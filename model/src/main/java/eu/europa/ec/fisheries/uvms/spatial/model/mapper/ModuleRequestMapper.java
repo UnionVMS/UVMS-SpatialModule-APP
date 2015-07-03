@@ -5,9 +5,6 @@
  */
 package eu.europa.ec.fisheries.uvms.spatial.model.mapper;
 
-import eu.europa.ec.fisheries.schema.spatial.module.v1.CreateMovementRequest;
-import eu.europa.ec.fisheries.schema.spatial.module.v1.MovementDataSourceMethod;
-import eu.europa.ec.fisheries.schema.spatial.v1.MovementBaseType;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.ModelMarshallException;
 
 /**
@@ -15,12 +12,12 @@ import eu.europa.ec.fisheries.uvms.spatial.model.exception.ModelMarshallExceptio
  * @author jojoha
  */
 public class ModuleRequestMapper {
-
-    public static String mapToCreateMovementRequest(MovementBaseType baseType) throws ModelMarshallException {
-        CreateMovementRequest request = new CreateMovementRequest();
-        request.setMethod(MovementDataSourceMethod.CREATE);
-        request.setMovement(baseType);
-        return JAXBMarshaller.marshallJaxBObjectToString(request);
-    }
+//
+//    public static String mapToCreateMovementRequest(MovementBaseType baseType) throws ModelMarshallException {
+//        CreateMovementRequest request = new CreateMovementRequest();
+//        request.setMethod(MovementDataSourceMethod.CREATE);
+//        request.setMovement(baseType);
+//        return JAXBMarshaller.marshallJaxBObjectToString(request);
+//    }
 
 }

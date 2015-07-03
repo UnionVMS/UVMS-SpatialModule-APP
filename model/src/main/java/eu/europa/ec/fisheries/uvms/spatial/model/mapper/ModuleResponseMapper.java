@@ -5,8 +5,6 @@
  */
 package eu.europa.ec.fisheries.uvms.spatial.model.mapper;
 
-import eu.europa.ec.fisheries.schema.spatial.module.v1.CreateMovementResponse;
-import eu.europa.ec.fisheries.schema.spatial.v1.MovementBaseType;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.ModelMapperException;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.ModelMarshallException;
 import javax.jms.JMSException;
@@ -32,12 +30,12 @@ public class ModuleResponseMapper {
             throw new ModelMapperException("Wrong corelationId in response. Expected was: " + correlationId + "But actual was: " + response.getJMSCorrelationID());
         }
 
-    }
+    }/*
 
     public static String mapToCreateMovementResponse(MovementBaseType movment) throws ModelMarshallException {
         CreateMovementResponse response = new CreateMovementResponse();
         response.setMovement(movment);
         return JAXBMarshaller.marshallJaxBObjectToString(response);
     }
-
+*/
 }

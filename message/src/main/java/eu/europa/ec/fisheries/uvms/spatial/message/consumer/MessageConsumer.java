@@ -5,7 +5,6 @@
  */
 package eu.europa.ec.fisheries.uvms.spatial.message.consumer;
 
-import eu.europa.ec.fisheries.uvms.spatial.message.exception.MovementMessageException;
 import javax.ejb.Local;
 
 /**
@@ -15,6 +14,6 @@ import javax.ejb.Local;
 @Local
 public interface MessageConsumer {
 
-    public <T> T getMessage(String correlationId, Class type) throws MovementMessageException;
+    public <T> T getMessage(String correlationId, Class type) throws Exception;
 
 }

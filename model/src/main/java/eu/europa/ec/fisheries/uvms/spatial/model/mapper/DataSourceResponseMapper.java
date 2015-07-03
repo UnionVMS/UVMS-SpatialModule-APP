@@ -13,18 +13,6 @@ import javax.jms.TextMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.europa.ec.fisheries.schema.spatial.search.v1.MovementSearchGroup;
-import eu.europa.ec.fisheries.schema.spatial.source.v1.CreateMovementResponse;
-import eu.europa.ec.fisheries.schema.spatial.source.v1.CreateTempMovementResponse;
-import eu.europa.ec.fisheries.schema.spatial.source.v1.GetMovementListByQueryResponse;
-import eu.europa.ec.fisheries.schema.spatial.source.v1.GetTempMovementListResponse;
-import eu.europa.ec.fisheries.schema.spatial.source.v1.ListMovementSearchGroupResponse;
-import eu.europa.ec.fisheries.schema.spatial.source.v1.SendTempMovementResponse;
-import eu.europa.ec.fisheries.schema.spatial.source.v1.SetStatusMovementResponse;
-import eu.europa.ec.fisheries.schema.spatial.source.v1.SingleMovementSearchGroupResponse;
-import eu.europa.ec.fisheries.schema.spatial.source.v1.UpdateTempMovementResponse;
-import eu.europa.ec.fisheries.schema.spatial.v1.MovementBaseType;
-import eu.europa.ec.fisheries.schema.spatial.v1.TempMovementType;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.ModelMapperException;
 
 /**
@@ -70,6 +58,7 @@ public class DataSourceResponseMapper {
         // //everything is well
         // }
     }
+/*
 
     public static List<MovementBaseType> mapToMovementBaseTypeListFromResponse(TextMessage message) throws ModelMapperException, JMSException {
         validateResponse(message, message.getJMSCorrelationID());
@@ -130,5 +119,6 @@ public class DataSourceResponseMapper {
         SendTempMovementResponse response = JAXBMarshaller.unmarshallTextMessage(message, SendTempMovementResponse.class);
         return response.getMovement();
     }
+*/
 
 }

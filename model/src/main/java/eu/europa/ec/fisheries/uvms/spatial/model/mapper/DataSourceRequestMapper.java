@@ -10,23 +10,6 @@ import java.math.BigInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.europa.ec.fisheries.schema.spatial.search.v1.MovementListQuery;
-import eu.europa.ec.fisheries.schema.spatial.search.v1.MovementSearchGroup;
-import eu.europa.ec.fisheries.schema.spatial.source.v1.CreateMovementRequest;
-import eu.europa.ec.fisheries.schema.spatial.source.v1.CreateMovementSearchGroupRequest;
-import eu.europa.ec.fisheries.schema.spatial.source.v1.CreateTempMovementRequest;
-import eu.europa.ec.fisheries.schema.spatial.source.v1.DeleteMovementSearchGroupRequest;
-import eu.europa.ec.fisheries.schema.spatial.source.v1.GetMovementListByQueryRequest;
-import eu.europa.ec.fisheries.schema.spatial.source.v1.GetMovementSearchGroupRequest;
-import eu.europa.ec.fisheries.schema.spatial.source.v1.GetMovementSearchGroupsByUserRequest;
-import eu.europa.ec.fisheries.schema.spatial.source.v1.GetTempMovementListRequest;
-import eu.europa.ec.fisheries.schema.spatial.source.v1.MovementDataSourceMethod;
-import eu.europa.ec.fisheries.schema.spatial.source.v1.SendTempMovementRequest;
-import eu.europa.ec.fisheries.schema.spatial.source.v1.SetStatusMovementRequest;
-import eu.europa.ec.fisheries.schema.spatial.source.v1.UpdateMovementSearchGroupRequest;
-import eu.europa.ec.fisheries.schema.spatial.source.v1.UpdateTempMovementRequest;
-import eu.europa.ec.fisheries.schema.spatial.v1.MovementBaseType;
-import eu.europa.ec.fisheries.schema.spatial.v1.TempMovementType;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.ModelMarshallException;
 
 /**
@@ -36,6 +19,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.exception.ModelMarshallExceptio
 public class DataSourceRequestMapper {
 
     final static Logger LOG = LoggerFactory.getLogger(DataSourceRequestMapper.class);
+/*
 
     public static String mapGetListByQuery(MovementListQuery query) throws ModelMarshallException {
         GetMovementListByQueryRequest request = new GetMovementListByQueryRequest();
@@ -120,5 +104,6 @@ public class DataSourceRequestMapper {
         request.setMethod(MovementDataSourceMethod.TEMP_SEND);
         return JAXBMarshaller.marshallJaxBObjectToString(request);
     }
+*/
 
 }

@@ -21,14 +21,6 @@ import javax.jms.TextMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.europa.ec.fisheries.schema.spatial.common.v1.ExceptionType;
-import eu.europa.ec.fisheries.schema.spatial.module.v1.MovementException;
-import eu.europa.ec.fisheries.uvms.spatial.message.constants.DataSourceQueue;
-import eu.europa.ec.fisheries.uvms.spatial.message.constants.MessageConstants;
-import eu.europa.ec.fisheries.uvms.spatial.message.constants.ModuleQueue;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.ErrorEvent;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.carrier.EventMessage;
-import eu.europa.ec.fisheries.uvms.spatial.message.exception.MovementMessageException;
 import eu.europa.ec.fisheries.uvms.spatial.message.producer.MessageProducer;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.ModelMarshallException;
 import eu.europa.ec.fisheries.uvms.spatial.model.mapper.JAXBMarshaller;
@@ -37,6 +29,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.mapper.JAXBMarshaller;
 public class MessageProducerBean implements MessageProducer {
 
     final static Logger LOG = LoggerFactory.getLogger(MessageProducerBean.class);
+/*
 
     @Resource(mappedName = MessageConstants.QUEUE_DATASOURCE_INTERNAL)
     private Queue localDbQueue;
@@ -191,5 +184,6 @@ public class MessageProducerBean implements MessageProducer {
             }
         }
     }
+*/
 
 }

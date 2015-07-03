@@ -5,7 +5,6 @@
  */
 package eu.europa.ec.fisheries.uvms.spatial.model;
 
-import eu.europa.ec.fisheries.uvms.spatial.model.exception.MovementModelException;
 import javax.ejb.Local;
 
 /**
@@ -14,9 +13,11 @@ import javax.ejb.Local;
  */
 @Local
 public interface Model {
-
+/*
     public void sendData(Object dto) throws MovementModelException;
 
-    public Object getData() throws MovementModelException;
+    public Object g*//*
+etData() throws MovementModelException;
+*/
 
 }

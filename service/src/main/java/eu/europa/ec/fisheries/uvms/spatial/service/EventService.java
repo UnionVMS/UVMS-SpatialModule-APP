@@ -5,8 +5,6 @@
  */
 package eu.europa.ec.fisheries.uvms.spatial.service;
 
-import eu.europa.ec.fisheries.uvms.spatial.message.event.CreateMovementEvent;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.carrier.EventMessage;
 import javax.ejb.Local;
 import javax.enterprise.event.Observes;
 
@@ -17,6 +15,6 @@ import javax.enterprise.event.Observes;
 @Local
 public interface EventService {
 
-    public void createMovement(@Observes @CreateMovementEvent EventMessage message);
+//    public void createMovement(@Observes @CreateMovementEvent EventMessage message);
 
 }
