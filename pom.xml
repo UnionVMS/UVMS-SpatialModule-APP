@@ -12,7 +12,7 @@
         <mockito.version>1.9.5</mockito.version>
         <junit.version>4.10</junit.version>
         <javaee.version>7.0</javaee.version>
-        <sl4j.version>1.7.7</sl4j.version>
+        <sl4j.version>1.7.12</sl4j.version>
         <logback.version>1.1.2</logback.version>
         <logback.core.version>1.1.2</logback.core.version>
         <vessel.module.version>1.0.4-SNAPSHOT</vessel.module.version>

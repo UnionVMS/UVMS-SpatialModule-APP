@@ -4,17 +4,17 @@ package eu.europa.ec.fisheries.uvms.spatial.entity;
  * Created by georgige on 7/3/2015.
  */
 
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
 
-@XmlRootElement(name = "ns2:application")
-public class USMDeploymentDescriptor {
+@XmlRootElement(name = "application", namespace = "deployment.domain.administration.usm.mare.ec.europa.eu")
+public class USMDeploymentDescriptor implements Serializable {
 
     //TODO maybe add the other attributes if needed?
     private String name;
     private String description;
+    private String parent;
 
     // Must have no-argument constructor
     public USMDeploymentDescriptor() {
@@ -24,7 +24,7 @@ public class USMDeploymentDescriptor {
         return name;
     }
 
-    @XmlElement
+    @XmlElement(required = true)
     public void setName(String name) {
         this.name = name;
     }
@@ -37,4 +37,14 @@ public class USMDeploymentDescriptor {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public String getParent() {
+        return parent;
+    }
+
+    @XmlElement(required = true)
+    public void setParent(String parent) {
+        this.parent = parent;
+    }
+
 }

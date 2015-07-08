@@ -1,6 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial;
 
 import eu.europa.ec.fisheries.uvms.spatial.entity.USMDeploymentDescriptor;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,6 +18,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -27,16 +29,29 @@ import java.util.Properties;
 @Startup
 public class ModuleInitializerBean {
 
-    private static final String PROP_MODULE_NAME = "module.name";
-    private static final String PROP_USM_REST_SERVER = "usm.rest.server";
-    private static final String PROP_USM_DESCRIPTOR_FORCE_UPDATE = "usm.deplyment.descriptor.force-update";
+    public static final String PROP_MODULE_NAME = "module.name";
+    public static final String PROP_USM_REST_SERVER = "usm.rest.server";
+    public static final String PROP_USM_DESCRIPTOR_FORCE_UPDATE = "usm.deplyment.descriptor.force-update";
 
-    private static final String USM_REST_DESCRIPTOR_URI = "/usm-administration/rest/deployments/";
-    private static final String CONFIG_USM_DEPLOYMENT_DESCRIPTOR_XML = "config.usmDeploymentDescriptor.xml";
-    private static final String PROP_FILE_NAME = "config.properties";
-    private static final String TRUE = "true";
+    public static final String USM_REST_DESCRIPTOR_URI = "/usm-administration/rest/deployments/";
+    public static final String CONFIG_USM_DEPLOYMENT_DESCRIPTOR_XML = "usmDeploymentDescriptor.xml";
+    public static final String PROP_FILE_NAME = "config.properties";
+    public static final String TRUE = "true";
 
     private static final Logger LOG = LoggerFactory.getLogger(ModuleInitializerBean.class);
+
+    public static void main(String[] args) throws JAXBException {
+        USMDeploymentDescriptor descriptor = new USMDeploymentDescriptor();
+        descriptor.setName("gj");
+        descriptor.setDescription("jgfjh");
+        descriptor.setParent("fhg");
+
+        JAXBContext ctx = JAXBContext.newInstance(USMDeploymentDescriptor.class);
+
+        Marshaller marshaller = ctx.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+        marshaller.marshal(descriptor, System.out);
+    }
 
     @PostConstruct
     protected void startup() throws IOException {
@@ -49,17 +64,18 @@ public class ModuleInitializerBean {
         Response response = target.path(moduleConfigs.getProperty(PROP_MODULE_NAME)).request(MediaType.APPLICATION_XML_TYPE).get();
 
         try {
-            USMDeploymentDescriptor descriptor = createDescriptor();
+            String descriptor = retrieveDescriptorAsString();
+            //USMDeploymentDescriptor descriptor = retrieveDescriptor();
 
             // TODO This is just an assumption that USM restful service returns 200
-            if (response.getStatus() != HttpServletResponse.SC_OK) {
+            if (isDescriptorNotPresent(response)) {
                 LOG.info("USM doesn't recognize the current module. Deploying module deployment descriptor...");
-                response = target.request(MediaType.APPLICATION_XML_TYPE).post(Entity.xml(descriptor));
+                response = target.request(MediaType.APPLICATION_XML_TYPE).post(Entity.entity(descriptor, MediaType.APPLICATION_XML_TYPE));
                 checkResult(response, "");
             } else {
                 LOG.info("Module deployment descriptor has already been deployed at USM.");
 
-                if (TRUE.equalsIgnoreCase(moduleConfigs.getProperty(PROP_USM_DESCRIPTOR_FORCE_UPDATE))) {
+                if (isForceUpdate(moduleConfigs)) {
                     LOG.info("Updating the existing module deployment descriptor into USM.");
                     response = target.request(MediaType.APPLICATION_XML_TYPE).put(Entity.xml(descriptor));
                     checkResult(response, "re");
@@ -76,6 +92,14 @@ public class ModuleInitializerBean {
 
     }
 
+    private boolean isForceUpdate(Properties moduleConfigs) {
+        return TRUE.equalsIgnoreCase(moduleConfigs.getProperty(PROP_USM_DESCRIPTOR_FORCE_UPDATE));
+    }
+
+    private boolean isDescriptorNotPresent(Response response) {
+        return response.getStatus() != HttpServletResponse.SC_OK;
+    }
+
     private Properties retrieveModuleConfigs() throws IOException {
         Properties prop = new Properties();
         InputStream properties = getClass().getClassLoader().getResourceAsStream(PROP_FILE_NAME);
@@ -87,12 +111,24 @@ public class ModuleInitializerBean {
         }
     }
 
-    private USMDeploymentDescriptor createDescriptor() throws JAXBException {
+    @Deprecated
+    private USMDeploymentDescriptor retrieveDescriptor() throws JAXBException, FileNotFoundException {
         JAXBContext context = JAXBContext.newInstance(USMDeploymentDescriptor.class);
         Unmarshaller un = context.createUnmarshaller();
 
-        InputStream descriptorXML = getClass().getResourceAsStream(CONFIG_USM_DEPLOYMENT_DESCRIPTOR_XML);
+        InputStream descriptorXML = getClass().getClassLoader().getResourceAsStream(CONFIG_USM_DEPLOYMENT_DESCRIPTOR_XML);
+        if (descriptorXML == null) {
+            throw new FileNotFoundException("Descriptor template file '" + CONFIG_USM_DEPLOYMENT_DESCRIPTOR_XML + "' not found in the classpath");
+        }
         return (USMDeploymentDescriptor) un.unmarshal(descriptorXML);
+    }
+
+    private String retrieveDescriptorAsString() throws JAXBException, IOException {
+        InputStream descriptorXML = getClass().getClassLoader().getResourceAsStream(CONFIG_USM_DEPLOYMENT_DESCRIPTOR_XML);
+        if (descriptorXML == null) {
+            throw new FileNotFoundException("Descriptor template file '" + CONFIG_USM_DEPLOYMENT_DESCRIPTOR_XML + "' not found in the classpath");
+        }
+        return IOUtils.toString(descriptorXML, "UTF-8");
     }
 
     private void checkResult(Response response, String logPrefix) {
