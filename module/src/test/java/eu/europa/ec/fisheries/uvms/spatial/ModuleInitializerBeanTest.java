@@ -16,6 +16,9 @@ public class ModuleInitializerBeanTest {
     public static final String KEEP_ALIVE = "keep-alive";
     public static final String APPLICATION_XML = "application/xml";
     public static final String CONTENT_TYPE = "Content-Type";
+    public static final int NOT_PRESENT = 201;
+    public static final int PRESENT = 200;
+    public static final int SUCCESS = 200;
 
     @Rule
     public WireMockRule wireMockRule = new WireMockRule();
@@ -28,11 +31,17 @@ public class ModuleInitializerBeanTest {
     }
 
     @Test
-    public void shouldDeployDescriptorOnStartup() throws Exception {
+    public void shouldDeployDescriptor() throws Exception {
         // given
+        stubFor(get(urlEqualTo("/usm-administration/rest/deployments/spatialModule"))
+                .willReturn(aResponse()
+                        .withStatus(NOT_PRESENT)
+                        .withHeader(CONTENT_TYPE, "text/xml")
+                        .withBody("<response>OK</response>")));
+
         stubFor(post(urlEqualTo("/usm-administration/rest/deployments/"))
                 .willReturn(aResponse()
-                        .withStatus(200)
+                        .withStatus(SUCCESS)
                         .withHeader(CONTENT_TYPE, "text/xml")
                         .withBody("<response>OK</response>")));
 
@@ -55,4 +64,42 @@ public class ModuleInitializerBeanTest {
         );
 
     }
+
+    @Test
+    public void shouldUpdateDescriptor() throws Exception {
+        // given
+        stubFor(get(urlEqualTo("/usm-administration/rest/deployments/spatialModule"))
+                .willReturn(aResponse()
+                        .withStatus(PRESENT)
+                        .withHeader(CONTENT_TYPE, "text/xml")
+                        .withBody("<response>OK</response>")));
+
+        stubFor(put(urlEqualTo("/usm-administration/rest/deployments/"))
+                .willReturn(aResponse()
+                        .withStatus(SUCCESS)
+                        .withHeader(CONTENT_TYPE, "text/xml")
+                        .withBody("<response>OK</response>")));
+
+        // when
+        initializerBean.startup();
+
+        // then
+        verify(1, getRequestedFor(urlEqualTo("/usm-administration/rest/deployments/spatialModule"))
+                        .withHeader("Accept", matching("application/xml"))
+                        .withHeader("Host", matching(LOCALHOST))
+                        .withHeader("Connection", matching(KEEP_ALIVE))
+                        .withoutHeader(CONTENT_TYPE)
+        );
+
+        verify(1, putRequestedFor(urlEqualTo("/usm-administration/rest/deployments/"))
+                        .withHeader("Accept", matching(APPLICATION_XML))
+                        .withHeader("Content-Type", matching(APPLICATION_XML))
+                        .withHeader("Host", matching(LOCALHOST))
+                        .withHeader("Connection", matching(KEEP_ALIVE))
+                        .withHeader("Content-Length", matching("866"))
+                        .withRequestBody(matching(".*<name>Spatial Module</name>.*"))
+        );
+
+    }
+
 }
