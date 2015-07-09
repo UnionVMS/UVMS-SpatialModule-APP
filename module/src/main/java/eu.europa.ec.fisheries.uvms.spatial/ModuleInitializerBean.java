@@ -18,7 +18,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -40,19 +39,6 @@ public class ModuleInitializerBean {
 
     private static final Logger LOG = LoggerFactory.getLogger(ModuleInitializerBean.class);
 
-    public static void main(String[] args) throws JAXBException {
-        USMDeploymentDescriptor descriptor = new USMDeploymentDescriptor();
-        descriptor.setName("gj");
-        descriptor.setDescription("jgfjh");
-        descriptor.setParent("fhg");
-
-        JAXBContext ctx = JAXBContext.newInstance(USMDeploymentDescriptor.class);
-
-        Marshaller marshaller = ctx.createMarshaller();
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-        marshaller.marshal(descriptor, System.out);
-    }
-
     @PostConstruct
     protected void startup() throws IOException {
         // do something on application startup
@@ -65,12 +51,11 @@ public class ModuleInitializerBean {
 
         try {
             String descriptor = retrieveDescriptorAsString();
-            //USMDeploymentDescriptor descriptor = retrieveDescriptor();
 
             // TODO This is just an assumption that USM restful service returns 200
-            if (isDescriptorNotPresent(response)) {
+            if (!isDescriptorAlreadyRegistered(response)) {
                 LOG.info("USM doesn't recognize the current module. Deploying module deployment descriptor...");
-                response = target.request(MediaType.APPLICATION_XML_TYPE).post(Entity.entity(descriptor, MediaType.APPLICATION_XML_TYPE));
+                response = target.request(MediaType.APPLICATION_XML_TYPE).post(Entity.xml(descriptor));
                 checkResult(response, "");
             } else {
                 LOG.info("Module deployment descriptor has already been deployed at USM.");
@@ -79,9 +64,6 @@ public class ModuleInitializerBean {
                     LOG.info("Updating the existing module deployment descriptor into USM.");
                     response = target.request(MediaType.APPLICATION_XML_TYPE).put(Entity.xml(descriptor));
                     checkResult(response, "re");
-
-                    // create a test which mocks the USM services (Jersey consumer and producer of those deployment descriptors
-                    // maybe an integration test
                 }
             }
         } catch (JAXBException e) {
@@ -96,8 +78,8 @@ public class ModuleInitializerBean {
         return TRUE.equalsIgnoreCase(moduleConfigs.getProperty(PROP_USM_DESCRIPTOR_FORCE_UPDATE));
     }
 
-    private boolean isDescriptorNotPresent(Response response) {
-        return response.getStatus() != HttpServletResponse.SC_OK;
+    private boolean isDescriptorAlreadyRegistered(Response response) {
+        return response.getStatus() == HttpServletResponse.SC_OK;
     }
 
     private Properties retrieveModuleConfigs() throws IOException {
@@ -111,7 +93,6 @@ public class ModuleInitializerBean {
         }
     }
 
-    @Deprecated
     private USMDeploymentDescriptor retrieveDescriptor() throws JAXBException, FileNotFoundException {
         JAXBContext context = JAXBContext.newInstance(USMDeploymentDescriptor.class);
         Unmarshaller un = context.createUnmarshaller();
