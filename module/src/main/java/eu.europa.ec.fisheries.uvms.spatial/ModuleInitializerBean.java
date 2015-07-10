@@ -52,7 +52,6 @@ public class ModuleInitializerBean {
         try {
             String descriptor = retrieveDescriptorAsString();
 
-            // TODO This is just an assumption that USM restful service returns 200
             if (!isDescriptorAlreadyRegistered(response)) {
                 LOG.info("USM doesn't recognize the current module. Deploying module deployment descriptor...");
                 response = target.request(MediaType.APPLICATION_XML_TYPE).post(Entity.xml(descriptor));

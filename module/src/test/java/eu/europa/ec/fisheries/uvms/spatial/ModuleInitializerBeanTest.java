@@ -5,6 +5,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import javax.servlet.http.HttpServletResponse;
+
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
 /**
@@ -16,9 +18,9 @@ public class ModuleInitializerBeanTest {
     public static final String KEEP_ALIVE = "keep-alive";
     public static final String APPLICATION_XML = "application/xml";
     public static final String CONTENT_TYPE = "Content-Type";
-    public static final int NOT_PRESENT = 201;
-    public static final int PRESENT = 200;
-    public static final int SUCCESS = 200;
+    public static final int NOT_PRESENT = HttpServletResponse.SC_NO_CONTENT;
+    public static final int PRESENT = HttpServletResponse.SC_OK;
+    public static final int SUCCESS = HttpServletResponse.SC_OK;
 
     @Rule
     public WireMockRule wireMockRule = new WireMockRule();
@@ -35,14 +37,12 @@ public class ModuleInitializerBeanTest {
         // given
         stubFor(get(urlEqualTo("/usm-administration/rest/deployments/spatialModule"))
                 .willReturn(aResponse()
-                        .withStatus(NOT_PRESENT)
-                        .withHeader(CONTENT_TYPE, "text/xml")
-                        .withBody("<response>OK</response>")));
+                        .withStatus(NOT_PRESENT)));
 
         stubFor(post(urlEqualTo("/usm-administration/rest/deployments/"))
                 .willReturn(aResponse()
                         .withStatus(SUCCESS)
-                        .withHeader(CONTENT_TYPE, "text/xml")
+                        .withHeader(CONTENT_TYPE, APPLICATION_XML)
                         .withBody("<response>OK</response>")));
 
         // when
@@ -50,7 +50,7 @@ public class ModuleInitializerBeanTest {
 
         // then
         verify(1, getRequestedFor(urlEqualTo("/usm-administration/rest/deployments/spatialModule"))
-                        .withHeader("Accept", matching("application/xml"))
+                        .withHeader("Accept", matching(APPLICATION_XML))
                         .withHeader("Host", matching(LOCALHOST))
                         .withHeader("Connection", matching(KEEP_ALIVE))
                         .withoutHeader(CONTENT_TYPE)
@@ -71,13 +71,13 @@ public class ModuleInitializerBeanTest {
         stubFor(get(urlEqualTo("/usm-administration/rest/deployments/spatialModule"))
                 .willReturn(aResponse()
                         .withStatus(PRESENT)
-                        .withHeader(CONTENT_TYPE, "text/xml")
+                        .withHeader(CONTENT_TYPE, APPLICATION_XML)
                         .withBody("<response>OK</response>")));
 
         stubFor(put(urlEqualTo("/usm-administration/rest/deployments/"))
                 .willReturn(aResponse()
                         .withStatus(SUCCESS)
-                        .withHeader(CONTENT_TYPE, "text/xml")
+                        .withHeader(CONTENT_TYPE, APPLICATION_XML)
                         .withBody("<response>OK</response>")));
 
         // when
