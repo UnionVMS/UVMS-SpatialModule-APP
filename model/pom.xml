@@ -15,8 +15,8 @@
     
     <properties>
         <!-- the name of the wsdlfiles wothout fileending -->
-        <wsdl.contract.name>MovementModuleService</wsdl.contract.name>
-        <wsdl.source.name>MovementDataSourceService</wsdl.source.name>
+        <!--<wsdl.contract.name>MovementModuleService</wsdl.contract.name>
+        <wsdl.source.name>MovementDataSourceService</wsdl.source.name>-->
     </properties>
     
     <profiles>

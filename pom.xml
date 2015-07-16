@@ -15,7 +15,7 @@
         <sl4j.version>1.7.12</sl4j.version>
         <logback.version>1.1.2</logback.version>
         <logback.core.version>1.1.2</logback.core.version>
-        <vessel.module.version>1.0.4-SNAPSHOT</vessel.module.version>
+        <vessel.module.version>1.0.5-SNAPSHOT</vessel.module.version>
     </properties>
     
     <dependencies>
@@ -31,6 +31,7 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${sl4j.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
@@ -56,7 +57,7 @@
             <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
-        
+
         <!-- Module dependencies -->
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.vessel</groupId>
