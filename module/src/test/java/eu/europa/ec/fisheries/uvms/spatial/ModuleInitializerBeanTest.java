@@ -9,9 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
-/**
- * Created by mkopyczok on 07-07-15.
- */
 public class ModuleInitializerBeanTest {
 
     public static final String LOCALHOST = "localhost:8080";
