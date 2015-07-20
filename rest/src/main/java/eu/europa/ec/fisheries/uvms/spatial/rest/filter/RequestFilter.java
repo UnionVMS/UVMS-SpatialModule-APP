@@ -15,10 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import eu.europa.ec.fisheries.uvms.spatial.rest.constants.RestConstants;
 
-/**
- *
- * @author jojoha
- */
 @WebFilter("/*")
 public class RequestFilter implements Filter {
 
@@ -26,7 +22,7 @@ public class RequestFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        LOG.info("Requstfilter starting up!");
+        LOG.info("Requestfilter starting up!");
     }
 
     @Override
@@ -40,7 +36,7 @@ public class RequestFilter implements Filter {
 
     @Override
     public void destroy() {
-        LOG.info("Requstfilter shuting down!");
+        LOG.info("Requestfilter shuting down!");
     }
 
 }
