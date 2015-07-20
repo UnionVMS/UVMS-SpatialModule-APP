@@ -32,6 +32,9 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
+/**
+ * //TODO use mockData from model
+ */
 @Path("/mock")
 public class MockResource {
 

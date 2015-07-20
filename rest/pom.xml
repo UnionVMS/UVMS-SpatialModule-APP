@@ -75,7 +75,7 @@
                                     <useStandardDocletOptions>false</useStandardDocletOptions>
                                     <additionalparam>-apiVersion ${project.version}
                                         -docBasePath http://${hostname}:${port}/${project.parent.artifactId}/apidocs
-                                        -apiBasePath http://${hostname}:${port}/${project.parent.artifactId}/eu.europe.ec.fisheries.uvms.spatial.rest</additionalparam>
+                                        -apiBasePath http://${hostname}:${port}/${project.parent.artifactId}/rest</additionalparam>
                                 </configuration>
                                 <goals>
                                     <goal>javadoc</goal>

@@ -42,12 +42,12 @@
                         </ejbModule>
                         <ejbModule>
                             <groupId>${project.groupId}</groupId>
-                            <artifactId>spatial-model</artifactId>
+                            <artifactId>model</artifactId>
                         </ejbModule>
                         <webModule>
                             <groupId>${project.groupId}</groupId>
                             <context-root>${project.parent.artifactId}</context-root>
-                            <artifactId>eu.europe.ec.fisheries.uvms.spatial.rest</artifactId>
+                            <artifactId>rest</artifactId>
                         </webModule>
                     </modules>
                     <skinnyWars>true</skinnyWars>
@@ -71,13 +71,13 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>spatial-model</artifactId>
+            <artifactId>model</artifactId>
             <version>1.0-SNAPSHOT</version>
             <type>ejb</type>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>eu.europe.ec.fisheries.uvms.spatial.rest</artifactId>
+            <artifactId>rest</artifactId>
             <version>${project.parent.version}</version>
             <type>war</type>
         </dependency>
