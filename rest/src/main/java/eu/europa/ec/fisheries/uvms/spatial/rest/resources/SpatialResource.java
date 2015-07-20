@@ -1,22 +1,18 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources;
 
-import eu.europa.ec.fisheries.schema.movement.v1.MovementBaseType;
 import eu.europa.ec.fisheries.uvms.movement.model.mock.MockData;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseDto;
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.RestResponseCode;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.ResponseCode;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.ResponseCodeConstant;
-import eu.europa.ec.fisheries.wsdl.vessel.types.*;
-
-import javax.annotation.security.PermitAll;
-import javax.ejb.Stateless;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-
+import eu.europa.ec.fisheries.wsdl.vessel.types.CarrierSource;
+import eu.europa.ec.fisheries.wsdl.vessel.types.Vessel;
+import eu.europa.ec.fisheries.wsdl.vessel.types.VesselId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
