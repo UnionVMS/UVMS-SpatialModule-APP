@@ -15,7 +15,9 @@
         <sl4j.version>1.7.12</sl4j.version>
         <logback.version>1.1.2</logback.version>
         <logback.core.version>1.1.2</logback.core.version>
+        <org.mapstruct.version>1.0.0.CR1</org.mapstruct.version>
         <vessel.module.version>1.0.5-SNAPSHOT</vessel.module.version>
+        <movement.module.version>1.0.2-SNAPSHOT</movement.module.version>
     </properties>
     
     <dependencies>
@@ -25,7 +27,7 @@
             <version>${javaee.version}</version>
             <scope>provided</scope>
         </dependency>
-        
+
         <!-- LOGGING DEPENDENCIES -->
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -43,7 +45,20 @@
             <artifactId>logback-core</artifactId>
             <version>${logback.core.version}</version>
         </dependency>
-        
+
+        <!-- MAPPING -->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>1.0.0.CR1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+            <version>1.0.0.CR1</version>
+        </dependency>
+
         <!-- TEST -->
         <dependency>
             <groupId>junit</groupId>
@@ -63,6 +78,11 @@
             <groupId>eu.europa.ec.fisheries.uvms.vessel</groupId>
             <artifactId>vessel-model</artifactId>
             <version>${vessel.module.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>eu.europa.ec.fisheries.uvms.movement</groupId>
+            <artifactId>movement-model</artifactId>
+            <version>${movement.module.version}</version>
         </dependency>
     </dependencies>
 	
