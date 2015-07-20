@@ -1,7 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 /**
- * Created by georgige on 7/3/2015.
+ * //TODO create test
  */
 
 import javax.xml.bind.annotation.XmlElement;
@@ -12,6 +12,7 @@ import java.io.Serializable;
 public class USMDeploymentDescriptor implements Serializable {
 
     //TODO maybe add the other attributes if needed?
+    //TODO entity is a confusing name for the package name
     private String name;
     private String description;
     private String parent;
