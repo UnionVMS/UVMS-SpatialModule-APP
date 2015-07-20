@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
-    <artifactId>eu.europe.ec.fisheries.uvms.spatial.rest</artifactId>
-    <name>${project.parent.artifactId}-eu.europe.ec.fisheries.uvms.spatial.rest</name>
+    <artifactId>rest</artifactId>
+    <name>${project.parent.artifactId}-rest</name>
     <packaging>war</packaging>
 
     <parent>
@@ -51,10 +50,10 @@
         </plugins>
     </build>
     
-    <!-- USE following command to run this profile: mvn clean install -P generate-eu.europe.ec.fisheries.uvms.spatial.rest-doc -Dhostname=127.0.0.1 -Dport=8080  -->
+    <!-- USE following command to run this profile: mvn clean install -P generate-rest-doc -Dhostname=127.0.0.1 -Dport=8080  -->
     <profiles>
         <profile>
-            <id>generate-eu.europe.ec.fisheries.uvms.spatial.rest-doc</id>
+            <id>generate-rest-doc</id>
             <build>
                 <plugins>
                     <plugin>
