@@ -20,7 +20,7 @@ public class ModuleInitializerBeanTest {
     public static final int SUCCESS = HttpServletResponse.SC_OK;
 
     @Rule
-    public WireMockRule wireMockRule = new WireMockRule();
+    public WireMockRule wireMockRule = new WireMockRule(16666);
 
     private ModuleInitializerBean initializerBean;
 
