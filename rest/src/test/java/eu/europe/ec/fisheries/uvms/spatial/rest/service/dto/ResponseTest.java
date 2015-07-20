@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package rest.service.dto;
+package eu.europe.ec.fisheries.uvms.spatial.rest.service.dto;
 
 import junit.framework.Assert;
 
@@ -45,11 +45,11 @@ public class ResponseTest {
     public void checkDtoReturnsValid() {
 
         String VALUE = "HELLO_DTO";
-        ResponseDto dto = new ResponseDto(VALUE, ResponseCode.OK);
+        ResponseDto dto = new ResponseDto(VALUE,  eu.europa.ec.fisheries.uvms.spatial.service.dto.ResponseCode.OK);
         Assert.assertEquals(dto.getCode(), ResponseCode.OK.getCode());
         Assert.assertEquals(dto.getData(), VALUE);
 
-        dto = new ResponseDto(ResponseCode.ERROR);
+        dto = new ResponseDto( eu.europa.ec.fisheries.uvms.spatial.service.dto.ResponseCode.OK.ERROR);
         Assert.assertEquals(dto.getCode(), ResponseCode.ERROR.getCode());
         Assert.assertEquals(dto.getData(), null);
 

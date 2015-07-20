@@ -47,7 +47,7 @@
                         <webModule>
                             <groupId>${project.groupId}</groupId>
                             <context-root>${project.parent.artifactId}</context-root>
-                            <artifactId>rest</artifactId>
+                            <artifactId>eu.europe.ec.fisheries.uvms.spatial.rest</artifactId>
                         </webModule>
                     </modules>
                     <skinnyWars>true</skinnyWars>
@@ -77,7 +77,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>rest</artifactId>
+            <artifactId>eu.europe.ec.fisheries.uvms.spatial.rest</artifactId>
             <version>${project.parent.version}</version>
             <type>war</type>
         </dependency>

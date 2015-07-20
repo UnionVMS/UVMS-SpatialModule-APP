@@ -32,7 +32,7 @@ public class ModuleInitializerBean {
     public static final String PROP_USM_REST_SERVER = "usm.rest.server";
     public static final String PROP_USM_DESCRIPTOR_FORCE_UPDATE = "usm.deplyment.descriptor.force-update";
 
-    public static final String USM_REST_DESCRIPTOR_URI = "/usm-administration/rest/deployments/";
+    public static final String USM_REST_DESCRIPTOR_URI = "/usm-administration/eu.europe.ec.fisheries.uvms.spatial.rest/deployments/";
     public static final String CONFIG_USM_DEPLOYMENT_DESCRIPTOR_XML = "usmDeploymentDescriptor.xml";
     public static final String PROP_FILE_NAME = "config.properties";
     public static final String TRUE = "true";

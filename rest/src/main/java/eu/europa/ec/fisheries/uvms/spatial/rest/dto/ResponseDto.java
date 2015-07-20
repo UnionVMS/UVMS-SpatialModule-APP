@@ -1,28 +1,18 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package eu.europa.ec.fisheries.uvms.spatial.rest.dto;
 
 import java.util.Objects;
 
-/**
- *
- * @author jojoha
- * @param <T>
- */
 public class ResponseDto<T> {
 
     private T data;
-    private final RestResponseCode code;
+    private final eu.europa.ec.fisheries.uvms.spatial.service.dto.RestResponseCode code;
 
-    public ResponseDto(T data, RestResponseCode code) {
+    public ResponseDto(T data, eu.europa.ec.fisheries.uvms.spatial.service.dto.RestResponseCode code) {
         this.data = data;
         this.code = code;
     }
 
-    public ResponseDto(RestResponseCode code) {
+    public ResponseDto(eu.europa.ec.fisheries.uvms.spatial.service.dto.RestResponseCode code) {
         this.code = code;
     }
 
