@@ -5,16 +5,10 @@
  */
 package eu.europe.ec.fisheries.uvms.spatial.rest.service.dto;
 
-import junit.framework.Assert;
-
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseCode;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseDto;
+import junit.framework.Assert;
+import org.junit.*;
 
 /**
  *
@@ -45,11 +39,11 @@ public class ResponseTest {
     public void checkDtoReturnsValid() {
 
         String VALUE = "HELLO_DTO";
-        ResponseDto dto = new ResponseDto(VALUE,  eu.europa.ec.fisheries.uvms.spatial.service.dto.ResponseCode.OK);
+        ResponseDto dto = new ResponseDto(VALUE,  ResponseCode.OK);
         Assert.assertEquals(dto.getCode(), ResponseCode.OK.getCode());
         Assert.assertEquals(dto.getData(), VALUE);
 
-        dto = new ResponseDto( eu.europa.ec.fisheries.uvms.spatial.service.dto.ResponseCode.OK.ERROR);
+        dto = new ResponseDto( ResponseCode.OK.ERROR);
         Assert.assertEquals(dto.getCode(), ResponseCode.ERROR.getCode());
         Assert.assertEquals(dto.getData(), null);
 
