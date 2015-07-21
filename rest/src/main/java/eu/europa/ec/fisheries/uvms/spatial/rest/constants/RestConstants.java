@@ -1,18 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package eu.europa.ec.fisheries.uvms.spatial.rest.constants;
 
-/**
- *
- * @author jojoha
- */
 public class RestConstants {
 
     public static final String REST_URL = "/rest";
-    public static final String MODULE_NAME = "Mobileterminal";
+    public static final String MODULE_NAME = "spatial";
 
     public static final String ACCESS_CONTROL_ALLOW_ORIGIN = "Access-Control-Allow-Origin";
     public static final String ACCESS_CONTROL_ALLOW_METHODS_ALL = "*";

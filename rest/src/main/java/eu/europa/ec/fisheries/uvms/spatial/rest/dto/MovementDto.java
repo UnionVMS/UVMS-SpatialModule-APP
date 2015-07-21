@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import eu.europa.ec.fisheries.schema.movement.mobileterminal.v1.MobileTerminalId;
 import eu.europa.ec.fisheries.schema.movement.v1.MessageType;
 import eu.europa.ec.fisheries.schema.movement.v1.MovementPoint;
@@ -10,6 +11,7 @@ import java.util.Date;
 /**
  *
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class MovementDto {
 
     private String id;

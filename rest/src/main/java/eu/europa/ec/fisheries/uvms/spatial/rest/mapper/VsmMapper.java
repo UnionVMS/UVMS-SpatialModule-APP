@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
  * //TODO create test
  */
 @Mapper
-public class VsmMapper {
+public interface VsmMapper {
 
 
 }

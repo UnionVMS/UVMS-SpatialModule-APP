@@ -1,20 +1,20 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest;
 
-import java.util.HashSet;
-import java.util.Set;
+import eu.europa.ec.fisheries.uvms.spatial.rest.constants.RestConstants;
+import eu.europa.ec.fisheries.uvms.spatial.rest.resources.MockResource;
+import eu.europa.ec.fisheries.uvms.spatial.rest.resources.SpatialResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Application;
+import java.util.HashSet;
+import java.util.Set;
 
-import eu.europa.ec.fisheries.uvms.spatial.rest.resources.MockResource;
-import eu.europa.ec.fisheries.uvms.spatial.rest.resources.SpatialResource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-@ApplicationPath(RestConstants.MODULE_REST)
+@ApplicationPath(RestConstants.REST_URL)
 public class RestActivator extends Application {
 
     final static Logger LOG = LoggerFactory.getLogger(RestActivator.class);
@@ -40,7 +40,7 @@ public class RestActivator extends Application {
 
     @GET
     @Produces("text/html")
-    @Path("/test")
+    @Path("test")
     public String getHtml() {
         return "<html lang=\"en\"><body><h1>Hello, World!!</body></h1></html>";
     }

@@ -5,14 +5,14 @@ import java.util.Objects;
 public class ResponseDto<T> {
 
     private T data;
-    private final eu.europa.ec.fisheries.uvms.spatial.service.dto.RestResponseCode code;
+    private final ResponseCode code;
 
-    public ResponseDto(T data, eu.europa.ec.fisheries.uvms.spatial.service.dto.RestResponseCode code) {
+    public ResponseDto(T data, ResponseCode code) {
         this.data = data;
         this.code = code;
     }
 
-    public ResponseDto(eu.europa.ec.fisheries.uvms.spatial.service.dto.RestResponseCode code) {
+    public ResponseDto(ResponseCode code) {
         this.code = code;
     }
 

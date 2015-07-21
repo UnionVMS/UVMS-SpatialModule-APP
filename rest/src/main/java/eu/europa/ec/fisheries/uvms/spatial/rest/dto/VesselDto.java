@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import eu.europa.ec.fisheries.wsdl.vessel.types.CarrierSource;
 import eu.europa.ec.fisheries.wsdl.vessel.types.VesselHistoryId;
 import eu.europa.ec.fisheries.wsdl.vessel.types.VesselId;
@@ -7,6 +8,7 @@ import eu.europa.ec.fisheries.wsdl.vessel.types.VesselId;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class VesselDto {
 
     private VesselId vesselId;

@@ -1,30 +1,32 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import java.util.List;
+
 /**
  * //TODO create test
  * //TODO find better name
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class VmsDto {
 
-    private VesselDto vessel;
-    private MovementDto movement;
+    private List<VesselDto> vessels;
+    private List<MovementDto> movements;
 
-    public VmsDto() {
+    public List<MovementDto> getMovements() {
+        return movements;
     }
 
-    public VesselDto getVessel() {
-        return vessel;
+    public void setMovements(List<MovementDto> movements) {
+        this.movements = movements;
     }
 
-    public void setVessel(VesselDto vessel) {
-        this.vessel = vessel;
+    public List<VesselDto> getVessels() {
+        return vessels;
     }
 
-    public MovementDto getMovement() {
-        return movement;
-    }
-
-    public void setMovement(MovementDto movement) {
-        this.movement = movement;
+    public void setVessels(List<VesselDto> vessels) {
+        this.vessels = vessels;
     }
 }
