@@ -6,16 +6,17 @@
 package eu.europa.ec.fisheries.uvms.spatial.model.mapper;
 
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.ModelMarshallException;
-import java.io.StringReader;
-import java.io.StringWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.jms.JMSException;
 import javax.jms.TextMessage;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.StringReader;
+import java.io.StringWriter;
 
 /**
  *
@@ -59,6 +60,7 @@ public class JAXBMarshaller {
      * @throws
      * eu.europa.ec.fisheries.uvms.spatial.model.exception.ModelMarshallException
      */
+    @SuppressWarnings("unchecked")
     public static <R> R unmarshallTextMessage(TextMessage textMessage, Class clazz) throws ModelMarshallException {
         try {
             JAXBContext jc = JAXBContext.newInstance(clazz);
