@@ -12,12 +12,15 @@
         <artifactId>spatial</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    
-    <properties>
-        <!-- the name of the wsdlfiles wothout fileending -->
-        <!--<wsdl.contract.name>MovementModuleService</wsdl.contract.name>
-        <wsdl.source.name>MovementDataSourceService</wsdl.source.name>-->
-    </properties>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+
+    </dependencies>
     
     <profiles>
         <profile>
