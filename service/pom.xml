@@ -12,26 +12,14 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
     
-    <!-- PROPERTIES USED FOR LOGBACK -->
-    <properties>
-        <application.name>${parent.artifactId}</application.name> 
-        <application.version>${parent.version}</application.version>
-        <application.logfile>/app/logs/${parent.artifactId}/${parent.artifactId}.log</application.logfile>
-        <application.error.logfile>/app/logs/${parent.artifactId}/${parent.artifactId}-error.log</application.error.logfile>
-    </properties>
-    
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>spatial-model</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>provided</scope>
+            <artifactId>model</artifactId>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>message</artifactId>
-            <version>${project.parent.version}</version>
-            <scope>provided</scope>
         </dependency>
     </dependencies>
 
