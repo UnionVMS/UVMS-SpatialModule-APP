@@ -4,26 +4,13 @@
  */
 package eu.europa.ec.fisheries.uvms.spatial.message.producer.bean;
 
-import java.math.BigInteger;
-
-import javax.annotation.Resource;
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.enterprise.event.Observes;
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
-import javax.jms.JMSException;
-import javax.jms.Queue;
-import javax.jms.Session;
-import javax.jms.TextMessage;
-
+import eu.europa.ec.fisheries.uvms.spatial.message.producer.MessageProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.europa.ec.fisheries.uvms.spatial.message.producer.MessageProducer;
-import eu.europa.ec.fisheries.uvms.spatial.model.exception.ModelMarshallException;
-import eu.europa.ec.fisheries.uvms.spatial.model.mapper.JAXBMarshaller;
+import javax.ejb.Stateless;
+//import eu.europa.ec.fisheries.uvms.spatial.model.exception.ModelMarshallException;
+//import eu.europa.ec.fisheries.uvms.spatial.model.mapper.JAXBMarshaller;
 
 @Stateless
 public class MessageProducerBean implements MessageProducer {
