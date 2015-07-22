@@ -23,15 +23,17 @@
         <movement.model.version>1.0.2-SNAPSHOT</movement.model.version>
         <application.name>${project.parent.artifactId}</application.name>
         <application.version>${project.parent.artifactId}</application.version>
-        <application.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}.log
-        </application.logfile>
-        <application.error.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}-error.log
-        </application.error.logfile>
+        <application.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}.log</application.logfile>
+        <application.error.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}-error.log</application.error.logfile>
+        <hibernate.version>4.3.10.Final</hibernate.version>
+        <hibernate.spatial.version>4.3</hibernate.spatial.version>
+        <postgres.jdbc.version>9.4-1201-jdbc41</postgres.jdbc.version>
+        <postgis.jdbc.version>1.5.2</postgis.jdbc.version>
     </properties>
 
     <dependencyManagement>
-        <dependencies>
 
+        <dependencies>
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>service</artifactId>
@@ -80,6 +82,44 @@
                 <version>${mapstruct.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-spatial</artifactId>
+                <version>${hibernate.spatial.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>hibernate-core</artifactId>
+                        <groupId>org.hibernate</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>postgis-jdbc</artifactId>
+                        <groupId>org.postgis</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>postgresql</artifactId>
+                        <groupId>postgresql</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-core</artifactId>
+                <version>${hibernate.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.postgis</groupId>
+                <artifactId>postgis-jdbc</artifactId>
+                <version>${postgis.jdbc.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>${postgres.jdbc.version}</version>
+            </dependency>
+
             <!-- TEST -->
             <dependency>
                 <groupId>junit</groupId>
@@ -114,7 +154,6 @@
                 <artifactId>wiremock</artifactId>
                 <version>1.56</version>
                 <scope>test</scope>
-                <!-- Include everything below here if you have dependency conflicts -->
                 <classifier>standalone</classifier>
                 <exclusions>
                     <exclusion>
@@ -206,6 +245,17 @@
             <layout>default</layout>
         </snapshotRepository>
     </distributionManagement>
+
+    <repositories>
+        <repository>
+            <id>OSGEO GeoTools repo</id>
+            <url>http://download.osgeo.org/webdav/geotools</url>
+        </repository>
+        <repository>
+            <id>Hibernate Spatial repo</id>
+            <url>http://www.hibernatespatial.org/repository</url>
+        </repository>
+    </repositories>
 
     <scm>
         <connection>scm:svn:https://webgate.ec.europa.eu/CITnet/svn/UNIONVMS/branches/dev/Modules/Spatial/APP
