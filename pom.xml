@@ -25,6 +25,7 @@
         <application.version>${project.parent.artifactId}</application.version>
         <application.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}.log</application.logfile>
         <application.error.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}-error.log</application.error.logfile>
+        <application.logfile.boot>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}-boot.log</application.logfile.boot>
         <hibernate.version>4.3.10.Final</hibernate.version>
         <hibernate.spatial.version>4.3</hibernate.spatial.version>
         <postgres.jdbc.version>9.4-1201-jdbc41</postgres.jdbc.version>
@@ -268,6 +269,6 @@
         <module>service</module>
         <module>message</module>
         <module>model</module>
-        <module>module</module>
+        <module>deploy</module>
     </modules>
 </project>
