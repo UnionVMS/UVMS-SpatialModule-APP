@@ -2,19 +2,19 @@ package eu.europa.ec.fisheries.uvms.spatial;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
 import javax.servlet.http.HttpServletResponse;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static java.lang.Integer.valueOf;
 
-@Ignore(value = "fix me")
 public class ModuleInitializerBeanTest {
 
-    public static final String LOCALHOST = "localhost:8080";
-    public static final String KEEP_ALIVE = "keep-alive";
+    public static final int PORT = 8089;
+    public static final String LOCALHOST = "localhost:" + valueOf(PORT);
+    public static final String KEEP_ALIVE = "Keep-Alive";
     public static final String APPLICATION_XML = "application/xml";
     public static final String CONTENT_TYPE = "Content-Type";
     public static final int NOT_PRESENT = HttpServletResponse.SC_NO_CONTENT;
@@ -22,7 +22,7 @@ public class ModuleInitializerBeanTest {
     public static final int SUCCESS = HttpServletResponse.SC_OK;
 
     @Rule
-    public WireMockRule wireMockRule = new WireMockRule(16666);
+    public WireMockRule wireMockRule = new WireMockRule(PORT);
 
     private ModuleInitializerBean initializerBean;
 
@@ -61,7 +61,6 @@ public class ModuleInitializerBeanTest {
                         .withHeader("Connection", matching(KEEP_ALIVE))
                         .withRequestBody(matching(".*<name>Spatial Module</name>.*"))
         );
-
     }
 
     @Test

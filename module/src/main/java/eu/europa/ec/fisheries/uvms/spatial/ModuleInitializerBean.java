@@ -48,6 +48,7 @@ public class ModuleInitializerBean {
         WebTarget target = client.target(moduleConfigs.getProperty(PROP_USM_REST_SERVER)).path(USM_REST_DESCRIPTOR_URI);
 
         Response response = target.path(moduleConfigs.getProperty(PROP_MODULE_NAME)).request(MediaType.APPLICATION_XML_TYPE).get();
+        closeConnection(response);
 
         try {
             String descriptor = retrieveDescriptorAsString();
@@ -68,9 +69,15 @@ public class ModuleInitializerBean {
         } catch (JAXBException e) {
             throw new RuntimeException("Unable to unmarshal descriptor", e);
         } finally {
-            client.close();
+            closeConnection(response);
         }
 
+    }
+
+    private void closeConnection(Response response) {
+        if (response != null) {
+            response.close();
+        }
     }
 
     private boolean isForceUpdate(Properties moduleConfigs) {
