@@ -1,0 +1,116 @@
+2015-07-22 09:15:28 INFO  wiremock.org.mortbay.log - Logging to Logger[wiremock.org.mortbay.log] via wiremock.org.mortbay.log.Slf4jLog
+2015-07-22 09:18:52 INFO  wiremock.org.mortbay.log - Logging to Logger[wiremock.org.mortbay.log] via wiremock.org.mortbay.log.Slf4jLog
+2015-07-22 09:20:39 INFO  wiremock.org.mortbay.log - Logging to Logger[wiremock.org.mortbay.log] via wiremock.org.mortbay.log.Slf4jLog
+2015-07-22 09:23:53 INFO  wiremock.org.mortbay.log - Logging to Logger[wiremock.org.mortbay.log] via wiremock.org.mortbay.log.Slf4jLog
+2015-07-22 09:25:44 INFO  wiremock.org.mortbay.log - Logging to Logger[wiremock.org.mortbay.log] via wiremock.org.mortbay.log.Slf4jLog
+2015-07-22 09:28:58 INFO  wiremock.org.mortbay.log - Logging to Logger[wiremock.org.mortbay.log] via wiremock.org.mortbay.log.Slf4jLog
+2015-07-22 09:30:52 INFO  wiremock.org.mortbay.log - Logging to Logger[wiremock.org.mortbay.log] via wiremock.org.mortbay.log.Slf4jLog
+2015-07-22 09:33:24 INFO  wiremock.org.mortbay.log - Logging to Logger[wiremock.org.mortbay.log] via wiremock.org.mortbay.log.Slf4jLog
+2015-07-22 09:40:32 INFO  wiremock.org.mortbay.log - Logging to Logger[wiremock.org.mortbay.log] via wiremock.org.mortbay.log.Slf4jLog
+2015-07-22 10:05:26 INFO  wiremock.org.mortbay.log - Logging to Logger[wiremock.org.mortbay.log] via wiremock.org.mortbay.log.Slf4jLog
+2015-07-22 10:27:44 INFO  wiremock.org.mortbay.log - Logging to Logger[wiremock.org.mortbay.log] via wiremock.org.mortbay.log.Slf4jLog
+2015-07-22 10:29:49 INFO  wiremock.org.mortbay.log - Logging to Logger[wiremock.org.mortbay.log] via wiremock.org.mortbay.log.Slf4jLog
+2015-07-22 10:32:55 INFO  wiremock.org.mortbay.log - Logging to Logger[wiremock.org.mortbay.log] via wiremock.org.mortbay.log.Slf4jLog
+2015-07-22 10:35:38 INFO  wiremock.org.mortbay.log - Logging to Logger[wiremock.org.mortbay.log] via wiremock.org.mortbay.log.Slf4jLog
+2015-07-22 10:38:28 INFO  wiremock.org.mortbay.log - Logging to Logger[wiremock.org.mortbay.log] via wiremock.org.mortbay.log.Slf4jLog
+2015-07-22 10:40:48 INFO  wiremock.org.mortbay.log - Logging to Logger[wiremock.org.mortbay.log] via wiremock.org.mortbay.log.Slf4jLog
+2015-07-22 11:00:26 INFO  wiremock.org.mortbay.log - Logging to Logger[wiremock.org.mortbay.log] via wiremock.org.mortbay.log.Slf4jLog
+2015-07-22 11:00:27 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - USM doesn't recognize the current module. Deploying module deployment descriptor...
+2015-07-22 11:00:28 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Module deployment descriptor has already been deployed at USM.
+2015-07-22 11:00:28 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Updating the existing module deployment descriptor into USM.
+2015-07-22 11:02:37 INFO  wiremock.org.mortbay.log - Logging to Logger[wiremock.org.mortbay.log] via wiremock.org.mortbay.log.Slf4jLog
+2015-07-22 11:02:38 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - USM doesn't recognize the current module. Deploying module deployment descriptor...
+2015-07-22 11:02:38 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Module deployment descriptor has already been deployed at USM.
+2015-07-22 11:02:38 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Updating the existing module deployment descriptor into USM.
+2015-07-22 11:04:46 INFO  wiremock.org.mortbay.log - Logging to Logger[wiremock.org.mortbay.log] via wiremock.org.mortbay.log.Slf4jLog
+2015-07-22 11:04:47 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - USM doesn't recognize the current module. Deploying module deployment descriptor...
+2015-07-22 11:04:47 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Application deployment descriptor successfully deployed into USM.
+2015-07-22 11:04:48 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Module deployment descriptor has already been deployed at USM.
+2015-07-22 11:04:48 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Updating the existing module deployment descriptor into USM.
+2015-07-22 11:05:48 INFO  wiremock.org.mortbay.log - Logging to Logger[wiremock.org.mortbay.log] via wiremock.org.mortbay.log.Slf4jLog
+2015-07-22 11:05:50 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - USM doesn't recognize the current module. Deploying module deployment descriptor...
+2015-07-22 11:05:50 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Application deployment descriptor successfully deployed into USM.
+2015-07-22 11:05:50 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Module deployment descriptor has already been deployed at USM.
+2015-07-22 11:05:50 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Updating the existing module deployment descriptor into USM.
+2015-07-22 11:06:37 INFO  wiremock.org.mortbay.log - Logging to Logger[wiremock.org.mortbay.log] via wiremock.org.mortbay.log.Slf4jLog
+2015-07-22 11:06:38 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - USM doesn't recognize the current module. Deploying module deployment descriptor...
+2015-07-22 11:06:38 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Application deployment descriptor successfully deployed into USM.
+2015-07-22 11:06:39 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Module deployment descriptor has already been deployed at USM.
+2015-07-22 11:06:39 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Updating the existing module deployment descriptor into USM.
+2015-07-22 11:07:10 INFO  wiremock.org.mortbay.log - Logging to Logger[wiremock.org.mortbay.log] via wiremock.org.mortbay.log.Slf4jLog
+2015-07-22 11:07:11 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - USM doesn't recognize the current module. Deploying module deployment descriptor...
+2015-07-22 11:07:11 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Application deployment descriptor successfully deployed into USM.
+2015-07-22 11:07:12 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Module deployment descriptor has already been deployed at USM.
+2015-07-22 11:07:12 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Updating the existing module deployment descriptor into USM.
+2015-07-22 11:07:25 INFO  wiremock.org.mortbay.log - Logging to Logger[wiremock.org.mortbay.log] via wiremock.org.mortbay.log.Slf4jLog
+2015-07-22 11:07:26 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - USM doesn't recognize the current module. Deploying module deployment descriptor...
+2015-07-22 11:07:26 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Application deployment descriptor successfully deployed into USM.
+2015-07-22 11:07:26 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Module deployment descriptor has already been deployed at USM.
+2015-07-22 11:07:26 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Updating the existing module deployment descriptor into USM.
+2015-07-22 11:10:16 INFO  wiremock.org.mortbay.log - Logging to Logger[wiremock.org.mortbay.log] via wiremock.org.mortbay.log.Slf4jLog
+2015-07-22 11:10:17 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - USM doesn't recognize the current module. Deploying module deployment descriptor...
+2015-07-22 11:10:17 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Application deployment descriptor successfully deployed into USM.
+2015-07-22 11:10:17 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Module deployment descriptor has already been deployed at USM.
+2015-07-22 11:10:17 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Updating the existing module deployment descriptor into USM.
+2015-07-22 11:10:55 INFO  wiremock.org.mortbay.log - Logging to Logger[wiremock.org.mortbay.log] via wiremock.org.mortbay.log.Slf4jLog
+2015-07-22 11:10:56 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Module deployment descriptor has already been deployed at USM.
+2015-07-22 11:10:56 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Updating the existing module deployment descriptor into USM.
+2015-07-22 11:11:14 INFO  wiremock.org.mortbay.log - Logging to Logger[wiremock.org.mortbay.log] via wiremock.org.mortbay.log.Slf4jLog
+2015-07-22 11:11:15 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - USM doesn't recognize the current module. Deploying module deployment descriptor...
+2015-07-22 11:11:15 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Application deployment descriptor successfully deployed into USM.
+2015-07-22 11:11:41 INFO  wiremock.org.mortbay.log - Logging to Logger[wiremock.org.mortbay.log] via wiremock.org.mortbay.log.Slf4jLog
+2015-07-22 11:11:43 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - USM doesn't recognize the current module. Deploying module deployment descriptor...
+2015-07-22 11:11:43 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Application deployment descriptor successfully deployed into USM.
+2015-07-22 11:11:43 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Module deployment descriptor has already been deployed at USM.
+2015-07-22 11:11:43 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Updating the existing module deployment descriptor into USM.
+2015-07-22 11:20:21 INFO  wiremock.org.mortbay.log - Logging to Logger[wiremock.org.mortbay.log] via wiremock.org.mortbay.log.Slf4jLog
+2015-07-22 11:20:22 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - USM doesn't recognize the current module. Deploying module deployment descriptor...
+2015-07-22 11:20:22 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Application deployment descriptor successfully deployed into USM.
+2015-07-22 11:20:22 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Module deployment descriptor has already been deployed at USM.
+2015-07-22 11:20:22 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Updating the existing module deployment descriptor into USM.
+2015-07-22 11:23:09 INFO  wiremock.org.mortbay.log - Logging to Logger[wiremock.org.mortbay.log] via wiremock.org.mortbay.log.Slf4jLog
+2015-07-22 11:23:10 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - USM doesn't recognize the current module. Deploying module deployment descriptor...
+2015-07-22 11:23:10 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Application deployment descriptor successfully deployed into USM.
+2015-07-22 11:23:10 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Module deployment descriptor has already been deployed at USM.
+2015-07-22 11:23:10 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Updating the existing module deployment descriptor into USM.
+2015-07-22 11:50:44 INFO  wiremock.org.mortbay.log - Logging to Logger[wiremock.org.mortbay.log] via wiremock.org.mortbay.log.Slf4jLog
+2015-07-22 11:50:45 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - USM doesn't recognize the current module. Deploying module deployment descriptor...
+2015-07-22 11:50:46 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Application deployment descriptor successfully deployed into USM.
+2015-07-22 11:50:46 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Module deployment descriptor has already been deployed at USM.
+2015-07-22 11:50:46 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Updating the existing module deployment descriptor into USM.
+2015-07-22 11:55:29 INFO  wiremock.org.mortbay.log - Logging to Logger[wiremock.org.mortbay.log] via wiremock.org.mortbay.log.Slf4jLog
+2015-07-22 11:55:30 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - USM doesn't recognize the current module. Deploying module deployment descriptor...
+2015-07-22 11:55:30 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Application deployment descriptor successfully deployed into USM.
+2015-07-22 11:55:30 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Module deployment descriptor has already been deployed at USM.
+2015-07-22 11:55:30 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Updating the existing module deployment descriptor into USM.
+2015-07-22 11:56:58 INFO  wiremock.org.mortbay.log - Logging to Logger[wiremock.org.mortbay.log] via wiremock.org.mortbay.log.Slf4jLog
+2015-07-22 11:56:59 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - USM doesn't recognize the current module. Deploying module deployment descriptor...
+2015-07-22 11:56:59 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Application deployment descriptor successfully deployed into USM.
+2015-07-22 11:56:59 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Module deployment descriptor has already been deployed at USM.
+2015-07-22 11:56:59 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Updating the existing module deployment descriptor into USM.
+2015-07-22 11:57:32 INFO  wiremock.org.mortbay.log - Logging to Logger[wiremock.org.mortbay.log] via wiremock.org.mortbay.log.Slf4jLog
+2015-07-22 11:57:33 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Module deployment descriptor has already been deployed at USM.
+2015-07-22 11:57:33 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Updating the existing module deployment descriptor into USM.
+2015-07-22 11:58:58 INFO  wiremock.org.mortbay.log - Logging to Logger[wiremock.org.mortbay.log] via wiremock.org.mortbay.log.Slf4jLog
+2015-07-22 11:58:59 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Module deployment descriptor has already been deployed at USM.
+2015-07-22 11:58:59 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Updating the existing module deployment descriptor into USM.
+2015-07-22 12:00:04 INFO  wiremock.org.mortbay.log - Logging to Logger[wiremock.org.mortbay.log] via wiremock.org.mortbay.log.Slf4jLog
+2015-07-22 12:00:05 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Module deployment descriptor has already been deployed at USM.
+2015-07-22 12:00:05 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Updating the existing module deployment descriptor into USM.
+2015-07-22 12:00:05 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Application redeployment descriptor successfully redeployed into USM.
+2015-07-22 12:01:04 INFO  wiremock.org.mortbay.log - Logging to Logger[wiremock.org.mortbay.log] via wiremock.org.mortbay.log.Slf4jLog
+2015-07-22 12:01:06 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - USM doesn't recognize the current module. Deploying module deployment descriptor...
+2015-07-22 12:01:06 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Application deployment descriptor successfully deployed into USM.
+2015-07-22 12:01:06 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Module deployment descriptor has already been deployed at USM.
+2015-07-22 12:01:06 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Updating the existing module deployment descriptor into USM.
+2015-07-22 12:01:06 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Application redeployment descriptor successfully redeployed into USM.
+2015-07-22 12:03:02 INFO  wiremock.org.mortbay.log - Logging to Logger[wiremock.org.mortbay.log] via wiremock.org.mortbay.log.Slf4jLog
+2015-07-22 12:03:03 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - USM doesn't recognize the current module. Deploying module deployment descriptor...
+2015-07-22 12:03:04 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Module deployment descriptor has already been deployed at USM.
+2015-07-22 12:03:04 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Updating the existing module deployment descriptor into USM.
+2015-07-22 12:04:25 INFO  wiremock.org.mortbay.log - Logging to Logger[wiremock.org.mortbay.log] via wiremock.org.mortbay.log.Slf4jLog
+2015-07-22 12:04:26 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - USM doesn't recognize the current module. Deploying module deployment descriptor...
+2015-07-22 12:04:26 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Application deployment descriptor successfully deployed into USM.
+2015-07-22 12:04:26 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Module deployment descriptor has already been deployed at USM.
+2015-07-22 12:04:26 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Updating the existing module deployment descriptor into USM.
+2015-07-22 12:04:26 INFO  e.e.e.f.u.spatial.ModuleInitializerBean - Application redeployment descriptor successfully redeployed into USM.
