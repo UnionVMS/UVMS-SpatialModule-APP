@@ -12,6 +12,7 @@
     </parent>
     
     <dependencies>
+        
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>model</artifactId>
@@ -20,16 +21,6 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>service</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>eu.europa.ec.fisheries.uvms.movement</groupId>
-            <artifactId>movement-model</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>eu.europa.ec.fisheries.uvms.vessel</groupId>
-            <artifactId>vessel-model</artifactId>
         </dependency>
 
         <dependency>

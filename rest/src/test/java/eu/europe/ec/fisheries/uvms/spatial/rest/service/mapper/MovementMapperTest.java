@@ -2,7 +2,6 @@ package eu.europe.ec.fisheries.uvms.spatial.rest.service.mapper;
 
 import eu.europa.ec.fisheries.schema.movement.v1.MovementBaseType;
 import eu.europa.ec.fisheries.uvms.movement.model.mock.MockData;
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.MovementDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.MovementMapper;
 import org.junit.Before;
 import org.junit.Test;

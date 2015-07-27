@@ -10,9 +10,12 @@ import eu.europa.ec.fisheries.schema.movement.v1.MessageType;
 import eu.europa.ec.fisheries.schema.movement.v1.MovementBaseType;
 import eu.europa.ec.fisheries.schema.movement.v1.MovementPoint;
 import eu.europa.ec.fisheries.schema.movement.v1.MovementSourceType;
+import eu.europa.ec.fisheries.uvms.movement.MovementDto;
+import eu.europa.ec.fisheries.uvms.spatial.dto.SpatialDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.*;
 import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.MovementMapper;
 import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.VesselMapper;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.*;
 import eu.europa.ec.fisheries.wsdl.vessel.types.CarrierSource;
 import eu.europa.ec.fisheries.wsdl.vessel.types.Vessel;
 import eu.europa.ec.fisheries.wsdl.vessel.types.VesselId;
@@ -56,11 +59,11 @@ public class MockResource {
                 movementDtos.add(movementDto);
             }
 
-            VmsDto vmsDto = new VmsDto();
-            vmsDto.setVessels(vesselDtos);
-            vmsDto.setMovements(movementDtos);
+            SpatialDto spatialDto = new SpatialDto();
+            spatialDto.setVessels(vesselDtos);
+            spatialDto.setMovements(movementDtos);
 
-            return new ResponseDto(vmsDto, ResponseCode.OK);
+            return new ResponseDto(spatialDto, ResponseCode.OK);
 
         } catch (Exception e) {
             LOG.error("[ Error when getting vessel list. ] ", e);
