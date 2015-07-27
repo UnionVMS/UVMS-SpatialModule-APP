@@ -27,7 +27,7 @@ public class SpatialResource {
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Path("get")
-    public ResponseDto getUserAreasList(int eezId) {
+    public ResponseDto getEezById(int eezId) {
         try {
             LOG.info("Getting user areas list");
             return new ResponseDto(spatialService.getEezById(eezId), ResponseCode.OK);
