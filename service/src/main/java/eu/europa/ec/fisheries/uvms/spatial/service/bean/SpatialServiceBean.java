@@ -18,9 +18,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.exception.SpatialServiceExcep
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.transaction.Transactional;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,10 +30,8 @@ import java.util.List;
 @Stateless
 public class SpatialServiceBean implements SpatialService {
 
-    @EJB
     MessageConsumer consumer;
 
-    @EJB
     MessageProducer producer;
 
 
