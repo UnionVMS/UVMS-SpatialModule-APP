@@ -2,6 +2,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import eu.europa.ec.fisheries.uvms.movement.MovementDto;
+import eu.europa.ec.fisheries.uvms.vessel.dto.VesselDto;
 
 import java.util.List;
 

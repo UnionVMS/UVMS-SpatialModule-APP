@@ -3,7 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.dto;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import eu.europa.ec.fisheries.uvms.movement.MovementDto;
 import eu.europa.ec.fisheries.uvms.movement.MovementDtoListSerializer;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.VesselDto;
+import eu.europa.ec.fisheries.uvms.vessel.dto.VesselDto;
 
 import java.util.List;
 

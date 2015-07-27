@@ -15,7 +15,7 @@ import eu.europa.ec.fisheries.uvms.spatial.dto.SpatialDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.*;
 import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.MovementMapper;
 import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.VesselMapper;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.*;
+import eu.europa.ec.fisheries.uvms.vessel.dto.VesselDto;
 import eu.europa.ec.fisheries.wsdl.vessel.types.CarrierSource;
 import eu.europa.ec.fisheries.wsdl.vessel.types.Vessel;
 import eu.europa.ec.fisheries.wsdl.vessel.types.VesselId;

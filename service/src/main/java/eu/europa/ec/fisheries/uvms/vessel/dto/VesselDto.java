@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.spatial.service.dto;
+package eu.europa.ec.fisheries.uvms.vessel.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import eu.europa.ec.fisheries.wsdl.vessel.types.CarrierSource;

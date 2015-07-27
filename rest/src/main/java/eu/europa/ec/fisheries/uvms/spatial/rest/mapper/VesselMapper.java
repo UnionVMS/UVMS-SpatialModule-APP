@@ -1,6 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.mapper;
 
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.VesselDto;
+import eu.europa.ec.fisheries.uvms.vessel.dto.VesselDto;
 import eu.europa.ec.fisheries.wsdl.vessel.types.Vessel;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
