@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.spatial.rest.dto;
+package eu.europa.ec.fisheries.uvms.spatial.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import eu.europa.ec.fisheries.schema.movement.mobileterminal.v1.MobileTerminalId;

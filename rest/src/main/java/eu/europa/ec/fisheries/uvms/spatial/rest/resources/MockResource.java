@@ -1,6 +1,5 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources;
 
-
 import eu.europa.ec.fisheries.schema.movement.mobileterminal.v1.MobileTerminalId;
 import eu.europa.ec.fisheries.schema.movement.search.v1.ListCriteria;
 import eu.europa.ec.fisheries.schema.movement.search.v1.ListPagination;
@@ -11,8 +10,11 @@ import eu.europa.ec.fisheries.schema.movement.v1.MovementBaseType;
 import eu.europa.ec.fisheries.schema.movement.v1.MovementPoint;
 import eu.europa.ec.fisheries.schema.movement.v1.MovementSourceType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.*;
-import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.MovementMapper;
-import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.VesselMapper;
+import eu.europa.ec.fisheries.uvms.spatial.service.mapper.MovementMapper;
+import eu.europa.ec.fisheries.uvms.spatial.service.mapper.VesselMapper;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.MovementDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.SpatialDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.VesselDto;
 import eu.europa.ec.fisheries.wsdl.vessel.types.CarrierSource;
 import eu.europa.ec.fisheries.wsdl.vessel.types.Vessel;
 import eu.europa.ec.fisheries.wsdl.vessel.types.VesselId;
@@ -42,8 +44,8 @@ public class MockResource {
         try {
             LOG.info("Getting vms data...");
 
-            List<MovementBaseType> movementBaseTypeList = MockMovementData.getDtoList(10000);
-            List<Vessel> vesselList = MockVesselData.getVesselDtoList(10000);
+            List<MovementBaseType> movementBaseTypeList = MockMovementData.getDtoList(10);
+            List<Vessel> vesselList = MockVesselData.getVesselDtoList(10);
 
             List<VesselDto> vesselDtos = new ArrayList<>();
             List<MovementDto> movementDtos = new ArrayList<>();
@@ -51,16 +53,16 @@ public class MockResource {
             for (Vessel v : vesselList){
                 String id = v.getVesselId().getValue();
                 vesselDtos.add(VesselMapper.INSTANCE.vesselToVesselDto(v));
-                MovementDto movementDto = MovementMapper.INSTANCE.movementBaseTypeToMovementDto(movementBaseTypeList.get(randInt(0, 9999)));
+                MovementDto movementDto = MovementMapper.INSTANCE.movementBaseTypeToMovementDto(movementBaseTypeList.get(randInt(0, 9)));
                 movementDto.setId(id);
                 movementDtos.add(movementDto);
             }
 
-            VmsDto vmsDto = new VmsDto();
-            vmsDto.setVessels(vesselDtos);
-            vmsDto.setMovements(movementDtos);
+            SpatialDto spatialDto = new SpatialDto();
+            spatialDto.setVessels(vesselDtos);
+            spatialDto.setMovements(movementDtos);
 
-            return new ResponseDto(vmsDto, ResponseCode.OK);
+            return new ResponseDto(spatialDto, ResponseCode.OK);
 
         } catch (Exception e) {
             LOG.error("[ Error when getting vessel list. ] ", e);
