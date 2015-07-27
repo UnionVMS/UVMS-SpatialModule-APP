@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.spatial.entity;
+package eu.europa.ec.fisheries.uvms.spatial.service.dto;
 
 /**
  * Created by georgige on 7/3/2015.

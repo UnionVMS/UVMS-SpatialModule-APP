@@ -22,7 +22,7 @@
         <vessel.module.version>1.0.5-SNAPSHOT</vessel.module.version>
         <movement.model.version>1.0.2-SNAPSHOT</movement.model.version>
         <application.name>${project.parent.artifactId}</application.name>
-        <application.version>${project.parent.artifactId}</application.version>
+        <application.version>${project.parent.version}</application.version>
         <application.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}.log</application.logfile>
         <application.error.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}-error.log</application.error.logfile>
         <application.logfile.boot>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}-boot.log</application.logfile.boot>
