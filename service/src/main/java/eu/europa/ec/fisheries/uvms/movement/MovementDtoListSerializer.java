@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import eu.europa.ec.fisheries.schema.movement.v1.MovementPoint;
-import eu.europa.ec.fisheries.uvms.movement.MovementDto;
 import org.apache.commons.lang3.StringUtils;
 import org.geojson.LngLatAlt;
 import org.geojson.Point;

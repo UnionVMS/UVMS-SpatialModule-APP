@@ -19,8 +19,8 @@
         <mapstruct.version>1.0.0.CR1</mapstruct.version>
         <jackson.version>2.6.0</jackson.version>
         <logback.core.version>1.1.2</logback.core.version>
-        <vessel.module.version>1.0.5-SNAPSHOT</vessel.module.version>
-        <movement.model.version>1.0.2-SNAPSHOT</movement.model.version>
+        <vessel.module.version>1.0.6-SNAPSHOT</vessel.module.version>
+        <movement.model.version>1.0.3-SNAPSHOT</movement.model.version>
         <application.name>${project.parent.artifactId}</application.name>
         <application.version>${project.parent.version}</application.version>
         <application.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}.log</application.logfile>
@@ -81,6 +81,24 @@
                 <groupId>org.mapstruct</groupId>
                 <artifactId>mapstruct-processor</artifactId>
                 <version>${mapstruct.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.4</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>2.4</version>
+            </dependency>
+
+            <dependency>
+                <groupId>de.grundid.opendatalab</groupId>
+                <artifactId>geojson-jackson</artifactId>
+                <version>1.5</version>
             </dependency>
 
             <dependency>

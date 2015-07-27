@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package eu.europa.ec.fisheries.uvms.spatial.service.dto;
+package eu.europa.ec.fisheries.uvms.spatial.dto;
 
 /**
  *
