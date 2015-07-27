@@ -24,7 +24,7 @@
 
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.movement</groupId>
-            <artifactId>model</artifactId>
+            <artifactId>movement-model</artifactId>
         </dependency>
 
         <dependency>
