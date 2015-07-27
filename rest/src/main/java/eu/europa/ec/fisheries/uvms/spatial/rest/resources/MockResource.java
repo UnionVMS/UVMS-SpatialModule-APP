@@ -10,11 +10,11 @@ import eu.europa.ec.fisheries.schema.movement.v1.MessageType;
 import eu.europa.ec.fisheries.schema.movement.v1.MovementBaseType;
 import eu.europa.ec.fisheries.schema.movement.v1.MovementPoint;
 import eu.europa.ec.fisheries.schema.movement.v1.MovementSourceType;
+import eu.europa.ec.fisheries.uvms.movement.MovementBaseTypeMapper;
 import eu.europa.ec.fisheries.uvms.movement.MovementDto;
 import eu.europa.ec.fisheries.uvms.spatial.dto.SpatialDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.*;
-import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.MovementMapper;
-import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.VesselMapper;
+import eu.europa.ec.fisheries.uvms.vessel.VesselMapper;
 import eu.europa.ec.fisheries.uvms.vessel.dto.VesselDto;
 import eu.europa.ec.fisheries.wsdl.vessel.types.CarrierSource;
 import eu.europa.ec.fisheries.wsdl.vessel.types.Vessel;
@@ -54,7 +54,7 @@ public class MockResource {
             for (Vessel v : vesselList){
                 String id = v.getVesselId().getValue();
                 vesselDtos.add(VesselMapper.INSTANCE.vesselToVesselDto(v));
-                MovementDto movementDto = MovementMapper.INSTANCE.movementBaseTypeToMovementDto(movementBaseTypeList.get(randInt(0, 9999)));
+                MovementDto movementDto = MovementBaseTypeMapper.INSTANCE.movementBaseTypeToMovementDto(movementBaseTypeList.get(randInt(0, 9999)));
                 movementDto.setId(id);
                 movementDtos.add(movementDto);
             }

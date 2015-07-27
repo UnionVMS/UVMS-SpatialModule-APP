@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.spatial.rest.mapper;
+package eu.europa.ec.fisheries.uvms.vessel;
 
 import eu.europa.ec.fisheries.uvms.vessel.dto.VesselDto;
 import eu.europa.ec.fisheries.wsdl.vessel.types.Vessel;
