@@ -131,7 +131,6 @@ public class ModuleInitializerBeanTest {
                         .withHeader("Content-Type", WireMock.matching(APPLICATION_XML))
                         .withHeader("Host", WireMock.matching(LOCALHOST))
                         .withHeader("Connection", WireMock.matching(KEEP_ALIVE))
-                        .withHeader("Content-Length", WireMock.matching("866"))
                         .withHeader(ModuleInitializerBean.AUTHORIZATION_HEADER, WireMock.matching(JWTOKEN))
                         .withRequestBody(WireMock.matching(".*<name>spatial</name>.*"))
         );

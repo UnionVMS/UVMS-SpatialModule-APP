@@ -74,6 +74,8 @@ public class ModuleInitializerBean {
                 try {
                     String descriptor = retrieveDescriptorAsString();
 
+                    response.close();
+
                     if (!isDescriptorAlreadyRegistered(response)) {
                         LOG.info("USM doesn't recognize the current module. Deploying module deployment descriptor...");
                         response = target.request(MediaType.APPLICATION_XML_TYPE).header(AUTHORIZATION_HEADER, authToken).post(Entity.xml(descriptor));
