@@ -12,6 +12,6 @@ public interface SpatialService {
 
     List<SpatialDto> getListAsRestDto(String spatialQuery) throws SpatialServiceException;
 
-    public Eez getEezById(int eezId);
+    Eez getEezById(int eezId);
 
 }

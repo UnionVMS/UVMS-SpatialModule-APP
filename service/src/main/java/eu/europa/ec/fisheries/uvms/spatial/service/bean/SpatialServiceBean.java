@@ -12,13 +12,12 @@ import eu.europa.ec.fisheries.uvms.spatial.message.consumer.MessageConsumer;
 import eu.europa.ec.fisheries.uvms.spatial.message.exception.MovementMessageException;
 import eu.europa.ec.fisheries.uvms.spatial.message.producer.MessageProducer;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialService;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.HibernateUtil;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.entity.Eez;
 import eu.europa.ec.fisheries.uvms.spatial.service.exception.SpatialServiceException;
-import org.hibernate.Hibernate;
-import org.hibernate.Session;
 
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,10 +29,13 @@ import java.util.List;
 @Stateless
 public class SpatialServiceBean implements SpatialService {
 
-    MessageConsumer consumer;
+    //private static EntityManagerFactory factory;
 
-    MessageProducer producer;
+    @PersistenceContext(unitName = "entityManager")
+    private EntityManager em;
 
+    private MessageConsumer consumer;
+    private MessageProducer producer;
 
     @Override
     public List<SpatialDto> getListAsRestDto(String spatialQuery) throws SpatialServiceException {
@@ -73,19 +75,16 @@ public class SpatialServiceBean implements SpatialService {
     }
 
     public Eez getEezById(int eezId) {
-        Session session = null;
-        Eez eez = null;
-        try {
-            session = HibernateUtil.getSessionFactory().openSession();
-            eez = (Eez) session.get(Eez.class, eezId);
-            Hibernate.initialize(eez);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (session != null && session.isOpen()) {
-                session.close();
-            }
-        }
+
+        // factory = Persistence.createEntityManagerFactory("entityManager");
+        // EntityManager em = factory.createEntityManager();
+
+        em.getTransaction().begin();
+        Eez eez = (Eez) em.find(Eez.class, eezId);
+
+        em.getTransaction().commit();
+        em.close();
+
         return eez;
     }
 
