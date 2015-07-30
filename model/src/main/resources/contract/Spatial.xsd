@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns="source.spatial.wsdl.fisheries.ec.europa.eu"
+            xmlns:t="types.spatial.wsdl.fisheries.ec.europa.eu"
+            targetNamespace="source.spatial.wsdl.fisheries.ec.europa.eu"
+            version="1.0">
+
+    <xsd:import namespace="types.spatial.wsdl.fisheries.ec.europa.eu" schemaLocation="SpatialElement.xsd"/>
+
+    <xsd:element name="VesselListRequest">
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="t:Spatial">
+                    <xsd:sequence>
+                        <xsd:element name="query" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:extension>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>

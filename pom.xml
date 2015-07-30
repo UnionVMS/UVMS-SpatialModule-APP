@@ -105,6 +105,12 @@
             </dependency>
 
             <dependency>
+                <groupId>org.jvnet.jaxb2_commons</groupId>
+                <artifactId>jaxb2-basics-runtime</artifactId>
+                <version>0.9.4</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-spatial</artifactId>
                 <version>${hibernate.spatial.version}</version>

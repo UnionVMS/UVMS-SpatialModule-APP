@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>model</artifactId>
-    <name>${project.parent.artifactId}-model</name>   
+    <name>${project.parent.artifactId}-model</name>
     <packaging>ejb</packaging>
     <description>This module shall have interfaces, XSD, and DTOs</description>
 
@@ -20,83 +21,66 @@
             <artifactId>junit</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.jvnet.jaxb2_commons</groupId>
+            <artifactId>jaxb2-basics-runtime</artifactId>
+        </dependency>
+
     </dependencies>
-    
+
     <profiles>
+
         <profile>
-            <id>generate-from-wsdl</id>
+            <id>generate-from-xsd</id>
             <build>
                 <plugins>
                     <plugin>
-                        <artifactId>maven-clean-plugin</artifactId>
-                        <version>2.6.1</version>
+                        <groupId>org.jvnet.jaxb2.maven2</groupId>
+                        <artifactId>maven-jaxb2-plugin</artifactId>
+                        <version>0.12.3</version>
                         <executions>
                             <execution>
-                                <id>clean-generated-sources</id>
-                                <phase>clean</phase>
-                                <goals>
-                                    <goal>clean</goal>
-                                </goals>
-                                <configuration>
-                                    <filesets>
-                                        <fileset>
-                                            <directory>${basedir}/src/main/java/eu/europa/ec/fisheries/schema</directory>
-                                        </fileset>
-                                    </filesets>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.cxf</groupId>
-                        <artifactId>cxf-codegen-plugin</artifactId>
-                        <version>2.7.6</version>
-                        <executions>
-                            <execution>
-                                <id>generate-vessel-module</id>
                                 <phase>generate-sources</phase>
-                                <configuration>
-                                    <sourceRoot>${basedir}/src/main/java/</sourceRoot>
-                                    <wsdlOptions>
-                                        <wsdlOption>
-                                            <!-- This is for incoming and outgoing messages to the module -->
-                                            <wsdl>${basedir}/src/main/resources/contract/${wsdl.contract.name}.wsdl</wsdl>
-                                            <bindingFiles>
-                                                <bindingFile>${basedir}/src/main/resources/binding.xml</bindingFile>
-                                            </bindingFiles>
-                                        </wsdlOption>
-                                    </wsdlOptions>
-                                </configuration>
                                 <goals>
-                                    <goal>wsdl2java</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>generate-vessel-datasource</id>
-                                <phase>generate-sources</phase>
-                                <configuration>
-                                    <sourceRoot>${basedir}/src/main/java/</sourceRoot>
-                                    <wsdlOptions>
-                                        <wsdlOption>
-                                            <!-- This is for incoming and outgoing messages to the proxy services and local database -->
-                                            <wsdl>${basedir}/src/main/resources/contract/${wsdl.source.name}.wsdl</wsdl>
-                                            <bindingFiles>
-                                                <bindingFile>${basedir}/src/main/resources/binding.xml</bindingFile>
-                                            </bindingFiles>
-                                        </wsdlOption>
-                                    </wsdlOptions>
-                                </configuration>
-                                <goals>
-                                    <goal>wsdl2java</goal>
+                                    <goal>generate</goal>
                                 </goals>
                             </execution>
                         </executions>
+
+                        <configuration>
+                            <schemaLanguage>XMLSCHEMA</schemaLanguage>
+                            <forceRegenerate>true</forceRegenerate>
+
+                            <schemaDirectory>${project.basedir}/src/main/resources/contract</schemaDirectory>
+                            <bindingDirectory>${project.basedir}/src/main/resources/contract</bindingDirectory>
+
+                            <generateDirectory>${project.basedir}/target/generated-sources/xjc</generateDirectory>
+
+                            <extension>true</extension>
+                            <args>
+                                <arg>-Xequals</arg>
+                                <arg>-XhashCode</arg>
+                                <arg>-XtoString</arg>
+                                <arg>-Xsetters</arg>
+                                <arg>-Xsetters-mode=direct</arg>
+                            </args>
+
+                            <plugins>
+                                <plugin>
+                                    <groupId>org.jvnet.jaxb2_commons</groupId>
+                                    <artifactId>jaxb2-basics</artifactId>
+                                    <version>0.6.4</version>
+                                </plugin>
+                            </plugins>
+
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
         </profile>
+
     </profiles>
-    
+
     <build>
         <finalName>${project.parent.artifactId}-model-${project.version}</finalName>
         <plugins>
