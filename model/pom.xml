@@ -54,7 +54,7 @@
                             <schemaDirectory>${project.basedir}/src/main/resources/contract</schemaDirectory>
                             <bindingDirectory>${project.basedir}/src/main/resources/contract</bindingDirectory>
 
-                            <generateDirectory>${project.basedir}/target/generated-sources/xjc</generateDirectory>
+                            <generateDirectory>${basedir}/src/main/java/</generateDirectory>
 
                             <extension>true</extension>
                             <args>

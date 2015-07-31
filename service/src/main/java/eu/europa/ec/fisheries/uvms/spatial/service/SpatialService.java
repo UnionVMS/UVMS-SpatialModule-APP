@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.service;
 
+import eu.europa.ec.fisheries.schema.spatial.source.GetAreaTypesSpatialRS;
 import eu.europa.ec.fisheries.uvms.spatial.dto.SpatialDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.entity.Eez;
 import eu.europa.ec.fisheries.uvms.spatial.service.exception.SpatialServiceException;
@@ -14,4 +15,5 @@ public interface SpatialService {
 
     Eez getEezById(int eezId);
 
+    GetAreaTypesSpatialRS getAreaTypes();
 }

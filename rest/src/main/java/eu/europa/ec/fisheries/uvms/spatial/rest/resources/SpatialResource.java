@@ -26,7 +26,7 @@ public class SpatialResource {
     @POST
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    @Path("get")
+    @Path("getEezById")
     public ResponseDto getEezById(int eezId) {
         try {
             LOG.info("Getting user areas list");
@@ -37,4 +37,17 @@ public class SpatialResource {
         }
     }
 
+    @POST
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Path("getAreaTypes")
+    public ResponseDto getAreaTypes() {
+        try {
+            LOG.info("Getting user areas list");
+            return new ResponseDto(spatialService.getAreaTypes(), ResponseCode.OK);
+        } catch (Exception e) {
+            LOG.error("[ Error when getting vessel list. ] ", e);
+            throw new RuntimeException("Please fix it");
+        }
+    }
 }

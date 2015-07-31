@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2015 rel. 4 sp1 (x64) (http://www.altova.com) by marian (cop) -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="types.spatial.schema.fisheries.ec.europa.eu" targetNamespace="types.spatial.schema.fisheries.ec.europa.eu" version="1.0">
+	<xsd:complexType name="AreaType">
+		<xsd:sequence>
+			<xsd:element name="areaType" type="xsd:string"/>
+		</xsd:sequence>
+	</xsd:complexType>
+</xsd:schema>

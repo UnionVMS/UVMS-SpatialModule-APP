@@ -1,9 +1,11 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
+import com.google.common.collect.Lists;
 import eu.europa.ec.fisheries.schema.movement.search.v1.ListCriteria;
 import eu.europa.ec.fisheries.schema.movement.search.v1.ListPagination;
 import eu.europa.ec.fisheries.schema.movement.search.v1.MovementListQuery;
 import eu.europa.ec.fisheries.schema.movement.search.v1.SearchKey;
+import eu.europa.ec.fisheries.schema.spatial.source.GetAreaTypesSpatialRS;
 import eu.europa.ec.fisheries.uvms.movement.model.exception.ModelMarshallException;
 import eu.europa.ec.fisheries.uvms.movement.model.mapper.MovementDataSourceRequestMapper;
 import eu.europa.ec.fisheries.uvms.spatial.dto.SpatialDto;
@@ -17,11 +19,15 @@ import eu.europa.ec.fisheries.uvms.spatial.service.exception.SpatialServiceExcep
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import static com.google.common.collect.Lists.newArrayList;
 
 /**
  * //TODO create test
@@ -29,7 +35,7 @@ import java.util.List;
 @Stateless
 public class SpatialServiceBean implements SpatialService {
 
-    //private static EntityManagerFactory factory;
+    private static EntityManagerFactory factory;
 
     @PersistenceContext(unitName = "entityManager")
     private EntityManager em;
@@ -74,10 +80,11 @@ public class SpatialServiceBean implements SpatialService {
         return null;
     }
 
+    @Override
     public Eez getEezById(int eezId) {
 
-        // factory = Persistence.createEntityManagerFactory("entityManager");
-        // EntityManager em = factory.createEntityManager();
+        factory = Persistence.createEntityManagerFactory("entityManager");
+        EntityManager em = factory.createEntityManager();
 
         em.getTransaction().begin();
         Eez eez = (Eez) em.find(Eez.class, eezId);
@@ -86,6 +93,14 @@ public class SpatialServiceBean implements SpatialService {
         em.close();
 
         return eez;
+    }
+
+    @Override
+    public GetAreaTypesSpatialRS getAreaTypes() {
+        GetAreaTypesSpatialRS response = new GetAreaTypesSpatialRS();
+        String[] areas = {"Portugal", "Belgium", "Poland", "Bulgaria"};
+        response.setAreaType(newArrayList(areas));
+        return response;
     }
 
 }
