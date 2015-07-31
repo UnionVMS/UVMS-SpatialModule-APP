@@ -3,7 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.dto;
 import java.io.Serializable;
 
 /**
- * Created by georgige on 7/24/2015.
+ * //TODO create test
  */
 public class AuthenticationRequest implements Serializable{
 

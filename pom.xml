@@ -9,10 +9,16 @@
     <packaging>pom</packaging>
     <description>Maven projekt-archetype for UnionVms modules</description>
 
+    <developers>
+        <developer>
+            <name>Gregory Rinaldi</name>
+            <email>gregory.rinaldi@ordina.be</email>
+        </developer>
+    </developers>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <mockito.version>1.9.5</mockito.version>
         <javaee.version>7.0</javaee.version>
         <sl4j.version>1.7.12</sl4j.version>
         <logback.version>1.1.2</logback.version>
@@ -26,18 +32,17 @@
         <application.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}.log</application.logfile>
         <application.error.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}-error.log</application.error.logfile>
         <application.logfile.boot>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}-boot.log</application.logfile.boot>
-        <hibernate.version>4.3.10.Final</hibernate.version>
-        <hibernate.spatial.version>4.3</hibernate.spatial.version>
-        <postgres.jdbc.version>9.4-1201-jdbc41</postgres.jdbc.version>
+        <hibernate.version>4.3.5.Final</hibernate.version>
+        <postgis.version>1.5.2</postgis.version>
+        <hibernate-spatial.version>4.3</hibernate-spatial.version>
+        <jts.version>1.13</jts.version>
         <postgis.jdbc.version>1.5.2</postgis.jdbc.version>
-        <junit-version>4.11</junit-version>
-        <java-version>1.7</java-version>
-        <compiler-plugin-version>3.1</compiler-plugin-version>
     </properties>
 
     <dependencyManagement>
 
         <dependencies>
+
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>service</artifactId>
@@ -110,48 +115,27 @@
                 <version>0.9.4</version>
             </dependency>
 
-            <dependency>
-                <groupId>org.hibernate</groupId>
-                <artifactId>hibernate-spatial</artifactId>
-                <version>${hibernate.spatial.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <artifactId>hibernate-core</artifactId>
-                        <groupId>org.hibernate</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>postgis-jdbc</artifactId>
-                        <groupId>org.postgis</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>postgresql</artifactId>
-                        <groupId>postgresql</groupId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-
-            <dependency>
-                <groupId>org.hibernate</groupId>
-                <artifactId>hibernate-core</artifactId>
-                <version>${hibernate.version}</version>
-            </dependency>
-
+            <!-- Hibernate JPA provider provided by WildFly -->
             <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-entitymanager</artifactId>
                 <version>${hibernate.version}</version>
+                <scope>provided</scope>
             </dependency>
 
-            <dependency>
-                <groupId>org.postgis</groupId>
-                <artifactId>postgis-jdbc</artifactId>
-                <version>${postgis.jdbc.version}</version>
-            </dependency>
+            <!-- Hibernate provided by WildFly -->
 
+          <!--  <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-core</artifactId>
+                <version>${hibernate.version}</version>
+                <scope>provided</scope>
+            </dependency>
+-->
             <dependency>
-                <groupId>org.postgresql</groupId>
-                <artifactId>postgresql</artifactId>
-                <version>${postgres.jdbc.version}</version>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>1.16.4</version>
             </dependency>
 
             <dependency>
@@ -161,10 +145,11 @@
             </dependency>
 
             <!-- TEST -->
+
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>${junit-version}</version>
+                <version>4.11</version>
                 <scope>test</scope>
             </dependency>
 
@@ -176,38 +161,11 @@
                 <type>pom</type>
             </dependency>
 
+            <!-- Arquillian -->
             <dependency>
                 <groupId>org.jboss.arquillian.junit</groupId>
                 <artifactId>arquillian-junit-container</artifactId>
                 <version>1.1.8.Final</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.jboss.shrinkwrap.resolver</groupId>
-                <artifactId>shrinkwrap-resolver-depchain</artifactId>
-                <version>2.1.1</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.jboss.shrinkwrap.resolver</groupId>
-                <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
-                <version>2.1.1</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.wildfly</groupId>
-                <artifactId>wildfly-arquillian-container-managed</artifactId>
-                <version>8.2.0.Final</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.jboss.arquillian.core</groupId>
-                <artifactId>arquillian-core-api</artifactId>
-                <version>1.1.4.Final</version>
                 <scope>test</scope>
             </dependency>
 
@@ -222,13 +180,6 @@
                 <groupId>org.jboss.resteasy</groupId>
                 <artifactId>resteasy-jaxrs</artifactId>
                 <version>3.0.11.Final</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.mockito</groupId>
-                <artifactId>mockito-all</artifactId>
-                <version>${mockito.version}</version>
                 <scope>test</scope>
             </dependency>
 
@@ -290,6 +241,7 @@
             </dependency>
 
         </dependencies>
+
     </dependencyManagement>
 
     <dependencies>
@@ -336,19 +288,6 @@
         </snapshotRepository>
     </distributionManagement>
 
-    <!-- add repositories for JTS and Hibernate Spatial and Hibernate (JBoss) -->
-    <repositories>
-        <repository>
-            <id>Hibernate Spatial repo</id>
-            <url>http://www.hibernatespatial.org/repository</url>
-        </repository>
-        <!-- add JBOSS repository for easy access to Hibernate libraries -->
-        <repository>
-            <id>JBOSS</id>
-            <url>https://repository.jboss.org/nexus/content/repositories/releases/</url>
-        </repository>
-    </repositories>
-
     <scm>
         <connection>scm:svn:https://webgate.ec.europa.eu/CITnet/svn/UNIONVMS/branches/dev/Modules/Spatial/APP</connection>
     </scm>
@@ -360,10 +299,10 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>${compiler-plugin-version}</version>
+                    <version>3.1</version>
                     <configuration>
-                        <source>${java-version}</source>
-                        <target>${java-version}</target>
+                        <source>1.7</source>
+                        <target>1.7</target>
                         <encoding>${project.build.sourceEncoding}</encoding>
                     </configuration>
                 </plugin>
@@ -382,6 +321,22 @@
             </plugin>
         </plugins>
     </build>
+
+    <repositories>
+        <repository>
+            <id>OSGEO GeoTools repo</id>
+            <url>http://download.osgeo.org/webdav/geotools</url>
+        </repository>
+        <repository>
+            <id>JBoss repository</id>
+            <url>http://repository.jboss.org/nexus/content/groups/public</url>
+        </repository>
+        <repository>
+            <id>Hibernate Spatial repo</id>
+            <url>http://www.hibernatespatial.org/repository</url>
+        </repository>
+    </repositories>
+
     <modules>
         <module>rest</module>
         <module>service</module>

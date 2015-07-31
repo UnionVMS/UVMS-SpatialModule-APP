@@ -1,44 +1,40 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import com.google.common.collect.Lists;
 import eu.europa.ec.fisheries.schema.movement.search.v1.ListCriteria;
 import eu.europa.ec.fisheries.schema.movement.search.v1.ListPagination;
 import eu.europa.ec.fisheries.schema.movement.search.v1.MovementListQuery;
 import eu.europa.ec.fisheries.schema.movement.search.v1.SearchKey;
-import eu.europa.ec.fisheries.schema.spatial.source.GetAreaTypesSpatialRS;
 import eu.europa.ec.fisheries.uvms.movement.model.exception.ModelMarshallException;
 import eu.europa.ec.fisheries.uvms.movement.model.mapper.MovementDataSourceRequestMapper;
 import eu.europa.ec.fisheries.uvms.spatial.dto.SpatialDto;
+import eu.europa.ec.fisheries.uvms.spatial.entity.Country;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ExclusiveEconomicZone;
 import eu.europa.ec.fisheries.uvms.spatial.message.constants.ModuleQueue;
 import eu.europa.ec.fisheries.uvms.spatial.message.consumer.MessageConsumer;
 import eu.europa.ec.fisheries.uvms.spatial.message.exception.MovementMessageException;
 import eu.europa.ec.fisheries.uvms.spatial.message.producer.MessageProducer;
-import eu.europa.ec.fisheries.uvms.spatial.service.SpatialService;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.entity.Eez;
 import eu.europa.ec.fisheries.uvms.spatial.service.exception.SpatialServiceException;
 
+import javax.ejb.EJB;
+import javax.ejb.Local;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.PersistenceContext;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static com.google.common.collect.Lists.newArrayList;
-
 /**
  * //TODO create test
  */
 @Stateless
+@Local(SpatialService.class)
 public class SpatialServiceBean implements SpatialService {
 
-    private static EntityManagerFactory factory;
+    @EJB
+    private SpatialService spatialService;
 
-    @PersistenceContext(unitName = "entityManager")
-    private EntityManager em;
+    @EJB
+    private CrudService crudService;
 
     private MessageConsumer consumer;
     private MessageProducer producer;
@@ -70,37 +66,28 @@ public class SpatialServiceBean implements SpatialService {
             String messageId = producer.sendModuleMessage(query, ModuleQueue.MOVEMENT);
 
 
-        } catch (ModelMarshallException e) {
-            e.printStackTrace();
-        } catch (MovementMessageException e) {
+        } catch (ModelMarshallException | MovementMessageException e) {
             e.printStackTrace();
         }
-
 
         return null;
     }
 
-    @Override
-    public Eez getEezById(int eezId) {
-
-        factory = Persistence.createEntityManagerFactory("entityManager");
-        EntityManager em = factory.createEntityManager();
-
-        em.getTransaction().begin();
-        Eez eez = (Eez) em.find(Eez.class, eezId);
-
-        em.getTransaction().commit();
-        em.close();
-
-        return eez;
-    }
-
-    @Override
+    // check integration test IT run locally with vagrant box and spatial data from liquibase
+    // TODO gererates Caused by: java.lang.ClassNotFoundException: org.jvnet.jaxb2_commons.lang.Equals from [Module \"deployment.test.war:main\" from Service Module Loader]"}}
+/*    @Override
     public GetAreaTypesSpatialRS getAreaTypes() {
         GetAreaTypesSpatialRS response = new GetAreaTypesSpatialRS();
-        String[] areas = {"Portugal", "Belgium", "Poland", "Bulgaria"};
-        response.setAreaType(newArrayList(areas));
+        response.setAreaType(Arrays.asList("Portugal", "Belgium", "Poland", "Bulgaria"));
         return response;
+    }*/
+
+    public Country getCountryById(int id){
+        return (Country) crudService.find(Country.class, id);
     }
 
+    @Override
+    public ExclusiveEconomicZone getExclusiveEconomicZoneById(int id) {
+        return (ExclusiveEconomicZone) crudService.find(ExclusiveEconomicZone.class, id);
+    }
 }
