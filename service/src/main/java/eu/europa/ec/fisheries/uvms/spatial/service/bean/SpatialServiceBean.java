@@ -79,12 +79,12 @@ public class SpatialServiceBean implements SpatialService {
         return response;
     }*/
 
-    public Country getCountryById(int id){
+    public Country getCountryById(int id){ //TODO return dto instead we don't want dependency on entities in REST module
         return (Country) crudService.find(Country.class, id);
     }
 
     @Override
-    public ExclusiveEconomicZone getExclusiveEconomicZoneById(int id) {
+    public ExclusiveEconomicZone getExclusiveEconomicZoneById(int id) { //TODO return dto instead we don't want dependency on entities in REST module
         return (ExclusiveEconomicZone) crudService.find(ExclusiveEconomicZone.class, id);
     }
 }
