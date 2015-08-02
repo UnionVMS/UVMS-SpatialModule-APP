@@ -70,6 +70,7 @@ public class SpatialServiceBean implements SpatialService {
         return null;
     }
 
+    // TODO create AreaType Service Bean , interface .... test
     // check integration test IT run locally with vagrant box and spatial data from liquibase
     // TODO gererates Caused by: java.lang.ClassNotFoundException: org.jvnet.jaxb2_commons.lang.Equals from [Module \"deployment.test.war:main\" from Service Module Loader]"}}
 /*    @Override
@@ -79,12 +80,12 @@ public class SpatialServiceBean implements SpatialService {
         return response;
     }*/
 
-    public Country getCountryById(int id){ //TODO return dto instead we don't want dependency on entities in REST module
+    public Country getCountryById(int id){ //TODO create CountryService Bean return dto instead we don't want dependency on entities in REST module
         return (Country) crudService.find(Country.class, id);
     }
 
     @Override
-    public ExclusiveEconomicZone getExclusiveEconomicZoneById(int id) { //TODO return dto instead we don't want dependency on entities in REST module
+    public ExclusiveEconomicZone getExclusiveEconomicZoneById(int id) { //TODO create ExclusiveEconomicZone Bean return dto instead we don't want dependency on entities in REST module
         return (ExclusiveEconomicZone) crudService.find(ExclusiveEconomicZone.class, id);
     }
 }
