@@ -1,8 +1,10 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
+import com.vividsolutions.jts.geom.Geometry;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,6 +25,10 @@ public class ExclusiveEconomicZone implements Serializable {
     @Id
     @Column(name = "gid")
     private Integer gid;
+
+    @Column(name = "geom")
+    @Type(type = "org.hibernate.spatial.GeometryType")
+    private Geometry geometry;
 
     private String eez;
     private String country;

@@ -45,5 +45,6 @@ public class CrudServiceBeanIT {
     public void testExclusiveEconomicZone(){
         ExclusiveEconomicZone eez = (ExclusiveEconomicZone) crudService.find(ExclusiveEconomicZone.class, 1);
         assertNotNull(eez);
+        assertNotNull(eez.getGeometry());
     }
 }

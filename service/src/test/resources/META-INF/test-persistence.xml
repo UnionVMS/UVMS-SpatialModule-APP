@@ -5,9 +5,8 @@
 
        <persistence-unit name="UVMS" transaction-type="JTA">
            <jta-data-source>java:/jdbc/UVMS</jta-data-source>
-           <class>eu.europa.ec.fisheries.uvms.spatial.service.dao.entity.Country</class>
            <properties>
-               <property name="hibernate.dialect" value="org.hibernate.dialect.PostgresPlusDialect" />
+               <property name="hibernate.dialect" value="org.hibernate.spatial.dialect.postgis.PostgisDialect" />
            </properties>
 
         </persistence-unit>
