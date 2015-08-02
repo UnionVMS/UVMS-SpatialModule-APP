@@ -1,8 +1,8 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest;
 
 import eu.europa.ec.fisheries.uvms.spatial.rest.constants.RestConstants;
+import eu.europa.ec.fisheries.uvms.spatial.rest.resources.AreaTypeResource;
 import eu.europa.ec.fisheries.uvms.spatial.rest.resources.MockResource;
-import eu.europa.ec.fisheries.uvms.spatial.rest.resources.SpatialResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +23,7 @@ public class RestActivator extends Application {
     private final Set<Class<?>> set = new HashSet<>();
 
     public RestActivator() {
-        set.add(SpatialResource.class);
+        set.add(AreaTypeResource.class);
         set.add(MockResource.class);
         LOG.info(RestConstants.MODULE_NAME + " module starting up");
     }
