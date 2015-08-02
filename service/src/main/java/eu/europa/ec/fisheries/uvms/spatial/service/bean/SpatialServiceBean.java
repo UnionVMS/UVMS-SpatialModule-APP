@@ -31,9 +31,6 @@ import java.util.List;
 public class SpatialServiceBean implements SpatialService {
 
     @EJB
-    private SpatialService spatialService;
-
-    @EJB
     private CrudService crudService;
 
     private MessageConsumer consumer;
