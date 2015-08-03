@@ -17,7 +17,7 @@ import java.util.Map;
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class CrudServiceBean implements CrudService {
 
-    @PersistenceContext(unitName="UVMS")
+    @PersistenceContext(unitName = "UVMS")
     EntityManager em;
 
     @Override
