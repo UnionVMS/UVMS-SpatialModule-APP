@@ -16,18 +16,17 @@ import javax.ejb.EJB;
 import static junit.framework.TestCase.assertNotNull;
 
 @RunWith(Arquillian.class)
-public class CrudServiceBeanIT {
+public class CrudServiceBeanITest {
 
     @EJB
     CrudService crudService;
 
     @Deployment
     public static JavaArchive createDeployment() {
-
         return ShrinkWrap.create(JavaArchive.class).addPackages(true, "eu.europa")
-        .addAsResource("META-INF/test-persistence.xml", "META-INF/persistence.xml")
-        .addAsResource("config.properties")
-        .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsResource("META-INF/test-persistence.xml", "META-INF/persistence.xml")
+                .addAsResource("config.properties")
+                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
     @Before
@@ -36,14 +35,20 @@ public class CrudServiceBeanIT {
     }
 
     @Test
-    public void testFindCountry(){
+    public void shouldFindCountry() {
+        // when
         Country country = (Country) crudService.find(Country.class, 1);
+
+        //then
         assertNotNull(country);
     }
 
     @Test
-    public void testExclusiveEconomicZone(){
+    public void shouldFindExclusiveEconomicZone() {
+        // when
         ExclusiveEconomicZone eez = (ExclusiveEconomicZone) crudService.find(ExclusiveEconomicZone.class, 1);
+
+        // then
         assertNotNull(eez);
         assertNotNull(eez.getGeometry());
     }

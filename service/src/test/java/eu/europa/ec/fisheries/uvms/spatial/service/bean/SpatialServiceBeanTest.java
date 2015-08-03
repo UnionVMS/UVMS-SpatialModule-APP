@@ -10,9 +10,6 @@ import org.unitils.mock.Mock;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * //TODO create test
- */
 public class SpatialServiceBeanTest extends UnitilsJUnit4 {
 
     @TestedObject
@@ -24,20 +21,27 @@ public class SpatialServiceBeanTest extends UnitilsJUnit4 {
     private Country country;
 
     @Before
-    public void beforeTest(){
-
+    public void beforeTest() {
         spatialService = new SpatialServiceBean();
+        country = createCountry();
+    }
 
-        country = new Country();
+    private Country createCountry() {
+        Country country = new Country();
         country.setId(1);
         country.setSovereign("Sovereign");
+        return country;
     }
 
     @Test
-    public void testGetCountryById(){
-
+    public void shouldGetCountryById() {
+        // given
         crudServiceMock.returns(country).find(Country.class, 1);
+
+        // when
         Country countryById = spatialService.getCountryById(1);
+
+        //then
         assertEquals(countryById, countryById);
     }
 }

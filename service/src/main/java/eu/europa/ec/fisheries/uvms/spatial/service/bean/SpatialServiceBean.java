@@ -4,6 +4,7 @@ import eu.europa.ec.fisheries.schema.movement.search.v1.ListCriteria;
 import eu.europa.ec.fisheries.schema.movement.search.v1.ListPagination;
 import eu.europa.ec.fisheries.schema.movement.search.v1.MovementListQuery;
 import eu.europa.ec.fisheries.schema.movement.search.v1.SearchKey;
+import eu.europa.ec.fisheries.schema.spatial.source.GetAreaTypesSpatialRS;
 import eu.europa.ec.fisheries.uvms.movement.model.exception.ModelMarshallException;
 import eu.europa.ec.fisheries.uvms.movement.model.mapper.MovementDataSourceRequestMapper;
 import eu.europa.ec.fisheries.uvms.spatial.dto.SpatialDto;
@@ -32,6 +33,9 @@ public class SpatialServiceBean implements SpatialService {
 
     @EJB
     private CrudService crudService;
+
+    @EJB
+    private AreaService areaService;
 
     private MessageConsumer consumer;
     private MessageProducer producer;
@@ -70,17 +74,15 @@ public class SpatialServiceBean implements SpatialService {
         return null;
     }
 
-    // TODO create AreaType Service Bean , interface .... test
     // check integration test IT run locally with vagrant box and spatial data from liquibase
     // TODO gererates Caused by: java.lang.ClassNotFoundException: org.jvnet.jaxb2_commons.lang.Equals from [Module \"deployment.test.war:main\" from Service Module Loader]"}}
-/*    @Override
+    @Override
     public GetAreaTypesSpatialRS getAreaTypes() {
-        GetAreaTypesSpatialRS response = new GetAreaTypesSpatialRS();
-        response.setAreaType(Arrays.asList("Portugal", "Belgium", "Poland", "Bulgaria"));
-        return response;
-    }*/
+        return areaService.getAreaTypes();
+    }
 
-    public Country getCountryById(int id){ //TODO create CountryService Bean return dto instead we don't want dependency on entities in REST module
+    @Override
+    public Country getCountryById(int id) { //TODO create CountryService Bean return dto instead we don't want dependency on entities in REST module
         return (Country) crudService.find(Country.class, id);
     }
 
