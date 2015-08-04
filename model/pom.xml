@@ -24,6 +24,7 @@
         <dependency>
             <groupId>org.jvnet.jaxb2_commons</groupId>
             <artifactId>jaxb2-basics-runtime</artifactId>
+            <version>0.9.4</version>
         </dependency>
 
     </dependencies>
@@ -31,7 +32,7 @@
     <profiles>
 
         <profile>
-            <id>generate-from-xsd</id>
+            <id>generate-from-wsdl</id>
             <build>
                 <plugins>
                     <plugin>
@@ -49,7 +50,7 @@
 
                         <configuration>
                             <schemaLanguage>XMLSCHEMA</schemaLanguage>
-                            <forceRegenerate>true</forceRegenerate>
+                            <forceRegenerate>false</forceRegenerate>
 
                             <schemaDirectory>${project.basedir}/src/main/resources/contract</schemaDirectory>
                             <bindingDirectory>${project.basedir}/src/main/resources/contract</bindingDirectory>
@@ -69,7 +70,7 @@
                                 <plugin>
                                     <groupId>org.jvnet.jaxb2_commons</groupId>
                                     <artifactId>jaxb2-basics</artifactId>
-                                    <version>0.6.4</version>
+                                    <version>0.9.4</version>
                                 </plugin>
                             </plugins>
 
