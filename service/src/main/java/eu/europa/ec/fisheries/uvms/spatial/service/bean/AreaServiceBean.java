@@ -16,7 +16,7 @@ import java.util.List;
 @Stateless
 @Local(AreaService.class)
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
-public class AreaServiceBean implements AreaService {
+public class AreaServiceBean implements AreaService { // TODO this class does same as CrudService class use that instead
 
     @PersistenceContext(unitName = "UVMS")
     private EntityManager em;
