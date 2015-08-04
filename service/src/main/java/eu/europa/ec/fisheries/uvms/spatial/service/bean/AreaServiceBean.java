@@ -1,7 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.schema.spatial.source.GetAreaTypesSpatialRS;
-import eu.europa.ec.fisheries.uvms.spatial.entity.AreaTypes;
 
 import javax.ejb.Local;
 import javax.ejb.Stateless;
@@ -22,7 +21,7 @@ public class AreaServiceBean implements AreaService {
     @PersistenceContext(unitName = "UVMS")
     private EntityManager em;
 
-    @Override
+    @Override // TODO don't use jaxb generated classes directly into business logic create mapper instead
     public GetAreaTypesSpatialRS getAreaTypes() {
         GetAreaTypesSpatialRS response = new GetAreaTypesSpatialRS();
         //response.setAreaTypes(Arrays.asList("Portugal", "Belgium", "Poland", "Bulgaria"));
