@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.spatial.service.bean;
+package eu.europa.ec.fisheries.uvms.spatial.dao;
 
 import javax.ejb.Local;
 import javax.ejb.Stateless;
@@ -13,9 +13,9 @@ import java.util.Map;
  * //TODO create test
  */
 @Stateless
-@Local(CrudService.class)
+@Local(CrudDao.class)
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
-public class CrudServiceBean implements CrudService {
+public class CrudDaoImpl implements CrudDao {
 
     @PersistenceContext(unitName = "UVMS")
     EntityManager em;

@@ -1,9 +1,9 @@
-package eu.europa.ec.fisheries.uvms.spatial.service.bean;
+package eu.europa.ec.fisheries.uvms.spatial.dao;
 
 import java.util.List;
 import java.util.Map;
 
-public interface CrudService {
+public interface CrudDao {
     Object create(Object t);
 
     Object find(Class type, Object id);

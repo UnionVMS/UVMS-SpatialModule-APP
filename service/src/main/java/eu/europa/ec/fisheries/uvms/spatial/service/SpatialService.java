@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.spatial.service.bean;
+package eu.europa.ec.fisheries.uvms.spatial.service;
 
 import eu.europa.ec.fisheries.schema.spatial.source.GetAreaTypesSpatialRS;
 import eu.europa.ec.fisheries.uvms.spatial.dto.SpatialDto;
@@ -16,5 +16,4 @@ public interface SpatialService {
 
     ExclusiveEconomicZone getExclusiveEconomicZoneById(int id);
 
-    GetAreaTypesSpatialRS getAreaTypes();
 }

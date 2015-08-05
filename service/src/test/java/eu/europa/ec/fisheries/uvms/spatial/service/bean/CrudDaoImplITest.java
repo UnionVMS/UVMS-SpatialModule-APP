@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
+import eu.europa.ec.fisheries.uvms.spatial.dao.CrudDao;
 import eu.europa.ec.fisheries.uvms.spatial.entity.Country;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ExclusiveEconomicZone;
 import org.jboss.arquillian.junit.Arquillian;
@@ -12,20 +13,20 @@ import javax.ejb.EJB;
 import static junit.framework.TestCase.assertNotNull;
 
 @RunWith(Arquillian.class)
-public class CrudServiceBeanITest extends AbstractArquillianTest { // TODO make maven not read this test by renaming to CrudServiceBeanIT
+public class CrudDaoImplITest extends AbstractArquillianTest { // TODO make maven not read this test by renaming to CrudServiceBeanIT
 
     @EJB
-    CrudService crudService;
+    CrudDao crudDao;
 
     @Before
     public void beforeTest() {
-        assertNotNull("CrudService not injected", crudService);
+        assertNotNull("CrudService not injected", crudDao);
     }
 
     @Test
     public void shouldFindCountry() {
         // when
-        Country country = (Country) crudService.find(Country.class, 1);
+        Country country = (Country) crudDao.find(Country.class, 1);
 
 
         //then
@@ -35,7 +36,7 @@ public class CrudServiceBeanITest extends AbstractArquillianTest { // TODO make 
     @Test
     public void shouldFindExclusiveEconomicZone() {
         // when
-        ExclusiveEconomicZone eez = (ExclusiveEconomicZone) crudService.find(ExclusiveEconomicZone.class, 1);
+        ExclusiveEconomicZone eez = (ExclusiveEconomicZone) crudDao.find(ExclusiveEconomicZone.class, 1);
 
         // then
         assertNotNull(eez);

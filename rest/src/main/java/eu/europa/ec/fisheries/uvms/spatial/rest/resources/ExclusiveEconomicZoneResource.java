@@ -3,7 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.rest.resources;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ExclusiveEconomicZone;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseCode;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.CrudService;
+import eu.europa.ec.fisheries.uvms.spatial.dao.CrudDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +25,7 @@ public class ExclusiveEconomicZoneResource {
     final static Logger LOG = LoggerFactory.getLogger(ExclusiveEconomicZoneResource.class);
 
     @EJB
-    private CrudService crudService;
+    private CrudDao crudDao;
 
     @POST
     @Consumes(value = {MediaType.APPLICATION_JSON})
@@ -34,7 +34,7 @@ public class ExclusiveEconomicZoneResource {
     public ResponseDto getExclusiveEconomicZoneById(int eezId) {
         try {
             LOG.info("Getting user areas list");
-            return new ResponseDto(crudService.find(ExclusiveEconomicZone.class, eezId), ResponseCode.OK);
+            return new ResponseDto(crudDao.find(ExclusiveEconomicZone.class, eezId), ResponseCode.OK);
         } catch (Exception e) {
             LOG.error("[ Error when getting vessel list. ] ", e);// TODO veesel list?
             throw new RuntimeException("Please fix it");

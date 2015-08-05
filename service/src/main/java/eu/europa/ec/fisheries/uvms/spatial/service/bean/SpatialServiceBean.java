@@ -7,6 +7,7 @@ import eu.europa.ec.fisheries.schema.movement.search.v1.SearchKey;
 import eu.europa.ec.fisheries.schema.spatial.source.GetAreaTypesSpatialRS;
 import eu.europa.ec.fisheries.uvms.movement.model.exception.ModelMarshallException;
 import eu.europa.ec.fisheries.uvms.movement.model.mapper.MovementDataSourceRequestMapper;
+import eu.europa.ec.fisheries.uvms.spatial.dao.CrudDao;
 import eu.europa.ec.fisheries.uvms.spatial.dto.SpatialDto;
 import eu.europa.ec.fisheries.uvms.spatial.entity.Country;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ExclusiveEconomicZone;
@@ -14,6 +15,8 @@ import eu.europa.ec.fisheries.uvms.spatial.message.constants.ModuleQueue;
 import eu.europa.ec.fisheries.uvms.spatial.message.consumer.MessageConsumer;
 import eu.europa.ec.fisheries.uvms.spatial.message.exception.MovementMessageException;
 import eu.europa.ec.fisheries.uvms.spatial.message.producer.MessageProducer;
+import eu.europa.ec.fisheries.uvms.spatial.service.AreaService;
+import eu.europa.ec.fisheries.uvms.spatial.service.SpatialService;
 import eu.europa.ec.fisheries.uvms.spatial.service.exception.SpatialServiceException;
 
 import javax.ejb.EJB;
@@ -32,7 +35,7 @@ import java.util.List;
 public class SpatialServiceBean implements SpatialService {
 
     @EJB
-    private CrudService crudService;
+    private CrudDao crudDao;
 
     @EJB
     private AreaService areaService;
@@ -74,20 +77,13 @@ public class SpatialServiceBean implements SpatialService {
         return null;
     }
 
-    // check integration test IT run locally with vagrant box and spatial data from liquibase
-    // TODO gererates Caused by: java.lang.ClassNotFoundException: org.jvnet.jaxb2_commons.lang.Equals from [Module \"deployment.test.war:main\" from Service Module Loader]"}}
-    @Override
-    public GetAreaTypesSpatialRS getAreaTypes() {
-        return areaService.getAreaTypes();
-    }
-
     @Override
     public Country getCountryById(int id) { //TODO create CountryService Bean return dto instead we don't want dependency on entities in REST module
-        return (Country) crudService.find(Country.class, id);
+        return (Country) crudDao.find(Country.class, id);
     }
 
     @Override
     public ExclusiveEconomicZone getExclusiveEconomicZoneById(int id) { //TODO create ExclusiveEconomicZone Bean return dto instead we don't want dependency on entities in REST module
-        return (ExclusiveEconomicZone) crudService.find(ExclusiveEconomicZone.class, id);
+        return (ExclusiveEconomicZone) crudDao.find(ExclusiveEconomicZone.class, id);
     }
 }

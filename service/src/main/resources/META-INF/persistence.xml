@@ -5,7 +5,9 @@
 
     <persistence-unit name="UVMS" transaction-type="JTA">
         <jta-data-source>java:/jdbc/UVMS</jta-data-source>
+
         <properties>
+            <property name="hibernate.show_sql" value="true" />
             <property name="hibernate.dialect" value="org.hibernate.spatial.dialect.postgis.PostgisDialect"/>
         </properties>
     </persistence-unit>

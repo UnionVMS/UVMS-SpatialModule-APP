@@ -1,22 +1,15 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.schema.spatial.source.GetAreaTypesSpatialRS;
-import eu.europa.ec.fisheries.uvms.spatial.entity.Country;
-import org.jboss.arquillian.container.test.api.Deployment;
+import eu.europa.ec.fisheries.uvms.spatial.service.AreaService;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.ejb.EJB;
 
-import java.io.File;
-
 import static junit.framework.TestCase.assertNotNull;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
 
 /**
  * Created by kopyczmi on 04-Aug-15.
@@ -34,6 +27,6 @@ public class AreaServiceBeanTest extends AbstractArquillianTest {
 
         //then
         assertNotNull(areaTypes);
-        assertNotNull(areaTypes.getAreaTypes());
+        assertFalse(areaTypes.getAreaTypes().isEmpty());
     }
 }

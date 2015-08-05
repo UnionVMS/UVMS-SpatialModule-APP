@@ -1,6 +1,8 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
+import eu.europa.ec.fisheries.uvms.spatial.dao.CrudDao;
 import eu.europa.ec.fisheries.uvms.spatial.entity.Country;
+import eu.europa.ec.fisheries.uvms.spatial.service.SpatialService;
 import org.junit.Before;
 import org.junit.Test;
 import org.unitils.UnitilsJUnit4;
@@ -16,7 +18,7 @@ public class SpatialServiceBeanTest extends UnitilsJUnit4 {
     private SpatialService spatialService;
 
     @InjectIntoByType
-    private Mock<CrudService> crudServiceMock;
+    private Mock<CrudDao> crudServiceMock;
 
     private Country country;
 

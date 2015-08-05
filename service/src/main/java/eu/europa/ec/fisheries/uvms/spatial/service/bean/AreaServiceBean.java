@@ -1,14 +1,13 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.schema.spatial.source.GetAreaTypesSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.dao.SpatialDao;
+import eu.europa.ec.fisheries.uvms.spatial.service.AreaService;
 
-import javax.ejb.Local;
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import javax.ejb.*;
 import java.util.List;
+
+import static java.util.Arrays.asList;
 
 /**
  * Created by kopyczmi on 03-Aug-15.
@@ -16,19 +15,24 @@ import java.util.List;
 @Stateless
 @Local(AreaService.class)
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
-public class AreaServiceBean implements AreaService { // TODO this class does same as CrudService class use that instead
+public class AreaServiceBean implements AreaService {
 
-    @PersistenceContext(unitName = "UVMS")
-    private EntityManager em;
+    @EJB
+    private SpatialDao spatialDao;
 
-    @Override // TODO don't use jaxb generated classes directly into business logic create mapper instead
+    @Override
     public GetAreaTypesSpatialRS getAreaTypes() {
+        List<String> testData = asList("Portugal", "Belgium", "Poland", "Bulgaria"); //TODO remove it
+
+        List<String> areaTypes = spatialDao.getAreaTypes();
+        areaTypes.addAll(testData);
+
+        return createResponse(areaTypes);
+    }
+
+    private GetAreaTypesSpatialRS createResponse(List<String> areaTypes) {
         GetAreaTypesSpatialRS response = new GetAreaTypesSpatialRS();
-        //response.setAreaTypes(Arrays.asList("Portugal", "Belgium", "Poland", "Bulgaria"));
-
-        List<String> areaTypes = em.createNamedQuery("getAreaTypes", String.class).getResultList();
         response.setAreaTypes(areaTypes);
-
         return response;
     }
 
