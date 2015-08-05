@@ -13,7 +13,7 @@ import javax.ejb.EJB;
 import static junit.framework.TestCase.assertNotNull;
 
 @RunWith(Arquillian.class)
-public class CrudDaoImplITest extends AbstractArquillianTest { // TODO make maven not read this test by renaming to CrudServiceBeanIT
+public class CrudDaoImplIT extends AbstractArquillianTest { // TODO make maven not read this test by renaming to CrudServiceBeanIT
 
     @EJB
     CrudDao crudDao;
@@ -27,7 +27,6 @@ public class CrudDaoImplITest extends AbstractArquillianTest { // TODO make mave
     public void shouldFindCountry() {
         // when
         Country country = (Country) crudDao.find(Country.class, 1);
-
 
         //then
         assertNotNull(country);

@@ -4,7 +4,6 @@ import eu.europa.ec.fisheries.schema.movement.search.v1.ListCriteria;
 import eu.europa.ec.fisheries.schema.movement.search.v1.ListPagination;
 import eu.europa.ec.fisheries.schema.movement.search.v1.MovementListQuery;
 import eu.europa.ec.fisheries.schema.movement.search.v1.SearchKey;
-import eu.europa.ec.fisheries.schema.spatial.source.GetAreaTypesSpatialRS;
 import eu.europa.ec.fisheries.uvms.movement.model.exception.ModelMarshallException;
 import eu.europa.ec.fisheries.uvms.movement.model.mapper.MovementDataSourceRequestMapper;
 import eu.europa.ec.fisheries.uvms.spatial.dao.CrudDao;
@@ -23,7 +22,6 @@ import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -47,34 +45,35 @@ public class SpatialServiceBean implements SpatialService {
     public List<SpatialDto> getListAsRestDto(String spatialQuery) throws SpatialServiceException {
 
         MovementListQuery movementListQuery = new MovementListQuery();
-        ListPagination listPagination = new ListPagination();
-        listPagination.setListSize(BigInteger.valueOf(1000));
-        listPagination.setPage(BigInteger.valueOf(0));
-        movementListQuery.setPagination(listPagination);
+        movementListQuery.setPagination(createPagination());
 
-        List<ListCriteria> listCriterias = new ArrayList<>();
-
-        ListCriteria listCriteria = new ListCriteria();
-        SearchKey fromDate = SearchKey.FROM_DATE;
-        listCriteria.setKey(fromDate);
-        listCriteria.setValue(new Date().toString());
-
-        SearchKey toDate = SearchKey.TO_DATE;
-        listCriteria.setKey(fromDate);
-        listCriteria.setValue(new Date().toString());
-
+        ListCriteria listCriteria = createListCriteria();
 
         try {
-
             String query = MovementDataSourceRequestMapper.mapGetListByQuery(movementListQuery);
             String messageId = producer.sendModuleMessage(query, ModuleQueue.MOVEMENT);
-
-
         } catch (ModelMarshallException | MovementMessageException e) {
             e.printStackTrace();
         }
 
         return null;
+    }
+
+    private ListCriteria createListCriteria() {
+        ListCriteria listCriteria = new ListCriteria();
+        listCriteria.setKey(SearchKey.FROM_DATE);
+        listCriteria.setValue(new Date().toString());
+
+        listCriteria.setKey(SearchKey.TO_DATE);
+        listCriteria.setValue(new Date().toString());
+        return listCriteria;
+    }
+
+    private ListPagination createPagination() {
+        ListPagination listPagination = new ListPagination();
+        listPagination.setListSize(BigInteger.valueOf(1000));
+        listPagination.setPage(BigInteger.valueOf(0));
+        return listPagination;
     }
 
     @Override
