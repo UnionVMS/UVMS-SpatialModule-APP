@@ -14,8 +14,9 @@ import static org.junit.Assert.assertFalse;
 /**
  * Created by kopyczmi on 04-Aug-15.
  */
+// TODO Plase add also unit test for AreaService
 @RunWith(Arquillian.class)
-public class AreaServiceBeanTest extends AbstractArquillianTest { // todo call this AreaServiceBeanIT because integration test but this can be achieved without integration test
+public class AreaServiceBeanIT extends AbstractArquillianIT {
 
     @EJB
     AreaService areaService;

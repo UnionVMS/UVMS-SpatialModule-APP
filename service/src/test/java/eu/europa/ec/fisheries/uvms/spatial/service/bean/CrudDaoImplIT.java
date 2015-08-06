@@ -13,7 +13,7 @@ import javax.ejb.EJB;
 import static junit.framework.TestCase.assertNotNull;
 
 @RunWith(Arquillian.class)
-public class CrudDaoImplIT extends AbstractArquillianTest { // TODO make maven not read this test by renaming to CrudServiceBeanIT
+public class CrudDaoImplIT extends AbstractArquillianIT {
 
     @EJB
     CrudDao crudDao;

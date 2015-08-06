@@ -16,7 +16,7 @@ import javax.ws.rs.core.MediaType;
 /**
  * //TODO create test
  */
-@Path("areatypes")
+@Path("/")
 @Stateless
 public class AreaTypeResource {
 
@@ -27,6 +27,7 @@ public class AreaTypeResource {
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
+    @Path("areatypes")
     public ResponseDto getAreaTypes() {
         try {
             LOG.info("Getting user areas list");
