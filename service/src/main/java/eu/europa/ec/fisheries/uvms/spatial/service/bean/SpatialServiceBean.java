@@ -90,7 +90,7 @@ public class SpatialServiceBean implements SpatialService {
     }
 
     //TODO Please inject mapper via DI
-    // No this is the right way create a new instance every time you need one
+    // How will you do that mapper is not an ejb you could use the init phase
     private GetEezSpatialRS createResponse(EezEntity eez) {
         GetEezSpatialRS response = new GetEezSpatialRS();
         if (eez != null) {
