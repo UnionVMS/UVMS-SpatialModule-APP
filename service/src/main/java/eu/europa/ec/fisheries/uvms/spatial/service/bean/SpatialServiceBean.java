@@ -31,6 +31,7 @@ import java.util.List;
 /
 /   TODO Probably at thit time we do not need dedicated service per each DB entity. We should consider what would be the best granularity.
 /
+//  Greg -> Better do it know because refactoring is a pain in the !
 */
 @Stateless
 @Local(SpatialService.class)
@@ -89,6 +90,7 @@ public class SpatialServiceBean implements SpatialService {
     }
 
     //TODO Please inject mapper via DI
+    // No this is the right way create a new instance every time you need one
     private GetEezSpatialRS createResponse(EezEntity eez) {
         GetEezSpatialRS response = new GetEezSpatialRS();
         if (eez != null) {
