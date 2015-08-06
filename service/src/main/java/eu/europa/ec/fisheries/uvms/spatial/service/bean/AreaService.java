@@ -7,4 +7,7 @@ import eu.europa.ec.fisheries.schema.spatial.source.GetAreaTypesSpatialRS;
  */
 public interface AreaService {
     GetAreaTypesSpatialRS getAreaTypes();
+
+    // TODO change return type
+    Object getAreasByLocation(double lat, double lon, int crs);
 }

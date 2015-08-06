@@ -9,9 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 @Path("/")
@@ -33,6 +31,23 @@ public class AreaTypeResource {
             return new ResponseDto(areaTypes, ResponseCode.OK);
         } catch (Exception ex) {
             LOG.error("[ Error when getting area types list. ] ", ex);
+            return new ResponseDto(ex.getMessage(), ResponseCode.ERROR);
+        }
+    }
+
+    @POST
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Path("/areasByLocation")
+    public ResponseDto getExclusiveEconomicZoneById(
+            @PathParam(value = "lat") double lat,
+            @PathParam(value = "lon") double lon,
+            @DefaultValue("4326") @PathParam(value = "crs") int crs) {
+        try {
+            LOG.info("Getting areas by location");
+            return new ResponseDto(areaService.getAreasByLocation(lat, lon, crs), ResponseCode.OK);
+        } catch (Exception ex) {
+            LOG.error("[ Error when getting areas by location. ] ", ex);
             return new ResponseDto(ex.getMessage(), ResponseCode.ERROR);
         }
     }
