@@ -14,6 +14,7 @@ public interface SpatialService {
     // TODO change return type for DTO
     CountryEntity getCountryById(int id);
 
+    // TODO change return type for DTO
     GetEezSpatialRS getExclusiveEconomicZoneById(long id);
 
     // TODO change return type
