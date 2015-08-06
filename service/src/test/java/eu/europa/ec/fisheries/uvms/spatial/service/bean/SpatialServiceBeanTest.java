@@ -28,22 +28,17 @@ public class SpatialServiceBeanTest extends UnitilsJUnit4 {
         country = createCountry();
     }
 
+    @Test
+    public void shouldGetCountryById() {
+        crudServiceMock.returns(country).find(CountryEntity.class, 1);
+        CountryEntity countryById = spatialService.getCountryById(1);
+        assertEquals(countryById, countryById);
+    }
+
     private CountryEntity createCountry() {
         CountryEntity country = new CountryEntity();
         country.setId(1);
         country.setSovereign("Sovereign");
         return country;
-    }
-
-    @Test
-    public void shouldGetCountryById() {
-        // given
-        crudServiceMock.returns(country).find(CountryEntity.class, 1);
-
-        // when
-        CountryEntity countryById = spatialService.getCountryById(1);
-
-        //then
-        assertEquals(countryById, countryById);
     }
 }
