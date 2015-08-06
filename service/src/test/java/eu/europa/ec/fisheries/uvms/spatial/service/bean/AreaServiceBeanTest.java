@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
  * Created by kopyczmi on 06-Aug-15.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class AreaServiceBeanITest {
+public class AreaServiceBeanTest {
 
     private final static List<String> AREA_TYPES = ImmutableList.of("Portugal", "Belgium", "Poland", "Bulgaria");
 
