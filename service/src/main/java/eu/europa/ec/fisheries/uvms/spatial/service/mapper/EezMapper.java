@@ -1,6 +1,5 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.mapper;
 
-import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.schema.spatial.types.EezType;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import org.mapstruct.Mapper;
@@ -11,8 +10,9 @@ import org.mapstruct.factory.Mappers;
 /**
  * Created by kopyczmi on 06-Aug-15.
  */
-@Mapper(uses=GeometryMapper.class)
+@Mapper(uses = GeometryMapper.class)
 public interface EezMapper {
+
     EezMapper INSTANCE = Mappers.getMapper(EezMapper.class);
 
     @Mappings({
@@ -20,7 +20,5 @@ public interface EezMapper {
             @Mapping(source = "geom", target = "geometry")
     })
     EezType eezEntityToSchema(EezEntity eezEntity);
-
-    //String geometryToString(Geometry geometry);
 
 }
