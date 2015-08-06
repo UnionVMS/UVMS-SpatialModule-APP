@@ -20,6 +20,7 @@ public class AbstractArquillianTest {
                 .addAsResource("config.properties")
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
+        // TODO this maven dependency should not be needed try to create unit tests first
         File[] jaxbPluginLibs = Maven.resolver().resolve("org.jvnet.jaxb2_commons:jaxb2-basics-runtime:0.9.4").withTransitivity().as(File.class);
         File[] guavaLibs = Maven.resolver().resolve("com.google.guava:guava:18.0").withTransitivity().as(File.class);
         javaArchive = javaArchive

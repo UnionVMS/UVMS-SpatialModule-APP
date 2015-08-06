@@ -15,7 +15,7 @@ import static org.junit.Assert.assertFalse;
  * Created by kopyczmi on 04-Aug-15.
  */
 @RunWith(Arquillian.class)
-public class AreaServiceBeanTest extends AbstractArquillianTest {
+public class AreaServiceBeanTest extends AbstractArquillianTest { // todo call this AreaServiceBeanIT because integration test but this can be achieved without integration test
 
     @EJB
     AreaService areaService;
