@@ -42,19 +42,13 @@ public class CrudDaoImplIT {
 
     @Test
     public void shouldFindCountry() {
-        // when
         CountryEntity country = (CountryEntity) crudDao.find(CountryEntity.class, 1);
-
-        //then
         assertNotNull(country);
     }
 
     @Test
     public void shouldFindExclusiveEconomicZone() {
-        // when
         EezEntity eez = (EezEntity) crudDao.find(EezEntity.class, 1);
-
-        // then
         assertNotNull(eez);
         assertNotNull(eez.getGeom());
     }
