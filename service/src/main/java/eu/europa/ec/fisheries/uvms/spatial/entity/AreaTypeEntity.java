@@ -8,7 +8,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "area_types", schema = "spatial", catalog = "uvms")
-public class AreaTypeEntity {
+public class AreaTypeEntity { // TODO  please use lombok @Data like CountryEntity
     private int id;
     private String typeName;
     private String areaTypeDesc;

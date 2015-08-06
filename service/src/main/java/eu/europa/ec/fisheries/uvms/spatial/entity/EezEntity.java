@@ -11,7 +11,7 @@ import java.math.BigInteger;
  */
 @Entity
 @Table(name = "eez", schema = "spatial", catalog = "uvms")
-public class EezEntity {
+public class EezEntity { // TODO  please use lombok @Data like CountryEntity it would be nice also to use some naming instead of abreviation like eez
     private long gid;
     private Geometry geom;
     private String eez;
