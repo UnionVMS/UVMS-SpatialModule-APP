@@ -21,7 +21,7 @@ public class AreaServiceBean implements AreaService {
     private SpatialDao spatialDao;
 
     @Override
-    public GetAreaTypesSpatialRS getAreaTypes() {
+    public GetAreaTypesSpatialRS getAreaTypes() { // Todo return AreaDto please
         List<String> testData = asList("Portugal", "Belgium", "Poland", "Bulgaria"); //TODO remove it
 
         List<String> areaTypes = spatialDao.getAreaTypes();
@@ -30,7 +30,7 @@ public class AreaServiceBean implements AreaService {
         return createResponse(areaTypes);
     }
 
-    private GetAreaTypesSpatialRS createResponse(List<String> areaTypes) {
+    private GetAreaTypesSpatialRS createResponse(List<String> areaTypes) { //TODO move this code to rest layer
         GetAreaTypesSpatialRS response = new GetAreaTypesSpatialRS();
         response.setAreaTypes(areaTypes);
         return response;
