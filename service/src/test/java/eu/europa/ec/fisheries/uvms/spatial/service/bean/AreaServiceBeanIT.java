@@ -14,7 +14,6 @@ import static org.junit.Assert.assertFalse;
 /**
  * Created by kopyczmi on 04-Aug-15.
  */
-// TODO Plase add also unit test for AreaService
 @RunWith(Arquillian.class)
 public class AreaServiceBeanIT extends AbstractArquillianIT {
 
