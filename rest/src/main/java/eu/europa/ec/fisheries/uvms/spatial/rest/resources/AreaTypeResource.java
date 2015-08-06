@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources;
 
+import eu.europa.ec.fisheries.schema.spatial.source.GetAreaTypesSpatialRS;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseCode;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.AreaService;
@@ -13,9 +14,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-/**
- * //TODO create test
- */
 @Path("/")
 @Stateless
 public class AreaTypeResource {
@@ -27,14 +25,15 @@ public class AreaTypeResource {
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
-    @Path("areatypes")
+    @Path("/areatypes")
     public ResponseDto getAreaTypes() {
         try {
             LOG.info("Getting user areas list");
-            return new ResponseDto(areaService.getAreaTypes(), ResponseCode.OK);
-        } catch (Exception e) {
-            LOG.error("[ Error when getting area types list. ] ", e);
-            throw new RuntimeException("Please fix it");
+            GetAreaTypesSpatialRS areaTypes = areaService.getAreaTypes();
+            return new ResponseDto(areaTypes, ResponseCode.OK);
+        } catch (Exception ex) {
+            LOG.error("[ Error when getting area types list. ] ", ex);
+            return new ResponseDto(ex.getMessage(), ResponseCode.ERROR);
         }
     }
 }

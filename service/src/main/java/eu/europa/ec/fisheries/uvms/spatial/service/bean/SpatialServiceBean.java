@@ -4,19 +4,21 @@ import eu.europa.ec.fisheries.schema.movement.search.v1.ListCriteria;
 import eu.europa.ec.fisheries.schema.movement.search.v1.ListPagination;
 import eu.europa.ec.fisheries.schema.movement.search.v1.MovementListQuery;
 import eu.europa.ec.fisheries.schema.movement.search.v1.SearchKey;
+import eu.europa.ec.fisheries.schema.spatial.source.GetEezSpatialRS;
 import eu.europa.ec.fisheries.uvms.movement.model.exception.ModelMarshallException;
 import eu.europa.ec.fisheries.uvms.movement.model.mapper.MovementDataSourceRequestMapper;
 import eu.europa.ec.fisheries.uvms.spatial.dao.CrudDao;
 import eu.europa.ec.fisheries.uvms.spatial.dto.SpatialDto;
-import eu.europa.ec.fisheries.uvms.spatial.entity.Country;
-import eu.europa.ec.fisheries.uvms.spatial.entity.ExclusiveEconomicZone;
+import eu.europa.ec.fisheries.uvms.spatial.entity.CountryEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import eu.europa.ec.fisheries.uvms.spatial.message.constants.ModuleQueue;
 import eu.europa.ec.fisheries.uvms.spatial.message.consumer.MessageConsumer;
 import eu.europa.ec.fisheries.uvms.spatial.message.exception.MovementMessageException;
 import eu.europa.ec.fisheries.uvms.spatial.message.producer.MessageProducer;
-import eu.europa.ec.fisheries.uvms.spatial.service.AreaService;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialService;
 import eu.europa.ec.fisheries.uvms.spatial.service.exception.SpatialServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.service.mapper.EezMapper;
+import org.apache.commons.lang3.NotImplementedException;
 
 import javax.ejb.EJB;
 import javax.ejb.Local;
@@ -25,18 +27,17 @@ import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 
-/**
- * //TODO create test
- */
+/*
+/
+/   TODO Probably at thit time we do not need dedicated service per each DB entity. We should consider what would be the best granularity.
+/
+*/
 @Stateless
 @Local(SpatialService.class)
 public class SpatialServiceBean implements SpatialService {
 
     @EJB
     private CrudDao crudDao;
-
-    @EJB
-    private AreaService areaService;
 
     private MessageConsumer consumer;
     private MessageProducer producer;
@@ -77,12 +78,27 @@ public class SpatialServiceBean implements SpatialService {
     }
 
     @Override
-    public Country getCountryById(int id) { //TODO create CountryService Bean return dto instead we don't want dependency on entities in REST module
-        return (Country) crudDao.find(Country.class, id);
+    public CountryEntity getCountryById(int id) {
+        return (CountryEntity) crudDao.find(CountryEntity.class, id);
     }
 
     @Override
-    public ExclusiveEconomicZone getExclusiveEconomicZoneById(int id) { //TODO create ExclusiveEconomicZone Bean return dto instead we don't want dependency on entities in REST module
-        return (ExclusiveEconomicZone) crudDao.find(ExclusiveEconomicZone.class, id);
+    public GetEezSpatialRS getExclusiveEconomicZoneById(long id) {
+        EezEntity eez = (EezEntity) crudDao.find(EezEntity.class, id);
+        return createResponse(eez);
+    }
+
+    //TODO Please inject mapper via DI
+    private GetEezSpatialRS createResponse(EezEntity eez) {
+        GetEezSpatialRS response = new GetEezSpatialRS();
+        if (eez != null) {
+            response.setEez(EezMapper.INSTANCE.eezEntityToSchema(eez));
+        }
+        return response;
+    }
+
+    @Override
+    public Object getAreasByLocation(double lat, double lon, int crs) {
+        throw new NotImplementedException("Not implemented, yet");
     }
 }

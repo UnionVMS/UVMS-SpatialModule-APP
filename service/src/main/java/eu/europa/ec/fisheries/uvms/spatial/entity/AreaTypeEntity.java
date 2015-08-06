@@ -8,7 +8,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "area_types", schema = "spatial", catalog = "uvms")
-public class AreaTypes {
+public class AreaTypeEntity {
     private int id;
     private String typeName;
     private String areaTypeDesc;
@@ -81,14 +81,14 @@ public class AreaTypes {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        AreaTypes areaTypes = (AreaTypes) o;
+        AreaTypeEntity areaTypeEntity = (AreaTypeEntity) o;
 
-        if (id != areaTypes.id) return false;
-        if (srsCode != areaTypes.srsCode) return false;
-        if (typeName != null ? !typeName.equals(areaTypes.typeName) : areaTypes.typeName != null) return false;
-        if (areaTypeDesc != null ? !areaTypeDesc.equals(areaTypes.areaTypeDesc) : areaTypes.areaTypeDesc != null) return false;
-        if (areaDbTable != null ? !areaDbTable.equals(areaTypes.areaDbTable) : areaTypes.areaDbTable != null) return false;
-        if (geoName != null ? !geoName.equals(areaTypes.geoName) : areaTypes.geoName != null) return false;
+        if (id != areaTypeEntity.id) return false;
+        if (srsCode != areaTypeEntity.srsCode) return false;
+        if (typeName != null ? !typeName.equals(areaTypeEntity.typeName) : areaTypeEntity.typeName != null) return false;
+        if (areaTypeDesc != null ? !areaTypeDesc.equals(areaTypeEntity.areaTypeDesc) : areaTypeEntity.areaTypeDesc != null) return false;
+        if (areaDbTable != null ? !areaDbTable.equals(areaTypeEntity.areaDbTable) : areaTypeEntity.areaDbTable != null) return false;
+        if (geoName != null ? !geoName.equals(areaTypeEntity.geoName) : areaTypeEntity.geoName != null) return false;
 
         return true;
     }

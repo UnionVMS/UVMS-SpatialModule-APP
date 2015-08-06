@@ -18,7 +18,7 @@ import java.io.Serializable;
 @Data
 @EqualsAndHashCode
 @ToString
-public class Country implements Serializable {
+public class CountryEntity implements Serializable {
 
     @Id
     @Column(name = "id")

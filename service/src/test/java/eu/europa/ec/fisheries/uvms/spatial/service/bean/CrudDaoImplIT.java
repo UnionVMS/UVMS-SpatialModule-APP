@@ -1,8 +1,8 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.spatial.dao.CrudDao;
-import eu.europa.ec.fisheries.uvms.spatial.entity.Country;
-import eu.europa.ec.fisheries.uvms.spatial.entity.ExclusiveEconomicZone;
+import eu.europa.ec.fisheries.uvms.spatial.entity.CountryEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +26,7 @@ public class CrudDaoImplIT extends AbstractArquillianIT {
     @Test
     public void shouldFindCountry() {
         // when
-        Country country = (Country) crudDao.find(Country.class, 1);
+        CountryEntity country = (CountryEntity) crudDao.find(CountryEntity.class, 1);
 
         //then
         assertNotNull(country);
@@ -35,10 +35,10 @@ public class CrudDaoImplIT extends AbstractArquillianIT {
     @Test
     public void shouldFindExclusiveEconomicZone() {
         // when
-        ExclusiveEconomicZone eez = (ExclusiveEconomicZone) crudDao.find(ExclusiveEconomicZone.class, 1);
+        EezEntity eez = (EezEntity) crudDao.find(EezEntity.class, 1);
 
         // then
         assertNotNull(eez);
-        assertNotNull(eez.getGeometry());
+        assertNotNull(eez.getGeom());
     }
 }

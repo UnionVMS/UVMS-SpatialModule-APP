@@ -1,6 +1,9 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 import eu.europa.ec.fisheries.schema.spatial.source.GetAreaTypesSpatialRS;
+import eu.europa.ec.fisheries.schema.spatial.types.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.dao.SpatialDao;
 import eu.europa.ec.fisheries.uvms.spatial.service.AreaService;
 
@@ -24,8 +27,16 @@ public class AreaServiceBean implements AreaService {
         return createResponse(areaTypes);
     }
 
-    private GetAreaTypesSpatialRS createResponse(List<String> areaTypes) {
+    private GetAreaTypesSpatialRS createResponse(List<String> areaTypeNames) {
         GetAreaTypesSpatialRS response = new GetAreaTypesSpatialRS();
+        List<AreaType> areaTypes = Lists.transform(areaTypeNames, new Function<String, AreaType>() {
+            @Override
+            public AreaType apply(String areaName) {
+                AreaType areaType = new AreaType();
+                areaType.setTypeName(areaName);
+                return areaType;
+            }
+        });
         response.setAreaTypes(areaTypes);
         return response;
     }

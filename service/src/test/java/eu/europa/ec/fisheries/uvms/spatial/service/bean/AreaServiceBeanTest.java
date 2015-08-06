@@ -1,7 +1,10 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
+import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import eu.europa.ec.fisheries.schema.spatial.source.GetAreaTypesSpatialRS;
+import eu.europa.ec.fisheries.schema.spatial.types.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.dao.SpatialDao;
 import eu.europa.ec.fisheries.uvms.spatial.service.AreaService;
 import org.junit.Test;
@@ -36,13 +39,22 @@ public class AreaServiceBeanTest {
         when(spatialDao.getAreaTypes()).thenReturn(AREA_TYPES);
 
         // when
-        GetAreaTypesSpatialRS areaTypes = areaService.getAreaTypes();
+        GetAreaTypesSpatialRS areaTypeRS = areaService.getAreaTypes();
 
         //then
-        assertNotNull(areaTypes);
-        List<String> areaTypesList = areaTypes.getAreaTypes();
-        assertThat(areaTypesList).hasSize(AREA_TYPES.size());
-        assertThat(areaTypes.getAreaTypes()).containsOnly(AREA_TYPES.toArray());
+        assertNotNull(areaTypeRS);
+        List<AreaType> areaTypes = areaTypeRS.getAreaTypes();
+        assertThat(areaTypes).hasSize(AREA_TYPES.size());
+        assertThat(retrieveAreaNames(areaTypes)).containsOnly(AREA_TYPES.toArray());
+    }
+
+    private List<String> retrieveAreaNames(List<AreaType> areaTypes) {
+        return Lists.transform(areaTypes, new Function<AreaType, String>() {
+            @Override
+            public String apply(AreaType areaType) {
+                return areaType.getTypeName();
+            }
+        });
     }
 
 }

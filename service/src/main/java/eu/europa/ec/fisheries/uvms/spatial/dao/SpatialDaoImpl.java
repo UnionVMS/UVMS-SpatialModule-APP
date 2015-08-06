@@ -21,7 +21,7 @@ public class SpatialDaoImpl implements SpatialDao {
 
     @Override
     public List<String> getAreaTypes() {
-        String sql = "SELECT a.typeName FROM AreaTypes a";
+        String sql = "SELECT a.typeName FROM AreaTypeEntity a";
         return em.createQuery(sql, String.class).getResultList();
     }
 }

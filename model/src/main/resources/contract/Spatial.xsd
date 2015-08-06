@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2015 rel. 4 sp1 (x64) (http://www.altova.com) by marian (cop) -->
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="source.spatial.schema.fisheries.ec.europa.eu" xmlns:t="types.spatial.schema.fisheries.ec.europa.eu" targetNamespace="source.spatial.schema.fisheries.ec.europa.eu" version="1.0">
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="source.spatial.schema.fisheries.ec.europa.eu" xmlns:s="types.spatial.schema.fisheries.ec.europa.eu" targetNamespace="source.spatial.schema.fisheries.ec.europa.eu" version="1.0">
 	<xsd:import namespace="types.spatial.schema.fisheries.ec.europa.eu" schemaLocation="CommonTypes.xsd"/>
-	<xsd:element name="GetAreaTypesSpatialRQ"/>
 	<xsd:element name="GetAreaTypesSpatialRS">
 		<xsd:complexType>
 			<xsd:sequence>
-				<xsd:element name="areaTypes" type="xsd:string" maxOccurs="unbounded"/>
+				<xsd:element name="AreaTypes" type="s:AreaType" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="GetEezSpatialRS">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="Eez" type="s:EezType"/>
 			</xsd:sequence>
 		</xsd:complexType>
 	</xsd:element>
