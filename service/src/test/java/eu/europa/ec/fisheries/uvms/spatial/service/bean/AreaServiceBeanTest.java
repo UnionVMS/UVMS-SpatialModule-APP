@@ -48,6 +48,17 @@ public class AreaServiceBeanTest {
         assertThat(retrieveAreaNames(areaTypes)).containsOnly(AREA_TYPES.toArray());
     }
 
+    @Test
+    public void shouldNotThrowNullPointerException() throws Exception {
+        // given
+        when(spatialDao.getAreaTypes()).thenReturn(null);
+
+        // when
+        GetAreaTypesSpatialRS areaTypeRS = areaService.getAreaTypes();
+
+    }
+
+
     private List<String> retrieveAreaNames(List<AreaType> areaTypes) {
         return Lists.transform(areaTypes, new Function<AreaType, String>() {
             @Override
