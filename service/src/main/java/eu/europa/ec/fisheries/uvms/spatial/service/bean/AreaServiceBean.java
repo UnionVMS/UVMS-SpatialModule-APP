@@ -9,12 +9,8 @@ import eu.europa.ec.fisheries.uvms.spatial.dao.CrudDao;
 import javax.ejb.*;
 import java.util.List;
 
-/**
- * Created by kopyczmi on 03-Aug-15.
- */
 @Stateless
 @Local(AreaService.class)
-@TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class AreaServiceBean implements AreaService {
 
     @EJB
