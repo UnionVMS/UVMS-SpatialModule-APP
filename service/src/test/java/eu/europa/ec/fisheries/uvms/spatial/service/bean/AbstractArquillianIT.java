@@ -20,9 +20,6 @@ public class AbstractArquillianIT {
                 .addAsResource("config.properties")
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
-        // TODO Please remove that dependencies
-        // YOU BIND YOURSELF TO THE MODEL!
-        // THIS IS MADNESS
         File[] jaxbPluginLibs = Maven.resolver().resolve("org.jvnet.jaxb2_commons:jaxb2-basics-runtime:0.9.4").withTransitivity().as(File.class);
         File[] guavaLibs = Maven.resolver().resolve("com.google.guava:guava:18.0").withTransitivity().as(File.class);
         File[] commonsLibs = Maven.resolver().resolve("org.apache.commons:commons-lang3:3.4").withTransitivity().as(File.class);

@@ -22,15 +22,7 @@ import java.io.File;
 import static junit.framework.TestCase.assertNotNull;
 
 @RunWith(Arquillian.class)
-public class CrudDaoImplIT {
-
-    @Deployment
-    public static JavaArchive createDeployment() {
-       return ShrinkWrap.create(JavaArchive.class).addPackages(true, "eu.europa")
-                .addAsResource("META-INF/test-persistence.xml", "META-INF/persistence.xml")
-                .addAsResource("config.properties")
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
-    }
+public class CrudDaoImplIT extends AbstractArquillianIT {
 
     @EJB
     CrudDao crudDao;
