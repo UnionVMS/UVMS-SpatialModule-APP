@@ -11,7 +11,7 @@ public interface SpatialService {
 
     List<SpatialDto> getListAsRestDto(String spatialQuery) throws SpatialServiceException;
 
-    // TODO change return type for Schema Object
+    // TODO change return type for DTO
     CountryEntity getCountryById(int id);
 
     GetEezSpatialRS getExclusiveEconomicZoneById(long id);
