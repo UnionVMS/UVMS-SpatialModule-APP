@@ -2,7 +2,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.spatial.dao.CrudDao;
 import eu.europa.ec.fisheries.uvms.spatial.entity.CountryEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.SpatialService;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.CountryDto;
 import org.junit.Before;
 import org.junit.Test;
 import org.unitils.UnitilsJUnit4;
@@ -12,10 +12,10 @@ import org.unitils.mock.Mock;
 
 import static org.junit.Assert.assertEquals;
 
-public class SpatialServiceBeanTest extends UnitilsJUnit4 {
+public class CountryServiceBeanTest extends UnitilsJUnit4 {
 
     @TestedObject
-    private SpatialService spatialService;
+    private CountryService countryService;
 
     @InjectIntoByType
     private Mock<CrudDao> crudServiceMock;
@@ -24,21 +24,20 @@ public class SpatialServiceBeanTest extends UnitilsJUnit4 {
 
     @Before
     public void beforeTest() {
-        spatialService = new SpatialServiceBean();
+        countryService = new CountryServiceBean();
         country = createCountry();
     }
 
     @Test
     public void shouldGetCountryById() {
         crudServiceMock.returns(country).find(CountryEntity.class, 1);
-        CountryEntity countryById = spatialService.getCountryById(1);
+        CountryDto countryById = countryService.getCountryById(1);
         assertEquals(countryById, countryById);
     }
 
     private CountryEntity createCountry() {
         CountryEntity country = new CountryEntity();
         country.setId(1);
-        country.setSovereign("Sovereign");
         return country;
     }
 }

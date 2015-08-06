@@ -3,7 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.rest.resources;
 import eu.europa.ec.fisheries.schema.spatial.source.GetEezSpatialRS;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseCode;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.SpatialService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.ExclusiveEconomicZoneService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +22,7 @@ public class EezResource {
     final static Logger LOG = LoggerFactory.getLogger(EezResource.class);
 
     @EJB
-    private SpatialService spatialService;
+    private ExclusiveEconomicZoneService exclusiveEconomicZoneService;
 
     @POST
     @Consumes(value = {MediaType.APPLICATION_JSON})
@@ -31,7 +31,7 @@ public class EezResource {
     public ResponseDto getExclusiveEconomicZoneById(@PathParam("id") long eezId) {
         try {
             LOG.info("Getting eez with {}", eezId);
-            GetEezSpatialRS eez = spatialService.getExclusiveEconomicZoneById(eezId);
+            GetEezSpatialRS eez = exclusiveEconomicZoneService.getExclusiveEconomicZoneById(eezId);
             return new ResponseDto(eez, ResponseCode.OK);
         } catch (Exception ex) {
             if (LOG.isDebugEnabled()) {

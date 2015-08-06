@@ -1,7 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.schema.spatial.source.GetAreaTypesSpatialRS;
-import eu.europa.ec.fisheries.uvms.spatial.service.AreaService;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;

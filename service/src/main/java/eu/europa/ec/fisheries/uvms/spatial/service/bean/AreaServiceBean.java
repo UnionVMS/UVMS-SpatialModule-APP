@@ -5,7 +5,6 @@ import com.google.common.collect.Lists;
 import eu.europa.ec.fisheries.schema.spatial.source.GetAreaTypesSpatialRS;
 import eu.europa.ec.fisheries.schema.spatial.types.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.dao.CrudDao;
-import eu.europa.ec.fisheries.uvms.spatial.service.AreaService;
 
 import javax.ejb.*;
 import java.util.List;

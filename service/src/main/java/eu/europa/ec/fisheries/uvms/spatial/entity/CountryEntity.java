@@ -1,6 +1,5 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -15,7 +14,6 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "countries", schema = "spatial")
-@Data
 @EqualsAndHashCode
 @ToString
 public class CountryEntity implements Serializable {
@@ -26,6 +24,16 @@ public class CountryEntity implements Serializable {
 
     @Column(name = "sovereignt")
     private String sovereign;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+
 
 
 }

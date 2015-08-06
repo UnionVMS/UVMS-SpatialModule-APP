@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.spatial.service;
+package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.schema.spatial.source.GetAreaTypesSpatialRS;
 

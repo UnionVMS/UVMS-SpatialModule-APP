@@ -3,7 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.rest.resources;
 import eu.europa.ec.fisheries.schema.spatial.source.GetAreaTypesSpatialRS;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseCode;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.AreaService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

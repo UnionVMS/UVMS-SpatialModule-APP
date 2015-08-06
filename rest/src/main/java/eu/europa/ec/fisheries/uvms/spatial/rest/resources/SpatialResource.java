@@ -2,7 +2,7 @@ package eu.europa.ec.fisheries.uvms.spatial.rest.resources;
 
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseCode;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.SpatialService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

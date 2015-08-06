@@ -6,7 +6,6 @@ import com.google.common.collect.Lists;
 import eu.europa.ec.fisheries.schema.spatial.source.GetAreaTypesSpatialRS;
 import eu.europa.ec.fisheries.schema.spatial.types.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.dao.CrudDao;
-import eu.europa.ec.fisheries.uvms.spatial.service.AreaService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
