@@ -19,7 +19,7 @@ import static org.junit.Assert.assertFalse;
 public class AreaServiceBeanIT extends AbstractArquillianIT {
 
     @EJB
-    AreaService areaService;
+    private AreaService areaService;
 
     @Test
     public void shouldReturnAreaTypes() throws Exception {

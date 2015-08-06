@@ -7,8 +7,6 @@ import eu.europa.ec.fisheries.uvms.spatial.service.AreaService;
 import javax.ejb.*;
 import java.util.List;
 
-import static java.util.Arrays.asList;
-
 /**
  * Created by kopyczmi on 03-Aug-15.
  */
@@ -22,11 +20,7 @@ public class AreaServiceBean implements AreaService {
 
     @Override
     public GetAreaTypesSpatialRS getAreaTypes() {
-        List<String> testData = asList("Portugal", "Belgium", "Poland", "Bulgaria"); //TODO remove it
-
         List<String> areaTypes = spatialDao.getAreaTypes();
-        areaTypes.addAll(testData);
-
         return createResponse(areaTypes);
     }
 
