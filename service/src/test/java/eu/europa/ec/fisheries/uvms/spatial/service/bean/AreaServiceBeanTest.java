@@ -5,7 +5,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import eu.europa.ec.fisheries.schema.spatial.source.GetAreaTypesSpatialRS;
 import eu.europa.ec.fisheries.schema.spatial.types.AreaType;
-import eu.europa.ec.fisheries.uvms.spatial.dao.SpatialDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.CrudDao;
 import eu.europa.ec.fisheries.uvms.spatial.service.AreaService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,7 +28,7 @@ public class AreaServiceBeanTest {
     private final static List<String> AREA_TYPES = ImmutableList.of("Portugal", "Belgium", "Poland", "Bulgaria");
 
     @Mock
-    private SpatialDao spatialDao;
+    private CrudDao crudDao;
 
     @InjectMocks
     private AreaService areaService = new AreaServiceBean();
@@ -36,7 +36,7 @@ public class AreaServiceBeanTest {
     @Test
     public void shouldReturnAreaTypes() throws Exception {
         // given
-        when(spatialDao.getAreaTypes()).thenReturn(AREA_TYPES);
+        when(crudDao.findByNativeQuery("SELECT a.typeName FROM AreaTypeEntity a", String.class)).thenReturn(AREA_TYPES);
 
         // when
         GetAreaTypesSpatialRS areaTypeRS = areaService.getAreaTypes();
@@ -51,13 +51,12 @@ public class AreaServiceBeanTest {
     @Test
     public void shouldNotThrowNullPointerException() throws Exception {
         // given
-        when(spatialDao.getAreaTypes()).thenReturn(null);
+        when(crudDao.findByNativeQuery("SELECT a.typeName FROM AreaTypeEntity a", String.class)).thenReturn(null);
 
         // when
         GetAreaTypesSpatialRS areaTypeRS = areaService.getAreaTypes();
 
     }
-
 
     private List<String> retrieveAreaNames(List<AreaType> areaTypes) {
         return Lists.transform(areaTypes, new Function<AreaType, String>() {

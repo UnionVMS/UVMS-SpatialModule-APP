@@ -19,4 +19,6 @@ public interface CrudDao {
     List findWithNamedQuery(String namedQueryName, Map parameters);
 
     List findWithNamedQuery(String namedQueryName, Map parameters, int resultLimit);
+
+    List findByNativeQuery(String sql, Class type);
 }

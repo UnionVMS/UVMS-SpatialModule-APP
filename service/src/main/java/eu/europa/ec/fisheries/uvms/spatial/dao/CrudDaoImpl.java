@@ -60,4 +60,9 @@ public class CrudDaoImpl implements CrudDao {
         return null;
     }
 
+    @Override
+    public List findByNativeQuery(String sql, Class type) {
+        return this.em.createNativeQuery(sql, type).getResultList();
+    }
+
 }

@@ -4,7 +4,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import eu.europa.ec.fisheries.schema.spatial.source.GetAreaTypesSpatialRS;
 import eu.europa.ec.fisheries.schema.spatial.types.AreaType;
-import eu.europa.ec.fisheries.uvms.spatial.dao.SpatialDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.CrudDao;
 import eu.europa.ec.fisheries.uvms.spatial.service.AreaService;
 
 import javax.ejb.*;
@@ -19,11 +19,11 @@ import java.util.List;
 public class AreaServiceBean implements AreaService {
 
     @EJB
-    private SpatialDao spatialDao;
+    private CrudDao crudDao;
 
     @Override
     public GetAreaTypesSpatialRS getAreaTypes() {
-        List<String> areaTypes = spatialDao.getAreaTypes();
+        List<String> areaTypes = crudDao.findByNativeQuery("SELECT a.typeName FROM AreaTypeEntity a", String.class);
         return createResponse(areaTypes);
     }
 
