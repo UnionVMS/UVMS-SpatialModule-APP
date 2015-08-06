@@ -1,5 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.dao;
 
+import org.hibernate.cfg.NotYetImplementedException;
+
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -22,7 +24,7 @@ public class CrudDaoImpl implements CrudDao {
 
     @Override
     public Object create(Object t) {
-        return null;
+        throw new NotYetImplementedException();
     }
 
     @Override
@@ -32,32 +34,34 @@ public class CrudDaoImpl implements CrudDao {
 
     @Override
     public Object update(Object t) {
-        return null;
+       throw new NotYetImplementedException();
     }
 
     @Override
     public void delete(Class type, Object id) {
-
+        throw new NotYetImplementedException();
     }
 
     @Override
-    public List findWithNamedQuery(String queryName) {
-        return null;
+    public List findWithNamedQuery(String namedQueryName) {
+        return this.em.createNamedQuery(namedQueryName).getResultList();
     }
 
     @Override
     public List findWithNamedQuery(String queryName, int resultLimit) {
-        return null;
+        return this.em.createNamedQuery(queryName).
+                setMaxResults(resultLimit).
+                getResultList();
     }
 
     @Override
     public List findWithNamedQuery(String namedQueryName, Map parameters) {
-        return null;
+        return findWithNamedQuery(namedQueryName, parameters, 0);
     }
 
     @Override
     public List findWithNamedQuery(String namedQueryName, Map parameters, int resultLimit) {
-        return null;
+        throw new NotYetImplementedException();
     }
 
     @Override
