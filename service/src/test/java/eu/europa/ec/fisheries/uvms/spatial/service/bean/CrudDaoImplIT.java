@@ -40,7 +40,7 @@ public class CrudDaoImplIT extends AbstractArquillianIT {
 
     @Test
     public void shouldFindExclusiveEconomicZone() {
-        EezEntity eez = (EezEntity) crudDao.find(EezEntity.class, 1);
+        EezEntity eez = (EezEntity) crudDao.find(EezEntity.class, 1l);
         assertNotNull(eez);
         assertNotNull(eez.getGeom());
     }

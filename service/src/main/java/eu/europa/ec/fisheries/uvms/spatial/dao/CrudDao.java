@@ -22,5 +22,5 @@ public interface CrudDao {
 
     // TODO Having so many different method in that class causes it is no longer only CRUD DAO, so we should consider to change the name for ex. SpatialDao
     // TODO But anyway I like it
-    List findByNativeQuery(String sql, Class type);
+    List findByQuery(String sql, Class type);
 }

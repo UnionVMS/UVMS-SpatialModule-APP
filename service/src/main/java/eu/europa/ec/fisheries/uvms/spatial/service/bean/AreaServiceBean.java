@@ -23,7 +23,7 @@ public class AreaServiceBean implements AreaService {
 
     @Override
     public GetAreaTypesSpatialRS getAreaTypes() {
-        List<String> areaTypes = crudDao.findByNativeQuery("SELECT a.typeName FROM AreaTypeEntity a", String.class);
+        List<String> areaTypes = crudDao.findByQuery("SELECT a.typeName FROM AreaTypeEntity a", String.class);
         return createResponse(areaTypes);
     }
 
