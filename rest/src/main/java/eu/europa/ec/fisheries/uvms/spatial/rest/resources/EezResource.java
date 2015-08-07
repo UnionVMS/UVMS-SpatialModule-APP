@@ -24,10 +24,10 @@ public class EezResource {
     @EJB
     private ExclusiveEconomicZoneService exclusiveEconomicZoneService;
 
-    @POST
+    @GET
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    @Path("{id}")
+    @Path("/{id}")
     public ResponseDto getExclusiveEconomicZoneById(@PathParam("id") long eezId) {
         try {
             LOG.info("Getting eez with {}", eezId);

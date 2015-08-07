@@ -35,7 +35,7 @@ public class AreaServiceBeanTest {
     @Test
     public void shouldReturnAreaTypes() throws Exception {
         // given
-        when(crudDao.findByQuery("SELECT a.typeName FROM AreaTypeEntity a", String.class)).thenReturn(AREA_TYPES);
+        when(crudDao.findByHQLQuery("SELECT a.typeName FROM AreaTypeEntity a", String.class)).thenReturn(AREA_TYPES);
 
         // when
         GetAreaTypesSpatialRS areaTypeRS = areaService.getAreaTypes();
@@ -54,7 +54,7 @@ public class AreaServiceBeanTest {
         // TODO see: http://stackoverflow.com/questions/7665412/writing-first-junit-test
         // TODO see: http://martinfowler.com/bliki/GivenWhenThen.html
         // given
-        when(crudDao.findByQuery("SELECT a.typeName FROM AreaTypeEntity a", String.class)).thenReturn(null);
+        when(crudDao.findByHQLQuery("SELECT a.typeName FROM AreaTypeEntity a", String.class)).thenReturn(null);
 
         // when
         GetAreaTypesSpatialRS areaTypeRS = areaService.getAreaTypes();

@@ -13,7 +13,7 @@ import static junit.framework.TestCase.assertNotNull;
  * Created by kopyczmi on 06-Aug-15.
  */
 @RunWith(Arquillian.class)
-public class ExclusiveEconomicZoneServiceIT extends AbstractArquillianIT {
+public class ExclusiveEconomicZoneServiceBeanIT extends AbstractArquillianIT {
 
     @EJB
     private ExclusiveEconomicZoneService exclusiveEconomicZoneService;

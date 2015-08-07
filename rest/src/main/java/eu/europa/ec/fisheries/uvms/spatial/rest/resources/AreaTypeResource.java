@@ -35,11 +35,11 @@ public class AreaTypeResource {
         }
     }
 
-    @POST
+    @GET
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Path("/areasByLocation")
-    public ResponseDto getExclusiveEconomicZoneById(
+    public ResponseDto areasByLocation(
             @PathParam(value = "lat") double lat,
             @PathParam(value = "lon") double lon,
             @DefaultValue("4326") @PathParam(value = "crs") int crs) {

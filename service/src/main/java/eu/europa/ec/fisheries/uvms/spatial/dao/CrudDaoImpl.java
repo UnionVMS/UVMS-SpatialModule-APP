@@ -34,7 +34,7 @@ public class CrudDaoImpl implements CrudDao {
 
     @Override
     public Object update(Object t) {
-       throw new NotYetImplementedException();
+        throw new NotYetImplementedException();
     }
 
     @Override
@@ -65,7 +65,7 @@ public class CrudDaoImpl implements CrudDao {
     }
 
     @Override
-    public List findByQuery(String sql, Class type) {
+    public List findByHQLQuery(String sql, Class type) {
         return this.em.createQuery(sql, type).getResultList();
     }
 

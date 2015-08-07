@@ -2,6 +2,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.schema.spatial.source.GetEezSpatialRS;
 import eu.europa.ec.fisheries.uvms.spatial.dao.CrudDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.CrudDaoImpl;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.EezMapper;
 
@@ -14,7 +15,6 @@ import javax.ejb.Stateless;
  */
 @Stateless
 @Local(ExclusiveEconomicZoneService.class)
-//TODO I am OK with that granularity
 public class ExclusiveEconomicZoneServiceBean implements ExclusiveEconomicZoneService {
 
     @EJB

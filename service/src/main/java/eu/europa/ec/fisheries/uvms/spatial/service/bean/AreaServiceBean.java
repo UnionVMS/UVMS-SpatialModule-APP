@@ -23,7 +23,7 @@ public class AreaServiceBean implements AreaService {
 
     @Override
     public GetAreaTypesSpatialRS getAreaTypes() {
-        List<String> areaTypes = crudDao.findByQuery("SELECT a.typeName FROM AreaTypeEntity a", String.class);
+        List<String> areaTypes = crudDao.findByHQLQuery("SELECT a.typeName FROM AreaTypeEntity a", String.class);
         return createResponse(areaTypes);
     }
 
@@ -31,7 +31,6 @@ public class AreaServiceBean implements AreaService {
     @Override
     public Object getAreasByLocation(double lat, double lon, int crs) {
         throw new NotImplementedException("Not implemented, yet");
-
     }
 
     private GetAreaTypesSpatialRS createResponse(List<String> areaTypeNames) {
