@@ -14,6 +14,7 @@ import javax.ejb.Stateless;
  */
 @Stateless
 @Local(ExclusiveEconomicZoneService.class)
+//TODO I am OK with that granularity
 public class ExclusiveEconomicZoneServiceBean implements ExclusiveEconomicZoneService {
 
     @EJB
@@ -25,6 +26,9 @@ public class ExclusiveEconomicZoneServiceBean implements ExclusiveEconomicZoneSe
         return createResponse(eez);
     }
 
+    // TODO It is better to let the container (EJB) to manage the lifecycle of objects than manually create objects
+    // TODO It is very difficult to write test independent of the Mapper when you can not mock it. As far as we are using EJB Injection in other places we should try to Inject as many components to our class as possible.
+    // TODO http://mapstruct.org/documentation/#section-retr-mapper => 4.2 Using dependency injection
     private GetEezSpatialRS createResponse(EezEntity eez) {
         GetEezSpatialRS response = new GetEezSpatialRS();
         if (eez != null) {

@@ -7,8 +7,12 @@ import eu.europa.ec.fisheries.schema.spatial.types.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.dao.CrudDao;
 import org.apache.commons.lang3.NotImplementedException;
 
-import javax.ejb.*;
+import javax.ejb.EJB;
+import javax.ejb.Local;
+import javax.ejb.Stateless;
 import java.util.List;
+
+import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 
 @Stateless
 @Local(AreaService.class)
@@ -32,15 +36,17 @@ public class AreaServiceBean implements AreaService {
 
     private GetAreaTypesSpatialRS createResponse(List<String> areaTypeNames) {
         GetAreaTypesSpatialRS response = new GetAreaTypesSpatialRS();
-        List<AreaType> areaTypes = Lists.transform(areaTypeNames, new Function<String, AreaType>() {
-            @Override
-            public AreaType apply(String areaName) {
-                AreaType areaType = new AreaType();
-                areaType.setTypeName(areaName);
-                return areaType;
-            }
-        });
-        response.setAreaTypes(areaTypes);
+        if (isNotEmpty(areaTypeNames)) {
+            List<AreaType> areaTypes = Lists.transform(areaTypeNames, new Function<String, AreaType>() {
+                @Override
+                public AreaType apply(String areaName) {
+                    AreaType areaType = new AreaType();
+                    areaType.setTypeName(areaName);
+                    return areaType;
+                }
+            });
+            response.setAreaTypes(areaTypes);
+        }
         return response;
     }
 

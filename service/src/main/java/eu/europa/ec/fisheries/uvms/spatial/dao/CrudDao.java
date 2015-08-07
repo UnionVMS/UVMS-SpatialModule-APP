@@ -20,5 +20,7 @@ public interface CrudDao {
 
     List findWithNamedQuery(String namedQueryName, Map parameters, int resultLimit);
 
+    // TODO Having so many different method in that class causes it is no longer only CRUD DAO, so we should consider to change the name for ex. SpatialDao
+    // TODO But anyway I like it
     List findByNativeQuery(String sql, Class type);
 }

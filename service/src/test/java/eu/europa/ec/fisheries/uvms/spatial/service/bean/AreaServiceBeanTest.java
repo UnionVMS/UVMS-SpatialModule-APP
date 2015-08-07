@@ -6,7 +6,6 @@ import com.google.common.collect.Lists;
 import eu.europa.ec.fisheries.schema.spatial.source.GetAreaTypesSpatialRS;
 import eu.europa.ec.fisheries.schema.spatial.types.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.dao.CrudDao;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -49,14 +48,20 @@ public class AreaServiceBeanTest {
     }
 
     @Test
-    @Ignore
+    // TODO Great, thanks!
     public void shouldNotThrowNullPointerException() throws Exception {
+        // TODO That comments make the test more readable. You see, and you immediately know what class are you testing and which you are mocking. It is even more noticeable witch larger more complicated tests.
+        // TODO see: http://stackoverflow.com/questions/7665412/writing-first-junit-test
+        // TODO see: http://martinfowler.com/bliki/GivenWhenThen.html
         // given
         when(crudDao.findByNativeQuery("SELECT a.typeName FROM AreaTypeEntity a", String.class)).thenReturn(null);
 
         // when
         GetAreaTypesSpatialRS areaTypeRS = areaService.getAreaTypes();
 
+        // then
+        assertNotNull(areaTypeRS);
+        assertThat(areaTypeRS.getAreaTypes()).isEmpty();
     }
 
     private List<String> retrieveAreaNames(List<AreaType> areaTypes) {
