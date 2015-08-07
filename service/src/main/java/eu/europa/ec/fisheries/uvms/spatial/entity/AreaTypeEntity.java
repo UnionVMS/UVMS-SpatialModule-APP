@@ -1,5 +1,8 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
 import javax.persistence.*;
 
 /**
@@ -8,6 +11,8 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "area_types", schema = "spatial", catalog = "uvms")
+@EqualsAndHashCode
+@ToString
 public class AreaTypeEntity {
     private int id;
     private String typeName;
@@ -76,31 +81,4 @@ public class AreaTypeEntity {
         this.srsCode = srsCode;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        AreaTypeEntity areaTypeEntity = (AreaTypeEntity) o;
-
-        if (id != areaTypeEntity.id) return false;
-        if (srsCode != areaTypeEntity.srsCode) return false;
-        if (typeName != null ? !typeName.equals(areaTypeEntity.typeName) : areaTypeEntity.typeName != null) return false;
-        if (areaTypeDesc != null ? !areaTypeDesc.equals(areaTypeEntity.areaTypeDesc) : areaTypeEntity.areaTypeDesc != null) return false;
-        if (areaDbTable != null ? !areaDbTable.equals(areaTypeEntity.areaDbTable) : areaTypeEntity.areaDbTable != null) return false;
-        if (geoName != null ? !geoName.equals(areaTypeEntity.geoName) : areaTypeEntity.geoName != null) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = id;
-        result = 31 * result + (typeName != null ? typeName.hashCode() : 0);
-        result = 31 * result + (areaTypeDesc != null ? areaTypeDesc.hashCode() : 0);
-        result = 31 * result + (areaDbTable != null ? areaDbTable.hashCode() : 0);
-        result = 31 * result + (geoName != null ? geoName.hashCode() : 0);
-        result = 31 * result + srsCode;
-        return result;
-    }
 }

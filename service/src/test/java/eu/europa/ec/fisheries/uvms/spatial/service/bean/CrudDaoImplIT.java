@@ -25,7 +25,7 @@ import static junit.framework.TestCase.assertNotNull;
 public class CrudDaoImplIT extends AbstractArquillianIT {
 
     @EJB
-    CrudDao crudDao;
+    private CrudDao crudDao;
 
     @Before
     public void beforeTest() {
