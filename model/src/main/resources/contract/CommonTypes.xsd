@@ -1,20 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2015 rel. 4 sp1 (x64) (http://www.altova.com) by marian (cop) -->
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="types.spatial.schema.fisheries.ec.europa.eu" targetNamespace="types.spatial.schema.fisheries.ec.europa.eu" version="1.0">
-	<xsd:complexType name="EezType">
+	<xsd:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="http://www.w3.org/2005/08/xml.xsd"/> 
+	<xsd:attribute name="id" type="xsd:ID"/>
+	<xsd:complexType name="AreaResultType">
 		<xsd:sequence>
-			<xsd:element name="Name" type="xsd:string"/>
-			<xsd:element name="Geometry" type="xsd:string"/>
-			<xsd:element name="Country" type="xsd:string"/>
-			<xsd:element name="Sovereign" type="xsd:string"/>
-			<xsd:element name="Remarks"/>
-			<xsd:element name="Longitude"/>
-			<xsd:element name="Latitude"/>
+			<xsd:element name="Type" type="xsd:string"/>
+			<xsd:element name="Geometry" type="GeometryType"/>
+			<xsd:element name="Properties" type="PropertyType"/>
 		</xsd:sequence>
 	</xsd:complexType>
 	<xsd:complexType name="AreaType">
 		<xsd:sequence>
 			<xsd:element name="TypeName" type="xsd:string"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="GeometryType">
+		<xsd:sequence>
+			<xsd:element name="Type" type="xsd:string"/>
+			<xsd:element name="Coordinates" type="xsd:string"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="PropertyType">
+		<xsd:sequence>
+			<xsd:element name="entry" minOccurs="0" maxOccurs="unbounded">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="key" type="xsd:string" minOccurs="0"/>
+						<xsd:element name="value" type="xsd:string" minOccurs="0"/>
+					</xsd:sequence>
+					<xsd:attribute ref="xml:id" use="required"/>
+				</xsd:complexType>
+			</xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
 </xsd:schema>
