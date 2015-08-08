@@ -15,8 +15,17 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 @Mapper(componentModel="cdi", uses = GeometryMapper.class )
 public abstract class AreaResultTypeMapper {
 
+    private final static String FEATURE = "Feature";
+    private final static String AREAM2 = "areaM2";
+    private final static String ISO3DIGIT = "iso3Digit";
+    private final static String REMARKS = "remarks";
+    private final static String SOVEREIGN = "sovereign";
+    private final static String COUNTRY = "country";
+    private final static String LATITUDE = "latitude";
+    private final static String LONGITUDE = "longitude";
+
     @Mappings( {
-        @Mapping(target = "type", constant = "Feature"),
+        @Mapping(target = "type", constant = FEATURE),
         @Mapping(source = "geom", target = "geometry"),
     })
     public abstract AreaResultType eezEntityToAreaResultType(EezEntity eezEntity);
@@ -41,7 +50,7 @@ public abstract class AreaResultTypeMapper {
     private void addAreaM2(EezEntity eezEntity, ArrayList<PropertyType.Entry> properties) {
         if (eezEntity.getAreaM2() != null) {
             PropertyType.Entry entry = new PropertyType.Entry();
-            entry.setKey("areaM2");
+            entry.setKey(AREAM2);
             entry.setValue(Double.toString(eezEntity.getAreaM2()));
             properties.add(entry);
         }
@@ -59,7 +68,7 @@ public abstract class AreaResultTypeMapper {
     private void addIso3Digit(EezEntity eezEntity, ArrayList<PropertyType.Entry> properties) {
         if (isNotEmpty(eezEntity.getIso3Digit())) {
             PropertyType.Entry entry = new PropertyType.Entry();
-            entry.setKey("iso3Digit");
+            entry.setKey(ISO3DIGIT);
             entry.setValue(eezEntity.getIso3Digit());
             properties.add(entry);
         }
@@ -68,7 +77,7 @@ public abstract class AreaResultTypeMapper {
     private void addRemarks(EezEntity eezEntity, ArrayList<PropertyType.Entry> properties) {
         if (isNotEmpty(eezEntity.getRemarks())) {
             PropertyType.Entry entry = new PropertyType.Entry();
-            entry.setKey("remarks");
+            entry.setKey(REMARKS);
             entry.setValue(eezEntity.getRemarks());
             properties.add(entry);
         }
@@ -77,7 +86,7 @@ public abstract class AreaResultTypeMapper {
     private void addSovereign(EezEntity eezEntity, ArrayList<PropertyType.Entry> properties) {
         if (isNotEmpty(eezEntity.getSovereign())) {
             PropertyType.Entry entry = new PropertyType.Entry();
-            entry.setKey("sovereign");
+            entry.setKey(SOVEREIGN);
             entry.setValue(eezEntity.getSovereign());
             properties.add(entry);
         }
@@ -86,7 +95,7 @@ public abstract class AreaResultTypeMapper {
     private void addCountry(EezEntity eezEntity, ArrayList<PropertyType.Entry> properties) {
         if (isNotEmpty(eezEntity.getCountry())) {
             PropertyType.Entry entry = new PropertyType.Entry();
-            entry.setKey("country");
+            entry.setKey(COUNTRY);
             entry.setValue(eezEntity.getCountry());
             properties.add(entry);
         }
@@ -95,7 +104,7 @@ public abstract class AreaResultTypeMapper {
     private void addLatitude(EezEntity eezEntity, ArrayList<PropertyType.Entry> properties) {
         if (eezEntity.getLatitude() != null) {
             PropertyType.Entry entry = new PropertyType.Entry();
-            entry.setKey("latitude");
+            entry.setKey(LATITUDE);
             entry.setValue(Double.toString(eezEntity.getLatitude()));
             properties.add(entry);
         }
@@ -104,7 +113,7 @@ public abstract class AreaResultTypeMapper {
     private void addLongitude(EezEntity eezEntity, ArrayList<PropertyType.Entry> properties) {
         if (eezEntity.getLongitude() != null) {
             PropertyType.Entry entry = new PropertyType.Entry();
-            entry.setKey("longitude");
+            entry.setKey(LONGITUDE);
             entry.setValue(Double.toString(eezEntity.getLongitude()));
             properties.add(entry);
         }
