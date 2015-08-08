@@ -4,11 +4,13 @@ import eu.europa.ec.fisheries.schema.spatial.source.GetEezSpatialRS;
 import eu.europa.ec.fisheries.uvms.spatial.dao.CrudDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.CrudDaoImpl;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.mapper.AreaResultTypeMapper;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.EezMapper;
 
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 
 /**
  * //TODO create test
@@ -20,8 +22,8 @@ public class ExclusiveEconomicZoneServiceBean implements ExclusiveEconomicZoneSe
     @EJB
     private CrudDao crudDao;
 
-    @EJB
-    private EezMapper eezMapper;
+    @Inject
+    private AreaResultTypeMapper eezMapper;
 
     @Override
     public GetEezSpatialRS getExclusiveEconomicZoneById(long id) {
@@ -32,7 +34,7 @@ public class ExclusiveEconomicZoneServiceBean implements ExclusiveEconomicZoneSe
     private GetEezSpatialRS createResponse(EezEntity eez) {
         GetEezSpatialRS response = new GetEezSpatialRS();
         if (eez != null) {
-            response.setEez(eezMapper.eezEntityToSchema(eez));
+            response.setEez(eezMapper.eezEntityToAreaResultType(eez));
         }
         return response;
     }

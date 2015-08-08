@@ -7,7 +7,7 @@ import org.mapstruct.factory.Mappers;
 /**
  * //TODO add test
  */
-@Mapper
+@Mapper(componentModel="cdi")
 public interface MovementBaseTypeMapper {
 
     MovementBaseTypeMapper INSTANCE = Mappers.getMapper(MovementBaseTypeMapper.class);
