@@ -33,10 +33,7 @@
         <application.error.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}-error.log</application.error.logfile>
         <application.logfile.boot>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}-boot.log</application.logfile.boot>
         <hibernate.version>4.3.5.Final</hibernate.version>
-        <postgis.version>1.5.2</postgis.version>
         <hibernate-spatial.version>4.3</hibernate-spatial.version>
-        <jts.version>1.13</jts.version>
-        <postgis.jdbc.version>1.5.2</postgis.jdbc.version>
     </properties>
 
     <dependencyManagement>
