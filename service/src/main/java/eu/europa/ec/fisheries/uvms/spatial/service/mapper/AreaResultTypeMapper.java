@@ -1,9 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.mapper;
 
 import com.google.common.collect.Lists;
-import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.schema.spatial.types.AreaResultType;
-import eu.europa.ec.fisheries.schema.spatial.types.GeometryType;
 import eu.europa.ec.fisheries.schema.spatial.types.PropertyType;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import org.mapstruct.*;
@@ -12,7 +10,7 @@ import java.util.ArrayList;
 
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
-@Mapper(componentModel="cdi", uses = GeometryMapper.class )
+@Mapper(componentModel="cdi", uses = GeometryTypeMapper.class )
 public abstract class AreaResultTypeMapper {
 
     private final static String FEATURE = "Feature";

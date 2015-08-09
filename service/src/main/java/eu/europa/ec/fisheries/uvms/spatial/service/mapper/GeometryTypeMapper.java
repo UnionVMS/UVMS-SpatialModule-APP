@@ -8,7 +8,7 @@ import org.mapstruct.Mappings;
 
 
 @Mapper(componentModel="cdi")
-public interface GeometryMapper {
+public interface GeometryTypeMapper {
 
     @Mappings({
             @Mapping(target = "coordinates", expression = "java(geometry.toText())"),

@@ -27,14 +27,13 @@ public class AreaResultTypeMapperTest {
         areaResultTypeMapper = new AreaResultTypeMapperImpl();
         entity = buildEntity();
         try {
-            Field field = AreaResultTypeMapperImpl.class.getDeclaredField("geometryMapper");
+            Field field = AreaResultTypeMapperImpl.class.getDeclaredField("geometryTypeMapper");
             field.setAccessible(true);
-            GeometryMapperImpl geometryMapper = new GeometryMapperImpl();
+            GeometryTypeMapper geometryMapper = new GeometryTypeMapperImpl();
             field.set(areaResultTypeMapper, geometryMapper);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             fail("Failed to initialize areaResultTypeMapper");
         }
-
     }
 
     @Test
