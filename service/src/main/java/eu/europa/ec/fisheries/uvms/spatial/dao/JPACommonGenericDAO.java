@@ -1,6 +1,5 @@
 package eu.europa.ec.fisheries.uvms.spatial.dao;
 
-import org.hibernate.cfg.NotYetImplementedException;
 import org.jboss.logging.Logger;
 
 import javax.ejb.Local;
@@ -9,13 +8,15 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  * This class is responsible for all application level database interaction.
  * It provides unified apis for all basic CRUD operations like Create, Read, Update, Delete.
- *
  */
 @Stateless
 @Local(CommonGenericDAO.class)
@@ -28,77 +29,98 @@ public class JPACommonGenericDAO<T> implements CommonGenericDAO<T> {
     EntityManager em;
 
     @Override
-    public T createEntity(T entity) throws Exception {
-        try {
-            LOG.debug("Persisting entity : " + entity.getClass().getSimpleName());
-            em.persist(entity);
-        } catch (Exception e) {
-            e.printStackTrace();
-            LOG.debug("Error occured during Persisting entity : " + entity.getClass().getSimpleName());
-            throw new Exception();
-        }
+    public T createEntity(T entity) {
+
+        LOG.debug("Persisting entity : " + entity.getClass().getSimpleName());
+        em.persist(entity);
+
         return entity;
     }
 
     @Override
     public T updateEntity(T entity) {
-        throw new NotYetImplementedException();
+
+        LOG.debug("Updating entity : " + entity.getClass().getSimpleName());
+        em.merge(entity);
+        return entity;
     }
 
     @Override
-    public T findEntityById(Class<T> entityClass, Object id) throws Exception {
+    public T findEntityById(Class<T> entityClass, Object id) {
+
         T obj;
-        try {
-            LOG.debug("Finding entity : " + entityClass.getSimpleName() + " with ID : " + id.toString());
-            obj = (T) em.find(entityClass, id);
-        } catch (Exception e) {
-            e.printStackTrace();
-            LOG.debug("Error occurred during finding entity : " + entityClass.getSimpleName() + " with ID : " + id.toString());
-            throw new Exception();
-        }
+
+        LOG.debug("Finding entity : " + entityClass.getSimpleName() + " with ID : " + id.toString());
+        obj = em.find(entityClass, id);
+
         return obj;
     }
 
     @Override
-    public List findWithNamedQuery(String namedQueryName) {
-        return this.em.createNamedQuery(namedQueryName).getResultList();
-    }
+    public List<T> findEntityByQuery(Class<T> entityClass, String hqlQuery) {
 
-    @Override
-    public List findWithNamedQuery(String queryName, int resultLimit) {
-        return this.em.createNamedQuery(queryName).
-                setMaxResults(resultLimit).
-                getResultList();
-    }
-
-    @Override
-    public List findWithNamedQuery(String namedQueryName, Map parameters) {
-        return findWithNamedQuery(namedQueryName, parameters, 0);
-    }
-
-    @Override
-    public List findWithNamedQuery(String namedQueryName, Map parameters, int resultLimit) {
-        throw new NotYetImplementedException();
-    }
-
-    @Override
-    public List<T> findEntityByQuery(Class<T> entityClass, String hqlQuery) throws Exception {
         List<T> objectList;
 
-        try {
-            LOG.debug("Finding entity for query : " + hqlQuery);
-            objectList = em.createQuery(hqlQuery, entityClass).getResultList();
-        } catch (Exception e) {
-            e.printStackTrace();
-            LOG.debug("Error occurred during finding entity for query : " + hqlQuery);
-            throw new Exception();
-        }
+        LOG.debug("Finding entity for query : " + hqlQuery);
+        objectList = em.createQuery(hqlQuery, entityClass).getResultList();
+
         return objectList;
     }
 
     @Override
-    public boolean deleteEntity(T entity, Object id) {
-        throw new NotYetImplementedException();
+    @SuppressWarnings("unchecked")
+    public List<T> findEntityByQuery(Class<T> entityClass, String hqlQuery, Map<Integer, String> parameters) {
+
+        List<T> objectList;
+
+        LOG.debug("Finding entity for query : " + hqlQuery);
+        Set<Entry<Integer, String>> rawParameters = parameters.entrySet();
+        Query query = em.createQuery(hqlQuery, entityClass);
+        for (Entry<Integer, String> entry : rawParameters) {
+            query.setParameter(entry.getKey(), entry.getValue());
+        }
+        objectList = query.getResultList();
+
+        return objectList;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<T> findEntityByQuery(Class<T> entityClass, String hqlQuery, Map<Integer, String> parameters, int maxResultLimit) {
+
+        List<T> objectList;
+
+        LOG.debug("Finding entity for query : " + hqlQuery);
+        Set<Entry<Integer, String>> rawParameters = parameters.entrySet();
+        Query query = em.createQuery(hqlQuery, entityClass);
+        for (Entry<Integer, String> entry : rawParameters) {
+            query.setParameter(entry.getKey(), entry.getValue());
+        }
+        if (maxResultLimit > 0) {
+            query.setMaxResults(maxResultLimit);
+        }
+        objectList = query.getResultList();
+
+        return objectList;
+    }
+
+    @Override
+    public List<T> findAllEntity(Class<T> entityClass) {
+
+        List<T> objectList;
+
+        LOG.debug("Finding all entity list for : " + entityClass.getSimpleName());
+        objectList = em.createQuery("from " + entityClass.getSimpleName(), entityClass).getResultList();
+
+        return objectList;
+    }
+
+    @Override
+    public void deleteEntity(T entity, Object id) {
+
+        LOG.debug("Deleting entity : " + entity.getClass().getSimpleName());
+        em.remove(em.contains(entity) ? entity : em.merge(entity));
+
     }
 
 }

@@ -5,22 +5,20 @@ import java.util.Map;
 
 public interface CommonGenericDAO<T> {
 
-    T createEntity(T entity) throws Exception;
+    T createEntity(T entity);
 
     T updateEntity(T entity);
 
-    T findEntityById(Class<T> entityClass, Object id) throws Exception;
+    T findEntityById(Class<T> entityClass, Object id);
 
-    List findWithNamedQuery(String queryName);
+    List<T> findEntityByQuery(Class<T> entityClass, String hqlQuery);
 
-    List findWithNamedQuery(String queryName, int resultLimit);
+    List<T> findEntityByQuery(Class<T> entityClass, String hqlQuery, Map<Integer, String> parameters);
 
-    List findWithNamedQuery(String namedQueryName, Map parameters);
+    List<T> findEntityByQuery(Class<T> entityClass, String hqlQuery, Map<Integer, String> parameters, int maxResultLimit);
 
-    List findWithNamedQuery(String namedQueryName, Map parameters, int resultLimit);
+    List<T> findAllEntity(Class<T> entityClass);
 
-    List<T> findEntityByQuery(Class<T> entityClass, String hqlQuery) throws Exception;
-
-    boolean deleteEntity(T entity, Object id);
+    void deleteEntity(T entity, Object id);
 
 }

@@ -25,11 +25,7 @@ public class AreaServiceBean implements AreaService {
     @SuppressWarnings("unchecked")
     public GetAreaTypesSpatialRS getAreaTypes() {
         List<String> areaTypes = null;
-        try {
-            areaTypes = areaDao.findEntityByQuery(String.class, "SELECT a.typeName FROM AreaTypeEntity a");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        areaTypes = areaDao.findEntityByQuery(String.class, "SELECT a.typeName FROM AreaTypeEntity a");
         return createResponse(areaTypes);
     }
 
