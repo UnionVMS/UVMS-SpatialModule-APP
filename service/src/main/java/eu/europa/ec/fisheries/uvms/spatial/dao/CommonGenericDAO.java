@@ -5,7 +5,7 @@ import java.util.Map;
 
 public interface CommonGenericDAO<T> {
 
-    T createEntity(T entity);
+    T createEntity(T entity) throws Exception;
 
     T updateEntity(T entity);
 

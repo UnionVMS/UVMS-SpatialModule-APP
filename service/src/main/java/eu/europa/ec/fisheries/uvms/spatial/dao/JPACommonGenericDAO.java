@@ -28,8 +28,16 @@ public class JPACommonGenericDAO<T> implements CommonGenericDAO<T> {
     EntityManager em;
 
     @Override
-    public T createEntity(T entity) {
-        throw new NotYetImplementedException();
+    public T createEntity(T entity) throws Exception {
+        try {
+            LOG.debug("Persisting entity : " + entity.getClass().getSimpleName());
+            em.persist(entity);
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOG.debug("Error occured during Persisting entity : " + entity.getClass().getSimpleName());
+            throw new Exception();
+        }
+        return entity;
     }
 
     @Override
@@ -47,8 +55,6 @@ public class JPACommonGenericDAO<T> implements CommonGenericDAO<T> {
             e.printStackTrace();
             LOG.debug("Error occurred during finding entity : " + entityClass.getSimpleName() + " with ID : " + id.toString());
             throw new Exception();
-        } finally {
-            em.close();
         }
         return obj;
     }
@@ -86,8 +92,6 @@ public class JPACommonGenericDAO<T> implements CommonGenericDAO<T> {
             e.printStackTrace();
             LOG.debug("Error occurred during finding entity for query : " + hqlQuery);
             throw new Exception();
-        } finally {
-            em.close();
         }
         return objectList;
     }

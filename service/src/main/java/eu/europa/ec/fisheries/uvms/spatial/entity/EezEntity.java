@@ -13,11 +13,11 @@ import java.math.BigInteger;
  */
 
 @Entity
-@Table(name = "eez", schema = "spatial", catalog = "uvms")
+@Table(name = "eez", schema = "spatial")
 @EqualsAndHashCode
 @ToString
 public class EezEntity {
-    private long gid;
+    private int gid;
     private Geometry geom;
     private String eez;
     private String country;
@@ -35,11 +35,11 @@ public class EezEntity {
 
     @Id
     @Column(name = "gid")
-    public long getGid() {
+    public int getGid() {
         return gid;
     }
 
-    public void setGid(long gid) {
+    public void setGid(int gid) {
         this.gid = gid;
     }
 
