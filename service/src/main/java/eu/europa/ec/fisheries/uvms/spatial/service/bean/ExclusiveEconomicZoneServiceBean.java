@@ -25,12 +25,14 @@ public class ExclusiveEconomicZoneServiceBean implements ExclusiveEconomicZoneSe
 
     @Override
     @SuppressWarnings("unchecked")
-    public GetEezSpatialRS getExclusiveEconomicZoneById(long id) {
-        EezEntity eez = null;
+    public GetEezSpatialRS getExclusiveEconomicZoneById(int id) {
+        EezEntity eez;
+        //TODO We should avoid to hide exceptions.
         try {
             eez = (EezEntity) commonGenericDAO.findEntityById(EezEntity.class, id);
         } catch (Exception e) {
             e.printStackTrace();
+            throw e;
         }
         return createResponse(eez);
     }

@@ -7,5 +7,5 @@ import eu.europa.ec.fisheries.schema.spatial.source.GetEezSpatialRS;
  */
 public interface ExclusiveEconomicZoneService {
 
-    GetEezSpatialRS getExclusiveEconomicZoneById(long id);
+    GetEezSpatialRS getExclusiveEconomicZoneById(int id);
 }

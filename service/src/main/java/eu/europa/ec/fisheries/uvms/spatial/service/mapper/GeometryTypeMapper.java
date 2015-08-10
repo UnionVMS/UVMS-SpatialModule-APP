@@ -15,4 +15,5 @@ public interface GeometryTypeMapper {
             @Mapping(target = "type", source = "geometryType")
     })
     GeometryType geometryToGeometryType(Geometry geometry);
+
 }

@@ -28,7 +28,7 @@ public class EezResource {
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Path("/{id}")
-    public ResponseDto getExclusiveEconomicZoneById(@PathParam("id") long eezId) {
+    public ResponseDto getExclusiveEconomicZoneById(@PathParam("id") int eezId) {
         try {
             LOG.info("Getting eez with {}", eezId);
             GetEezSpatialRS eez = exclusiveEconomicZoneService.getExclusiveEconomicZoneById(eezId);

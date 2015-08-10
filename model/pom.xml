@@ -63,6 +63,7 @@
                                 <arg>-XhashCode</arg>
                                 <arg>-XtoString</arg>
                                 <arg>-Xsetters</arg>
+                                <arg>-Xvalue-constructor</arg>
                                 <arg>-Xsetters-mode=direct</arg>
                             </args>
 
@@ -71,6 +72,11 @@
                                     <groupId>org.jvnet.jaxb2_commons</groupId>
                                     <artifactId>jaxb2-basics</artifactId>
                                     <version>0.9.4</version>
+                                </plugin>
+                                <plugin>
+                                    <groupId>org.jvnet.jaxb2_commons</groupId>
+                                    <artifactId>jaxb2-value-constructor</artifactId>
+                                    <version>3.0</version>
                                 </plugin>
                             </plugins>
 

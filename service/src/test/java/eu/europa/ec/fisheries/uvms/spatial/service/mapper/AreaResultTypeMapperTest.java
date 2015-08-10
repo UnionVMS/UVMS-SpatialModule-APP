@@ -23,7 +23,7 @@ public class AreaResultTypeMapperTest {
     private EezEntity entity;
 
     @Before
-    public void beforeTest(){
+    public void beforeTest() {
         areaResultTypeMapper = new AreaResultTypeMapperImpl();
         entity = buildEntity();
         try {
@@ -66,7 +66,6 @@ public class AreaResultTypeMapperTest {
 
     @Test
     public void shouldReturnNull() {
-
         // given
         entity = null;
 
@@ -79,7 +78,6 @@ public class AreaResultTypeMapperTest {
 
     @Test
     public void shouldReturnEmptyAreaResultType() {
-
         // given
         entity = new EezEntity();
 
@@ -90,7 +88,6 @@ public class AreaResultTypeMapperTest {
         assertEquals("Feature", areaResultType.getType());
         assertEquals(null, areaResultType.getGeometry());
         assertEquals(0, areaResultType.getProperties().getEntry().size());
-
     }
 
     private EezEntity buildEntity() {
@@ -109,9 +106,8 @@ public class AreaResultTypeMapperTest {
         entity.setMrgidEez(1);
         entity.setRemarks("none");
         entity.setSovId(1);
-        entity.setGeom(new GeometryFactory().createPoint(new Coordinate(1,11)));
+        entity.setGeom(new GeometryFactory().createPoint(new Coordinate(1, 11)));
         return entity;
     }
-
 
 }

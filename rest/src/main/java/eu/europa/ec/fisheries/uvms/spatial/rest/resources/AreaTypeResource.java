@@ -38,7 +38,7 @@ public class AreaTypeResource {
     @GET
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    @Path("/areasByLocation")
+    @Path("/areasbylocation")
     public ResponseDto areasByLocation(
             @PathParam(value = "lat") double lat,
             @PathParam(value = "lon") double lon,

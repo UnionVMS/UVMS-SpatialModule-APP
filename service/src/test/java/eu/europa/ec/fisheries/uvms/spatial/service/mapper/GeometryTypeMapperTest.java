@@ -25,9 +25,8 @@ public class GeometryTypeMapperTest {
 
     @Test
     public void shouldReturnGeometryTypeWithTypePoint() {
-
         // given
-        geometry = new GeometryFactory().createPoint(new Coordinate(1,11));
+        geometry = new GeometryFactory().createPoint(new Coordinate(1, 11));
 
         // when
         GeometryType geometryType = geometryMapper.geometryToGeometryType(geometry);
@@ -39,7 +38,6 @@ public class GeometryTypeMapperTest {
 
     @Test
     public void shouldReturnGeometryTypeWithTypePolygon() {
-
         // given
         List<Coordinate> coordinates = Arrays.asList(
 
