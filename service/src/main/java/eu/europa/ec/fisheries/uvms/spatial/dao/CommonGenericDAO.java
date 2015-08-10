@@ -3,14 +3,13 @@ package eu.europa.ec.fisheries.uvms.spatial.dao;
 import java.util.List;
 import java.util.Map;
 
-public interface CrudDao {
-    Object create(Object t);
+public interface CommonGenericDAO<T> {
 
-    Object find(Class type, Object id);
+    T createEntity(T entity);
 
-    Object update(Object t);
+    T updateEntity(T entity);
 
-    void delete(Class type, Object id);
+    T findEntityById(Class<T> entityClass, Object id) throws Exception;
 
     List findWithNamedQuery(String queryName);
 
@@ -20,5 +19,8 @@ public interface CrudDao {
 
     List findWithNamedQuery(String namedQueryName, Map parameters, int resultLimit);
 
-    List findByHQLQuery(String sql, Class type);
+    List<T> findEntityByQuery(Class<T> entityClass, String hqlQuery) throws Exception;
+
+    boolean deleteEntity(T entity, Object id);
+
 }

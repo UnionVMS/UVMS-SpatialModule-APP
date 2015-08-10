@@ -4,7 +4,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import eu.europa.ec.fisheries.schema.spatial.source.GetAreaTypesSpatialRS;
 import eu.europa.ec.fisheries.schema.spatial.types.AreaType;
-import eu.europa.ec.fisheries.uvms.spatial.dao.CrudDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.CommonGenericDAO;
 import org.apache.commons.lang3.NotImplementedException;
 
 import javax.ejb.EJB;
@@ -19,11 +19,17 @@ import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 public class AreaServiceBean implements AreaService {
 
     @EJB
-    private CrudDao crudDao;
+    private CommonGenericDAO areaDao;
 
     @Override
+    @SuppressWarnings("unchecked")
     public GetAreaTypesSpatialRS getAreaTypes() {
-        List<String> areaTypes = crudDao.findByHQLQuery("SELECT a.typeName FROM AreaTypeEntity a", String.class);
+        List<String> areaTypes = null;
+        try {
+            areaTypes = areaDao.findEntityByQuery(String.class, "SELECT a.typeName FROM AreaTypeEntity a");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return createResponse(areaTypes);
     }
 

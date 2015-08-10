@@ -1,11 +1,9 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.schema.spatial.source.GetEezSpatialRS;
-import eu.europa.ec.fisheries.uvms.spatial.dao.CrudDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.CrudDaoImpl;
+import eu.europa.ec.fisheries.uvms.spatial.dao.CommonGenericDAO;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.AreaResultTypeMapper;
-import eu.europa.ec.fisheries.uvms.spatial.service.mapper.EezMapper;
 
 import javax.ejb.EJB;
 import javax.ejb.Local;
@@ -20,14 +18,20 @@ import javax.inject.Inject;
 public class ExclusiveEconomicZoneServiceBean implements ExclusiveEconomicZoneService {
 
     @EJB
-    private CrudDao crudDao;
+    private CommonGenericDAO commonGenericDAO;
 
     @Inject
     private AreaResultTypeMapper eezMapper;
 
     @Override
+    @SuppressWarnings("unchecked")
     public GetEezSpatialRS getExclusiveEconomicZoneById(long id) {
-        EezEntity eez = (EezEntity) crudDao.find(EezEntity.class, id);
+        EezEntity eez = null;
+        try {
+            eez = (EezEntity) commonGenericDAO.findEntityById(EezEntity.class, id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return createResponse(eez);
     }
 

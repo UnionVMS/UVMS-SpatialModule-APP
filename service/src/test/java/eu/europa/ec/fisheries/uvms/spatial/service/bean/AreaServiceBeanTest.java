@@ -5,7 +5,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import eu.europa.ec.fisheries.schema.spatial.source.GetAreaTypesSpatialRS;
 import eu.europa.ec.fisheries.schema.spatial.types.AreaType;
-import eu.europa.ec.fisheries.uvms.spatial.dao.CrudDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.CommonGenericDAO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -27,15 +27,16 @@ public class AreaServiceBeanTest {
     private final static List<String> AREA_TYPES = ImmutableList.of("Portugal", "Belgium", "Poland", "Bulgaria");
 
     @Mock
-    private CrudDao crudDao;
+    private CommonGenericDAO areaDao;
 
     @InjectMocks
     private AreaService areaService = new AreaServiceBean();
 
     @Test
+    @SuppressWarnings("unchecked")
     public void shouldReturnAreaTypes() throws Exception {
         // given
-        when(crudDao.findByHQLQuery("SELECT a.typeName FROM AreaTypeEntity a", String.class)).thenReturn(AREA_TYPES);
+        when(areaDao.findEntityByQuery(String.class, "SELECT a.typeName FROM AreaTypeEntity a")).thenReturn(AREA_TYPES);
 
         // when
         GetAreaTypesSpatialRS areaTypeRS = areaService.getAreaTypes();
@@ -48,13 +49,13 @@ public class AreaServiceBeanTest {
     }
 
     @Test
-    // TODO Great, thanks!
+    @SuppressWarnings("unchecked")
     public void shouldNotThrowNullPointerException() throws Exception {
         // TODO That comments make the test more readable. You see, and you immediately know what class are you testing and which you are mocking. It is even more noticeable with larger more complicated tests.
         // TODO see: http://stackoverflow.com/questions/7665412/writing-first-junit-test
         // TODO see: http://martinfowler.com/bliki/GivenWhenThen.html
         // given
-        when(crudDao.findByHQLQuery("SELECT a.typeName FROM AreaTypeEntity a", String.class)).thenReturn(null);
+        when(areaDao.findEntityByQuery(String.class, "SELECT a.typeName FROM AreaTypeEntity a")).thenReturn(null);
 
         // when
         GetAreaTypesSpatialRS areaTypeRS = areaService.getAreaTypes();
