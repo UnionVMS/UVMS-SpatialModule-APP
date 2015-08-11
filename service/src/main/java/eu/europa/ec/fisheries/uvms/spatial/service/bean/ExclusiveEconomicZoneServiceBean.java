@@ -3,7 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 import eu.europa.ec.fisheries.schema.spatial.source.GetEezSpatialRS;
 import eu.europa.ec.fisheries.uvms.spatial.dao.CommonGenericDAO;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.mapper.AreaResultTypeMapper;
+import eu.europa.ec.fisheries.uvms.spatial.service.mapper.EezMapper;
 
 import javax.ejb.EJB;
 import javax.ejb.Local;
@@ -21,26 +21,19 @@ public class ExclusiveEconomicZoneServiceBean implements ExclusiveEconomicZoneSe
     private CommonGenericDAO commonGenericDAO;
 
     @Inject
-    private AreaResultTypeMapper eezMapper;
+    private EezMapper eezMapper;
 
     @Override
     @SuppressWarnings("unchecked")
     public GetEezSpatialRS getExclusiveEconomicZoneById(int id) {
-        EezEntity eez;
-        //TODO We should avoid to hide exceptions.
-        try {
-            eez = (EezEntity) commonGenericDAO.findEntityById(EezEntity.class, id);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw e;
-        }
+        EezEntity eez = (EezEntity) commonGenericDAO.findEntityById(EezEntity.class, id);
         return createResponse(eez);
     }
 
     private GetEezSpatialRS createResponse(EezEntity eez) {
         GetEezSpatialRS response = new GetEezSpatialRS();
         if (eez != null) {
-            response.setEez(eezMapper.eezEntityToAreaResultType(eez));
+            response.setEez(eezMapper.eezEntityToSchema(eez));
         }
         return response;
     }

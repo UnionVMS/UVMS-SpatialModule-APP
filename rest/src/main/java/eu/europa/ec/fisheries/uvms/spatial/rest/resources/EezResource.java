@@ -3,12 +3,14 @@ package eu.europa.ec.fisheries.uvms.spatial.rest.resources;
 import eu.europa.ec.fisheries.schema.spatial.source.GetEezSpatialRS;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseCode;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseDto;
+import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.EezDtoMapper;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.ExclusiveEconomicZoneService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
@@ -24,6 +26,9 @@ public class EezResource {
     @EJB
     private ExclusiveEconomicZoneService exclusiveEconomicZoneService;
 
+    @Inject
+    private EezDtoMapper eezDtoMapper;
+
     @GET
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
@@ -32,7 +37,7 @@ public class EezResource {
         try {
             LOG.info("Getting eez with {}", eezId);
             GetEezSpatialRS eez = exclusiveEconomicZoneService.getExclusiveEconomicZoneById(eezId);
-            return new ResponseDto(eez, ResponseCode.OK);
+            return new ResponseDto(eezDtoMapper.eezSchemaToDto(eez.getEez()), ResponseCode.OK);
         } catch (Exception ex) {
             if (LOG.isDebugEnabled()) {
                 LOG.error("[ Error when getting eez with id " + eezId + ". ] ", ex);

@@ -12,7 +12,7 @@
 	<xsd:element name="GetEezSpatialRS">
 		<xsd:complexType>
 			<xsd:sequence>
-				<xsd:element name="Eez" type="s:AreaResultType"/>
+				<xsd:element name="Eez" type="s:EezType"/>
 			</xsd:sequence>
 		</xsd:complexType>
 	</xsd:element>
