@@ -31,10 +31,6 @@ public class ExclusiveEconomicZoneServiceBean implements ExclusiveEconomicZoneSe
     }
 
     private GetEezSpatialRS createResponse(EezEntity eez) {
-        GetEezSpatialRS response = new GetEezSpatialRS();
-        if (eez != null) {
-            response.setEez(eezMapper.eezEntityToSchema(eez));
-        }
-        return response;
+        return new GetEezSpatialRS(eezMapper.eezEntityToSchema(eez));
     }
 }

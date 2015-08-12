@@ -33,15 +33,13 @@ public class GeometryTypeMapperTest {
 
         // then
         assertEquals("Point", geometryType.getGeometryType());
-        assertEquals("POINT (1 11)", geometryType.getCoordinates());
+        assertEquals("{\"type\":\"Point\",\"coordinates\":[1,11]}", geometryType.getGeometryJson());
     }
 
     @Test
     public void shouldReturnGeometryTypeWithTypePolygon() {
         // given
-        List<Coordinate> coordinates = Arrays.asList(
-
-                new Coordinate(1, 11), new Coordinate(1, 11), new Coordinate(1, 11), new Coordinate(1, 11));
+        List<Coordinate> coordinates = Arrays.asList(new Coordinate(1, 11), new Coordinate(1, 11), new Coordinate(1, 11), new Coordinate(1, 11));
         Polygon polygon = new GeometryFactory().createPolygon((Coordinate[]) coordinates.toArray());
 
         // when
@@ -49,6 +47,6 @@ public class GeometryTypeMapperTest {
 
         // then
         assertEquals("Polygon", geometryType.getGeometryType());
-        assertEquals("POLYGON ((1 11, 1 11, 1 11, 1 11))", geometryType.getCoordinates());
+        assertEquals("{\"type\":\"Polygon\",\"coordinates\":[[[1,11],[1,11],[1,11],[1,11]]]}", geometryType.getGeometryJson());
     }
 }

@@ -1,6 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources;
 
 import eu.europa.ec.fisheries.schema.spatial.source.GetEezSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.rest.dto.EezDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseCode;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.EezDtoMapper;
@@ -37,7 +38,8 @@ public class EezResource {
         try {
             LOG.info("Getting eez with {}", eezId);
             GetEezSpatialRS eez = exclusiveEconomicZoneService.getExclusiveEconomicZoneById(eezId);
-            return new ResponseDto(eezDtoMapper.eezSchemaToDto(eez.getEez()), ResponseCode.OK);
+            EezDto eezDto = eezDtoMapper.eezSchemaToDto(eez.getEez());
+            return new ResponseDto(eezDto, ResponseCode.OK);
         } catch (Exception ex) {
             if (LOG.isDebugEnabled()) {
                 LOG.error("[ Error when getting eez with id " + eezId + ". ] ", ex);

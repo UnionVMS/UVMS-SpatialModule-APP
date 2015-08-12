@@ -1,7 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import eu.europa.ec.fisheries.uvms.movement.MovementDtoSerializer;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.serializer.EezDtoSerializer;
 
 import java.math.BigInteger;
@@ -27,7 +26,7 @@ public class EezDto {
     private Integer mrgidEez;
 
     private String geometryType;
-    private String coordinates;
+    private String geometryJson;
 
     public int getGid() {
         return gid;
@@ -149,11 +148,11 @@ public class EezDto {
         this.geometryType = geometryType;
     }
 
-    public String getCoordinates() {
-        return coordinates;
+    public String getGeometryJson() {
+        return geometryJson;
     }
 
-    public void setCoordinates(String coordinates) {
-        this.coordinates = coordinates;
+    public void setGeometryJson(String geometryJson) {
+        this.geometryJson = geometryJson;
     }
 }

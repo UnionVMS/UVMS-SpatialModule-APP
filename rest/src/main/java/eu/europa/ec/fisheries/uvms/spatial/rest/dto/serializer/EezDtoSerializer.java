@@ -1,7 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.dto.serializer;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.EezDto;
 
@@ -10,12 +9,10 @@ import java.io.IOException;
 /**
  * Created by kopyczmi on 11-Aug-15.
  */
-public class EezDtoSerializer extends JsonSerializer<EezDto> {
+public class EezDtoSerializer extends AbstractDtoSerializer {
 
-    private static final String COORDINATES = "coordinates";
     private static final String GEOMETRY = "geometry";
     private static final String PROPERTIES = "properties";
-    private static final String TYPE = "type";
     private static final String FEATURE = "Feature";
 
     @Override
@@ -24,16 +21,9 @@ public class EezDtoSerializer extends JsonSerializer<EezDto> {
         gen.writeStringField(TYPE, FEATURE);
         gen.writeFieldName(GEOMETRY);
 
-        writeGeometry(gen, eezDto);
+        writeGeometry(gen, eezDto.getGeometryJson());
         writeProperties(gen, eezDto);
 
-        gen.writeEndObject();
-    }
-
-    private void writeGeometry(JsonGenerator gen, EezDto eezDto) throws IOException {
-        gen.writeStartObject();
-        gen.writeStringField(TYPE, eezDto.getGeometryType());
-        gen.writeStringField(COORDINATES, eezDto.getCoordinates());
         gen.writeEndObject();
     }
 

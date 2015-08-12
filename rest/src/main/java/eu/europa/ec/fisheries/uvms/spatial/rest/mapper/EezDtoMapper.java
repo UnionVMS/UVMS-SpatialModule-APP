@@ -14,7 +14,7 @@ public interface EezDtoMapper {
 
     @Mappings({
             @Mapping(target = "geometryType", source = "geom.geometryType"),
-            @Mapping(target = "coordinates", source = "geom.coordinates")
+            @Mapping(target = "geometryJson", source = "geom.geometryJson")
     })
     EezDto eezSchemaToDto(EezType eez);
 
