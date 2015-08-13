@@ -4,6 +4,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import eu.europa.ec.fisheries.schema.spatial.source.GetAreaTypesSpatialRS;
 import eu.europa.ec.fisheries.schema.spatial.types.AreaType;
+import eu.europa.ec.fisheries.uvms.exception.SpatialServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.dao.CommonGenericDAO;
 import org.apache.commons.lang3.NotImplementedException;
 
@@ -25,7 +26,11 @@ public class AreaServiceBean implements AreaService {
     @SuppressWarnings("unchecked")
     public GetAreaTypesSpatialRS getAreaTypes() {
         List<String> areaTypes = null;
-        areaTypes = areaDao.findEntityByQuery(String.class, "SELECT a.typeName FROM AreaTypeEntity a");
+        try {
+            areaTypes = areaDao.findEntityByQuery(String.class, "SELECT a.typeName FROM AreaTypeEntity a");
+        } catch (SpatialServiceException e) {
+            e.printStackTrace();
+        }
         return createResponse(areaTypes);
     }
 

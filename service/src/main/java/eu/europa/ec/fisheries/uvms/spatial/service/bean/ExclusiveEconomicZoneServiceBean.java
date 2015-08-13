@@ -1,6 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.schema.spatial.source.GetEezSpatialRS;
+import eu.europa.ec.fisheries.uvms.exception.SpatialServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.dao.CommonGenericDAO;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.EezMapper;
@@ -26,7 +27,12 @@ public class ExclusiveEconomicZoneServiceBean implements ExclusiveEconomicZoneSe
     @Override
     @SuppressWarnings("unchecked")
     public GetEezSpatialRS getExclusiveEconomicZoneById(int id) {
-        EezEntity eez = (EezEntity) commonGenericDAO.findEntityById(EezEntity.class, id);
+        EezEntity eez = null;
+        try {
+            eez = (EezEntity) commonGenericDAO.findEntityById(EezEntity.class, id);
+        } catch (SpatialServiceException e) {
+            e.printStackTrace();
+        }
         return createResponse(eez);
     }
 
