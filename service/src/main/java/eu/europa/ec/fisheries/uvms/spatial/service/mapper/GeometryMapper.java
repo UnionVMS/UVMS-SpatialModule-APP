@@ -12,13 +12,8 @@ import org.mapstruct.*;
 public abstract class GeometryMapper {
 
     @Mappings({
-            @Mapping(target = "geometryJson", expression = "java(geometryToGeoJson(geometry))")
+            @Mapping(target = "geometryJson", expression = "java(new org.geotools.geojson.geom.GeometryJSON().toString(geometry))")
     })
     public abstract GeometryType geometryToGeometryType(Geometry geometry);
-
-    public String geometryToGeoJson(Geometry geometry) {
-        GeometryJSON geoJSON = new GeometryJSON();
-        return geoJSON.toString(geometry);
-    }
 
 }
