@@ -13,7 +13,12 @@ import javax.persistence.*;
 @Table(name = "area_types", schema = "spatial", catalog = "uvms")
 @EqualsAndHashCode
 @ToString
+@NamedQueries({
+        @NamedQuery(name = AreaTypeEntity.FIND_ALL, query = "SELECT a.typeName FROM AreaTypeEntity a"),
+})
 public class AreaTypeEntity {
+    public static final String FIND_ALL = "AreaType.findAll";
+
     private int id;
     private String typeName;
     private String areaTypeDesc;

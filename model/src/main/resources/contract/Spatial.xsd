@@ -16,4 +16,21 @@
 			</xsd:sequence>
 		</xsd:complexType>
 	</xsd:element>
+	<xsd:element name="GetAreasByLocationRS">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="AreaTypes" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:complexContent>
+							<xsd:extension base="s:AreaType">
+								<xsd:sequence>
+									<xsd:element name="Id" type="xsd:string"/>
+								</xsd:sequence>
+							</xsd:extension>
+						</xsd:complexContent>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
 </xsd:schema>
