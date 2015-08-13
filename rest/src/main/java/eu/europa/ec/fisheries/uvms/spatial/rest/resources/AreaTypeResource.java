@@ -36,13 +36,12 @@ public class AreaTypeResource {
     }
 
     @GET
-    @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Path("/areasbylocation")
     public ResponseDto areasByLocation(
-            @PathParam(value = "lat") double lat,
-            @PathParam(value = "lon") double lon,
-            @DefaultValue("4326") @PathParam(value = "crs") int crs) {
+            @QueryParam(value = "lat") double lat,
+            @QueryParam(value = "lon") double lon,
+            @DefaultValue("4326") @QueryParam(value = "crs") int crs) {
         try {
             LOG.info("Getting areas by location");
             return new ResponseDto(areaService.getAreasByLocation(lat, lon, crs), ResponseCode.OK);

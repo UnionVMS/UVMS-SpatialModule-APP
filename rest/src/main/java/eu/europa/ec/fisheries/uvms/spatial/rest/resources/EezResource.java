@@ -31,7 +31,6 @@ public class EezResource {
     private EezDtoMapper eezDtoMapper;
 
     @GET
-    @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Path("/{id}")
     public ResponseDto getExclusiveEconomicZoneById(@PathParam("id") int eezId) {
