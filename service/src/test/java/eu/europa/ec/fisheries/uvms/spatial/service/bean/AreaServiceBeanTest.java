@@ -6,6 +6,7 @@ import com.google.common.collect.Lists;
 import eu.europa.ec.fisheries.schema.spatial.source.GetAreaTypesSpatialRS;
 import eu.europa.ec.fisheries.schema.spatial.types.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.dao.CommonGenericDAO;
+import eu.europa.ec.fisheries.uvms.spatial.entity.AreaTypeEntity;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -24,10 +25,10 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class AreaServiceBeanTest {
 
-    private final static List<String> AREA_TYPES = ImmutableList.of("Portugal", "Belgium", "Poland", "Bulgaria");
+    private final static List<String> AREA_TYPES = ImmutableList.of("Portugal", "Belgium", "Poland", "Bulgaria", "India");
 
     @Mock
-    private CommonGenericDAO areaDao;
+    private CommonGenericDAO commonGenericDAO;
 
     @InjectMocks
     private AreaService areaService = new AreaServiceBean();
@@ -36,7 +37,7 @@ public class AreaServiceBeanTest {
     @SuppressWarnings("unchecked")
     public void shouldReturnAreaTypes() throws Exception {
         // given
-        when(areaDao.findEntityByQuery(String.class, "SELECT a.typeName FROM AreaTypeEntity a")).thenReturn(AREA_TYPES);
+        when(commonGenericDAO.findEntityByNamedQuery(String.class, AreaTypeEntity.FIND_ALL)).thenReturn(AREA_TYPES);
 
         // when
         GetAreaTypesSpatialRS areaTypeRS = areaService.getAreaTypes();
@@ -51,11 +52,8 @@ public class AreaServiceBeanTest {
     @Test
     @SuppressWarnings("unchecked")
     public void shouldNotThrowNullPointerException() throws Exception {
-        // TODO That comments make the test more readable. You see, and you immediately know what class are you testing and which you are mocking. It is even more noticeable with larger more complicated tests.
-        // TODO see: http://stackoverflow.com/questions/7665412/writing-first-junit-test
-        // TODO see: http://martinfowler.com/bliki/GivenWhenThen.html
         // given
-        when(areaDao.findEntityByQuery(String.class, "SELECT a.typeName FROM AreaTypeEntity a")).thenReturn(null);
+        when(commonGenericDAO.findEntityByNamedQuery(String.class, AreaTypeEntity.FIND_ALL)).thenReturn(null);
 
         // when
         GetAreaTypesSpatialRS areaTypeRS = areaService.getAreaTypes();

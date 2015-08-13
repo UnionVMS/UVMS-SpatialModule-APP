@@ -15,9 +15,11 @@ import javax.persistence.*;
 @ToString
 @NamedQueries({
         @NamedQuery(name = AreaTypeEntity.FIND_ALL, query = "SELECT a.typeName FROM AreaTypeEntity a"),
+        @NamedQuery(name = AreaTypeEntity.FIND_SYSTEM, query = "SELECT a FROM AreaTypeEntity a"), //TODO add filtering by T/F 'system_area' column
 })
 public class AreaTypeEntity {
     public static final String FIND_ALL = "AreaType.findAll";
+    public static final String FIND_SYSTEM = "AreaType.findSystem";
 
     private int id;
     private String typeName;

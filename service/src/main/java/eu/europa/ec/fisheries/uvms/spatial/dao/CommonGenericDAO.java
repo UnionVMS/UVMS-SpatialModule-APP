@@ -11,17 +11,21 @@ public interface CommonGenericDAO<T> {
 
     T findEntityById(Class<T> entityClass, Object id);
 
-    List<T> findEntityByQuery(Class<T> entityClass, String hqlQuery);
+    List<T> findEntityByNativeQuery(String hqlQuery);
 
-    List<T> findEntityByQuery(Class<T> entityClass, String hqlQuery, Map<Integer, String> parameters);
+    List<T> findEntityByNativeQuery(String hqlQuery, Map<String, String> parameters);
 
-    List<T> findEntityByQuery(Class<T> entityClass, String hqlQuery, Map<Integer, String> parameters, int maxResultLimit);
+    List<T> findEntityByHqlQuery(Class<T> entityClass, String hqlQuery);
+
+    List<T> findEntityByHqlQuery(Class<T> entityClass, String hqlQuery, Map<Integer, String> parameters);
+
+    List<T> findEntityByHqlQuery(Class<T> entityClass, String hqlQuery, Map<Integer, String> parameters, int maxResultLimit);
 
     List<T> findEntityByNamedQuery(Class<T> entityClass, String queryName);
 
-    List<T> findEntityByNamedQuery(Class<T> entityClass, String queryName, Map<Integer, String> parameters);
+    List<T> findEntityByNamedQuery(Class<T> entityClass, String queryName, Map<String, String> parameters);
 
-    List<T> findEntityByNamedQuery(Class<T> entityClass, String queryName, Map<Integer, String> parameters, int maxResultLimit);
+    List<T> findEntityByNamedQuery(Class<T> entityClass, String queryName, Map<String, String> parameters, int maxResultLimit);
 
     List<T> findAllEntity(Class<T> entityClass);
 

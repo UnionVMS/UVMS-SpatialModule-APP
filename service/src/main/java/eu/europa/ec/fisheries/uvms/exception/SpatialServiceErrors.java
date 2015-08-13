@@ -13,11 +13,11 @@ public enum SpatialServiceErrors {
     private final String messagePattern;
     private final String description;
 
-    private SpatialServiceErrors(int code, String message) {
+    SpatialServiceErrors(int code, String message) {
         this(code, message, message);
     }
 
-    private SpatialServiceErrors(int code, String message, String description) {
+    SpatialServiceErrors(int code, String message, String description) {
         this.errorCode = Integer.valueOf(code);
         this.messagePattern = message;
         this.description = description;

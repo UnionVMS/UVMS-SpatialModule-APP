@@ -1,8 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.dao;
 
-import eu.europa.ec.fisheries.uvms.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.exception.SpatialServiceException;
-import org.apache.commons.lang3.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,7 +72,39 @@ public class JPACommonGenericDAO<T> implements CommonGenericDAO<T> {
     }
 
     @Override
-    public List<T> findEntityByQuery(final Class<T> entityClass, final String hqlQuery) {
+    public List<T> findEntityByNativeQuery(String nativeQuery) {
+        List<T> objectList;
+        try {
+            LOG.debug("Finding entity for query : " + nativeQuery);
+            objectList = em.createNativeQuery(nativeQuery).getResultList();
+        } catch (Exception e) {
+            LOG.error("Error occurred during finding entity for query : " + nativeQuery);
+            throw new SpatialServiceException(DAO_FIX_IT_ERROR, e);
+        }
+
+        return objectList;
+    }
+
+    @Override
+    public List<T> findEntityByNativeQuery(String nativeQuery, Map<String, String> parameters) {
+        List<T> objectList;
+        try {
+            LOG.debug("Finding entity for query : " + nativeQuery);
+            Query query = em.createNativeQuery(nativeQuery);
+            for (Entry<String, String> entry : parameters.entrySet()) {
+                query.setParameter(entry.getKey(), entry.getValue());
+            }
+            objectList = query.getResultList();
+        } catch (Exception e) {
+            LOG.error("Error occurred during finding entity for query : " + nativeQuery);
+            throw new SpatialServiceException(DAO_FIX_IT_ERROR, e);
+        }
+
+        return objectList;
+    }
+
+    @Override
+    public List<T> findEntityByHqlQuery(final Class<T> entityClass, final String hqlQuery) {
         List<T> objectList;
 
         try {
@@ -90,7 +120,7 @@ public class JPACommonGenericDAO<T> implements CommonGenericDAO<T> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<T> findEntityByQuery(final Class<T> entityClass, final String hqlQuery, final Map<Integer, String> parameters) {
+    public List<T> findEntityByHqlQuery(final Class<T> entityClass, final String hqlQuery, final Map<Integer, String> parameters) {
         List<T> objectList;
 
         try {
@@ -111,7 +141,7 @@ public class JPACommonGenericDAO<T> implements CommonGenericDAO<T> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<T> findEntityByQuery(final Class<T> entityClass, final String hqlQuery, final Map<Integer, String> parameters, final int maxResultLimit) {
+    public List<T> findEntityByHqlQuery(final Class<T> entityClass, final String hqlQuery, final Map<Integer, String> parameters, final int maxResultLimit) {
         List<T> objectList;
 
         try {
@@ -145,13 +175,34 @@ public class JPACommonGenericDAO<T> implements CommonGenericDAO<T> {
     }
 
     @Override
-    public List<T> findEntityByNamedQuery(Class<T> entityClass, String queryName, Map<Integer, String> parameters) {
-        throw new NotImplementedException("Not implemented, yet");
+    public List<T> findEntityByNamedQuery(Class<T> entityClass, String queryName, Map<String, String> parameters) {
+        try {
+            TypedQuery<T> query = em.createNamedQuery(queryName, entityClass);
+            for (Entry<String, String> entry : parameters.entrySet()) {
+                query.setParameter(entry.getKey(), entry.getValue());
+            }
+            return query.getResultList();
+        } catch (Exception e) {
+            LOG.error("Error occurred during finding entity for query : {}", e.getMessage());
+            throw new SpatialServiceException(DAO_FIX_IT_ERROR, e, queryName);
+        }
     }
 
     @Override
-    public List<T> findEntityByNamedQuery(Class<T> entityClass, String queryName, Map<Integer, String> parameters, int maxResultLimit) {
-        throw new NotImplementedException("Not implemented, yet");
+    public List<T> findEntityByNamedQuery(Class<T> entityClass, String queryName, Map<String, String> parameters, int maxResultLimit) {
+        try {
+            TypedQuery<T> query = em.createNamedQuery(queryName, entityClass);
+            for (Entry<String, String> entry : parameters.entrySet()) {
+                query.setParameter(entry.getKey(), entry.getValue());
+            }
+            if (maxResultLimit > 0) {
+                query.setMaxResults(maxResultLimit);
+            }
+            return query.getResultList();
+        } catch (Exception e) {
+            LOG.error("Error occurred during finding entity for query : {}", e.getMessage());
+            throw new SpatialServiceException(DAO_FIX_IT_ERROR, e, queryName);
+        }
     }
 
     @Override
@@ -162,7 +213,7 @@ public class JPACommonGenericDAO<T> implements CommonGenericDAO<T> {
             LOG.debug("Finding all entity list for : " + entityClass.getSimpleName());
             objectList = em.createQuery("from " + entityClass.getSimpleName(), entityClass).getResultList();
         } catch (Exception e) {
-            LOG.error("Error occurred while finding all entity list for : " + entityClass.getSimpleName());
+            LOG.error("Error occurred during finding all entity list for : " + entityClass.getSimpleName());
             throw new SpatialServiceException(DAO_FIX_IT_ERROR, e);
         }
         return objectList;
