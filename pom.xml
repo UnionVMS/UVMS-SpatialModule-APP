@@ -125,6 +125,13 @@
                 <version>0.9.4</version>
             </dependency>
 
+            <dependency>
+                <groupId>javax</groupId>
+                <artifactId>javaee-api</artifactId>
+                <version>${javaee.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
             <!-- Hibernate JPA provider provided by WildFly -->
             <dependency>
                 <groupId>org.hibernate</groupId>
@@ -280,13 +287,6 @@
     </dependencyManagement>
 
     <dependencies>
-
-        <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-api</artifactId>
-            <version>${javaee.version}</version>
-            <scope>provided</scope>
-        </dependency>
 
         <!-- LOGGING DEPENDENCIES -->
         <dependency>
