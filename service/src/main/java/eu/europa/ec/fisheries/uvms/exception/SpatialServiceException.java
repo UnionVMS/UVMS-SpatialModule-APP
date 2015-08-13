@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.spatial.service.exception;
+package eu.europa.ec.fisheries.uvms.exception;
 
 /**
  * //TODO create test
