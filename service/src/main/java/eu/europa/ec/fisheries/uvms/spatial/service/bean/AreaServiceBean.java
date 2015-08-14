@@ -34,7 +34,7 @@ public class AreaServiceBean extends AbstractServiceBean implements AreaService 
     @Override
     @SuppressWarnings("unchecked")
     public GetAreaTypesSpatialRS getAreaTypes() {
-        List<String> areaTypes = null;
+        List<String> areaTypes;
         try {
             areaTypes = commonDao.findEntityByNamedQuery(String.class, AreaTypeEntity.FIND_ALL);
         } catch (HibernateException hex) {
@@ -47,8 +47,13 @@ public class AreaServiceBean extends AbstractServiceBean implements AreaService 
             LOG.debug("Exception: ", ex);
             LOG.debug("Exception cause: ", ex.getCause());
 
-            SpatialServiceErrors error = SpatialServiceErrors.DAO_FIX_IT_ERROR;
-            return createErrorGetAreaTypesResponse(error.formatMessage(), error.getErrorCode());
+            if (ex instanceof SpatialServiceException) {
+                SpatialServiceException sse = (SpatialServiceException) ex;
+                return createErrorGetAreaTypesResponse(sse.getMessage(), sse.getErrorCode());
+            } else {
+                SpatialServiceErrors error = SpatialServiceErrors.DAO_FIX_IT_ERROR;
+                return createErrorGetAreaTypesResponse(error.formatMessage(), error.getErrorCode());
+            }
         }
 
         return createSuccessGetAreaTypesResponse(areaTypes);
