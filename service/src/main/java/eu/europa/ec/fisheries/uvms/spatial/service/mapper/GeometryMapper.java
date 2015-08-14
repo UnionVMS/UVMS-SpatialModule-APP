@@ -1,9 +1,11 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.mapper;
 
 import com.vividsolutions.jts.geom.Geometry;
-import eu.europa.ec.fisheries.schema.spatial.types.GeometryType;
+import eu.schemas.GeometryType;
 import org.geotools.geojson.geom.GeometryJSON;
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
 /**
  * Created by kopyczmi on 11-Aug-15.

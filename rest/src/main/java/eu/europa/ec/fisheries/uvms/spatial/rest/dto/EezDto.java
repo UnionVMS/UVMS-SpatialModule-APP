@@ -1,10 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.dto;
 
-import com.fasterxml.jackson.annotation.JsonRawValue;
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
-import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import eu.europa.ec.fisheries.schema.spatial.types.GeometryType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.serializer.EezDtoSerializer;
 
 import java.math.BigInteger;
@@ -28,8 +24,6 @@ public class EezDto {
     private Double longitude;
     private Double latitude;
     private Integer mrgidEez;
-
-
     private String geometryJson;
 
     public int getGid() {

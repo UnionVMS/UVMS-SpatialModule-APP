@@ -1,7 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.mapper;
 
-import eu.europa.ec.fisheries.schema.spatial.types.EezType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.EezDto;
+import eu.schemas.EezType;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -13,7 +13,7 @@ import org.mapstruct.Mappings;
 public interface EezDtoMapper {
 
     @Mappings({
-            @Mapping(target = "geometryJson", source = "geom.geometryJson")
+            @Mapping(target = "geometryJson", source = "geometry.geometryJson")
     })
     EezDto eezSchemaToDto(EezType eez);
 

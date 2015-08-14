@@ -1,25 +1,23 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources;
 
-import eu.europa.ec.fisheries.schema.spatial.source.GetEezSpatialRS;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.EezDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseCode;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.EezDtoMapper;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.ExclusiveEconomicZoneService;
+import eu.schemas.GetEezSpatialRS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
-import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-/**
- * //TODO create test
- */
 @Path("/eez")
-@Stateless
 public class EezResource {
 
     final static Logger LOG = LoggerFactory.getLogger(EezResource.class);

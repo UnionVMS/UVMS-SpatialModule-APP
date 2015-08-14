@@ -1,7 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.mapper;
 
-import eu.europa.ec.fisheries.schema.spatial.types.EezType;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
+import eu.schemas.EezType;
 import org.mapstruct.Mapper;
 
 /**

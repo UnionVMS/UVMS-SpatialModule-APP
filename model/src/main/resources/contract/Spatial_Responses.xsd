@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2015 rel. 4 sp1 (x64) (http://www.altova.com) by marian (cop) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.eu/" targetNamespace="http://schemas.eu/" version="1.0" id="FISH2015_SPATIAL2015">
+	<xs:include schemaLocation="Spatial_CommonTypes.xsd"/>
+	<xs:element name="GetAreaTypesSpatialRS">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="ResponseMessage" type="ResponseMessageType"/>
+				<xs:element name="AreaType" type="AreaType" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="GetEezSpatialRS">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="ResponseMessage" type="ResponseMessageType"/>
+				<xs:element name="Eez" type="EezType" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="GetAreasByLocationSpatialRS">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="ResponseMessage" type="ResponseMessageType"/>
+				<xs:element name="AreaType" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:complexContent>
+							<xs:extension base="AreaType">
+								<xs:attribute name="Id" type="xs:long"/>
+							</xs:extension>
+						</xs:complexContent>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

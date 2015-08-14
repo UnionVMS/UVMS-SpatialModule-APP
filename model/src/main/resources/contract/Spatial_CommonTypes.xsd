@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2015 rel. 4 sp1 (x64) (http://www.altova.com) by marian (cop) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.eu/" targetNamespace="http://schemas.eu/" version="1.0" id="FISH2015_SPATIAL2015">
+	<xs:include schemaLocation="Spatial_SimpleTypes.xsd"/>
+	<xs:complexType name="AreaType">
+		<xs:sequence>
+			<xs:element name="TypeName" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="GeometryType">
+		<xs:sequence>
+			<xs:element name="GeometryType" type="xs:string"/>
+			<xs:element name="GeometryJson" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="EezType">
+		<xs:sequence>
+			<xs:element name="Gid" type="xs:integer"/>
+			<xs:element name="Geometry" type="GeometryType"/>
+			<xs:element name="Eez" type="xs:string"/>
+			<xs:element name="Country" type="xs:string"/>
+			<xs:element name="Sovereign" type="xs:string"/>
+			<xs:element name="Remarks" type="xs:string"/>
+			<xs:element name="SovId" type="xs:int"/>
+			<xs:element name="EezId" type="xs:int"/>
+			<xs:element name="Iso3Digit" type="xs:string"/>
+			<xs:element name="Mrgid" type="xs:integer"/>
+			<xs:element name="DateChang" type="xs:string"/>
+			<xs:element name="AreaM2" type="xs:double"/>
+			<xs:element name="Longitude" type="xs:double"/>
+			<xs:element name="Latitude" type="xs:double"/>
+			<xs:element name="MrgidEez" type="xs:int"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

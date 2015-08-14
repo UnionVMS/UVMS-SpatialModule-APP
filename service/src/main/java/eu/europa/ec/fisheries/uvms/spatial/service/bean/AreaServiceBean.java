@@ -3,13 +3,13 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import eu.europa.ec.fisheries.schema.spatial.source.GetAreaTypesSpatialRS;
-import eu.europa.ec.fisheries.schema.spatial.source.GetAreasByLocationRS;
-import eu.europa.ec.fisheries.schema.spatial.types.AreaType;
 import eu.europa.ec.fisheries.uvms.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.exception.SpatialServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.dao.CommonGenericDAO;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaTypeEntity;
+import eu.schemas.AreaType;
+import eu.schemas.GetAreaTypesSpatialRS;
+import eu.schemas.GetAreasByLocationSpatialRS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +47,7 @@ public class AreaServiceBean implements AreaService {
     }
 
     @Override
-    public GetAreasByLocationRS getAreasByLocation(double lat, double lon, int crs) {
+    public GetAreasByLocationSpatialRS getAreasByLocation(double lat, double lon, int crs) {
         List<AreaTypeEntity> systemAreaTypes = commonDao.findEntityByNamedQuery(AreaTypeEntity.class, AreaTypeEntity.FIND_SYSTEM);
         for (AreaTypeEntity areaType : systemAreaTypes) {
             String areaDbTable = areaType.getAreaDbTable();
@@ -67,8 +67,8 @@ public class AreaServiceBean implements AreaService {
         return result;
     }
 
-    private GetAreasByLocationRS createGetAreasByLocationResponse() {
-        GetAreasByLocationRS response = new GetAreasByLocationRS();
+    private GetAreasByLocationSpatialRS createGetAreasByLocationResponse() {
+        GetAreasByLocationSpatialRS response = new GetAreasByLocationSpatialRS();
 
         return response;
     }
@@ -84,7 +84,7 @@ public class AreaServiceBean implements AreaService {
                     return areaType;
                 }
             });
-            response.setAreaTypes(areaTypes);
+            response.setAreaType(areaTypes);
         }
         return response;
     }

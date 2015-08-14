@@ -1,7 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import eu.europa.ec.fisheries.schema.spatial.source.GetAreaTypesSpatialRS;
-import eu.europa.ec.fisheries.schema.spatial.source.GetAreasByLocationRS;
+import eu.schemas.GetAreaTypesSpatialRS;
+import eu.schemas.GetAreasByLocationSpatialRS;
 
 /**
  * Created by kopyczmi on 03-Aug-15.
@@ -9,5 +9,5 @@ import eu.europa.ec.fisheries.schema.spatial.source.GetAreasByLocationRS;
 public interface AreaService {
     GetAreaTypesSpatialRS getAreaTypes();
 
-    GetAreasByLocationRS getAreasByLocation(double lat, double lon, int crs);
+    GetAreasByLocationSpatialRS getAreasByLocation(double lat, double lon, int crs);
 }
