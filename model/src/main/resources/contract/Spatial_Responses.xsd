@@ -6,7 +6,7 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element name="ResponseMessage" type="ResponseMessageType"/>
-				<xs:element name="AreaType" type="AreaType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="AreaTypes" type="AreasNameType" minOccurs="0"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -22,16 +22,13 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element name="ResponseMessage" type="ResponseMessageType"/>
-				<xs:element name="AreaType" minOccurs="0" maxOccurs="unbounded">
-					<xs:complexType>
-						<xs:complexContent>
-							<xs:extension base="AreaType">
-								<xs:attribute name="Id" type="xs:long"/>
-							</xs:extension>
-						</xs:complexContent>
-					</xs:complexType>
-				</xs:element>
+				<xs:element name="AreasType" type="AreasWithIdType" minOccurs="0"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
+	<xs:complexType name="GetEezSpatialRQ">
+		<xs:sequence>
+			<xs:element name="EezId" type="NumericStringLength1to9"/>
+		</xs:sequence>
+	</xs:complexType>
 </xs:schema>

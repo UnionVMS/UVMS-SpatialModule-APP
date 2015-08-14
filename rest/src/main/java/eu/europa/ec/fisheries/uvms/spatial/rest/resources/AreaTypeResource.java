@@ -1,6 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources;
 
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GetAreaTypesSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ResponseMessageType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseCode;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
@@ -12,7 +13,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 @Path("/")
-public class AreaTypeResource {
+public class AreaTypeResource extends AbstractResource {
 
     final static Logger LOG = LoggerFactory.getLogger(AreaTypeResource.class);
 
@@ -25,8 +26,14 @@ public class AreaTypeResource {
     public ResponseDto getAreaTypes() {
         try {
             LOG.info("Getting user areas list");
-            GetAreaTypesSpatialRS areaTypes = areaService.getAreaTypes();
-            return new ResponseDto(areaTypes, ResponseCode.OK);
+            GetAreaTypesSpatialRS getAreaTypesRS = areaService.getAreaTypes();
+
+            ResponseMessageType responseMessage = getAreaTypesRS.getResponseMessage();
+            if (isSuccess(responseMessage)) {
+                return new ResponseDto(getAreaTypesRS.getAreaTypes(), ResponseCode.OK);
+            } else {
+                return createErrorResponse(responseMessage);
+            }
         } catch (Exception ex) {
             LOG.error("[ Error when getting area types list. ] ", ex);
             return new ResponseDto(ex.getMessage(), ResponseCode.ERROR);

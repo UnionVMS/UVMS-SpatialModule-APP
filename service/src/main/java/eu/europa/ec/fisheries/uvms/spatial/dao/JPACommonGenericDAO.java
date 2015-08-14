@@ -1,6 +1,5 @@
 package eu.europa.ec.fisheries.uvms.spatial.dao;
 
-import eu.europa.ec.fisheries.uvms.exception.SpatialServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,8 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
-import static eu.europa.ec.fisheries.uvms.exception.SpatialServiceErrors.DAO_FIX_IT_ERROR;
 
 /**
  * This class is responsible for all application level database interaction.
@@ -35,199 +32,110 @@ public class JPACommonGenericDAO<T> implements CommonGenericDAO<T> {
 
     @Override
     public T createEntity(final T entity) {
-        try {
-            LOG.debug("Persisting entity : " + entity.getClass().getSimpleName());
-            em.persist(entity);
-        } catch (Exception e) {
-            LOG.error("Error occurred during Persisting entity : " + entity.getClass().getSimpleName());
-            throw new SpatialServiceException(DAO_FIX_IT_ERROR, e);
-        }
+        LOG.debug("Persisting entity : " + entity.getClass().getSimpleName());
+        em.persist(entity);
         return entity;
     }
 
     @Override
     public T updateEntity(final T entity) {
-        try {
-            LOG.debug("Updating entity : " + entity.getClass().getSimpleName());
-            em.merge(entity);
-        } catch (Exception e) {
-            LOG.error("Error occurred during updating entity : " + entity.getClass().getSimpleName());
-            throw new SpatialServiceException(DAO_FIX_IT_ERROR, e);
-        }
+        LOG.debug("Updating entity : " + entity.getClass().getSimpleName());
+        em.merge(entity);
         return entity;
     }
 
     @Override
     public T findEntityById(final Class<T> entityClass, final Object id) {
-        T obj;
-
-        try {
-            LOG.debug("Finding entity : " + entityClass.getSimpleName() + " with ID : " + id.toString());
-            obj = em.find(entityClass, id);
-        } catch (Exception e) {
-            LOG.error("Error occurred during finding entity : " + entityClass.getSimpleName() + " with ID : " + id.toString());
-            throw new SpatialServiceException(DAO_FIX_IT_ERROR, e);
-        }
-        return obj;
+        LOG.debug("Finding entity : " + entityClass.getSimpleName() + " with ID : " + id.toString());
+        return em.find(entityClass, id);
     }
 
     @Override
     public List<T> findEntityByNativeQuery(String nativeQuery) {
-        List<T> objectList;
-        try {
-            LOG.debug("Finding entity for query : " + nativeQuery);
-            objectList = em.createNativeQuery(nativeQuery).getResultList();
-        } catch (Exception e) {
-            LOG.error("Error occurred during finding entity for query : " + nativeQuery);
-            throw new SpatialServiceException(DAO_FIX_IT_ERROR, e);
-        }
-
-        return objectList;
+        LOG.debug("Finding entity for query : " + nativeQuery);
+        return em.createNativeQuery(nativeQuery).getResultList();
     }
 
     @Override
     public List<T> findEntityByNativeQuery(String nativeQuery, Map<String, String> parameters) {
-        List<T> objectList;
-        try {
-            LOG.debug("Finding entity for query : " + nativeQuery);
-            Query query = em.createNativeQuery(nativeQuery);
-            for (Entry<String, String> entry : parameters.entrySet()) {
-                query.setParameter(entry.getKey(), entry.getValue());
-            }
-            objectList = query.getResultList();
-        } catch (Exception e) {
-            LOG.error("Error occurred during finding entity for query : " + nativeQuery);
-            throw new SpatialServiceException(DAO_FIX_IT_ERROR, e);
+        LOG.debug("Finding entity for query : " + nativeQuery);
+        Query query = em.createNativeQuery(nativeQuery);
+        for (Entry<String, String> entry : parameters.entrySet()) {
+            query.setParameter(entry.getKey(), entry.getValue());
         }
-
-        return objectList;
+        return query.getResultList();
     }
 
     @Override
     public List<T> findEntityByHqlQuery(final Class<T> entityClass, final String hqlQuery) {
-        List<T> objectList;
-
-        try {
-            LOG.debug("Finding entity for query : " + hqlQuery);
-            objectList = em.createQuery(hqlQuery, entityClass).getResultList();
-        } catch (Exception e) {
-            LOG.error("Error occurred during finding entity for query : " + hqlQuery);
-            throw new SpatialServiceException(DAO_FIX_IT_ERROR, e);
-        }
-
-        return objectList;
+        LOG.debug("Finding entity for query : " + hqlQuery);
+        return em.createQuery(hqlQuery, entityClass).getResultList();
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public List<T> findEntityByHqlQuery(final Class<T> entityClass, final String hqlQuery, final Map<Integer, String> parameters) {
-        List<T> objectList;
-
-        try {
-            LOG.debug("Finding entity for query : " + hqlQuery);
-            Set<Entry<Integer, String>> rawParameters = parameters.entrySet();
-            Query query = em.createQuery(hqlQuery, entityClass);
-            for (Entry<Integer, String> entry : rawParameters) {
-                query.setParameter(entry.getKey(), entry.getValue());
-            }
-            objectList = query.getResultList();
-        } catch (Exception e) {
-            LOG.error("Error occurred during finding entity for query : " + hqlQuery);
-            throw new SpatialServiceException(DAO_FIX_IT_ERROR, e);
+        LOG.debug("Finding entity for query : " + hqlQuery);
+        Set<Entry<Integer, String>> rawParameters = parameters.entrySet();
+        Query query = em.createQuery(hqlQuery, entityClass);
+        for (Entry<Integer, String> entry : rawParameters) {
+            query.setParameter(entry.getKey(), entry.getValue());
         }
-
-        return objectList;
+        return query.getResultList();
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public List<T> findEntityByHqlQuery(final Class<T> entityClass, final String hqlQuery, final Map<Integer, String> parameters, final int maxResultLimit) {
-        List<T> objectList;
-
-        try {
-            LOG.debug("Finding entity for query : " + hqlQuery);
-            Set<Entry<Integer, String>> rawParameters = parameters.entrySet();
-            Query query = em.createQuery(hqlQuery, entityClass);
-            for (Entry<Integer, String> entry : rawParameters) {
-                query.setParameter(entry.getKey(), entry.getValue());
-            }
-            if (maxResultLimit > 0) {
-                query.setMaxResults(maxResultLimit);
-            }
-            objectList = query.getResultList();
-        } catch (Exception e) {
-            LOG.error("Error occurred during finding entity for query : " + hqlQuery);
-            throw new SpatialServiceException(DAO_FIX_IT_ERROR, e);
+        LOG.debug("Finding entity for query : " + hqlQuery);
+        Set<Entry<Integer, String>> rawParameters = parameters.entrySet();
+        Query query = em.createQuery(hqlQuery, entityClass);
+        for (Entry<Integer, String> entry : rawParameters) {
+            query.setParameter(entry.getKey(), entry.getValue());
         }
-
-        return objectList;
+        if (maxResultLimit > 0) {
+            query.setMaxResults(maxResultLimit);
+        }
+        return query.getResultList();
     }
 
     @Override
     public List<T> findEntityByNamedQuery(final Class<T> entityClass, final String queryName) {
-        try {
-            TypedQuery<T> query = em.createNamedQuery(queryName, entityClass);
-            return query.getResultList();
-        } catch (Exception e) {
-            LOG.error("Error occurred during finding entity for query : {}", e.getMessage());
-            throw new SpatialServiceException(DAO_FIX_IT_ERROR, e, queryName);
-        }
+        TypedQuery<T> query = em.createNamedQuery(queryName, entityClass);
+        return query.getResultList();
     }
 
     @Override
     public List<T> findEntityByNamedQuery(Class<T> entityClass, String queryName, Map<String, String> parameters) {
-        try {
-            TypedQuery<T> query = em.createNamedQuery(queryName, entityClass);
-            for (Entry<String, String> entry : parameters.entrySet()) {
-                query.setParameter(entry.getKey(), entry.getValue());
-            }
-            return query.getResultList();
-        } catch (Exception e) {
-            LOG.error("Error occurred during finding entity for query : {}", e.getMessage());
-            throw new SpatialServiceException(DAO_FIX_IT_ERROR, e, queryName);
+        TypedQuery<T> query = em.createNamedQuery(queryName, entityClass);
+        for (Entry<String, String> entry : parameters.entrySet()) {
+            query.setParameter(entry.getKey(), entry.getValue());
         }
+        return query.getResultList();
     }
 
     @Override
     public List<T> findEntityByNamedQuery(Class<T> entityClass, String queryName, Map<String, String> parameters, int maxResultLimit) {
-        try {
-            TypedQuery<T> query = em.createNamedQuery(queryName, entityClass);
-            for (Entry<String, String> entry : parameters.entrySet()) {
-                query.setParameter(entry.getKey(), entry.getValue());
-            }
-            if (maxResultLimit > 0) {
-                query.setMaxResults(maxResultLimit);
-            }
-            return query.getResultList();
-        } catch (Exception e) {
-            LOG.error("Error occurred during finding entity for query : {}", e.getMessage());
-            throw new SpatialServiceException(DAO_FIX_IT_ERROR, e, queryName);
+        TypedQuery<T> query = em.createNamedQuery(queryName, entityClass);
+        for (Entry<String, String> entry : parameters.entrySet()) {
+            query.setParameter(entry.getKey(), entry.getValue());
         }
+        if (maxResultLimit > 0) {
+            query.setMaxResults(maxResultLimit);
+        }
+        return query.getResultList();
     }
 
     @Override
     public List<T> findAllEntity(final Class<T> entityClass) {
-        List<T> objectList;
-
-        try {
-            LOG.debug("Finding all entity list for : " + entityClass.getSimpleName());
-            objectList = em.createQuery("from " + entityClass.getSimpleName(), entityClass).getResultList();
-        } catch (Exception e) {
-            LOG.error("Error occurred during finding all entity list for : " + entityClass.getSimpleName());
-            throw new SpatialServiceException(DAO_FIX_IT_ERROR, e);
-        }
-        return objectList;
+        LOG.debug("Finding all entity list for : " + entityClass.getSimpleName());
+        return em.createQuery("from " + entityClass.getSimpleName(), entityClass).getResultList();
     }
 
     @Override
     public void deleteEntity(final T entity, final Object id) {
-        try {
-            LOG.debug("Deleting entity : " + entity.getClass().getSimpleName());
-            em.remove(em.contains(entity) ? entity : em.merge(entity));
-        } catch (Exception e) {
-            LOG.error("Error occurred during deleting entity : " + entity.getClass().getSimpleName());
-            throw new SpatialServiceException(DAO_FIX_IT_ERROR, e);
-        }
+        LOG.debug("Deleting entity : " + entity.getClass().getSimpleName());
+        em.remove(em.contains(entity) ? entity : em.merge(entity));
     }
 
 }

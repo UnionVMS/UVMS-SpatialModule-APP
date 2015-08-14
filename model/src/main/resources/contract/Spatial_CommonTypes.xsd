@@ -4,7 +4,8 @@
 	<xs:include schemaLocation="Spatial_SimpleTypes.xsd"/>
 	<xs:complexType name="AreaType">
 		<xs:sequence>
-			<xs:element name="TypeName" type="xs:string"/>
+			<xs:element name="Id" type="NumericStringLength1to9"/>
+			<xs:element name="TypeName" type="StringLength1to255"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="GeometryType">
@@ -30,6 +31,16 @@
 			<xs:element name="Longitude" type="xs:double"/>
 			<xs:element name="Latitude" type="xs:double"/>
 			<xs:element name="MrgidEez" type="xs:int"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AreasNameType">
+		<xs:sequence>
+			<xs:element name="AreaType" type="StringLength1to255" maxOccurs="1000"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AreasWithIdType">
+		<xs:sequence>
+			<xs:element name="AreaType" type="AreaType" maxOccurs="1000"/>
 		</xs:sequence>
 	</xs:complexType>
 </xs:schema>

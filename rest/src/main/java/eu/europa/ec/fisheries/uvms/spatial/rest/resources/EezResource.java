@@ -1,7 +1,8 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources;
 
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ErrorMessageType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GetEezSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GetEezSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ResponseMessageType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.EezDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseCode;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseDto;
@@ -19,7 +20,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 @Path("/eez")
-public class EezResource {
+public class EezResource extends AbstractResource {
 
     final static Logger LOG = LoggerFactory.getLogger(EezResource.class);
 
@@ -32,20 +33,18 @@ public class EezResource {
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Path("/{id}")
-    @SuppressWarnings("unchecked")
     public ResponseDto getExclusiveEconomicZoneById(@PathParam("id") int eezId) {
         try {
-            LOG.info("Getting eez with {}", eezId);
-            // TODO Please change for to RQ Object
+            LOG.info("Getting getEezRS with {}", eezId);
 
-            GetEezSpatialRS eez = exclusiveEconomicZoneService.getExclusiveEconomicZoneById(eezId);
+            GetEezSpatialRS getEezRS = exclusiveEconomicZoneService.getExclusiveEconomicZoneById(createRequest(eezId));
 
-            if (eez.getResponseMessage().getSuccess() != null) {
-                EezDto eezDto = eezDtoMapper.eezSchemaToDto(eez.getEez());
+            ResponseMessageType responseMessage = getEezRS.getResponseMessage();
+            if (isSuccess(responseMessage)) {
+                EezDto eezDto = eezDtoMapper.eezSchemaToDto(getEezRS.getEez());
                 return new ResponseDto(eezDto, ResponseCode.OK);
             } else {
-                ErrorMessageType error = eez.getResponseMessage().getErrors().getErrorMessage().iterator().next();
-                return new ResponseDto(error.getValue(), ResponseCode.map(error.getErrorCode()));
+                return createErrorResponse(responseMessage);
             }
         } catch (Exception ex) {
             if (LOG.isDebugEnabled()) {
@@ -53,5 +52,9 @@ public class EezResource {
             }
             return new ResponseDto(ex.getMessage(), ResponseCode.ERROR);
         }
+    }
+
+    private GetEezSpatialRQ createRequest(int eezId) {
+        return new GetEezSpatialRQ(String.valueOf(eezId));
     }
 }
