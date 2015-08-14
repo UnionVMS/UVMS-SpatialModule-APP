@@ -2,8 +2,8 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.spatial.dao.CommonGenericDAO;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.EezMapper;
-import eu.schemas.GetEezSpatialRS;
 import org.hibernate.HibernateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +13,9 @@ import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+
+import static com.google.common.collect.Lists.newArrayList;
 
 /**
  * //TODO create test
@@ -45,12 +48,25 @@ public class ExclusiveEconomicZoneServiceBean implements ExclusiveEconomicZoneSe
         return createSuccessResponse(eez);
     }
 
-    // TODO Please finish
     private GetEezSpatialRS createErrorResponse() {
-        return null;
+        return new GetEezSpatialRS(createErrorResponseMessage(), null);
+    }
+
+    private ResponseMessageType createErrorResponseMessage() {
+        ResponseMessageType responseMessage = new ResponseMessageType();
+        ErrorMessageType errorMessageType = new ErrorMessageType("Error message", "1232");
+        ArrayList<ErrorMessageType> errorMessageTypes = newArrayList(errorMessageType);
+        responseMessage.setErrors(new ErrorsType(errorMessageTypes));
+        return responseMessage;
     }
 
     private GetEezSpatialRS createSuccessResponse(EezEntity eez) {
-        return new GetEezSpatialRS(null, eezMapper.eezEntityToSchema(eez)); //TODO change null
+        return new GetEezSpatialRS(createSuccessResponseMessage(), eezMapper.eezEntityToSchema(eez));
+    }
+
+    private ResponseMessageType createSuccessResponseMessage() {
+        ResponseMessageType responseMessage = new ResponseMessageType();
+        responseMessage.setSuccess(new SuccessType());
+        return responseMessage;
     }
 }

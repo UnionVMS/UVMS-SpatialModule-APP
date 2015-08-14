@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2015 rel. 4 sp1 (x64) (http://www.altova.com) by marian (cop) -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.eu/" targetNamespace="http://schemas.eu/" version="1.0" id="FISH2015_SPATIAL2015">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://europa.eu/ec/fisheries/uvms/spatial/model/schemas" targetNamespace="http://europa.eu/ec/fisheries/uvms/spatial/model/schemas" version="1.0" id="FISH2015_SPATIAL2015">
 	<xs:include schemaLocation="Spatial_CommonTypes.xsd"/>
 	<xs:element name="GetAreaTypesSpatialRS">
 		<xs:complexType>

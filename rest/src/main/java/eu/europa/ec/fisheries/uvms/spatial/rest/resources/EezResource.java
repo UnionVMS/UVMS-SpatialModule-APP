@@ -1,11 +1,12 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources;
 
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ErrorMessageType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GetEezSpatialRS;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.EezDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseCode;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.EezDtoMapper;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.ExclusiveEconomicZoneService;
-import eu.schemas.GetEezSpatialRS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,9 +36,17 @@ public class EezResource {
     public ResponseDto getExclusiveEconomicZoneById(@PathParam("id") int eezId) {
         try {
             LOG.info("Getting eez with {}", eezId);
+            // TODO Please change for to RQ Object
+
             GetEezSpatialRS eez = exclusiveEconomicZoneService.getExclusiveEconomicZoneById(eezId);
-            EezDto eezDto = eezDtoMapper.eezSchemaToDto(eez.getEez());
-            return new ResponseDto(eezDto, ResponseCode.OK);
+
+            if (eez.getResponseMessage().getSuccess() != null) {
+                EezDto eezDto = eezDtoMapper.eezSchemaToDto(eez.getEez());
+                return new ResponseDto(eezDto, ResponseCode.OK);
+            } else {
+                ErrorMessageType error = eez.getResponseMessage().getErrors().getErrorMessage().iterator().next();
+                return new ResponseDto(error.getValue(), ResponseCode.map(error.getErrorCode()));
+            }
         } catch (Exception ex) {
             if (LOG.isDebugEnabled()) {
                 LOG.error("[ Error when getting eez with id " + eezId + ". ] ", ex);

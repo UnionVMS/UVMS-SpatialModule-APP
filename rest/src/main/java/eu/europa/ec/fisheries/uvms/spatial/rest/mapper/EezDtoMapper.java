@@ -1,7 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.mapper;
 
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.EezDto;
-import eu.schemas.EezType;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;

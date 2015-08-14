@@ -7,9 +7,9 @@ import eu.europa.ec.fisheries.uvms.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.exception.SpatialServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.dao.CommonGenericDAO;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaTypeEntity;
-import eu.schemas.AreaType;
-import eu.schemas.GetAreaTypesSpatialRS;
-import eu.schemas.GetAreasByLocationSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GetAreaTypesSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GetAreasByLocationSpatialRS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,6 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import eu.schemas.GetEezSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GetEezSpatialRS;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;

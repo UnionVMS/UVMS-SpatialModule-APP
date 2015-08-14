@@ -7,13 +7,21 @@ public enum ResponseCode implements RestResponseCode {
 
     private final String code;
 
-    private ResponseCode(String code) {
+    ResponseCode(String code) {
         this.code = code;
+    }
+
+    public static ResponseCode map(String errorCode) {
+        for (ResponseCode responseCode : values()) {
+            if (responseCode.getCode().equals(errorCode)) {
+                return responseCode;
+            }
+        }
+        return ERROR;
     }
 
     @Override
     public String getCode() {
         return code;
     }
-
 }
