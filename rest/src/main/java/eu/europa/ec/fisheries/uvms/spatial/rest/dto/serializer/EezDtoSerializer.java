@@ -1,6 +1,9 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.dto.serializer;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.EezDto;
 
@@ -9,20 +12,33 @@ import java.io.IOException;
 /**
  * Created by kopyczmi on 11-Aug-15.
  */
-public class EezDtoSerializer extends AbstractDtoSerializer {
+public class EezDtoSerializer extends JsonSerializer<EezDto> {
 
     private static final String GEOMETRY = "geometry";
     private static final String PROPERTIES = "properties";
     private static final String FEATURE = "Feature";
+    protected static final String TYPE = "type";
+    protected static final String COORDINATES = "coordinates";
+
 
     @Override
     public void serialize(EezDto eezDto, JsonGenerator gen, SerializerProvider provider) throws IOException {
         gen.writeStartObject();
         gen.writeStringField(TYPE, FEATURE);
         gen.writeFieldName(GEOMETRY);
-
-        writeGeometry(gen, eezDto.getGeometryJson());
+        writeGeometry(gen , eezDto.getGeometryJson());
         writeProperties(gen, eezDto);
+
+        gen.writeEndObject();
+    }
+
+    private void writeGeometry(JsonGenerator gen, String geometryJson) throws IOException {
+        gen.writeStartObject();
+
+        JsonNode rootNode = new ObjectMapper().readTree(geometryJson);
+
+        gen.writeStringField(TYPE, rootNode.get(TYPE).textValue());
+        gen.writeObjectField(COORDINATES, rootNode.get(COORDINATES));
 
         gen.writeEndObject();
     }

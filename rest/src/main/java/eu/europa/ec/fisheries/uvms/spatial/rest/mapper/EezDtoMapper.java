@@ -13,7 +13,6 @@ import org.mapstruct.Mappings;
 public interface EezDtoMapper {
 
     @Mappings({
-            @Mapping(target = "geometryType", source = "geom.geometryType"),
             @Mapping(target = "geometryJson", source = "geom.geometryJson")
     })
     EezDto eezSchemaToDto(EezType eez);

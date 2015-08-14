@@ -33,6 +33,7 @@ public class EezResource {
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Path("/{id}")
+    @SuppressWarnings("unchecked")
     public ResponseDto getExclusiveEconomicZoneById(@PathParam("id") int eezId) {
         try {
             LOG.info("Getting eez with {}", eezId);
