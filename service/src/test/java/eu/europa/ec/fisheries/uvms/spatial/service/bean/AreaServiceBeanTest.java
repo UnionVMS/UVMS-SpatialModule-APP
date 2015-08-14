@@ -1,11 +1,8 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import eu.europa.ec.fisheries.uvms.spatial.dao.CommonGenericDAO;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaTypeEntity;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GetAreaTypesSpatialRS;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,9 +41,9 @@ public class AreaServiceBeanTest {
 
         //then
         assertNotNull(areaTypeRS);
-        List<AreaType> areaTypes = areaTypeRS.getAreaType();
+        List<String> areaTypes = areaTypeRS.getAreaTypes().getAreaType();
         assertThat(areaTypes).hasSize(AREA_TYPES.size());
-        assertThat(retrieveAreaNames(areaTypes)).containsOnly(AREA_TYPES.toArray());
+        assertThat(areaTypes).containsOnly(AREA_TYPES.toArray());
     }
 
     @Test
@@ -60,16 +57,7 @@ public class AreaServiceBeanTest {
 
         // then
         assertNotNull(areaTypeRS);
-        assertThat(areaTypeRS.getAreaType()).isEmpty();
-    }
-
-    private List<String> retrieveAreaNames(List<AreaType> areaTypes) {
-        return Lists.transform(areaTypes, new Function<AreaType, String>() {
-            @Override
-            public String apply(AreaType areaType) {
-                return areaType.getTypeName();
-            }
-        });
+        assertThat(areaTypeRS.getAreaTypes().getAreaType()).isEmpty();
     }
 
 }

@@ -1,15 +1,14 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import eu.europa.ec.fisheries.uvms.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.exception.SpatialServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.dao.CommonGenericDAO;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaTypeEntity;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreasNameType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GetAreaTypesSpatialRS;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GetAreasByLocationSpatialRS;
+import org.hibernate.HibernateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,11 +19,10 @@ import java.util.HashMap;
 import java.util.List;
 
 import static java.lang.String.valueOf;
-import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 
 @Stateless
 @Local(AreaService.class)
-public class AreaServiceBean implements AreaService {
+public class AreaServiceBean extends AbstractServiceBean implements AreaService {
 
     public static final String LAT = "lat";
     public static final String LON = "lon";
@@ -39,24 +37,48 @@ public class AreaServiceBean implements AreaService {
         List<String> areaTypes = null;
         try {
             areaTypes = commonDao.findEntityByNamedQuery(String.class, AreaTypeEntity.FIND_ALL);
-        } catch (Exception e) {
-            LOG.error("Error during getting areas types", e);
-            throw new SpatialServiceException(SpatialServiceErrors.DAO_FIX_IT_ERROR, e.getCause());
+        } catch (HibernateException hex) {
+            LOG.debug("HibernateException: ", hex);
+            LOG.debug("HibernateException cause: ", hex.getCause());
+
+            SpatialServiceErrors error = SpatialServiceErrors.DAO_FIX_IT_ERROR;
+            return createErrorGetAreaTypesResponse(error.formatMessage(), error.getErrorCode());
+        } catch (Exception ex) {
+            LOG.debug("Exception: ", ex);
+            LOG.debug("Exception cause: ", ex.getCause());
+
+            SpatialServiceErrors error = SpatialServiceErrors.DAO_FIX_IT_ERROR;
+            return createErrorGetAreaTypesResponse(error.formatMessage(), error.getErrorCode());
         }
-        return createGetAreaTypesResponse(areaTypes);
+
+        return createSuccessGetAreaTypesResponse(areaTypes);
+    }
+
+    private GetAreaTypesSpatialRS createSuccessGetAreaTypesResponse(List<String> areaTypeNames) {
+        return new GetAreaTypesSpatialRS(createSuccessResponseMessage(), new AreasNameType(areaTypeNames));
+    }
+
+    private GetAreaTypesSpatialRS createErrorGetAreaTypesResponse(String errorMessage, Integer errorCode) {
+        return new GetAreaTypesSpatialRS(createErrorResponseMessage(errorMessage, errorCode), null);
     }
 
     @Override
     public GetAreasByLocationSpatialRS getAreasByLocation(double lat, double lon, int crs) {
-        List<AreaTypeEntity> systemAreaTypes = commonDao.findEntityByNamedQuery(AreaTypeEntity.class, AreaTypeEntity.FIND_SYSTEM);
-        for (AreaTypeEntity areaType : systemAreaTypes) {
-            String areaDbTable = areaType.getAreaDbTable();
+        try {
+            List<AreaTypeEntity> systemAreaTypes = commonDao.findEntityByNamedQuery(AreaTypeEntity.class, AreaTypeEntity.FIND_SYSTEM);
+            for (AreaTypeEntity areaType : systemAreaTypes) {
+                String areaDbTable = areaType.getAreaDbTable();
 
-            HashMap<String, String> paramaters = createParamaters(lat, lon, crs);
-            List resultList = commonDao.findEntityByNativeQuery("SELECT * FROM " + areaDbTable, paramaters);
+                HashMap<String, String> paramaters = createParamaters(lat, lon, crs);
+                List resultList = commonDao.findEntityByNativeQuery("SELECT * FROM " + areaDbTable);
+
+            }
+        } catch (Exception e) {
+            LOG.error("Error during getting areas by location ", e);
+            throw new SpatialServiceException(SpatialServiceErrors.DAO_FIX_IT_ERROR, e.getCause());
         }
 
-        return createGetAreasByLocationResponse();
+        return createSuccessGetAreasByLocationResponse();
     }
 
     private HashMap<String, String> createParamaters(double lat, double lon, int crs) {
@@ -67,26 +89,8 @@ public class AreaServiceBean implements AreaService {
         return result;
     }
 
-    private GetAreasByLocationSpatialRS createGetAreasByLocationResponse() {
-        GetAreasByLocationSpatialRS response = new GetAreasByLocationSpatialRS();
-
-        return response;
-    }
-
-    private GetAreaTypesSpatialRS createGetAreaTypesResponse(List<String> areaTypeNames) {
-        GetAreaTypesSpatialRS response = new GetAreaTypesSpatialRS();
-        if (isNotEmpty(areaTypeNames)) {
-            List<AreaType> areaTypes = Lists.transform(areaTypeNames, new Function<String, AreaType>() {
-                @Override
-                public AreaType apply(String areaName) {
-                    AreaType areaType = new AreaType();
-                    areaType.setTypeName(areaName);
-                    return areaType;
-                }
-            });
-            response.setAreaType(areaTypes);
-        }
-        return response;
+    private GetAreasByLocationSpatialRS createSuccessGetAreasByLocationResponse() {
+        return new GetAreasByLocationSpatialRS();
     }
 
 }

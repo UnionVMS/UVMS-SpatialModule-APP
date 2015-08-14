@@ -1,8 +1,11 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
+import eu.europa.ec.fisheries.uvms.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.dao.CommonGenericDAO;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GetEezSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GetEezSpatialRS;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.EezMapper;
 import org.hibernate.HibernateException;
 import org.slf4j.Logger;
@@ -13,9 +16,6 @@ import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-
-import static com.google.common.collect.Lists.newArrayList;
 
 /**
  * //TODO create test
@@ -23,7 +23,7 @@ import static com.google.common.collect.Lists.newArrayList;
 @Stateless
 @Local(ExclusiveEconomicZoneService.class)
 @Transactional(Transactional.TxType.REQUIRED)
-public class ExclusiveEconomicZoneServiceBean implements ExclusiveEconomicZoneService {
+public class ExclusiveEconomicZoneServiceBean extends AbstractServiceBean implements ExclusiveEconomicZoneService {
 
     private final static Logger LOG = LoggerFactory.getLogger(ExclusiveEconomicZoneServiceBean.class);
 
@@ -35,38 +35,35 @@ public class ExclusiveEconomicZoneServiceBean implements ExclusiveEconomicZoneSe
 
     @Override
     @SuppressWarnings("unchecked")
-    public GetEezSpatialRS getExclusiveEconomicZoneById(int id) {
-        EezEntity eez = null;
+    public GetEezSpatialRS getExclusiveEconomicZoneById(GetEezSpatialRQ getEezSpatialRQ) {
+        EezType eezType;
         try {
-            eez = (EezEntity) commonGenericDAO.findEntityById(EezEntity.class, id);
+            int eezId = Integer.parseInt(getEezSpatialRQ.getEezId());
+            EezEntity eez = (EezEntity) commonGenericDAO.findEntityById(EezEntity.class, eezId);
+            eezType = eezMapper.eezEntityToSchema(eez);
         } catch (HibernateException hex) {
             LOG.debug("HibernateException: ", hex);
             LOG.debug("HibernateException cause: ", hex.getCause());
 
-            return createErrorResponse();
+            SpatialServiceErrors error = SpatialServiceErrors.DAO_FIX_IT_ERROR;
+            return createErrorResponse(error.formatMessage(), error.getErrorCode());
+        } catch (Exception ex) {
+            LOG.debug("Exception: ", ex);
+            LOG.debug("Exception cause: ", ex.getCause());
+
+            SpatialServiceErrors error = SpatialServiceErrors.DAO_FIX_IT_ERROR;
+            return createErrorResponse(error.formatMessage(), error.getErrorCode());
         }
-        return createSuccessResponse(eez);
+
+        return createSuccessResponse(eezType);
     }
 
-    private GetEezSpatialRS createErrorResponse() {
-        return new GetEezSpatialRS(createErrorResponseMessage(), null);
+    private GetEezSpatialRS createErrorResponse(String errorMessage, Integer errorCode) {
+        return new GetEezSpatialRS(createErrorResponseMessage(errorMessage, errorCode), null);
     }
 
-    private ResponseMessageType createErrorResponseMessage() {
-        ResponseMessageType responseMessage = new ResponseMessageType();
-        ErrorMessageType errorMessageType = new ErrorMessageType("Error message", "1232");
-        ArrayList<ErrorMessageType> errorMessageTypes = newArrayList(errorMessageType);
-        responseMessage.setErrors(new ErrorsType(errorMessageTypes));
-        return responseMessage;
+    private GetEezSpatialRS createSuccessResponse(EezType eez) {
+        return new GetEezSpatialRS(createSuccessResponseMessage(), eez);
     }
 
-    private GetEezSpatialRS createSuccessResponse(EezEntity eez) {
-        return new GetEezSpatialRS(createSuccessResponseMessage(), eezMapper.eezEntityToSchema(eez));
-    }
-
-    private ResponseMessageType createSuccessResponseMessage() {
-        ResponseMessageType responseMessage = new ResponseMessageType();
-        responseMessage.setSuccess(new SuccessType());
-        return responseMessage;
-    }
 }
