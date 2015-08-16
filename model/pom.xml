@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+        >
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>model</artifactId>
@@ -32,6 +33,12 @@
             <version>0.9.4</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+
+
     </dependencies>
 
     <profiles>
@@ -54,6 +61,7 @@
                         </executions>
 
                         <configuration>
+
                             <schemaLanguage>XMLSCHEMA</schemaLanguage>
                             <forceRegenerate>false</forceRegenerate>
 
@@ -70,6 +78,7 @@
                                 <arg>-Xsetters</arg>
                                 <arg>-Xvalue-constructor</arg>
                                 <arg>-Xsetters-mode=direct</arg>
+                                <arg>-Xannotate</arg>
                             </args>
 
                             <plugins>
@@ -83,9 +92,32 @@
                                     <artifactId>jaxb2-value-constructor</artifactId>
                                     <version>3.0</version>
                                 </plugin>
+                                <plugin>
+                                    <groupId>org.jvnet.jaxb2_commons</groupId>
+                                    <artifactId>jaxb2-basics-annotate</artifactId>
+                                    <version>1.0.1</version>
+                                </plugin>
+                                <plugin>
+                                    <groupId>org.jvnet.jaxb2_commons</groupId>
+                                    <artifactId>jaxb2-annotate-plugin-test-annox-annotations</artifactId>
+                                    <version>1.0.0</version>
+                                </plugin>
                             </plugins>
-
                         </configuration>
+
+                        <dependencies>
+                            <dependency>
+                                <groupId>com.fasterxml.jackson.core</groupId>
+                                <artifactId>jackson-annotations</artifactId>
+                                <version>${jackson.version}</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>com.fasterxml.jackson.core</groupId>
+                                <artifactId>jackson-databind</artifactId>
+                                <version>${jackson.version}</version>
+                            </dependency>
+                        </dependencies>
+
                     </plugin>
                 </plugins>
             </build>
