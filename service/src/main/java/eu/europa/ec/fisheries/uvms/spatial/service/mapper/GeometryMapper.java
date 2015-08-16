@@ -2,25 +2,16 @@ package eu.europa.ec.fisheries.uvms.spatial.service.mapper;
 
 import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GeometryType;
-import org.geotools.geojson.geom.GeometryJSON;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
 
 /**
- * Created by kopyczmi on 11-Aug-15.
+ * //TODO create test
  */
 @Mapper(componentModel = "cdi")
-public abstract class GeometryMapper {
+public interface GeometryMapper {
 
-    @Mappings({
-            @Mapping(target = "geometryJson", expression = "java(geometryToGeoJson(geometry))")
-    })
-    public abstract GeometryType geometryToGeometryType(Geometry geometry);
-
-    protected String geometryToGeoJson(Geometry geometry) {
-        GeometryJSON geoJSON = new GeometryJSON();
-        return geoJSON.toString(geometry);
-    }
+    @Mapping(target = "geometry", expression = "java(new com.vividsolutions.jts.io.WKTWriter().write(geometry))")
+    GeometryType geometryToGeometryType(Geometry geometry);
 
 }

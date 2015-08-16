@@ -13,14 +13,14 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class GeometryTypeMapperTest {
+public class GeometryMapperTest {
 
-    private GeometryMapper geometryMapper;
+    private GeometryMapper mapper;
     private Geometry geometry;
 
     @Before
     public void beforeTest() {
-        geometryMapper = new GeometryMapperImpl();
+        mapper = new GeometryMapperImpl();
     }
 
     @Test
@@ -29,11 +29,10 @@ public class GeometryTypeMapperTest {
         geometry = new GeometryFactory().createPoint(new Coordinate(1, 11));
 
         // when
-        GeometryType geometryType = geometryMapper.geometryToGeometryType(geometry);
+        GeometryType geometryType = mapper.geometryToGeometryType(geometry);
 
         // then
-        assertEquals("Point", geometryType.getGeometryType());
-        assertEquals("{\"type\":\"Point\",\"coordinates\":[1,11]}", geometryType.getGeometryJson());
+        assertEquals("POINT (1 11)", geometryType.getGeometry());
     }
 
     @Test
@@ -43,10 +42,9 @@ public class GeometryTypeMapperTest {
         Polygon polygon = new GeometryFactory().createPolygon((Coordinate[]) coordinates.toArray());
 
         // when
-        GeometryType geometryType = geometryMapper.geometryToGeometryType(polygon);
+        GeometryType geometryType = mapper.geometryToGeometryType(polygon);
 
         // then
-        assertEquals("Polygon", geometryType.getGeometryType());
-        assertEquals("{\"type\":\"Polygon\",\"coordinates\":[[[1,11],[1,11],[1,11],[1,11]]]}", geometryType.getGeometryJson());
+        assertEquals("POLYGON ((1 11, 1 11, 1 11, 1 11))", geometryType.getGeometry());
     }
 }

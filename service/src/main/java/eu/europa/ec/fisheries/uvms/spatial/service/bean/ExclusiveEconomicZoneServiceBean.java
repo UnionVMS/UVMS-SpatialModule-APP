@@ -40,7 +40,7 @@ public class ExclusiveEconomicZoneServiceBean extends AbstractServiceBean implem
         try {
             int eezId = Integer.parseInt(getEezSpatialRQ.getEezId());
             EezEntity eez = (EezEntity) commonGenericDAO.findEntityById(EezEntity.class, eezId);
-            eezType = eezMapper.eezEntityToSchema(eez);
+            eezType = eezMapper.eezEntityToEezType(eez);
         } catch (HibernateException hex) {
             LOG.debug("HibernateException: ", hex);
             LOG.debug("HibernateException cause: ", hex.getCause());

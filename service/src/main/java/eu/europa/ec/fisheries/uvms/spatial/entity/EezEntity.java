@@ -18,7 +18,7 @@ import java.math.BigInteger;
 @ToString
 public class EezEntity {
     private int gid;
-    private Geometry geom;
+    private Geometry geometry;
     private String eez;
     private String country;
     private String sovereign;
@@ -46,12 +46,12 @@ public class EezEntity {
     @Basic
     @Column(name = "geom")
     @Type(type = "org.hibernate.spatial.GeometryType")
-    public Geometry getGeom() {
-        return geom;
+    public Geometry getGeometry() {
+        return geometry;
     }
 
-    public void setGeom(Geometry geom) {
-        this.geom = geom;
+    public void setGeometry(Geometry geom) {
+        this.geometry = geom;
     }
 
     @Basic
