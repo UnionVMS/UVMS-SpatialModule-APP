@@ -1,6 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import eu.europa.ec.fisheries.uvms.spatial.dao.CommonGenericDAO;
+import eu.europa.ec.fisheries.uvms.spatial.dao.CommonGenericDAOBean;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaTypeEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import org.jboss.arquillian.junit.Arquillian;
@@ -27,15 +27,16 @@ public class CommonGenericDAOIT extends AbstractArquillianIT {
     private static final String AUSTRALIA = "Australia";
 
     @EJB
-    private CommonGenericDAO genericDAO;
+    private CommonGenericDAOBean genericDAO;
 
     @Before
     public void beforeEach() {
-        assertNotNull("CommonGenericDAO not injected", genericDAO);
+        assertNotNull("genericDAO not injected", genericDAO);
     }
 
     @Test
     @Transactional(TransactionMode.ROLLBACK)
+    @SuppressWarnings("unchecked")
     public void shouldCreateEntity() throws Exception {
         // given
         EezEntity eez = createEezEntity();
@@ -50,6 +51,7 @@ public class CommonGenericDAOIT extends AbstractArquillianIT {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void shouldFindEntity() throws Exception {
         // when
         EezEntity eezEntity = (EezEntity) genericDAO.findEntityById(EezEntity.class, 1);
@@ -59,6 +61,7 @@ public class CommonGenericDAOIT extends AbstractArquillianIT {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void shouldGetEntity() throws Exception {
         // when
         List<String> areasType = genericDAO.findEntityByNamedQuery(String.class, AreaTypeEntity.FIND_ALL);

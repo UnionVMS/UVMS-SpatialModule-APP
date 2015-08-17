@@ -1,7 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
+import eu.europa.ec.fisheries.uvms.spatial.dao.CommonGenericDAOBean;
 import eu.europa.ec.fisheries.uvms.util.exception.SpatialServiceErrors;
-import eu.europa.ec.fisheries.uvms.spatial.dao.CommonGenericDAO;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GetEezSpatialRQ;
@@ -28,7 +28,7 @@ public class ExclusiveEconomicZoneServiceBean extends AbstractServiceBean implem
     private final static Logger LOG = LoggerFactory.getLogger(ExclusiveEconomicZoneServiceBean.class);
 
     @EJB
-    private CommonGenericDAO commonGenericDAO;
+    private CommonGenericDAOBean commonGenericDAO;
 
     @Inject
     private EezMapper eezMapper;

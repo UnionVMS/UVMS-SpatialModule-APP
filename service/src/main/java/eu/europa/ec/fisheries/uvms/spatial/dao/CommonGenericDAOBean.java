@@ -10,5 +10,5 @@ import javax.ejb.TransactionAttributeType;
 @Stateless
 @LocalBean
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
-public class CommonGenericDao extends JPACommonGenericDAO {
+public class CommonGenericDAOBean extends JPACommonGenericDAO {
 }

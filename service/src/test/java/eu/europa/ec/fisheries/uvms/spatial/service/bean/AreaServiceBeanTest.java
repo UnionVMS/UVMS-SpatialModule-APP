@@ -1,7 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.google.common.collect.ImmutableList;
-import eu.europa.ec.fisheries.uvms.spatial.dao.CommonGenericDAO;
+import eu.europa.ec.fisheries.uvms.spatial.dao.CommonGenericDAOBean;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaTypeEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GetAreaTypesSpatialRS;
 import org.junit.Test;
@@ -25,7 +25,7 @@ public class AreaServiceBeanTest {
     private final static List<String> AREA_TYPES = ImmutableList.of("Portugal", "Belgium", "Poland", "Bulgaria", "India");
 
     @Mock
-    private CommonGenericDAO commonGenericDAO;
+    private CommonGenericDAOBean commonGenericDAO;
 
     @InjectMocks
     private AreaService areaService = new AreaServiceBean();
