@@ -1,8 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.google.common.collect.Maps;
-import eu.europa.ec.fisheries.uvms.service.CommonGenericDAO;
-import eu.europa.ec.fisheries.uvms.spatial.dao.CommonGenericDAOBean;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaTypeEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreasNameType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GetAreaTypesSpatialRS;
@@ -13,10 +11,8 @@ import org.hibernate.HibernateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
-import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.List;
 
@@ -32,9 +28,6 @@ public class AreaServiceBean extends AbstractServiceBean implements AreaService 
     private static final String LON = "lon";
     private static final String CRS = "crs";
 
-    @Inject
-    private CommonGenericDAOBean commonDao;
-
     @Override
     @SuppressWarnings("unchecked")
     public GetAreaTypesSpatialRS getAreaTypes() {
@@ -42,9 +35,7 @@ public class AreaServiceBean extends AbstractServiceBean implements AreaService 
         try {
             areaTypes = commonDao.findEntityByNamedQuery(String.class, AreaTypeEntity.FIND_ALL);
         } catch (HibernateException hex) {
-            LOG.error("HibernateException: ", hex);
-            LOG.error("HibernateException cause: ", hex.getCause());
-
+            // Stacktrace logged in commons lib
             SpatialServiceErrors error = SpatialServiceErrors.INTERNAL_APPLICATION_ERROR;
             return createErrorGetAreaTypesResponse(error.formatMessage(), error.getErrorCode());
         } catch (Exception ex) {

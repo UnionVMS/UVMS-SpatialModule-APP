@@ -28,9 +28,6 @@ public class ExclusiveEconomicZoneServiceBean extends AbstractServiceBean implem
     private final static Logger LOG = LoggerFactory.getLogger(ExclusiveEconomicZoneServiceBean.class);
 
     @Inject
-    private CommonGenericDAOBean commonDao;
-
-    @Inject
     private EezMapper eezMapper;
 
     @Override
@@ -42,28 +39,26 @@ public class ExclusiveEconomicZoneServiceBean extends AbstractServiceBean implem
             EezEntity eez = (EezEntity) commonDao.findEntityById(EezEntity.class, eezId);
             eezType = eezMapper.eezEntityToEezType(eez);
         } catch (HibernateException hex) {
-            LOG.error("HibernateException: ", hex);
-            LOG.error("HibernateException cause: ", hex.getCause());
-
+            // Stacktrace logged in commons lib
             SpatialServiceErrors error = SpatialServiceErrors.INTERNAL_APPLICATION_ERROR;
-            return createErrorGetEEzResponse(error.formatMessage(), error.getErrorCode());
+            return createErrorGetEezResponse(error.formatMessage(), error.getErrorCode());
         } catch (Exception ex) {
             LOG.error("Exception: ", ex);
             LOG.error("Exception cause: ", ex.getCause());
 
             if (ex instanceof SpatialServiceException) {
                 SpatialServiceException sse = (SpatialServiceException) ex;
-                return createErrorGetEEzResponse(sse.getMessage(), sse.getErrorCode());
+                return createErrorGetEezResponse(sse.getMessage(), sse.getErrorCode());
             } else {
                 SpatialServiceErrors error = SpatialServiceErrors.INTERNAL_APPLICATION_ERROR;
-                return createErrorGetEEzResponse(error.formatMessage(), error.getErrorCode());
+                return createErrorGetEezResponse(error.formatMessage(), error.getErrorCode());
             }
         }
 
         return createSuccessResponse(eezType);
     }
 
-    private GetEezSpatialRS createErrorGetEEzResponse(String errorMessage, Integer errorCode) {
+    private GetEezSpatialRS createErrorGetEezResponse(String errorMessage, Integer errorCode) {
         return new GetEezSpatialRS(createErrorResponseMessage(errorMessage, errorCode), null);
     }
 

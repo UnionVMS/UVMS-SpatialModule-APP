@@ -9,7 +9,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezType;
 import java.io.IOException;
 
 /**
- * //TODO create test
+ * TODO create test
  */
 public class EezTypeSerializer extends JsonSerializer<EezType> {
 
