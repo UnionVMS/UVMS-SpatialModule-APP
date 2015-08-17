@@ -2,6 +2,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.google.common.collect.Maps;
 import eu.europa.ec.fisheries.uvms.service.CommonGenericDAO;
+import eu.europa.ec.fisheries.uvms.spatial.dao.CommonGenericDAOBean;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaTypeEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreasNameType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GetAreaTypesSpatialRS;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.List;
 
@@ -30,8 +32,8 @@ public class AreaServiceBean extends AbstractServiceBean implements AreaService 
     private static final String LON = "lon";
     private static final String CRS = "crs";
 
-    @EJB
-    private CommonGenericDAO commonDao;
+    @Inject
+    private CommonGenericDAOBean commonDao;
 
     @Override
     @SuppressWarnings("unchecked")
