@@ -42,14 +42,14 @@ public class ExclusiveEconomicZoneServiceBean extends AbstractServiceBean implem
             EezEntity eez = (EezEntity) commonDao.findEntityById(EezEntity.class, eezId);
             eezType = eezMapper.eezEntityToEezType(eez);
         } catch (HibernateException hex) {
-            LOG.debug("HibernateException: ", hex);
-            LOG.debug("HibernateException cause: ", hex.getCause());
+            LOG.error("HibernateException: ", hex);
+            LOG.error("HibernateException cause: ", hex.getCause());
 
             SpatialServiceErrors error = SpatialServiceErrors.INTERNAL_APPLICATION_ERROR;
             return createErrorGetEEzResponse(error.formatMessage(), error.getErrorCode());
         } catch (Exception ex) {
-            LOG.debug("Exception: ", ex);
-            LOG.debug("Exception cause: ", ex.getCause());
+            LOG.error("Exception: ", ex);
+            LOG.error("Exception cause: ", ex.getCause());
 
             if (ex instanceof SpatialServiceException) {
                 SpatialServiceException sse = (SpatialServiceException) ex;
