@@ -74,9 +74,7 @@ public class AreaServiceBean extends AbstractServiceBean implements AreaService 
 
             }
         } catch (HibernateException hex) {
-            LOG.error("HibernateException: ", hex);
-            LOG.error("HibernateException cause: ", hex.getCause());
-
+            // Stacktrace logged in commons lib
             SpatialServiceErrors error = SpatialServiceErrors.INTERNAL_APPLICATION_ERROR;
             return createErrorGetAreasByLocationResponse(error.formatMessage(), error.getErrorCode());
         } catch (Exception ex) {
