@@ -1,17 +1,16 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.spatial.dao.CommonGenericDAOBean;
-import eu.europa.ec.fisheries.uvms.util.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GetEezSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GetEezSpatialRS;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.EezMapper;
+import eu.europa.ec.fisheries.uvms.util.exception.SpatialServiceErrors;
 import org.hibernate.HibernateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -27,19 +26,19 @@ public class ExclusiveEconomicZoneServiceBean extends AbstractServiceBean implem
 
     private final static Logger LOG = LoggerFactory.getLogger(ExclusiveEconomicZoneServiceBean.class);
 
-    @EJB
-    private CommonGenericDAOBean commonGenericDAO;
+    @Inject
+    private CommonGenericDAOBean commonDao;
 
     @Inject
     private EezMapper eezMapper;
 
     @Override
     @SuppressWarnings("unchecked")
-    public GetEezSpatialRS getExclusiveEconomicZoneById(GetEezSpatialRQ getEezSpatialRQ) {
+    public GetEezSpatialRS getExclusiveEconomicZoneById(final GetEezSpatialRQ getEezSpatialRQ) {
         EezType eezType;
         try {
             int eezId = Integer.parseInt(getEezSpatialRQ.getEezId());
-            EezEntity eez = (EezEntity) commonGenericDAO.findEntityById(EezEntity.class, eezId);
+            EezEntity eez = (EezEntity) commonDao.findEntityById(EezEntity.class, eezId);
             eezType = eezMapper.eezEntityToEezType(eez);
         } catch (HibernateException hex) {
             LOG.debug("HibernateException: ", hex);

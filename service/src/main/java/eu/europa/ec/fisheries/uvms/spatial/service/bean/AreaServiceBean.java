@@ -2,19 +2,19 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.google.common.collect.Maps;
 import eu.europa.ec.fisheries.uvms.spatial.dao.CommonGenericDAOBean;
-import eu.europa.ec.fisheries.uvms.util.exception.SpatialServiceErrors;
-import eu.europa.ec.fisheries.uvms.util.exception.SpatialServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaTypeEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreasNameType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GetAreaTypesSpatialRS;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GetAreasByLocationSpatialRS;
+import eu.europa.ec.fisheries.uvms.util.exception.SpatialServiceErrors;
+import eu.europa.ec.fisheries.uvms.util.exception.SpatialServiceException;
 import org.hibernate.HibernateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.List;
 
@@ -29,7 +29,7 @@ public class AreaServiceBean extends AbstractServiceBean implements AreaService 
     public static final String CRS = "crs";
     private final static Logger LOG = LoggerFactory.getLogger(AreaServiceBean.class);
 
-    @EJB
+    @Inject
     private CommonGenericDAOBean commonDao;
 
     @Override
