@@ -6,6 +6,7 @@ import lombok.ToString;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigInteger;
 
 /**
@@ -16,7 +17,10 @@ import java.math.BigInteger;
 @Table(name = "eez", schema = "spatial")
 @EqualsAndHashCode
 @ToString
-public class EezEntity {
+public class EezEntity implements Serializable {
+
+    private static final long serialVersionUID = 6797853213499502943L;
+
     private int gid;
     private Geometry geometry;
     private String eez;

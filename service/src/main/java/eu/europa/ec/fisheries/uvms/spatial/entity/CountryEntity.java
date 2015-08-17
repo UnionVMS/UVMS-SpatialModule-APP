@@ -18,6 +18,8 @@ import java.io.Serializable;
 @ToString
 public class CountryEntity implements Serializable {
 
+    private static final long serialVersionUID = 725159867407395464L;
+
     @Id
     @Column(name = "id")
     private int id; // TODO convert to Long

@@ -35,11 +35,18 @@
         <hibernate.version>4.3.5.Final</hibernate.version>
         <hibernate-spatial.version>4.3</hibernate-spatial.version>
         <geotools.version>14-M1</geotools.version>
+        <uvms.commons.version>1.0-SNAPSHOT</uvms.commons.version>
     </properties>
 
     <dependencyManagement>
 
         <dependencies>
+
+            <dependency>
+                <groupId>eu.europa.ec.fisheries.uvms</groupId>
+                <artifactId>uvms-commons</artifactId>
+                <version>${uvms.commons.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
