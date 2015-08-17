@@ -1,11 +1,13 @@
-package eu.europa.ec.fisheries.uvms.exception;
+package eu.europa.ec.fisheries.uvms.util.exception;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class SpatialServiceException extends RuntimeException {
+
     private static final long serialVersionUID = 6218157098825269143L;
+
     private final SpatialServiceErrors error;
     private Object[] params;
 

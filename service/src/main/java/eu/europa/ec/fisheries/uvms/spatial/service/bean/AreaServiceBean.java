@@ -1,8 +1,8 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.google.common.collect.Maps;
-import eu.europa.ec.fisheries.uvms.exception.SpatialServiceErrors;
-import eu.europa.ec.fisheries.uvms.exception.SpatialServiceException;
+import eu.europa.ec.fisheries.uvms.util.exception.SpatialServiceErrors;
+import eu.europa.ec.fisheries.uvms.util.exception.SpatialServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.dao.CommonGenericDAO;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaTypeEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreasNameType;

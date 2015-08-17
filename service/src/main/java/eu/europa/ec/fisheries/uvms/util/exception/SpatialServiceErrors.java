@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.exception;
+package eu.europa.ec.fisheries.uvms.util.exception;
 
 import java.text.MessageFormat;
 
@@ -6,8 +6,11 @@ import java.text.MessageFormat;
  * Created by kopyczmi on 13-Aug-15.
  */
 public enum SpatialServiceErrors {
+    //@formatter:off
 
     DAO_FIX_IT_ERROR(1000, "Problem with DAO method {0}");
+
+    //@formatter:on
 
     private final Integer errorCode;
     private final String messagePattern;

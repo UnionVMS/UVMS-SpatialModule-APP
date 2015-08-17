@@ -1,6 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import eu.europa.ec.fisheries.uvms.exception.SpatialServiceErrors;
+import eu.europa.ec.fisheries.uvms.util.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.dao.CommonGenericDAO;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezType;
