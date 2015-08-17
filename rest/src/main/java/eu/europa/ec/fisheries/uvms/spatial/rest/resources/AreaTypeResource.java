@@ -1,6 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources;
 
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GetAreaTypesSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GetAreasByLocationSpatialRS;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ResponseMessageType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseCode;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseDto;
@@ -49,7 +50,14 @@ public class AreaTypeResource extends AbstractResource {
             @DefaultValue("4326") @QueryParam(value = "crs") int crs) {
         try {
             LOG.info("Getting areas by location");
-            return new ResponseDto(areaService.getAreasByLocation(lat, lon, crs), ResponseCode.OK);
+            GetAreasByLocationSpatialRS areasByLocation = areaService.getAreasByLocation(lat, lon, crs);
+
+            ResponseMessageType responseMessage = areasByLocation.getResponseMessage();
+            if (isSuccess(responseMessage)) {
+                return new ResponseDto(areasByLocation.getAreasType(), ResponseCode.OK);
+            } else {
+                return createErrorResponse(responseMessage);
+            }
         } catch (Exception ex) {
             LOG.error("[ Error when getting areas by location. ] ", ex);
             return new ResponseDto(ex.getMessage(), ResponseCode.ERROR);

@@ -8,7 +8,7 @@ import java.text.MessageFormat;
 public enum SpatialServiceErrors {
     //@formatter:off
 
-    DAO_FIX_IT_ERROR(1000, "Problem with DAO method {0}");
+    INTERNAL_APPLICATION_ERROR(500, "An internal application error has occurred.", "An internal application error has occurred.");
 
     //@formatter:on
 
