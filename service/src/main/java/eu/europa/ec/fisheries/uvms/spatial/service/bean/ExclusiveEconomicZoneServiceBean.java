@@ -5,7 +5,6 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GetEezSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GetEezSpatialRS;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.EezMapper;
-import eu.europa.ec.fisheries.uvms.util.exception.ExceptionMapper;
 import eu.europa.ec.fisheries.uvms.util.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.util.exception.SpatialServiceException;
 import org.hibernate.HibernateException;
@@ -24,8 +23,6 @@ import javax.transaction.Transactional;
 @Local(ExclusiveEconomicZoneService.class)
 @Transactional(Transactional.TxType.REQUIRED)
 public class ExclusiveEconomicZoneServiceBean extends AbstractServiceBean implements ExclusiveEconomicZoneService {
-
-    private final static Logger LOG = LoggerFactory.getLogger(ExclusiveEconomicZoneServiceBean.class);
 
     @Inject
     private EezMapper eezMapper;
@@ -64,8 +61,4 @@ public class ExclusiveEconomicZoneServiceBean extends AbstractServiceBean implem
         return new GetEezSpatialRS(createSuccessResponseMessage(), eez);
     }
 
-    @Override
-    protected Logger getLogger() {
-        return LOG;
-    }
 }

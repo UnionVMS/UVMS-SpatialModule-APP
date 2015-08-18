@@ -17,12 +17,12 @@ import static org.junit.Assert.assertNotNull;
 public class AreaServiceBeanIT extends AbstractArquillianIT {
 
     @EJB
-    private AreaService areaService;
+    private AreaTypeService areaTypeService;
 
     @Test
     public void shouldReturnAreaTypes() throws Exception {
         // when
-        GetAreaTypesSpatialRS areaTypes = areaService.getAreaTypes();
+        GetAreaTypesSpatialRS areaTypes = areaTypeService.getAreaTypes();
 
         //then
         assertNotNull(areaTypes);

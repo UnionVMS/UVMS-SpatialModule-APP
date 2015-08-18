@@ -6,8 +6,6 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GetAreasByLocationSpati
 /**
  * Created by kopyczmi on 03-Aug-15.
  */
-public interface AreaService {
+public interface AreaTypeService {
     GetAreaTypesSpatialRS getAreaTypes();
-
-    GetAreasByLocationSpatialRS getAreasByLocation(double lat, double lon, int crs);
 }

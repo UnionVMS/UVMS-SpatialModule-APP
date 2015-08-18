@@ -5,7 +5,8 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GetAreasByLocationSpati
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ResponseMessageType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseCode;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaByLocationService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +20,10 @@ public class AreaTypeResource extends AbstractResource {
     final static Logger LOG = LoggerFactory.getLogger(AreaTypeResource.class);
 
     @EJB
-    private AreaService areaService;
+    private AreaTypeService areaTypeService;
+
+    @EJB
+    private AreaByLocationService areaByLocationService;
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
@@ -27,7 +31,7 @@ public class AreaTypeResource extends AbstractResource {
     public ResponseDto getAreaTypes() {
         try {
             LOG.info("Getting user areas list");
-            GetAreaTypesSpatialRS getAreaTypesRS = areaService.getAreaTypes();
+            GetAreaTypesSpatialRS getAreaTypesRS = areaTypeService.getAreaTypes();
 
             ResponseMessageType responseMessage = getAreaTypesRS.getResponseMessage();
             if (isSuccess(responseMessage)) {
@@ -50,7 +54,7 @@ public class AreaTypeResource extends AbstractResource {
             @DefaultValue("4326") @QueryParam(value = "crs") int crs) {
         try {
             LOG.info("Getting areas by location");
-            GetAreasByLocationSpatialRS areasByLocation = areaService.getAreasByLocation(lat, lon, crs);
+            GetAreasByLocationSpatialRS areasByLocation = areaByLocationService.getAreasByLocation(lat, lon, crs);
 
             ResponseMessageType responseMessage = areasByLocation.getResponseMessage();
             if (isSuccess(responseMessage)) {

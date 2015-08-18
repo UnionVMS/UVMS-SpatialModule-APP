@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
  * Created by kopyczmi on 06-Aug-15.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class AreaServiceBeanTest {
+public class AreaTypeServiceBeanTest {
 
     private final static List<String> AREA_TYPES = ImmutableList.of("Portugal", "Belgium", "Poland", "Bulgaria", "India");
 
@@ -28,7 +28,7 @@ public class AreaServiceBeanTest {
     private CommonGenericDAOBean commonGenericDAO;
 
     @InjectMocks
-    private AreaService areaService = new AreaServiceBean();
+    private AreaTypeService areaTypeService = new AreaTypeTypeServiceBean();
 
     @Test
     @SuppressWarnings("unchecked")
@@ -37,7 +37,7 @@ public class AreaServiceBeanTest {
         when(commonGenericDAO.findEntityByNamedQuery(String.class, AreaTypeEntity.FIND_ALL)).thenReturn(AREA_TYPES);
 
         // when
-        GetAreaTypesSpatialRS areaTypeRS = areaService.getAreaTypes();
+        GetAreaTypesSpatialRS areaTypeRS = areaTypeService.getAreaTypes();
 
         //then
         assertNotNull(areaTypeRS);
@@ -53,7 +53,7 @@ public class AreaServiceBeanTest {
         when(commonGenericDAO.findEntityByNamedQuery(String.class, AreaTypeEntity.FIND_ALL)).thenReturn(null);
 
         // when
-        GetAreaTypesSpatialRS areaTypeRS = areaService.getAreaTypes();
+        GetAreaTypesSpatialRS areaTypeRS = areaTypeService.getAreaTypes();
 
         // then
         assertNotNull(areaTypeRS);
