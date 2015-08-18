@@ -1,6 +1,5 @@
 package eu.europa.ec.fisheries.uvms.spatial.dao;
 
-import eu.europa.ec.fisheries.uvms.service.CommonGenericDAO;
 import eu.europa.ec.fisheries.uvms.service.JPACommonGenericDAO;
 
 import javax.ejb.LocalBean;
