@@ -1,6 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GetAreaTypesSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeSpatialRS;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +22,7 @@ public class AreaServiceBeanIT extends AbstractArquillianIT {
     @Test
     public void shouldReturnAreaTypes() throws Exception {
         // when
-        GetAreaTypesSpatialRS areaTypes = areaTypeService.getAreaTypes();
+        AreaTypeSpatialRS areaTypes = areaTypeService.getAreaTypes();
 
         //then
         assertNotNull(areaTypes);

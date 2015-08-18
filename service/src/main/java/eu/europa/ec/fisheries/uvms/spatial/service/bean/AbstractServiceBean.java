@@ -5,19 +5,22 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ErrorMessageType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ErrorsType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ResponseMessageType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SuccessType;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.handler.ExceptionHandler;
 import eu.europa.ec.fisheries.uvms.util.exception.ExceptionMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
+import javax.interceptor.Interceptors;
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
 
 /**
  * Created by kopyczmi on 14-Aug-15.
  */
-public abstract class AbstractServiceBean {
+public abstract class AbstractServiceBean<V, T> {
 
     protected final Logger LOG = LoggerFactory.getLogger(getClass());
 
@@ -26,6 +29,8 @@ public abstract class AbstractServiceBean {
 
     @EJB
     ExceptionMapper exceptionMapper;
+
+    public abstract T execute(V v);
 
     protected ResponseMessageType createSuccessResponseMessage() {
         ResponseMessageType responseMessage = new ResponseMessageType();

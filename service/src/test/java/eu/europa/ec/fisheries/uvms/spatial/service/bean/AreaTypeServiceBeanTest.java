@@ -3,7 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 import com.google.common.collect.ImmutableList;
 import eu.europa.ec.fisheries.uvms.spatial.dao.CommonGenericDAOBean;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaTypeEntity;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GetAreaTypesSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeSpatialRS;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -28,7 +28,7 @@ public class AreaTypeServiceBeanTest {
     private CommonGenericDAOBean commonGenericDAO;
 
     @InjectMocks
-    private AreaTypeService areaTypeService = new AreaTypeTypeServiceBean();
+    private AreaTypeService areaTypeService = new AreaTypeServiceBean();
 
     @Test
     @SuppressWarnings("unchecked")
@@ -37,7 +37,7 @@ public class AreaTypeServiceBeanTest {
         when(commonGenericDAO.findEntityByNamedQuery(String.class, AreaTypeEntity.FIND_ALL)).thenReturn(AREA_TYPES);
 
         // when
-        GetAreaTypesSpatialRS areaTypeRS = areaTypeService.getAreaTypes();
+        AreaTypeSpatialRS areaTypeRS = areaTypeService.getAreaTypes();
 
         //then
         assertNotNull(areaTypeRS);
@@ -53,7 +53,7 @@ public class AreaTypeServiceBeanTest {
         when(commonGenericDAO.findEntityByNamedQuery(String.class, AreaTypeEntity.FIND_ALL)).thenReturn(null);
 
         // when
-        GetAreaTypesSpatialRS areaTypeRS = areaTypeService.getAreaTypes();
+        AreaTypeSpatialRS areaTypeRS = areaTypeService.getAreaTypes();
 
         // then
         assertNotNull(areaTypeRS);

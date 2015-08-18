@@ -1,7 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources;
 
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GetAreaTypesSpatialRS;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GetAreasByLocationSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeSpatialRS;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ResponseMessageType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseCode;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseDto;
@@ -31,7 +31,7 @@ public class AreaTypeResource extends AbstractResource {
     public ResponseDto getAreaTypes() {
         try {
             LOG.info("Getting user areas list");
-            GetAreaTypesSpatialRS getAreaTypesRS = areaTypeService.getAreaTypes();
+            AreaTypeSpatialRS getAreaTypesRS = areaTypeService.getAreaTypes();
 
             ResponseMessageType responseMessage = getAreaTypesRS.getResponseMessage();
             if (isSuccess(responseMessage)) {
@@ -54,7 +54,7 @@ public class AreaTypeResource extends AbstractResource {
             @DefaultValue("4326") @QueryParam(value = "crs") int crs) {
         try {
             LOG.info("Getting areas by location");
-            GetAreasByLocationSpatialRS areasByLocation = areaByLocationService.getAreasByLocation(lat, lon, crs);
+            AreaByLocationSpatialRS areasByLocation = areaByLocationService.getAreasByLocation(lat, lon, crs);
 
             ResponseMessageType responseMessage = areasByLocation.getResponseMessage();
             if (isSuccess(responseMessage)) {

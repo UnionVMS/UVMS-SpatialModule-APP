@@ -2,13 +2,17 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.google.common.collect.Maps;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaTypeEntity;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GetAreasByLocationSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.handler.ExceptionHandler;
 import eu.europa.ec.fisheries.uvms.util.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.util.exception.SpatialServiceException;
+import org.apache.commons.lang3.NotImplementedException;
 import org.hibernate.HibernateException;
 
 import javax.ejb.Local;
 import javax.ejb.Stateless;
+import javax.interceptor.Interceptors;
+import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.List;
 
@@ -19,6 +23,8 @@ import static java.lang.String.valueOf;
  */
 @Stateless
 @Local(AreaByLocationService.class)
+@Transactional(Transactional.TxType.REQUIRED)
+@Interceptors(value = ExceptionHandler.class)
 public class AreaByLocationServiceBean extends AbstractServiceBean implements AreaByLocationService {
 
     private static final String LAT = "lat";
@@ -26,7 +32,7 @@ public class AreaByLocationServiceBean extends AbstractServiceBean implements Ar
     private static final String CRS = "crs";
 
     @Override
-    public GetAreasByLocationSpatialRS getAreasByLocation(double lat, double lon, int crs) {
+    public AreaByLocationSpatialRS getAreasByLocation(double lat, double lon, int crs) {
         try {
             List<AreaTypeEntity> systemAreaTypes = commonDao.findEntityByNamedQuery(AreaTypeEntity.class, AreaTypeEntity.FIND_SYSTEM);
             for (AreaTypeEntity areaType : systemAreaTypes) {
@@ -34,7 +40,7 @@ public class AreaByLocationServiceBean extends AbstractServiceBean implements Ar
 
                 HashMap<String, String> paramaters = createParamaters(lat, lon, crs);
                 List resultList = commonDao.findEntityByNativeQuery("SELECT * FROM " + areaDbTable);
-
+                System.out.println("Test");
             }
         } catch (Exception ex) {
             if (ex instanceof HibernateException) {
@@ -62,12 +68,16 @@ public class AreaByLocationServiceBean extends AbstractServiceBean implements Ar
         return result;
     }
 
-    private GetAreasByLocationSpatialRS createSuccessGetAreasByLocationResponse() {
-        return new GetAreasByLocationSpatialRS(createSuccessResponseMessage(), null);
+    private AreaByLocationSpatialRS createSuccessGetAreasByLocationResponse() {
+        return new AreaByLocationSpatialRS(createSuccessResponseMessage(), null);
     }
 
-    private GetAreasByLocationSpatialRS createErrorGetAreasByLocationResponse(String errorMessage, Integer errorCode) {
-        return new GetAreasByLocationSpatialRS(createErrorResponseMessage(errorMessage, errorCode), null);
+    private AreaByLocationSpatialRS createErrorGetAreasByLocationResponse(String errorMessage, Integer errorCode) {
+        return new AreaByLocationSpatialRS(createErrorResponseMessage(errorMessage, errorCode), null);
     }
 
+    @Override
+    public Object execute(Object o) {
+        throw new NotImplementedException("Not implemented yet");
+    }
 }

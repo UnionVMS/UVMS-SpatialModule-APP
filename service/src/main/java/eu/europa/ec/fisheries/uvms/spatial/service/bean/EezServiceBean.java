@@ -1,15 +1,14 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezSpatialRS;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GetEezSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GetEezSpatialRS;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.EezMapper;
 import eu.europa.ec.fisheries.uvms.util.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.util.exception.SpatialServiceException;
+import org.apache.commons.lang3.NotImplementedException;
 import org.hibernate.HibernateException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.ejb.Local;
 import javax.ejb.Stateless;
@@ -20,16 +19,16 @@ import javax.transaction.Transactional;
  * //TODO create test
  */
 @Stateless
-@Local(ExclusiveEconomicZoneService.class)
+@Local(EezService.class)
 @Transactional
-public class ExclusiveEconomicZoneServiceBean extends AbstractServiceBean implements ExclusiveEconomicZoneService {
+public class EezServiceBean extends AbstractServiceBean implements EezService {
 
     @Inject
     private EezMapper eezMapper;
 
     @Override
     @SuppressWarnings("unchecked")
-    public GetEezSpatialRS getExclusiveEconomicZoneById(GetEezSpatialRQ getEezSpatialRQ) {
+    public EezSpatialRS getExclusiveEconomicZoneById(EezSpatialRQ getEezSpatialRQ) {
         EezType eezType;
         try {
             int eezId = Integer.parseInt(getEezSpatialRQ.getEezId());
@@ -53,12 +52,16 @@ public class ExclusiveEconomicZoneServiceBean extends AbstractServiceBean implem
         return createSuccessResponse(eezType);
     }
 
-    private GetEezSpatialRS createErrorGetEezResponse(String errorMessage, Integer errorCode) {
-        return new GetEezSpatialRS(createErrorResponseMessage(errorMessage, errorCode), null);
+    private EezSpatialRS createErrorGetEezResponse(String errorMessage, Integer errorCode) {
+        return new EezSpatialRS(createErrorResponseMessage(errorMessage, errorCode), null);
     }
 
-    private GetEezSpatialRS createSuccessResponse(EezType eez) {
-        return new GetEezSpatialRS(createSuccessResponseMessage(), eez);
+    private EezSpatialRS createSuccessResponse(EezType eez) {
+        return new EezSpatialRS(createSuccessResponseMessage(), eez);
     }
 
+    @Override
+    public Object execute(Object o) {
+        throw new NotImplementedException("Not implemented yet");
+    }
 }

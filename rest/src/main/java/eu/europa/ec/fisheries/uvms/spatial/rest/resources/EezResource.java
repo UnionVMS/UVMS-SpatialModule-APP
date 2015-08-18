@@ -1,11 +1,11 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources;
 
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GetEezSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GetEezSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezSpatialRS;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ResponseMessageType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseCode;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.ExclusiveEconomicZoneService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.EezService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +22,7 @@ public class EezResource extends AbstractResource {
     final static Logger LOG = LoggerFactory.getLogger(EezResource.class);
 
     @EJB
-    private ExclusiveEconomicZoneService exclusiveEconomicZoneService;
+    private EezService eezService;
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
@@ -32,7 +32,7 @@ public class EezResource extends AbstractResource {
         try {
             LOG.info("Getting getEezRS with {}", eezId);
 
-            GetEezSpatialRS getEezRS = exclusiveEconomicZoneService.getExclusiveEconomicZoneById(createRequest(eezId));
+            EezSpatialRS getEezRS = eezService.getExclusiveEconomicZoneById(createRequest(eezId));
 
             ResponseMessageType responseMessage = getEezRS.getResponseMessage();
             if (isSuccess(responseMessage)) {
@@ -48,7 +48,7 @@ public class EezResource extends AbstractResource {
         }
     }
 
-    private GetEezSpatialRQ createRequest(int eezId) {
-        return new GetEezSpatialRQ(String.valueOf(eezId));
+    private EezSpatialRQ createRequest(int eezId) {
+        return new EezSpatialRQ(String.valueOf(eezId));
     }
 }
