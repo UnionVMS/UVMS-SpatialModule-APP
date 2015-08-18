@@ -21,7 +21,7 @@ import javax.transaction.Transactional;
  */
 @Stateless
 @Local(ExclusiveEconomicZoneService.class)
-@Transactional(Transactional.TxType.REQUIRED)
+@Transactional
 public class ExclusiveEconomicZoneServiceBean extends AbstractServiceBean implements ExclusiveEconomicZoneService {
 
     @Inject
