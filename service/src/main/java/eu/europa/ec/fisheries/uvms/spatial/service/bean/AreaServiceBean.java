@@ -34,18 +34,16 @@ public class AreaServiceBean extends AbstractServiceBean implements AreaService 
         List<String> areaTypes;
         try {
             areaTypes = commonDao.findEntityByNamedQuery(String.class, AreaTypeEntity.FIND_ALL);
-        } catch (HibernateException hex) {
-            // Stacktrace logged in commons lib
-            SpatialServiceErrors error = SpatialServiceErrors.INTERNAL_APPLICATION_ERROR;
-            return createErrorGetAreaTypesResponse(error.formatMessage(), error.getErrorCode());
         } catch (Exception ex) {
-            LOG.error("Exception: ", ex);
-            LOG.error("Exception cause: ", ex.getCause());
-
-            if (ex instanceof SpatialServiceException) {
+            if (ex instanceof HibernateException) {
+                SpatialServiceErrors error = exceptionMapper.convertToSpatialError(ex.getClass());
+                return createErrorGetAreaTypesResponse(error.formatMessage(), error.getErrorCode());
+            } else if (ex instanceof SpatialServiceException) {
+                logError(ex);
                 SpatialServiceException sse = (SpatialServiceException) ex;
                 return createErrorGetAreaTypesResponse(sse.getMessage(), sse.getErrorCode());
             } else {
+                logError(ex);
                 SpatialServiceErrors error = SpatialServiceErrors.INTERNAL_APPLICATION_ERROR;
                 return createErrorGetAreaTypesResponse(error.formatMessage(), error.getErrorCode());
             }
@@ -73,18 +71,16 @@ public class AreaServiceBean extends AbstractServiceBean implements AreaService 
                 List resultList = commonDao.findEntityByNativeQuery("SELECT * FROM " + areaDbTable);
 
             }
-        } catch (HibernateException hex) {
-            // Stacktrace logged in commons lib
-            SpatialServiceErrors error = SpatialServiceErrors.INTERNAL_APPLICATION_ERROR;
-            return createErrorGetAreasByLocationResponse(error.formatMessage(), error.getErrorCode());
         } catch (Exception ex) {
-            LOG.error("Exception: ", ex);
-            LOG.error("Exception cause: ", ex.getCause());
-
-            if (ex instanceof SpatialServiceException) {
+            if (ex instanceof HibernateException) {
+                SpatialServiceErrors error = exceptionMapper.convertToSpatialError(ex.getClass());
+                return createErrorGetAreasByLocationResponse(error.formatMessage(), error.getErrorCode());
+            } else if (ex instanceof SpatialServiceException) {
+                logError(ex);
                 SpatialServiceException sse = (SpatialServiceException) ex;
                 return createErrorGetAreasByLocationResponse(sse.getMessage(), sse.getErrorCode());
             } else {
+                logError(ex);
                 SpatialServiceErrors error = SpatialServiceErrors.INTERNAL_APPLICATION_ERROR;
                 return createErrorGetAreasByLocationResponse(error.formatMessage(), error.getErrorCode());
             }
@@ -109,4 +105,8 @@ public class AreaServiceBean extends AbstractServiceBean implements AreaService 
         return new GetAreasByLocationSpatialRS(createErrorResponseMessage(errorMessage, errorCode), null);
     }
 
+    @Override
+    protected Logger getLogger() {
+        return LOG;
+    }
 }

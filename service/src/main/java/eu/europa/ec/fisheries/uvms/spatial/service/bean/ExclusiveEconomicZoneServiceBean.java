@@ -1,11 +1,11 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import eu.europa.ec.fisheries.uvms.spatial.dao.CommonGenericDAOBean;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GetEezSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GetEezSpatialRS;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.EezMapper;
+import eu.europa.ec.fisheries.uvms.util.exception.ExceptionMapper;
 import eu.europa.ec.fisheries.uvms.util.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.util.exception.SpatialServiceException;
 import org.hibernate.HibernateException;
@@ -38,18 +38,16 @@ public class ExclusiveEconomicZoneServiceBean extends AbstractServiceBean implem
             int eezId = Integer.parseInt(getEezSpatialRQ.getEezId());
             EezEntity eez = (EezEntity) commonDao.findEntityById(EezEntity.class, eezId);
             eezType = eezMapper.eezEntityToEezType(eez);
-        } catch (HibernateException hex) {
-            // Stacktrace logged in commons lib
-            SpatialServiceErrors error = SpatialServiceErrors.INTERNAL_APPLICATION_ERROR;
-            return createErrorGetEezResponse(error.formatMessage(), error.getErrorCode());
         } catch (Exception ex) {
-            LOG.error("Exception: ", ex);
-            LOG.error("Exception cause: ", ex.getCause());
-
-            if (ex instanceof SpatialServiceException) {
+            if (ex instanceof HibernateException) {
+                SpatialServiceErrors error = exceptionMapper.convertToSpatialError(ex.getClass());
+                return createErrorGetEezResponse(error.formatMessage(), error.getErrorCode());
+            } else if (ex instanceof SpatialServiceException) {
+                logError(ex);
                 SpatialServiceException sse = (SpatialServiceException) ex;
                 return createErrorGetEezResponse(sse.getMessage(), sse.getErrorCode());
             } else {
+                logError(ex);
                 SpatialServiceErrors error = SpatialServiceErrors.INTERNAL_APPLICATION_ERROR;
                 return createErrorGetEezResponse(error.formatMessage(), error.getErrorCode());
             }
@@ -66,4 +64,8 @@ public class ExclusiveEconomicZoneServiceBean extends AbstractServiceBean implem
         return new GetEezSpatialRS(createSuccessResponseMessage(), eez);
     }
 
+    @Override
+    protected Logger getLogger() {
+        return LOG;
+    }
 }
