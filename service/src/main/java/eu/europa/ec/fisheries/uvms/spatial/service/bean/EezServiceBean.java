@@ -7,7 +7,6 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezType;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.EezMapper;
 import eu.europa.ec.fisheries.uvms.util.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.util.exception.SpatialServiceException;
-import org.apache.commons.lang3.NotImplementedException;
 import org.hibernate.HibernateException;
 
 import javax.ejb.Local;
@@ -32,7 +31,11 @@ public class EezServiceBean extends AbstractServiceBean implements EezService {
         EezType eezType;
         try {
             int eezId = Integer.parseInt(getEezSpatialRQ.getEezId());
-            EezEntity eez = (EezEntity) commonDao.findEntityById(EezEntity.class, eezId);
+            EezEntity eez = null;
+            Object entityById = commonDao.findEntityById(EezEntity.class, eezId);
+            if (entityById != null) {
+                eez = (EezEntity) entityById;
+            }
             eezType = eezMapper.eezEntityToEezType(eez);
         } catch (Exception ex) {
             if (ex instanceof HibernateException) {
@@ -60,8 +63,4 @@ public class EezServiceBean extends AbstractServiceBean implements EezService {
         return new EezSpatialRS(createSuccessResponseMessage(), eez);
     }
 
-    @Override
-    public Object execute(Object o) {
-        throw new NotImplementedException("Not implemented yet");
-    }
 }

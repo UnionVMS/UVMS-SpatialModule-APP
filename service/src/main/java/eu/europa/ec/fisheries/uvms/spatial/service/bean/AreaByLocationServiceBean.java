@@ -24,7 +24,6 @@ import static java.lang.String.valueOf;
 @Stateless
 @Local(AreaByLocationService.class)
 @Transactional(Transactional.TxType.REQUIRED)
-@Interceptors(value = ExceptionHandler.class)
 public class AreaByLocationServiceBean extends AbstractServiceBean implements AreaByLocationService {
 
     private static final String LAT = "lat";
@@ -32,12 +31,11 @@ public class AreaByLocationServiceBean extends AbstractServiceBean implements Ar
     private static final String CRS = "crs";
 
     @Override
-    public AreaByLocationSpatialRS getAreasByLocation(double lat, double lon, int crs) {
+    public AreaByLocationSpatialRS getAreasByLocation(double lat, double lon, int crs)  {
         try {
             List<AreaTypeEntity> systemAreaTypes = commonDao.findEntityByNamedQuery(AreaTypeEntity.class, AreaTypeEntity.FIND_SYSTEM);
             for (AreaTypeEntity areaType : systemAreaTypes) {
                 String areaDbTable = areaType.getAreaDbTable();
-
                 HashMap<String, String> paramaters = createParamaters(lat, lon, crs);
                 List resultList = commonDao.findEntityByNativeQuery("SELECT * FROM " + areaDbTable);
                 System.out.println("Test");
@@ -76,8 +74,4 @@ public class AreaByLocationServiceBean extends AbstractServiceBean implements Ar
         return new AreaByLocationSpatialRS(createErrorResponseMessage(errorMessage, errorCode), null);
     }
 
-    @Override
-    public Object execute(Object o) {
-        throw new NotImplementedException("Not implemented yet");
-    }
 }
