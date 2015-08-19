@@ -52,7 +52,7 @@ public class EezEntity implements Serializable {
     @Column(name = "iso_3digit", length = 5)
 	private String iso3digit;
     
-    @Column(name = "mrgid", precision = 131089, scale = 0)
+    @Column(name = "mrgid")
 	private BigDecimal mrgid;
     
     @Column(name = "date_chang", length = 50)
