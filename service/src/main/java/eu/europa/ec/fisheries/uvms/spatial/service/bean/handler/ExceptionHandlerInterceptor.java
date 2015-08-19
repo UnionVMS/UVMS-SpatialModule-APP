@@ -26,10 +26,8 @@ import static com.google.common.collect.Lists.newArrayList;
  */
 @Interceptor
 public class ExceptionHandlerInterceptor {
-    protected final Logger LOG = LoggerFactory.getLogger(ExceptionHandlerInterceptor.class);
-
     private static final String RESPONSE_MESSAGE = "responseMessage";
-
+    private final Logger LOG = LoggerFactory.getLogger(ExceptionHandlerInterceptor.class);
     @EJB
     ExceptionMapper exceptionMapper;
 
@@ -57,7 +55,7 @@ public class ExceptionHandlerInterceptor {
             return rsObject;
         } finally {
             long time = System.currentTimeMillis() - start;
-            String method = ctx.getClass().getName();
+            String method = ctx.getMethod().getName();
             LOG.debug("*** TracingInterceptor invocation of " + method + " took " + time + "ms");
         }
     }
