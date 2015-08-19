@@ -39,7 +39,8 @@ public class AreaByLocationServiceBean extends AbstractServiceBean implements Ar
         for (AreaTypeEntity areaType : systemAreaTypes) {
             String areaDbTable = areaType.getAreaDbTable();
             HashMap<String, String> paramaters = createParamaters(lat, lon, crs);
-            List resultList = commonDao.findEntityByNativeQuery("SELECT * FROM " + areaDbTable);
+            String nativeQuery = "SELECT gid FROM " + areaDbTable;
+            List resultList = commonDao.findEntityByNativeQuery(nativeQuery);
             System.out.println("Test");
         }
 
