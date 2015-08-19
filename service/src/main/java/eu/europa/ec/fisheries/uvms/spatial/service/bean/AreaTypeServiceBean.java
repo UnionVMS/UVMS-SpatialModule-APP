@@ -17,7 +17,7 @@ import java.util.List;
 @Stateless
 @Local(AreaTypeService.class)
 @Transactional
-@Interceptors({ExceptionHandlerInterceptor.class})
+@Interceptors(value = ExceptionHandlerInterceptor.class)
 public class AreaTypeServiceBean extends AbstractServiceBean implements AreaTypeService {
 
     @Override

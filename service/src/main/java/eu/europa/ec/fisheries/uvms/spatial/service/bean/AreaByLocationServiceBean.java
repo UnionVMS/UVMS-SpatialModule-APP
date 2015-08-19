@@ -23,7 +23,7 @@ import static java.lang.String.valueOf;
 @Stateless
 @Local(AreaByLocationService.class)
 @Transactional
-@Interceptors({ExceptionHandlerInterceptor.class})
+@Interceptors(value = ExceptionHandlerInterceptor.class)
 public class AreaByLocationServiceBean extends AbstractServiceBean implements AreaByLocationService {
 
     private static final String LAT = "lat";

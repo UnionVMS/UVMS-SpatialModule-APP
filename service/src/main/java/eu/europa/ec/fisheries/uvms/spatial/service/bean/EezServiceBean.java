@@ -19,7 +19,7 @@ import javax.transaction.Transactional;
 @Stateless
 @Local(EezService.class)
 @Transactional
-@Interceptors({ExceptionHandlerInterceptor.class})
+@Interceptors(value = ExceptionHandlerInterceptor.class)
 public class EezServiceBean extends AbstractServiceBean implements EezService {
 
     @Inject

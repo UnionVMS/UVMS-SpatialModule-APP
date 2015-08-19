@@ -16,6 +16,7 @@ import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -27,6 +28,8 @@ import static com.google.common.collect.Lists.newArrayList;
 public class ExceptionHandlerInterceptor {
     protected final Logger LOG = LoggerFactory.getLogger(ExceptionHandlerInterceptor.class);
 
+    private static final String RESPONSE_MESSAGE = "responseMessage";
+
     @EJB
     ExceptionMapper exceptionMapper;
 
@@ -35,11 +38,10 @@ public class ExceptionHandlerInterceptor {
         LOG.debug("*** TracingInterceptor intercepting " + ctx.getMethod().getName());
         long start = System.currentTimeMillis();
 
-        Object rsObject = createErrorResponse(ctx);
-
         try {
             return ctx.proceed();
         } catch (Exception ex) {
+            Object rsObject = createErrorResponse(ctx);
             if (isDatabaseException(ex)) {
                 SpatialServiceErrors error = exceptionMapper.convertToSpatialError(ex.getClass());
                 setErrorMessage(rsObject, error.getDescription(), error.getErrorCode());
@@ -60,7 +62,7 @@ public class ExceptionHandlerInterceptor {
         }
     }
 
-    private Object createErrorResponse(InvocationContext ctx) throws InstantiationException, IllegalAccessException, java.lang.reflect.InvocationTargetException, NoSuchMethodException {
+    private Object createErrorResponse(InvocationContext ctx) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         SpatialExceptionHandler annotation = ctx.getMethod().getAnnotation(SpatialExceptionHandler.class);
         Class responseTypeClass = annotation.responseType();
         if (responseTypeClass == null) {
@@ -74,7 +76,7 @@ public class ExceptionHandlerInterceptor {
     }
 
     private void setErrorMessage(Object rsObject, String errorMessage, Integer errorCode) {
-        set(rsObject, "responseMessage", createErrorResponseMessage(errorMessage, errorCode));
+        set(rsObject, RESPONSE_MESSAGE, createErrorResponseMessage(errorMessage, errorCode));
     }
 
     private ResponseMessageType createErrorResponseMessage(String errorMessage, Integer errorCode) {
