@@ -1,0 +1,188 @@
+package eu.europa.ec.fisheries.uvms.spatial.entity;
+
+import java.io.Serializable;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "report_connect_spatial", schema = "spatial")
+public class ReportConnectSpatialEntity implements Serializable {
+	
+	private static final long serialVersionUID = 6797853213499502869L;
+
+	@Id
+	@Column(name = "id")
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private long id;
+	
+	@ManyToOne
+	@JoinColumn(name = "map_proj_id")
+	private ProjectionEntity projectionByMapProjId;
+	
+	@ManyToOne
+	@JoinColumn(name = "display_proj_id")
+	private ProjectionEntity projectionByDisplayProjId;
+	
+	@Column(name = "report_id", nullable = false)
+	private long reportId;
+	
+	@Column(name = "map_center", nullable = false, length = 255)
+	private String mapCenter;
+	
+	@Column(name = "map_zoom", nullable = false)
+	private int mapZoom;
+	
+	@Column(name = "map_extent")
+	private String mapExtent;
+	
+	@Column(name = "display_format", length = 255)
+	private String displayFormat;
+	
+	@Column(name = "measurement_units", length = 255)
+	private String measurementUnits;
+	
+	@Column(name = "scalebar_units", length = 255)
+	private String scalebarUnits;
+	
+	@Lob
+	@Column(name = "vector_styles")
+	private String vectorStyles;
+	
+	@Lob
+	@Column(name = "json_report_definition")
+	private String jsonReportDefinition;
+	
+	@Column(name = "app_version", nullable = false, length = 255)
+	private String appVersion;
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "reportConnectSpatial", cascade = CascadeType.ALL)
+	private Set<ReportConnectServiceAreasEntity> reportConnectServiceAreases;
+
+	public ReportConnectSpatialEntity() {
+	}
+
+	public long getId() {
+		return this.id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public ProjectionEntity getProjectionByMapProjId() {
+		return this.projectionByMapProjId;
+	}
+
+	public void setProjectionByMapProjId(ProjectionEntity projectionByMapProjId) {
+		this.projectionByMapProjId = projectionByMapProjId;
+	}
+
+	public ProjectionEntity getProjectionByDisplayProjId() {
+		return this.projectionByDisplayProjId;
+	}
+
+	public void setProjectionByDisplayProjId(ProjectionEntity projectionByDisplayProjId) {
+		this.projectionByDisplayProjId = projectionByDisplayProjId;
+	}
+
+	public long getReportId() {
+		return this.reportId;
+	}
+
+	public void setReportId(long reportId) {
+		this.reportId = reportId;
+	}
+
+	public String getMapCenter() {
+		return this.mapCenter;
+	}
+
+	public void setMapCenter(String mapCenter) {
+		this.mapCenter = mapCenter;
+	}
+
+	public int getMapZoom() {
+		return this.mapZoom;
+	}
+
+	public void setMapZoom(int mapZoom) {
+		this.mapZoom = mapZoom;
+	}
+
+	public String getMapExtent() {
+		return this.mapExtent;
+	}
+
+	public void setMapExtent(String mapExtent) {
+		this.mapExtent = mapExtent;
+	}
+
+	public String getDisplayFormat() {
+		return this.displayFormat;
+	}
+
+	public void setDisplayFormat(String displayFormat) {
+		this.displayFormat = displayFormat;
+	}
+
+	public String getMeasurementUnits() {
+		return this.measurementUnits;
+	}
+
+	public void setMeasurementUnits(String measurementUnits) {
+		this.measurementUnits = measurementUnits;
+	}
+
+	public String getScalebarUnits() {
+		return this.scalebarUnits;
+	}
+
+	public void setScalebarUnits(String scalebarUnits) {
+		this.scalebarUnits = scalebarUnits;
+	}
+
+	public String getVectorStyles() {
+		return this.vectorStyles;
+	}
+
+	public void setVectorStyles(String vectorStyles) {
+		this.vectorStyles = vectorStyles;
+	}
+
+	public String getJsonReportDefinition() {
+		return this.jsonReportDefinition;
+	}
+
+	public void setJsonReportDefinition(String jsonReportDefinition) {
+		this.jsonReportDefinition = jsonReportDefinition;
+	}
+
+	public String getAppVersion() {
+		return this.appVersion;
+	}
+
+	public void setAppVersion(String appVersion) {
+		this.appVersion = appVersion;
+	}
+
+	public Set<ReportConnectServiceAreasEntity> getReportConnectServiceAreases() {
+		return this.reportConnectServiceAreases;
+	}
+
+	public void setReportConnectServiceAreases(Set<ReportConnectServiceAreasEntity> reportConnectServiceAreases) {
+		this.reportConnectServiceAreases = reportConnectServiceAreases;
+	}
+
+}
