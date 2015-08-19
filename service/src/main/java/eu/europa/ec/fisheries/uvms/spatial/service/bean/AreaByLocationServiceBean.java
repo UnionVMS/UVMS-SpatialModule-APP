@@ -1,13 +1,12 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.google.common.collect.Maps;
+import eu.europa.ec.fisheries.uvms.service.exception.CommonGenericDAOException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaTypeEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRS;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.handler.ExceptionHandler;
-import eu.europa.ec.fisheries.uvms.util.exception.SpatialServiceErrors;
-import eu.europa.ec.fisheries.uvms.util.exception.SpatialServiceException;
-import org.apache.commons.lang3.NotImplementedException;
-import org.hibernate.HibernateException;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.handler.ExceptionHandlerInterceptor;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.handler.SpatialExceptionHandler;
+import lombok.SneakyThrows;
 
 import javax.ejb.Local;
 import javax.ejb.Stateless;
@@ -23,7 +22,8 @@ import static java.lang.String.valueOf;
  */
 @Stateless
 @Local(AreaByLocationService.class)
-@Transactional(Transactional.TxType.REQUIRED)
+@Transactional
+@Interceptors({ExceptionHandlerInterceptor.class})
 public class AreaByLocationServiceBean extends AbstractServiceBean implements AreaByLocationService {
 
     private static final String LAT = "lat";
@@ -31,28 +31,16 @@ public class AreaByLocationServiceBean extends AbstractServiceBean implements Ar
     private static final String CRS = "crs";
 
     @Override
-    public AreaByLocationSpatialRS getAreasByLocation(double lat, double lon, int crs)  {
-        try {
-            List<AreaTypeEntity> systemAreaTypes = commonDao.findEntityByNamedQuery(AreaTypeEntity.class, AreaTypeEntity.FIND_SYSTEM);
-            for (AreaTypeEntity areaType : systemAreaTypes) {
-                String areaDbTable = areaType.getAreaDbTable();
-                HashMap<String, String> paramaters = createParamaters(lat, lon, crs);
-                List resultList = commonDao.findEntityByNativeQuery("SELECT * FROM " + areaDbTable);
-                System.out.println("Test");
-            }
-        } catch (Exception ex) {
-            if (ex instanceof HibernateException) {
-                SpatialServiceErrors error = exceptionMapper.convertToSpatialError(ex.getClass());
-                return createErrorGetAreasByLocationResponse(error.formatMessage(), error.getErrorCode());
-            } else if (ex instanceof SpatialServiceException) {
-                logError(ex);
-                SpatialServiceException sse = (SpatialServiceException) ex;
-                return createErrorGetAreasByLocationResponse(sse.getMessage(), sse.getErrorCode());
-            } else {
-                logError(ex);
-                SpatialServiceErrors error = SpatialServiceErrors.INTERNAL_APPLICATION_ERROR;
-                return createErrorGetAreasByLocationResponse(error.formatMessage(), error.getErrorCode());
-            }
+    @SneakyThrows(CommonGenericDAOException.class)
+    @SpatialExceptionHandler(responseType = AreaByLocationSpatialRS.class)
+    public AreaByLocationSpatialRS getAreasByLocation(double lat, double lon, int crs) {
+        List<AreaTypeEntity> systemAreaTypes = commonDao.findEntityByNamedQuery(AreaTypeEntity.class, AreaTypeEntity.FIND_SYSTEM);
+
+        for (AreaTypeEntity areaType : systemAreaTypes) {
+            String areaDbTable = areaType.getAreaDbTable();
+            HashMap<String, String> paramaters = createParamaters(lat, lon, crs);
+            List resultList = commonDao.findEntityByNativeQuery("SELECT * FROM " + areaDbTable);
+            System.out.println("Test");
         }
 
         return createSuccessGetAreasByLocationResponse();
@@ -68,10 +56,6 @@ public class AreaByLocationServiceBean extends AbstractServiceBean implements Ar
 
     private AreaByLocationSpatialRS createSuccessGetAreasByLocationResponse() {
         return new AreaByLocationSpatialRS(createSuccessResponseMessage(), null);
-    }
-
-    private AreaByLocationSpatialRS createErrorGetAreasByLocationResponse(String errorMessage, Integer errorCode) {
-        return new AreaByLocationSpatialRS(createErrorResponseMessage(errorMessage, errorCode), null);
     }
 
 }
