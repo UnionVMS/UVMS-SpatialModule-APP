@@ -2,10 +2,8 @@ package eu.europa.ec.fisheries.uvms.spatial.service.mapper;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.io.WKTWriter;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GeometryType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -54,7 +52,7 @@ public class EezMapperTest {
         eez.setRemarks("remarks");
         eez.setEez("eez");
         eez.setCountry("country");
-        eez.setGeometry(new GeometryFactory().createPoint(new Coordinate(1, 11)));
+        eez.setGeom(new GeometryFactory().createPoint(new Coordinate(1, 11)));
         return eez;
     }
 }

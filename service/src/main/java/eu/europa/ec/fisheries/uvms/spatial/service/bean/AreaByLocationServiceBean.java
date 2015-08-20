@@ -2,10 +2,11 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.google.common.collect.Maps;
 import eu.europa.ec.fisheries.uvms.service.exception.CommonGenericDAOException;
-import eu.europa.ec.fisheries.uvms.spatial.entity.AreaTypeEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.AreaTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRS;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.handler.ExceptionHandlerInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.handler.SpatialExceptionHandler;
+import eu.europa.ec.fisheries.uvms.spatial.util.SpatialConstants;
 import lombok.SneakyThrows;
 
 import javax.ejb.Local;
@@ -34,9 +35,9 @@ public class AreaByLocationServiceBean extends AbstractServiceBean implements Ar
     @SneakyThrows(CommonGenericDAOException.class)
     @SpatialExceptionHandler(responseType = AreaByLocationSpatialRS.class)
     public AreaByLocationSpatialRS getAreasByLocation(double lat, double lon, int crs) {
-        List<AreaTypeEntity> systemAreaTypes = commonDao.findEntityByNamedQuery(AreaTypeEntity.class, AreaTypeEntity.FIND_SYSTEM);
+        List<AreaTypesEntity> systemAreaTypes = commonDao.findEntityByNamedQuery(AreaTypesEntity.class, SpatialConstants.FIND_SYSTEM);
 
-        for (AreaTypeEntity areaType : systemAreaTypes) {
+        for (AreaTypesEntity areaType : systemAreaTypes) {
             String areaDbTable = areaType.getAreaDbTable();
             HashMap<String, String> paramaters = createParamaters(lat, lon, crs);
             String nativeQuery = "SELECT gid FROM " + areaDbTable;

@@ -2,8 +2,8 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.google.common.collect.ImmutableList;
 import eu.europa.ec.fisheries.uvms.spatial.dao.CommonGenericDAOBean;
-import eu.europa.ec.fisheries.uvms.spatial.entity.AreaTypeEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.util.SpatialConstants;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -34,7 +34,7 @@ public class AreaTypeServiceBeanTest {
     @SuppressWarnings("unchecked")
     public void shouldReturnAreaTypes() throws Exception {
         // given
-        when(commonGenericDAO.findEntityByNamedQuery(String.class, AreaTypeEntity.FIND_ALL)).thenReturn(AREA_TYPES);
+        when(commonGenericDAO.findEntityByNamedQuery(String.class, SpatialConstants.FIND_ALL)).thenReturn(AREA_TYPES);
 
         // when
         AreaTypeSpatialRS areaTypeRS = areaTypeService.getAreaTypes();
@@ -50,7 +50,7 @@ public class AreaTypeServiceBeanTest {
     @SuppressWarnings("unchecked")
     public void shouldNotThrowNullPointerException() throws Exception {
         // given
-        when(commonGenericDAO.findEntityByNamedQuery(String.class, AreaTypeEntity.FIND_ALL)).thenReturn(null);
+        when(commonGenericDAO.findEntityByNamedQuery(String.class, SpatialConstants.FIND_ALL)).thenReturn(null);
 
         // when
         AreaTypeSpatialRS areaTypeRS = areaTypeService.getAreaTypes();
