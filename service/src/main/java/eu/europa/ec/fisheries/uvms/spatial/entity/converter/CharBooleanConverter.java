@@ -6,19 +6,22 @@ import javax.persistence.Converter;
 @Converter
 public class CharBooleanConverter implements AttributeConverter<Boolean, String> {
 
-	@Override
-	public String convertToDatabaseColumn(Boolean attribute) {
-		if (Boolean.TRUE.equals(attribute)) {
-            return "Y";
-        } else {
-            return "N";
-        }
-	}
+    private static final String Y = "Y";
+    private static final String N = "N";
 
-	@Override
-	public Boolean convertToEntityAttribute(String dbData) {
-		return "Y".equals(dbData);
-	}
+    @Override
+    public String convertToDatabaseColumn(Boolean attribute) {
+        if (Boolean.TRUE.equals(attribute)) {
+            return Y;
+        } else {
+            return N;
+        }
+    }
+
+    @Override
+    public Boolean convertToEntityAttribute(String dbData) {
+        return Y.equals(dbData);
+    }
 
 }
 

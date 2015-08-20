@@ -27,7 +27,7 @@ import eu.europa.ec.fisheries.uvms.spatial.util.QueryNameConstants;
 @Table(name = "area_types", schema = "spatial", uniqueConstraints = @UniqueConstraint(columnNames = "type_name"))
 @NamedQueries({
     @NamedQuery(name = QueryNameConstants.FIND_ALL, query = "SELECT a.typeName FROM AreaTypesEntity a"),
-    @NamedQuery(name = QueryNameConstants.FIND_SYSTEM, query = "SELECT a FROM AreaTypesEntity a"), //TODO add filtering by T/F 'system_area' column
+    @NamedQuery(name = QueryNameConstants.FIND_SYSTEM, query = "SELECT a FROM AreaTypesEntity a"), //TODO add filtering by Y/N 'system_area' column
 })
 
 public class AreaTypesEntity implements Serializable {
