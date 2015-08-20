@@ -39,7 +39,7 @@ public class ExceptionHandlerInterceptor {
         try {
             return ctx.proceed();
         } catch (Exception ex) {
-            Object rsObject = createErrorResponse(ctx);
+            Object rsObject = createEmptyResponse(ctx);
             if (isDatabaseException(ex)) {
                 SpatialServiceErrors error = exceptionMapper.convertToSpatialError(ex.getClass());
                 setErrorMessage(rsObject, error.getDescription(), error.getErrorCode());
@@ -60,7 +60,7 @@ public class ExceptionHandlerInterceptor {
         }
     }
 
-    private Object createErrorResponse(InvocationContext ctx) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+    private Object createEmptyResponse(InvocationContext ctx) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         SpatialExceptionHandler annotation = ctx.getMethod().getAnnotation(SpatialExceptionHandler.class);
         Class responseTypeClass = annotation.responseType();
         if (responseTypeClass == null) {
@@ -74,6 +74,7 @@ public class ExceptionHandlerInterceptor {
     }
 
     private void setErrorMessage(Object rsObject, String errorMessage, Integer errorCode) {
+        // TODO Add interface to generated schema classes to set response message by properties without the use of reflection
         set(rsObject, RESPONSE_MESSAGE, createErrorResponseMessage(errorMessage, errorCode));
     }
 

@@ -5,7 +5,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeSpatialRS;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreasNameType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.handler.ExceptionHandlerInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.handler.SpatialExceptionHandler;
-import eu.europa.ec.fisheries.uvms.spatial.util.SpatialConstants;
+import eu.europa.ec.fisheries.uvms.spatial.util.QueryNameConstants;
 import lombok.SneakyThrows;
 
 import javax.ejb.Local;
@@ -25,7 +25,7 @@ public class AreaTypeServiceBean extends AbstractServiceBean implements AreaType
     @SneakyThrows(CommonGenericDAOException.class)
     @SpatialExceptionHandler(responseType = AreaTypeSpatialRS.class)
     public AreaTypeSpatialRS getAreaTypes() {
-        List<String> areaTypes = commonDao.findEntityByNamedQuery(String.class, SpatialConstants.FIND_ALL);
+        List<String> areaTypes = commonDao.findEntityByNamedQuery(String.class, QueryNameConstants.FIND_ALL);
         return createSuccessGetAreaTypesResponse(areaTypes);
     }
 

@@ -2,7 +2,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.spatial.dao.CommonGenericDAOBean;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
-import eu.europa.ec.fisheries.uvms.spatial.util.SpatialConstants;
+import eu.europa.ec.fisheries.uvms.spatial.util.QueryNameConstants;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.transaction.api.annotation.TransactionMode;
 import org.jboss.arquillian.transaction.api.annotation.Transactional;
@@ -63,7 +63,7 @@ public class CommonGenericDAOIT extends AbstractArquillianIT {
     @SuppressWarnings("unchecked")
     public void shouldGetEntity() throws Exception {
         // when
-        List<String> areasType = genericDAO.findEntityByNamedQuery(String.class, SpatialConstants.FIND_ALL);
+        List<String> areasType = genericDAO.findEntityByNamedQuery(String.class, QueryNameConstants.FIND_ALL);
 
         // then
         assertThat(areasType).isNotEmpty();

@@ -21,13 +21,13 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import eu.europa.ec.fisheries.uvms.spatial.entity.converter.CharBooleanConverter;
-import eu.europa.ec.fisheries.uvms.spatial.util.SpatialConstants;
+import eu.europa.ec.fisheries.uvms.spatial.util.QueryNameConstants;
 
 @Entity
 @Table(name = "area_types", schema = "spatial", uniqueConstraints = @UniqueConstraint(columnNames = "type_name"))
 @NamedQueries({
-    @NamedQuery(name = SpatialConstants.FIND_ALL, query = "SELECT a.typeName FROM AreaTypesEntity a"),
-    @NamedQuery(name = SpatialConstants.FIND_SYSTEM, query = "SELECT a FROM AreaTypesEntity a"), //TODO add filtering by T/F 'system_area' column
+    @NamedQuery(name = QueryNameConstants.FIND_ALL, query = "SELECT a.typeName FROM AreaTypesEntity a"),
+    @NamedQuery(name = QueryNameConstants.FIND_SYSTEM, query = "SELECT a FROM AreaTypesEntity a"), //TODO add filtering by T/F 'system_area' column
 })
 
 public class AreaTypesEntity implements Serializable {

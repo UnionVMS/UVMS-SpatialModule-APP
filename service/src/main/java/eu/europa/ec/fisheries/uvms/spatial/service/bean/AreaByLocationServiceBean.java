@@ -6,7 +6,7 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.AreaTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRS;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.handler.ExceptionHandlerInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.handler.SpatialExceptionHandler;
-import eu.europa.ec.fisheries.uvms.spatial.util.SpatialConstants;
+import eu.europa.ec.fisheries.uvms.spatial.util.QueryNameConstants;
 import lombok.SneakyThrows;
 
 import javax.ejb.Local;
@@ -35,7 +35,7 @@ public class AreaByLocationServiceBean extends AbstractServiceBean implements Ar
     @SneakyThrows(CommonGenericDAOException.class)
     @SpatialExceptionHandler(responseType = AreaByLocationSpatialRS.class)
     public AreaByLocationSpatialRS getAreasByLocation(double lat, double lon, int crs) {
-        List<AreaTypesEntity> systemAreaTypes = commonDao.findEntityByNamedQuery(AreaTypesEntity.class, SpatialConstants.FIND_SYSTEM);
+        List<AreaTypesEntity> systemAreaTypes = commonDao.findEntityByNamedQuery(AreaTypesEntity.class, QueryNameConstants.FIND_SYSTEM);
 
         for (AreaTypesEntity areaType : systemAreaTypes) {
             String areaDbTable = areaType.getAreaDbTable();

@@ -5,7 +5,7 @@ package eu.europa.ec.fisheries.uvms.spatial.util;
  * @author padhyad 
  *
  */
-public class SpatialConstants {
+public class QueryNameConstants {
 	
 	/** Find all */
     public static final String FIND_ALL = "AreaType.findAll";
