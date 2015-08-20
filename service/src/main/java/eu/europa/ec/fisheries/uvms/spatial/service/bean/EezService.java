@@ -1,10 +1,9 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import eu.europa.ec.fisheries.uvms.service.exception.CommonGenericDAOException;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezSpatialRS;
 
 public interface EezService {
 
-    EezSpatialRS getExclusiveEconomicZoneById(EezSpatialRQ getEezSpatialRQ) throws CommonGenericDAOException;
+    EezSpatialRS getExclusiveEconomicZoneById(EezSpatialRQ getEezSpatialRQ);
 }
