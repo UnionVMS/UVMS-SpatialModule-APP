@@ -27,6 +27,8 @@ import static java.lang.String.valueOf;
 @Interceptors(value = ExceptionHandlerInterceptor.class)
 public class AreaByLocationServiceBean extends AbstractServiceBean implements AreaByLocationService {
 
+    private static final String SCHEMA_NAME = "spatial";
+    private static final String SEPARATOR = ".";
     private static final String LAT = "lat";
     private static final String LON = "lon";
     private static final String CRS = "crs";
@@ -35,13 +37,16 @@ public class AreaByLocationServiceBean extends AbstractServiceBean implements Ar
     @SneakyThrows(CommonGenericDAOException.class)
     @SpatialExceptionHandler(responseType = AreaByLocationSpatialRS.class)
     public AreaByLocationSpatialRS getAreasByLocation(double lat, double lon, int crs) {
-        List<AreaTypesEntity> systemAreaTypes = commonDao.findEntityByNamedQuery(AreaTypesEntity.class, QueryNameConstants.FIND_SYSTEM);
+        List<AreaTypesEntity> systemAreaTypes = commonDao.findEntityByNamedQuery(AreaTypesEntity.class, QueryNameConstants.FIND_SYSTEM_AREAS);
 
         for (AreaTypesEntity areaType : systemAreaTypes) {
             String areaDbTable = areaType.getAreaDbTable();
             HashMap<String, String> paramaters = createParamaters(lat, lon, crs);
-            String nativeQuery = "SELECT gid FROM " + areaDbTable;
-            List resultList = commonDao.findEntityByNativeQuery(nativeQuery);
+            String nativeQuery = "SELECT gid FROM " + SCHEMA_NAME + SEPARATOR + areaDbTable;
+            List<String> resultList = commonDao.findEntityByNativeQuery(nativeQuery);
+            for (String id : resultList) {
+                System.out.println(id);
+            }
             System.out.println("Test");
         }
 

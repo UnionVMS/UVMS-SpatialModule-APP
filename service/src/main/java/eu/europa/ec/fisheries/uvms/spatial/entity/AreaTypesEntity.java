@@ -26,8 +26,8 @@ import eu.europa.ec.fisheries.uvms.spatial.util.QueryNameConstants;
 @Entity
 @Table(name = "area_types", schema = "spatial", uniqueConstraints = @UniqueConstraint(columnNames = "type_name"))
 @NamedQueries({
-    @NamedQuery(name = QueryNameConstants.FIND_ALL, query = "SELECT a.typeName FROM AreaTypesEntity a"),
-    @NamedQuery(name = QueryNameConstants.FIND_SYSTEM, query = "SELECT a FROM AreaTypesEntity a"), //TODO add filtering by Y/N 'system_area' column
+    @NamedQuery(name = QueryNameConstants.FIND_ALL_AREAS, query = "SELECT a.typeName FROM AreaTypesEntity a"),
+    @NamedQuery(name = QueryNameConstants.FIND_SYSTEM_AREAS, query = "SELECT area FROM AreaTypesEntity area WHERE area.isSystemArea = 'Y'"),
 })
 
 public class AreaTypesEntity implements Serializable {
@@ -39,15 +39,14 @@ public class AreaTypesEntity implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "service_layer_id", nullable = false)
 	private ServiceLayerEntity serviceLayer;
 	
 	@Column(name = "type_name", unique = true, nullable = false, length=255)
 	private String typeName;
 	
-	@Lob
-	@Column(name = "area_type_desc")
+	@Column(name = "area_type_desc", length=255)
 	private String areaTypeDesc;
 	
 	@Column(name = "area_db_table", nullable = false, length=255)

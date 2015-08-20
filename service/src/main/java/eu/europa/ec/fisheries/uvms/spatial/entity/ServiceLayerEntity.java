@@ -27,8 +27,7 @@ public class ServiceLayerEntity implements Serializable {
     @Column(name = "name", nullable = false, length = 255)
     private String name;
 
-    @Lob
-    @Column(name = "layer_desc")
+    @Column(name = "layer_desc", length = 255)
     private String layerDesc;
 
     @Column(name = "service_url")

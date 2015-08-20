@@ -8,9 +8,9 @@ package eu.europa.ec.fisheries.uvms.spatial.util;
 public class QueryNameConstants {
 	
 	/** Find all */
-    public static final String FIND_ALL = "AreaType.findAll";
+    public static final String FIND_ALL_AREAS = "AreaType.findAllAreas";
     
     /** Find System */
-    public static final String FIND_SYSTEM = "AreaType.findSystem";
+    public static final String FIND_SYSTEM_AREAS = "AreaType.findSystemAreas";
 
 }

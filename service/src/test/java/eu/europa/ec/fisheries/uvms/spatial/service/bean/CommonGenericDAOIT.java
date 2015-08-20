@@ -63,7 +63,7 @@ public class CommonGenericDAOIT extends AbstractArquillianIT {
     @SuppressWarnings("unchecked")
     public void shouldGetEntity() throws Exception {
         // when
-        List<String> areasType = genericDAO.findEntityByNamedQuery(String.class, QueryNameConstants.FIND_ALL);
+        List<String> areasType = genericDAO.findEntityByNamedQuery(String.class, QueryNameConstants.FIND_ALL_AREAS);
 
         // then
         assertThat(areasType).isNotEmpty();

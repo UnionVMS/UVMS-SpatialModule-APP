@@ -25,7 +25,7 @@ public class AreaTypeServiceBean extends AbstractServiceBean implements AreaType
     @SneakyThrows(CommonGenericDAOException.class)
     @SpatialExceptionHandler(responseType = AreaTypeSpatialRS.class)
     public AreaTypeSpatialRS getAreaTypes() {
-        List<String> areaTypes = commonDao.findEntityByNamedQuery(String.class, QueryNameConstants.FIND_ALL);
+        List<String> areaTypes = commonDao.findEntityByNamedQuery(String.class, QueryNameConstants.FIND_ALL_AREAS);
         return createSuccessGetAreaTypesResponse(areaTypes);
     }
 

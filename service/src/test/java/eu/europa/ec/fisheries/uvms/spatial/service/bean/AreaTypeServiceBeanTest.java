@@ -34,7 +34,7 @@ public class AreaTypeServiceBeanTest {
     @SuppressWarnings("unchecked")
     public void shouldReturnAreaTypes() throws Exception {
         // given
-        when(commonGenericDAO.findEntityByNamedQuery(String.class, QueryNameConstants.FIND_ALL)).thenReturn(AREA_TYPES);
+        when(commonGenericDAO.findEntityByNamedQuery(String.class, QueryNameConstants.FIND_ALL_AREAS)).thenReturn(AREA_TYPES);
 
         // when
         AreaTypeSpatialRS areaTypeRS = areaTypeService.getAreaTypes();
@@ -50,7 +50,7 @@ public class AreaTypeServiceBeanTest {
     @SuppressWarnings("unchecked")
     public void shouldNotThrowNullPointerException() throws Exception {
         // given
-        when(commonGenericDAO.findEntityByNamedQuery(String.class, QueryNameConstants.FIND_ALL)).thenReturn(null);
+        when(commonGenericDAO.findEntityByNamedQuery(String.class, QueryNameConstants.FIND_ALL_AREAS)).thenReturn(null);
 
         // when
         AreaTypeSpatialRS areaTypeRS = areaTypeService.getAreaTypes();
