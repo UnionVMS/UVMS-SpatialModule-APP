@@ -25,7 +25,7 @@ public class ExclusiveEconomicZoneServiceBeanIT extends AbstractArquillianIT {
         EezSpatialRQ getEezSpatialRQ = new EezSpatialRQ("123");
 
         // when
-        EezSpatialRS eez = eezService.getExclusiveEconomicZoneById(getEezSpatialRQ);
+        EezSpatialRS eez = eezService.getEezById(getEezSpatialRQ);
 
         //then
         assertNotNull(eez);

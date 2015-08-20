@@ -32,7 +32,7 @@ public class EezResource extends AbstractResource {
         try {
             LOG.info("Getting getEezRS with {}", eezId);
 
-            EezSpatialRS getEezRS = eezService.getExclusiveEconomicZoneById(createRequest(eezId));
+            EezSpatialRS getEezRS = eezService.getEezById(createRequest(eezId));
 
             ResponseMessageType responseMessage = getEezRS.getResponseMessage();
             if (isSuccess(responseMessage)) {

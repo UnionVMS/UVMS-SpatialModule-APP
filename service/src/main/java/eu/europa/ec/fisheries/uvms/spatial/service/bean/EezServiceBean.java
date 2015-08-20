@@ -29,17 +29,14 @@ public class EezServiceBean extends AbstractServiceBean implements EezService {
     @SuppressWarnings("unchecked")
     @SneakyThrows(CommonGenericDAOException.class)
     @SpatialExceptionHandler(responseType = EezSpatialRS.class)
-    public EezSpatialRS getExclusiveEconomicZoneById(EezSpatialRQ getEezSpatialRQ) {
-        EezType eezType;
-        int eezId = Integer.parseInt(getEezSpatialRQ.getEezId());
-        EezEntity eez = null;
-        Object entityById = commonDao.findEntityById(EezEntity.class, eezId);
-        if (entityById != null) {
-            eez = (EezEntity) entityById;
-        }
-        eezType = eezMapper.eezEntityToEezType(eez);
-
+    public EezSpatialRS getEezById(EezSpatialRQ getEezSpatialRQ) {
+        EezEntity eez = (EezEntity) commonDao.findEntityById(EezEntity.class, retrieveIdFromRQ(getEezSpatialRQ));
+        EezType eezType = eezMapper.eezEntityToEezType(eez);
         return createSuccessResponse(eezType);
+    }
+
+    private int retrieveIdFromRQ(EezSpatialRQ getEezSpatialRQ) {
+        return Integer.parseInt(getEezSpatialRQ.getEezId());
     }
 
     private EezSpatialRS createSuccessResponse(EezType eez) {
