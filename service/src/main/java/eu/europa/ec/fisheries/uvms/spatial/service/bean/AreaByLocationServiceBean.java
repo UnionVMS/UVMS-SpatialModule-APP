@@ -1,22 +1,22 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import com.google.common.collect.Maps;
+import com.google.common.collect.Lists;
 import eu.europa.ec.fisheries.uvms.service.exception.CommonGenericDAOException;
+import eu.europa.ec.fisheries.uvms.spatial.dao.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaTypesEntity;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.handler.ExceptionHandlerInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.handler.SpatialExceptionHandler;
 import eu.europa.ec.fisheries.uvms.spatial.util.QueryNameConstants;
 import lombok.SneakyThrows;
 
+import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.interceptor.Interceptors;
 import javax.transaction.Transactional;
-import java.util.HashMap;
 import java.util.List;
-
-import static java.lang.String.valueOf;
 
 /**
  * Created by kopyczmi on 18-Aug-15.
@@ -25,44 +25,40 @@ import static java.lang.String.valueOf;
 @Local(AreaByLocationService.class)
 @Transactional
 @Interceptors(value = ExceptionHandlerInterceptor.class)
-public class AreaByLocationServiceBean extends AbstractServiceBean implements AreaByLocationService {
+public class AreaByLocationServiceBean implements AreaByLocationService {
 
-    private static final String SCHEMA_NAME = "spatial";
-    private static final String SEPARATOR = ".";
-    private static final String LAT = "lat";
-    private static final String LON = "lon";
-    private static final String CRS = "crs";
+    @EJB
+    private SpatialRepository repository;
 
     @Override
     @SneakyThrows(CommonGenericDAOException.class)
     @SpatialExceptionHandler(responseType = AreaByLocationSpatialRS.class)
     public AreaByLocationSpatialRS getAreasByLocation(double lat, double lon, int crs) {
-        List<AreaTypesEntity> systemAreaTypes = commonDao.findEntityByNamedQuery(AreaTypesEntity.class, QueryNameConstants.FIND_SYSTEM_AREAS);
+        List<AreaTypesEntity> systemAreaTypes = repository.findEntityByNamedQuery(AreaTypesEntity.class, QueryNameConstants.FIND_SYSTEM_AREAS);
 
+        List<AreaType> areaTypes = Lists.newArrayList();
         for (AreaTypesEntity areaType : systemAreaTypes) {
             String areaDbTable = areaType.getAreaDbTable();
-            HashMap<String, String> paramaters = createParamaters(lat, lon, crs);
-            String nativeQuery = "SELECT gid FROM " + SCHEMA_NAME + SEPARATOR + areaDbTable;
-            List<String> resultList = commonDao.findEntityByNativeQuery(nativeQuery);
-            for (String id : resultList) {
-                System.out.println(id);
+            String areaTypeName = areaType.getTypeName();
+
+            List<Integer> resultList = repository.findAreaIdByLocation(lat, lon, crs, areaDbTable);
+            for (Integer id : resultList) {
+                AreaType area = new AreaType(String.valueOf(id), areaTypeName);
+                areaTypes.add(area);
             }
-            System.out.println("Test");
         }
 
-        return createSuccessGetAreasByLocationResponse();
+        return createSuccessGetAreasByLocationResponse(new AreasWithIdType(areaTypes));
     }
 
-    private HashMap<String, String> createParamaters(double lat, double lon, int crs) {
-        HashMap<String, String> result = Maps.newHashMap();
-        result.put(LAT, valueOf(lat));
-        result.put(LON, valueOf(lon));
-        result.put(CRS, valueOf(crs));
-        return result;
+
+    private AreaByLocationSpatialRS createSuccessGetAreasByLocationResponse(AreasWithIdType areasWithIdType) {
+        return new AreaByLocationSpatialRS(createSuccessResponseMessage(), areasWithIdType);
     }
 
-    private AreaByLocationSpatialRS createSuccessGetAreasByLocationResponse() {
-        return new AreaByLocationSpatialRS(createSuccessResponseMessage(), null);
+    protected ResponseMessageType createSuccessResponseMessage() {
+        ResponseMessageType responseMessage = new ResponseMessageType();
+        responseMessage.setSuccess(new SuccessType());
+        return responseMessage;
     }
-
 }

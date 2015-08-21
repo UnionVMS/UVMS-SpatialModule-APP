@@ -1,37 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://europa.eu/ec/fisheries/uvms/spatial/model/schemas"
-           targetNamespace="http://europa.eu/ec/fisheries/uvms/spatial/model/schemas" version="1.0" id="FISH2015_SPATIAL2015"
-           xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="2.1" elementFormDefault="qualified"
-           xmlns:annox="http://annox.dev.java.net"
-           xmlns:jackson="http://annox.dev.java.net/com.fasterxml.jackson.databind.annotation"
-           jaxb:extensionBindingPrefixes="annox">
+<!-- edited with XMLSpy v2015 rel. 4 sp1 (x64) (http://www.altova.com) by marian (cop) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://europa.eu/ec/fisheries/uvms/spatial/model/schemas" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:annox="http://annox.dev.java.net" xmlns:jackson="http://annox.dev.java.net/com.fasterxml.jackson.databind.annotation" targetNamespace="http://europa.eu/ec/fisheries/uvms/spatial/model/schemas" elementFormDefault="qualified" version="1.0" id="FISH2015_SPATIAL2015" jaxb:version="2.1" jaxb:extensionBindingPrefixes="annox">
 	<xs:include schemaLocation="Spatial_SimpleTypes.xsd"/>
 	<xs:complexType name="AreaType">
 		<xs:sequence>
 			<xs:element name="Id" type="NumericStringLength1to9"/>
-			<xs:element name="TypeName" type="StringLength1to255"/>
+			<xs:element name="AreaType" type="StringLength1to255"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="GeometryType">
-        <xs:annotation>
-            <xs:appinfo>
-                <annox:annotate>
-                    <jackson:JsonSerialize using="eu.europa.ec.fisheries.uvms.spatial.model.serializer.GeometryTypeSerializer"/>
-                </annox:annotate>
-            </xs:appinfo>
-        </xs:annotation>
+		<xs:annotation>
+			<xs:appinfo>
+				<annox:annotate>
+					<jackson:JsonSerialize using="eu.europa.ec.fisheries.uvms.spatial.model.serializer.GeometryTypeSerializer"/>
+				</annox:annotate>
+			</xs:appinfo>
+		</xs:annotation>
 		<xs:sequence>
 			<xs:element name="Geometry" type="xs:string"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="EezType">
-        <xs:annotation>
-            <xs:appinfo>
-                <annox:annotate>
-                    <jackson:JsonSerialize using="eu.europa.ec.fisheries.uvms.spatial.model.serializer.EezTypeSerializer"/>
-                </annox:annotate>
-            </xs:appinfo>
-        </xs:annotation>
+		<xs:annotation>
+			<xs:appinfo>
+				<annox:annotate>
+					<jackson:JsonSerialize using="eu.europa.ec.fisheries.uvms.spatial.model.serializer.EezTypeSerializer"/>
+				</annox:annotate>
+			</xs:appinfo>
+		</xs:annotation>
 		<xs:sequence>
 			<xs:element name="Gid" type="xs:integer"/>
 			<xs:element name="Geometry" type="GeometryType"/>
