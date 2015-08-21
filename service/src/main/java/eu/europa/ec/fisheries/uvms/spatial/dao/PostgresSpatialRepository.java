@@ -1,6 +1,5 @@
 package eu.europa.ec.fisheries.uvms.spatial.dao;
 
-import com.google.common.collect.Maps;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
@@ -12,10 +11,7 @@ import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
-import java.util.HashMap;
 import java.util.List;
-
-import static java.lang.String.valueOf;
 
 /**
  * Created by Michal Kopyczok on 21-Aug-15.
@@ -29,9 +25,6 @@ public class PostgresSpatialRepository extends CommonGenericDAOBean implements S
     private static final String SELECT_GID_FROM = "SELECT gid FROM ";
     private static final String SCHEMA_NAME = "spatial";
     private static final String SEPARATOR = ".";
-    private static final String LAT = "lat";
-    private static final String LON = "lon";
-    private static final String CRS = "crs";
     private static final String SRID = "SRID=";
     private static final String ST_GEOM_FROM_EWKT = "st_geomfromewkt";
 
@@ -68,14 +61,6 @@ public class PostgresSpatialRepository extends CommonGenericDAOBean implements S
         Point point = gf.createPoint(coord);
         point.setSRID(3245);
         return new WKTWriter(2).write(point);
-    }
-
-    private HashMap<String, String> createParamaters(double lat, double lon, int crs) {
-        HashMap<String, String> result = Maps.newHashMap();
-        result.put(LAT, valueOf(lat));
-        result.put(LON, valueOf(lon));
-        result.put(CRS, valueOf(crs));
-        return result;
     }
 
 }
