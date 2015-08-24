@@ -9,25 +9,11 @@
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="GeometryType">
-		<xs:annotation>
-			<xs:appinfo>
-				<annox:annotate>
-					<jackson:JsonSerialize using="eu.europa.ec.fisheries.uvms.spatial.model.serializer.GeometryTypeSerializer"/>
-				</annox:annotate>
-			</xs:appinfo>
-		</xs:annotation>
 		<xs:sequence>
 			<xs:element name="Geometry" type="xs:string"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="EezType">
-		<xs:annotation>
-			<xs:appinfo>
-				<annox:annotate>
-					<jackson:JsonSerialize using="eu.europa.ec.fisheries.uvms.spatial.model.serializer.EezTypeSerializer"/>
-				</annox:annotate>
-			</xs:appinfo>
-		</xs:annotation>
 		<xs:sequence>
 			<xs:element name="Gid" type="xs:integer"/>
 			<xs:element name="Geometry" type="GeometryType"/>
@@ -56,4 +42,24 @@
 			<xs:element name="AreaType" type="AreaType" maxOccurs="1000"/>
 		</xs:sequence>
 	</xs:complexType>
+
+    <xs:complexType name="ClosestAreaRequest">
+        <xs:sequence>
+            <xs:element name="Longitude" type="xs:double"/>
+            <xs:element name="Latitude" type="xs:double"/>
+            <xs:element name="Crs" type="xs:integer"/>
+            <xs:element name="Area" type="AreaType"/>
+            <xs:element name="MeasurementUnits" type="MeasurementUnitsType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="MeasurementUnitsType" final="restriction" >
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Meters" />
+            <xs:enumeration value="Kilometers" />
+            <xs:enumeration value="Miles" />
+            <xs:enumeration value="NauticalMiles" />
+        </xs:restriction>
+    </xs:simpleType>
+
 </xs:schema>

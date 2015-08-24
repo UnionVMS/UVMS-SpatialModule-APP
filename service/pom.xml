@@ -49,14 +49,15 @@
         </dependency>
 
         <dependency>
-            <groupId>com.github.tomakehurst</groupId>
-            <artifactId>wiremock</artifactId>
-            <classifier>standalone</classifier>
+            <groupId>org.geotools</groupId>
+            <artifactId>gt-geojson</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.geotools</groupId>
-            <artifactId>gt-geojson</artifactId>
+            <groupId>com.github.tomakehurst</groupId>
+            <artifactId>wiremock</artifactId>
+            <classifier>standalone</classifier>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -92,11 +93,6 @@
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>de.grundid.opendatalab</groupId>
-            <artifactId>geojson-jackson</artifactId>
         </dependency>
 
         <dependency>

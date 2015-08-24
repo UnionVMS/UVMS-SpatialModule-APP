@@ -20,7 +20,7 @@ public class ResponseDto<T> {
         return data;
     }
 
-    public String getCode() {
+    public int getCode() {
         return code.getCode();
     }
 

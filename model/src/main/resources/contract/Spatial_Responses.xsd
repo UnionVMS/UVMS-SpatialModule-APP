@@ -31,4 +31,18 @@
 			<xs:element name="EezId" type="NumericStringLength1to9"/>
 		</xs:sequence>
 	</xs:complexType>
+
+    <xs:complexType name="ClosestAreaResponse">
+        <xs:sequence>
+            <xs:element name="ClosestAreaTypeList" type="ClosestAreaType" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="MessageType" type="ResponseMessageType" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ClosestAreaType">
+        <xs:sequence>
+            <xs:element name="DistanceToLocation" type="xs:string" minOccurs="0"/>
+            <xs:element name="Area" type="AreaType" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
 </xs:schema>

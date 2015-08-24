@@ -15,12 +15,12 @@ import static org.junit.Assert.assertEquals;
 
 public class GeometryMapperTest {
 
-    private GeometryMapper mapper;
+    private GeometryTypeMapper mapper;
     private Geometry geometry;
 
     @Before
     public void beforeTest() {
-        mapper = new GeometryMapperImpl();
+        mapper = new GeometryTypeMapperImpl();
     }
 
     @Test

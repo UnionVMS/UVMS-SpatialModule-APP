@@ -2,6 +2,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.service.queue.EezQueueService;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,10 +15,10 @@ import static junit.framework.TestCase.assertNotNull;
  * Created by kopyczmi on 06-Aug-15.
  */
 @RunWith(Arquillian.class)
-public class ExclusiveEconomicZoneServiceBeanIT extends AbstractArquillianIT {
+public class EezQueueServiceBeanIT extends AbstractArquillianIT {
 
     @EJB
-    private EezService eezService;
+    private EezQueueService service;
 
     @Test
     public void shouldReturnEez() throws Exception {
@@ -25,7 +26,7 @@ public class ExclusiveEconomicZoneServiceBeanIT extends AbstractArquillianIT {
         EezSpatialRQ getEezSpatialRQ = new EezSpatialRQ("123");
 
         // when
-        EezSpatialRS eez = eezService.getEezById(getEezSpatialRQ);
+        EezSpatialRS eez = service.getEezById(getEezSpatialRQ);
 
         //then
         assertNotNull(eez);

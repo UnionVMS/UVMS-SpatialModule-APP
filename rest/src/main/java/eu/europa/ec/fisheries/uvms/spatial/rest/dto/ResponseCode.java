@@ -1,27 +1,25 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.dto;
 
-public enum ResponseCode implements RestResponseCode {
+public enum ResponseCode {
 
-    OK("200"),
-    ERROR("500");
+    OK(200),
+    ERROR(500),
 
-    private final String code;
+    SPATIAL_ERROR(501),
 
-    ResponseCode(String code) {
+    SERVICE_ERROR(521),
+    MODEL_ERROR(522),
+    DOMAIN_ERROR(523),
+
+    UNDEFINED_ERROR(500);
+
+    private final int code;
+
+    private ResponseCode(int code) {
         this.code = code;
     }
 
-    public static ResponseCode map(String errorCode) {
-        for (ResponseCode responseCode : values()) {
-            if (responseCode.getCode().equals(errorCode)) {
-                return responseCode;
-            }
-        }
-        return ERROR;
-    }
-
-    @Override
-    public String getCode() {
+    public int getCode() {
         return code;
     }
 }

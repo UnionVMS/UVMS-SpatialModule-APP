@@ -14,18 +14,18 @@ import static org.junit.Assert.assertEquals;
 
 public class EezMapperTest {
 
-    private EezMapper mapper;
+    private EezTypeMapper mapper;
     private EezEntity eez;
 
     @Before
     public void beforeTest() {
-        mapper = new EezMapperImpl();
+        mapper = new EezTypeMapperImpl();
 
         try {
-            Field field = EezMapperImpl.class.getDeclaredField("geometryMapper");
+            Field field = EezTypeMapper.class.getDeclaredField("geometryTypeMapper");
             field.setAccessible(true);
-            GeometryMapperImpl geometryMapper = new GeometryMapperImpl();
-            field.set(mapper, geometryMapper);
+            GeometryTypeMapper geometryMapper = new GeometryTypeMapperImpl();
+            field.set(mapper, geometryMapper);//FIXME
         } catch (NoSuchFieldException | IllegalAccessException e) {
             fail("Failed to initialize areaResultTypeMapper");
         }
