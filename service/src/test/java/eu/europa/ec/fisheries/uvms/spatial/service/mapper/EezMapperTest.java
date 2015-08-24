@@ -5,7 +5,6 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezType;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
@@ -23,10 +22,10 @@ public class EezMapperTest {
         mapper = new EezTypeMapperImpl();
 
         try {
-            Field field = EezTypeMapper.class.getDeclaredField("geometryTypeMapper");
+            Field field = EezTypeMapperImpl.class.getDeclaredField("geometryTypeMapper");
             field.setAccessible(true);
             GeometryTypeMapper geometryMapper = new GeometryTypeMapperImpl();
-            field.set(mapper, geometryMapper);//FIXME
+            field.set(mapper, geometryMapper);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             fail("Failed to initialize areaResultTypeMapper");
         }
