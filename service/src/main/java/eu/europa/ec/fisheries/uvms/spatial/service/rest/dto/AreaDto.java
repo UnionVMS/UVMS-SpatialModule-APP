@@ -11,19 +11,18 @@ public class AreaDto {
     @Delegate(types = Include.class)
     private AreaType areaType;
 
-    public AreaDto(String id, String areaType) {
-        setId(id);
-        setAreaType(areaType);
+    public AreaDto(String id, String areaTypeName) {
+        this.areaType = new AreaType(id, areaTypeName);
     }
 
     private interface Include {
-        public String getId();
+        String getId();
 
-        public void setId(String id);
+        void setId(String id);
 
-        public String getAreaType();
+        String getAreaTypeName();
 
-        public void setAreaType(String areaType);
+        void setAreaTypeName(String areaType);
     }
 
 }

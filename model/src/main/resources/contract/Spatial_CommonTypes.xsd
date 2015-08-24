@@ -5,7 +5,7 @@
 	<xs:complexType name="AreaType">
 		<xs:sequence>
 			<xs:element name="Id" type="NumericStringLength1to9"/>
-			<xs:element name="AreaType" type="StringLength1to255"/>
+			<xs:element name="AreaTypeName" type="StringLength1to255"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="GeometryType">
@@ -42,24 +42,21 @@
 			<xs:element name="AreaType" type="AreaType" maxOccurs="1000"/>
 		</xs:sequence>
 	</xs:complexType>
-
-    <xs:complexType name="ClosestAreaRequest">
-        <xs:sequence>
-            <xs:element name="Longitude" type="xs:double"/>
-            <xs:element name="Latitude" type="xs:double"/>
-            <xs:element name="Crs" type="xs:integer"/>
-            <xs:element name="Area" type="AreaType"/>
-            <xs:element name="MeasurementUnits" type="MeasurementUnitsType"/>
-        </xs:sequence>
-    </xs:complexType>
-
-    <xs:simpleType name="MeasurementUnitsType" final="restriction" >
-        <xs:restriction base="xs:string">
-            <xs:enumeration value="Meters" />
-            <xs:enumeration value="Kilometers" />
-            <xs:enumeration value="Miles" />
-            <xs:enumeration value="NauticalMiles" />
-        </xs:restriction>
-    </xs:simpleType>
-
+	<xs:complexType name="ClosestAreaRequest">
+		<xs:sequence>
+			<xs:element name="Longitude" type="xs:double"/>
+			<xs:element name="Latitude" type="xs:double"/>
+			<xs:element name="Crs" type="xs:integer"/>
+			<xs:element name="Area" type="AreaType"/>
+			<xs:element name="MeasurementUnits" type="MeasurementUnitsType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="MeasurementUnitsType" final="restriction">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Meters"/>
+			<xs:enumeration value="Kilometers"/>
+			<xs:enumeration value="Miles"/>
+			<xs:enumeration value="NauticalMiles"/>
+		</xs:restriction>
+	</xs:simpleType>
 </xs:schema>

@@ -6,16 +6,12 @@ import eu.europa.ec.fisheries.uvms.spatial.dao.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreasWithIdType;
-import eu.europa.ec.fisheries.uvms.spatial.service.queue.AreaByLocationQueueService;
-import eu.europa.ec.fisheries.uvms.spatial.service.queue.handler.ExceptionHandlerInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.rest.dto.AreaDto;
 import lombok.SneakyThrows;
 
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
-import javax.interceptor.Interceptors;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -42,8 +38,8 @@ public class AreaByLocationRestServiceBean implements AreaByLocationRestService 
 
             List<Integer> resultList = repository.findAreaIdByLocation(lat, lon, crs, areaDbTable);
             for (Integer id : resultList) {
-                AreaDto area = new AreaDto(String.valueOf(id), areaTypeName);
-                areaTypes.add(area);
+                AreaDto areaDto = new AreaDto(String.valueOf(id), areaTypeName);
+                areaTypes.add(areaDto);
             }
         }
 

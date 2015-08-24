@@ -12,7 +12,22 @@ import java.math.BigInteger;
 
 public class EezDto {
 
-    public static final SimpleFeatureType EEZ = build();
+    private static final SimpleFeatureType EEZ_FEATURE = build();
+
+    private static final String GID = "gid";
+    private static final String GEOMETRY = "geometry";
+    private static final String EEZ = "eez";
+    private static final String COUNTRY = "country";
+    private static final String SOV_ID = "sovId";
+    private static final String EEZ_ID = "eezId";
+    private static final String ISO_3_DIGIT = "iso3Digit";
+    private static final String MRG_ID = "mrgId";
+    private static final String AREA_M_2 = "areaM2";
+    private static final String LONGITUDE = "longitude";
+    private static final String LATITUDE = "latitude";
+    private static final String MRGID_EEZ = "mrgidEez";
+    private static final String SOVEREIGN = "sovereign";
+    private static final String REMARKS = "remarks";
 
     private Geometry geometry;
     private String eez;
@@ -30,45 +45,44 @@ public class EezDto {
     private Double longitude;
     private Double latitude;
 
-    public SimpleFeature toFeature(){
-        SimpleFeatureBuilder featureBuilder = new SimpleFeatureBuilder(EEZ);
-        featureBuilder.add(getGeometry());
-        featureBuilder.add(getGid());
-        featureBuilder.add(getEez());
-        featureBuilder.add(getCountry());
-        featureBuilder.add(getSovId());
-        featureBuilder.add(getEezId());
-        featureBuilder.add(getIso3Digit());
-        featureBuilder.add(getMrgid());
-        featureBuilder.add(getAreaM2());
-        featureBuilder.add(getLongitude());
-        featureBuilder.add(getLatitude());
-        featureBuilder.add(getMrgidEez());
-        featureBuilder.add(getSovereign());
-        featureBuilder.add(getRemarks());
-        return featureBuilder.buildFeature(String.valueOf(getEezId()));
-    }
-
     private static SimpleFeatureType build() {
-
         SimpleFeatureTypeBuilder sb = new SimpleFeatureTypeBuilder();
         sb.setCRS(DefaultGeographicCRS.WGS84); //TODO check it
         sb.setName("EEZ");
-        sb.add("geometry", MultiPolygon.class);
-        sb.add("gid", BigInteger.class);
-        sb.add("eez", String.class);
-        sb.add("country", String.class);
-        sb.add("sovId", Integer.class);
-        sb.add("eezId", Integer.class);
-        sb.add("iso3Digit", String.class);
-        sb.add("mrgId", BigInteger.class);
-        sb.add("areaM2", Double.class);
-        sb.add("longitude", Double.class);
-        sb.add("latitude", Double.class);
-        sb.add("mrgidEez", Integer.class);
-        sb.add("sovereign", String.class);
-        sb.add("remarks", String.class);
+        sb.add(GEOMETRY, MultiPolygon.class);
+        sb.add(GID, BigInteger.class);
+        sb.add(EEZ, String.class);
+        sb.add(COUNTRY, String.class);
+        sb.add(SOV_ID, Integer.class);
+        sb.add(EEZ_ID, Integer.class);
+        sb.add(ISO_3_DIGIT, String.class);
+        sb.add(MRG_ID, BigInteger.class);
+        sb.add(AREA_M_2, Double.class);
+        sb.add(LONGITUDE, Double.class);
+        sb.add(LATITUDE, Double.class);
+        sb.add(MRGID_EEZ, Integer.class);
+        sb.add(SOVEREIGN, String.class);
+        sb.add(REMARKS, String.class);
         return sb.buildFeatureType();
+    }
+
+    public SimpleFeature toFeature() {
+        SimpleFeatureBuilder featureBuilder = new SimpleFeatureBuilder(EEZ_FEATURE);
+        featureBuilder.set(GEOMETRY, getGeometry());
+        featureBuilder.set(GID, getGid());
+        featureBuilder.set(EEZ, getEez());
+        featureBuilder.set(COUNTRY, getCountry());
+        featureBuilder.set(SOV_ID, getSovId());
+        featureBuilder.set(EEZ_ID, getEezId());
+        featureBuilder.set(ISO_3_DIGIT, getIso3Digit());
+        featureBuilder.set(MRG_ID, getMrgid());
+        featureBuilder.set(AREA_M_2, getAreaM2());
+        featureBuilder.set(LONGITUDE, getLongitude());
+        featureBuilder.set(LATITUDE, getLatitude());
+        featureBuilder.set(MRGID_EEZ, getMrgidEez());
+        featureBuilder.set(SOVEREIGN, getSovereign());
+        featureBuilder.set(REMARKS, getRemarks());
+        return featureBuilder.buildFeature(String.valueOf(getEezId()));
     }
 
     public BigInteger getGid() {
