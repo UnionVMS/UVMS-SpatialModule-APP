@@ -7,6 +7,9 @@ public enum ResponseCode {
 
     SPATIAL_ERROR(501),
 
+    INPUT_ERROR(511),
+    MAPPING_ERROR(512),
+
     SERVICE_ERROR(521),
     MODEL_ERROR(522),
     DOMAIN_ERROR(523),
