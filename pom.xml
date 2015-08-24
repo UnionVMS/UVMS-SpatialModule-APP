@@ -25,8 +25,8 @@
         <mapstruct.version>1.0.0.CR1</mapstruct.version>
         <jackson.version>2.6.0</jackson.version>
         <logback.core.version>1.1.2</logback.core.version>
-        <vessel.module.version>1.0.6-SNAPSHOT</vessel.module.version>
-        <movement.model.version>1.0.3-SNAPSHOT</movement.model.version>
+        <vessel.module.version>1.0.7-SNAPSHOT</vessel.module.version>
+        <movement.model.version>1.0.4-SNAPSHOT</movement.model.version>
         <application.name>${project.parent.artifactId}</application.name>
         <application.version>${project.parent.version}</application.version>
         <application.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}.log</application.logfile>
