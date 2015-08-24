@@ -8,7 +8,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezSpatialRS;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ResponseMessageType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SuccessType;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.handler.SpatialExceptionHandler;
+import eu.europa.ec.fisheries.uvms.spatial.service.queue.handler.SpatialExceptionHandler;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.EezTypeMapper;
 import lombok.SneakyThrows;
 

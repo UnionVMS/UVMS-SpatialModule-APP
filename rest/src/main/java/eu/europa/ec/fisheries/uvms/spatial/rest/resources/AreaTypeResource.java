@@ -1,29 +1,29 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources;
 
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRS;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeSpatialRS;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ResponseMessageType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseCode;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaByLocationService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeService;
+import eu.europa.ec.fisheries.uvms.spatial.rest.error.ErrorHandler;
+import eu.europa.ec.fisheries.uvms.spatial.service.rest.AreaByLocationRestService;
+import eu.europa.ec.fisheries.uvms.spatial.service.rest.AreaTypeRestService;
+import eu.europa.ec.fisheries.uvms.spatial.service.rest.dto.AreaDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.List;
 
 @Path("/")
-public class AreaTypeResource extends AbstractResource {
+public class AreaTypeResource {
 
     final static Logger LOG = LoggerFactory.getLogger(AreaTypeResource.class);
 
     @EJB
-    private AreaTypeService areaTypeService;
+    private AreaTypeRestService areaTypeService;
 
     @EJB
-    private AreaByLocationService areaByLocationService;
+    private AreaByLocationRestService areaByLocationService;
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
@@ -31,17 +31,11 @@ public class AreaTypeResource extends AbstractResource {
     public ResponseDto getAreaTypes() {
         try {
             LOG.info("Getting user areas list");
-            AreaTypeSpatialRS getAreaTypesRS = areaTypeService.getAreaTypes();
-
-            ResponseMessageType responseMessage = getAreaTypesRS.getResponseMessage();
-            if (isSuccess(responseMessage)) {
-                return new ResponseDto(getAreaTypesRS.getAreaTypes(), ResponseCode.OK);
-            } else {
-                return createErrorResponse(responseMessage);
-            }
+            List<String> areaTypes = areaTypeService.getAreaTypes();
+            return new ResponseDto(areaTypes, ResponseCode.OK);
         } catch (Exception ex) {
             LOG.error("[ Error when getting area types list. ] ", ex);
-            return new ResponseDto(ex.getMessage(), ResponseCode.ERROR);
+            return ErrorHandler.getFault(ex);
         }
     }
 
@@ -54,17 +48,11 @@ public class AreaTypeResource extends AbstractResource {
             @DefaultValue("4326") @QueryParam(value = "crs") int crs) {
         try {
             LOG.info("Getting areas by location");
-            AreaByLocationSpatialRS areasByLocation = areaByLocationService.getAreasByLocation(lat, lon, crs);
-
-            ResponseMessageType responseMessage = areasByLocation.getResponseMessage();
-            if (isSuccess(responseMessage)) {
-                return new ResponseDto(areasByLocation.getAreasType(), ResponseCode.OK);
-            } else {
-                return createErrorResponse(responseMessage);
-            }
+            List<AreaDto> areasByLocation = areaByLocationService.getAreasByLocation(lat, lon, crs);
+            return new ResponseDto(areasByLocation, ResponseCode.OK);
         } catch (Exception ex) {
             LOG.error("[ Error when getting areas by location. ] ", ex);
-            return new ResponseDto(ex.getMessage(), ResponseCode.ERROR);
+            return ErrorHandler.getFault(ex);
         }
     }
 }

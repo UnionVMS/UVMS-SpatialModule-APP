@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.util.exception;
+package eu.europa.ec.fisheries.uvms.spatial.service.queue.exception;
 
 import com.google.common.collect.ImmutableMap;
 import eu.europa.ec.fisheries.uvms.service.exception.CommonGenericDAOException;

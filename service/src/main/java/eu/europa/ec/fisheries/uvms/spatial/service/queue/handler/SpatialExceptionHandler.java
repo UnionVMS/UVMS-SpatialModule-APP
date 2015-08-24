@@ -1,8 +1,7 @@
-package eu.europa.ec.fisheries.uvms.spatial.service.bean.handler;
+package eu.europa.ec.fisheries.uvms.spatial.service.queue.handler;
 
 import javax.enterprise.util.Nonbinding;
 import javax.interceptor.InterceptorBinding;
-import javax.interceptor.Interceptors;
 import java.lang.annotation.*;
 
 /**

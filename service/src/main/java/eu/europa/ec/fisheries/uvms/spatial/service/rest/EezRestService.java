@@ -1,11 +1,9 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.rest;
 
-import eu.europa.ec.fisheries.uvms.spatial.dto.EezDto;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.service.rest.dto.EezDto;
 
 public interface EezRestService {
 
-    public EezDto getEezById(Integer id);
+    public EezDto getEezById(int id);
 
 }

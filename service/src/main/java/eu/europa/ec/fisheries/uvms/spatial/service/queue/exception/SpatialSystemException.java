@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.util.exception;
+package eu.europa.ec.fisheries.uvms.spatial.service.queue.exception;
 
 /**
  * Represents a system exception, that should not be presented to the client in details. (User gets internal error

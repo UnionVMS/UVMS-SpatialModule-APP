@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.util.exception;
+package eu.europa.ec.fisheries.uvms.spatial.service.queue.exception;
 
 import java.text.MessageFormat;
 

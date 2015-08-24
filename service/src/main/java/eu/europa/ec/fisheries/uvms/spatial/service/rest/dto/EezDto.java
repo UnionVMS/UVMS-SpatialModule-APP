@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.spatial.dto;
+package eu.europa.ec.fisheries.uvms.spatial.service.rest.dto;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.MultiPolygon;
@@ -52,7 +52,7 @@ public class EezDto {
     private static SimpleFeatureType build() {
 
         SimpleFeatureTypeBuilder sb = new SimpleFeatureTypeBuilder();
-        sb.setCRS(DefaultGeographicCRS.WGS84);
+        sb.setCRS(DefaultGeographicCRS.WGS84); //TODO check it
         sb.setName("EEZ");
         sb.add("geometry", MultiPolygon.class);
         sb.add("gid", BigInteger.class);

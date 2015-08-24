@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.spatial.util;
+package eu.europa.ec.fisheries.uvms.spatial.entity.util;
 
 /**
  * All constants for Spatial modules

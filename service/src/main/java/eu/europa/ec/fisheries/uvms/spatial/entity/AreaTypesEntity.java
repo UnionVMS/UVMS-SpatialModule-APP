@@ -12,7 +12,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -21,7 +20,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import eu.europa.ec.fisheries.uvms.spatial.entity.converter.CharBooleanConverter;
-import eu.europa.ec.fisheries.uvms.spatial.util.QueryNameConstants;
+import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 
 @Entity
 @Table(name = "area_types", schema = "spatial", uniqueConstraints = @UniqueConstraint(columnNames = "type_name"))

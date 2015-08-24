@@ -3,12 +3,11 @@ package eu.europa.ec.fisheries.uvms.spatial.rest.resources;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.uvms.rest.FeatureToGeoJsonMapper;
-import eu.europa.ec.fisheries.uvms.spatial.dto.EezDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseCode;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.error.ErrorHandler;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeService;
 import eu.europa.ec.fisheries.uvms.spatial.service.rest.EezRestService;
+import eu.europa.ec.fisheries.uvms.spatial.service.rest.dto.EezDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +25,7 @@ public class EezResource {
     final static Logger LOG = LoggerFactory.getLogger(EezResource.class);
 
     @EJB
-    private EezRestService service;
+    private EezRestService eezService;
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
@@ -35,16 +34,21 @@ public class EezResource {
     public ResponseDto getExclusiveEconomicZoneById(@PathParam("id") int id) throws IOException {
         try {
             LOG.info("Getting eez with {}", id);
-
-            EezDto eezDto = service.getEezById(id);
-            String geojson = new FeatureToGeoJsonMapper().convert(eezDto.toFeature());
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode jsonNode = objectMapper.readTree(geojson);
-            return new ResponseDto(jsonNode, ResponseCode.OK);
-        }
-        catch (Exception e) {
+            EezDto eezDto = eezService.getEezById(id);
+            String geojson = feature2String(eezDto);
+            return new ResponseDto(string2Json(geojson), ResponseCode.OK);
+        } catch (Exception e) {
             LOG.error("[ Error when getting eez list. ] ", e);
             return ErrorHandler.getFault(e);
         }
+    }
+
+    private String feature2String(EezDto eezDto) {
+        return new FeatureToGeoJsonMapper().convert(eezDto.toFeature());
+    }
+
+    private JsonNode string2Json(String geojson) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readTree(geojson);
     }
 }

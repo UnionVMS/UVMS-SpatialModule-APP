@@ -1,11 +1,11 @@
-package eu.europa.ec.fisheries.uvms.spatial.service.bean;
+package eu.europa.ec.fisheries.uvms.spatial.service.queue;
 
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeSpatialRS;
 
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaRequest;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaResponse;
 
-public interface AreaTypeService {
+public interface AreaTypeQueueService {
     AreaTypeSpatialRS getAreaTypes();
 
     /**

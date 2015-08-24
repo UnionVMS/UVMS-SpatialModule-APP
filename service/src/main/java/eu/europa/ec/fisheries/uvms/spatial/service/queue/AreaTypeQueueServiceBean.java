@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.spatial.service.bean;
+package eu.europa.ec.fisheries.uvms.spatial.service.queue;
 
 import eu.europa.ec.fisheries.uvms.service.CommonGenericDAO;
 import eu.europa.ec.fisheries.uvms.service.exception.CommonGenericDAOException;
@@ -8,9 +8,9 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaRequest;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaResponse;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ResponseMessageType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SuccessType;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.handler.ExceptionHandlerInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.handler.SpatialExceptionHandler;
-import eu.europa.ec.fisheries.uvms.spatial.util.QueryNameConstants;
+import eu.europa.ec.fisheries.uvms.spatial.service.queue.handler.ExceptionHandlerInterceptor;
+import eu.europa.ec.fisheries.uvms.spatial.service.queue.handler.SpatialExceptionHandler;
+import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import lombok.SneakyThrows;
 
 import javax.ejb.EJB;
@@ -21,10 +21,10 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Stateless
-@Local(AreaTypeService.class)
+@Local(AreaTypeQueueService.class)
 @Transactional
 @Interceptors(value = ExceptionHandlerInterceptor.class)
-public class AreaTypeServiceBean implements AreaTypeService {
+public class AreaTypeQueueServiceBean implements AreaTypeQueueService {
 
     @EJB
     private CommonGenericDAO commonDao;

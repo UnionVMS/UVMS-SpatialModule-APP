@@ -1,19 +1,18 @@
-package eu.europa.ec.fisheries.uvms.spatial.service.bean;
+package eu.europa.ec.fisheries.uvms.spatial.service.queue;
 
 import com.google.common.collect.Lists;
 import eu.europa.ec.fisheries.uvms.service.exception.CommonGenericDAOException;
 import eu.europa.ec.fisheries.uvms.spatial.dao.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.handler.ExceptionHandlerInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.handler.SpatialExceptionHandler;
-import eu.europa.ec.fisheries.uvms.spatial.util.QueryNameConstants;
+import eu.europa.ec.fisheries.uvms.spatial.service.queue.handler.ExceptionHandlerInterceptor;
+import eu.europa.ec.fisheries.uvms.spatial.service.queue.handler.SpatialExceptionHandler;
+import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import lombok.SneakyThrows;
 
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
-import javax.inject.Inject;
 import javax.interceptor.Interceptors;
 import javax.transaction.Transactional;
 import java.util.List;
@@ -22,10 +21,10 @@ import java.util.List;
  * Created by kopyczmi on 18-Aug-15.
  */
 @Stateless
-@Local(AreaByLocationService.class)
+@Local(AreaByLocationQueueService.class)
 @Transactional
 @Interceptors(value = ExceptionHandlerInterceptor.class)
-public class AreaByLocationServiceBean implements AreaByLocationService {
+public class AreaByLocationQueueServiceBean implements AreaByLocationQueueService {
 
     @EJB
     private SpatialRepository repository;
