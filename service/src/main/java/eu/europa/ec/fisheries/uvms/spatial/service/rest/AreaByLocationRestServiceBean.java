@@ -23,7 +23,7 @@ import java.util.List;
  * Created by Michal Kopyczok on 24-Aug-15.
  */
 @Stateless
-@Local(AreaByLocationQueueService.class)
+@Local(AreaByLocationRestService.class)
 @Transactional
 public class AreaByLocationRestServiceBean implements AreaByLocationRestService {
 
