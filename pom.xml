@@ -27,11 +27,11 @@
         <logback.core.version>1.1.2</logback.core.version>
         <vessel.module.version>1.0.7-SNAPSHOT</vessel.module.version>
         <movement.model.version>1.0.4-SNAPSHOT</movement.model.version>
-        <application.name>${project.artifactId}</application.name>
-        <application.version>${project.version}</application.version>
-        <application.logfile>/app/logs/${project.artifactId}/${project.artifactId}.log</application.logfile>
-        <application.error.logfile>/app/logs/${project.artifactId}/${project.artifactId}-error.log</application.error.logfile>
-        <application.logfile.boot>/app/logs/${project.artifactId}/${project.artifactId}-boot.log</application.logfile.boot>
+        <application.name>${project.parent.artifactId}</application.name>
+        <application.version>${project.parent.version}</application.version>
+        <application.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}-app.log</application.logfile>
+        <application.error.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}-error.log</application.error.logfile>
+        <application.logfile.boot>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}-boot.log</application.logfile.boot>
         <hibernate.version>4.3.5.Final</hibernate.version>
         <hibernate-spatial.version>4.3</hibernate-spatial.version>
         <geotools.version>14-M1</geotools.version>
@@ -288,7 +288,6 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${sl4j.version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
