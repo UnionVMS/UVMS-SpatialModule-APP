@@ -7,7 +7,5 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezSpatialRS;
  * //TODO create test
  */
 public interface EezQueueService {
-
-    public EezSpatialRS getEezById(EezSpatialRQ getEezSpatialRQ);
-
+    EezSpatialRS getEezById(EezSpatialRQ getEezSpatialRQ);
 }

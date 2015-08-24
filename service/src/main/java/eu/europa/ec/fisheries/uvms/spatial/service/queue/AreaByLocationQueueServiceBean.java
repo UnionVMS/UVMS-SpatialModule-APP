@@ -4,10 +4,10 @@ import com.google.common.collect.Lists;
 import eu.europa.ec.fisheries.uvms.service.exception.CommonGenericDAOException;
 import eu.europa.ec.fisheries.uvms.spatial.dao.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaTypesEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.queue.handler.ExceptionHandlerInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.queue.handler.SpatialExceptionHandler;
-import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import lombok.SneakyThrows;
 
 import javax.ejb.EJB;
@@ -50,12 +50,11 @@ public class AreaByLocationQueueServiceBean implements AreaByLocationQueueServic
         return createSuccessGetAreasByLocationResponse(new AreasWithIdType(areaTypes));
     }
 
-
     private AreaByLocationSpatialRS createSuccessGetAreasByLocationResponse(AreasWithIdType areasWithIdType) {
         return new AreaByLocationSpatialRS(createSuccessResponseMessage(), areasWithIdType);
     }
 
-    protected ResponseMessageType createSuccessResponseMessage() {
+    private ResponseMessageType createSuccessResponseMessage() {
         ResponseMessageType responseMessage = new ResponseMessageType();
         responseMessage.setSuccess(new SuccessType());
         return responseMessage;
