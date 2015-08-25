@@ -31,6 +31,7 @@ public class AbstractArquillianIT {
                 .addAsResource("META-INF/test-persistence.xml", "META-INF/persistence.xml")
                 .addAsManifestResource(new File("src/test/resources/META-INF/jboss-deployment-structure.xml"))
                 .addAsResource("config.properties")
+                .addAsResource("logback.xml")
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
         for (String libName : libs) {
