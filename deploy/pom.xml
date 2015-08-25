@@ -84,6 +84,26 @@
                         <groupId>org.wildfly.plugins</groupId>
                         <artifactId>wildfly-maven-plugin</artifactId>
                         <version>1.0.2.Final</version>
+                        <executions>
+                            <!-- Undeploy the application on clean -->
+		                    <execution>
+		                        <id>undeploy</id>
+		                        <phase>clean</phase>
+		                        <goals>
+		                            <goal>undeploy</goal>
+		                        </goals>
+		                        <configuration>
+		                            <ignoreMissingDeployment>true</ignoreMissingDeployment>
+		                        </configuration>
+                    		</execution>
+                    		<execution>
+		                        <id>deploy</id>
+		                        <phase>install</phase>
+		                        <goals>
+		                            <goal>deploy</goal>
+		                        </goals>
+                    		</execution>
+                        </executions>
                         <configuration>
                             <filename>${project.build.finalName}.${project.packaging}</filename>
                             <targetDir>${project.build.directory}</targetDir>
