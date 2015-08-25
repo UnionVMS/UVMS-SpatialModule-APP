@@ -14,9 +14,6 @@ import javax.ejb.Stateless;
 import javax.transaction.Transactional;
 import java.util.List;
 
-/**
- * Created by Michal Kopyczok on 24-Aug-15.
- */
 @Stateless
 @Local(AreaByLocationRestService.class)
 @Transactional

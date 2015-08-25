@@ -19,6 +19,7 @@ public class AreaByLocationServiceBeanIT extends AbstractArquillianIT {
 
     private static final double LATITUDE = 32.85615;
     private static final double LONGITUDE = -10.74118;
+    private static final int DEFAULT_CRS = 4326;
 
     @EJB
     private AreaByLocationQueueService areaByLocationQueueService;
@@ -29,6 +30,7 @@ public class AreaByLocationServiceBeanIT extends AbstractArquillianIT {
         AreaByLocationSpatialRQ request = new AreaByLocationSpatialRQ();
         request.setLatitude(LATITUDE);
         request.setLongitude(LONGITUDE);
+        request.setCrs(DEFAULT_CRS);
 
         // when
         AreaByLocationSpatialRS areasByLocation = areaByLocationQueueService.getAreasByLocation(request);
