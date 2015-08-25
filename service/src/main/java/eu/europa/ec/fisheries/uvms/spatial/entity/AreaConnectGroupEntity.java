@@ -23,7 +23,7 @@ public class AreaConnectGroupEntity implements Serializable {
 	
 	@Id
 	@Column(name = "id")
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
 	@ManyToOne

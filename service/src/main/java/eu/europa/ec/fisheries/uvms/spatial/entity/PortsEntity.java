@@ -17,7 +17,7 @@ public class PortsEntity implements Serializable {
 	
 	@Id
 	@Column(name = "gid")
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long gid;
 
 	public PortsEntity() {

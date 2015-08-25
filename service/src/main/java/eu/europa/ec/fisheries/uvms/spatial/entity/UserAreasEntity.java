@@ -30,7 +30,7 @@ public class UserAreasEntity implements Serializable {
 
 	@Id
 	@Column(name = "gid")
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long gid;
 	
 	@Column(name = "user_id", nullable = false)

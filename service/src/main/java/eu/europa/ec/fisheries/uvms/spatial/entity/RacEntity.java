@@ -17,7 +17,7 @@ public class RacEntity implements Serializable {
 	
 	@Id
 	@Column(name = "gid")
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int gid;
 
 	public RacEntity() {

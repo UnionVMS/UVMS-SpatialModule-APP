@@ -23,50 +23,50 @@ public class EezEntity implements Serializable {
 
 	@Id
 	@Column(name = "gid")
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int gid;
-	
+
     @Basic
     @Column(name = "geom")
     @Type(type = "org.hibernate.spatial.GeometryType")
 	private Geometry geom;
-    
+
     @Column(name = "eez", length = 200)
 	private String eez;
-    
+
     @Column(name = "country", length = 100)
 	private String country;
-    
+
     @Column(name = "sovereign", length = 100)
 	private String sovereign;
-    
+
     @Column(name = "remarks", length = 150)
 	private String remarks;
-    
+
     @Column(name = "sov_id")
 	private Integer sovId;
-    
+
     @Column(name = "eez_id")
 	private Integer eezId;
-    
+
     @Column(name = "iso_3digit", length = 5)
 	private String iso3digit;
-    
+
     @Column(name = "mrgid")
 	private BigDecimal mrgid;
-    
+
     @Column(name = "date_chang", length = 50)
 	private String dateChang;
-    
+
     @Column(name = "area_m2")
 	private Double areaM2;
-    
+
     @Column(name = "longitude")
 	private Double longitude;
-    
+
     @Column(name = "latitude")
 	private Double latitude;
-    
+
     @Column(name = "mrgid_eez")
 	private Integer mrgidEez;
 
