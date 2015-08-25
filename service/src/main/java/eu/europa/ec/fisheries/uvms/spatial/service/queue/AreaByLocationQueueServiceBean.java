@@ -26,13 +26,15 @@ import java.util.List;
 @Interceptors(value = ExceptionHandlerInterceptor.class)
 public class AreaByLocationQueueServiceBean implements AreaByLocationQueueService {
 
+    private static final int DEFAULT_CRS = 4326;
+
     @EJB
     private SpatialRepository repository;
 
     @Override
     @SneakyThrows(CommonGenericDAOException.class)
     @SpatialExceptionHandler(responseType = AreaByLocationSpatialRS.class)
-    public AreaByLocationSpatialRS getAreasByLocation(double lat, double lon, int crs) {
+    public AreaByLocationSpatialRS getAreasByLocation(AreaByLocationSpatialRQ request) {
         List<AreaTypesEntity> systemAreaTypes = repository.findEntityByNamedQuery(AreaTypesEntity.class, QueryNameConstants.FIND_SYSTEM_AREAS);
 
         List<AreaType> areaTypes = Lists.newArrayList();
@@ -40,7 +42,7 @@ public class AreaByLocationQueueServiceBean implements AreaByLocationQueueServic
             String areaDbTable = areaType.getAreaDbTable();
             String areaTypeName = areaType.getTypeName();
 
-            List<Integer> resultList = repository.findAreaIdByLocation(lat, lon, crs, areaDbTable);
+            List<Integer> resultList = repository.findAreaIdByLocation(request.getLatitude(), request.getLongitude(), getCrs(request.getCrs()), areaDbTable);
             for (Integer id : resultList) {
                 AreaType area = new AreaType(String.valueOf(id), areaTypeName);
                 areaTypes.add(area);
@@ -48,6 +50,13 @@ public class AreaByLocationQueueServiceBean implements AreaByLocationQueueServic
         }
 
         return createSuccessGetAreasByLocationResponse(new AreasWithIdType(areaTypes));
+    }
+
+    private Integer getCrs(Integer crs) {
+        if (crs == null) {
+            return new Integer(DEFAULT_CRS);
+        }
+        return crs;
     }
 
     private AreaByLocationSpatialRS createSuccessGetAreasByLocationResponse(AreasWithIdType areasWithIdType) {

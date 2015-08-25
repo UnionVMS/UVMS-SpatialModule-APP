@@ -18,6 +18,15 @@
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
+	<xs:element name="AreaByLocationSpatialRQ">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Longitude" type="xs:double"/>
+				<xs:element name="Latitude" type="xs:double"/>
+				<xs:element name="Crs" type="xs:int" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
 	<xs:element name="AreaByLocationSpatialRS">
 		<xs:complexType>
 			<xs:sequence>
@@ -26,23 +35,25 @@
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
-	<xs:complexType name="EezSpatialRQ">
+	<xs:element name="EezSpatialRQ">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="EezId" type="NumericStringLength1to9"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ClosestAreaResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="ClosestAreaTypeList" type="ClosestAreaType" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="MessageType" type="ResponseMessageType" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="ClosestAreaType">
 		<xs:sequence>
-			<xs:element name="EezId" type="NumericStringLength1to9"/>
+			<xs:element name="DistanceToLocation" type="xs:string" minOccurs="0"/>
+			<xs:element name="Area" type="AreaType" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
-
-    <xs:complexType name="ClosestAreaResponse">
-        <xs:sequence>
-            <xs:element name="ClosestAreaTypeList" type="ClosestAreaType" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element name="MessageType" type="ResponseMessageType" minOccurs="0"/>
-        </xs:sequence>
-    </xs:complexType>
-
-    <xs:complexType name="ClosestAreaType">
-        <xs:sequence>
-            <xs:element name="DistanceToLocation" type="xs:string" minOccurs="0"/>
-            <xs:element name="Area" type="AreaType" minOccurs="0"/>
-        </xs:sequence>
-    </xs:complexType>
 </xs:schema>

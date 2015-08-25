@@ -5,7 +5,6 @@ import eu.europa.ec.fisheries.uvms.service.exception.CommonGenericDAOException;
 import eu.europa.ec.fisheries.uvms.spatial.dao.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.service.rest.dto.AreaDto;
 import lombok.SneakyThrows;
 
