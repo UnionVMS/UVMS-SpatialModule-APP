@@ -8,13 +8,22 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezSpatialRS;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ResponseMessageType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SuccessType;
+import eu.europa.ec.fisheries.uvms.spatial.service.queue.handler.ExceptionHandlerInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.queue.handler.SpatialExceptionHandler;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.EezTypeMapper;
 import lombok.SneakyThrows;
 
 import javax.ejb.EJB;
+import javax.ejb.Local;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.interceptor.Interceptors;
+import javax.transaction.Transactional;
 
+@Stateless
+@Local(EezQueueService.class)
+@Transactional
+@Interceptors(value = ExceptionHandlerInterceptor.class)
 public class EezQueueServiceBean implements EezQueueService {
 
     @EJB

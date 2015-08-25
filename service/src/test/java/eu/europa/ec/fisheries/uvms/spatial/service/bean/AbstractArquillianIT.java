@@ -21,7 +21,8 @@ public class AbstractArquillianIT {
             "org.mapstruct:mapstruct-processor:1.0.0.CR1",
             "commons-collections:commons-collections:3.2.1",
             "org.geotools:gt-geojson:14-M1",
-            "org.easytesting:fest-assert:1.4"
+            "org.easytesting:fest-assert:1.4",
+            "org.slf4j:slf4j-api:1.7.12"
     };
 
     @Deployment
