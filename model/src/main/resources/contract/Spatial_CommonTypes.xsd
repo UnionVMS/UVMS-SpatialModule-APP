@@ -37,16 +37,15 @@
 			<xs:element name="AreaType" type="StringLength1to255" maxOccurs="1000"/>
 		</xs:sequence>
 	</xs:complexType>
+	<xs:complexType name="ClosestAreaType">
+		<xs:sequence>
+			<xs:element name="DistanceToLocation" type="xs:string" minOccurs="0"/>
+			<xs:element name="Area" type="AreaType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
 	<xs:complexType name="AreasWithIdType">
 		<xs:sequence>
 			<xs:element name="Area" type="AreaTypeEntry" minOccurs="0" maxOccurs="1000"/>
-		</xs:sequence>
-	</xs:complexType>
-	<xs:complexType name="ClosestAreaSpatialRQ">
-		<xs:sequence>
-			<xs:element name="Point" type="PointType"/>
-			<xs:element name="Area" type="AreaType"/>
-			<xs:element name="MeasurementUnits" type="MeasurementUnitsType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PointType">

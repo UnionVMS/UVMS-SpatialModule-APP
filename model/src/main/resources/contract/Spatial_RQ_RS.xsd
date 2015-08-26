@@ -40,7 +40,16 @@
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="ClosestAreaResponse">
+	<xs:element name="ClosestAreaSpatialRQ">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Point" type="PointType"/>
+				<xs:element name="Area" type="AreaType"/>
+				<xs:element name="MeasurementUnits" type="MeasurementUnitsType"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ClosestAreaSpatialRS">
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element name="ClosestAreaTypeList" type="ClosestAreaType" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
@@ -48,12 +57,6 @@
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
-	<xs:complexType name="ClosestAreaType">
-		<xs:sequence>
-			<xs:element name="DistanceToLocation" type="xs:string" minOccurs="0"/>
-			<xs:element name="Area" type="AreaType" minOccurs="0"/>
-		</xs:sequence>
-	</xs:complexType>
 	<xs:element name="SpatialEnrichmentRQ">
 		<xs:complexType>
 			<xs:sequence>

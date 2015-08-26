@@ -7,6 +7,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler.ExceptionHandlerInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler.SpatialExceptionHandler;
 import lombok.SneakyThrows;
+import org.apache.commons.lang3.NotImplementedException;
 
 import javax.ejb.EJB;
 import javax.ejb.Local;
@@ -41,8 +42,8 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
     }
 
     @Override
-    public ClosestAreaResponse getClosestArea(ClosestAreaSpatialRQ request) {
-        return null;
+    public ClosestAreaSpatialRS getClosestArea(ClosestAreaSpatialRQ request) {
+        throw new NotImplementedException("Not implemented yet");
     }
 
     private AreaTypeNamesSpatialRS createSuccessGetAreaTypesResponse(List<String> areaTypeNames) {
