@@ -1,6 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.mapper;
 
-import eu.europa.ec.fisheries.uvms.spatial.service.rest.dto.EezDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.EezDto;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

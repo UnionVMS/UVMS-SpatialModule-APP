@@ -3,9 +3,9 @@ package eu.europa.ec.fisheries.uvms.spatial.rest.resources;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseCode;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.error.ErrorHandler;
-import eu.europa.ec.fisheries.uvms.spatial.service.rest.AreaByLocationRestService;
-import eu.europa.ec.fisheries.uvms.spatial.service.rest.AreaTypeRestService;
-import eu.europa.ec.fisheries.uvms.spatial.service.rest.dto.AreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaByLocationService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,10 +20,13 @@ public class AreaTypeResource {
     final static Logger LOG = LoggerFactory.getLogger(AreaTypeResource.class);
 
     @EJB
-    private AreaTypeRestService areaTypeService;
+    private AreaTypeNamesService areaTypeService;
 
     @EJB
-    private AreaByLocationRestService areaByLocationService;
+    private AreaByLocationService areaByLocationService;
+
+    public AreaTypeResource() {
+    }
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
@@ -31,7 +34,7 @@ public class AreaTypeResource {
     public ResponseDto getAreaTypes() {
         try {
             LOG.info("Getting user areas list");
-            List<String> areaTypes = areaTypeService.getAreaTypes();
+            List<String> areaTypes = areaTypeService.getAreaTypesRest();
             return new ResponseDto(areaTypes, ResponseCode.OK);
         } catch (Exception ex) {
             LOG.error("[ Error when getting area types list. ] ", ex);
@@ -48,7 +51,7 @@ public class AreaTypeResource {
             @DefaultValue("4326") @QueryParam(value = "crs") int crs) {
         try {
             LOG.info("Getting areas by location");
-            List<AreaDto> areasByLocation = areaByLocationService.getAreasByLocation(lat, lon, crs);
+            List<AreaDto> areasByLocation = areaByLocationService.getAreasByLocationRest(lat, lon, crs);
             return new ResponseDto(areasByLocation, ResponseCode.OK);
         } catch (Exception ex) {
             LOG.error("[ Error when getting areas by location. ] ", ex);

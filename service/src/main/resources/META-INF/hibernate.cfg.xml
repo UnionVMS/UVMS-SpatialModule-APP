@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hibernate-configuration>
+       
+    <session-factory>
+               
+        <property name="connection.driver_class">org.postgresql.Driver</property>
+               
+        <property name="connection.url">jdbc:postgresql://localhost:5432/uvms</property>
+        <property name="connection.pool_size">1</property>
+        <property name="dialect">org.hibernate.spatial.dialect.postgis.PostgisDialect</property>
+        <property name="show_sql">true</property>
+
+        <mapping class="eu.europa.ec.fisheries.uvms.spatial.entity.AreaTypesEntity"/>
+
+    </session-factory>
+
+</hibernate-configuration>

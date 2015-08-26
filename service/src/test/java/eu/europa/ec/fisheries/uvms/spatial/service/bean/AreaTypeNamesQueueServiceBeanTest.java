@@ -3,8 +3,6 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 import com.google.common.collect.ImmutableList;
 import eu.europa.ec.fisheries.uvms.spatial.dao.CommonGenericDAOBean;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeSpatialRS;
-import eu.europa.ec.fisheries.uvms.spatial.service.queue.AreaTypeQueueService;
-import eu.europa.ec.fisheries.uvms.spatial.service.queue.AreaTypeQueueServiceBean;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +20,7 @@ import static org.mockito.Mockito.when;
  * Created by kopyczmi on 06-Aug-15.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class AreaTypeQueueServiceBeanTest {
+public class AreaTypeNamesQueueServiceBeanTest {
 
     private final static List<String> AREA_TYPES = ImmutableList.of("Portugal", "Belgium", "Poland", "Bulgaria", "India");
 
@@ -30,7 +28,7 @@ public class AreaTypeQueueServiceBeanTest {
     private CommonGenericDAOBean commonGenericDAO;
 
     @InjectMocks
-    private AreaTypeQueueService areaTypeQueueService = new AreaTypeQueueServiceBean();
+    private AreaTypeNamesService areaTypeNamesService = new AreaTypeNamesServiceBean();
 
     @Test
     @SuppressWarnings("unchecked")
@@ -39,7 +37,7 @@ public class AreaTypeQueueServiceBeanTest {
         when(commonGenericDAO.findEntityByNamedQuery(String.class, QueryNameConstants.FIND_ALL_AREAS)).thenReturn(AREA_TYPES);
 
         // when
-        AreaTypeSpatialRS areaTypeRS = areaTypeQueueService.getAreaTypes();
+        AreaTypeSpatialRS areaTypeRS = areaTypeNamesService.getAreaTypesQueue();
 
         //then
         assertNotNull(areaTypeRS);
@@ -55,7 +53,7 @@ public class AreaTypeQueueServiceBeanTest {
         when(commonGenericDAO.findEntityByNamedQuery(String.class, QueryNameConstants.FIND_ALL_AREAS)).thenReturn(null);
 
         // when
-        AreaTypeSpatialRS areaTypeRS = areaTypeQueueService.getAreaTypes();
+        AreaTypeSpatialRS areaTypeRS = areaTypeNamesService.getAreaTypesQueue();
 
         // then
         assertNotNull(areaTypeRS);

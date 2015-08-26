@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.spatial.service.rest.dto;
+package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto;
 
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import lombok.experimental.Delegate;

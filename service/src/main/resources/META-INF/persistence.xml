@@ -5,6 +5,7 @@
 
     <persistence-unit name="UVMS" transaction-type="JTA">
         <jta-data-source>java:/jdbc/UVMS</jta-data-source>
+        <mapping-file>META-INF/orm.xml</mapping-file>
 
         <properties>
             <property name="hibernate.show_sql" value="true" />

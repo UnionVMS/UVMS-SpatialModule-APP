@@ -1,12 +1,12 @@
-package eu.europa.ec.fisheries.uvms.spatial.service.queue.handler;
+package eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler;
 
 import eu.europa.ec.fisheries.uvms.service.exception.CommonGenericDAOException;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ErrorMessageType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ErrorsType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ResponseMessageType;
-import eu.europa.ec.fisheries.uvms.spatial.service.queue.exception.ExceptionMapper;
-import eu.europa.ec.fisheries.uvms.spatial.service.queue.exception.SpatialServiceErrors;
-import eu.europa.ec.fisheries.uvms.spatial.service.queue.exception.SpatialServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.ExceptionMapper;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import org.hibernate.HibernateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

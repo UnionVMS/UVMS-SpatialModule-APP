@@ -2,7 +2,6 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezSpatialRS;
-import eu.europa.ec.fisheries.uvms.spatial.service.queue.EezQueueService;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,7 +17,7 @@ import static junit.framework.TestCase.assertNotNull;
 public class EezQueueServiceBeanIT extends AbstractArquillianIT {
 
     @EJB
-    private EezQueueService service;
+    private EezService service;
 
     @Test
     public void shouldReturnEez() throws Exception {
@@ -26,7 +25,7 @@ public class EezQueueServiceBeanIT extends AbstractArquillianIT {
         EezSpatialRQ getEezSpatialRQ = new EezSpatialRQ("123");
 
         // when
-        EezSpatialRS eez = service.getEezById(getEezSpatialRQ);
+        EezSpatialRS eez = service.getEezByIdQueue(getEezSpatialRQ);
 
         //then
         assertNotNull(eez);

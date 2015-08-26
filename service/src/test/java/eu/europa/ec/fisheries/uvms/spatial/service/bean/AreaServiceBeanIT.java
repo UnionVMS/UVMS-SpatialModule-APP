@@ -1,7 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeSpatialRS;
-import eu.europa.ec.fisheries.uvms.spatial.service.queue.AreaTypeQueueService;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,12 +17,12 @@ import static org.junit.Assert.assertNotNull;
 public class AreaServiceBeanIT extends AbstractArquillianIT {
 
     @EJB
-    private AreaTypeQueueService areaTypeQueueService;
+    private AreaTypeNamesService areaTypeNamesService;
 
     @Test
     public void shouldReturnAreaTypes() throws Exception {
         // when
-        AreaTypeSpatialRS areaTypes = areaTypeQueueService.getAreaTypes();
+        AreaTypeSpatialRS areaTypes = areaTypeNamesService.getAreaTypesQueue();
 
         //then
         assertNotNull(areaTypes);

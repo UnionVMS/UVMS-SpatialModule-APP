@@ -6,8 +6,8 @@ import eu.europa.ec.fisheries.uvms.rest.FeatureToGeoJsonMapper;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseCode;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.error.ErrorHandler;
-import eu.europa.ec.fisheries.uvms.spatial.service.rest.EezRestService;
-import eu.europa.ec.fisheries.uvms.spatial.service.rest.dto.EezDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.EezService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.EezDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +25,7 @@ public class EezResource {
     final static Logger LOG = LoggerFactory.getLogger(EezResource.class);
 
     @EJB
-    private EezRestService eezService;
+    private EezService eezService;
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
@@ -34,7 +34,7 @@ public class EezResource {
     public ResponseDto getExclusiveEconomicZoneById(@PathParam("id") int id) throws IOException {
         try {
             LOG.info("Getting eez with {}", id);
-            EezDto eezDto = eezService.getEezById(id);
+            EezDto eezDto = eezService.getEezByIdRest(id);
             String geojson = feature2String(eezDto);
             return new ResponseDto(string2Json(geojson), ResponseCode.OK);
         } catch (Exception e) {

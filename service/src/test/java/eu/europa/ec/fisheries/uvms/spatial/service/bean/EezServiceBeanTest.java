@@ -5,10 +5,6 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezSpatialRS;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ResponseMessageType;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.EezTypeMapper;
-import eu.europa.ec.fisheries.uvms.spatial.service.queue.EezQueueService;
-import eu.europa.ec.fisheries.uvms.spatial.service.queue.EezQueueServiceBean;
-import eu.europa.ec.fisheries.uvms.spatial.service.rest.EezRestService;
-import eu.europa.ec.fisheries.uvms.spatial.service.rest.EezRestServiceBean;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -22,7 +18,7 @@ import static org.junit.Assert.assertNull;
  * Created by kopyczmi on 20-Aug-15.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class EezQueueServiceBeanTest {
+public class EezServiceBeanTest {
 
     private static final String EEZ_ID = "123";
     @Mock
@@ -30,7 +26,7 @@ public class EezQueueServiceBeanTest {
     @Mock
     private CommonGenericDAOBean commonGenericDAO;
     @InjectMocks
-    private EezQueueService service = new EezQueueServiceBean();
+    private EezService service = new EezServiceBean();
 
     @Test
     public void shouldReturnEmptyResponse() {
@@ -38,7 +34,7 @@ public class EezQueueServiceBeanTest {
         EezSpatialRQ getEezSpatialRQ = new EezSpatialRQ(EEZ_ID);
 
         // when
-        EezSpatialRS eezSpatialRS = service.getEezById(getEezSpatialRQ);
+        EezSpatialRS eezSpatialRS = service.getEezByIdQueue(getEezSpatialRQ);
 
         // then
         assertNotNull(eezSpatialRS);

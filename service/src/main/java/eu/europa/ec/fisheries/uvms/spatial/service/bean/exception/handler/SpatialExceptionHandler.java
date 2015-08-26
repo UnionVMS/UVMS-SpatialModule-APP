@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.spatial.service.queue.handler;
+package eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler;
 
 import javax.enterprise.util.Nonbinding;
 import javax.interceptor.InterceptorBinding;

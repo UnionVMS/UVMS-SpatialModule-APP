@@ -8,5 +8,5 @@ import java.util.List;
  * Created by Michal Kopyczok on 21-Aug-15.
  */
 public interface SpatialRepository extends CommonGenericDAO {
-    List<Integer> findAreaIdByLocation(double lat, double lon, int crs, String areaDbTable);
+    List<Integer> findAreasIdByLocation(double lat, double lon, int crs, String areaDbTable);
 }

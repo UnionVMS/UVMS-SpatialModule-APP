@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.spatial.service.queue.exception;
+package eu.europa.ec.fisheries.uvms.spatial.service.bean.exception;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;

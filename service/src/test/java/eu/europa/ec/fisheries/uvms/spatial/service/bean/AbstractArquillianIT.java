@@ -29,6 +29,7 @@ public class AbstractArquillianIT {
     public static WebArchive createDeployment() {
         WebArchive webArchive = ShrinkWrap.create(WebArchive.class).addPackages(true, "eu.europa")
                 .addAsResource("META-INF/test-persistence.xml", "META-INF/persistence.xml")
+                .addAsResource("META-INF/orm.xml", "META-INF/orm.xml")
                 .addAsManifestResource(new File("src/test/resources/META-INF/jboss-deployment-structure.xml"))
                 .addAsResource("config.properties")
                 .addAsResource("logback.xml")

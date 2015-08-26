@@ -1,16 +1,11 @@
-package eu.europa.ec.fisheries.uvms.spatial.service.queue;
+package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.service.CommonGenericDAO;
 import eu.europa.ec.fisheries.uvms.service.exception.CommonGenericDAOException;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeSpatialRS;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreasNameType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaRequest;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaResponse;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ResponseMessageType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SuccessType;
-import eu.europa.ec.fisheries.uvms.spatial.service.queue.handler.ExceptionHandlerInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.service.queue.handler.SpatialExceptionHandler;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler.ExceptionHandlerInterceptor;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler.SpatialExceptionHandler;
 import lombok.SneakyThrows;
 
 import javax.ejb.EJB;
@@ -21,10 +16,9 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Stateless
-@Local(AreaTypeQueueService.class)
+@Local(AreaTypeNamesService.class)
 @Transactional
-@Interceptors(value = ExceptionHandlerInterceptor.class)
-public class AreaTypeQueueServiceBean implements AreaTypeQueueService {
+public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
 
     @EJB
     private CommonGenericDAO commonDao;
@@ -33,9 +27,17 @@ public class AreaTypeQueueServiceBean implements AreaTypeQueueService {
     @SuppressWarnings("unchecked")
     @SneakyThrows(CommonGenericDAOException.class)
     @SpatialExceptionHandler(responseType = AreaTypeSpatialRS.class)
-    public AreaTypeSpatialRS getAreaTypes() {
+    @Interceptors(value = ExceptionHandlerInterceptor.class)
+    public AreaTypeSpatialRS getAreaTypesQueue() {
         List<String> areaTypes = commonDao.findEntityByNamedQuery(String.class, QueryNameConstants.FIND_ALL_AREAS);
         return createSuccessGetAreaTypesResponse(areaTypes);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    @SneakyThrows(CommonGenericDAOException.class)
+    public List<String> getAreaTypesRest() {
+        return commonDao.findEntityByNamedQuery(String.class, QueryNameConstants.FIND_ALL_AREAS);
     }
 
     @Override

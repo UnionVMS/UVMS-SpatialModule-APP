@@ -2,7 +2,6 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRS;
-import eu.europa.ec.fisheries.uvms.spatial.service.queue.AreaByLocationQueueService;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +21,7 @@ public class AreaByLocationServiceBeanIT extends AbstractArquillianIT {
     private static final int DEFAULT_CRS = 4326;
 
     @EJB
-    private AreaByLocationQueueService areaByLocationQueueService;
+    private AreaByLocationService areaByLocationService;
 
     @Test
     public void shouldGetAreasByLocation() throws Exception {
@@ -33,7 +32,7 @@ public class AreaByLocationServiceBeanIT extends AbstractArquillianIT {
         request.setCrs(DEFAULT_CRS);
 
         // when
-        AreaByLocationSpatialRS areasByLocation = areaByLocationQueueService.getAreasByLocation(request);
+        AreaByLocationSpatialRS areasByLocation = areaByLocationService.getAreasByLocationQueue(request);
 
         //then
         assertNotNull(areasByLocation);

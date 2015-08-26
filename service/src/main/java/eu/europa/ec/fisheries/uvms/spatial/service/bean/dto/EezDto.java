@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.spatial.service.rest.dto;
+package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.MultiPolygon;
