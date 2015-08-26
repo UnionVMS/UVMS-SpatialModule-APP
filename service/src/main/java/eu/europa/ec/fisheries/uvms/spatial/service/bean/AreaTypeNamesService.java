@@ -1,13 +1,13 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeNamesSpatialRS;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaRequest;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaResponse;
 
 import java.util.List;
 
 public interface AreaTypeNamesService {
-    AreaTypeSpatialRS getAreaTypesQueue();
+    AreaTypeNamesSpatialRS getAreaTypesQueue();
 
     List<String> getAreaTypesRest();
 

@@ -3,7 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 import com.google.common.collect.ImmutableList;
 import eu.europa.ec.fisheries.uvms.spatial.dao.CommonGenericDAOBean;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeNamesSpatialRS;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -37,7 +37,7 @@ public class AreaTypeNamesServiceTest {
         when(commonGenericDAO.findEntityByNamedQuery(String.class, QueryNameConstants.FIND_ALL_AREAS)).thenReturn(AREA_TYPES);
 
         // when
-        AreaTypeSpatialRS areaTypeRS = areaTypeNamesService.getAreaTypesQueue();
+        AreaTypeNamesSpatialRS areaTypeRS = areaTypeNamesService.getAreaTypesQueue();
 
         //then
         assertNotNull(areaTypeRS);
@@ -53,7 +53,7 @@ public class AreaTypeNamesServiceTest {
         when(commonGenericDAO.findEntityByNamedQuery(String.class, QueryNameConstants.FIND_ALL_AREAS)).thenReturn(null);
 
         // when
-        AreaTypeSpatialRS areaTypeRS = areaTypeNamesService.getAreaTypesQueue();
+        AreaTypeNamesSpatialRS areaTypeRS = areaTypeNamesService.getAreaTypesQueue();
 
         // then
         assertNotNull(areaTypeRS);

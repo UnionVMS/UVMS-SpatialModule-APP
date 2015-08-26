@@ -26,9 +26,9 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
     @Override
     @SuppressWarnings("unchecked")
     @SneakyThrows(CommonGenericDAOException.class)
-    @SpatialExceptionHandler(responseType = AreaTypeSpatialRS.class)
+    @SpatialExceptionHandler(responseType = AreaTypeNamesSpatialRS.class)
     @Interceptors(value = ExceptionHandlerInterceptor.class)
-    public AreaTypeSpatialRS getAreaTypesQueue() {
+    public AreaTypeNamesSpatialRS getAreaTypesQueue() {
         List<String> areaTypes = commonDao.findEntityByNamedQuery(String.class, QueryNameConstants.FIND_ALL_AREAS);
         return createSuccessGetAreaTypesResponse(areaTypes);
     }
@@ -45,8 +45,8 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
         return null;
     }
 
-    private AreaTypeSpatialRS createSuccessGetAreaTypesResponse(List<String> areaTypeNames) {
-        return new AreaTypeSpatialRS(createSuccessResponseMessage(), new AreasNameType(areaTypeNames));
+    private AreaTypeNamesSpatialRS createSuccessGetAreaTypesResponse(List<String> areaTypeNames) {
+        return new AreaTypeNamesSpatialRS(createSuccessResponseMessage(), new AreasNameType(areaTypeNames));
     }
 
     private ResponseMessageType createSuccessResponseMessage() {
