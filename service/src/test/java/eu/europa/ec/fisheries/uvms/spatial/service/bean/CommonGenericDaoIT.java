@@ -19,18 +19,18 @@ import static org.fest.assertions.Assertions.assertThat;
 
 @RunWith(Arquillian.class)
 @Transactional
-public class CommonGenericDAOIT extends AbstractArquillianIT {
+public class CommonGenericDaoIT extends AbstractArquillianIT {
 
     private static final String EEZ = "eez";
     private static final String REMARKS = "remarks";
     private static final String AUSTRALIA = "Australia";
 
     @EJB
-    private CommonGenericDAO genericDAO;
+    private CommonGenericDAO genericDao;
 
     @Before
     public void beforeEach() {
-        assertNotNull("genericDAO not injected", genericDAO);
+        assertNotNull("genericDao not injected", genericDao);
     }
 
     @Test
@@ -41,7 +41,7 @@ public class CommonGenericDAOIT extends AbstractArquillianIT {
         EezEntity eez = createEezEntity();
 
         // when
-        EezEntity createdEez = (EezEntity) genericDAO.createEntity(eez);
+        EezEntity createdEez = (EezEntity) genericDao.createEntity(eez);
 
         // then
         assertNotNull(createdEez);
@@ -53,7 +53,7 @@ public class CommonGenericDAOIT extends AbstractArquillianIT {
     @SuppressWarnings("unchecked")
     public void shouldFindEntity() throws Exception {
         // when
-        EezEntity eezEntity = (EezEntity) genericDAO.findEntityById(EezEntity.class, 1);
+        EezEntity eezEntity = (EezEntity) genericDao.findEntityById(EezEntity.class, 1);
 
         // then
         assertEquals(eezEntity.getSovereign(), AUSTRALIA);
@@ -63,7 +63,7 @@ public class CommonGenericDAOIT extends AbstractArquillianIT {
     @SuppressWarnings("unchecked")
     public void shouldGetEntity() throws Exception {
         // when
-        List<String> areasType = genericDAO.findEntityByNamedQuery(String.class, QueryNameConstants.FIND_ALL_AREAS);
+        List<String> areasType = genericDao.findEntityByNamedQuery(String.class, QueryNameConstants.FIND_ALL_AREAS);
 
         // then
         assertThat(areasType).isNotEmpty();

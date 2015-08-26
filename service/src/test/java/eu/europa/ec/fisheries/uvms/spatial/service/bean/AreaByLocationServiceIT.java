@@ -14,7 +14,7 @@ import static junit.framework.TestCase.assertNotNull;
  * Created by kopyczmi on 19-Aug-15.
  */
 @RunWith(Arquillian.class)
-public class AreaByLocationServiceBeanIT extends AbstractArquillianIT {
+public class AreaByLocationServiceIT extends AbstractArquillianIT {
 
     private static final double LATITUDE = 32.85615;
     private static final double LONGITUDE = -10.74118;

@@ -18,7 +18,7 @@ import static org.junit.Assert.assertNull;
  * Created by kopyczmi on 20-Aug-15.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class EezServiceBeanTest {
+public class EezServiceTest {
 
     private static final String EEZ_ID = "123";
     @Mock

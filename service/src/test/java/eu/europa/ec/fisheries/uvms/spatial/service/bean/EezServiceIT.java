@@ -14,7 +14,7 @@ import static junit.framework.TestCase.assertNotNull;
  * Created by kopyczmi on 06-Aug-15.
  */
 @RunWith(Arquillian.class)
-public class EezQueueServiceBeanIT extends AbstractArquillianIT {
+public class EezServiceIT extends AbstractArquillianIT {
 
     @EJB
     private EezService service;

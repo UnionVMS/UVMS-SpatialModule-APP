@@ -14,7 +14,7 @@ import static org.junit.Assert.assertNotNull;
  * Created by kopyczmi on 04-Aug-15.
  */
 @RunWith(Arquillian.class)
-public class AreaServiceBeanIT extends AbstractArquillianIT {
+public class AreaTypeNamesServiceIT extends AbstractArquillianIT {
 
     @EJB
     private AreaTypeNamesService areaTypeNamesService;

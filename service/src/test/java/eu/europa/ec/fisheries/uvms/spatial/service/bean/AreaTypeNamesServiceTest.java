@@ -2,8 +2,8 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.google.common.collect.ImmutableList;
 import eu.europa.ec.fisheries.uvms.spatial.dao.CommonGenericDAOBean;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeSpatialRS;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeSpatialRS;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
  * Created by kopyczmi on 06-Aug-15.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class AreaTypeNamesQueueServiceBeanTest {
+public class AreaTypeNamesServiceTest {
 
     private final static List<String> AREA_TYPES = ImmutableList.of("Portugal", "Belgium", "Poland", "Bulgaria", "India");
 
