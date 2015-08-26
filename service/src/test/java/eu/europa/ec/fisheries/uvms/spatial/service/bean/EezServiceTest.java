@@ -34,7 +34,7 @@ public class EezServiceTest {
         EezSpatialRQ getEezSpatialRQ = new EezSpatialRQ(EEZ_ID);
 
         // when
-        EezSpatialRS eezSpatialRS = service.getEezByIdQueue(getEezSpatialRQ);
+        EezSpatialRS eezSpatialRS = service.getEezById(getEezSpatialRQ);
 
         // then
         assertNotNull(eezSpatialRS);

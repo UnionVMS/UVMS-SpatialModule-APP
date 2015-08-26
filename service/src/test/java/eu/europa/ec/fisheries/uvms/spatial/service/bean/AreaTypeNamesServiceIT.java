@@ -22,7 +22,7 @@ public class AreaTypeNamesServiceIT extends AbstractArquillianIT {
     @Test
     public void shouldReturnAreaTypes() throws Exception {
         // when
-        AreaTypeNamesSpatialRS areaTypes = areaTypeNamesService.getAreaTypesQueue();
+        AreaTypeNamesSpatialRS areaTypes = areaTypeNamesService.getAreaTypes();
 
         //then
         assertNotNull(areaTypes);

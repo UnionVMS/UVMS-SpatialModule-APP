@@ -10,6 +10,6 @@ import java.util.List;
  * Created by kopyczmi on 18-Aug-15.
  */
 public interface AreaByLocationService {
-    AreaByLocationSpatialRS getAreasByLocationQueue(AreaByLocationSpatialRQ request);
+    AreaByLocationSpatialRS getAreasByLocation(AreaByLocationSpatialRQ request);
     List<AreaDto> getAreasByLocationRest(double lat, double lon, int crs);
 }

@@ -38,7 +38,7 @@ public class EezServiceBean implements EezService {
     @SneakyThrows(CommonGenericDAOException.class)
     @SpatialExceptionHandler(responseType = EezSpatialRS.class)
     @Interceptors(value = ExceptionHandlerInterceptor.class)
-    public EezSpatialRS getEezByIdQueue(EezSpatialRQ getEezSpatialRQ) {
+    public EezSpatialRS getEezById(EezSpatialRQ getEezSpatialRQ) {
         EezEntity eez = (EezEntity) commonDao.findEntityById(EezEntity.class, retrieveIdFromRQ(getEezSpatialRQ));
         EezType eezType = eezMapper.eezEntityToEezType(eez);
         return createSuccessResponse(eezType);

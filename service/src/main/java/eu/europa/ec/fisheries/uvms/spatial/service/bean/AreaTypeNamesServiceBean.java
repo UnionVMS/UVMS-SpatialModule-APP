@@ -29,7 +29,7 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
     @SneakyThrows(CommonGenericDAOException.class)
     @SpatialExceptionHandler(responseType = AreaTypeNamesSpatialRS.class)
     @Interceptors(value = ExceptionHandlerInterceptor.class)
-    public AreaTypeNamesSpatialRS getAreaTypesQueue() {
+    public AreaTypeNamesSpatialRS getAreaTypes() {
         List<String> areaTypes = commonDao.findEntityByNamedQuery(String.class, QueryNameConstants.FIND_ALL_AREAS);
         return createSuccessGetAreaTypesResponse(areaTypes);
     }

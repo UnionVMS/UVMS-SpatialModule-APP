@@ -37,7 +37,7 @@ public class AreaTypeNamesServiceTest {
         when(commonGenericDAO.findEntityByNamedQuery(String.class, QueryNameConstants.FIND_ALL_AREAS)).thenReturn(AREA_TYPES);
 
         // when
-        AreaTypeNamesSpatialRS areaTypeRS = areaTypeNamesService.getAreaTypesQueue();
+        AreaTypeNamesSpatialRS areaTypeRS = areaTypeNamesService.getAreaTypes();
 
         //then
         assertNotNull(areaTypeRS);
@@ -53,7 +53,7 @@ public class AreaTypeNamesServiceTest {
         when(commonGenericDAO.findEntityByNamedQuery(String.class, QueryNameConstants.FIND_ALL_AREAS)).thenReturn(null);
 
         // when
-        AreaTypeNamesSpatialRS areaTypeRS = areaTypeNamesService.getAreaTypesQueue();
+        AreaTypeNamesSpatialRS areaTypeRS = areaTypeNamesService.getAreaTypes();
 
         // then
         assertNotNull(areaTypeRS);

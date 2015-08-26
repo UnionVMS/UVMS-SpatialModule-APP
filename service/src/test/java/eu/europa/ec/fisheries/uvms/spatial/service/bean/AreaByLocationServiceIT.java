@@ -30,10 +30,10 @@ public class AreaByLocationServiceIT extends AbstractArquillianIT {
         AreaByLocationSpatialRQ request = new AreaByLocationSpatialRQ(new PointType(LONGITUDE, LATITUDE, DEFAULT_CRS));
 
         // when
-        AreaByLocationSpatialRS areasByLocation = areaByLocationService.getAreasByLocationQueue(request);
+        AreaByLocationSpatialRS areasByLocation = areaByLocationService.getAreasByLocation(request);
 
         //then
         assertNotNull(areasByLocation);
-        assertNotNull(areasByLocation.getAreasType());
+        assertNotNull(areasByLocation.getAreasByLocation());
     }
 }

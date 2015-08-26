@@ -10,6 +10,13 @@
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
+	<xs:element name="EezSpatialRQ">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="EezId" type="NumericStringLength1to9"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
 	<xs:element name="EezSpatialRS">
 		<xs:complexType>
 			<xs:sequence>
@@ -29,14 +36,7 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element name="ResponseMessage" type="ResponseMessageType"/>
-				<xs:element name="AreasType" type="AreasWithIdType" minOccurs="0"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="EezSpatialRQ">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="EezId" type="NumericStringLength1to9"/>
+				<xs:element name="AreasByLocation" type="AreasByLocationType" minOccurs="0"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -71,27 +71,9 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element name="ResponseMessage" type="ResponseMessageType"/>
-				<xs:element name="AreasByLocation" type="AreasWithIdType"/>
-				<xs:element name="ClosestArea">
-					<xs:complexType>
-						<xs:sequence>
-							<xs:element name="Id" type="NumericStringLength1to9"/>
-							<xs:element name="AreaTypeName" type="AreaType"/>
-							<xs:element name="Distance" type="xs:double"/>
-							<xs:element name="Units" type="MeasurementUnitsType"/>
-						</xs:sequence>
-					</xs:complexType>
-				</xs:element>
-				<xs:element name="ClosestLocation">
-					<xs:complexType>
-						<xs:sequence>
-							<xs:element name="Id" type="NumericStringLength1to9"/>
-							<xs:element name="LocationTypeName" type="LocationType"/>
-							<xs:element name="Distance" type="xs:double"/>
-							<xs:element name="Units" type="MeasurementUnitsType"/>
-						</xs:sequence>
-					</xs:complexType>
-				</xs:element>
+				<xs:element name="AreasByLocation" type="AreasByLocationType"/>
+				<xs:element name="ClosestArea" type="ClosestAreaType"/>
+				<xs:element name="ClosestLocation" type="ClosestLocationType"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>

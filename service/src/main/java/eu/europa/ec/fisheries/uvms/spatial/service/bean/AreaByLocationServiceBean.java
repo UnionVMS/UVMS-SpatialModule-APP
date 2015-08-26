@@ -35,7 +35,7 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
     @SneakyThrows(CommonGenericDAOException.class)
     @SpatialExceptionHandler(responseType = AreaByLocationSpatialRS.class)
     @Interceptors(value = ExceptionHandlerInterceptor.class)
-    public AreaByLocationSpatialRS getAreasByLocationQueue(AreaByLocationSpatialRQ request) {
+    public AreaByLocationSpatialRS getAreasByLocation(AreaByLocationSpatialRQ request) {
         List<AreaTypesEntity> systemAreaTypes = repository.findEntityByNamedQuery(AreaTypesEntity.class, QueryNameConstants.FIND_SYSTEM_AREAS);
 
         List<AreaTypeEntry> areaTypes = Lists.newArrayList();
@@ -51,7 +51,7 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
             }
         }
 
-        return createSuccessGetAreasByLocationResponse(new AreasWithIdType(areaTypes));
+        return createSuccessGetAreasByLocationResponse(new AreasByLocationType(areaTypes));
     }
 
     @Override
@@ -81,8 +81,8 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
         return crs;
     }
 
-    private AreaByLocationSpatialRS createSuccessGetAreasByLocationResponse(AreasWithIdType areasWithIdType) {
-        return new AreaByLocationSpatialRS(createSuccessResponseMessage(), areasWithIdType);
+    private AreaByLocationSpatialRS createSuccessGetAreasByLocationResponse(AreasByLocationType areasByLocation) {
+        return new AreaByLocationSpatialRS(createSuccessResponseMessage(), areasByLocation);
     }
 
     private ResponseMessageType createSuccessResponseMessage() {

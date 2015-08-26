@@ -5,6 +5,6 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezSpatialRS;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.EezDto;
 
 public interface EezService {
-    EezSpatialRS getEezByIdQueue(EezSpatialRQ getEezSpatialRQ);
+    EezSpatialRS getEezById(EezSpatialRQ getEezSpatialRQ);
     EezDto getEezByIdRest(int id);
 }

@@ -25,7 +25,7 @@ public class EezServiceIT extends AbstractArquillianIT {
         EezSpatialRQ getEezSpatialRQ = new EezSpatialRQ("123");
 
         // when
-        EezSpatialRS eez = service.getEezByIdQueue(getEezSpatialRQ);
+        EezSpatialRS eez = service.getEezById(getEezSpatialRQ);
 
         //then
         assertNotNull(eez);

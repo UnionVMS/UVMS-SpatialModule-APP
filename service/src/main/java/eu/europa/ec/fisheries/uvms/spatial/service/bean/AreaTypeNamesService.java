@@ -7,7 +7,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialRS;
 import java.util.List;
 
 public interface AreaTypeNamesService {
-    AreaTypeNamesSpatialRS getAreaTypesQueue();
+    AreaTypeNamesSpatialRS getAreaTypes();
 
     List<String> getAreaTypesRest();
 

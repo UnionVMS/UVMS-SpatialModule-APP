@@ -1,11 +1,10 @@
 package eu.europa.ec.fisheries.uvms.spatial.dao;
 
+import com.google.common.collect.Maps;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.io.WKTWriter;
-import eu.europa.ec.fisheries.uvms.service.exception.CommonGenericDAOException;
-import lombok.SneakyThrows;
 
 import javax.ejb.Local;
 import javax.ejb.Stateless;
@@ -33,17 +32,17 @@ public class PostgresSpatialRepository extends CommonGenericDAOBean implements S
     private static final String ST_GEOM_FROM_EWKT = "st_geomfromewkt";
 
     @Override
-    @SneakyThrows(CommonGenericDAOException.class)
+    //@SneakyThrows(CommonGenericDAOException.class)
     public List<Integer> findAreasIdByLocation(double lat, double lon, int crs, String areaDbTable) {
-        String nativeQuery = SELECT_GID_FROM + getTableName(areaDbTable) + getWhereCondition(lat, lon, crs);
-        return findEntityByNativeQuery(nativeQuery);
+//        String nativeQuery = SELECT_GID_FROM + getTableName(areaDbTable) + getWhereCondition(lat, lon, crs);
+//        return findEntityByNativeQuery(nativeQuery);
 
-//        HashMap<String, String> parameters = Maps.newHashMap();
-//        parameters.put("tableName", areaDbTable);
-//        parameters.put("lat", String.valueOf(lat));
-//        parameters.put("lon", String.valueOf(lon));
-//        parameters.put("crs", String.valueOf(crs));
-//        return findEntityByNamedQuery2("findAreasIdByLocation", parameters);
+        HashMap<String, String> parameters = Maps.newHashMap();
+        parameters.put("tableName", areaDbTable);
+        parameters.put("lat", String.valueOf(lat));
+        parameters.put("lon", String.valueOf(lon));
+        parameters.put("crs", String.valueOf(crs));
+        return findEntityByNamedQuery2("findAreasIdByLocation", parameters);
     }
 
     private List<Integer> findEntityByNamedQuery2(String queryName, HashMap<String, String> parameters) {
