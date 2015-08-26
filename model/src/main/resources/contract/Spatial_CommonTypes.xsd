@@ -2,7 +2,7 @@
 <!-- edited with XMLSpy v2015 rel. 4 sp1 (x64) (http://www.altova.com) by marian (cop) -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://europa.eu/ec/fisheries/uvms/spatial/model/schemas" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:annox="http://annox.dev.java.net" xmlns:jackson="http://annox.dev.java.net/com.fasterxml.jackson.databind.annotation" targetNamespace="http://europa.eu/ec/fisheries/uvms/spatial/model/schemas" elementFormDefault="qualified" version="1.0" id="FISH2015_SPATIAL2015" jaxb:version="2.1" jaxb:extensionBindingPrefixes="annox">
 	<xs:include schemaLocation="Spatial_SimpleTypes.xsd"/>
-	<xs:complexType name="AreaType">
+	<xs:complexType name="AreaTypeEntry">
 		<xs:sequence>
 			<xs:element name="Id" type="NumericStringLength1to9"/>
 			<xs:element name="AreaTypeName" type="StringLength1to255"/>
@@ -39,24 +39,21 @@
 	</xs:complexType>
 	<xs:complexType name="AreasWithIdType">
 		<xs:sequence>
-			<xs:element name="AreaType" type="AreaType" maxOccurs="1000"/>
+			<xs:element name="Area" type="AreaTypeEntry" minOccurs="0" maxOccurs="1000"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="ClosestAreaRequest">
+	<xs:complexType name="ClosestAreaSpatialRQ">
 		<xs:sequence>
-			<xs:element name="Longitude" type="xs:double"/>
-			<xs:element name="Latitude" type="xs:double"/>
-			<xs:element name="Crs" type="xs:integer"/>
+			<xs:element name="Point" type="PointType"/>
 			<xs:element name="Area" type="AreaType"/>
 			<xs:element name="MeasurementUnits" type="MeasurementUnitsType"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:simpleType name="MeasurementUnitsType" final="restriction">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="Meters"/>
-			<xs:enumeration value="Kilometers"/>
-			<xs:enumeration value="Miles"/>
-			<xs:enumeration value="NauticalMiles"/>
-		</xs:restriction>
-	</xs:simpleType>
+	<xs:complexType name="PointType">
+		<xs:sequence>
+			<xs:element name="Longitude" type="xs:double"/>
+			<xs:element name="Latitude" type="xs:double"/>
+			<xs:element name="Crs" type="xs:int" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
 </xs:schema>

@@ -38,14 +38,15 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
     public AreaByLocationSpatialRS getAreasByLocationQueue(AreaByLocationSpatialRQ request) {
         List<AreaTypesEntity> systemAreaTypes = repository.findEntityByNamedQuery(AreaTypesEntity.class, QueryNameConstants.FIND_SYSTEM_AREAS);
 
-        List<AreaType> areaTypes = Lists.newArrayList();
+        List<AreaTypeEntry> areaTypes = Lists.newArrayList();
         for (AreaTypesEntity areaType : systemAreaTypes) {
             String areaDbTable = areaType.getAreaDbTable();
             String areaTypeName = areaType.getTypeName();
 
-            List<Integer> resultList = repository.findAreasIdByLocation(request.getLatitude(), request.getLongitude(), getCrs(request.getCrs()), areaDbTable);
+            PointType point = request.getPoint();
+            List<Integer> resultList = repository.findAreasIdByLocation(point.getLatitude(), point.getLongitude(), getCrs(point.getCrs()), areaDbTable);
             for (Integer id : resultList) {
-                AreaType area = new AreaType(String.valueOf(id), areaTypeName);
+                AreaTypeEntry area = new AreaTypeEntry(String.valueOf(id), areaTypeName);
                 areaTypes.add(area);
             }
         }

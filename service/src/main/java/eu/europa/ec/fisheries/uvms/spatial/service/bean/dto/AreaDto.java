@@ -1,6 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto;
 
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import lombok.experimental.Delegate;
 
 /**
@@ -9,20 +9,16 @@ import lombok.experimental.Delegate;
 public class AreaDto {
 
     @Delegate(types = Include.class)
-    private AreaType areaType;
+    private AreaTypeEntry areaType;
 
     public AreaDto(String id, String areaTypeName) {
-        this.areaType = new AreaType(id, areaTypeName);
+        this.areaType = new AreaTypeEntry(id, areaTypeName);
     }
 
     private interface Include {
         String getId();
 
-        void setId(String id);
-
         String getAreaTypeName();
-
-        void setAreaTypeName(String areaType);
     }
 
 }

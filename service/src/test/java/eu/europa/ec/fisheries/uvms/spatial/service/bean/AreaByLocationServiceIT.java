@@ -2,6 +2,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.PointType;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,10 +27,7 @@ public class AreaByLocationServiceIT extends AbstractArquillianIT {
     @Test
     public void shouldGetAreasByLocation() throws Exception {
         // given
-        AreaByLocationSpatialRQ request = new AreaByLocationSpatialRQ();
-        request.setLatitude(LATITUDE);
-        request.setLongitude(LONGITUDE);
-        request.setCrs(DEFAULT_CRS);
+        AreaByLocationSpatialRQ request = new AreaByLocationSpatialRQ(new PointType(LONGITUDE, LATITUDE, DEFAULT_CRS));
 
         // when
         AreaByLocationSpatialRS areasByLocation = areaByLocationService.getAreasByLocationQueue(request);

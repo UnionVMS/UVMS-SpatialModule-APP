@@ -549,6 +549,29 @@
 			<xs:enumeration value="N"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:simpleType name="AreaType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="EEZ"/>
+			<xs:enumeration value="FAO"/>
+			<xs:enumeration value="GFCM"/>
+			<xs:enumeration value="RFMO"/>
+			<xs:enumeration value="RAC"/>
+			<xs:enumeration value="STatRect"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="LocationType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Port"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="MeasurementUnitsType" final="restriction">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Meters"/>
+			<xs:enumeration value="Kilometers"/>
+			<xs:enumeration value="Miles"/>
+			<xs:enumeration value="NauticalMiles"/>
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:complexType name="ResponseMessageType">
 		<xs:choice>
 			<xs:element name="Success" type="SuccessType"/>

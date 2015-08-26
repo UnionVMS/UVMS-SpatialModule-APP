@@ -41,7 +41,7 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
     }
 
     @Override
-    public ClosestAreaResponse getClosestArea(ClosestAreaRequest request) {
+    public ClosestAreaResponse getClosestArea(ClosestAreaSpatialRQ request) {
         return null;
     }
 

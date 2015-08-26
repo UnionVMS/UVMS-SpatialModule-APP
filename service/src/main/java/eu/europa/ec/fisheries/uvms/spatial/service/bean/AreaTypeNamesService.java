@@ -1,8 +1,8 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeNamesSpatialRS;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaRequest;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaResponse;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialRQ;
 
 import java.util.List;
 
@@ -17,5 +17,5 @@ public interface AreaTypeNamesService {
      * @param request a location point
      * @return A list of the closest area types
      */
-    ClosestAreaResponse getClosestArea(ClosestAreaRequest request);
+    ClosestAreaResponse getClosestArea(ClosestAreaSpatialRQ request);
 }
