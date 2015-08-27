@@ -44,7 +44,7 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
             String areaTypeName = areaType.getTypeName();
 
             PointType point = request.getPoint();
-            List<Integer> resultList = repository.findAreasIdByLocation(point.getLatitude(), point.getLongitude(), getCrs(point.getCrs()), areaDbTable);
+            List<Integer> resultList = repository.findAreasIdByLocation(point.getLatitude(), point.getLongitude(), retrieveCrs(point.getCrs()), areaDbTable);
             for (Integer id : resultList) {
                 AreaTypeEntry area = new AreaTypeEntry(String.valueOf(id), areaTypeName);
                 areaTypes.add(area);
@@ -74,7 +74,7 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
         return areaTypes;
     }
 
-    private Integer getCrs(Integer crs) {
+    private Integer retrieveCrs(Integer crs) {
         if (crs == null) {
             return new Integer(DEFAULT_CRS);
         }

@@ -22,16 +22,16 @@ public class AbstractArquillianIT {
             "commons-collections:commons-collections:3.2.1",
             "org.geotools:gt-geojson:14-M1",
             "org.easytesting:fest-assert:1.4",
-            "org.slf4j:slf4j-api:1.7.12"
+            "org.slf4j:slf4j-api:1.7.12",
     };
 
     @Deployment
     public static WebArchive createDeployment() {
         WebArchive webArchive = ShrinkWrap.create(WebArchive.class).addPackages(true, "eu.europa")
                 .addAsResource("META-INF/test-persistence.xml", "META-INF/persistence.xml")
-                .addAsResource("META-INF/orm.xml", "META-INF/orm.xml")
                 .addAsManifestResource(new File("src/test/resources/META-INF/jboss-deployment-structure.xml"))
                 .addAsResource("config.properties")
+                .addAsResource("nativeSql.properties")
                 .addAsResource("logback.xml")
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 

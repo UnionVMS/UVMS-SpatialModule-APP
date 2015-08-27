@@ -1,20 +1,14 @@
 package eu.europa.ec.fisheries.uvms.spatial.dao;
 
-import com.google.common.collect.Maps;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.io.WKTWriter;
+import eu.europa.ec.fisheries.uvms.service.exception.CommonGenericDAOException;
+import eu.europa.ec.fisheries.uvms.util.SqlPropertyHolder;
+import lombok.SneakyThrows;
 
-import javax.ejb.Local;
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.persistence.Query;
+import javax.ejb.*;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+
+import static com.google.common.collect.Maps.newHashMap;
 
 /**
  * Created by Michal Kopyczok on 21-Aug-15.
@@ -25,65 +19,30 @@ import java.util.Map;
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class PostgresSpatialRepository extends CommonGenericDAOBean implements SpatialRepository {
 
-    private static final String SELECT_GID_FROM = "SELECT gid FROM ";
-    private static final String SCHEMA_NAME = "spatial";
-    private static final String SEPARATOR = ".";
-    private static final String SRID = "SRID=";
-    private static final String ST_GEOM_FROM_EWKT = "st_geomfromewkt";
+    @EJB
+    private SqlPropertyHolder sqlPropertyHolder;
+
+    private static final String TABLE_NAME = "{tableName}";
+    private static final String LAT = "{lat}";
+    private static final String LON = "{lon}";
+    private static final String CRS = "{crs}";
+    private static final String FIND_AREAS_ID_BY_LOCATION = "sql.findAreasId.ByLocation";
 
     @Override
-    //@SneakyThrows(CommonGenericDAOException.class)
+    @SneakyThrows(CommonGenericDAOException.class)
     public List<Integer> findAreasIdByLocation(double lat, double lon, int crs, String areaDbTable) {
-//        String nativeQuery = SELECT_GID_FROM + getTableName(areaDbTable) + getWhereCondition(lat, lon, crs);
-//        return findEntityByNativeQuery(nativeQuery);
-
-        HashMap<String, String> parameters = Maps.newHashMap();
-        parameters.put("tableName", areaDbTable);
-        parameters.put("lat", String.valueOf(lat));
-        parameters.put("lon", String.valueOf(lon));
-        parameters.put("crs", String.valueOf(crs));
-        return findEntityByNamedQuery2("findAreasIdByLocation", parameters);
+        String sql = sqlPropertyHolder.getProperty(FIND_AREAS_ID_BY_LOCATION);
+        sql = replaceAndEscapeParameters(sql, createParameters(lat, lon, crs, areaDbTable));
+        return findEntityByNativeQuery(sql);
     }
 
-    private List<Integer> findEntityByNamedQuery2(String queryName, HashMap<String, String> parameters) {
-        Query e = getEntityManager().createNamedQuery(queryName);
-        Iterator i$ = parameters.entrySet().iterator();
-
-        while (i$.hasNext()) {
-            Map.Entry entry = (Map.Entry) i$.next();
-            e.setParameter((String) entry.getKey(), entry.getValue());
-        }
-
-        List objectList = e.getResultList();
-        return objectList;
-    }
-
-    private String getWhereCondition(double lat, double lon, int crs) {
-        return " where " + "st_intersects" + "(geom, " + getStGeomFromWkt(lat, lon, crs) + ")";
-    }
-
-    private String getStGeomFromWkt(double lat, double lon, int crs) {
-        return ST_GEOM_FROM_EWKT + createEWKTPoint(lat, lon, crs);
-    }
-
-    private String getTableName(String areaDbTable) {
-        return SCHEMA_NAME + SEPARATOR + areaDbTable;
-    }
-
-    private String createEWKTPoint(double lat, double lon, int crs) {
-        return "('" + createSrid(crs) + ";" + createWKTPoint(lat, lon) + "')";
-    }
-
-    private String createSrid(int crs) {
-        return SRID + crs;
-    }
-
-    private String createWKTPoint(double lat, double lon) {
-        GeometryFactory gf = new GeometryFactory();
-        Coordinate coord = new Coordinate(lon, lat);
-        Point point = gf.createPoint(coord);
-        point.setSRID(3245);
-        return new WKTWriter(2).write(point);
+    private HashMap<String, String> createParameters(double lat, double lon, int crs, String areaDbTable) {
+        HashMap<String, String> parameters = newHashMap();
+        parameters.put(TABLE_NAME, areaDbTable);
+        parameters.put(LAT, String.valueOf(lat));
+        parameters.put(LON, String.valueOf(lon));
+        parameters.put(CRS, String.valueOf(crs));
+        return parameters;
     }
 
 }
