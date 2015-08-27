@@ -41,11 +41,6 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
         return commonDao.findEntityByNamedQuery(String.class, QueryNameConstants.FIND_ALL_AREAS);
     }
 
-    @Override
-    public ClosestAreaSpatialRS getClosestArea(ClosestAreaSpatialRQ request) {
-        throw new NotImplementedException("Not implemented yet");
-    }
-
     private AreaTypeNamesSpatialRS createSuccessGetAreaTypesResponse(List<String> areaTypeNames) {
         return new AreaTypeNamesSpatialRS(createSuccessResponseMessage(), new AreasNameType(areaTypeNames));
     }

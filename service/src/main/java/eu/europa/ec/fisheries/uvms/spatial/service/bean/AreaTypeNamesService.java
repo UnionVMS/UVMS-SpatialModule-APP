@@ -10,12 +10,4 @@ public interface AreaTypeNamesService {
     AreaTypeNamesSpatialRS getAreaTypes();
 
     List<String> getAreaTypesRest();
-
-    /**
-     * Returns a list of the closest area types and distance from the specified position
-     *
-     * @param request a location point
-     * @return A list of the closest area types
-     */
-    ClosestAreaSpatialRS getClosestArea(ClosestAreaSpatialRQ request);
 }
