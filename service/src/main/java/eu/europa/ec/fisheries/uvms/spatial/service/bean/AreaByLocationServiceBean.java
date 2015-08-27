@@ -57,7 +57,6 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
     @Override
     @SneakyThrows(CommonGenericDAOException.class)
     public List<AreaDto> getAreasByLocationRest(double lat, double lon, int crs) {
-        //TODO validate input data
         List<AreaTypesEntity> systemAreaTypes = repository.findEntityByNamedQuery(AreaTypesEntity.class, QueryNameConstants.FIND_SYSTEM_AREAS);
 
         List<AreaDto> areaTypes = Lists.newArrayList();
