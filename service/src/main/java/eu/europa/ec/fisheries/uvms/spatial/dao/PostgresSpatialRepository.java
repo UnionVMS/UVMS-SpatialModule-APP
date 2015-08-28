@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.dao;
 
+import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.service.exception.CommonGenericDAOException;
 import eu.europa.ec.fisheries.uvms.util.SqlPropertyHolder;
 import lombok.SneakyThrows;
@@ -19,28 +20,27 @@ import static com.google.common.collect.Maps.newHashMap;
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class PostgresSpatialRepository extends CommonGenericDAOBean implements SpatialRepository {
 
-    @EJB
-    private SqlPropertyHolder sqlPropertyHolder;
-
     private static final String TABLE_NAME = "{tableName}";
     private static final String LAT = "{lat}";
     private static final String LON = "{lon}";
     private static final String CRS = "{crs}";
     private static final String FIND_AREAS_ID_BY_LOCATION = "sql.findAreasId.ByLocation";
+    @EJB
+    private SqlPropertyHolder sqlPropertyHolder;
 
     @Override
     @SneakyThrows(CommonGenericDAOException.class)
-    public List<Integer> findAreasIdByLocation(double lat, double lon, int crs, String areaDbTable) {
+    public List<Integer> findAreasIdByLocation(Point point, String areaDbTable) {
         String sql = sqlPropertyHolder.getProperty(FIND_AREAS_ID_BY_LOCATION);
-        sql = replaceAndEscapeParameters(sql, createParameters(lat, lon, crs, areaDbTable));
+        sql = replaceAndEscapeParameters(sql, createParameters(point.getX(), point.getY(), point.getSRID(), areaDbTable));
         return findEntityByNativeQuery(sql);
     }
 
-    private HashMap<String, String> createParameters(double lat, double lon, int crs, String areaDbTable) {
+    private HashMap<String, String> createParameters(double lon, double lat, int crs, String areaDbTable) {
         HashMap<String, String> parameters = newHashMap();
         parameters.put(TABLE_NAME, areaDbTable);
-        parameters.put(LAT, String.valueOf(lat));
         parameters.put(LON, String.valueOf(lon));
+        parameters.put(LAT, String.valueOf(lat));
         parameters.put(CRS, String.valueOf(crs));
         return parameters;
     }

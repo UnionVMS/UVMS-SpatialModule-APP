@@ -8,8 +8,9 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialService
 public class ErrorHandler {
 
     public static ResponseDto getFault(Exception ex) {
-        if (ex instanceof CommonGenericDAOException || ex instanceof SpatialServiceException) {
-            return new ResponseDto<>(ex.getMessage(), ResponseCode.SERVICE_ERROR);
+        Throwable cause = ex.getCause();
+        if (cause instanceof CommonGenericDAOException || cause instanceof SpatialServiceException) {
+            return new ResponseDto<>(cause.getMessage(), ResponseCode.SERVICE_ERROR);
         }
 
         return new ResponseDto<>(ex.getMessage(), ResponseCode.UNDEFINED_ERROR);

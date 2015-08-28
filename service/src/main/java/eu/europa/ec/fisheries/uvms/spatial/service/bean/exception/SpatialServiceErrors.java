@@ -9,7 +9,8 @@ public enum SpatialServiceErrors {
     //@formatter:off
 
     INTERNAL_APPLICATION_ERROR(500, "An internal application error has occurred.", "An internal application error has occurred."),
-    WRONG_NATIVE_SQL_CONFIGURATION_ERROR(5001, "Sql Native query with name {0} does not exist.", "Wrong configuration.");
+    WRONG_NATIVE_SQL_CONFIGURATION_ERROR(5001, "Sql Native query with name {0} does not exist.", "Wrong configuration."),
+    NO_SUCH_CRS_CODE_ERROR(5002, "CRS code {0} does not exist.", "Wrong argument.");
 
     //@formatter:on
 
