@@ -52,7 +52,7 @@
 	<xs:element name="ClosestAreaSpatialRS">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="ClosestAreaTypeList" type="ClosestAreaType" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="ClosestAreaTypeList" type="ClosestAreaEntry" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
 				<xs:element name="MessageType" type="ResponseMessageType" minOccurs="0"/>
 			</xs:sequence>
 		</xs:complexType>
@@ -61,8 +61,20 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element name="Point" type="PointType"/>
-				<xs:element name="AreaType" type="AreaType"/>
-				<xs:element name="LocationType" type="LocationType"/>
+				<xs:element name="AreaTypes">
+					<xs:complexType>
+						<xs:sequence maxOccurs="10">
+							<xs:element name="AreaType" type="AreaType"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="LocationTypes">
+					<xs:complexType>
+						<xs:sequence maxOccurs="10">
+							<xs:element name="LocationType" type="LocationType"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
 				<xs:element name="Units" type="MeasurementUnitsType"/>
 			</xs:sequence>
 		</xs:complexType>
@@ -72,8 +84,8 @@
 			<xs:sequence>
 				<xs:element name="ResponseMessage" type="ResponseMessageType"/>
 				<xs:element name="AreasByLocation" type="AreasByLocationType"/>
-				<xs:element name="ClosestArea" type="ClosestAreaType"/>
-				<xs:element name="ClosestLocation" type="ClosestLocationType"/>
+				<xs:element name="ClosestAreas" type="ClosestAreasType"/>
+				<xs:element name="ClosestLocations" type="ClosestLocationsType"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
