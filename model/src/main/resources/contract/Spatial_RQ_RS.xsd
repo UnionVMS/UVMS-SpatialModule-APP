@@ -43,7 +43,7 @@
 	<xs:element name="ClosestAreaSpatialRQ">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="Point" type="PointType"/>
+				<xs:element name="Wkt" type="xs:string"/>
 				<xs:element name="Area" type="AreaType"/>
 				<xs:element name="MeasurementUnits" type="MeasurementUnitsType"/>
 			</xs:sequence>
