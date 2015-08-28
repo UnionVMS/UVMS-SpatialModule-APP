@@ -53,7 +53,7 @@
 	<xs:element name="ClosestAreaSpatialRS">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="ClosestAreaTypeList" type="ClosestAreaEntry" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="ClosestAreaTypeList" type="ClosestAreaEntry" nillable="true" minOccurs="0" maxOccurs="1"/>
 				<xs:element name="MessageType" type="ResponseMessageType" minOccurs="0"/>
 			</xs:sequence>
 		</xs:complexType>
