@@ -40,7 +40,7 @@
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="ClosestAreaSpatialRQ">
+	<xs:element name="ClosestAreaSpatialRequest">
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element name="Wkt" type="xs:string"/>
@@ -50,10 +50,10 @@
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="ClosestAreaSpatialRS">
+	<xs:element name="ClosestAreaSpatialResponse">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="ClosestAreaTypeList" type="ClosestAreaEntry" nillable="true" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="ClosestArea" type="ClosestAreaEntry" nillable="true" minOccurs="0" maxOccurs="1"/>
 				<xs:element name="MessageType" type="ResponseMessageType" minOccurs="0"/>
 			</xs:sequence>
 		</xs:complexType>
