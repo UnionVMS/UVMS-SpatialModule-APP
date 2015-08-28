@@ -44,7 +44,8 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element name="Wkt" type="xs:string"/>
-				<xs:element name="Area" type="AreaType"/>
+                <xs:element name="Crs" type="xs:integer"/>
+                <xs:element name="Area" type="AreaType"/>
 				<xs:element name="MeasurementUnits" type="MeasurementUnitsType"/>
 			</xs:sequence>
 		</xs:complexType>
