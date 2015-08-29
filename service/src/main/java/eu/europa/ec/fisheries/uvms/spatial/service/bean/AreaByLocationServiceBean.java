@@ -117,7 +117,7 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
 
     private Integer retrieveCrs(Integer crs) {
         if (crs == null) {
-            return new Integer(DEFAULT_CRS);
+            return DEFAULT_CRS;
         }
         return crs;
     }
