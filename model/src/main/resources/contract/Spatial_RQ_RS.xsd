@@ -52,10 +52,14 @@
 	</xs:element>
 	<xs:element name="ClosestAreaSpatialResponse">
 		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="ClosestArea" type="ClosestAreaEntry" nillable="true" minOccurs="0" maxOccurs="1"/>
-				<xs:element name="MessageType" type="ResponseMessageType" minOccurs="0"/>
-			</xs:sequence>
+                <xs:sequence>
+                    <xs:element name="Id" type="NumericStringLength1to9"/>
+                    <xs:element name="AreaTypeName" type="AreaType"/>
+                    <xs:element name="Distance" type="xs:double"/>
+                    <xs:element name="Units" type="MeasurementUnitsType"/>
+                    <xs:element name="MessageType" type="ResponseMessageType" minOccurs="0"/>
+
+                </xs:sequence>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="SpatialEnrichmentRQ">
