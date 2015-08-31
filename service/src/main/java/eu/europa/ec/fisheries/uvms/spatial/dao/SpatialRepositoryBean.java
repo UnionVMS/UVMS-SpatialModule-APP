@@ -18,7 +18,7 @@ import static com.google.common.collect.Maps.newHashMap;
 @Stateless(name = "postgresRepository")
 @Local(value = SpatialRepository.class)
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
-public class PostgresSpatialRepository extends CommonGenericDAOBean implements SpatialRepository {
+public class SpatialRepositoryBean extends CommonGenericDAOBean implements SpatialRepository {
 
     private static final String TABLE_NAME = "{tableName}";
     private static final String LAT = "{lat}";
