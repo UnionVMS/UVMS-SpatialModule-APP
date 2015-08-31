@@ -1,7 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.common.SpatialUtils;
-import eu.europa.ec.fisheries.uvms.service.CommonGenericDAO;
+import eu.europa.ec.fisheries.uvms.service.CrudService;
 import eu.europa.ec.fisheries.uvms.service.exception.CommonGenericDAOException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
@@ -34,7 +34,7 @@ import java.util.Map;
 public class AreaServiceBean implements AreaService {
 
     @Inject
-    private CommonGenericDAO dao;
+    private CrudService crudService;
 
     private final static String TABLE_NAME_PLACEHOLDER = "{tableName}";
     private final static String CLOSEST_AREA_QUERY = "sql.closestArea";
@@ -80,14 +80,14 @@ public class AreaServiceBean implements AreaService {
 
     @SuppressWarnings("unchecked")
     private Map<String, String> getAreaMap() throws CommonGenericDAOException {
-        List<AreaTypesEntity> allEntity = dao.findAllEntity(AreaTypesEntity.class);
+        List<AreaTypesEntity> allEntity = crudService.findAllEntity(AreaTypesEntity.class);
         Map<String, String> areaMap = new HashMap<>();
         for (AreaTypesEntity i : allEntity) areaMap.put(i.getTypeName(),i.getAreaDbTable());
         return areaMap;
     }
 
     private SQLQuery createSQLQuery(String queryString, ClosestAreaSpatialRequest request) {
-        SQLQuery sqlQuery = dao.getEntityManager().unwrap(Session.class).createSQLQuery(queryString);
+        SQLQuery sqlQuery = crudService.getEntityManager().unwrap(Session.class).createSQLQuery(queryString);
         sqlQuery.setResultTransformer(Transformers.aliasToBean(ClosestAreaEntry.class));
         sqlQuery.setString(WKT, request.getWkt());
         sqlQuery.setInteger(DEFAULT_CRS, SpatialUtils.DEFAULT_CRS);

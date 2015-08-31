@@ -1,6 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import eu.europa.ec.fisheries.uvms.service.CommonGenericDAO;
+import eu.europa.ec.fisheries.uvms.service.CrudService;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import org.jboss.arquillian.junit.Arquillian;
@@ -19,14 +19,14 @@ import static org.fest.assertions.Assertions.assertThat;
 
 @RunWith(Arquillian.class)
 @Transactional
-public class CommonGenericDaoIT extends AbstractArquillianIT {
+public class CrudServiceIT extends AbstractArquillianIT {
 
     private static final String EEZ = "eez";
     private static final String REMARKS = "remarks";
     private static final String AUSTRALIA = "Australia";
 
     @EJB
-    private CommonGenericDAO genericDao;
+    private CrudService genericDao;
 
     @Before
     public void beforeEach() {

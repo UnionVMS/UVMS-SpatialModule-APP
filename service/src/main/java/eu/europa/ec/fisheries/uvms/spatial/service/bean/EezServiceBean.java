@@ -1,13 +1,9 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import eu.europa.ec.fisheries.uvms.service.CommonGenericDAO;
+import eu.europa.ec.fisheries.uvms.service.CrudService;
 import eu.europa.ec.fisheries.uvms.service.exception.CommonGenericDAOException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezSpatialRS;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ResponseMessageType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SuccessType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.EezDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler.ExceptionHandlerInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler.SpatialExceptionHandler;
@@ -28,7 +24,7 @@ import javax.transaction.Transactional;
 public class EezServiceBean implements EezService {
 
     @EJB
-    private CommonGenericDAO commonDao;
+    private CrudService crudService;
 
     @Inject
     private EezTypeMapper eezMapper;
@@ -39,7 +35,7 @@ public class EezServiceBean implements EezService {
     @SpatialExceptionHandler(responseType = EezSpatialRS.class)
     @Interceptors(value = ExceptionHandlerInterceptor.class)
     public EezSpatialRS getEezById(EezSpatialRQ getEezSpatialRQ) {
-        EezEntity eez = (EezEntity) commonDao.findEntityById(EezEntity.class, retrieveIdFromRQ(getEezSpatialRQ));
+        EezEntity eez = (EezEntity) crudService.findEntityById(EezEntity.class, retrieveIdFromRQ(getEezSpatialRQ));
         EezType eezType = eezMapper.eezEntityToEezType(eez);
         return createSuccessResponse(eezType);
     }
@@ -48,7 +44,7 @@ public class EezServiceBean implements EezService {
     @SuppressWarnings("unchecked")
     @SneakyThrows(CommonGenericDAOException.class)
     public EezDto getEezByIdRest(int id) {
-        EezEntity eez = (EezEntity) commonDao.findEntityById(EezEntity.class, id);
+        EezEntity eez = (EezEntity) crudService.findEntityById(EezEntity.class, id);
         return EezDtoMapper.INSTANCE.eezEntityToEezDto(eez);
     }
 
