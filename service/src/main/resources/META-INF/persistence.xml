@@ -8,7 +8,11 @@
     <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
     <jta-data-source>java:/jdbc/UVMS</jta-data-source>
     <properties>
-        <property name="hibernate.ejb.cfgfile" value="/hibernate.cfg.xml"/>
+        <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+        <property name="show_sql" value="false" />
+
+        <property name="format_sql" value="false" />
+        <property name="use_sql_comments" value="true" />
     </properties>
 
 </persistence-unit>
