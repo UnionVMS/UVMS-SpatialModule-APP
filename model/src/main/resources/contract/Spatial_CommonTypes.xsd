@@ -42,7 +42,7 @@
 			<xs:element name="Id" type="NumericStringLength1to9"/>
 			<xs:element name="AreaTypeName" type="AreaType"/>
 			<xs:element name="Distance" type="xs:double"/>
-			<xs:element name="Units" type="MeasurementUnitsType"/>
+			<xs:element name="Units" type="UnitType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="ClosestLocationEntry">
@@ -50,7 +50,7 @@
 			<xs:element name="Id" type="NumericStringLength1to9"/>
 			<xs:element name="LocationType" type="LocationType"/>
 			<xs:element name="Distance" type="xs:double"/>
-			<xs:element name="Units" type="MeasurementUnitsType"/>
+			<xs:element name="Units" type="UnitType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="AreasByLocationType">
