@@ -8,9 +8,6 @@ import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 
 import java.io.File;
 
-/**
- * Created by kopyczmi on 04-Aug-15.
- */
 public class AbstractArquillianIT {
 
     private static String[] libs = {
@@ -29,8 +26,9 @@ public class AbstractArquillianIT {
     public static WebArchive createDeployment() {
         WebArchive webArchive = ShrinkWrap.create(WebArchive.class).addPackages(true, "eu.europa")
                 .addAsResource("META-INF/test-persistence.xml", "META-INF/persistence.xml")
-                .addAsManifestResource(new File("src/test/resources/META-INF/jboss-deployment-structure.xml"))
+                .addAsResource("META-INF/orm.xml")
                 .addAsResource("config.properties")
+                .addAsResource("META-INF/jboss-deployment-structure.xml")
                 .addAsResource("nativeSql.properties")
                 .addAsResource("logback.xml")
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");

@@ -20,7 +20,7 @@ public class CommonGenericDAOBean extends JPACommonGenericDAO {
     private PostgreSqlEncoder encoder;
 
     @Override
-    protected EntityManager getEntityManager() {
+    public EntityManager getEntityManager() {
         return em;
     }
 
