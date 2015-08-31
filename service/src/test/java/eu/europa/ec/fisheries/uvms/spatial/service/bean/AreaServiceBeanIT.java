@@ -6,7 +6,6 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialRespo
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.postgresql.util.PSQLException;
 
 import javax.ejb.EJB;
 
@@ -53,7 +52,7 @@ public class AreaServiceBeanIT extends AbstractArquillianIT {
 
     }
 
-    @Test(expected = PSQLException.class)
+    @Test(expected = Exception.class)
     public void shouldThrowException() {
 
         ClosestAreaSpatialRequest request = new ClosestAreaSpatialRequest();
