@@ -1,14 +1,14 @@
 package eu.europa.ec.fisheries.uvms.spatial.dao;
 
 import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.io.WKTWriter;
 import eu.europa.ec.fisheries.uvms.service.CrudService;
 import eu.europa.ec.fisheries.uvms.util.SqlPropertyHolder;
+import org.hibernate.SQLQuery;
+import org.hibernate.Session;
 
 import javax.ejb.*;
-import java.util.HashMap;
 import java.util.List;
-
-import static com.google.common.collect.Maps.newHashMap;
 
 /**
  * Created by Michal Kopyczok on 21-Aug-15.
@@ -19,40 +19,47 @@ import static com.google.common.collect.Maps.newHashMap;
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class SpatialRepositoryBean implements SpatialRepository {
 
-    private static final String TABLE_NAME = "{tableName}";
-    private static final String LAT = "{lat}";
-    private static final String LON = "{lon}";
-    private static final String CRS = "{crs}";
-    private static final String FIND_AREAS_ID_BY_LOCATION = "sql.findAreasId.ByLocation";
+    private static final String CRS = "crs";
+    private static final String WKT = "wktPoint";
+    private static final String FIND_AREAS_ID_BY_LOCATION = "sql.findAreasIdByLocation";
+    private static final String APOSTROPHE = "'";
+    private static final String TABLE_NAME_PLACEHOLDER = "{tableName}";
+
     @EJB
     private SqlPropertyHolder sqlPropertyHolder;
-    @EJB
-    private PostgreSqlEncoder encoder;
 
     @EJB
     private CrudService crudService;
 
     @Override
     public List<Integer> findAreasIdByLocation(Point point, String areaDbTable) {
-        String sql = sqlPropertyHolder.getProperty(FIND_AREAS_ID_BY_LOCATION);
-        sql = replaceAndEscapeParameters(sql, createParameters(point.getX(), point.getY(), point.getSRID(), areaDbTable));
-        return crudService.findEntityByNativeQuery(sql);
+        String queryString = sqlPropertyHolder.getProperty(FIND_AREAS_ID_BY_LOCATION);
+
+        queryString = replaceTableName(queryString, areaDbTable);
+        String wktPoint = convertToWkt(point);
+        int sRid = point.getSRID();
+
+        List<Integer> result = createSQLQuery(queryString, wktPoint, sRid).list();
+        return result;
     }
 
-    private HashMap<String, String> createParameters(double lon, double lat, int crs, String areaDbTable) {
-        HashMap<String, String> parameters = newHashMap();
-        parameters.put(TABLE_NAME, areaDbTable);
-        parameters.put(LON, String.valueOf(lon));
-        parameters.put(LAT, String.valueOf(lat));
-        parameters.put(CRS, String.valueOf(crs));
-        return parameters;
+    private String convertToWkt(Point point) {
+        return new WKTWriter().write(point);
     }
 
-    protected String replaceAndEscapeParameters(String sqlString, HashMap<String, String> parameters) {
-        for (String key : parameters.keySet()) {
-            sqlString = sqlString.replace(key, encoder.encode(parameters.get(key)));
-        }
-        return sqlString;
+    private SQLQuery createSQLQuery(String queryString, String wktPoint, int crs) {
+        SQLQuery sqlQuery = getSession().createSQLQuery(queryString);
+        sqlQuery.setString(WKT, wktPoint);
+        sqlQuery.setInteger(CRS, crs);
+        return sqlQuery;
+    }
+
+    private String replaceTableName(String queryString, String tableName) {
+        return queryString.replace(TABLE_NAME_PLACEHOLDER, tableName);
+    }
+
+    private Session getSession() {
+        return crudService.getEntityManager().unwrap(Session.class);
     }
 
 }

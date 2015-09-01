@@ -16,7 +16,7 @@ import javax.persistence.PersistenceContext;
 public class CrudServiceBean extends AbstractCrudService {
 
     @PersistenceContext(unitName = "UVMS")
-    EntityManager em;
+    private EntityManager em;
 
     @Override
     public EntityManager getEntityManager() {

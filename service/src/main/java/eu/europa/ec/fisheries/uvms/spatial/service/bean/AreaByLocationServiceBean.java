@@ -14,6 +14,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialService
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler.ExceptionHandlerInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler.SpatialExceptionHandler;
+import lombok.SneakyThrows;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -30,6 +31,8 @@ import javax.interceptor.Interceptors;
 import javax.transaction.Transactional;
 import java.util.List;
 
+import static eu.europa.ec.fisheries.uvms.common.SpatialUtils.DEFAULT_CRS;
+
 /**
  * Created by kopyczmi on 18-Aug-15.
  */
@@ -38,18 +41,19 @@ import java.util.List;
 @Transactional
 public class AreaByLocationServiceBean implements AreaByLocationService {
 
-    private static final int DEFAULT_CRS = 4326;
     private static final String EPSG = "EPSG:";
 
     @EJB
-    private CrudService crudService;
+    private SpatialRepository repository;
+
     @EJB
-    private SpatialRepository spatialRepository;
+    private CrudService crudService;
+
     @Override
     @SpatialExceptionHandler(responseType = AreaByLocationSpatialRS.class)
     @Interceptors(value = ExceptionHandlerInterceptor.class)
     public AreaByLocationSpatialRS getAreasByLocation(AreaByLocationSpatialRQ request) {
-        List<AreaTypesEntity> systemAreaTypes = crudService.findEntityByNamedQuery(AreaTypesEntity.class, QueryNameConstants.FIND_SYSTEM_AREAS);
+        List<AreaTypesEntity> systemAreaTypes = getAreaTypes();
 
         List<AreaTypeEntry> areaTypes = Lists.newArrayList();
         for (AreaTypesEntity areaType : systemAreaTypes) {
@@ -59,7 +63,7 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
             PointType schemaPoint = request.getPoint();
             Point point = convertToPointInWGS84(schemaPoint.getLongitude(), schemaPoint.getLatitude(), retrieveCrs(schemaPoint.getCrs()));
 
-            List<Integer> resultList = spatialRepository.findAreasIdByLocation(point, areaDbTable);
+            List<Integer> resultList = repository.findAreasIdByLocation(point, areaDbTable);
             for (Integer id : resultList) {
                 AreaTypeEntry area = new AreaTypeEntry(String.valueOf(id), areaTypeName);
                 areaTypes.add(area);
@@ -69,9 +73,10 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
         return createSuccessGetAreasByLocationResponse(new AreasByLocationType(areaTypes));
     }
 
+
     @Override
     public List<AreaDto> getAreasByLocationRest(double lat, double lon, int crs) {
-        List<AreaTypesEntity> systemAreaTypes = crudService.findEntityByNamedQuery(AreaTypesEntity.class, QueryNameConstants.FIND_SYSTEM_AREAS);
+        List<AreaTypesEntity> systemAreaTypes = getAreaTypes();
 
         Point point = convertToPointInWGS84(lon, lat, crs);
 
@@ -80,7 +85,7 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
             String areaDbTable = areaType.getAreaDbTable();
             String areaTypeName = areaType.getTypeName();
 
-            List<Integer> resultList = spatialRepository.findAreasIdByLocation(point, areaDbTable);
+            List<Integer> resultList = repository.findAreasIdByLocation(point, areaDbTable);
             for (Integer id : resultList) {
                 AreaDto areaDto = new AreaDto(String.valueOf(id), areaTypeName);
                 areaTypes.add(areaDto);
@@ -88,6 +93,10 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
         }
 
         return areaTypes;
+    }
+
+    private List getAreaTypes() {
+        return crudService.findEntityByNamedQuery(AreaTypesEntity.class, QueryNameConstants.FIND_SYSTEM_AREAS);
     }
 
     private Point convertToPointInWGS84(double lon, double lat, int crs) {
