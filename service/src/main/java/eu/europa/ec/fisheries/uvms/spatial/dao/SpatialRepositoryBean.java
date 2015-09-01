@@ -48,7 +48,7 @@ public class SpatialRepositoryBean implements SpatialRepository {
         return parameters;
     }
 
-    protected String replaceAndEscapeParameters(String sqlString, HashMap<String, String> parameters) { // TODO remove
+    protected String replaceAndEscapeParameters(String sqlString, HashMap<String, String> parameters) {
         for (String key : parameters.keySet()) {
             sqlString = sqlString.replace(key, encoder.encode(parameters.get(key)));
         }
