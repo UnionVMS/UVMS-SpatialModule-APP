@@ -1,6 +1,5 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import eu.europa.ec.fisheries.uvms.spatial.dao.CommonGenericDAOBean;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezSpatialRS;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ResponseMessageType;
@@ -24,7 +23,7 @@ public class EezServiceTest {
     @Mock
     EezTypeMapper eezMapper;
     @Mock
-    private CommonGenericDAOBean commonGenericDAO;
+    private CrudServiceBean commonGenericDAO;
     @InjectMocks
     private EezService service = new EezServiceBean();
 
