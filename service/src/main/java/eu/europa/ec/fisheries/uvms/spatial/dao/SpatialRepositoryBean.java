@@ -14,7 +14,7 @@ import java.util.List;
  * Created by Michal Kopyczok on 21-Aug-15.
  */
 
-@Stateless(name = "postgresRepository")
+@Stateless
 @Local(value = SpatialRepository.class)
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class SpatialRepositoryBean implements SpatialRepository {
@@ -22,7 +22,6 @@ public class SpatialRepositoryBean implements SpatialRepository {
     private static final String CRS = "crs";
     private static final String WKT = "wktPoint";
     private static final String FIND_AREAS_ID_BY_LOCATION = "sql.findAreasIdByLocation";
-    private static final String APOSTROPHE = "'";
     private static final String TABLE_NAME_PLACEHOLDER = "{tableName}";
 
     @EJB
