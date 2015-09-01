@@ -26,10 +26,10 @@ import java.util.List;
 import java.util.Map;
 
 @Stateless
-@Local(AreaService.class)
+@Local(ClosestAreaService.class)
 @Transactional
 @Slf4j
-public class AreaServiceBean implements AreaService {
+public class ClosestAreaServiceBean implements ClosestAreaService {
 
     @Inject
     private CrudService crudService;

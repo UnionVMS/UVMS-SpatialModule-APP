@@ -14,10 +14,10 @@ import javax.ejb.EJB;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(Arquillian.class)
-public class AreaServiceBeanIT extends AbstractArquillianIT {
+public class ClosestAreaServiceBeanIT extends AbstractArquillianIT {
 
     @EJB
-    private AreaService service;
+    private ClosestAreaService service;
 
     @Test
     public void testGetClosestArea() throws Exception {
