@@ -1,6 +1,5 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler;
 
-import eu.europa.ec.fisheries.uvms.service.exception.CommonGenericDAOException;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ErrorMessageType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ErrorsType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ResponseMessageType;
@@ -70,7 +69,7 @@ public class ExceptionHandlerInterceptor {
     }
 
     private boolean isDatabaseException(Exception ex) {
-        return ex instanceof HibernateException || ex instanceof CommonGenericDAOException;
+        return ex instanceof HibernateException;
     }
 
     private void setErrorMessage(Object rsObject, String errorMessage, Integer errorCode) {
