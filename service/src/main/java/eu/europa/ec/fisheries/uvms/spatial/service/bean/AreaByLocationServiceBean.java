@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
+import eu.europa.ec.fisheries.uvms.service.CrudService;
 import eu.europa.ec.fisheries.uvms.spatial.dao.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
@@ -41,13 +42,14 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
     private static final String EPSG = "EPSG:";
 
     @EJB
-    private SpatialRepository repository;
-
+    private CrudService crudService;
+    @EJB
+    private SpatialRepository spatialRepository;
     @Override
     @SpatialExceptionHandler(responseType = AreaByLocationSpatialRS.class)
     @Interceptors(value = ExceptionHandlerInterceptor.class)
     public AreaByLocationSpatialRS getAreasByLocation(AreaByLocationSpatialRQ request) {
-        List<AreaTypesEntity> systemAreaTypes = repository.findEntityByNamedQuery(AreaTypesEntity.class, QueryNameConstants.FIND_SYSTEM_AREAS);
+        List<AreaTypesEntity> systemAreaTypes = crudService.findEntityByNamedQuery(AreaTypesEntity.class, QueryNameConstants.FIND_SYSTEM_AREAS);
 
         List<AreaTypeEntry> areaTypes = Lists.newArrayList();
         for (AreaTypesEntity areaType : systemAreaTypes) {
@@ -57,7 +59,7 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
             PointType schemaPoint = request.getPoint();
             Point point = convertToPointInWGS84(schemaPoint.getLongitude(), schemaPoint.getLatitude(), retrieveCrs(schemaPoint.getCrs()));
 
-            List<Integer> resultList = repository.findAreasIdByLocation(point, areaDbTable);
+            List<Integer> resultList = spatialRepository.findAreasIdByLocation(point, areaDbTable);
             for (Integer id : resultList) {
                 AreaTypeEntry area = new AreaTypeEntry(String.valueOf(id), areaTypeName);
                 areaTypes.add(area);
@@ -69,7 +71,7 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
 
     @Override
     public List<AreaDto> getAreasByLocationRest(double lat, double lon, int crs) {
-        List<AreaTypesEntity> systemAreaTypes = repository.findEntityByNamedQuery(AreaTypesEntity.class, QueryNameConstants.FIND_SYSTEM_AREAS);
+        List<AreaTypesEntity> systemAreaTypes = crudService.findEntityByNamedQuery(AreaTypesEntity.class, QueryNameConstants.FIND_SYSTEM_AREAS);
 
         Point point = convertToPointInWGS84(lon, lat, crs);
 
@@ -78,7 +80,7 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
             String areaDbTable = areaType.getAreaDbTable();
             String areaTypeName = areaType.getTypeName();
 
-            List<Integer> resultList = repository.findAreasIdByLocation(point, areaDbTable);
+            List<Integer> resultList = spatialRepository.findAreasIdByLocation(point, areaDbTable);
             for (Integer id : resultList) {
                 AreaDto areaDto = new AreaDto(String.valueOf(id), areaTypeName);
                 areaTypes.add(areaDto);
