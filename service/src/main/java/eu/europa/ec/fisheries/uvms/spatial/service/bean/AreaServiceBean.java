@@ -2,7 +2,6 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.common.SpatialUtils;
 import eu.europa.ec.fisheries.uvms.service.CrudService;
-import eu.europa.ec.fisheries.uvms.service.exception.CommonGenericDAOException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaEntry;
@@ -12,7 +11,6 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UnitType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler.SpatialExceptionHandler;
 import eu.europa.ec.fisheries.uvms.util.ModelUtils;
 import eu.europa.ec.fisheries.uvms.util.SqlPropertyHolder;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
@@ -48,7 +46,6 @@ public class AreaServiceBean implements AreaService {
     private SqlPropertyHolder prop;
 
     @Override
-    @SneakyThrows(value = CommonGenericDAOException.class)
     @SpatialExceptionHandler(responseType = ClosestAreaSpatialResponse.class)
     public ClosestAreaSpatialResponse getClosestArea(final ClosestAreaSpatialRequest request) {
 
@@ -79,7 +76,7 @@ public class AreaServiceBean implements AreaService {
     }
 
     @SuppressWarnings("unchecked")
-    private Map<String, String> getAreaMap() throws CommonGenericDAOException {
+    private Map<String, String> getAreaMap() {
         List<AreaTypesEntity> allEntity = crudService.findAllEntity(AreaTypesEntity.class);
         Map<String, String> areaMap = new HashMap<>();
         for (AreaTypesEntity i : allEntity) areaMap.put(i.getTypeName(),i.getAreaDbTable());

@@ -1,7 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.service.CrudService;
-import eu.europa.ec.fisheries.uvms.service.exception.CommonGenericDAOException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeNamesSpatialRS;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreasNameType;
@@ -9,7 +8,6 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ResponseMessageType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SuccessType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler.ExceptionHandlerInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler.SpatialExceptionHandler;
-import lombok.SneakyThrows;
 
 import javax.ejb.EJB;
 import javax.ejb.Local;
@@ -28,7 +26,6 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
 
     @Override
     @SuppressWarnings("unchecked")
-    @SneakyThrows(CommonGenericDAOException.class)
     @SpatialExceptionHandler(responseType = AreaTypeNamesSpatialRS.class)
     @Interceptors(value = ExceptionHandlerInterceptor.class)
     public AreaTypeNamesSpatialRS getAreaTypes() {
@@ -38,7 +35,6 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
 
     @Override
     @SuppressWarnings("unchecked")
-    @SneakyThrows(CommonGenericDAOException.class)
     public List<String> getAreaTypesRest() {
         return crudService.findEntityByNamedQuery(String.class, QueryNameConstants.FIND_ALL_AREAS);
     }

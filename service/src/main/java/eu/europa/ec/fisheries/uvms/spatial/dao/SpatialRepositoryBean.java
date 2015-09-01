@@ -1,9 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.dao;
 
 import com.vividsolutions.jts.geom.Point;
-import eu.europa.ec.fisheries.uvms.service.exception.CommonGenericDAOException;
 import eu.europa.ec.fisheries.uvms.util.SqlPropertyHolder;
-import lombok.SneakyThrows;
 
 import javax.ejb.*;
 import java.util.HashMap;
@@ -29,7 +27,6 @@ public class SpatialRepositoryBean extends CommonGenericDAOBean implements Spati
     private SqlPropertyHolder sqlPropertyHolder;
 
     @Override
-    @SneakyThrows(CommonGenericDAOException.class)
     public List<Integer> findAreasIdByLocation(Point point, String areaDbTable) {
         String sql = sqlPropertyHolder.getProperty(FIND_AREAS_ID_BY_LOCATION);
         sql = replaceAndEscapeParameters(sql, createParameters(point.getX(), point.getY(), point.getSRID(), areaDbTable));

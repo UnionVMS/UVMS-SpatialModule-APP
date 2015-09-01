@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
-import eu.europa.ec.fisheries.uvms.service.exception.CommonGenericDAOException;
 import eu.europa.ec.fisheries.uvms.spatial.dao.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
@@ -14,7 +13,6 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialService
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler.ExceptionHandlerInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler.SpatialExceptionHandler;
-import lombok.SneakyThrows;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -46,7 +44,6 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
     private SpatialRepository repository;
 
     @Override
-    @SneakyThrows(CommonGenericDAOException.class)
     @SpatialExceptionHandler(responseType = AreaByLocationSpatialRS.class)
     @Interceptors(value = ExceptionHandlerInterceptor.class)
     public AreaByLocationSpatialRS getAreasByLocation(AreaByLocationSpatialRQ request) {
@@ -71,7 +68,6 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
     }
 
     @Override
-    @SneakyThrows(CommonGenericDAOException.class)
     public List<AreaDto> getAreasByLocationRest(double lat, double lon, int crs) {
         List<AreaTypesEntity> systemAreaTypes = repository.findEntityByNamedQuery(AreaTypesEntity.class, QueryNameConstants.FIND_SYSTEM_AREAS);
 
