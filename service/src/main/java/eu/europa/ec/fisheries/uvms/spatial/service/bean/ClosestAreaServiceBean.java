@@ -19,7 +19,6 @@ import org.hibernate.transform.Transformers;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
-import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +30,7 @@ import java.util.Map;
 @Slf4j
 public class ClosestAreaServiceBean implements ClosestAreaService {
 
-    @Inject
+    @EJB
     private CrudService crudService;
 
     private final static String TABLE_NAME_PLACEHOLDER = "{tableName}";
