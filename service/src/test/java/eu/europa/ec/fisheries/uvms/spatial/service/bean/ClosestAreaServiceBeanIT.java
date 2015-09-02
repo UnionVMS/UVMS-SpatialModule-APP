@@ -33,8 +33,8 @@ public class ClosestAreaServiceBeanIT extends AbstractArquillianIT {
 
         //then
         assertEquals(new SuccessType(), response.getMessageType().getSuccess());
-        assertEquals(152.99006034643287, response.getClosestArea().get(0).getDistance(), 0.01);
-        assertEquals("81", response.getClosestArea().get(0).getId());
+        assertEquals(597.1283174583547, response.getClosestArea().get(0).getDistance(), 0.01);
+        assertEquals("145", response.getClosestArea().get(0).getId());
 
     }
 

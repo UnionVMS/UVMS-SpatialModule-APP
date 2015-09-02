@@ -8,6 +8,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ResponseMessageType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SuccessType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler.ExceptionHandlerInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler.SpatialExceptionHandler;
+import eu.europa.ec.fisheries.uvms.util.ModelUtils;
 
 import javax.ejb.EJB;
 import javax.ejb.Local;
@@ -15,6 +16,8 @@ import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
 import javax.transaction.Transactional;
 import java.util.List;
+
+import static eu.europa.ec.fisheries.uvms.util.ModelUtils.createSuccessResponseMessage;
 
 @Stateless
 @Local(AreaTypeNamesService.class)
@@ -41,12 +44,6 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
 
     private AreaTypeNamesSpatialRS createSuccessGetAreaTypesResponse(List<String> areaTypeNames) {
         return new AreaTypeNamesSpatialRS(createSuccessResponseMessage(), new AreasNameType(areaTypeNames));
-    }
-
-    private ResponseMessageType createSuccessResponseMessage() {
-        ResponseMessageType responseMessage = new ResponseMessageType();
-        responseMessage.setSuccess(new SuccessType());
-        return responseMessage;
     }
 
 }
