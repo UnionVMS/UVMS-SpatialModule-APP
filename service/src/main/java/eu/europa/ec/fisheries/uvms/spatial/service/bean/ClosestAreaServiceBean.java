@@ -1,15 +1,13 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
+import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.common.SpatialUtils;
 import eu.europa.ec.fisheries.uvms.service.CrudService;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaTypesEntity;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaEntry;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialRequest;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialResponse;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UnitType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
@@ -38,6 +36,9 @@ import java.util.List;
 import java.util.Map;
 
 import static eu.europa.ec.fisheries.uvms.common.SpatialUtils.DEFAULT_CRS;
+import static eu.europa.ec.fisheries.uvms.util.SpatialUtils.convertToPointInWGS84;
+import static eu.europa.ec.fisheries.uvms.util.SpatialUtils.convertToWkt;
+import static eu.europa.ec.fisheries.uvms.util.SpatialUtils.defaultIfNull;
 
 @Stateless
 @Local(ClosestAreaService.class)
@@ -61,66 +62,36 @@ public class ClosestAreaServiceBean implements ClosestAreaService {
     private SqlPropertyHolder prop;
 
     @Override
-    @SpatialExceptionHandler(responseType = ClosestAreaSpatialResponse.class)
-    public ClosestAreaSpatialResponse getClosestArea(final ClosestAreaSpatialRequest request) {
+    @SpatialExceptionHandler(responseType = ClosestAreaSpatialRS.class)
+    public ClosestAreaSpatialRS getClosestArea(final ClosestAreaSpatialRQ request) {
+        ClosestAreaSpatialRS response = createResponse();
 
-        ClosestAreaSpatialResponse response = new ClosestAreaSpatialResponse();
-        response.setMessageType(ModelUtils.createSuccessResponseMessage());
-        List<AreaType> areaTypes = request.getArea();
+        List<AreaType> areaTypes = request.getAreaTypes().getAreaType();
         Map<String, String> areaMap = getAreaMap();
-        String queryString;
-        if (SpatialUtils.isDefaultCrs(request.getCrs())) {
-            queryString = prop.getProperty(CLOSEST_AREA_QUERY);
-        } else {
-            queryString = prop.getProperty(CLOSEST_AREA_QUERY_WITH_TRANSFORM);
-        }
+        String queryString = prop.getProperty(CLOSEST_AREA_QUERY);
 
+        PointType schemaPoint = request.getPoint();
+        Point point = convertToPointInWGS84(schemaPoint.getLongitude(), schemaPoint.getLatitude(), defaultIfNull(schemaPoint.getCrs()));
 
-        String wkt = request.getWkt();
-        if (!SpatialUtils.isDefaultCrs(request.getCrs()))
-        {
-            wkt = null;
-        }
-
-
+        List<ClosestAreaEntry> closestAreaList = Lists.newArrayList();
         for (AreaType areaType: areaTypes){
-            SQLQuery sqlQuery;
             String replaced = queryString.replace(TABLE_NAME_PLACEHOLDER, areaMap.get(areaType.value()));
-
-            sqlQuery = createSQLQuery(replaced, wkt, SpatialUtils.DEFAULT_CRS, UnitType.valueOf(request.getUnit().name()).getUnit());
-            if (!SpatialUtils.isDefaultCrs(request.getCrs())) {
-                sqlQuery.setInteger(OTHER_CRS, request.getCrs());
-            }
+            String wktPoint = convertToWkt(point);
+            SQLQuery sqlQuery = createSQLQuery(replaced, wktPoint, SpatialUtils.DEFAULT_CRS, UnitType.valueOf(request.getUnit().name()).getUnit());
             List queryResult = sqlQuery.list();
             if (queryResult != null && queryResult.size() == 1) {
-                ClosestAreaEntry entry = (ClosestAreaEntry) queryResult.get(0);
-                response.getClosestArea().add(entry);
+                ClosestAreaEntry area = (ClosestAreaEntry) queryResult.get(0);
+                closestAreaList.add(area);
             }
         }
+        response.setClosestArea(new ClosestAreasType(closestAreaList));
         return response;
     }
 
-    private Point convertToPointInWGS84(double lon, double lat, int crs) {
-        try {
-            GeometryFactory gf = new GeometryFactory();
-            Point point = gf.createPoint(new Coordinate(lon, lat));
-            if (crs != SpatialUtils.DEFAULT_CRS) {
-                point = transform(crs, point);
-            }
-            point.setSRID(SpatialUtils.DEFAULT_CRS);
-            return point;
-        } catch (FactoryException ex) {
-            throw new SpatialServiceException(SpatialServiceErrors.NO_SUCH_CRS_CODE_ERROR, String.valueOf(crs));
-        } catch (MismatchedDimensionException | TransformException ex) {
-            throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
-        }
-    }
-
-    private Point transform(int crs, Point point) throws FactoryException, TransformException {
-        CoordinateReferenceSystem inputCrs = CRS.decode(EPSG + crs);
-        MathTransform mathTransform = CRS.findMathTransform(inputCrs, DefaultGeographicCRS.WGS84, false);
-        point = (Point) JTS.transform(point, mathTransform);
-        return point;
+    private ClosestAreaSpatialRS createResponse() {
+        ClosestAreaSpatialRS response = new ClosestAreaSpatialRS();
+        response.setResponseMessage(ModelUtils.createSuccessResponseMessage());
+        return response;
     }
 
     @SuppressWarnings("unchecked")

@@ -59,7 +59,7 @@
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="ResponseMessage" type="ResponseMessageType" />
-                <xs:element name="ClosestArea" type="ClosestAreasType" minOccurs="1" maxOccurs="unbounded" />
+                <xs:element name="ClosestArea" type="ClosestAreasType" minOccurs="0" maxOccurs="1" />
             </xs:sequence>
         </xs:complexType>
     </xs:element>

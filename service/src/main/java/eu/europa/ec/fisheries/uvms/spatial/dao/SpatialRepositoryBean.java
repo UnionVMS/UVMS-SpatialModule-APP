@@ -3,12 +3,15 @@ package eu.europa.ec.fisheries.uvms.spatial.dao;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.io.WKTWriter;
 import eu.europa.ec.fisheries.uvms.service.CrudService;
+import eu.europa.ec.fisheries.uvms.util.SpatialUtils;
 import eu.europa.ec.fisheries.uvms.util.SqlPropertyHolder;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 
 import javax.ejb.*;
 import java.util.List;
+
+import static eu.europa.ec.fisheries.uvms.util.SpatialUtils.convertToWkt;
 
 /**
  * Created by Michal Kopyczok on 21-Aug-15.
@@ -40,10 +43,6 @@ public class SpatialRepositoryBean implements SpatialRepository {
 
         List<Integer> result = createSQLQuery(queryString, wktPoint, sRid).list();
         return result;
-    }
-
-    private String convertToWkt(Point point) {
-        return new WKTWriter().write(point);
     }
 
     private SQLQuery createSQLQuery(String queryString, String wktPoint, int crs) {

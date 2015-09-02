@@ -3,6 +3,7 @@ package eu.europa.ec.fisheries.uvms.util;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.io.WKTWriter;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import org.geotools.geometry.jts.JTS;
@@ -39,7 +40,7 @@ public class SpatialUtils {
         }
     }
 
-    public static  Point transform(int crs, Point point) throws FactoryException, TransformException {
+    public static Point transform(int crs, Point point) throws FactoryException, TransformException {
         CoordinateReferenceSystem inputCrs = CRS.decode(EPSG + crs);
         MathTransform mathTransform = CRS.findMathTransform(inputCrs, DefaultGeographicCRS.WGS84, false);
         point = (Point) JTS.transform(point, mathTransform);
@@ -52,4 +53,9 @@ public class SpatialUtils {
         }
         return crs;
     }
+
+    public static String convertToWkt(Point point) {
+        return new WKTWriter().write(point);
+    }
+
 }

@@ -1,10 +1,10 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialRequest;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialResponse;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialRS;
 
 public interface ClosestAreaService {
 
-    ClosestAreaSpatialResponse getClosestArea(ClosestAreaSpatialRequest request);
+    ClosestAreaSpatialRS getClosestArea(ClosestAreaSpatialRQ request);
 
 }
