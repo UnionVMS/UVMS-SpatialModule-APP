@@ -82,7 +82,7 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
         return areaTypes;
     }
 
-    private List getAreaTypes() {
+    private List<AreaTypesEntity> getAreaTypes() {
         return crudService.findEntityByNamedQuery(AreaTypesEntity.class, QueryNameConstants.FIND_SYSTEM_AREAS);
     }
 

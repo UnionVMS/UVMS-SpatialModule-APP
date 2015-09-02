@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 
 import static eu.europa.ec.fisheries.uvms.common.SpatialUtils.DEFAULT_CRS;
+import static eu.europa.ec.fisheries.uvms.util.ModelUtils.createSuccessResponseMessage;
 import static eu.europa.ec.fisheries.uvms.util.SpatialUtils.convertToPointInWGS84;
 import static eu.europa.ec.fisheries.uvms.util.SpatialUtils.convertToWkt;
 import static eu.europa.ec.fisheries.uvms.util.SpatialUtils.defaultIfNull;
@@ -51,7 +52,7 @@ public class ClosestAreaServiceBean implements ClosestAreaService {
 
     private static final String EPSG = "EPSG:";
     private final static String TABLE_NAME_PLACEHOLDER = "{tableName}";
-    private final static String CLOSEST_AREA_QUERY = "sql.closestArea";
+
     private final static String CLOSEST_AREA_QUERY_WITH_TRANSFORM = "sql.closestAreaWithTransform";
     private final static String OTHER_CRS = "otherCrs";
     private final static String DEFAULT_CRS = "defaultCrs";
@@ -64,28 +65,29 @@ public class ClosestAreaServiceBean implements ClosestAreaService {
     @Override
     @SpatialExceptionHandler(responseType = ClosestAreaSpatialRS.class)
     public ClosestAreaSpatialRS getClosestArea(final ClosestAreaSpatialRQ request) {
-        ClosestAreaSpatialRS response = createResponse();
-
         List<AreaType> areaTypes = request.getAreaTypes().getAreaType();
         Map<String, String> areaMap = getAreaMap();
-        String queryString = prop.getProperty(CLOSEST_AREA_QUERY);
+        //String queryString = prop.getProperty(CLOSEST_AREA_QUERY);
 
         PointType schemaPoint = request.getPoint();
         Point point = convertToPointInWGS84(schemaPoint.getLongitude(), schemaPoint.getLatitude(), defaultIfNull(schemaPoint.getCrs()));
 
         List<ClosestAreaEntry> closestAreaList = Lists.newArrayList();
         for (AreaType areaType: areaTypes){
-            String replaced = queryString.replace(TABLE_NAME_PLACEHOLDER, areaMap.get(areaType.value()));
+            //String replaced = queryString.replace(TABLE_NAME_PLACEHOLDER, areaMap.get(areaType.value()));
             String wktPoint = convertToWkt(point);
-            SQLQuery sqlQuery = createSQLQuery(replaced, wktPoint, SpatialUtils.DEFAULT_CRS, UnitType.valueOf(request.getUnit().name()).getUnit());
-            List queryResult = sqlQuery.list();
+            //SQLQuery sqlQuery = createSQLQuery(replaced, wktPoint, SpatialUtils.DEFAULT_CRS, UnitType.valueOf(request.getUnit().name()).getUnit());
+            List queryResult = null;//sqlQuery.list();
             if (queryResult != null && queryResult.size() == 1) {
                 ClosestAreaEntry area = (ClosestAreaEntry) queryResult.get(0);
                 closestAreaList.add(area);
             }
         }
-        response.setClosestArea(new ClosestAreasType(closestAreaList));
-        return response;
+        return createSuccessClosestAreaResponse(new ClosestAreasType(closestAreaList));
+    }
+
+    private ClosestAreaSpatialRS createSuccessClosestAreaResponse(ClosestAreasType closestAreasType) {
+        return new ClosestAreaSpatialRS(createSuccessResponseMessage(), closestAreasType);
     }
 
     private ClosestAreaSpatialRS createResponse() {
@@ -102,12 +104,5 @@ public class ClosestAreaServiceBean implements ClosestAreaService {
         return areaMap;
     }
 
-    private SQLQuery createSQLQuery(String queryString, String wktPoint, int defaultCrs, double unit) {
-        SQLQuery sqlQuery = crudService.getEntityManager().unwrap(Session.class).createSQLQuery(queryString);
-        sqlQuery.setResultTransformer(Transformers.aliasToBean(ClosestAreaEntry.class));
-        sqlQuery.setString(WKT, wktPoint);
-        sqlQuery.setInteger(DEFAULT_CRS, defaultCrs);
-        sqlQuery.setDouble(UNIT, unit);
-        return sqlQuery;
-    }
+
 }

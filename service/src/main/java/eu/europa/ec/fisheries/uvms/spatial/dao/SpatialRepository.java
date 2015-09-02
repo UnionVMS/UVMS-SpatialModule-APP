@@ -9,4 +9,6 @@ import java.util.List;
  */
 public interface SpatialRepository {
     List<Integer> findAreasIdByLocation(Point point, String areaDbTable);
+
+    List<Integer> findClosestAreas(Point point, String areaDbTable);
 }
