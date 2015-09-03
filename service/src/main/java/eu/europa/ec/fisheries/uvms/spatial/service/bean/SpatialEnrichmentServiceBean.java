@@ -2,6 +2,8 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.service.CrudService;
 import eu.europa.ec.fisheries.uvms.spatial.dao.SpatialRepository;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRS;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaDto;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,6 +30,11 @@ public class SpatialEnrichmentServiceBean implements SpatialEnrichmentService {
 
     @Override
     public List<AreaDto> getClosestLocationRest(double lat, double lon, int crs, List<String> locationTypes, String unit) {
+        return null;
+    }
+
+    @Override
+    public SpatialEnrichmentRS getClosestLocation(SpatialEnrichmentRQ spatialEnrichmentRQ) {
         return null;
     }
 
