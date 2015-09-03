@@ -69,7 +69,7 @@ public class AreaTypeResource {
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
-    @Path("/closestarea")
+    @Path("/closestareas")
     public ResponseDto closestArea(
             @QueryParam(value = "lat") double lat,
             @QueryParam(value = "lon") double lon,

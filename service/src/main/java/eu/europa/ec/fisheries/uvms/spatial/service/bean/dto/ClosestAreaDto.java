@@ -5,13 +5,13 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto;
  */
 public class ClosestAreaDto {
     private String id;
-    private String areaTypeName;
+    private String areaType;
     private double distance;
     private String unit;
 
-    public ClosestAreaDto(String id, String areaTypeName, double distance, String unit) {
+    public ClosestAreaDto(String id, String areaType, double distance, String unit) {
         this.id = id;
-        this.areaTypeName = areaTypeName;
+        this.areaType = areaType;
         this.distance = distance;
         this.unit = unit;
     }
@@ -20,8 +20,8 @@ public class ClosestAreaDto {
         return id;
     }
 
-    public String getAreaTypeName() {
-        return areaTypeName;
+    public String getAreaType() {
+        return areaType;
     }
 
     public double getDistance() {

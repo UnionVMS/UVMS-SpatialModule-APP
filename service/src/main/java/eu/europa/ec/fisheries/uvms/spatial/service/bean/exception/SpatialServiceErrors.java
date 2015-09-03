@@ -11,8 +11,8 @@ public enum SpatialServiceErrors {
     INTERNAL_APPLICATION_ERROR(500, "An internal application error has occurred.", "An internal application error has occurred."),
     WRONG_NATIVE_SQL_CONFIGURATION_ERROR(5001, "Sql Native query with name {0} does not exist.", "Wrong configuration."),
     NO_SUCH_CRS_CODE_ERROR(5002, "CRS code {0} does not exist.", "Wrong argument."),
-    WRONG_MEASUREMENT_UNIT(5003, "Wrong measurement unit {0) parameter. Please provide valid value.", "Wrong argument."),
-    WRONG_AREA_TYPE(5004, "Wrong area type {0) parameter. Please provide valid value.", "Wrong argument.");
+    WRONG_MEASUREMENT_UNIT(5003, "Invalid parameter. Wrong measurement unit: '{0}'.", "Wrong argument."),
+    WRONG_AREA_TYPE(5004, "Invalid parameter. Wrong area type: '{0}'.", "Wrong argument.");
 
     //@formatter:on
 

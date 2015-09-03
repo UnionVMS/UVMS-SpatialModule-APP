@@ -23,7 +23,7 @@
 //    public void testGetClosestArea() throws Exception {
 //        // given
 //        ClosestAreaSpatialRQ request = new ClosestAreaSpatialRQ();
-//        request.setUnit(eu.europa.ec.fisheries.uvms.spatial.model.schemas.MeasurementUnit.KILOMETERS);
+//        request.setUnit(eu.europa.ec.fisheries.uvms.spatial.model.schemas.MeasurementUnit.KILOMETER);
 //        request.setWkt("POINT(-7.14925 45.11557)");
 //        request.getArea().add(AreaType.COUNTRY);
 //        request.setCrs(SpatialUtils.DEFAULT_CRS);
@@ -42,7 +42,7 @@
 //    public void testGetClosestAreaWithTransform() throws Exception {
 //        // given
 //        ClosestAreaSpatialRQ request = new ClosestAreaSpatialRQ();
-//        request.setUnit(eu.europa.ec.fisheries.uvms.spatial.model.schemas.MeasurementUnit.KILOMETERS);
+//        request.setUnit(eu.europa.ec.fisheries.uvms.spatial.model.schemas.MeasurementUnit.KILOMETER);
 //        request.setWkt("POINT(-7.14925 45.11557)");
 //        request.getArea().add(AreaType.COUNTRY);
 //        request.setCrs(3857);

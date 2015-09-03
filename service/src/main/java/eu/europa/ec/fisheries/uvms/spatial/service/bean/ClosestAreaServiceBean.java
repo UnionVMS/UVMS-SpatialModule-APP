@@ -44,7 +44,7 @@ public class ClosestAreaServiceBean implements ClosestAreaService {
     public ClosestAreaSpatialRS getClosestAreas(ClosestAreaSpatialRQ request) {
         Map<String, String> areaType2TableName = getAreaType2TableNameMap();
         Point point = convertToPointInWGS84(request.getPoint());
-        MeasurementUnit measurementUnit = MeasurementUnit.valueOf(request.getUnit().name());
+        MeasurementUnit measurementUnit = MeasurementUnit.getMeasurement(request.getUnit().name());
 
         List<ClosestAreaEntry> closestAreas = newArrayList();
         for (AreaType areaType : request.getAreaTypes().getAreaType()) {
@@ -72,7 +72,7 @@ public class ClosestAreaServiceBean implements ClosestAreaService {
 
         List<ClosestAreaDto> closestAreas = newArrayList();
         for (String areaType : areaTypes) {
-            String areaDbTable = areaType2TableName.get(areaType);
+            String areaDbTable = areaType2TableName.get(areaType.toUpperCase());
             validateAreaType(areaType, areaDbTable);
 
             List<ClosestAreaEntry> closestAreaList = repository.findClosestAreas(point, measurementUnit, areaDbTable);
@@ -80,7 +80,7 @@ public class ClosestAreaServiceBean implements ClosestAreaService {
 
             ClosestAreaEntry area = closestAreaList.get(0);
             if (area != null) {
-                ClosestAreaDto closestAreaDto = new ClosestAreaDto(area.getId(), area.getAreaType().name(), area.getDistance(), unit);
+                ClosestAreaDto closestAreaDto = new ClosestAreaDto(area.getId(), areaType, area.getDistance(), unit);
                 closestAreas.add(closestAreaDto);
             }
         }
