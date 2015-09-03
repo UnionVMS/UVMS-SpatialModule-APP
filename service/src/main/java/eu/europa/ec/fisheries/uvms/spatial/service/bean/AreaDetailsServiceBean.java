@@ -65,7 +65,7 @@ public class AreaDetailsServiceBean implements AreaDetailsService {
     @Interceptors(value = ExceptionHandlerInterceptor.class)
 	public AreaDetailsSpatialResponse getAreaDetails(AreaDetailsSpatialRequest request) {
 		AreaDetailsSpatialResponse response = null;
-		String areaTypeName = request.getAreaType().getAreaTypeName();
+		String areaTypeName = request.getAreaType().getAreaType();
 		LOG.info("Area Type name received : " + areaTypeName);
 		Map<String, String> parameters = new HashMap<String, String>();	
 		parameters.put("areaDbTable", areaTypeName);
