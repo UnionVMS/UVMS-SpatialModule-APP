@@ -6,6 +6,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRS;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaDto;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.NotImplementedException;
 
 import javax.ejb.EJB;
 import javax.ejb.Local;
@@ -35,7 +36,7 @@ public class SpatialEnrichmentServiceBean implements SpatialEnrichmentService {
 
     @Override
     public SpatialEnrichmentRS getClosestLocation(SpatialEnrichmentRQ spatialEnrichmentRQ) {
-        return null;
+        throw new NotImplementedException("implement me");
     }
 
 }
