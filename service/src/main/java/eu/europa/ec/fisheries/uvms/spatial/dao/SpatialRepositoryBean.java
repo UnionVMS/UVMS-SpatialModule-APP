@@ -44,7 +44,7 @@ public class SpatialRepositoryBean implements SpatialRepository {
     }
 
     @Override
-    public List<ClosestAreaEntry> findClosestAreas(Point point, UnitType unit, String areaDbTable) {
+    public List<ClosestAreaEntry> findClosestAreas(Point point, MeasurementUnit unit, String areaDbTable) {
         String queryString = sqlPropertyHolder.getProperty(CLOSEST_AREA_QUERY);
         return executeClosestAreas(queryString, point, unit, areaDbTable);
     }
@@ -57,11 +57,11 @@ public class SpatialRepositoryBean implements SpatialRepository {
         return createSQLQuery(queryString, wktPoint, crs).list();
     }
 
-    private List<ClosestAreaEntry> executeClosestAreas(String queryString, Point point, UnitType unit, String areaDbTable) {
+    private List<ClosestAreaEntry> executeClosestAreas(String queryString, Point point, MeasurementUnit unit, String areaDbTable) {
         queryString = replaceTableName(queryString, areaDbTable);
         String wktPoint = convertToWkt(point);
         int crs = point.getSRID();
-        double unitRatio = MeasurementUnit.valueOf(unit.name()).getRatio();
+        double unitRatio = unit.getRatio();
 
         return createSQLQuery(queryString, wktPoint, crs, unitRatio).list();
     }
