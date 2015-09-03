@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
+
 @Entity
 @Table(name = "stat_rect", schema = "spatial")
 public class StatRectEntity implements Serializable {
@@ -18,6 +20,7 @@ public class StatRectEntity implements Serializable {
 	@Id
 	@Column(name = "gid")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@ColumnAliasName(aliasName="gid")
 	private int gid;
 
 	public StatRectEntity() {

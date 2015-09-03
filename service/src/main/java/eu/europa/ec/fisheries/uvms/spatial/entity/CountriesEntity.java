@@ -14,6 +14,8 @@ import org.hibernate.annotations.Type;
 
 import com.vividsolutions.jts.geom.Geometry;
 
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
+
 @Entity
 @Table(name = "countries", schema = "spatial")
 public class CountriesEntity implements Serializable {
@@ -28,48 +30,63 @@ public class CountriesEntity implements Serializable {
     @Basic
     @Column(name = "geom")
     @Type(type = "org.hibernate.spatial.GeometryType")
+    @ColumnAliasName(aliasName="geom")
 	private Geometry geom;
     
     @Column(name = "sovereignt", length = 32)
+    @ColumnAliasName(aliasName="sovereignt")
 	private String sovereignt;
     
     @Column(name = "sov_a3", length = 3)
+    @ColumnAliasName(aliasName="sovA3")
 	private String sovA3;
     
     @Column(name = "type", length = 17)
+    @ColumnAliasName(aliasName="type")
 	private String type;
     
     @Column(name = "admin", length = 40)
+    @ColumnAliasName(aliasName="admin")
 	private String admin;
     
     @Column(name = "adm0_a3", length = 3)
+    @ColumnAliasName(aliasName="adm0A3")
 	private String adm0A3;
     
     @Column(name = "name", length = 36)
+    @ColumnAliasName(aliasName="name")
 	private String name;
     
     @Column(name = "name_long", length = 40)
+    @ColumnAliasName(aliasName="nameLong")
 	private String nameLong;
     
     @Column(name = "pop_est", precision = 17, scale = 17)
+    @ColumnAliasName(aliasName="popEst")
 	private Double popEst;
     
     @Column(name = "gdp_md_est", precision = 17, scale = 17)
+    @ColumnAliasName(aliasName="gdpMdEst")
 	private Double gdpMdEst;
     
     @Column(name = "income_grp", length = 23)
+    @ColumnAliasName(aliasName="incomeGrp")
 	private String incomeGrp;
     
     @Column(name = "continent", length = 23)
+    @ColumnAliasName(aliasName="continent")
 	private String continent;
     
     @Column(name = "region_un", length = 23)
+    @ColumnAliasName(aliasName="regionUn")
 	private String regionUn;
     
     @Column(name = "subregion", length = 25)
+    @ColumnAliasName(aliasName="subregion")
 	private String subregion;
     
     @Column(name = "region_wb", length = 26)
+    @ColumnAliasName(aliasName="regionWb")
 	private String regionWb;
 
 	public CountriesEntity() {

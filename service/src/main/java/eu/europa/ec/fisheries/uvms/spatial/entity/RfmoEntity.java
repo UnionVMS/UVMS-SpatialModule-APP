@@ -14,6 +14,8 @@ import org.hibernate.annotations.Type;
 
 import com.vividsolutions.jts.geom.Geometry;
 
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
+
 @Entity
 @Table(name = "rfmo", schema = "spatial")
 public class RfmoEntity implements Serializable {
@@ -23,20 +25,25 @@ public class RfmoEntity implements Serializable {
 	@Id
 	@Column(name = "gid")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@ColumnAliasName(aliasName="gid")
 	private int gid;
 	
     @Basic
     @Column(name = "geom")
     @Type(type = "org.hibernate.spatial.GeometryType")
+    @ColumnAliasName(aliasName="geometry")
 	private Geometry geom;
     
     @Column(name = "rfmo", length = 10)
+    @ColumnAliasName(aliasName="rfmo")
 	private String rfmo;
     
     @Column(name = "name", length = 125)
+    @ColumnAliasName(aliasName="name")
 	private String name;
     
     @Column(name = "tuna", length = 10)
+    @ColumnAliasName(aliasName="tuna")
 	private String tuna;
 
 	public RfmoEntity() {

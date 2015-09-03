@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
+
 @Entity
 @Table(name = "fao", schema = "spatial")
 public class FaoEntity implements Serializable {
@@ -18,6 +20,7 @@ public class FaoEntity implements Serializable {
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@ColumnAliasName(aliasName="id")
 	private int id;
 
 	public FaoEntity() {

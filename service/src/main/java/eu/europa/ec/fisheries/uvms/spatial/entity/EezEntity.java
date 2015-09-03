@@ -15,6 +15,9 @@ import org.hibernate.annotations.Type;
 
 import com.vividsolutions.jts.geom.Geometry;
 
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
+
+
 @Entity
 @Table(name = "eez", schema = "spatial")
 public class EezEntity implements Serializable {
@@ -24,50 +27,65 @@ public class EezEntity implements Serializable {
 	@Id
 	@Column(name = "gid")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@ColumnAliasName(aliasName ="gid")
 	private int gid;
 
     @Basic
     @Column(name = "geom")
     @Type(type = "org.hibernate.spatial.GeometryType")
+    @ColumnAliasName(aliasName ="geometry")
 	private Geometry geom;
 
     @Column(name = "eez", length = 200)
+    @ColumnAliasName(aliasName ="eez")
 	private String eez;
 
     @Column(name = "country", length = 100)
+    @ColumnAliasName(aliasName ="country")
 	private String country;
 
     @Column(name = "sovereign", length = 100)
+    @ColumnAliasName(aliasName ="sovereign")
 	private String sovereign;
-
+    
     @Column(name = "remarks", length = 150)
+    @ColumnAliasName(aliasName ="remarks")
 	private String remarks;
 
     @Column(name = "sov_id")
+    @ColumnAliasName(aliasName ="sovId")
 	private Integer sovId;
 
     @Column(name = "eez_id")
+    @ColumnAliasName(aliasName ="eezId")
 	private Integer eezId;
 
     @Column(name = "iso_3digit", length = 5)
+    @ColumnAliasName(aliasName ="iso3digit")
 	private String iso3digit;
 
     @Column(name = "mrgid")
+    @ColumnAliasName(aliasName ="mrgid")
 	private BigDecimal mrgid;
 
     @Column(name = "date_chang", length = 50)
+    @ColumnAliasName(aliasName ="dateChang")
 	private String dateChang;
 
     @Column(name = "area_m2")
+    @ColumnAliasName(aliasName ="areaM2")
 	private Double areaM2;
 
     @Column(name = "longitude")
+    @ColumnAliasName(aliasName ="longitude")
 	private Double longitude;
 
     @Column(name = "latitude")
+    @ColumnAliasName(aliasName ="latitude")
 	private Double latitude;
 
     @Column(name = "mrgid_eez")
+    @ColumnAliasName(aliasName ="mrgidEez")
 	private Integer mrgidEez;
 
 	public EezEntity() {

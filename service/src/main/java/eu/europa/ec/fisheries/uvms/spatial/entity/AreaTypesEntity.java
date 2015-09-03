@@ -27,6 +27,7 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 @NamedQueries({
     @NamedQuery(name = QueryNameConstants.FIND_ALL_AREAS, query = "SELECT a.typeName FROM AreaTypesEntity a"),
     @NamedQuery(name = QueryNameConstants.FIND_SYSTEM_AREAS, query = "SELECT area FROM AreaTypesEntity area WHERE area.isSystemArea = 'Y'"),
+    @NamedQuery(name = QueryNameConstants.FIND_AREAS_BY_ID, query = "SELECT area FROM AreaTypesEntity area WHERE area.areaDbTable= :areaDbTable")
 })
 
 public class AreaTypesEntity implements Serializable {
