@@ -29,12 +29,12 @@
 //        request.setCrs(SpatialUtils.DEFAULT_CRS);
 //
 //        // when
-//        ClosestAreaSpatialRS response = service.getClosestArea(request);
+//        ClosestAreaSpatialRS response = service.getClosestAreas(request);
 //
 //        //then
 //        assertEquals(new SuccessType(), response.getMessageType().getSuccess());
-//        assertEquals(597.1283174583547, response.getClosestArea().get(0).getDistance(), 0.01);
-//        assertEquals("145", response.getClosestArea().get(0).getId());
+//        assertEquals(597.1283174583547, response.getClosestAreas().get(0).getDistance(), 0.01);
+//        assertEquals("145", response.getClosestAreas().get(0).getId());
 //
 //    }
 //
@@ -48,12 +48,12 @@
 //        request.setCrs(3857);
 //
 //        // when
-//        ClosestAreaSpatialRS response = service.getClosestArea(request);
+//        ClosestAreaSpatialRS response = service.getClosestAreas(request);
 //
 //        //then
 //        assertEquals(new SuccessType(), response.getMessageType().getSuccess());
-//        assertEquals(3460.563176305411, response.getClosestArea().get(0).getDistance(), 0.01);
-//        assertEquals("81", response.getClosestArea().get(0).getId());
+//        assertEquals(3460.563176305411, response.getClosestAreas().get(0).getDistance(), 0.01);
+//        assertEquals("81", response.getClosestAreas().get(0).getId());
 //
 //    }
 //

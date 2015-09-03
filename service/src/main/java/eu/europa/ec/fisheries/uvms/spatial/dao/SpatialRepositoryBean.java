@@ -3,7 +3,6 @@ package eu.europa.ec.fisheries.uvms.spatial.dao;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.service.CrudService;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaEntry;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.UnitType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.MeasurementUnit;
 import eu.europa.ec.fisheries.uvms.util.SqlPropertyHolder;
 import org.hibernate.SQLQuery;
@@ -68,6 +67,7 @@ public class SpatialRepositoryBean implements SpatialRepository {
 
     private SQLQuery createSQLQuery(String queryString, String wktPoint, int crs, double unit) {
         SQLQuery sqlQuery = getSession().createSQLQuery(queryString);
+        //TODO Remove mapping to schema object, because it is also used by the REST Service
         sqlQuery.setResultTransformer(Transformers.aliasToBean(ClosestAreaEntry.class));
         sqlQuery.setString(WKT, wktPoint);
         sqlQuery.setInteger(CRS, crs);
