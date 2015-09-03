@@ -20,6 +20,7 @@ public class AbstractArquillianIT {
             "org.geotools:gt-geojson:14-M1",
             "org.easytesting:fest-assert:1.4",
             "org.slf4j:slf4j-api:1.7.12",
+            "org.geotools:gt-epsg-hsql:14-M1"
     };
 
     @Deployment
