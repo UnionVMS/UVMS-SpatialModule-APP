@@ -12,7 +12,10 @@ public enum SpatialServiceErrors {
     WRONG_NATIVE_SQL_CONFIGURATION_ERROR(5001, "Sql Native query with name {0} does not exist.", "Wrong configuration."),
     NO_SUCH_CRS_CODE_ERROR(5002, "CRS code {0} does not exist.", "Wrong argument."),
     WRONG_MEASUREMENT_UNIT(5003, "Invalid parameter. Wrong measurement unit: '{0}'.", "Wrong argument."),
-    WRONG_AREA_TYPE(5004, "Invalid parameter. Wrong area type: '{0}'.", "Wrong argument.");
+    WRONG_AREA_TYPE(5004, "Invalid parameter. Wrong Area Type: '{0}'.", "Wrong argument."),
+    MISSING_LATITUDE(5005, "Invalid parameter. Missing latitude: 'lat='.", "Wrong argument."),
+    MISSING_LONGITUDE(5006, "Invalid parameter. Missing longitude: 'lon='.", "Wrong argument."),
+    MISSING_AREA_TYPE(5007, "Invalid parameter. Please specify at least one Area Type: 'type='.", "Wrong argument.");
 
     //@formatter:on
 
