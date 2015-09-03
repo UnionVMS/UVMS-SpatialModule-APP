@@ -9,27 +9,35 @@ public class ClosestAreaDto {
     private double distance;
     private String unit;
 
-    public ClosestAreaDto(String id, String areaType, double distance, String unit) {
-        this.id = id;
-        this.areaType = areaType;
-        this.distance = distance;
-        this.unit = unit;
-    }
-
     public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getAreaType() {
         return areaType;
     }
 
+    public void setAreaType(String areaType) {
+        this.areaType = areaType;
+    }
+
     public double getDistance() {
         return distance;
+    }
+
+    public void setDistance(double distance) {
+        this.distance = distance;
     }
 
     public String getUnit() {
         return unit;
     }
 
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
 }

@@ -3,6 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.dao;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.service.CrudService;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaEntry;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.MeasurementUnit;
 import eu.europa.ec.fisheries.uvms.util.SqlPropertyHolder;
 import org.hibernate.SQLQuery;
@@ -43,7 +44,7 @@ public class SpatialRepositoryBean implements SpatialRepository {
     }
 
     @Override
-    public List<ClosestAreaEntry> findClosestAreas(Point point, MeasurementUnit unit, String areaDbTable) {
+    public List<ClosestAreaDto> findClosestAreas(Point point, MeasurementUnit unit, String areaDbTable) {
         String queryString = sqlPropertyHolder.getProperty(CLOSEST_AREA_QUERY);
         return executeClosestAreas(queryString, point, unit, areaDbTable);
     }
@@ -56,7 +57,7 @@ public class SpatialRepositoryBean implements SpatialRepository {
         return createSQLQuery(queryString, wktPoint, crs).list();
     }
 
-    private List<ClosestAreaEntry> executeClosestAreas(String queryString, Point point, MeasurementUnit unit, String areaDbTable) {
+    private List<ClosestAreaDto> executeClosestAreas(String queryString, Point point, MeasurementUnit unit, String areaDbTable) {
         queryString = replaceTableName(queryString, areaDbTable);
         String wktPoint = convertToWkt(point);
         int crs = point.getSRID();
@@ -67,8 +68,7 @@ public class SpatialRepositoryBean implements SpatialRepository {
 
     private SQLQuery createSQLQuery(String queryString, String wktPoint, int crs, double unit) {
         SQLQuery sqlQuery = getSession().createSQLQuery(queryString);
-        //TODO Remove mapping to schema object, because it is also used by the REST Service
-        sqlQuery.setResultTransformer(Transformers.aliasToBean(ClosestAreaEntry.class));
+        sqlQuery.setResultTransformer(Transformers.aliasToBean(ClosestAreaDto.class));
         sqlQuery.setString(WKT, wktPoint);
         sqlQuery.setInteger(CRS, crs);
         sqlQuery.setDouble(UNIT, unit);

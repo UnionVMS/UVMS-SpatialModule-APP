@@ -50,13 +50,12 @@ public class ClosestAreaServiceBean implements ClosestAreaService {
         for (AreaType areaType : request.getAreaTypes().getAreaType()) {
             String areaDbTable = areaType2TableName.get(areaType.value());
 
-            List<ClosestAreaEntry> closestAreaList = repository.findClosestAreas(point, measurementUnit, areaDbTable);
+            List<ClosestAreaDto> closestAreaList = repository.findClosestAreas(point, measurementUnit, areaDbTable);
             validateResponse(closestAreaList);
 
-            ClosestAreaEntry closestAreaEntry = closestAreaList.get(0);
-            if (closestAreaEntry != null) {
-                closestAreaEntry.setAreaType(areaType);
-                closestAreaEntry.setUnit(request.getUnit());
+            ClosestAreaDto closestAreaDto = closestAreaList.get(0);
+            if (closestAreaDto != null) {
+                ClosestAreaEntry closestAreaEntry = new ClosestAreaEntry(closestAreaDto.getId(), areaType, closestAreaDto.getDistance(), request.getUnit());
                 closestAreas.add(closestAreaEntry);
             }
         }
@@ -75,12 +74,13 @@ public class ClosestAreaServiceBean implements ClosestAreaService {
             String areaDbTable = areaType2TableName.get(areaType.toUpperCase());
             validateAreaType(areaType, areaDbTable);
 
-            List<ClosestAreaEntry> closestAreaList = repository.findClosestAreas(point, measurementUnit, areaDbTable);
+            List<ClosestAreaDto> closestAreaList = repository.findClosestAreas(point, measurementUnit, areaDbTable);
             validateResponse(closestAreaList);
 
-            ClosestAreaEntry area = closestAreaList.get(0);
-            if (area != null) {
-                ClosestAreaDto closestAreaDto = new ClosestAreaDto(area.getId(), areaType, area.getDistance(), unit);
+            ClosestAreaDto closestAreaDto = closestAreaList.get(0);
+            if (closestAreaDto != null) {
+                closestAreaDto.setAreaType(areaType.toUpperCase());
+                closestAreaDto.setUnit(measurementUnit.name());
                 closestAreas.add(closestAreaDto);
             }
         }
@@ -103,7 +103,7 @@ public class ClosestAreaServiceBean implements ClosestAreaService {
         return areaMap;
     }
 
-    private void validateResponse(List<ClosestAreaEntry> closestAreaList) {
+    private void validateResponse(List<ClosestAreaDto> closestAreaList) {
         if (closestAreaList.size() > 1) {
             throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
         }
