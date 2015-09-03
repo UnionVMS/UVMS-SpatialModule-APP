@@ -94,5 +94,26 @@
                 <xs:element name="ClosestLocations" type="ClosestLocationsType" />
             </xs:sequence>
         </xs:complexType>
-    </xs:element>
+    </xs:element>    
+    <xs:element name="AreaDetailsSpatialRequest">
+		<xs:annotation>
+			<xs:documentation>Root element for area details request</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="areaType" type="AreaTypeEntry" nillable="false"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="AreaDetailsSpatialResponse">
+		<xs:annotation>
+			<xs:documentation>Root element for area details response</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="ResponseMessage" type="ResponseMessageType" nillable="false"/>
+				<xs:element name="areaDetails" type="AreaDetails" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
 </xs:schema>
