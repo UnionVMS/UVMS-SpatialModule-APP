@@ -55,7 +55,7 @@ public class ClosestAreaServiceBean implements ClosestAreaService {
 
             ClosestAreaEntry closestAreaEntry = closestAreaList.get(0);
             if (closestAreaEntry != null) {
-                closestAreaEntry.setAreaTypeName(areaType);
+                closestAreaEntry.setAreaType(areaType);
                 closestAreaEntry.setUnit(request.getUnit());
                 closestAreas.add(closestAreaEntry);
             }
@@ -80,7 +80,7 @@ public class ClosestAreaServiceBean implements ClosestAreaService {
 
             ClosestAreaEntry area = closestAreaList.get(0);
             if (area != null) {
-                ClosestAreaDto closestAreaDto = new ClosestAreaDto(area.getId(), area.getAreaTypeName().name(), area.getDistance(), unit);
+                ClosestAreaDto closestAreaDto = new ClosestAreaDto(area.getId(), area.getAreaType().name(), area.getDistance(), unit);
                 closestAreas.add(closestAreaDto);
             }
         }

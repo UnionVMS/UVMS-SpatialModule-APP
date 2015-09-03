@@ -9,16 +9,16 @@ import lombok.experimental.Delegate;
 public class AreaDto {
 
     @Delegate(types = Include.class)
-    private AreaTypeEntry areaType;
+    private AreaTypeEntry areaTypeName;
 
-    public AreaDto(String id, String areaTypeName) {
-        this.areaType = new AreaTypeEntry(id, areaTypeName);
+    public AreaDto(String id, String areaType) {
+        this.areaTypeName = new AreaTypeEntry(id, areaType);
     }
 
     private interface Include {
         String getId();
 
-        String getAreaTypeName();
+        String getAreaType();
     }
 
 }

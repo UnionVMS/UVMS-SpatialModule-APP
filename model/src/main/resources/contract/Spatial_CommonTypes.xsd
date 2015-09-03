@@ -5,7 +5,7 @@
     <xs:complexType name="AreaTypeEntry">
         <xs:sequence>
             <xs:element name="Id" type="NumericStringLength1to9" />
-            <xs:element name="AreaTypeName" type="StringLength1to255" />
+            <xs:element name="AreaType" type="StringLength1to255" />
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="GeometryType">
@@ -40,7 +40,7 @@
     <xs:complexType name="ClosestAreaEntry">
         <xs:sequence>
             <xs:element name="Id" type="NumericStringLength1to9" />
-            <xs:element name="AreaTypeName" type="AreaType" />
+            <xs:element name="AreaType" type="AreaType" />
             <xs:element name="Distance" type="xs:double" />
             <xs:element name="Unit" type="UnitType" />
         </xs:sequence>
@@ -77,14 +77,14 @@
     </xs:complexType>
     <xs:complexType name="AreaDetails">
         <xs:sequence>
-            <xs:element name="areaType" type="AreaTypeEntry" nillable="false"/>
-            <xs:element name="areaProperty" type="AreaProperty" nillable="false" maxOccurs="unbounded"/>
+            <xs:element name="areaType" type="AreaTypeEntry" nillable="false" />
+            <xs:element name="areaProperty" type="AreaProperty" maxOccurs="unbounded" nillable="false" />
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="AreaProperty">
         <xs:sequence>
-            <xs:element name="propertyName" type="xs:string" nillable="false"/>
-            <xs:element name="propertyValue" type="xs:string" nillable="false"/>
+            <xs:element name="propertyName" type="xs:string" nillable="false" />
+            <xs:element name="propertyValue" type="xs:string" nillable="false" />
         </xs:sequence>
     </xs:complexType>
 </xs:schema>
