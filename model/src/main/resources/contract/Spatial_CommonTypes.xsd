@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSpy v2015 rel. 4 sp1 (x64) (http://www.altova.com) by marian (cop) -->
+<!-- edited with XMLSpy v2015 rel. 4 sp1 (http://www.altova.com) by aditya (na) -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://europa.eu/ec/fisheries/uvms/spatial/model/schemas" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:annox="http://annox.dev.java.net" xmlns:jackson="http://annox.dev.java.net/com.fasterxml.jackson.databind.annotation" targetNamespace="http://europa.eu/ec/fisheries/uvms/spatial/model/schemas" elementFormDefault="qualified" version="1.0" id="FISH2015_SPATIAL2015" jaxb:version="2.1" jaxb:extensionBindingPrefixes="annox">
 	<xs:include schemaLocation="Spatial_SimpleTypes.xsd"/>
 	<xs:complexType name="AreaTypeEntry">
@@ -40,7 +40,7 @@
 	<xs:complexType name="ClosestAreaEntry">
 		<xs:sequence>
 			<xs:element name="Id" type="NumericStringLength1to9"/>
-			<xs:element name="AreaTypeName" type="AreaType"/>
+			<xs:element name="Name" type="AreaType"/>
 			<xs:element name="Distance" type="xs:double"/>
 			<xs:element name="Units" type="UnitType"/>
 		</xs:sequence>
@@ -73,6 +73,18 @@
 	<xs:complexType name="ClosestLocationsType">
 		<xs:sequence>
 			<xs:element name="ClosestLocations" type="ClosestAreaEntry" maxOccurs="10"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AreaDetails">
+		<xs:sequence>
+			<xs:element name="areaType" type="AreaTypeEntry" nillable="false"/>
+			<xs:element name="areaProperty" type="AreaProperty" nillable="false" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AreaProperty">
+		<xs:sequence>
+			<xs:element name="propertyName" type="xs:string" nillable="false"/>
+			<xs:element name="propertyValue" type="xs:string" nillable="false"/>
 		</xs:sequence>
 	</xs:complexType>
 </xs:schema>
