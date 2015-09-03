@@ -16,14 +16,16 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
 
-import static eu.europa.ec.fisheries.uvms.common.SpatialUtils.DEFAULT_CRS;
-
 /**
  * Created by Michal Kopyczok on 02-Sep-15.
  */
 public class SpatialUtils {
 
     private static final String EPSG = "EPSG:";
+    private static final int DEFAULT_CRS = 4326;
+
+    private SpatialUtils() {
+    }
 
     public static Point convertToPointInWGS84(PointType schemaPoint) {
         return convertToPointInWGS84(schemaPoint.getLongitude(), schemaPoint.getLatitude(), defaultIfNull(schemaPoint.getCrs()));
@@ -61,6 +63,10 @@ public class SpatialUtils {
 
     public static String convertToWkt(Point point) {
         return new WKTWriter().write(point);
+    }
+
+    public static boolean isDefaultCrs(int crs) {
+        return crs == DEFAULT_CRS;
     }
 
 }
