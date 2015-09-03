@@ -15,12 +15,7 @@ public class ValidationUtils {
         validateCoordinates(lat, lon);
     }
 
-    public static void validateInputParameters(Double lat, Double lon, List<String> areaTypes) {
-        validateCoordinates(lat, lon);
-        validateAreaTypes(areaTypes);
-    }
-
-    private static void validateCoordinates(Double lat, Double lon) {
+    public static void validateCoordinates(Double lat, Double lon) {
         validateLatitude(lat);
         validateLongitude(lon);
     }
@@ -37,9 +32,15 @@ public class ValidationUtils {
         }
     }
 
-    private static void validateAreaTypes(List<String> areaTypes) {
+    public static void validateAreaTypes(List<String> areaTypes) {
         if (isEmpty(areaTypes)) {
             throw new SpatialServiceException(SpatialServiceErrors.MISSING_AREA_TYPE);
+        }
+    }
+
+    public static void validateLocationTypes(List<String> locationTypes) {
+        if (isEmpty(locationTypes)) {
+            throw new SpatialServiceException(SpatialServiceErrors.MISSING_LOCATION_TYPE);
         }
     }
 }

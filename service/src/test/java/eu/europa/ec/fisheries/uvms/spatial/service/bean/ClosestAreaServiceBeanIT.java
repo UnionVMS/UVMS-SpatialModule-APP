@@ -38,9 +38,9 @@ public class ClosestAreaServiceBeanIT extends AbstractArquillianIT {
         //then
         assertNotNull(response);
         assertNotNull(response.getResponseMessage().getSuccess());
-        assertFalse(response.getClosestArea().getClosestArea().isEmpty());
+        assertFalse(response.getClosestAreas().getClosestArea().isEmpty());
 
-        ClosestAreaEntry closestAreaEntry = response.getClosestArea().getClosestArea().get(0);
+        ClosestAreaEntry closestAreaEntry = response.getClosestAreas().getClosestArea().get(0);
         assertEquals("231", closestAreaEntry.getId());
         assertEquals(0.0, closestAreaEntry.getDistance(), 0.01);
         assertEquals(AreaType.EEZ, closestAreaEntry.getAreaType());
@@ -60,9 +60,9 @@ public class ClosestAreaServiceBeanIT extends AbstractArquillianIT {
         //then
         assertNotNull(response);
         assertNotNull(response.getResponseMessage().getSuccess());
-        assertFalse(response.getClosestArea().getClosestArea().isEmpty());
+        assertFalse(response.getClosestAreas().getClosestArea().isEmpty());
 
-        ClosestAreaEntry closestAreaEntry = response.getClosestArea().getClosestArea().get(0);
+        ClosestAreaEntry closestAreaEntry = response.getClosestAreas().getClosestArea().get(0);
         assertEquals("189", closestAreaEntry.getId());
         assertEquals(367.705022199885, closestAreaEntry.getDistance(), 0.01);
         assertEquals(AreaType.COUNTRY, closestAreaEntry.getAreaType());

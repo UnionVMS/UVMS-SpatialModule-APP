@@ -9,8 +9,6 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.ClosestAreaService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestAreaDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,13 +17,10 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-import static eu.europa.ec.fisheries.uvms.spatial.rest.util.ValidationUtils.validateInputParameters;
-import static org.apache.commons.collections.CollectionUtils.isEmpty;
-
 @Path("/")
-public class AreaTypeResource {
+public class AreaResource {
 
-    final static Logger LOG = LoggerFactory.getLogger(AreaTypeResource.class);
+    final static Logger LOG = LoggerFactory.getLogger(AreaResource.class);
 
     @EJB
     private AreaTypeNamesService areaTypeService;
@@ -35,9 +30,6 @@ public class AreaTypeResource {
 
     @EJB
     private ClosestAreaService closestAreaService;
-
-    public AreaTypeResource() {
-    }
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
@@ -62,7 +54,7 @@ public class AreaTypeResource {
             @DefaultValue("4326") @QueryParam(value = "crs") int crs) {
         try {
             LOG.info("Getting areas by location");
-            validateInputParameters(lat, lon);
+            ValidationUtils.validateInputParameters(lat, lon);
             List<AreaDto> areasByLocation = areaByLocationService.getAreasByLocationRest(lat, lon, crs);
             return new ResponseDto(areasByLocation, ResponseCode.OK);
         } catch (Exception ex) {
@@ -89,6 +81,11 @@ public class AreaTypeResource {
             LOG.error("[ Error when getting closest areas. ] ", ex);
             return ErrorHandler.getFault(ex);
         }
+    }
+
+    public void validateInputParameters(Double lat, Double lon, List<String> areaTypes) {
+        ValidationUtils.validateCoordinates(lat, lon);
+        ValidationUtils.validateAreaTypes(areaTypes);
     }
 
 }

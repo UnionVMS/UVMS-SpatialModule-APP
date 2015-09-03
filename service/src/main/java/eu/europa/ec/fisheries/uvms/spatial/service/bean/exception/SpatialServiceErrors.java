@@ -15,7 +15,8 @@ public enum SpatialServiceErrors {
     WRONG_AREA_TYPE(5004, "Invalid parameter. Wrong Area Type: '{0}'.", "Wrong argument."),
     MISSING_LATITUDE(5005, "Invalid parameter. Missing latitude: 'lat='.", "Wrong argument."),
     MISSING_LONGITUDE(5006, "Invalid parameter. Missing longitude: 'lon='.", "Wrong argument."),
-    MISSING_AREA_TYPE(5007, "Invalid parameter. Please specify at least one Area Type: 'type='.", "Wrong argument.");
+    MISSING_AREA_TYPE(5007, "Invalid parameter. Please specify at least one Area Type: 'type='.", "Wrong argument."),
+    MISSING_LOCATION_TYPE(5008, "Invalid parameter. Please specify at least one Location Type: 'type='.", "Wrong argument.");
 
     //@formatter:on
 
