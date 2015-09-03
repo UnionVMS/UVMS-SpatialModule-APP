@@ -4,6 +4,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.io.WKTWriter;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.PointType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import org.geotools.geometry.jts.JTS;
@@ -23,6 +24,10 @@ import static eu.europa.ec.fisheries.uvms.common.SpatialUtils.DEFAULT_CRS;
 public class SpatialUtils {
 
     private static final String EPSG = "EPSG:";
+
+    public static Point convertToPointInWGS84(PointType schemaPoint) {
+        return convertToPointInWGS84(schemaPoint.getLongitude(), schemaPoint.getLatitude(), defaultIfNull(schemaPoint.getCrs()));
+    }
 
     public static Point convertToPointInWGS84(double lon, double lat, int crs) {
         try {

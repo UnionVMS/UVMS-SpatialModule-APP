@@ -3,6 +3,8 @@ package eu.europa.ec.fisheries.uvms.spatial.dao;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.service.CrudService;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaEntry;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.UnitType;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.MeasurementUnit;
 import eu.europa.ec.fisheries.uvms.util.SqlPropertyHolder;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
@@ -26,7 +28,7 @@ public class SpatialRepositoryBean implements SpatialRepository {
     private static final String WKT = "wktPoint";
     private static final String UNIT = "unit";
     private static final String FIND_AREAS_ID_BY_LOCATION = "sql.findAreasIdByLocation";
-    private static final String CLOSEST_AREA_QUERY = "sql.closestArea";
+    private static final String CLOSEST_AREA_QUERY = "sql.findClosestArea";
     private static final String TABLE_NAME_PLACEHOLDER = "{tableName}";
 
     @EJB
@@ -38,21 +40,30 @@ public class SpatialRepositoryBean implements SpatialRepository {
     @Override
     public List<Integer> findAreasIdByLocation(Point point, String areaDbTable) {
         String queryString = sqlPropertyHolder.getProperty(FIND_AREAS_ID_BY_LOCATION);
-        return prepareAndExecuteQuery(queryString, point, areaDbTable);
+        return executeAreasByLocation(queryString, point, areaDbTable);
     }
 
     @Override
-    public List<Integer> findClosestAreas(Point point, String areaDbTable) {
+    public List<ClosestAreaEntry> findClosestAreas(Point point, UnitType unit, String areaDbTable) {
         String queryString = sqlPropertyHolder.getProperty(CLOSEST_AREA_QUERY);
-        return prepareAndExecuteQuery(queryString, point, areaDbTable);
+        return executeClosestAreas(queryString, point, unit, areaDbTable);
     }
 
-    private List<Integer> prepareAndExecuteQuery(String queryString, Point point, String areaDbTable) {
+    private List<Integer> executeAreasByLocation(String queryString, Point point, String areaDbTable) {
         queryString = replaceTableName(queryString, areaDbTable);
         String wktPoint = convertToWkt(point);
-        int sRid = point.getSRID();
+        int crs = point.getSRID();
 
-        return createSQLQuery(queryString, wktPoint, sRid).list();
+        return createSQLQuery(queryString, wktPoint, crs).list();
+    }
+
+    private List<ClosestAreaEntry> executeClosestAreas(String queryString, Point point, UnitType unit, String areaDbTable) {
+        queryString = replaceTableName(queryString, areaDbTable);
+        String wktPoint = convertToWkt(point);
+        int crs = point.getSRID();
+        double unitRatio = MeasurementUnit.valueOf(unit.name()).getRatio();
+
+        return createSQLQuery(queryString, wktPoint, crs, unitRatio).list();
     }
 
     private SQLQuery createSQLQuery(String queryString, String wktPoint, int crs, double unit) {

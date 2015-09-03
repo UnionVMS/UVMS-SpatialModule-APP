@@ -46,7 +46,7 @@
                 <xs:element name="Point" type="PointType" />
                 <xs:element name="AreaTypes">
                     <xs:complexType>
-                        <xs:sequence maxOccurs="10">
+                        <xs:sequence minOccurs="1" maxOccurs="10">
                             <xs:element name="AreaType" type="AreaType" />
                         </xs:sequence>
                     </xs:complexType>

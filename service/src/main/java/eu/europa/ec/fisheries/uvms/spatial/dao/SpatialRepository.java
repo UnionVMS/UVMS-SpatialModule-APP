@@ -1,6 +1,8 @@
 package eu.europa.ec.fisheries.uvms.spatial.dao;
 
 import com.vividsolutions.jts.geom.Point;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaEntry;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.UnitType;
 
 import java.util.List;
 
@@ -10,5 +12,5 @@ import java.util.List;
 public interface SpatialRepository {
     List<Integer> findAreasIdByLocation(Point point, String areaDbTable);
 
-    List<Integer> findClosestAreas(Point point, String areaDbTable);
+    List<ClosestAreaEntry> findClosestAreas(Point point, UnitType unit, String areaDbTable);
 }

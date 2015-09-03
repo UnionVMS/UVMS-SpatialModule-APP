@@ -42,13 +42,12 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
     public AreaByLocationSpatialRS getAreasByLocation(AreaByLocationSpatialRQ request) {
         List<AreaTypesEntity> systemAreaTypes = getAreaTypes();
 
+        Point point = convertToPointInWGS84(request.getPoint());
+
         List<AreaTypeEntry> areaTypes = Lists.newArrayList();
         for (AreaTypesEntity areaType : systemAreaTypes) {
             String areaDbTable = areaType.getAreaDbTable();
             String areaTypeName = areaType.getTypeName();
-
-            PointType schemaPoint = request.getPoint();
-            Point point = convertToPointInWGS84(schemaPoint.getLongitude(), schemaPoint.getLatitude(), defaultIfNull(schemaPoint.getCrs()));
 
             List<Integer> resultList = repository.findAreasIdByLocation(point, areaDbTable);
             for (Integer id : resultList) {

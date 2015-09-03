@@ -1,45 +1,26 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import com.google.common.collect.Lists;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.GeometryFactory;
+import com.google.common.collect.Maps;
 import com.vividsolutions.jts.geom.Point;
-import eu.europa.ec.fisheries.uvms.common.SpatialUtils;
 import eu.europa.ec.fisheries.uvms.service.CrudService;
+import eu.europa.ec.fisheries.uvms.spatial.dao.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UnitType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler.SpatialExceptionHandler;
-import eu.europa.ec.fisheries.uvms.util.ModelUtils;
-import eu.europa.ec.fisheries.uvms.util.SqlPropertyHolder;
 import lombok.extern.slf4j.Slf4j;
-import org.geotools.geometry.jts.JTS;
-import org.geotools.referencing.CRS;
-import org.geotools.referencing.crs.DefaultGeographicCRS;
-import org.hibernate.SQLQuery;
-import org.hibernate.Session;
-import org.hibernate.transform.Transformers;
-import org.opengis.geometry.MismatchedDimensionException;
-import org.opengis.referencing.FactoryException;
-import org.opengis.referencing.crs.CoordinateReferenceSystem;
-import org.opengis.referencing.operation.MathTransform;
-import org.opengis.referencing.operation.TransformException;
 
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.transaction.Transactional;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static eu.europa.ec.fisheries.uvms.common.SpatialUtils.DEFAULT_CRS;
+import static com.google.common.collect.Lists.newArrayList;
 import static eu.europa.ec.fisheries.uvms.util.ModelUtils.createSuccessResponseMessage;
 import static eu.europa.ec.fisheries.uvms.util.SpatialUtils.convertToPointInWGS84;
-import static eu.europa.ec.fisheries.uvms.util.SpatialUtils.convertToWkt;
-import static eu.europa.ec.fisheries.uvms.util.SpatialUtils.defaultIfNull;
 
 @Stateless
 @Local(ClosestAreaService.class)
@@ -48,59 +29,59 @@ import static eu.europa.ec.fisheries.uvms.util.SpatialUtils.defaultIfNull;
 public class ClosestAreaServiceBean implements ClosestAreaService {
 
     @EJB
-    private CrudService crudService;
-
-    private static final String EPSG = "EPSG:";
-    private final static String TABLE_NAME_PLACEHOLDER = "{tableName}";
-
-    private final static String CLOSEST_AREA_QUERY_WITH_TRANSFORM = "sql.closestAreaWithTransform";
-    private final static String OTHER_CRS = "otherCrs";
-    private final static String DEFAULT_CRS = "defaultCrs";
-    private final static String WKT = "wkt";
-    private final static String UNIT = "unit";
-
+    private SpatialRepository repository;
     @EJB
-    private SqlPropertyHolder prop;
+    private CrudService crudService;
 
     @Override
     @SpatialExceptionHandler(responseType = ClosestAreaSpatialRS.class)
     public ClosestAreaSpatialRS getClosestArea(final ClosestAreaSpatialRQ request) {
-        List<AreaType> areaTypes = request.getAreaTypes().getAreaType();
-        Map<String, String> areaMap = getAreaMap();
-        //String queryString = prop.getProperty(CLOSEST_AREA_QUERY);
+        Map<String, String> areaType2TableName = getAreaType2TableNameMap();
+        Point point = convertToPointInWGS84(request.getPoint());
 
-        PointType schemaPoint = request.getPoint();
-        Point point = convertToPointInWGS84(schemaPoint.getLongitude(), schemaPoint.getLatitude(), defaultIfNull(schemaPoint.getCrs()));
+        List<ClosestAreaEntry> closestAreas = newArrayList();
+        for (AreaType areaType : request.getAreaTypes().getAreaType()) {
+            String areaDbTable = areaType2TableName.get(areaType.value());
+            UnitType unit = request.getUnit();
 
-        List<ClosestAreaEntry> closestAreaList = Lists.newArrayList();
-        for (AreaType areaType: areaTypes){
-            //String replaced = queryString.replace(TABLE_NAME_PLACEHOLDER, areaMap.get(areaType.value()));
-            String wktPoint = convertToWkt(point);
-            //SQLQuery sqlQuery = createSQLQuery(replaced, wktPoint, SpatialUtils.DEFAULT_CRS, UnitType.valueOf(request.getUnit().name()).getUnit());
-            List queryResult = null;//sqlQuery.list();
-            if (queryResult != null && queryResult.size() == 1) {
-                ClosestAreaEntry area = (ClosestAreaEntry) queryResult.get(0);
-                closestAreaList.add(area);
+            List<ClosestAreaEntry> closestAreaList = repository.findClosestAreas(point, unit, areaDbTable);
+            validateResponse(closestAreaList);
+
+            ClosestAreaEntry closestAreaEntry = closestAreaList.get(0);
+            if (closestAreaEntry != null) {
+                closestAreaEntry.setAreaTypeName(areaType);
+                closestAreaEntry.setUnits(unit);
+                closestAreas.add(closestAreaEntry);
             }
         }
-        return createSuccessClosestAreaResponse(new ClosestAreasType(closestAreaList));
+
+        return createSuccessClosestAreaResponse(new ClosestAreasType(closestAreas));
+    }
+
+    private void validateResponse(List<ClosestAreaEntry> closestAreaList) {
+        if (isMoreThanOneArea(closestAreaList)) {
+            throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
+        }
+    }
+
+    private boolean isMoreThanOneArea(List<ClosestAreaEntry> closestAreaList) {
+        return closestAreaList.size() > 1;
     }
 
     private ClosestAreaSpatialRS createSuccessClosestAreaResponse(ClosestAreasType closestAreasType) {
         return new ClosestAreaSpatialRS(createSuccessResponseMessage(), closestAreasType);
     }
 
-    private ClosestAreaSpatialRS createResponse() {
-        ClosestAreaSpatialRS response = new ClosestAreaSpatialRS();
-        response.setResponseMessage(ModelUtils.createSuccessResponseMessage());
-        return response;
+    private Map<String, String> getAreaType2TableNameMap() {
+        List<AreaTypesEntity> allEntity = crudService.findAllEntity(AreaTypesEntity.class);
+        return convert2Map(allEntity);
     }
 
-    @SuppressWarnings("unchecked")
-    private Map<String, String> getAreaMap() {
-        List<AreaTypesEntity> allEntity = crudService.findAllEntity(AreaTypesEntity.class);
-        Map<String, String> areaMap = new HashMap<>();
-        for (AreaTypesEntity i : allEntity) areaMap.put(i.getTypeName(),i.getAreaDbTable());
+    private Map<String, String> convert2Map(List<AreaTypesEntity> allEntity) {
+        Map<String, String> areaMap = Maps.newHashMap();
+        for (AreaTypesEntity i : allEntity) {
+            areaMap.put(i.getTypeName().toUpperCase(), i.getAreaDbTable());
+        }
         return areaMap;
     }
 
