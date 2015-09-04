@@ -3,7 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.service.CrudService;
-import eu.europa.ec.fisheries.uvms.spatial.dao.SpatialRepository;
+import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
@@ -20,7 +20,6 @@ import java.util.List;
 
 import static eu.europa.ec.fisheries.uvms.util.ModelUtils.createSuccessResponseMessage;
 import static eu.europa.ec.fisheries.uvms.util.SpatialUtils.convertToPointInWGS84;
-import static eu.europa.ec.fisheries.uvms.util.SpatialUtils.defaultIfNull;
 
 /**
  * Created by kopyczmi on 18-Aug-15.
