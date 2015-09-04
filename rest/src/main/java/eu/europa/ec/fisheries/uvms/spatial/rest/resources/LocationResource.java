@@ -50,8 +50,8 @@ public class LocationResource {
         }
     }
 
-    public void validateInputParameters(Double lat, Double lon, List<String> areaTypes) {
+    public void validateInputParameters(Double lat, Double lon, List<String> locationTypes) {
         ValidationUtils.validateCoordinates(lat, lon);
-        ValidationUtils.validateLocationTypes(areaTypes);
+        ValidationUtils.validateLocationTypes(locationTypes);
     }
 }

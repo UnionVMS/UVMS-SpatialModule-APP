@@ -72,7 +72,7 @@
     </xs:complexType>
     <xs:complexType name="ClosestLocationsType">
         <xs:sequence>
-            <xs:element name="ClosestLocations" type="ClosestAreaEntry" maxOccurs="10" />
+            <xs:element name="ClosestLocations" type="ClosestLocationEntry" maxOccurs="10" />
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="AreaDetails">

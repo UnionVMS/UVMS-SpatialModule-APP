@@ -12,6 +12,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialService
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler.ExceptionHandlerInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler.SpatialExceptionHandler;
+import eu.europa.ec.fisheries.uvms.util.SpatialUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.ejb.EJB;
@@ -50,7 +51,7 @@ public class ClosestAreaServiceBean implements ClosestAreaService {
         for (AreaType areaType : request.getAreaTypes().getAreaType()) {
             String areaDbTable = areaType2TableName.get(areaType.value());
 
-            List<ClosestAreaDto> closestAreaList = repository.findClosestAreas(point, measurementUnit, areaDbTable);
+            List<ClosestAreaDto> closestAreaList = repository.findClosestArea(point, measurementUnit, areaDbTable);
             validateResponse(closestAreaList);
 
             ClosestAreaDto closestAreaDto = closestAreaList.get(0);
@@ -64,22 +65,23 @@ public class ClosestAreaServiceBean implements ClosestAreaService {
     }
 
     @Override
-    public List<ClosestAreaDto> getClosestAreasRest(double lat, double lon, int crs, String unit, List<String> areaTypes) {
+    public List<ClosestAreaDto> getClosestAreasRest(double lat, double lon, int crs, String unit, List<String> types) {
+        List<String> areaTypes = SpatialUtils.toUpperCase(types);
         Map<String, String> areaType2TableName = getAreaType2TableNameMap();
         Point point = convertToPointInWGS84(lon, lat, crs);
         MeasurementUnit measurementUnit = MeasurementUnit.getMeasurement(unit);
 
         List<ClosestAreaDto> closestAreas = newArrayList();
         for (String areaType : areaTypes) {
-            String areaDbTable = areaType2TableName.get(areaType.toUpperCase());
+            String areaDbTable = areaType2TableName.get(areaType);
             validateAreaType(areaType, areaDbTable);
 
-            List<ClosestAreaDto> closestAreaList = repository.findClosestAreas(point, measurementUnit, areaDbTable);
+            List<ClosestAreaDto> closestAreaList = repository.findClosestArea(point, measurementUnit, areaDbTable);
             validateResponse(closestAreaList);
 
             ClosestAreaDto closestAreaDto = closestAreaList.get(0);
             if (closestAreaDto != null) {
-                closestAreaDto.setAreaType(areaType.toUpperCase());
+                closestAreaDto.setAreaType(areaType);
                 closestAreaDto.setUnit(measurementUnit.name());
                 closestAreas.add(closestAreaDto);
             }
@@ -97,8 +99,8 @@ public class ClosestAreaServiceBean implements ClosestAreaService {
     private Map<String, String> getAreaType2TableNameMap() {
         List<AreaTypesEntity> allEntity = crudService.findAllEntity(AreaTypesEntity.class);
         Map<String, String> areaMap = Maps.newHashMap();
-        for (AreaTypesEntity i : allEntity) {
-            areaMap.put(i.getTypeName().toUpperCase(), i.getAreaDbTable());
+        for (AreaTypesEntity area : allEntity) {
+            areaMap.put(area.getTypeName().toUpperCase(), area.getAreaDbTable());
         }
         return areaMap;
     }

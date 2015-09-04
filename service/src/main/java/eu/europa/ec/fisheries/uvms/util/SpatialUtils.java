@@ -1,5 +1,7 @@
 package eu.europa.ec.fisheries.uvms.util;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
@@ -15,6 +17,8 @@ import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
+
+import java.util.List;
 
 /**
  * Created by Michal Kopyczok on 02-Sep-15.
@@ -59,6 +63,15 @@ public class SpatialUtils {
             return DEFAULT_CRS;
         }
         return crs;
+    }
+
+    public static List<String> toUpperCase(List<String> textValue) {
+        return Lists.transform(textValue, new Function<String, String>() {
+            @Override
+            public String apply(String value) {
+                return value.toUpperCase();
+            }
+        });
     }
 
     public static String convertToWkt(Point point) {

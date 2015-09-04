@@ -4,6 +4,7 @@ import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaEntry;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.UnitType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestLocationDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.MeasurementUnit;
 
 import java.util.List;
@@ -14,5 +15,7 @@ import java.util.List;
 public interface SpatialRepository {
     List<Integer> findAreasIdByLocation(Point point, String areaDbTable);
 
-    List<ClosestAreaDto> findClosestAreas(Point point, MeasurementUnit unit, String areaDbTable);
+    List<ClosestAreaDto> findClosestArea(Point point, MeasurementUnit unit, String areaDbTable);
+
+    List<ClosestLocationDto> findClosestlocation(Point point, MeasurementUnit unit, String areaDbTable);
 }
