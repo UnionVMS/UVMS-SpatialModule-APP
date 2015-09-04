@@ -39,7 +39,7 @@ public class SpatialUtils {
         try {
             GeometryFactory gf = new GeometryFactory();
             Point point = gf.createPoint(new Coordinate(lon, lat));
-            if (crs != DEFAULT_CRS) {
+            if (!isDefaultCrs(crs)) {
                 point = transform(crs, point);
             }
             point.setSRID(DEFAULT_CRS);
