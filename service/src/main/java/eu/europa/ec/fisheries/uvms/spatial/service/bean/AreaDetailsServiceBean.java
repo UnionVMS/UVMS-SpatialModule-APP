@@ -33,14 +33,14 @@ public class AreaDetailsServiceBean implements AreaDetailsService {
 
     private static Logger LOG = LoggerFactory.getLogger(AreaDetailsServiceBean.class.getName());
 
-    private ImmutableMap<AreaType, Class> entityMap = ImmutableMap.<AreaType, Class>builder()
-            .put(AreaType.EEZ, EezEntity.class)
-            .put(AreaType.RFMO, RfmoEntity.class)
-            .put(AreaType.COUNTRY, CountriesEntity.class)
-            .put(AreaType.FAO, FaoEntity.class)
-            .put(AreaType.GFCM, GfcmEntity.class)
-            .put(AreaType.RAC, RacEntity.class)
-            .put(AreaType.S_TAT_RECT, StatRectEntity.class)
+    private ImmutableMap<String, Class> entityMap = ImmutableMap.<String, Class>builder()
+            .put(AreaType.EEZ.value(), EezEntity.class)
+            .put(AreaType.RFMO.value(), RfmoEntity.class)
+            .put(AreaType.COUNTRY.value(), CountriesEntity.class)
+            .put(AreaType.FAO.value(), FaoEntity.class)
+            .put(AreaType.GFCM.value(), GfcmEntity.class)
+            .put(AreaType.RAC.value(), RacEntity.class)
+            .put(AreaType.S_TAT_RECT.value(), StatRectEntity.class)
             .build();
 
     @EJB
@@ -72,8 +72,8 @@ public class AreaDetailsServiceBean implements AreaDetailsService {
     }
 
     private boolean isSystemAreaType(String areaTypeName) {
-        for (AreaType key : entityMap.keySet()) {
-            if (key.value().equalsIgnoreCase(areaTypeName)) {
+        for (String key : entityMap.keySet()) {
+            if (key.equalsIgnoreCase(areaTypeName)) {
                 return true;
             }
         }
