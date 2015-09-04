@@ -23,6 +23,10 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetailsSpatialRespo
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ErrorsType;
 
+/**
+ * @author padhyad
+ * Arquillian integration test for GetAreaDetails API
+ */
 @RunWith(Arquillian.class)
 public class AreaDetailsServiceIT {
 	
@@ -46,6 +50,9 @@ public class AreaDetailsServiceIT {
 	@EJB
 	private AreaDetailsService areaDetailsService;
 	
+	/**
+	 * Test EEZ entity for valid response
+	 */
 	@Test
 	public void getEezAreaDetailsTest() {
 		AreaDetailsSpatialRequest request = new AreaDetailsSpatialRequest(new AreaTypeEntry("1", "eez"));		
@@ -56,6 +63,9 @@ public class AreaDetailsServiceIT {
 		assertEquals(response.getAreaDetails().getAreaProperty().isEmpty(), false);
 	}
 	
+	/**
+	 * Test RFMO entity for valid response
+	 */
 	@Test
 	public void getRfmoAreaDetailsTest() {
 		AreaDetailsSpatialRequest request = new AreaDetailsSpatialRequest(new AreaTypeEntry("1", "rfmo"));		
@@ -66,6 +76,22 @@ public class AreaDetailsServiceIT {
 		assertEquals(response.getAreaDetails().getAreaProperty().isEmpty(), false);
 	}
 	
+
+	/**
+	 * Test for invalid input
+	 */
+	@Test
+	public void getAreaDetailsIncorrectIdTest() {
+		AreaDetailsSpatialRequest request = new AreaDetailsSpatialRequest(new AreaTypeEntry("invalid", "eez"));		
+		AreaDetailsSpatialResponse response = areaDetailsService.getAreaDetails(request);
+		ErrorsType errorType = response.getResponseMessage().getErrors();
+		assertEquals(errorType.getErrorMessage().get(0).getErrorCode(), "5012");
+	}
+	
+
+	/**
+	 * Test for Invalid entity in the DB
+	 */
 	@Test
 	public void getAreaDetailsInvalidEntityTest() {
 		AreaDetailsSpatialRequest request = new AreaDetailsSpatialRequest(new AreaTypeEntry("1", "Invalid"));		
@@ -74,6 +100,9 @@ public class AreaDetailsServiceIT {
 		assertEquals(errorType.getErrorMessage().get(0).getErrorCode(), "5009");
 	}
 	
+	/**
+	 * Test for non existing row in DB
+	 */
 	@Test
 	public void GetAreaDetailsInvalidRowTest() {
 		AreaDetailsSpatialRequest request = new AreaDetailsSpatialRequest(new AreaTypeEntry("10000000", "eez"));		

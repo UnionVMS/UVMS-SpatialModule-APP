@@ -1,30 +1,45 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import com.google.common.collect.ImmutableMap;
-import eu.europa.ec.fisheries.uvms.service.CrudService;
-import eu.europa.ec.fisheries.uvms.spatial.entity.*;
-import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler.ExceptionHandlerInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler.SpatialExceptionHandler;
-import eu.europa.ec.fisheries.uvms.util.ColumnAliasNameHelper;
-import org.apache.commons.lang3.NotImplementedException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static com.google.common.collect.Maps.newHashMap;
+import static eu.europa.ec.fisheries.uvms.util.ModelUtils.createSuccessResponseMessage;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
-import static com.google.common.collect.Maps.newHashMap;
-import static eu.europa.ec.fisheries.uvms.util.ModelUtils.createSuccessResponseMessage;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.NotImplementedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.common.collect.ImmutableMap;
+
+import eu.europa.ec.fisheries.uvms.service.CrudService;
+import eu.europa.ec.fisheries.uvms.spatial.entity.AreaTypesEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.CountriesEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.FaoEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.GfcmEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.RacEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.RfmoEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.StatRectEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetailsSpatialRequest;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetailsSpatialResponse;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler.ExceptionHandlerInterceptor;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler.SpatialExceptionHandler;
+import eu.europa.ec.fisheries.uvms.util.ColumnAliasNameHelper;
 
 @Stateless
 @Local(AreaDetailsService.class)
@@ -50,7 +65,6 @@ public class AreaDetailsServiceBean implements AreaDetailsService {
     @Override
     @SpatialExceptionHandler(responseType = AreaDetailsSpatialResponse.class)
     @Interceptors(value = ExceptionHandlerInterceptor.class)
-
     public AreaDetailsSpatialResponse getAreaDetails(AreaDetailsSpatialRequest request) {
         AreaDetailsSpatialResponse response = null;
         String areaTypeName = request.getAreaType().getAreaType();
@@ -59,7 +73,7 @@ public class AreaDetailsServiceBean implements AreaDetailsService {
         parameters.put("typeName", areaTypeName.toUpperCase());
         List<AreaTypesEntity> areasTypes = crudService.findEntityByNamedQuery(AreaTypesEntity.class, QueryNameConstants.FIND_AREAS_BY_ID, parameters, 1);
         if (!areasTypes.isEmpty()) {
-            if (isSystemAreaType(areaTypeName)) {
+            if (isSystemAreaType(areaTypeName)) { //proceed only if the area is in the MAP
                 Map<String, String> properties = getSystemAreaDetails(areasTypes.get(0), request.getAreaType().getId());
                 response = createAreaDetailsSpatialResponse(properties, request);
             } else {
@@ -82,22 +96,25 @@ public class AreaDetailsServiceBean implements AreaDetailsService {
     }
 
     @SuppressWarnings("unchecked")
-    private Map<String, String> getSystemAreaDetails(AreaTypesEntity areaTypeEntity, String id) {
-        Map<String, String> properties = newHashMap();
-        LOG.info("Area Type entity to be retrieved : " + areaTypeEntity.getTypeName());
-        Class entityClass = entityMap.get(areaTypeEntity.getTypeName());
-        if (entityClass != null) {
-            Object object = crudService.findEntityById(entityClass, Integer.parseInt(id));
-            if (object != null) {
-                properties = ColumnAliasNameHelper.getFieldMap(object);
-            } else {
-                throw new SpatialServiceException(SpatialServiceErrors.AREA_NOT_FOUND, areaTypeEntity.getTypeName());
-            }
-        } else {
-            throw new SpatialServiceException(SpatialServiceErrors.AREA_NOT_FOUND, areaTypeEntity.getTypeName());
-        }
-        return properties;
-    }
+	private Map<String, String> getSystemAreaDetails(AreaTypesEntity areaTypeEntity, String id) {
+		Map<String, String> properties = newHashMap();
+		LOG.info("Area Type entity to be retrieved : " + areaTypeEntity.getTypeName());
+		if (!StringUtils.isNumeric(id)) {
+			throw new SpatialServiceException(SpatialServiceErrors.INVALID_AREA_ID, id);
+		}
+		Class entityClass = entityMap.get(areaTypeEntity.getTypeName()); // Check whether the area is already registered in the Map
+		if (entityClass != null) {
+			Object object = crudService.findEntityById(entityClass, Integer.parseInt(id));
+			if (object != null) {
+				properties = ColumnAliasNameHelper.getFieldMap(object); // Get the alias name set in the annotation using helper
+			} else {
+				throw new SpatialServiceException(SpatialServiceErrors.AREA_NOT_FOUND, areaTypeEntity.getTypeName());
+			}
+		} else {
+			throw new SpatialServiceException(SpatialServiceErrors.AREA_NOT_FOUND, areaTypeEntity.getTypeName());
+		}
+		return properties; 
+	}
 
     private AreaDetailsSpatialResponse createAreaDetailsSpatialResponse(Map<String, String> properties, AreaDetailsSpatialRequest request) {
         List<AreaProperty> areaProperties = new ArrayList<AreaProperty>();
