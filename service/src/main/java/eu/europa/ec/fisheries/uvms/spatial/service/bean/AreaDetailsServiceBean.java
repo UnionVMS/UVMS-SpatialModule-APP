@@ -50,12 +50,13 @@ public class AreaDetailsServiceBean implements AreaDetailsService {
     @Override
     @SpatialExceptionHandler(responseType = AreaDetailsSpatialResponse.class)
     @Interceptors(value = ExceptionHandlerInterceptor.class)
+
     public AreaDetailsSpatialResponse getAreaDetails(AreaDetailsSpatialRequest request) {
         AreaDetailsSpatialResponse response = null;
         String areaTypeName = request.getAreaType().getAreaType();
         LOG.info("Area Type name received : " + areaTypeName);
         Map<String, String> parameters = newHashMap();
-        parameters.put("areaDbTable", areaTypeName);
+        parameters.put("typeName", areaTypeName.toUpperCase());
         List<AreaTypesEntity> areasTypes = crudService.findEntityByNamedQuery(AreaTypesEntity.class, QueryNameConstants.FIND_AREAS_BY_ID, parameters, 1);
         if (!areasTypes.isEmpty()) {
             if (isSystemAreaType(areaTypeName)) {
