@@ -10,6 +10,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialService
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler.ExceptionHandlerInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler.SpatialExceptionHandler;
 import eu.europa.ec.fisheries.uvms.util.ColumnAliasNameHelper;
+import org.apache.commons.lang3.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,10 +20,10 @@ import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.google.common.collect.Maps.newHashMap;
 import static eu.europa.ec.fisheries.uvms.util.ModelUtils.createSuccessResponseMessage;
 
 @Stateless
@@ -53,7 +54,7 @@ public class AreaDetailsServiceBean implements AreaDetailsService {
         AreaDetailsSpatialResponse response = null;
         String areaTypeName = request.getAreaType().getAreaType();
         LOG.info("Area Type name received : " + areaTypeName);
-        Map<String, String> parameters = new HashMap<String, String>();
+        Map<String, String> parameters = newHashMap();
         parameters.put("areaDbTable", areaTypeName);
         List<AreaTypesEntity> areasTypes = crudService.findEntityByNamedQuery(AreaTypesEntity.class, QueryNameConstants.FIND_AREAS_BY_ID, parameters, 1);
         if (!areasTypes.isEmpty()) {
@@ -62,6 +63,7 @@ public class AreaDetailsServiceBean implements AreaDetailsService {
                 response = createAreaDetailsSpatialResponse(properties, request);
             } else {
                 // TODO handle user areas
+                throw new NotImplementedException("Not yet implemented");
             }
         } else {
             throw new SpatialServiceException(SpatialServiceErrors.INVALID_AREA_TYPE, areaTypeName);
@@ -80,7 +82,7 @@ public class AreaDetailsServiceBean implements AreaDetailsService {
 
     @SuppressWarnings("unchecked")
     private Map<String, String> getSystemAreaDetails(AreaTypesEntity areaTypeEntity, String id) {
-        Map<String, String> properties = new HashMap<String, String>();
+        Map<String, String> properties = newHashMap();
         LOG.info("Area Type entity to be retrieved : " + areaTypeEntity.getTypeName());
         Class entityClass = entityMap.get(areaTypeEntity.getTypeName());
         if (entityClass != null) {
