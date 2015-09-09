@@ -20,7 +20,10 @@ public enum SpatialServiceErrors {
 	INVALID_AREA_TYPE(5009, "Invalid Area Type in Request : {0}"),
 	AREA_NOT_FOUND(5010, "Area Type not found : {0}"),
     WRONG_LOCATION_TYPE(5011, "Invalid parameter. Wrong Location Type: '{0}'.", "Wrong argument."),
-	INVALID_AREA_ID(5012, "Invalid Area id in the request : {0}");
+	INVALID_AREA_ID(5012, "Invalid Area id in the request : {0}"),
+	INVALID_LOCATION_TYPE(5013, "Invalid Location Type in Request : {0}"),
+	LOCATION_NOT_FOUND(5014, "Location Type not found : {0}"),
+	INVALID_LOCATION_ID(5015, "Invalid Location id in the request : {0}");
 
     //@formatter:on
 
