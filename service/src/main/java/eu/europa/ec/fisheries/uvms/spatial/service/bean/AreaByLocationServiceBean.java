@@ -11,6 +11,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.EnrichmentDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler.ExceptionHandlerInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler.SpatialExceptionHandler;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.ejb.EJB;
 import javax.ejb.Local;
@@ -29,6 +30,7 @@ import static eu.europa.ec.fisheries.uvms.util.SpatialUtils.convertToPointInWGS8
 @Stateless(name = "areaByLocationService")
 @Local(AreaByLocationService.class)
 @Transactional
+@Slf4j
 public class AreaByLocationServiceBean implements AreaByLocationService, SpatialEnrichmentSupport {
 
     @EJB(name = "closestAreaService")

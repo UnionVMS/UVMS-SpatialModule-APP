@@ -1,65 +1,68 @@
 package eu.europa.ec.fisheries.uvms.util;
 
-import java.lang.reflect.Field;
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTWriter;
-
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
+import java.lang.reflect.Field;
+import java.math.BigDecimal;
+import java.util.Map;
 
+import static com.google.common.collect.Maps.newHashMap;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+
+@Slf4j
 public class ColumnAliasNameHelper {
-	
-	private static Logger LOG = LoggerFactory.getLogger(ColumnAliasNameHelper.class.getName());
-	
-	public static  Map<String, String> getFieldMap(Object object) {
-		Map<String, String> map = new HashMap<String, String>();
-		Class objClass = object.getClass();
-		try {
-			for (Field field : objClass.getDeclaredFields()) {
-				field.setAccessible(true);
-				if (field.isAnnotationPresent(ColumnAliasName.class)) {
-					String aliasName = field.getAnnotation(ColumnAliasName.class).aliasName();
-					LOG.info("Alias Name : " + aliasName);
-					String value = null;
-					
-					if ((field.get(object) instanceof Double)) {
-						Double doubleVal = (Double)field.get(object);
-						value = String.valueOf(doubleVal);
-					} else if ((field.get(object) instanceof Integer)) {
-						Integer integerVal = (Integer)field.get(object);
-						value = String.valueOf(integerVal);
-					} else if ((field.get(object) instanceof String)) {
-						value = (String)field.get(object);
-					} else if ((field.get(object) instanceof BigDecimal)) {
-						BigDecimal fieldVal = (BigDecimal)field.get(object);
-						value = fieldVal.toString();
-					} else if ((field.get(object) instanceof Geometry)) {
-						Geometry geometry = ((Geometry)field.get(object));
-						value = new WKTWriter().write(geometry);
-					} else {
-						value = (String)field.get(object);
-					}
-					LOG.info("Value is : " + value);	
-					if (value != null && value !="") {
-						map.put(aliasName, value);
-					}					
-				}				
-			}		
-		} catch (IllegalAccessException e) {
-			LOG.error("Illegal acess exception : ", e);
-			throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
-		}
-		
-		return map;
-	}
+
+    public static Map<String, String> getFieldMap(Object object) {
+        Map<String, String> map = newHashMap();
+        Class objClass = object.getClass();
+
+        try {
+            for (Field field : objClass.getDeclaredFields()) {
+                field.setAccessible(true);
+                if (field.isAnnotationPresent(ColumnAliasName.class)) {
+                    String aliasName = field.getAnnotation(ColumnAliasName.class).aliasName();
+                    log.info("Alias Name : " + aliasName);
+
+                    String value = retrieveValue(object, field);
+                    log.info("Value is : " + value);
+                    if (isNotEmpty(value)) {
+                        map.put(aliasName, value);
+                    } else {
+                        throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
+                    }
+                } else {
+                    throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
+                }
+            }
+        } catch (IllegalAccessException e) {
+            log.error("Illegal acess exception : ", e);
+            throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
+        }
+
+        return map;
+    }
+
+    private static String retrieveValue(Object object, Field field) throws IllegalAccessException {
+        if (field.get(object) instanceof Number) {
+            Number doubleVal = (Number) field.get(object);
+            return String.valueOf(doubleVal);
+        } else if (field.get(object) instanceof String) {
+            return (String) field.get(object);
+        } else if (field.get(object) instanceof BigDecimal) {
+            BigDecimal fieldVal = (BigDecimal) field.get(object);
+            return fieldVal.toString();
+        } else if (field.get(object) instanceof Geometry) {
+            Geometry geometry = ((Geometry) field.get(object));
+            return new WKTWriter().write(geometry);
+        } else {
+            return (String) field.get(object);
+        }
+    }
 
 }
