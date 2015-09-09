@@ -42,8 +42,8 @@ public class LocationResource {
         try {
             log.info("Getting closest locations");
             validateInputParameters(lat, lon, locationTypes);
-            List<ClosestLocationDto> closestAreas = closestLocationService.getClosestLocationsRest(lat, lon, crs, unit, locationTypes);
-            return new ResponseDto(closestAreas, ResponseCode.OK);
+            List<ClosestLocationDto> closestLocations = closestLocationService.getClosestLocationsRest(lat, lon, crs, unit, locationTypes);
+            return new ResponseDto(closestLocations, ResponseCode.OK);
         } catch (Exception ex) {
             log.error("[ Error when getting closest locations. ] ", ex);
             return ErrorHandler.getFault(ex);
