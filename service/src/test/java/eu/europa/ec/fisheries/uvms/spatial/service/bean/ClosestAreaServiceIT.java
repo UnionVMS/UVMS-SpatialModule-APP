@@ -14,7 +14,7 @@ import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(Arquillian.class)
-public class ClosestAreaServiceBeanIT extends AbstractArquillianIT {
+public class ClosestAreaServiceIT extends AbstractArquillianIT {
 
     private static final double LATITUDE = 32.85615;
     private static final double LATITUDE_2 = 45.11557;
