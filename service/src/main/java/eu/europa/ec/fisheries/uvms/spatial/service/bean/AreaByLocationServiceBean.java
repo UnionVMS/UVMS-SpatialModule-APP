@@ -3,8 +3,8 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.service.CrudService;
+import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
-import eu.europa.ec.fisheries.uvms.spatial.entity.AreaTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaDto;
@@ -39,12 +39,12 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
     @SpatialExceptionHandler(responseType = AreaByLocationSpatialRS.class)
     @Interceptors(value = ExceptionHandlerInterceptor.class)
     public AreaByLocationSpatialRS getAreasByLocation(AreaByLocationSpatialRQ request) {
-        List<AreaTypesEntity> systemAreaTypes = getAreaTypes();
+        List<AreaLocationTypesEntity> systemAreaTypes = getAreaTypes();
 
         Point point = convertToPointInWGS84(request.getPoint());
 
         List<AreaTypeEntry> areaTypes = Lists.newArrayList();
-        for (AreaTypesEntity areaType : systemAreaTypes) {
+        for (AreaLocationTypesEntity areaType : systemAreaTypes) {
             String areaDbTable = areaType.getAreaDbTable();
             String areaTypeName = areaType.getTypeName();
 
@@ -61,12 +61,12 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
 
     @Override
     public List<AreaDto> getAreasByLocationRest(double lat, double lon, int crs) {
-        List<AreaTypesEntity> systemAreaTypes = getAreaTypes();
+        List<AreaLocationTypesEntity> systemAreaTypes = getAreaTypes();
 
         Point point = convertToPointInWGS84(lon, lat, crs);
 
         List<AreaDto> areaTypes = Lists.newArrayList();
-        for (AreaTypesEntity areaType : systemAreaTypes) {
+        for (AreaLocationTypesEntity areaType : systemAreaTypes) {
             String areaDbTable = areaType.getAreaDbTable();
             String areaTypeName = areaType.getTypeName();
 
@@ -80,8 +80,8 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
         return areaTypes;
     }
 
-    private List<AreaTypesEntity> getAreaTypes() {
-        return crudService.findEntityByNamedQuery(AreaTypesEntity.class, QueryNameConstants.FIND_SYSTEM_AREAS);
+    private List<AreaLocationTypesEntity> getAreaTypes() {
+        return crudService.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_SYSTEM_AREAS);
     }
 
     private AreaByLocationSpatialRS createSuccessGetAreasByLocationResponse(AreasByLocationType areasByLocation) {

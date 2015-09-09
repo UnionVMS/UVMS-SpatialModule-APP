@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 import com.google.common.collect.ImmutableMap;
 
 import eu.europa.ec.fisheries.uvms.service.CrudService;
-import eu.europa.ec.fisheries.uvms.spatial.entity.AreaTypesEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.CountriesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.FaoEntity;
@@ -71,7 +71,7 @@ public class AreaDetailsServiceBean implements AreaDetailsService {
         LOG.info("Area Type name received : " + areaTypeName);
         Map<String, String> parameters = newHashMap();
         parameters.put("typeName", areaTypeName.toUpperCase());
-        List<AreaTypesEntity> areasTypes = crudService.findEntityByNamedQuery(AreaTypesEntity.class, QueryNameConstants.FIND_AREAS_BY_ID, parameters, 1);
+        List<AreaLocationTypesEntity> areasTypes = crudService.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_AREAS_BY_ID, parameters, 1);
         if (!areasTypes.isEmpty()) {
             if (isSystemAreaType(areaTypeName)) { //proceed only if the area is in the MAP
                 Map<String, String> properties = getSystemAreaDetails(areasTypes.get(0), request.getAreaType().getId());
@@ -96,7 +96,7 @@ public class AreaDetailsServiceBean implements AreaDetailsService {
     }
 
     @SuppressWarnings("unchecked")
-	private Map<String, String> getSystemAreaDetails(AreaTypesEntity areaTypeEntity, String id) {
+	private Map<String, String> getSystemAreaDetails(AreaLocationTypesEntity areaTypeEntity, String id) {
 		Map<String, String> properties = newHashMap();
 		LOG.info("Area Type entity to be retrieved : " + areaTypeEntity.getTypeName());
 		if (!StringUtils.isNumeric(id)) {

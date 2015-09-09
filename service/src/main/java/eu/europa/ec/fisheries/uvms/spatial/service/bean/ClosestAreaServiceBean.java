@@ -3,9 +3,10 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 import com.google.common.collect.Maps;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.service.CrudService;
-import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
-import eu.europa.ec.fisheries.uvms.spatial.entity.AreaTypesEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
+import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.MeasurementUnit;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
@@ -97,9 +98,9 @@ public class ClosestAreaServiceBean implements ClosestAreaService {
     }
 
     private Map<String, String> getAreaType2TableNameMap() {
-        List<AreaTypesEntity> allEntity = crudService.findAllEntity(AreaTypesEntity.class);
+        List<AreaLocationTypesEntity> areas = crudService.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_ALL_AREAS);
         Map<String, String> areaMap = Maps.newHashMap();
-        for (AreaTypesEntity area : allEntity) {
+        for (AreaLocationTypesEntity area : areas) {
             areaMap.put(area.getTypeName().toUpperCase(), area.getAreaDbTable());
         }
         return areaMap;

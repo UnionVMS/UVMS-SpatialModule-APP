@@ -55,10 +55,10 @@ public class ServiceLayerEntity implements Serializable {
     private Boolean isInternal = false;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "serviceLayer", cascade = CascadeType.ALL)
-    private Set<AreaTypesEntity> areaTypeses;
+    private Set<AreaLocationTypesEntity> areaTypeses;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "serviceLayer", cascade = CascadeType.ALL)
-    private Set<ReportConnectServiceAreasEntity> reportConnectServiceAreases;
+    private Set<ReportConnectServiceAreasEntity> reportConnectServiceAreas;
 
     public ServiceLayerEntity() {
     }
@@ -159,20 +159,20 @@ public class ServiceLayerEntity implements Serializable {
         this.isInternal = isInternal;
     }
 
-    public Set<AreaTypesEntity> getAreaTypeses() {
+    public Set<AreaLocationTypesEntity> getAreaTypeses() {
         return this.areaTypeses;
     }
 
-    public void setAreaTypeses(Set<AreaTypesEntity> areaTypeses) {
+    public void setAreaTypeses(Set<AreaLocationTypesEntity> areaTypeses) {
         this.areaTypeses = areaTypeses;
     }
 
-    public Set<ReportConnectServiceAreasEntity> getReportConnectServiceAreases() {
-        return this.reportConnectServiceAreases;
+    public Set<ReportConnectServiceAreasEntity> getReportConnectServiceAreas() {
+        return this.reportConnectServiceAreas;
     }
 
-    public void setReportConnectServiceAreases(Set<ReportConnectServiceAreasEntity> reportConnectServiceAreases) {
-        this.reportConnectServiceAreases = reportConnectServiceAreases;
+    public void setReportConnectServiceAreas(Set<ReportConnectServiceAreasEntity> reportConnectServiceAreas) {
+        this.reportConnectServiceAreas = reportConnectServiceAreas;
     }
 
 }

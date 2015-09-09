@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import org.geotools.geometry.jts.GeometryBuilder;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +21,6 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import eu.europa.ec.fisheries.uvms.service.CrudService;
-import eu.europa.ec.fisheries.uvms.spatial.entity.AreaTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.RfmoEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetailsSpatialRequest;
@@ -54,7 +54,7 @@ public class AreaDetailsServiceTest {
 	 */
 	@Test
 	public void getEezAreaDetailsTest() {
-		List<AreaTypesEntity> areaEntities = new ArrayList<AreaTypesEntity>();
+		List<AreaLocationTypesEntity> areaEntities = new ArrayList<AreaLocationTypesEntity>();
 		areaEntities.add(getMockAreaTypeEntity("EEZ"));		
 		EezEntity eezEntity = getMockedEezEntity();		
 		mockCrudServiceBean(areaEntities, eezEntity);
@@ -70,7 +70,7 @@ public class AreaDetailsServiceTest {
 	 */
 	@Test
 	public void getRfmoAreaDetailsTest() {
-		List<AreaTypesEntity> areaEntities = new ArrayList<AreaTypesEntity>();
+		List<AreaLocationTypesEntity> areaEntities = new ArrayList<AreaLocationTypesEntity>();
 		areaEntities.add(getMockAreaTypeEntity("RFMO"));		
 		RfmoEntity rfmoEntity = getMockedRfmoEntity();
 		mockCrudServiceBean(areaEntities, rfmoEntity);		
@@ -111,13 +111,13 @@ public class AreaDetailsServiceTest {
 
 	
 	@SuppressWarnings("unchecked")
-	public void mockCrudServiceBean(List<AreaTypesEntity> returnList, Object entity) {
+	public void mockCrudServiceBean(List<AreaLocationTypesEntity> returnList, Object entity) {
 		Mockito.when(crudServiceBean.findEntityByNamedQuery(Mockito.any(Class.class), Mockito.any(String.class), Mockito.any(Map.class), Mockito.any(Integer.class))).thenReturn(returnList);
 		Mockito.when(crudServiceBean.findEntityById(Mockito.any(Class.class), Mockito.any(Object.class))).thenReturn(entity);
 	}
 	
-	private AreaTypesEntity getMockAreaTypeEntity(String typeName) {
-		AreaTypesEntity areaEntity = Mockito.mock(AreaTypesEntity.class);
+	private AreaLocationTypesEntity getMockAreaTypeEntity(String typeName) {
+		AreaLocationTypesEntity areaEntity = Mockito.mock(AreaLocationTypesEntity.class);
 		Mockito.when(areaEntity.getTypeName()).thenReturn(typeName.toUpperCase());
 		return areaEntity;
 	}

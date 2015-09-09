@@ -23,14 +23,16 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.converter.CharBooleanConverter
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 
 @Entity
-@Table(name = "area_types", schema = "spatial", uniqueConstraints = @UniqueConstraint(columnNames = "type_name"))
+@Table(name = "area_location_types", schema = "spatial", uniqueConstraints = @UniqueConstraint(columnNames = "type_name"))
 @NamedQueries({
-    @NamedQuery(name = QueryNameConstants.FIND_ALL_AREAS, query = "SELECT a.typeName FROM AreaTypesEntity a"),
-    @NamedQuery(name = QueryNameConstants.FIND_SYSTEM_AREAS, query = "SELECT area FROM AreaTypesEntity area WHERE area.isSystemArea = 'Y'"),
-    @NamedQuery(name = QueryNameConstants.FIND_AREAS_BY_ID, query = "SELECT area FROM AreaTypesEntity area WHERE area.typeName= :typeName")
+    @NamedQuery(name = QueryNameConstants.FIND_ALL_AREAS, query = "SELECT area FROM AreaLocationTypesEntity area WHERE area.isLocation = 'N'"),
+    @NamedQuery(name = QueryNameConstants.FIND_ALL_LOCATIONS, query = "SELECT area FROM AreaLocationTypesEntity area WHERE area.isLocation = 'Y'"),
+    @NamedQuery(name = QueryNameConstants.FIND_SYSTEM_AREAS, query = "SELECT area FROM AreaLocationTypesEntity area WHERE area.isLocation = 'N' AND area.isSystemArea = 'Y'"),
+    @NamedQuery(name = QueryNameConstants.FIND_SYSTEM_LOCATIONS, query = "SELECT area FROM AreaLocationTypesEntity area WHERE area.isLocation = 'N' AND area.isSystemArea = 'Y'"),
+    @NamedQuery(name = QueryNameConstants.FIND_AREAS_BY_ID, query = "SELECT area FROM AreaLocationTypesEntity area WHERE area.isLocation = 'N' AND area.typeName= :typeName")
 })
 
-public class AreaTypesEntity implements Serializable {
+public class AreaLocationTypesEntity implements Serializable {
 	
 	private static final long serialVersionUID = 6797853213499502859L;
 
@@ -54,12 +56,16 @@ public class AreaTypesEntity implements Serializable {
 	
 	@Convert(converter = CharBooleanConverter.class)
 	@Column(name = "is_system_area", nullable = false, length = 1)
-	private Boolean isSystemArea = false;
-	
+	private Boolean isSystemWide = false;
+
+	@Convert(converter = CharBooleanConverter.class)
+	@Column(name = "is_location", nullable = false, length = 1)
+	private Boolean isLocation = false;
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "areaTypes", cascade = CascadeType.ALL)
 	private Set<AreaConnectGroupEntity> areaConnectGroups;
 
-	public AreaTypesEntity() {
+	public AreaLocationTypesEntity() {
 	}
 
 	public int getId() {
@@ -102,12 +108,20 @@ public class AreaTypesEntity implements Serializable {
 		this.areaDbTable = areaDbTable;
 	}
 
-	public Boolean getIsSystemArea() {
-		return this.isSystemArea;
+	public Boolean getIsSystemWide() {
+		return this.isSystemWide;
 	}
 
-	public void setIsSystemArea(Boolean isSystemArea) {
-		this.isSystemArea = isSystemArea;
+	public void setIsSystemArea(Boolean isSystemWide) {
+		this.isSystemWide = isSystemWide;
+	}
+
+	public Boolean getIsLocation() {
+		return this.isLocation;
+	}
+
+	public void setIsLocation(Boolean isLocation) {
+		this.isLocation = isLocation;
 	}
 
 	public Set<AreaConnectGroupEntity> getAreaConnectGroups() {

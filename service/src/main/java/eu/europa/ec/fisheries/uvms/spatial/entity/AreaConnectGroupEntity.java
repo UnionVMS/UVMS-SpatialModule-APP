@@ -1,86 +1,75 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
 @Entity
 @Table(name = "area_connect_group", schema = "spatial")
 public class AreaConnectGroupEntity implements Serializable {
 
-	private static final long serialVersionUID = 6797853213499502855L;
-	
-	@Id
-	@Column(name = "id")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
-	
-	@ManyToOne
-	@JoinColumn(name = "area_group_id", nullable = false)
-	private AreaGroupEntity areaGroup;
-	
-	@ManyToOne
-	@JoinColumn(name = "area_type_id", nullable = false)
-	private AreaTypesEntity areaTypes;
-	
-	@Column(name = "area_id", nullable = false)
-	private long areaId;
-	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "areaConnectGroup", cascade = CascadeType.ALL)
-	private Set<ReportLayerConfigEntity> reportLayerConfigs;
+    private static final long serialVersionUID = 6797853213499502855L;
 
-	public AreaConnectGroupEntity() {
-	}
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
-	public long getId() {
-		return this.id;
-	}
+    @ManyToOne
+    @JoinColumn(name = "area_group_id", nullable = false)
+    private AreaGroupEntity areaGroup;
 
-	public void setId(long id) {
-		this.id = id;
-	}
+    @ManyToOne
+    @JoinColumn(name = "area_type_id", nullable = false)
+    private AreaLocationTypesEntity areaLocationTypes;
 
-	public AreaGroupEntity getAreaGroup() {
-		return this.areaGroup;
-	}
+    @Column(name = "area_id", nullable = false)
+    private long areaId;
 
-	public void setAreaGroup(AreaGroupEntity areaGroup) {
-		this.areaGroup = areaGroup;
-	}
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "areaConnectGroup", cascade = CascadeType.ALL)
+    private Set<ReportLayerConfigEntity> reportLayerConfigs;
 
-	public AreaTypesEntity getAreaTypes() {
-		return this.areaTypes;
-	}
+    public AreaConnectGroupEntity() {
+    }
 
-	public void setAreaTypes(AreaTypesEntity areaTypes) {
-		this.areaTypes = areaTypes;
-	}
+    public long getId() {
+        return this.id;
+    }
 
-	public long getAreaId() {
-		return this.areaId;
-	}
+    public void setId(long id) {
+        this.id = id;
+    }
 
-	public void setAreaId(long areaId) {
-		this.areaId = areaId;
-	}
+    public AreaGroupEntity getAreaGroup() {
+        return this.areaGroup;
+    }
 
-	public Set<ReportLayerConfigEntity> getReportLayerConfigs() {
-		return this.reportLayerConfigs;
-	}
+    public void setAreaGroup(AreaGroupEntity areaGroup) {
+        this.areaGroup = areaGroup;
+    }
 
-	public void setReportLayerConfigs(Set<ReportLayerConfigEntity> reportLayerConfigs) {
-		this.reportLayerConfigs = reportLayerConfigs;
-	}
+    public AreaLocationTypesEntity getAreaLocationTypes() {
+        return this.areaLocationTypes;
+    }
+
+    public void setAreaLocationTypes(AreaLocationTypesEntity areaTypes) {
+        this.areaLocationTypes = areaTypes;
+    }
+
+    public long getAreaId() {
+        return this.areaId;
+    }
+
+    public void setAreaId(long areaId) {
+        this.areaId = areaId;
+    }
+
+    public Set<ReportLayerConfigEntity> getReportLayerConfigs() {
+        return this.reportLayerConfigs;
+    }
+
+    public void setReportLayerConfigs(Set<ReportLayerConfigEntity> reportLayerConfigs) {
+        this.reportLayerConfigs = reportLayerConfigs;
+    }
 
 }

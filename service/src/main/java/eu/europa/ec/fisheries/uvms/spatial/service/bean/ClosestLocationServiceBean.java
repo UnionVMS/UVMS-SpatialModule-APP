@@ -3,8 +3,10 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 import com.google.common.collect.Maps;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.service.CrudService;
-import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
+import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
+import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestLocationDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.MeasurementUnit;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
@@ -99,9 +101,12 @@ public class ClosestLocationServiceBean implements ClosestLocationService {
     }
 
     private Map<String, String> getLocationType2TableNameMap() {
-        Map<String, String> areaMap = Maps.newHashMap();
-        areaMap.put("PORT", "port");
-        return areaMap;
+        List<AreaLocationTypesEntity> locations = crudService.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_ALL_LOCATIONS);
+        Map<String, String> locationMap = Maps.newHashMap();
+        for (AreaLocationTypesEntity location : locations) {
+            locationMap.put(location.getTypeName().toUpperCase(), location.getAreaDbTable());
+        }
+        return locationMap;
     }
 
     private void validateResponse(List<ClosestLocationDto> closestLocationList) {

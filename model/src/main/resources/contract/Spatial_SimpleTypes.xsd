@@ -562,7 +562,7 @@
     </xs:simpleType>
     <xs:simpleType name="LocationType">
         <xs:restriction base="xs:string">
-            <xs:enumeration value="Port" />
+            <xs:enumeration value="PORT" />
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="UnitType" final="restriction">
