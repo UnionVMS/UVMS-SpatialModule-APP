@@ -36,8 +36,6 @@ public class ColumnAliasNameHelper {
                     } else {
                         throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
                     }
-                } else {
-                    throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
                 }
             }
         } catch (IllegalAccessException e) {
