@@ -1,10 +1,10 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.service.CrudService;
-import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRS;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.EnrichmentDto;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.NotImplementedException;
 
@@ -30,13 +30,12 @@ public class SpatialEnrichmentServiceBean implements SpatialEnrichmentService {
     private CrudService crudService;
 
     @Override
-    public List<AreaDto> getClosestLocationRest(double lat, double lon, int crs, List<String> locationTypes, String unit) {
-        return null;
+    public List<EnrichmentDto> getSpatialEnrichment(double lat, double lon, int crs, String unit, List<String> areaTypes, List<String> locationTypes) {
+        throw new NotImplementedException("Not implemented yet");
     }
 
     @Override
-    public SpatialEnrichmentRS getClosestLocation(SpatialEnrichmentRQ spatialEnrichmentRQ) {
-        throw new NotImplementedException("implement me");
+    public SpatialEnrichmentRS getSpatialEnrichment(SpatialEnrichmentRQ spatialEnrichmentRQ) {
+        throw new NotImplementedException("Not implemented yet");
     }
-
 }

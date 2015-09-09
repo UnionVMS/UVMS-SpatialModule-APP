@@ -10,6 +10,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.ClosestAreaService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.ClosestLocationService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestLocationDto;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,9 +25,8 @@ import static eu.europa.ec.fisheries.uvms.spatial.rest.util.ValidationUtils.vali
  * Created by Michal Kopyczok on 03-Sep-15.
  */
 @Path("/")
+@Slf4j
 public class LocationResource {
-    final static Logger LOG = LoggerFactory.getLogger(LocationResource.class);
-
     @EJB
     private ClosestLocationService closestLocationService;
 
@@ -40,12 +40,12 @@ public class LocationResource {
             @DefaultValue("Meter") @QueryParam(value = "unit") String unit,
             @QueryParam(value = "type") List<String> locationTypes) {
         try {
-            LOG.info("Getting closest locations");
+            log.info("Getting closest locations");
             validateInputParameters(lat, lon, locationTypes);
             List<ClosestLocationDto> closestAreas = closestLocationService.getClosestLocationsRest(lat, lon, crs, unit, locationTypes);
             return new ResponseDto(closestAreas, ResponseCode.OK);
         } catch (Exception ex) {
-            LOG.error("[ Error when getting closest locations. ] ", ex);
+            log.error("[ Error when getting closest locations. ] ", ex);
             return ErrorHandler.getFault(ex);
         }
     }

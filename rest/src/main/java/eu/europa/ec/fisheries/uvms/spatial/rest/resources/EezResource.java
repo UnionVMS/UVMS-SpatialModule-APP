@@ -8,6 +8,7 @@ import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.error.ErrorHandler;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.EezService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.EezDto;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,9 +21,8 @@ import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 
 @Path("/eez")
+@Slf4j
 public class EezResource {
-
-    final static Logger LOG = LoggerFactory.getLogger(EezResource.class);
 
     @EJB
     private EezService eezService;
@@ -33,12 +33,12 @@ public class EezResource {
     @SuppressWarnings("unchecked")
     public ResponseDto getExclusiveEconomicZoneById(@PathParam("id") int id) throws IOException {
         try {
-            LOG.info("Getting eez with {}", id);
+            log.info("Getting eez with {}", id);
             EezDto eezDto = eezService.getEezByIdRest(id);
             String geojson = feature2String(eezDto);
             return new ResponseDto(string2Json(geojson), ResponseCode.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when getting eez list. ] ", e);
+            log.error("[ Error when getting eez list. ] ", e);
             return ErrorHandler.getFault(e);
         }
     }
