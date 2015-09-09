@@ -14,4 +14,9 @@ public class ModelUtils {
         responseMessage.setSuccess(new SuccessType());
         return responseMessage;
     }
+
+    public static boolean containsError(ResponseMessageType responseMessage) {
+        return responseMessage.getErrors() != null;
+    }
+
 }

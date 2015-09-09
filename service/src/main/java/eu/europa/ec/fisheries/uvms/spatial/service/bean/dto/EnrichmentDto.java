@@ -10,6 +10,9 @@ public class EnrichmentDto {
     private List<ClosestAreaDto> closestAreas;
     private List<ClosestLocationDto> closestLocations;
 
+    public EnrichmentDto() {
+    }
+
     public EnrichmentDto(List<AreaDto> areasByLocation, List<ClosestAreaDto> closestAreas, List<ClosestLocationDto> closestLocations) {
         this.areasByLocation = areasByLocation;
         this.closestAreas = closestAreas;

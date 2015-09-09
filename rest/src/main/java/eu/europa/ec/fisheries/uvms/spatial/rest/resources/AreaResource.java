@@ -7,13 +7,9 @@ import eu.europa.ec.fisheries.uvms.spatial.rest.util.ValidationUtils;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaByLocationService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.ClosestAreaService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialEnrichmentService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestAreaDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.EnrichmentDto;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
 import javax.ws.rs.*;

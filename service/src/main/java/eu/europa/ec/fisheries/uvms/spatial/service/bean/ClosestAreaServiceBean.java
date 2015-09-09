@@ -8,6 +8,7 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.EnrichmentDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.MeasurementUnit;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
@@ -25,20 +26,53 @@ import java.util.List;
 import java.util.Map;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static eu.europa.ec.fisheries.uvms.util.ModelUtils.containsError;
 import static eu.europa.ec.fisheries.uvms.util.ModelUtils.createSuccessResponseMessage;
 import static eu.europa.ec.fisheries.uvms.util.SpatialUtils.convertToPointInWGS84;
 
-@Stateless
+@Stateless(name = "closestAreaService")
 @Local(ClosestAreaService.class)
 @Transactional
 @Slf4j
-public class ClosestAreaServiceBean implements ClosestAreaService {
+public class ClosestAreaServiceBean implements ClosestAreaService, SpatialEnrichmentSupport {
+
+    @EJB(name = "closestLocationService")
+    private SpatialEnrichmentSupport next;
 
     @EJB
     private SpatialRepository repository;
 
     @EJB
     private CrudService crudService;
+
+    @Override
+    public SpatialEnrichmentRS handleRequest(SpatialEnrichmentRQ request, SpatialEnrichmentRS response) {
+        if (containsError(response.getResponseMessage())) {
+            return response;
+        }
+
+        List<AreaType> areaTypes = request.getAreaTypes().getAreaType();
+        ClosestAreaSpatialRS closestAreasRS = getClosestAreas(new ClosestAreaSpatialRQ(request.getPoint(), new ClosestAreaSpatialRQ.AreaTypes(areaTypes), request.getUnit()));
+
+        if (containsError(closestAreasRS.getResponseMessage())) {
+            return addErrorMessage(response, closestAreasRS.getResponseMessage());
+        }
+        response.setClosestAreas(closestAreasRS.getClosestAreas());
+
+        return next.handleRequest(request, response);
+    }
+
+    private SpatialEnrichmentRS addErrorMessage(SpatialEnrichmentRS response, ResponseMessageType responseMessage) {
+        response.setResponseMessage(responseMessage);
+        return response;
+    }
+
+    @Override
+    public EnrichmentDto handleRequest(double lat, double lon, int crs, String unit, List<String> areaTypes, List<String> locationTypes, EnrichmentDto enrichmentDto) {
+        List<ClosestAreaDto> closestAreas = getClosestAreasRest(lat, lon, crs, unit, locationTypes);
+        enrichmentDto.setClosestAreas(closestAreas);
+        return next.handleRequest(lat, lon, crs, unit, areaTypes, locationTypes, enrichmentDto);
+    }
 
     @Override
     @SpatialExceptionHandler(responseType = ClosestAreaSpatialRS.class)
@@ -115,6 +149,5 @@ public class ClosestAreaServiceBean implements ClosestAreaService {
     private ClosestAreaSpatialRS createSuccessClosestAreaResponse(ClosestAreasType closestAreasType) {
         return new ClosestAreaSpatialRS(createSuccessResponseMessage(), closestAreasType);
     }
-
 
 }

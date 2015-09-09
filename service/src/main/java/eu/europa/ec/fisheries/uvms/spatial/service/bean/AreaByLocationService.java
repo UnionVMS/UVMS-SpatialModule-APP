@@ -11,5 +11,6 @@ import java.util.List;
  */
 public interface AreaByLocationService {
     AreaByLocationSpatialRS getAreasByLocation(AreaByLocationSpatialRQ request);
+
     List<AreaDto> getAreasByLocationRest(double lat, double lon, int crs);
 }
