@@ -36,8 +36,8 @@ public class EnrichmentResource {
         try {
             log.info("Getting spatial enrichment");
             validateInputParameters(lat, lon, areaTypes, locationTypes);
-            List<EnrichmentDto> spatialEnrichment = enrichmentService.getSpatialEnrichment(lat, lon, crs, unit, areaTypes, locationTypes);
-            return new ResponseDto(spatialEnrichment, ResponseCode.OK);
+            EnrichmentDto enrichment = enrichmentService.getSpatialEnrichment(lat, lon, crs, unit, areaTypes, locationTypes);
+            return new ResponseDto(enrichment, ResponseCode.OK);
         } catch (Exception ex) {
             log.error("[ Error when getting spatial enrichment. ] ", ex);
             return ErrorHandler.getFault(ex);

@@ -1,9 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import eu.europa.ec.fisheries.uvms.service.CrudService;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRS;
-import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestLocationDto;
@@ -36,14 +34,12 @@ public class SpatialEnrichmentServiceBean implements SpatialEnrichmentService {
     private ClosestLocationService closestLocationService;
 
     @Override
-    public List<EnrichmentDto> getSpatialEnrichment(double lat, double lon, int crs, String unit, List<String> areaTypes, List<String> locationTypes) {
-
+    public EnrichmentDto getSpatialEnrichment(double lat, double lon, int crs, String unit, List<String> areaTypes, List<String> locationTypes) {
         List<AreaDto> areasByLocation = areaByLocationService.getAreasByLocationRest(lat, lon, crs);
         List<ClosestAreaDto> closestAreas = closestAreaService.getClosestAreasRest(lat, lon, crs, unit, areaTypes);
         List<ClosestLocationDto> closestLocations = closestLocationService.getClosestLocationsRest(lat, lon, crs, unit, locationTypes);
 
-
-        throw new NotImplementedException("Not implemented yet");
+        return new EnrichmentDto(areasByLocation, closestAreas, closestLocations);
     }
 
     @Override

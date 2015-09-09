@@ -44,10 +44,10 @@ public class ClosestAreaServiceBean implements ClosestAreaService {
     @SpatialExceptionHandler(responseType = ClosestAreaSpatialRS.class)
     @Interceptors(value = ExceptionHandlerInterceptor.class)
     public ClosestAreaSpatialRS getClosestAreas(ClosestAreaSpatialRQ request) {
-        Map<String, String> areaType2TableName = getAreaType2TableNameMap();
         Point point = convertToPointInWGS84(request.getPoint());
         MeasurementUnit measurementUnit = MeasurementUnit.getMeasurement(request.getUnit().name());
 
+        Map<String, String> areaType2TableName = getAreaType2TableNameMap();
         List<ClosestAreaEntry> closestAreas = newArrayList();
         for (AreaType areaType : request.getAreaTypes().getAreaType()) {
             String areaDbTable = areaType2TableName.get(areaType.value());
@@ -67,11 +67,11 @@ public class ClosestAreaServiceBean implements ClosestAreaService {
 
     @Override
     public List<ClosestAreaDto> getClosestAreasRest(double lat, double lon, int crs, String unit, List<String> types) {
-        List<String> areaTypes = SpatialUtils.toUpperCase(types);
-        Map<String, String> areaType2TableName = getAreaType2TableNameMap();
         Point point = convertToPointInWGS84(lon, lat, crs);
         MeasurementUnit measurementUnit = MeasurementUnit.getMeasurement(unit);
 
+        List<String> areaTypes = SpatialUtils.toUpperCase(types);
+        Map<String, String> areaType2TableName = getAreaType2TableNameMap();
         List<ClosestAreaDto> closestAreas = newArrayList();
         for (String areaType : areaTypes) {
             String areaDbTable = areaType2TableName.get(areaType);

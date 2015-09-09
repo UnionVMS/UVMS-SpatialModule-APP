@@ -11,7 +11,7 @@ import java.util.List;
  */
 public interface SpatialEnrichmentService {
 
-    List<EnrichmentDto> getSpatialEnrichment(double lat, double lon, int crs, String unit, List<String> areaTypes, List<String> locationTypes);
+    EnrichmentDto getSpatialEnrichment(double lat, double lon, int crs, String unit, List<String> areaTypes, List<String> locationTypes);
 
     SpatialEnrichmentRS getSpatialEnrichment(SpatialEnrichmentRQ spatialEnrichmentRQ);
 

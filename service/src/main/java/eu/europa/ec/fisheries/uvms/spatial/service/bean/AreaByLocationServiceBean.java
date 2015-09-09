@@ -42,10 +42,9 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
     @SpatialExceptionHandler(responseType = AreaByLocationSpatialRS.class)
     @Interceptors(value = ExceptionHandlerInterceptor.class)
     public AreaByLocationSpatialRS getAreasByLocation(AreaByLocationSpatialRQ request) {
-        List<AreaLocationTypesEntity> systemAreaTypes = getAreaTypes();
-
         Point point = convertToPointInWGS84(request.getPoint());
 
+        List<AreaLocationTypesEntity> systemAreaTypes = getAreaTypes();
         List<AreaTypeEntry> areaTypes = Lists.newArrayList();
         for (AreaLocationTypesEntity areaType : systemAreaTypes) {
             String areaDbTable = areaType.getAreaDbTable();
@@ -64,10 +63,9 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
 
     @Override
     public List<AreaDto> getAreasByLocationRest(double lat, double lon, int crs) {
-        List<AreaLocationTypesEntity> systemAreaTypes = getAreaTypes();
-
         Point point = convertToPointInWGS84(lon, lat, crs);
 
+        List<AreaLocationTypesEntity> systemAreaTypes = getAreaTypes();
         List<AreaDto> areaTypes = Lists.newArrayList();
         for (AreaLocationTypesEntity areaType : systemAreaTypes) {
             String areaDbTable = areaType.getAreaDbTable();
