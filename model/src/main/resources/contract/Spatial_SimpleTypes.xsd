@@ -567,10 +567,10 @@
     </xs:simpleType>
     <xs:simpleType name="UnitType" final="restriction">
         <xs:restriction base="xs:string">
-            <xs:enumeration value="METER" />
-            <xs:enumeration value="KILOMETER" />
-            <xs:enumeration value="MILE" />
-            <xs:enumeration value="NAUTICAL_MILE" />
+            <xs:enumeration value="METERS" />
+            <xs:enumeration value="KILOMETERS" />
+            <xs:enumeration value="MILES" />
+            <xs:enumeration value="NAUTICAL_MILES" />
         </xs:restriction>
     </xs:simpleType>
     <xs:complexType name="ResponseMessageType">

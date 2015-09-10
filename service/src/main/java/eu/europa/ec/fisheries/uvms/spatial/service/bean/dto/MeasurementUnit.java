@@ -6,10 +6,10 @@ import org.apache.commons.lang.StringUtils;
 
 public enum MeasurementUnit {
 
-    METER(1),
-    KILOMETER(1000),
-    NAUTICAL_MILE(1852),
-    MILE(1609.344);
+    METERS(1),
+    KILOMETERS(1000),
+    NAUTICAL_MILES(1852),
+    MILES(1609.344);
 
     private double ratio;
 
