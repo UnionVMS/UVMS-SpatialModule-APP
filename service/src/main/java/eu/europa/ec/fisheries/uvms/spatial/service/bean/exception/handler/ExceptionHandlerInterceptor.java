@@ -1,21 +1,18 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler;
 
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ErrorMessageType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ErrorsType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ResponseMessageType;
+import com.google.common.collect.ImmutableMap;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.ExceptionMapper;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.HibernateException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -24,21 +21,34 @@ import static com.google.common.collect.Lists.newArrayList;
  * Created by kopyczmi on 18-Aug-15.
  */
 @Interceptor
+@Slf4j
 public class ExceptionHandlerInterceptor {
     private static final String RESPONSE_MESSAGE = "responseMessage";
-    private final Logger LOG = LoggerFactory.getLogger(ExceptionHandlerInterceptor.class);
+
+    // Supported requests map
+    private static final ImmutableMap<Class, Class> rqToRsMapping = ImmutableMap.<Class, Class>builder()
+            .put(EezSpatialRQ.class, EezSpatialRS.class)
+            .put(AreaByLocationSpatialRQ.class, AreaByLocationSpatialRS.class)
+            .put(ClosestAreaSpatialRQ.class, ClosestAreaSpatialRS.class)
+            .put(ClosestLocationSpatialRQ.class, ClosestLocationSpatialRS.class)
+            .put(SpatialEnrichmentRQ.class, SpatialEnrichmentRS.class)
+            .put(AreaDetailsSpatialRequest.class, AreaDetailsSpatialResponse.class)
+            .build();
+
     @EJB
     ExceptionMapper exceptionMapper;
 
     @AroundInvoke
     public Object log(InvocationContext ctx) throws Exception {
-        LOG.debug("*** TracingInterceptor intercepting " + ctx.getMethod().getName());
+        log.debug("*** TracingInterceptor intercepting " + ctx.getMethod().getName());
         long start = System.currentTimeMillis();
+        Class responseTypeClass = null;
 
         try {
+            responseTypeClass = retrieveResponseClass(ctx.getParameters());
             return ctx.proceed();
         } catch (Exception ex) {
-            Object rsObject = createEmptyResponse(ctx);
+            Object rsObject = responseTypeClass.getConstructor().newInstance();
             if (isDatabaseException(ex)) {
                 SpatialServiceErrors error = exceptionMapper.convertToSpatialError(ex.getClass());
                 setErrorMessage(rsObject, error.getDescription(), error.getErrorCode());
@@ -55,17 +65,12 @@ public class ExceptionHandlerInterceptor {
         } finally {
             long time = System.currentTimeMillis() - start;
             String method = ctx.getMethod().getName();
-            LOG.debug("*** TracingInterceptor invocation of " + method + " took " + time + "ms");
+            log.debug("*** TracingInterceptor invocation of " + method + " took " + time + "ms");
         }
     }
 
-    private Object createEmptyResponse(InvocationContext ctx) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-        SpatialExceptionHandler annotation = ctx.getMethod().getAnnotation(SpatialExceptionHandler.class);
-        Class responseTypeClass = annotation.responseType();
-        if (responseTypeClass == null) {
-            throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
-        }
-        return responseTypeClass.getConstructor().newInstance();
+    private Class retrieveResponseClass(Object[] parameters) {
+        return rqToRsMapping.get(parameters[0]);
     }
 
     private boolean isDatabaseException(Exception ex) {
@@ -86,8 +91,8 @@ public class ExceptionHandlerInterceptor {
     }
 
     private void logError(Exception ex) {
-        LOG.error("Exception: ", ex);
-        LOG.error("Exception cause: ", ex.getCause());
+        log.error("Exception: ", ex);
+        log.error("Exception cause: ", ex.getCause());
     }
 
     private boolean set(Object object, String fieldName, Object fieldValue) {

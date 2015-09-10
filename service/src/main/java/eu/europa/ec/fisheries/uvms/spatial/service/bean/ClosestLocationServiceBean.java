@@ -13,7 +13,6 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.MeasurementUnit;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler.ExceptionHandlerInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler.SpatialExceptionHandler;
 import eu.europa.ec.fisheries.uvms.util.SpatialUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -58,7 +57,7 @@ public class ClosestLocationServiceBean implements ClosestLocationService, Spati
             return addErrorMessage(response, closestLocationsRS.getResponseMessage());
         }
         response.setClosestLocations(closestLocationsRS.getClosestLocations());
-        
+
         return response;
     }
 
@@ -75,7 +74,6 @@ public class ClosestLocationServiceBean implements ClosestLocationService, Spati
     }
 
     @Override
-    @SpatialExceptionHandler(responseType = ClosestLocationSpatialRS.class)
     @Interceptors(value = ExceptionHandlerInterceptor.class)
     public ClosestLocationSpatialRS getClosestLocations(ClosestLocationSpatialRQ request) {
         Point point = convertToPointInWGS84(request.getPoint());

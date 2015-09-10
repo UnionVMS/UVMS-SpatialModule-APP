@@ -7,11 +7,7 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeNamesSpatialRS;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreasNameType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ResponseMessageType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SuccessType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler.ExceptionHandlerInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler.SpatialExceptionHandler;
-import eu.europa.ec.fisheries.uvms.util.ModelUtils;
 
 import javax.ejb.EJB;
 import javax.ejb.Local;
@@ -32,7 +28,6 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
 
     @Override
     @SuppressWarnings("unchecked")
-    @SpatialExceptionHandler(responseType = AreaTypeNamesSpatialRS.class)
     @Interceptors(value = ExceptionHandlerInterceptor.class)
     public AreaTypeNamesSpatialRS getAreaTypes() {
         List<String> areaTypes = findAllAreas();

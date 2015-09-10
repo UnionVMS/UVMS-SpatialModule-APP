@@ -1,7 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
 import eu.europa.ec.fisheries.uvms.service.CrudService;
 import eu.europa.ec.fisheries.uvms.spatial.entity.*;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
@@ -9,7 +8,6 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler.ExceptionHandlerInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler.SpatialExceptionHandler;
 import eu.europa.ec.fisheries.uvms.util.ColumnAliasNameHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.NotImplementedException;
@@ -19,7 +17,6 @@ import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -51,7 +48,6 @@ public class AreaDetailsServiceBean implements AreaDetailsService {
 
     @SuppressWarnings("unchecked")
     @Override
-    @SpatialExceptionHandler(responseType = AreaDetailsSpatialResponse.class)
     @Interceptors(value = ExceptionHandlerInterceptor.class)
     public AreaDetailsSpatialResponse getAreaDetails(AreaDetailsSpatialRequest request) {
         String areaTypeName = request.getAreaType().getAreaType();

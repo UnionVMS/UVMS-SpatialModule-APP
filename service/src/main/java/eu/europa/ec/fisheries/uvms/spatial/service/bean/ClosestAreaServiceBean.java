@@ -13,7 +13,6 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.MeasurementUnit;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler.ExceptionHandlerInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler.SpatialExceptionHandler;
 import eu.europa.ec.fisheries.uvms.util.SpatialUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,7 +35,7 @@ import static eu.europa.ec.fisheries.uvms.util.SpatialUtils.convertToPointInWGS8
 @Slf4j
 public class ClosestAreaServiceBean implements ClosestAreaService, SpatialEnrichmentSupport {
 
-    @EJB(beanName="ClosestLocationServiceBean")
+    @EJB(beanName = "ClosestLocationServiceBean")
     private SpatialEnrichmentSupport next;
 
     @EJB
@@ -75,7 +74,6 @@ public class ClosestAreaServiceBean implements ClosestAreaService, SpatialEnrich
     }
 
     @Override
-    @SpatialExceptionHandler(responseType = ClosestAreaSpatialRS.class)
     @Interceptors(value = ExceptionHandlerInterceptor.class)
     public ClosestAreaSpatialRS getClosestAreas(ClosestAreaSpatialRQ request) {
         Point point = convertToPointInWGS84(request.getPoint());

@@ -5,7 +5,6 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.EezDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler.ExceptionHandlerInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler.SpatialExceptionHandler;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.EezDtoMapper;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.EezTypeMapper;
 
@@ -29,7 +28,6 @@ public class EezServiceBean implements EezService {
 
     @Override
     @SuppressWarnings("unchecked")
-    @SpatialExceptionHandler(responseType = EezSpatialRS.class)
     @Interceptors(value = ExceptionHandlerInterceptor.class)
     public EezSpatialRS getEezById(EezSpatialRQ getEezSpatialRQ) {
         EezEntity eez = (EezEntity) crudService.findEntityById(EezEntity.class, retrieveIdFromRQ(getEezSpatialRQ));
