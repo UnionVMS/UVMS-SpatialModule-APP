@@ -1,6 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 import eu.europa.ec.fisheries.uvms.service.CrudService;
 import eu.europa.ec.fisheries.uvms.spatial.entity.*;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
 import static eu.europa.ec.fisheries.uvms.util.ModelUtils.createSuccessResponseMessage;
 import static org.apache.commons.lang.StringUtils.isNumeric;
@@ -115,7 +117,7 @@ public class AreaDetailsServiceBean implements AreaDetailsService {
     }
 
     private List<AreaProperty> createAreaProperties(Map<String, String> properties) {
-        List<AreaProperty> areaProperties = new ArrayList<AreaProperty>();
+        List<AreaProperty> areaProperties = newArrayList();
         for (Map.Entry<String, String> entry : properties.entrySet()) {
             areaProperties.add(new AreaProperty(entry.getKey(), entry.getValue()));
         }

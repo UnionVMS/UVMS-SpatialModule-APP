@@ -30,13 +30,13 @@ import static eu.europa.ec.fisheries.uvms.util.ModelUtils.containsError;
 import static eu.europa.ec.fisheries.uvms.util.ModelUtils.createSuccessResponseMessage;
 import static eu.europa.ec.fisheries.uvms.util.SpatialUtils.convertToPointInWGS84;
 
-@Stateless(name = "closestAreaService")
+@Stateless
 @Local(ClosestAreaService.class)
 @Transactional
 @Slf4j
 public class ClosestAreaServiceBean implements ClosestAreaService, SpatialEnrichmentSupport {
 
-    @EJB(name = "closestLocationService")
+    @EJB(beanName="ClosestLocationServiceBean")
     private SpatialEnrichmentSupport next;
 
     @EJB

@@ -7,7 +7,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.EnrichmentDto;
 import java.util.List;
 
 /**
- * Created by Michal Kopyczok on 09-Sep-15.
+ * Created by Cegeka on 09-Sep-15.
  */
 public interface SpatialEnrichmentService {
     SpatialEnrichmentRS getSpatialEnrichment(SpatialEnrichmentRQ spatialEnrichmentRQ);

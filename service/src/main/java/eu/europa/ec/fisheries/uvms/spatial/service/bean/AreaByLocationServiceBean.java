@@ -27,13 +27,13 @@ import static eu.europa.ec.fisheries.uvms.util.SpatialUtils.convertToPointInWGS8
 /**
  * Created by kopyczmi on 18-Aug-15.
  */
-@Stateless(name = "areaByLocationService")
+@Stateless
 @Local(AreaByLocationService.class)
 @Transactional
 @Slf4j
 public class AreaByLocationServiceBean implements AreaByLocationService, SpatialEnrichmentSupport {
 
-    @EJB(name = "closestAreaService")
+    @EJB(beanName="ClosestAreaServiceBean")
     private SpatialEnrichmentSupport next;
 
     @EJB

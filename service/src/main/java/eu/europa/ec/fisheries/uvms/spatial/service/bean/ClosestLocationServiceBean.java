@@ -33,7 +33,7 @@ import static eu.europa.ec.fisheries.uvms.util.SpatialUtils.convertToPointInWGS8
 /**
  * Created by Michal Kopyczok on 03-Sep-15.
  */
-@Stateless(name = "closestLocationService")
+@Stateless
 @Local(ClosestLocationService.class)
 @Transactional
 @Slf4j

@@ -14,7 +14,7 @@ import java.util.List;
 import static eu.europa.ec.fisheries.uvms.util.ModelUtils.createSuccessResponseMessage;
 
 /**
- * Created by Michal Kopyczok on 01-Sep-15.
+ * Created by Cegeka on 01-Sep-15.
  */
 @Stateless
 @Local(SpatialEnrichmentSupport.class)
@@ -22,7 +22,7 @@ import static eu.europa.ec.fisheries.uvms.util.ModelUtils.createSuccessResponseM
 @Slf4j
 public class SpatialEnrichmentServiceBean implements SpatialEnrichmentService {
 
-    @EJB(name = "areaByLocationService")
+    @EJB(beanName="AreaByLocationServiceBean")
     private SpatialEnrichmentSupport handler;
 
     @Override
