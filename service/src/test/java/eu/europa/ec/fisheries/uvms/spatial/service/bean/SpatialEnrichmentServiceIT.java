@@ -29,7 +29,7 @@ public class SpatialEnrichmentServiceIT extends AbstractArquillianIT {
         PointType point = new PointType(LONGITUDE, LATITUDE, DEFAULT_CRS);
         SpatialEnrichmentRQ.AreaTypes areas = new SpatialEnrichmentRQ.AreaTypes(newArrayList(AreaType.EEZ));
         SpatialEnrichmentRQ.LocationTypes locations = new SpatialEnrichmentRQ.LocationTypes(newArrayList(LocationType.PORT));
-        SpatialEnrichmentRQ request = new SpatialEnrichmentRQ(point, areas, locations, UnitType.METER);
+        SpatialEnrichmentRQ request = new SpatialEnrichmentRQ(point, areas, locations, UnitType.METERS);
 
         // when
         SpatialEnrichmentRS response = enrichmentService.getSpatialEnrichment(request);
@@ -47,13 +47,13 @@ public class SpatialEnrichmentServiceIT extends AbstractArquillianIT {
         assertEquals("231", closestAreaEntry.getId());
         assertEquals(0.0, closestAreaEntry.getDistance(), 0.01);
         assertEquals(AreaType.EEZ, closestAreaEntry.getAreaType());
-        assertEquals(UnitType.METER, closestAreaEntry.getUnit());
+        assertEquals(UnitType.METERS, closestAreaEntry.getUnit());
 
         ClosestLocationEntry closestLocationEntry = response.getClosestLocations().getClosestLocations().get(0);
         assertEquals("231", closestLocationEntry.getId());
         assertEquals(0.0, closestLocationEntry.getDistance(), 0.01);
         assertEquals(LocationType.PORT, closestLocationEntry.getLocationType());
-        assertEquals(UnitType.METER, closestLocationEntry.getUnit());
+        assertEquals(UnitType.METERS, closestLocationEntry.getUnit());
     }
 
 }

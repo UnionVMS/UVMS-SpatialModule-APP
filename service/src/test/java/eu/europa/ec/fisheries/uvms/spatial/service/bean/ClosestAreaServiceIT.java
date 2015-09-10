@@ -30,7 +30,7 @@ public class ClosestAreaServiceIT extends AbstractArquillianIT {
         // given
         PointType point = new PointType(LONGITUDE, LATITUDE, DEFAULT_CRS);
         AreaTypes areas = new AreaTypes(newArrayList(AreaType.EEZ));
-        ClosestAreaSpatialRQ request = new ClosestAreaSpatialRQ(point, areas, UnitType.METER);
+        ClosestAreaSpatialRQ request = new ClosestAreaSpatialRQ(point, areas, UnitType.METERS);
 
         // when
         ClosestAreaSpatialRS response = closestAreaService.getClosestAreas(request);
@@ -44,7 +44,7 @@ public class ClosestAreaServiceIT extends AbstractArquillianIT {
         assertEquals("231", closestAreaEntry.getId());
         assertEquals(0.0, closestAreaEntry.getDistance(), 0.01);
         assertEquals(AreaType.EEZ, closestAreaEntry.getAreaType());
-        assertEquals(UnitType.METER, closestAreaEntry.getUnit());
+        assertEquals(UnitType.METERS, closestAreaEntry.getUnit());
     }
 
     @Test
@@ -52,7 +52,7 @@ public class ClosestAreaServiceIT extends AbstractArquillianIT {
         // given
         PointType point = new PointType(LONGITUDE_2, LATITUDE_2, CRS);
         AreaTypes areas = new AreaTypes(newArrayList(AreaType.COUNTRY));
-        ClosestAreaSpatialRQ request = new ClosestAreaSpatialRQ(point, areas, UnitType.MILE);
+        ClosestAreaSpatialRQ request = new ClosestAreaSpatialRQ(point, areas, UnitType.MILES);
 
         // when
         ClosestAreaSpatialRS response = closestAreaService.getClosestAreas(request);
@@ -66,7 +66,7 @@ public class ClosestAreaServiceIT extends AbstractArquillianIT {
         assertEquals("189", closestAreaEntry.getId());
         assertEquals(367.705022199885, closestAreaEntry.getDistance(), 0.01);
         assertEquals(AreaType.COUNTRY, closestAreaEntry.getAreaType());
-        assertEquals(UnitType.MILE, closestAreaEntry.getUnit());
+        assertEquals(UnitType.MILES, closestAreaEntry.getUnit());
     }
 
 }

@@ -33,7 +33,7 @@ public class ClosestLocationServiceIT extends AbstractArquillianIT {
         // given
         PointType point = new PointType(LONGITUDE, LATITUDE, DEFAULT_CRS);
         ClosestLocationSpatialRQ.LocationTypes locations = new ClosestLocationSpatialRQ.LocationTypes(newArrayList(LocationType.PORT));
-        ClosestLocationSpatialRQ request = new ClosestLocationSpatialRQ(point, locations, UnitType.METER);
+        ClosestLocationSpatialRQ request = new ClosestLocationSpatialRQ(point, locations, UnitType.METERS);
 
         // when
         ClosestLocationSpatialRS response = closestLocationService.getClosestLocations(request);
@@ -47,7 +47,7 @@ public class ClosestLocationServiceIT extends AbstractArquillianIT {
         assertEquals("231", closestLocationEntry.getId());
         assertEquals(0.0, closestLocationEntry.getDistance(), 0.01);
         assertEquals(LocationType.PORT, closestLocationEntry.getLocationType());
-        assertEquals(UnitType.METER, closestLocationEntry.getUnit());
+        assertEquals(UnitType.METERS, closestLocationEntry.getUnit());
     }
 
     @Test
@@ -55,7 +55,7 @@ public class ClosestLocationServiceIT extends AbstractArquillianIT {
         // given
         PointType point = new PointType(LONGITUDE_2, LATITUDE_2, CRS);
         ClosestLocationSpatialRQ.LocationTypes locations = new ClosestLocationSpatialRQ.LocationTypes(newArrayList(LocationType.PORT));
-        ClosestLocationSpatialRQ request = new ClosestLocationSpatialRQ(point, locations, UnitType.MILE);
+        ClosestLocationSpatialRQ request = new ClosestLocationSpatialRQ(point, locations, UnitType.METERS);
 
         // when
         ClosestLocationSpatialRS response = closestLocationService.getClosestLocations(request);
@@ -69,7 +69,7 @@ public class ClosestLocationServiceIT extends AbstractArquillianIT {
         assertEquals("189", closestLocationEntry.getId());
         assertEquals(367.705022199885, closestLocationEntry.getDistance(), 0.01);
         assertEquals(LocationType.PORT, closestLocationEntry.getLocationType());
-        assertEquals(UnitType.MILE, closestLocationEntry.getUnit());
+        assertEquals(UnitType.METERS, closestLocationEntry.getUnit());
     }
 
 }
