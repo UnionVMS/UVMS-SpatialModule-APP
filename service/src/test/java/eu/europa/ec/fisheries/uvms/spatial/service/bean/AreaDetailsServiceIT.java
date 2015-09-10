@@ -59,8 +59,8 @@ public class AreaDetailsServiceIT {
 		AreaDetailsSpatialResponse response = areaDetailsService.getAreaDetails(request);
 		assertNull(response.getResponseMessage().getErrors());
 		assertNotNull(response.getResponseMessage().getSuccess());		
-		assertNotNull(response.getAreaDetails().getAreaProperties());
-		assertEquals(response.getAreaDetails().getAreaProperties().isEmpty(), false);
+		assertNotNull(response.getAreaDetails().getAreaProperty());
+		assertEquals(response.getAreaDetails().getAreaProperty().isEmpty(), false);
 	}
 	
 	/**
@@ -72,8 +72,8 @@ public class AreaDetailsServiceIT {
 		AreaDetailsSpatialResponse response = areaDetailsService.getAreaDetails(request);
 		assertNull(response.getResponseMessage().getErrors());
 		assertNotNull(response.getResponseMessage().getSuccess());		
-		assertNotNull(response.getAreaDetails().getAreaProperties());
-		assertEquals(response.getAreaDetails().getAreaProperties().isEmpty(), false);
+		assertNotNull(response.getAreaDetails().getAreaProperty());
+		assertEquals(response.getAreaDetails().getAreaProperty().isEmpty(), false);
 	}
 	
 
@@ -85,7 +85,7 @@ public class AreaDetailsServiceIT {
 		AreaDetailsSpatialRequest request = new AreaDetailsSpatialRequest(new AreaTypeEntry("invalid", "eez"));		
 		AreaDetailsSpatialResponse response = areaDetailsService.getAreaDetails(request);
 		ErrorsType errorType = response.getResponseMessage().getErrors();
-		assertEquals(errorType.getErrorMessages().get(0).getErrorCode(), "5012");
+		assertEquals(errorType.getErrorMessage().get(0).getErrorCode(), "5012");
 	}
 	
 
@@ -97,7 +97,7 @@ public class AreaDetailsServiceIT {
 		AreaDetailsSpatialRequest request = new AreaDetailsSpatialRequest(new AreaTypeEntry("1", "Invalid"));		
 		AreaDetailsSpatialResponse response = areaDetailsService.getAreaDetails(request);
 		ErrorsType errorType = response.getResponseMessage().getErrors();
-		assertEquals(errorType.getErrorMessages().get(0).getErrorCode(), "5009");
+		assertEquals(errorType.getErrorMessage().get(0).getErrorCode(), "5009");
 	}
 	
 	/**
@@ -108,8 +108,8 @@ public class AreaDetailsServiceIT {
 		AreaDetailsSpatialRequest request = new AreaDetailsSpatialRequest(new AreaTypeEntry("10000000", "eez"));		
 		AreaDetailsSpatialResponse response = areaDetailsService.getAreaDetails(request);
 		ErrorsType errorType = response.getResponseMessage().getErrors();
-		assertNotNull(errorType.getErrorMessages().get(0).getErrorCode());
-		assertEquals(errorType.getErrorMessages().get(0).getErrorCode(), "5010");
+		assertNotNull(errorType.getErrorMessage().get(0).getErrorCode());
+		assertEquals(errorType.getErrorMessage().get(0).getErrorCode(), "5010");
 	}
 	
 }
