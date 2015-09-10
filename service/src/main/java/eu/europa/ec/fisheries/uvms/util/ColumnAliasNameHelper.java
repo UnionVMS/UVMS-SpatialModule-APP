@@ -6,10 +6,8 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasNa
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Field;
-import java.math.BigDecimal;
 import java.util.Map;
 
 import static com.google.common.collect.Maps.newHashMap;
@@ -50,11 +48,6 @@ public class ColumnAliasNameHelper {
         if (field.get(object) instanceof Number) {
             Number doubleVal = (Number) field.get(object);
             return String.valueOf(doubleVal);
-        } else if (field.get(object) instanceof String) {
-            return (String) field.get(object);
-        } else if (field.get(object) instanceof BigDecimal) {
-            BigDecimal fieldVal = (BigDecimal) field.get(object);
-            return fieldVal.toString();
         } else if (field.get(object) instanceof Geometry) {
             Geometry geometry = ((Geometry) field.get(object));
             return new WKTWriter().write(geometry);
