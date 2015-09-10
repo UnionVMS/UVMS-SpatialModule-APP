@@ -16,6 +16,6 @@ public class QueryNameConstants {
     public static final String FIND_SYSTEM_LOCATIONS = "AreaType.findSystemLocations";
 
     /** Find Area By Id */
-    public static final String FIND_AREAS_BY_ID = "AreaType.findAreaById";
+    public static final String FIND_TYPE_BY_ID = "AreaType.findAreaById";
 
 }
