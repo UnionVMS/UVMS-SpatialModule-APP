@@ -2,8 +2,25 @@
 <!--Created with Liquid XML 2015 Designer Edition (Trial) 13.2.1.5996 (http://www.liquid-technologies.com)-->
 <xs:schema xmlns="http://europa.eu/ec/fisheries/uvms/spatial/model/schemas" id="FISH2015_SPATIAL2015" targetNamespace="http://europa.eu/ec/fisheries/uvms/spatial/model/schemas" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
     <xs:include schemaLocation="Spatial_CommonTypes.xsd" />
+
+    <!--<xs:annotation>-->
+        <!--<xs:appinfo>-->
+            <!--<schemaBindings>-->
+                <!--<package name="eu.europa.ec.fisheries.uvms.spatial.model.schemas" />-->
+            <!--</schemaBindings>-->
+            <!--<objectFactory packageName="eu.europa.ec.fisheries.uvms.spatial.model.schemas">-->
+                <!--<implements>eu.europa.ec.fisheries.uvms.spatial.model.schemas.ResponseHolder</implements>-->
+            <!--</objectFactory>-->
+        <!--</xs:appinfo>-->
+    <!--</xs:annotation>-->
+
     <xs:element name="AreaTypeNamesSpatialRS">
         <xs:complexType>
+            <!--<xs:annotation>-->
+                <!--<xs:appinfo>-->
+                    <!--<implements>eu.europa.ec.fisheries.uvms.spatial.model.schemas.ResponseHolder</implements>-->
+                <!--</xs:appinfo>-->
+            <!--</xs:annotation>-->
             <xs:sequence>
                 <xs:element name="ResponseMessage" type="ResponseMessageType" />
                 <xs:element name="AreaTypes" type="AreasNameType" minOccurs="0" />

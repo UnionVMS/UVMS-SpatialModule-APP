@@ -50,7 +50,7 @@ public class ClosestLocationServiceBean implements ClosestLocationService, Spati
             return response;
         }
 
-        List<LocationType> locationTypes = request.getLocationTypes().getLocationType();
+        List<LocationType> locationTypes = request.getLocationTypes().getLocationTypes();
         ClosestLocationSpatialRS closestLocationsRS = getClosestLocations(new ClosestLocationSpatialRQ(request.getPoint(), new ClosestLocationSpatialRQ.LocationTypes(locationTypes), request.getUnit()));
 
         if (containsError(closestLocationsRS.getResponseMessage())) {
@@ -81,7 +81,7 @@ public class ClosestLocationServiceBean implements ClosestLocationService, Spati
 
         Map<String, String> areaType2TableName = getLocationType2TableNameMap();
         List<ClosestLocationEntry> closestLocations = newArrayList();
-        for (LocationType locationType : request.getLocationTypes().getLocationType()) {
+        for (LocationType locationType : request.getLocationTypes().getLocationTypes()) {
             String areaDbTable = areaType2TableName.get(locationType.value());
 
             List<ClosestLocationDto> closestAreaList = repository.findClosestlocation(point, measurementUnit, areaDbTable);

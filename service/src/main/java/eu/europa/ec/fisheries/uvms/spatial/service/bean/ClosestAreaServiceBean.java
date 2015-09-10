@@ -50,7 +50,7 @@ public class ClosestAreaServiceBean implements ClosestAreaService, SpatialEnrich
             return response;
         }
 
-        List<AreaType> areaTypes = request.getAreaTypes().getAreaType();
+        List<AreaType> areaTypes = request.getAreaTypes().getAreaTypes();
         ClosestAreaSpatialRS closestAreasRS = getClosestAreas(new ClosestAreaSpatialRQ(request.getPoint(), new ClosestAreaSpatialRQ.AreaTypes(areaTypes), request.getUnit()));
 
         if (containsError(closestAreasRS.getResponseMessage())) {
@@ -81,7 +81,7 @@ public class ClosestAreaServiceBean implements ClosestAreaService, SpatialEnrich
 
         Map<String, String> areaType2TableName = getAreaType2TableNameMap();
         List<ClosestAreaEntry> closestAreas = newArrayList();
-        for (AreaType areaType : request.getAreaTypes().getAreaType()) {
+        for (AreaType areaType : request.getAreaTypes().getAreaTypes()) {
             String areaDbTable = areaType2TableName.get(areaType.value());
 
             List<ClosestAreaDto> closestAreaList = repository.findClosestArea(point, measurementUnit, areaDbTable);

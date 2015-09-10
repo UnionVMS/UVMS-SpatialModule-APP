@@ -44,7 +44,7 @@ public class AreaTypeNamesServiceTest {
 
         //then
         assertNotNull(areaTypeRS);
-        List<String> areaTypes = areaTypeRS.getAreaTypes().getAreaType();
+        List<String> areaTypes = areaTypeRS.getAreaTypes().getAreaTypes();
         assertThat(areaTypes).hasSize(AREA_TYPES.size());
         assertThat(areaTypes).containsOnly(AREA_TYPES.toArray());
     }
@@ -60,7 +60,7 @@ public class AreaTypeNamesServiceTest {
 
         // then
         assertNotNull(areaTypeRS);
-        assertThat(areaTypeRS.getAreaTypes().getAreaType()).isEmpty();
+        assertThat(areaTypeRS.getAreaTypes().getAreaTypes()).isEmpty();
     }
 
     private List<AreaLocationTypesEntity> createAreaLocationTypesList(List<String> areaTypes) {

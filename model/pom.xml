@@ -69,9 +69,18 @@
 
                             <schemaLanguage>XMLSCHEMA</schemaLanguage>
                             <forceRegenerate>false</forceRegenerate>
+                            <!-- Default to the schemaDirectory -->
+                            <bindingDirectory>${project.basedir}/src/main/resources</bindingDirectory>
+                            <bindingIncludes>
+                                <include>**/*.xjb</include>
+                            </bindingIncludes>
+                            <!-- By default, nothing is excluded. -->
+                            <bindingExcludes>
+                                <include>**/*.xj</include>
+                            </bindingExcludes>
 
                             <schemaDirectory>${project.basedir}/src/main/resources/contract</schemaDirectory>
-                            <bindingDirectory>${project.basedir}/src/main/resources/contract</bindingDirectory>
+
 
                             <generateDirectory>${basedir}/src/main/java/</generateDirectory>
 

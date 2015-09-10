@@ -40,10 +40,10 @@ public class SpatialEnrichmentServiceIT extends AbstractArquillianIT {
         assertNotNull(response.getAreasByLocation());
         assertNotNull(response.getClosestAreas());
         assertNotNull(response.getClosestLocations());
-        assertFalse(response.getClosestAreas().getClosestArea().isEmpty());
+        assertFalse(response.getClosestAreas().getClosestAreas().isEmpty());
         assertFalse(response.getClosestLocations().getClosestLocations().isEmpty());
 
-        ClosestAreaEntry closestAreaEntry = response.getClosestAreas().getClosestArea().get(0);
+        ClosestAreaEntry closestAreaEntry = response.getClosestAreas().getClosestAreas().get(0);
         assertEquals("231", closestAreaEntry.getId());
         assertEquals(0.0, closestAreaEntry.getDistance(), 0.01);
         assertEquals(AreaType.EEZ, closestAreaEntry.getAreaType());

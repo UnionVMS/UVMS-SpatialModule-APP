@@ -26,7 +26,7 @@ public class AreaTypeNamesServiceIT extends AbstractArquillianIT {
 
         //then
         assertNotNull(areaTypes);
-        assertFalse(areaTypes.getAreaTypes().getAreaType().isEmpty());
+        assertFalse(areaTypes.getAreaTypes().getAreaTypes().isEmpty());
     }
 
 }
