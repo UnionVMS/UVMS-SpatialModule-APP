@@ -86,5 +86,23 @@
             <xs:element name="propertyName" type="xs:string" nillable="false" />
             <xs:element name="propertyValue" type="xs:string" nillable="false" />
         </xs:sequence>
-    </xs:complexType>
+    </xs:complexType>    
+    <xs:complexType name="LocationDetails">
+		<xs:sequence>
+			<xs:element name="locationType" type="LocationTypeEntry" nillable="false"/>
+			<xs:element name="locationProperty" type="LocationProperty" nillable="false" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="LocationProperty">
+		<xs:sequence>
+			<xs:element name="propertyName" type="xs:string" nillable="false"/>
+			<xs:element name="propertyValue" type="xs:string" nillable="false"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="LocationTypeEntry">
+		<xs:sequence>
+			<xs:element name="Id" type="NumericStringLength1to9"/>
+			<xs:element name="LocationType" type="LocationType"/>
+		</xs:sequence>
+	</xs:complexType>
 </xs:schema>

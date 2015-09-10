@@ -140,4 +140,25 @@
             </xs:sequence>
         </xs:complexType>
     </xs:element>
+    	<xs:element name="LocationDetailsSpatialRequest">
+		<xs:annotation>
+			<xs:documentation>Root element for location details request</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="locationType" type="LocationTypeEntry" nillable="false"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="LocationDetailsSpatialResponse">
+		<xs:annotation>
+			<xs:documentation>Root element for location details request</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="ResponseMessage" type="ResponseMessageType" nillable="false"/>
+				<xs:element name="locationDetails" type="LocationDetails" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
 </xs:schema>
