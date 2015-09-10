@@ -29,7 +29,7 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
     @NamedQuery(name = QueryNameConstants.FIND_ALL_LOCATIONS, query = "SELECT area FROM AreaLocationTypesEntity area WHERE area.isLocation = 'Y'"),
     @NamedQuery(name = QueryNameConstants.FIND_SYSTEM_AREAS, query = "SELECT area FROM AreaLocationTypesEntity area WHERE area.isLocation = 'N' AND area.isSystemArea = 'Y'"),
     @NamedQuery(name = QueryNameConstants.FIND_SYSTEM_LOCATIONS, query = "SELECT area FROM AreaLocationTypesEntity area WHERE area.isLocation = 'N' AND area.isSystemArea = 'Y'"),
-    @NamedQuery(name = QueryNameConstants.FIND_AREAS_BY_ID, query = "SELECT area FROM AreaLocationTypesEntity area WHERE area.isLocation = 'N' AND area.typeName= :typeName")
+    @NamedQuery(name = QueryNameConstants.FIND_TYPE_BY_ID, query = "SELECT area FROM AreaLocationTypesEntity area WHERE area.isLocation = 'N' AND area.typeName= :typeName")
 })
 
 public class AreaLocationTypesEntity implements Serializable {
