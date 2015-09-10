@@ -61,7 +61,7 @@ public class AreaDetailsServiceTest {
 		AreaDetailsSpatialRequest request = new AreaDetailsSpatialRequest(new AreaTypeEntry("1", "eez"));
 		AreaDetailsSpatialResponse response = areaDetailsServiceBean.getAreaDetails(request);
 		assertNotNull(response);
-		List<AreaProperty> list = response.getAreaDetails().getAreaProperty();
+		List<AreaProperty> list = response.getAreaDetails().getAreaProperties();
 		assertEquals(list.isEmpty(), false);
 	}
 	
@@ -77,7 +77,7 @@ public class AreaDetailsServiceTest {
 		AreaDetailsSpatialRequest request = new AreaDetailsSpatialRequest(new AreaTypeEntry("1", "rfmo"));
 		AreaDetailsSpatialResponse response = areaDetailsServiceBean.getAreaDetails(request);
 		assertNotNull(response);
-		List<AreaProperty> list = response.getAreaDetails().getAreaProperty();
+		List<AreaProperty> list = response.getAreaDetails().getAreaProperties();
 		assertEquals(list.isEmpty(), false);
 	}
 	
