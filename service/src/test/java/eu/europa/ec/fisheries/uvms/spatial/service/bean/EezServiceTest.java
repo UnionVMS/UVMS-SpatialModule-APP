@@ -28,14 +28,11 @@ public class EezServiceTest {
     private EezService service = new EezServiceBean();
 
     @Test
-    public void shouldReturnEmptyResponse() {
-        // given
-        EezSpatialRQ getEezSpatialRQ = new EezSpatialRQ(EEZ_ID);
-
-        // when
+    public void testGetEezById() {
+        EezSpatialRQ eezSpatialRQ = new EezSpatialRQ();
+        eezSpatialRQ.setEezId(EEZ_ID);
+        EezSpatialRQ getEezSpatialRQ = eezSpatialRQ;
         EezSpatialRS eezSpatialRS = service.getEezById(getEezSpatialRQ);
-
-        // then
         assertNotNull(eezSpatialRS);
         ResponseMessageType responseMessage = eezSpatialRS.getResponseMessage();
         assertNotNull(responseMessage);
