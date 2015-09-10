@@ -12,6 +12,8 @@
         <!-- Extension that makes "collection like" properties name plural. I.e: attribute => attributes -->
         <xjc:simple />
 
+        <!-- <xjc:superInterface name="eu.europa.ec.fisheries.uvms.spatial.model.interfaces.ResponseHolder"/> -->
+
     </jaxb:globalBindings>
 
 </jaxb:bindings>
