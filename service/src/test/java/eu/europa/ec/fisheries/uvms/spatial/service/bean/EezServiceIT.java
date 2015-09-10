@@ -10,9 +10,6 @@ import javax.ejb.EJB;
 
 import static junit.framework.TestCase.assertNotNull;
 
-/**
- * Created by kopyczmi on 06-Aug-15.
- */
 @RunWith(Arquillian.class)
 public class EezServiceIT extends AbstractArquillianIT {
 
@@ -20,14 +17,11 @@ public class EezServiceIT extends AbstractArquillianIT {
     private EezService service;
 
     @Test
-    public void shouldReturnEez() throws Exception {
-        // given
-        EezSpatialRQ getEezSpatialRQ = new EezSpatialRQ("123");
-
-        // when
+    public void testGetEezById() throws Exception {
+        EezSpatialRQ eezSpatialRQ = new EezSpatialRQ();
+        eezSpatialRQ.setEezId("123");
+        EezSpatialRQ getEezSpatialRQ = eezSpatialRQ;
         EezSpatialRS eez = service.getEezById(getEezSpatialRQ);
-
-        //then
         assertNotNull(eez);
         assertNotNull(eez.getEez());
     }
