@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 import com.google.common.collect.ImmutableMap;
 
 import eu.europa.ec.fisheries.uvms.service.CrudService;
-import eu.europa.ec.fisheries.uvms.spatial.entity.AreaTypesEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.PortsEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationDetails;
@@ -31,7 +31,6 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler.ExceptionHandlerInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler.SpatialExceptionHandler;
 import eu.europa.ec.fisheries.uvms.util.ColumnAliasNameHelper;
 
 @Stateless
@@ -49,7 +48,7 @@ public class LocationDetailsServiceBean implements LocationDetailsService {
 
     @SuppressWarnings("unchecked")
     @Override
-    @SpatialExceptionHandler(responseType = LocationDetailsSpatialResponse.class)
+    //@SpatialExceptionHandler(responseType = LocationDetailsSpatialResponse.class)
     @Interceptors(value = ExceptionHandlerInterceptor.class)
 	public LocationDetailsSpatialResponse getLocationDetails(LocationDetailsSpatialRequest request) {
     	
@@ -58,7 +57,7 @@ public class LocationDetailsServiceBean implements LocationDetailsService {
         LOG.info("Location Type name received : " + locationType.value());
         Map<String, String> parameters = newHashMap();
         parameters.put("typeName", locationType.value().toUpperCase());
-        List<AreaTypesEntity> locationTypes = crudService.findEntityByNamedQuery(AreaTypesEntity.class, QueryNameConstants.FIND_TYPE_BY_ID, parameters, 1);
+        List<AreaLocationTypesEntity> locationTypes = crudService.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_TYPE_BY_ID, parameters, 1);
         if (!locationTypes.isEmpty()) {
         	Map<String, String> properties = getLocationDetails(locationTypes.get(0), request.getLocationType().getId());
             response = createLocationDetailsSpatialResponse(properties, request);
@@ -70,7 +69,7 @@ public class LocationDetailsServiceBean implements LocationDetailsService {
 
 
     @SuppressWarnings("unchecked")
-	private Map<String, String> getLocationDetails(AreaTypesEntity areaTypeEntity, String id) {
+	private Map<String, String> getLocationDetails(AreaLocationTypesEntity areaTypeEntity, String id) {
 		Map<String, String> properties = newHashMap();
 		LOG.info("Location Type entity to be retrieved : " + areaTypeEntity.getTypeName());
 		if (!StringUtils.isNumeric(id)) {
@@ -97,7 +96,7 @@ public class LocationDetailsServiceBean implements LocationDetailsService {
         }
         LocationDetails locationDetails = new LocationDetails();
         locationDetails.setLocationType(request.getLocationType());
-        locationDetails.setLocationProperty(locationProperties);
+        locationDetails.setLocationProperties(locationProperties);
         LocationDetailsSpatialResponse response = new LocationDetailsSpatialResponse();
         response.setLocationDetails(locationDetails);
         response.setResponseMessage(createSuccessResponseMessage());
