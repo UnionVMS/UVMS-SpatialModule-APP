@@ -27,8 +27,8 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 @NamedQueries({
     @NamedQuery(name = QueryNameConstants.FIND_ALL_AREAS, query = "SELECT area FROM AreaLocationTypesEntity area WHERE area.isLocation = 'N'"),
     @NamedQuery(name = QueryNameConstants.FIND_ALL_LOCATIONS, query = "SELECT area FROM AreaLocationTypesEntity area WHERE area.isLocation = 'Y'"),
-    @NamedQuery(name = QueryNameConstants.FIND_SYSTEM_AREAS, query = "SELECT area FROM AreaLocationTypesEntity area WHERE area.isLocation = 'N' AND area.isSystemArea = 'Y'"),
-    @NamedQuery(name = QueryNameConstants.FIND_SYSTEM_LOCATIONS, query = "SELECT area FROM AreaLocationTypesEntity area WHERE area.isLocation = 'N' AND area.isSystemArea = 'Y'"),
+    @NamedQuery(name = QueryNameConstants.FIND_SYSTEM_AREAS, query = "SELECT area FROM AreaLocationTypesEntity area WHERE area.isLocation = 'N' AND area.isSystemWide = 'Y'"),
+    @NamedQuery(name = QueryNameConstants.FIND_SYSTEM_LOCATIONS, query = "SELECT area FROM AreaLocationTypesEntity area WHERE area.isLocation = 'N' AND area.isSystemWide = 'Y'"),
     @NamedQuery(name = QueryNameConstants.FIND_TYPE_BY_ID, query = "SELECT area FROM AreaLocationTypesEntity area WHERE area.isLocation = 'N' AND area.typeName= :typeName")
 })
 
@@ -55,14 +55,14 @@ public class AreaLocationTypesEntity implements Serializable {
 	private String areaDbTable;
 	
 	@Convert(converter = CharBooleanConverter.class)
-	@Column(name = "is_system_area", nullable = false, length = 1)
+	@Column(name = "is_system_wide", nullable = false, length = 1)
 	private Boolean isSystemWide = false;
 
 	@Convert(converter = CharBooleanConverter.class)
 	@Column(name = "is_location", nullable = false, length = 1)
 	private Boolean isLocation = false;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "areaTypes", cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "areaLocationTypes", cascade = CascadeType.ALL)
 	private Set<AreaConnectGroupEntity> areaConnectGroups;
 
 	public AreaLocationTypesEntity() {

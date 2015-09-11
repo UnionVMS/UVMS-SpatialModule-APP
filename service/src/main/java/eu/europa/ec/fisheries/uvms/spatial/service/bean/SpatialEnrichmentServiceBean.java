@@ -22,17 +22,17 @@ import static eu.europa.ec.fisheries.uvms.util.ModelUtils.createSuccessResponseM
 @Slf4j
 public class SpatialEnrichmentServiceBean implements SpatialEnrichmentService {
 
-    @EJB(beanName="AreaByLocationServiceBean")
-    private SpatialEnrichmentSupport handler;
+    @EJB
+    private AreaByLocationService head;
 
     @Override
     public SpatialEnrichmentRS getSpatialEnrichment(SpatialEnrichmentRQ spatialEnrichmentRQ) {
-        return handler.handleRequest(spatialEnrichmentRQ, createSuccessSpatialEnrichmentResponse());
+        return head.handleSpatialEnrichment(spatialEnrichmentRQ, createSuccessSpatialEnrichmentResponse());
     }
 
     @Override
     public EnrichmentDto getSpatialEnrichment(double lat, double lon, int crs, String unit, List<String> areaTypes, List<String> locationTypes) {
-        return handler.handleRequest(lat, lon, crs, unit, areaTypes, locationTypes, new EnrichmentDto());
+        return head.handleSpatialEnrichment(lat, lon, crs, unit, areaTypes, locationTypes, new EnrichmentDto());
     }
 
     private SpatialEnrichmentRS createSuccessSpatialEnrichmentResponse() {

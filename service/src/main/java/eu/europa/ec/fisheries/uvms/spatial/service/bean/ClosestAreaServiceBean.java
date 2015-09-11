@@ -33,10 +33,10 @@ import static eu.europa.ec.fisheries.uvms.util.SpatialUtils.convertToPointInWGS8
 @Local(ClosestAreaService.class)
 @Transactional
 @Slf4j
-public class ClosestAreaServiceBean implements ClosestAreaService, SpatialEnrichmentSupport {
+public class ClosestAreaServiceBean implements ClosestAreaService {
 
-    @EJB(beanName = "ClosestLocationServiceBean")
-    private SpatialEnrichmentSupport next;
+    @EJB
+    private ClosestLocationService closestLocationService;
 
     @EJB
     private SpatialRepository repository;
@@ -45,7 +45,7 @@ public class ClosestAreaServiceBean implements ClosestAreaService, SpatialEnrich
     private CrudService crudService;
 
     @Override
-    public SpatialEnrichmentRS handleRequest(SpatialEnrichmentRQ request, SpatialEnrichmentRS response) {
+    public SpatialEnrichmentRS handleSpatialEnrichment(SpatialEnrichmentRQ request, SpatialEnrichmentRS response) {
         List<AreaType> areaTypes = request.getAreaTypes().getAreaTypes();
         ClosestAreaSpatialRS closestAreasRS = getClosestAreas(new ClosestAreaSpatialRQ(request.getPoint(), new ClosestAreaSpatialRQ.AreaTypes(areaTypes), request.getUnit()));
 
@@ -54,7 +54,7 @@ public class ClosestAreaServiceBean implements ClosestAreaService, SpatialEnrich
         }
         response.setClosestAreas(closestAreasRS.getClosestAreas());
 
-        return next.handleRequest(request, response);
+        return closestLocationService.handleSpatialEnrichment(request, response);
     }
 
     private SpatialEnrichmentRS addErrorMessage(SpatialEnrichmentRS response, ResponseMessageType responseMessage) {
@@ -63,10 +63,10 @@ public class ClosestAreaServiceBean implements ClosestAreaService, SpatialEnrich
     }
 
     @Override
-    public EnrichmentDto handleRequest(double lat, double lon, int crs, String unit, List<String> areaTypes, List<String> locationTypes, EnrichmentDto enrichmentDto) {
+    public EnrichmentDto handleSpatialEnrichment(double lat, double lon, int crs, String unit, List<String> areaTypes, List<String> locationTypes, EnrichmentDto enrichmentDto) {
         List<ClosestAreaDto> closestAreas = getClosestAreasRest(lat, lon, crs, unit, locationTypes);
         enrichmentDto.setClosestAreas(closestAreas);
-        return next.handleRequest(lat, lon, crs, unit, areaTypes, locationTypes, enrichmentDto);
+        return closestLocationService.handleSpatialEnrichment(lat, lon, crs, unit, areaTypes, locationTypes, enrichmentDto);
     }
 
     @Override

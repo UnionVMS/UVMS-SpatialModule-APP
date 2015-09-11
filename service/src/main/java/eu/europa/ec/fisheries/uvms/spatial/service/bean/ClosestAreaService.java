@@ -6,7 +6,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestAreaDto;
 
 import java.util.List;
 
-public interface ClosestAreaService {
+public interface ClosestAreaService extends SpatialEnrichmentSupport{
 
     ClosestAreaSpatialRS getClosestAreas(ClosestAreaSpatialRQ request);
 

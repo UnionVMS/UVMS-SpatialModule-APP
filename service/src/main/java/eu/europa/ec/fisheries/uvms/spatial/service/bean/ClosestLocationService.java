@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by Michal Kopyczok on 03-Sep-15.
  */
-public interface ClosestLocationService {
+public interface ClosestLocationService extends SpatialEnrichmentSupport {
     ClosestLocationSpatialRS getClosestLocations(ClosestLocationSpatialRQ request);
 
     List<ClosestLocationDto> getClosestLocationsRest(double lat, double lon, int crs, String unit, List<String> locationTypes);

@@ -36,7 +36,7 @@ import static eu.europa.ec.fisheries.uvms.util.SpatialUtils.convertToPointInWGS8
 @Local(ClosestLocationService.class)
 @Transactional
 @Slf4j
-public class ClosestLocationServiceBean implements ClosestLocationService, SpatialEnrichmentSupport {
+public class ClosestLocationServiceBean implements ClosestLocationService {
 
     @EJB
     private SpatialRepository repository;
@@ -45,7 +45,7 @@ public class ClosestLocationServiceBean implements ClosestLocationService, Spati
     private CrudService crudService;
 
     @Override
-    public SpatialEnrichmentRS handleRequest(SpatialEnrichmentRQ request, SpatialEnrichmentRS response) {
+    public SpatialEnrichmentRS handleSpatialEnrichment(SpatialEnrichmentRQ request, SpatialEnrichmentRS response) {
         List<LocationType> locationTypes = request.getLocationTypes().getLocationTypes();
         ClosestLocationSpatialRS closestLocationsRS = getClosestLocations(new ClosestLocationSpatialRQ(request.getPoint(), new ClosestLocationSpatialRQ.LocationTypes(locationTypes), request.getUnit()));
 
@@ -63,7 +63,7 @@ public class ClosestLocationServiceBean implements ClosestLocationService, Spati
     }
 
     @Override
-    public EnrichmentDto handleRequest(double lat, double lon, int crs, String unit, List<String> areaTypes, List<String> locationTypes, EnrichmentDto enrichmentDto) {
+    public EnrichmentDto handleSpatialEnrichment(double lat, double lon, int crs, String unit, List<String> areaTypes, List<String> locationTypes, EnrichmentDto enrichmentDto) {
         List<ClosestLocationDto> closestLocations = getClosestLocationsRest(lat, lon, crs, unit, locationTypes);
         enrichmentDto.setClosestLocations(closestLocations);
         return enrichmentDto;

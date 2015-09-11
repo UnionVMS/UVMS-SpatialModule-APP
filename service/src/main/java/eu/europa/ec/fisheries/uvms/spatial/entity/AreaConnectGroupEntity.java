@@ -52,8 +52,8 @@ public class AreaConnectGroupEntity implements Serializable {
         return this.areaLocationTypes;
     }
 
-    public void setAreaLocationTypes(AreaLocationTypesEntity areaTypes) {
-        this.areaLocationTypes = areaTypes;
+    public void setAreaLocationTypes(AreaLocationTypesEntity areaLocationTypes) {
+        this.areaLocationTypes = areaLocationTypes;
     }
 
     public long getAreaId() {
