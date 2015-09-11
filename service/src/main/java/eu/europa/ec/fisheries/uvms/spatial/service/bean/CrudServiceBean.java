@@ -15,7 +15,7 @@ import javax.persistence.PersistenceContext;
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class CrudServiceBean extends AbstractCrudService {
 
-    @PersistenceContext(unitName = "UVMS")
+    @PersistenceContext(unitName = "spatialPU")
     private EntityManager em;
 
     @Override
