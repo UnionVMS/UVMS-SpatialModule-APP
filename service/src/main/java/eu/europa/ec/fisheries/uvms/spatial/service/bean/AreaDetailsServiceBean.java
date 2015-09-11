@@ -2,6 +2,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import static com.google.common.collect.Maps.newHashMap;
 import static eu.europa.ec.fisheries.uvms.util.ModelUtils.createSuccessResponseMessage;
+import static eu.europa.ec.fisheries.uvms.util.ColumnAliasNameHelper.getFieldMap;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,8 +14,8 @@ import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
 import javax.transaction.Transactional;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang3.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +39,6 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler.ExceptionHandlerInterceptor;
-import eu.europa.ec.fisheries.uvms.util.ColumnAliasNameHelper;
 
 @Stateless
 @Local(AreaDetailsService.class)
@@ -56,63 +56,48 @@ public class AreaDetailsServiceBean implements AreaDetailsService {
             .put(AreaType.RAC.value(), RacEntity.class)
             .put(AreaType.S_TAT_RECT.value(), StatRectEntity.class)
             .build();
+    
+    private static String TYPE_NAME = "typeName";
 
     @EJB
     private CrudService crudService;
 
     @SuppressWarnings("unchecked")
     @Override
-    //@SpatialExceptionHandler(responseType = AreaDetailsSpatialResponse.class)
     @Interceptors(value = ExceptionHandlerInterceptor.class)
     public AreaDetailsSpatialResponse getAreaDetails(AreaDetailsSpatialRequest request) {
-        AreaDetailsSpatialResponse response = null;
         String areaTypeName = request.getAreaType().getAreaType();
         LOG.info("Area Type name received : " + areaTypeName);
         Map<String, String> parameters = newHashMap();
-        parameters.put("typeName", areaTypeName.toUpperCase());
+        parameters.put(TYPE_NAME, areaTypeName.toUpperCase());
         List<AreaLocationTypesEntity> areasTypes = crudService.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_TYPE_BY_ID, parameters, 1);
-        if (!areasTypes.isEmpty()) {
-            if (isSystemAreaType(areaTypeName)) { //proceed only if the area is in the MAP
-                Map<String, String> properties = getSystemAreaDetails(areasTypes.get(0), request.getAreaType().getId());
-                response = createAreaDetailsSpatialResponse(properties, request);
-            } else {
-                // TODO handle user areas
-                throw new NotImplementedException("Not yet implemented");
-            }
+        if (!areasTypes.isEmpty()) {        	
+        	AreaLocationTypesEntity areaType = areasTypes.get(0);  // We just have one entity in the result
+        	if (areaType.getIsSystemWide()) {
+        		Map<String, String> properties = getSystemAreaDetails(areaType, request.getAreaType().getId());
+                return createAreaDetailsSpatialResponse(properties, request);
+        	} else {
+        		// TODO Get area details for custom areas
+        		throw new NotImplementedException();
+        	}        	
         } else {
             throw new SpatialServiceException(SpatialServiceErrors.INVALID_AREA_TYPE, areaTypeName);
         }
-        return response;
-    }
-
-    private boolean isSystemAreaType(String areaTypeName) {
-        for (String key : entityMap.keySet()) {
-            if (key.equalsIgnoreCase(areaTypeName)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     @SuppressWarnings("unchecked")
 	private Map<String, String> getSystemAreaDetails(AreaLocationTypesEntity areaTypeEntity, String id) {
-		Map<String, String> properties = newHashMap();
 		LOG.info("Area Type entity to be retrieved : " + areaTypeEntity.getTypeName());
 		if (!StringUtils.isNumeric(id)) {
 			throw new SpatialServiceException(SpatialServiceErrors.INVALID_AREA_ID, id);
 		}
-		Class entityClass = entityMap.get(areaTypeEntity.getTypeName()); // Check whether the area is already registered in the Map
-		if (entityClass != null) {
-			Object object = crudService.findEntityById(entityClass, Integer.parseInt(id));
-			if (object != null) {
-				properties = ColumnAliasNameHelper.getFieldMap(object); // Get the alias name set in the annotation using helper
-			} else {
-				throw new SpatialServiceException(SpatialServiceErrors.AREA_NOT_FOUND, areaTypeEntity.getTypeName());
-			}
+		Class entityClass = entityMap.get(areaTypeEntity.getTypeName());
+		Object object = crudService.findEntityById(entityClass, Integer.parseInt(id));
+		if (object != null) {
+			return getFieldMap(object); // Get the alias name set in the annotation using helper
 		} else {
 			throw new SpatialServiceException(SpatialServiceErrors.AREA_NOT_FOUND, areaTypeEntity.getTypeName());
 		}
-		return properties; 
 	}
 
     private AreaDetailsSpatialResponse createAreaDetailsSpatialResponse(Map<String, String> properties, AreaDetailsSpatialRequest request) {
@@ -128,5 +113,4 @@ public class AreaDetailsServiceBean implements AreaDetailsService {
         response.setResponseMessage(createSuccessResponseMessage());
         return response;
     }
-
 }

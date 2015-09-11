@@ -40,53 +40,44 @@ public class LocationDetailsServiceBean implements LocationDetailsService {
 	
 	private static Logger LOG = LoggerFactory.getLogger(LocationDetailsServiceBean.class.getName());
 	
-    @EJB
-    private CrudService crudService;
-    
     private ImmutableMap<String, Class> entityMap = ImmutableMap.<String, Class>builder()
             .put(LocationType.PORT.value(), PortsEntity.class).build();
+	
+    private static String TYPE_NAME = "typeName";
+    
+    @EJB
+    private CrudService crudService;
 
     @SuppressWarnings("unchecked")
     @Override
-    //@SpatialExceptionHandler(responseType = LocationDetailsSpatialResponse.class)
     @Interceptors(value = ExceptionHandlerInterceptor.class)
 	public LocationDetailsSpatialResponse getLocationDetails(LocationDetailsSpatialRequest request) {
-    	
-    	LocationDetailsSpatialResponse response = null;
         LocationType locationType = request.getLocationType().getLocationType();
         LOG.info("Location Type name received : " + locationType.value());
         Map<String, String> parameters = newHashMap();
-        parameters.put("typeName", locationType.value().toUpperCase());
+        parameters.put(TYPE_NAME, locationType.value().toUpperCase());
         List<AreaLocationTypesEntity> locationTypes = crudService.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_TYPE_BY_ID, parameters, 1);
         if (!locationTypes.isEmpty()) {
         	Map<String, String> properties = getLocationDetails(locationTypes.get(0), request.getLocationType().getId());
-            response = createLocationDetailsSpatialResponse(properties, request);
+            return createLocationDetailsSpatialResponse(properties, request);
         } else {
-            throw new SpatialServiceException(SpatialServiceErrors.INVALID_AREA_TYPE, locationType.value());
+            throw new SpatialServiceException(SpatialServiceErrors.INVALID_LOCATION_TYPE, locationType.value());
         }
-        return response;
 	}
-
 
     @SuppressWarnings("unchecked")
 	private Map<String, String> getLocationDetails(AreaLocationTypesEntity areaTypeEntity, String id) {
-		Map<String, String> properties = newHashMap();
 		LOG.info("Location Type entity to be retrieved : " + areaTypeEntity.getTypeName());
 		if (!StringUtils.isNumeric(id)) {
 			throw new SpatialServiceException(SpatialServiceErrors.INVALID_LOCATION_ID, id);
 		}
-		Class entityClass = entityMap.get(areaTypeEntity.getTypeName()); // Check whether the area is already registered in the Map
-		if (entityClass != null) {
-			Object object = crudService.findEntityById(entityClass, Integer.parseInt(id));
-			if (object != null) {
-				properties = ColumnAliasNameHelper.getFieldMap(object); // Get the alias name set in the annotation using helper
-			} else {
-				throw new SpatialServiceException(SpatialServiceErrors.LOCATION_NOT_FOUND, areaTypeEntity.getTypeName());
-			}
+		Class entityClass = entityMap.get(areaTypeEntity.getTypeName());
+		Object object = crudService.findEntityById(entityClass, Integer.parseInt(id));
+		if (object != null) {
+			return ColumnAliasNameHelper.getFieldMap(object); // Get the alias name set in the annotation using helper
 		} else {
 			throw new SpatialServiceException(SpatialServiceErrors.LOCATION_NOT_FOUND, areaTypeEntity.getTypeName());
 		}
-		return properties; 
 	}
 
     private LocationDetailsSpatialResponse createLocationDetailsSpatialResponse(Map<String, String> properties, LocationDetailsSpatialRequest request) {

@@ -55,7 +55,7 @@ public class AreaDetailsServiceTest {
 	@Test
 	public void getEezAreaDetailsTest() {
 		List<AreaLocationTypesEntity> areaEntities = new ArrayList<AreaLocationTypesEntity>();
-		areaEntities.add(getMockAreaTypeEntity("EEZ"));		
+		areaEntities.add(getMockAreaTypeEntity("EEZ", true));		
 		EezEntity eezEntity = getMockedEezEntity();		
 		mockCrudServiceBean(areaEntities, eezEntity);
 		AreaDetailsSpatialRequest request = new AreaDetailsSpatialRequest(new AreaTypeEntry("1", "eez"));
@@ -71,7 +71,7 @@ public class AreaDetailsServiceTest {
 	@Test
 	public void getRfmoAreaDetailsTest() {
 		List<AreaLocationTypesEntity> areaEntities = new ArrayList<AreaLocationTypesEntity>();
-		areaEntities.add(getMockAreaTypeEntity("RFMO"));		
+		areaEntities.add(getMockAreaTypeEntity("RFMO", true));		
 		RfmoEntity rfmoEntity = getMockedRfmoEntity();
 		mockCrudServiceBean(areaEntities, rfmoEntity);		
 		AreaDetailsSpatialRequest request = new AreaDetailsSpatialRequest(new AreaTypeEntry("1", "rfmo"));
@@ -116,9 +116,10 @@ public class AreaDetailsServiceTest {
 		Mockito.when(crudServiceBean.findEntityById(Mockito.any(Class.class), Mockito.any(Object.class))).thenReturn(entity);
 	}
 	
-	private AreaLocationTypesEntity getMockAreaTypeEntity(String typeName) {
+	private AreaLocationTypesEntity getMockAreaTypeEntity(String typeName, Boolean isSystemWide) {
 		AreaLocationTypesEntity areaEntity = Mockito.mock(AreaLocationTypesEntity.class);
 		Mockito.when(areaEntity.getTypeName()).thenReturn(typeName.toUpperCase());
+		Mockito.when(areaEntity.getIsSystemWide()).thenReturn(isSystemWide);
 		return areaEntity;
 	}
 	
