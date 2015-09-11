@@ -56,7 +56,7 @@ public class ClosestAreaServiceBean implements ClosestAreaService {
 
     @Override
     public EnrichmentDto handleSpatialEnrichment(double lat, double lon, int crs, String unit, List<String> areaTypes, List<String> locationTypes, EnrichmentDto enrichmentDto) {
-        List<ClosestAreaDto> closestAreas = getClosestAreasRest(lat, lon, crs, unit, locationTypes);
+        List<ClosestAreaDto> closestAreas = getClosestAreasRest(lat, lon, crs, unit, areaTypes);
         enrichmentDto.setClosestAreas(closestAreas);
         return enrichmentDto;
     }

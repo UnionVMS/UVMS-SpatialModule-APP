@@ -18,7 +18,7 @@ import static eu.europa.ec.fisheries.uvms.util.ModelUtils.createSuccessResponseM
  * Created by Cegeka on 01-Sep-15.
  */
 @Stateless
-@Local(SpatialEnrichmentSupport.class)
+@Local(SpatialEnrichmentService.class)
 @Transactional
 @Slf4j
 public class SpatialEnrichmentServiceBean implements SpatialEnrichmentService {

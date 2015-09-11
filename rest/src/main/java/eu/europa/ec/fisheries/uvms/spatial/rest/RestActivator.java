@@ -3,6 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.rest;
 import eu.europa.ec.fisheries.uvms.spatial.rest.constants.RestConstants;
 import eu.europa.ec.fisheries.uvms.spatial.rest.resources.AreaResource;
 import eu.europa.ec.fisheries.uvms.spatial.rest.resources.EezResource;
+import eu.europa.ec.fisheries.uvms.spatial.rest.resources.EnrichmentResource;
 import eu.europa.ec.fisheries.uvms.spatial.rest.resources.LocationResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,7 @@ public class RestActivator extends Application {
         set.add(AreaResource.class);
         set.add(LocationResource.class);
         set.add(EezResource.class);
+        set.add(EnrichmentResource.class);
         LOG.info(RestConstants.MODULE_NAME + " module starting up");
     }
 
