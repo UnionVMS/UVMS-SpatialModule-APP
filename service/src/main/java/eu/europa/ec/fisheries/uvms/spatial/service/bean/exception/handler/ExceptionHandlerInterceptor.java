@@ -1,7 +1,8 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler;
 
-import com.google.common.collect.ImmutableMap;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ErrorMessageType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ErrorsType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ResponseMessageType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.ExceptionMapper;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
@@ -25,16 +26,6 @@ import static com.google.common.collect.Lists.newArrayList;
 public class ExceptionHandlerInterceptor {
     private static final String RESPONSE_MESSAGE = "responseMessage";
 
-    // Supported requests map
-    private static final ImmutableMap<Class, Class> rqToRsMapping = ImmutableMap.<Class, Class>builder()
-            .put(EezSpatialRQ.class, EezSpatialRS.class)
-            .put(AreaByLocationSpatialRQ.class, AreaByLocationSpatialRS.class)
-            .put(ClosestAreaSpatialRQ.class, ClosestAreaSpatialRS.class)
-            .put(ClosestLocationSpatialRQ.class, ClosestLocationSpatialRS.class)
-            .put(SpatialEnrichmentRQ.class, SpatialEnrichmentRS.class)
-            .put(AreaDetailsSpatialRequest.class, AreaDetailsSpatialResponse.class)
-            .build();
-
     @EJB
     ExceptionMapper exceptionMapper;
 
@@ -45,7 +36,7 @@ public class ExceptionHandlerInterceptor {
         Class responseTypeClass = null;
 
         try {
-            responseTypeClass = retrieveResponseClass(ctx.getParameters());
+            responseTypeClass = ctx.getMethod().getReturnType();
             return ctx.proceed();
         } catch (Exception ex) {
             Object rsObject = responseTypeClass.getConstructor().newInstance();
@@ -69,16 +60,11 @@ public class ExceptionHandlerInterceptor {
         }
     }
 
-    private Class retrieveResponseClass(Object[] parameters) {
-        return rqToRsMapping.get(parameters[0].getClass()); ///TODO check it
-    }
-
     private boolean isDatabaseException(Exception ex) {
         return ex instanceof HibernateException;
     }
 
     private void setErrorMessage(Object rsObject, String errorMessage, Integer errorCode) {
-        // TODO Add interface to generated schema classes to set response message by properties without the use of reflection
         set(rsObject, RESPONSE_MESSAGE, createErrorResponseMessage(errorMessage, errorCode));
     }
 
