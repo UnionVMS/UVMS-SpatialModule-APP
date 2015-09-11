@@ -33,9 +33,6 @@ import static eu.europa.ec.fisheries.uvms.util.SpatialUtils.convertToPointInWGS8
 public class AreaByLocationServiceBean implements AreaByLocationService {
 
     @EJB
-    private ClosestAreaService closestAreaService;
-
-    @EJB
     private SpatialRepository repository;
 
     @EJB
@@ -46,15 +43,10 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
         AreaByLocationSpatialRS areaByLocationRS = getAreasByLocation(new AreaByLocationSpatialRQ(request.getPoint()));
 
         if (containsError(areaByLocationRS.getResponseMessage())) {
-            return addErrorMessage(response, areaByLocationRS.getResponseMessage());
+            return new SpatialEnrichmentRS(areaByLocationRS.getResponseMessage(), null, null, null);
         }
         response.setAreasByLocation(areaByLocationRS.getAreasByLocation());
 
-        return closestAreaService.handleSpatialEnrichment(request, response);
-    }
-
-    private SpatialEnrichmentRS addErrorMessage(SpatialEnrichmentRS response, ResponseMessageType responseMessage) {
-        response.setResponseMessage(responseMessage);
         return response;
     }
 
@@ -62,7 +54,7 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
     public EnrichmentDto handleSpatialEnrichment(double lat, double lon, int crs, String unit, List<String> areaTypes, List<String> locationTypes, EnrichmentDto enrichmentDto) {
         List<AreaDto> areasByLocation = getAreasByLocationRest(lat, lon, crs);
         enrichmentDto.setAreasByLocation(areasByLocation);
-        return closestAreaService.handleSpatialEnrichment(lat, lon, crs, unit, areaTypes, locationTypes, enrichmentDto);
+        return enrichmentDto;
     }
 
     @Override

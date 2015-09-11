@@ -50,15 +50,10 @@ public class ClosestLocationServiceBean implements ClosestLocationService {
         ClosestLocationSpatialRS closestLocationsRS = getClosestLocations(new ClosestLocationSpatialRQ(request.getPoint(), new ClosestLocationSpatialRQ.LocationTypes(locationTypes), request.getUnit()));
 
         if (containsError(closestLocationsRS.getResponseMessage())) {
-            return addErrorMessage(response, closestLocationsRS.getResponseMessage());
+            return new SpatialEnrichmentRS(closestLocationsRS.getResponseMessage(), null, null, null);
         }
         response.setClosestLocations(closestLocationsRS.getClosestLocations());
 
-        return response;
-    }
-
-    private SpatialEnrichmentRS addErrorMessage(SpatialEnrichmentRS response, ResponseMessageType responseMessage) {
-        response.setResponseMessage(responseMessage);
         return response;
     }
 

@@ -36,9 +36,6 @@ import static eu.europa.ec.fisheries.uvms.util.SpatialUtils.convertToPointInWGS8
 public class ClosestAreaServiceBean implements ClosestAreaService {
 
     @EJB
-    private ClosestLocationService closestLocationService;
-
-    @EJB
     private SpatialRepository repository;
 
     @EJB
@@ -50,15 +47,10 @@ public class ClosestAreaServiceBean implements ClosestAreaService {
         ClosestAreaSpatialRS closestAreasRS = getClosestAreas(new ClosestAreaSpatialRQ(request.getPoint(), new ClosestAreaSpatialRQ.AreaTypes(areaTypes), request.getUnit()));
 
         if (containsError(closestAreasRS.getResponseMessage())) {
-            return addErrorMessage(response, closestAreasRS.getResponseMessage());
+            return new SpatialEnrichmentRS(closestAreasRS.getResponseMessage(), null, null, null);
         }
         response.setClosestAreas(closestAreasRS.getClosestAreas());
 
-        return closestLocationService.handleSpatialEnrichment(request, response);
-    }
-
-    private SpatialEnrichmentRS addErrorMessage(SpatialEnrichmentRS response, ResponseMessageType responseMessage) {
-        response.setResponseMessage(responseMessage);
         return response;
     }
 
@@ -66,7 +58,7 @@ public class ClosestAreaServiceBean implements ClosestAreaService {
     public EnrichmentDto handleSpatialEnrichment(double lat, double lon, int crs, String unit, List<String> areaTypes, List<String> locationTypes, EnrichmentDto enrichmentDto) {
         List<ClosestAreaDto> closestAreas = getClosestAreasRest(lat, lon, crs, unit, locationTypes);
         enrichmentDto.setClosestAreas(closestAreas);
-        return closestLocationService.handleSpatialEnrichment(lat, lon, crs, unit, areaTypes, locationTypes, enrichmentDto);
+        return enrichmentDto;
     }
 
     @Override

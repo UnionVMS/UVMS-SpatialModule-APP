@@ -11,6 +11,7 @@ import javax.ejb.Stateless;
 import javax.transaction.Transactional;
 import java.util.List;
 
+import static eu.europa.ec.fisheries.uvms.util.ModelUtils.containsError;
 import static eu.europa.ec.fisheries.uvms.util.ModelUtils.createSuccessResponseMessage;
 
 /**
@@ -23,16 +24,34 @@ import static eu.europa.ec.fisheries.uvms.util.ModelUtils.createSuccessResponseM
 public class SpatialEnrichmentServiceBean implements SpatialEnrichmentService {
 
     @EJB
-    private AreaByLocationService head;
+    private AreaByLocationService areaByLocationService;
+
+    @EJB
+    private ClosestAreaService closestAreaService;
+
+    @EJB
+    private ClosestLocationService closestLocationService;
 
     @Override
     public SpatialEnrichmentRS getSpatialEnrichment(SpatialEnrichmentRQ spatialEnrichmentRQ) {
-        return head.handleSpatialEnrichment(spatialEnrichmentRQ, createSuccessSpatialEnrichmentResponse());
+        SpatialEnrichmentRS spatialEnrichmentRS = areaByLocationService.handleSpatialEnrichment(spatialEnrichmentRQ, createSuccessSpatialEnrichmentResponse());
+        if (containsError(spatialEnrichmentRS.getResponseMessage())) {
+            return spatialEnrichmentRS;
+        }
+
+        spatialEnrichmentRS = closestAreaService.handleSpatialEnrichment(spatialEnrichmentRQ, spatialEnrichmentRS);
+        if (containsError(spatialEnrichmentRS.getResponseMessage())) {
+            return spatialEnrichmentRS;
+        }
+
+        return closestLocationService.handleSpatialEnrichment(spatialEnrichmentRQ, spatialEnrichmentRS);
     }
 
     @Override
     public EnrichmentDto getSpatialEnrichment(double lat, double lon, int crs, String unit, List<String> areaTypes, List<String> locationTypes) {
-        return head.handleSpatialEnrichment(lat, lon, crs, unit, areaTypes, locationTypes, new EnrichmentDto());
+        EnrichmentDto enrichmentDto = areaByLocationService.handleSpatialEnrichment(lat, lon, crs, unit, areaTypes, locationTypes, new EnrichmentDto());
+        enrichmentDto = closestAreaService.handleSpatialEnrichment(lat, lon, crs, unit, areaTypes, locationTypes, enrichmentDto);
+        return closestLocationService.handleSpatialEnrichment(lat, lon, crs, unit, areaTypes, locationTypes, enrichmentDto);
     }
 
     private SpatialEnrichmentRS createSuccessSpatialEnrichmentResponse() {
