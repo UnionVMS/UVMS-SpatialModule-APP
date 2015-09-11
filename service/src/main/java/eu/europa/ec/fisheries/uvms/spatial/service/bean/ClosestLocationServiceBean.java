@@ -46,10 +46,6 @@ public class ClosestLocationServiceBean implements ClosestLocationService, Spati
 
     @Override
     public SpatialEnrichmentRS handleRequest(SpatialEnrichmentRQ request, SpatialEnrichmentRS response) {
-        if (containsError(response.getResponseMessage())) {
-            return response;
-        }
-
         List<LocationType> locationTypes = request.getLocationTypes().getLocationTypes();
         ClosestLocationSpatialRS closestLocationsRS = getClosestLocations(new ClosestLocationSpatialRQ(request.getPoint(), new ClosestLocationSpatialRQ.LocationTypes(locationTypes), request.getUnit()));
 

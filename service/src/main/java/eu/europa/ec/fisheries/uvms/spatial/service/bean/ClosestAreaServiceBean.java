@@ -46,10 +46,6 @@ public class ClosestAreaServiceBean implements ClosestAreaService, SpatialEnrich
 
     @Override
     public SpatialEnrichmentRS handleRequest(SpatialEnrichmentRQ request, SpatialEnrichmentRS response) {
-        if (containsError(response.getResponseMessage())) {
-            return response;
-        }
-
         List<AreaType> areaTypes = request.getAreaTypes().getAreaTypes();
         ClosestAreaSpatialRS closestAreasRS = getClosestAreas(new ClosestAreaSpatialRQ(request.getPoint(), new ClosestAreaSpatialRQ.AreaTypes(areaTypes), request.getUnit()));
 

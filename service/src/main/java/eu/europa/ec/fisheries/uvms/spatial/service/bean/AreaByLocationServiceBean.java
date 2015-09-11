@@ -43,10 +43,6 @@ public class AreaByLocationServiceBean implements AreaByLocationService, Spatial
 
     @Override
     public SpatialEnrichmentRS handleRequest(SpatialEnrichmentRQ request, SpatialEnrichmentRS response) {
-        if (containsError(response.getResponseMessage())) {
-            return response;
-        }
-
         AreaByLocationSpatialRS areaByLocationRS = getAreasByLocation(new AreaByLocationSpatialRQ(request.getPoint()));
 
         if (containsError(areaByLocationRS.getResponseMessage())) {

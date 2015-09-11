@@ -70,7 +70,7 @@ public class ExceptionHandlerInterceptor {
     }
 
     private Class retrieveResponseClass(Object[] parameters) {
-        return rqToRsMapping.get(parameters[0]);
+        return rqToRsMapping.get(parameters[0].getClass()); ///TODO check it
     }
 
     private boolean isDatabaseException(Exception ex) {
