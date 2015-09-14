@@ -42,11 +42,7 @@ public class SpatialEventMDB implements MessageListener {
 
     @Inject
     @GetSpatialEnrichmentEvent
-    Event<SpatialMessageEvent> spatialEnrichmentEvent;
-
-    @Inject
-    @GetAreaDetailsEvent
-    Event<SpatialMessageEvent> areaDetailsSpatialEvent;
+    Event<SpatialMessageEvent> enrichmentSpatialEvent;
 
     @Inject
     @GetClosestAreaEvent
@@ -73,14 +69,6 @@ public class SpatialEventMDB implements MessageListener {
                     SpatialMessageEvent areaByLocationEvent = new SpatialMessageEvent(textMessage, byLocationSpatialRQ);
                     areaByLocationSpatialEvent.fire(areaByLocationEvent);
                     break;
-                case GET_AREA_DETAILS:
-                    AreaDetailsSpatialRequest areaDetailsSpatialRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, AreaDetailsSpatialRequest.class);
-                    SpatialMessageEvent areaDetailsEvent = new SpatialMessageEvent(textMessage, areaDetailsSpatialRequest);
-                    areaDetailsSpatialEvent.fire(areaDetailsEvent);
-                    break;
-                case GET_LOCATION_DETAILS:
-                    // TODO
-                    break;
                 case GET_AREA_TYPES:
                     AllAreaTypesRequest allAreaTypesRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, AllAreaTypesRequest.class);
                     SpatialMessageEvent areaTypeNamesEvent = new SpatialMessageEvent(textMessage, allAreaTypesRequest);
@@ -99,7 +87,7 @@ public class SpatialEventMDB implements MessageListener {
                 case GET_ENRICHMENT:
                     SpatialEnrichmentRQ spatialEnrichmentRQ = JAXBMarshaller.unmarshallTextMessage(textMessage, SpatialEnrichmentRQ.class);
                     SpatialMessageEvent spatialEnrichmentEvent = new SpatialMessageEvent(textMessage, spatialEnrichmentRQ);
-                    areaDetailsSpatialEvent.fire(spatialEnrichmentEvent);
+                    enrichmentSpatialEvent.fire(spatialEnrichmentEvent);
                     break;
                 default:
                     log.error("[ Not implemented method consumed: {} ]", method);

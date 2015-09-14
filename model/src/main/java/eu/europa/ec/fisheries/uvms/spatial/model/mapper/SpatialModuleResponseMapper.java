@@ -120,15 +120,6 @@ public class SpatialModuleResponseMapper {
         }
     }
 
-    public static String mapAreaDetailsSpatialResponse(final AreaDetails areaDetails) throws SpatialModelMarshallException {
-        try {
-            AreaDetailsSpatialResponse response = new AreaDetailsSpatialResponse();
-            response.setAreaDetails(areaDetails);
-            return JAXBMarshallerUtils.marshallJaxBObjectToString(response);
-        } catch (JAXBException e) {
-            return exception(areaDetails, e);
-        }
-    }
 
     private static <T> String exception(T data, JAXBException e) throws SpatialModelMarshallException {
         log.error("[ Error when marshalling data. ] {}", e.getMessage());

@@ -94,7 +94,4 @@ public class SpatialModuleRequestMapper {
             throw new SpatialModelMarshallException("[ Error when marshalling Object to String ]", ex);
         }
     }
-
-
-    //TODO locationdetails, areadetails
 }

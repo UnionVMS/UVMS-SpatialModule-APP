@@ -4,7 +4,10 @@ import eu.europa.ec.fisheries.uvms.spatial.message.bean.SpatialEventQ;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.*;
 import eu.europa.ec.fisheries.uvms.spatial.model.FaultCode;
 import eu.europa.ec.fisheries.uvms.spatial.model.mapper.SpatialModuleResponseMapper;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Area;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Location;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRS;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialEventService;
 import lombok.extern.slf4j.Slf4j;
 
@@ -114,19 +117,4 @@ public class SpatialEventServiceBean implements SpatialEventService {
             spatialErrorEvent.fire(new SpatialMessageEvent(message.getMessage(), SpatialModuleResponseMapper.createFaultMessage(FaultCode.SPATIAL_MESSAGE, "Exception when getting enrichment [ " + e.getMessage())));
         }
     }
-
-    @Override
-    public void getAreaDetails(@Observes @GetAreaDetailsEvent SpatialMessageEvent message) {
-        log.info("Getting area details.");
-        try {
-            AreaDetails areaDetails = areaDetailsService.getAreaDetails(message.getAreaDetailsSpatialRequest());
-            log.debug("Send back areaDetails response.");
-            messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapAreaDetailsSpatialResponse(areaDetails));
-        }
-        catch (Exception e){
-            log.error("[ Error when getting areaDetails from source. ] ", e);
-            spatialErrorEvent.fire(new SpatialMessageEvent(message.getMessage(), SpatialModuleResponseMapper.createFaultMessage(FaultCode.SPATIAL_MESSAGE, "Exception when getting getAreaDetails [ " + e.getMessage())));
-        }
-    }
-
 }

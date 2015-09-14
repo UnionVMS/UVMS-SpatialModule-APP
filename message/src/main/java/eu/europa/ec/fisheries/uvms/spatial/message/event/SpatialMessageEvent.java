@@ -10,7 +10,6 @@ public class SpatialMessageEvent {
     private AreaByLocationSpatialRQ areaByLocationSpatialRQ;
     private ClosestAreaSpatialRQ closestAreaSpatialRQ;
     private SpatialEnrichmentRQ spatialEnrichmentRQ;
-    private AreaDetailsSpatialRequest areaDetailsSpatialRequest;
     private AllAreaTypesRequest allAreaTypesRequest;
     private ClosestLocationSpatialRQ closestLocationSpatialRQ;
     private SpatialFault fault;
@@ -33,11 +32,6 @@ public class SpatialMessageEvent {
     public SpatialMessageEvent(TextMessage message, SpatialEnrichmentRQ spatialEnrichmentRQ){
         this.message = message;
         this.spatialEnrichmentRQ = spatialEnrichmentRQ;
-    }
-
-    public SpatialMessageEvent(TextMessage message, AreaDetailsSpatialRequest areaDetailsSpatialRequest){
-        this.message = message;
-        this.areaDetailsSpatialRequest = areaDetailsSpatialRequest;
     }
 
     public SpatialMessageEvent(TextMessage textMessage, AllAreaTypesRequest allAreaTypesRequest) {
@@ -64,10 +58,6 @@ public class SpatialMessageEvent {
 
     public SpatialEnrichmentRQ getSpatialEnrichmentRQ() {
         return spatialEnrichmentRQ;
-    }
-
-    public AreaDetailsSpatialRequest getAreaDetailsSpatialRequest() {
-        return areaDetailsSpatialRequest;
     }
 
     public SpatialFault getFault() {
