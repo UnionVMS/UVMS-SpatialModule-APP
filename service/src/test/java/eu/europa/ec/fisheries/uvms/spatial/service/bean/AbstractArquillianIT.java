@@ -29,7 +29,7 @@ public class AbstractArquillianIT {
                 .addAsResource("META-INF/test-persistence.xml", "META-INF/persistence.xml")
                 .addAsResource("META-INF/orm.xml")
                 .addAsResource("config.properties")
-                .addAsResource("META-INF/jboss-deployment-structure.xml")
+                //.addAsResource("META-INF/jboss-deployment-structure.xml")
                 .addAsResource("nativeSql.properties")
                 .addAsResource("logback.xml")
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
