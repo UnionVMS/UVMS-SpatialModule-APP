@@ -26,7 +26,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 @Singleton
-//@Startup // TODO it would be nice to be able to exclude this from our integration tests :-)
+//@Startup // FIXME Dead code?
 public class ModuleInitializerBean {
 
     public static final String PROP_MODULE_NAME = "module.name";

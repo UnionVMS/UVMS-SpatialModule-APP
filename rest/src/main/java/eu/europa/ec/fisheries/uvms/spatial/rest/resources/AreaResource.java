@@ -35,7 +35,7 @@ public class AreaResource {
     public ResponseDto getAreaTypes() {
         try {
             log.info("Getting user areas list");
-            List<String> areaTypes = areaTypeService.getAreaTypesRest();
+            List<String> areaTypes = areaTypeService.listAllAreaTypeNames();
             return new ResponseDto(areaTypes, ResponseCode.OK);
         } catch (Exception ex) {
             log.error("[ Error when getting area types list. ] ", ex);
@@ -53,7 +53,7 @@ public class AreaResource {
         try {
             log.info("Getting spatial enrichment by location");
             ValidationUtils.validateInputParameters(lat, lon);
-            List<AreaDto> areasByLocation = areaByLocationService.getAreasByLocationRest(lat, lon, crs);
+            List<AreaDto> areasByLocation = areaByLocationService.getAreaTypesByLocation(lat, lon, crs);
             return new ResponseDto(areasByLocation, ResponseCode.OK);
         } catch (Exception ex) {
             log.error("[ Error when getting areas by location. ] ", ex);
@@ -68,12 +68,12 @@ public class AreaResource {
             @QueryParam(value = "lat") Double lat,
             @QueryParam(value = "lon") Double lon,
             @DefaultValue("4326") @QueryParam(value = "crs") int crs,
-            @DefaultValue("Meter") @QueryParam(value = "unit") String unit,
+            @DefaultValue("Meters") @QueryParam(value = "unit") String unit,
             @QueryParam(value = "type") List<String> areaTypes) {
         try {
             log.info("Getting closest areas");
             validateInputParameters(lat, lon, areaTypes);
-            List<ClosestAreaDto> closestAreas = closestAreaService.getClosestAreasRest(lat, lon, crs, unit, areaTypes);
+            List<ClosestAreaDto> closestAreas = closestAreaService.getClosestAreas(lat, lon, crs, unit, areaTypes);
             return new ResponseDto(closestAreas, ResponseCode.OK);
         } catch (Exception ex) {
             log.error("[ Error when getting closest areas. ] ", ex);

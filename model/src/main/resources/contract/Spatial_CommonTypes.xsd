@@ -1,0 +1,136 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema xmlns="http://europa.eu/ec/fisheries/uvms/spatial/model/schemas" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" elementFormDefault="qualified" id="FISH2015_SPATIAL2015" targetNamespace="http://europa.eu/ec/fisheries/uvms/spatial/model/schemas" version="1.0" jaxb:version="2.1" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:include schemaLocation="Spatial_SimpleTypes.xsd" />
+    <xs:complexType name="AreaTypeEntry">
+        <xs:sequence>
+            <xs:element name="Id" type="NumericStringLength1to9" />
+            <xs:element name="AreaType" type="StringLength1to255" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GeometryType">
+        <xs:sequence>
+            <xs:element name="Geometry" type="xs:string" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="EezType">
+        <xs:sequence>
+            <xs:element name="Gid" type="xs:integer" />
+            <xs:element name="Geometry" type="GeometryType" />
+            <xs:element name="Eez" type="xs:string" />
+            <xs:element name="Country" type="xs:string" />
+            <xs:element name="Sovereign" type="xs:string" />
+            <xs:element name="Remarks" type="xs:string" />
+            <xs:element name="SovId" type="xs:int" />
+            <xs:element name="EezId" type="xs:int" />
+            <xs:element name="Iso3Digit" type="xs:string" />
+            <xs:element name="Mrgid" type="xs:integer" />
+            <xs:element name="DateChang" type="xs:string" />
+            <xs:element name="AreaM2" type="xs:double" />
+            <xs:element name="Longitude" type="xs:double" />
+            <xs:element name="Latitude" type="xs:double" />
+            <xs:element name="MrgidEez" type="xs:int" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="AreasNameType">
+        <xs:sequence>
+            <xs:element name="AreaType" type="StringLength1to255" maxOccurs="1000" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Area">
+        <xs:sequence>
+            <xs:element name="Id" type="NumericStringLength1to9" />
+            <xs:element name="AreaType" type="AreaType" />
+            <xs:element name="Distance" type="xs:double" />
+            <xs:element name="Unit" type="UnitType" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Location">
+        <xs:sequence>
+            <xs:element name="Id" type="NumericStringLength1to9" />
+            <xs:element name="LocationType" type="LocationType" />
+            <xs:element name="Distance" type="xs:double" />
+            <xs:element name="Unit" type="UnitType" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="AreasByLocationType">
+        <xs:sequence>
+            <xs:element name="Area" type="AreaTypeEntry" minOccurs="0" maxOccurs="1000" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="PointType">
+        <xs:sequence>
+            <xs:element name="Longitude" type="xs:double" />
+            <xs:element name="Latitude" type="xs:double" />
+            <xs:element name="Crs" type="xs:int" minOccurs="0" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="ClosestAreasType">
+        <xs:sequence>
+            <xs:element name="ClosestArea" type="Area" maxOccurs="10" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="ClosestLocationsType">
+        <xs:sequence>
+            <xs:element name="ClosestLocations" type="Location" maxOccurs="10" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="AreaDetails">
+        <xs:sequence>
+            <xs:element name="areaType" type="AreaTypeEntry" nillable="false" />
+            <xs:element name="areaProperty" type="AreaProperty" maxOccurs="unbounded" nillable="false" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="AreaProperty">
+        <xs:sequence>
+            <xs:element name="propertyName" type="xs:string" nillable="false" />
+            <xs:element name="propertyValue" type="xs:string" nillable="false" />
+        </xs:sequence>
+    </xs:complexType>    
+    <xs:complexType name="LocationDetails">
+		<xs:sequence>
+			<xs:element name="locationType" type="LocationTypeEntry" nillable="false"/>
+			<xs:element name="locationProperty" type="LocationProperty" nillable="false" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="LocationProperty">
+		<xs:sequence>
+			<xs:element name="propertyName" type="xs:string" nillable="false"/>
+			<xs:element name="propertyValue" type="xs:string" nillable="false"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="LocationTypeEntry">
+		<xs:sequence>
+			<xs:element name="Id" type="NumericStringLength1to9"/>
+			<xs:element name="LocationType" type="LocationType"/>
+		</xs:sequence>
+	</xs:complexType>
+
+    <xs:complexType name="SpatialModuleRequest" abstract="true">
+        <xs:sequence>
+            <xs:element name="method" type="SpatialModuleMethod" minOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="SpatialModuleMethod">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="GET_AREA_TYPES"/>
+            <xs:enumeration value="GET_AREA_BY_LOCATION"/>
+            <xs:enumeration value="GET_CLOSEST_LOCATION"/>
+            <xs:enumeration value="GET_CLOSEST_AREA"/>
+            <xs:enumeration value="GET_LOCATION_DETAILS"/>
+            <xs:enumeration value="GET_AREA_DETAILS"/>
+            <xs:enumeration value="GET_BUFFER_GEOM"/>
+            <xs:enumeration value="GET_ENRICHMENT"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:element name="SpatialFault">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="code" type="xs:int" />
+                <xs:element name="fault" type="xs:string" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

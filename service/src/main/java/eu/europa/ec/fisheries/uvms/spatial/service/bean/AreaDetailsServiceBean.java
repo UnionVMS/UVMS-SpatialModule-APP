@@ -1,44 +1,30 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import static com.google.common.collect.Maps.newHashMap;
-import static eu.europa.ec.fisheries.uvms.util.ModelUtils.createSuccessResponseMessage;
-import static eu.europa.ec.fisheries.uvms.util.ColumnAliasNameHelper.getFieldMap;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.ejb.EJB;
-import javax.ejb.Local;
-import javax.ejb.Stateless;
-import javax.interceptor.Interceptors;
-import javax.transaction.Transactional;
-
+import com.google.common.collect.ImmutableMap;
+import eu.europa.ec.fisheries.uvms.service.CrudService;
+import eu.europa.ec.fisheries.uvms.spatial.entity.*;
+import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetailsSpatialRequest;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.ImmutableMap;
+import javax.ejb.EJB;
+import javax.ejb.Local;
+import javax.ejb.Stateless;
+import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
-import eu.europa.ec.fisheries.uvms.service.CrudService;
-import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.CountriesEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.FaoEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.GfcmEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.RacEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.RfmoEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.StatRectEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetailsSpatialRequest;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetailsSpatialResponse;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler.ExceptionHandlerInterceptor;
+import static com.google.common.collect.Maps.newHashMap;
+import static eu.europa.ec.fisheries.uvms.util.ColumnAliasNameHelper.getFieldMap;
 
 @Stateless
 @Local(AreaDetailsService.class)
@@ -64,8 +50,7 @@ public class AreaDetailsServiceBean implements AreaDetailsService {
 
     @SuppressWarnings("unchecked")
     @Override
-    @Interceptors(value = ExceptionHandlerInterceptor.class)
-    public AreaDetailsSpatialResponse getAreaDetails(AreaDetailsSpatialRequest request) {
+    public AreaDetails getAreaDetails(AreaDetailsSpatialRequest request) {
         String areaTypeName = request.getAreaType().getAreaType();
         LOG.info("Area Type name received : " + areaTypeName);
         Map<String, String> parameters = newHashMap();
@@ -100,17 +85,17 @@ public class AreaDetailsServiceBean implements AreaDetailsService {
 		}
 	}
 
-    private AreaDetailsSpatialResponse createAreaDetailsSpatialResponse(Map<String, String> properties, AreaDetailsSpatialRequest request) {
+    private AreaDetails createAreaDetailsSpatialResponse(Map<String, String> properties, AreaDetailsSpatialRequest request) {
         List<AreaProperty> areaProperties = new ArrayList<AreaProperty>();
         for (Map.Entry<String, String> entry : properties.entrySet()) {
-            areaProperties.add(new AreaProperty(entry.getKey(), entry.getValue()));
+            AreaProperty areaProperty = new AreaProperty();
+            areaProperty.setPropertyName(entry.getKey());
+            areaProperty.setPropertyValue(entry.getValue());
+            areaProperties.add(areaProperty);
         }
         AreaDetails areaDetails = new AreaDetails();
         areaDetails.setAreaType(request.getAreaType());
-        areaDetails.setAreaProperties(areaProperties);
-        AreaDetailsSpatialResponse response = new AreaDetailsSpatialResponse();
-        response.setAreaDetails(areaDetails);
-        response.setResponseMessage(createSuccessResponseMessage());
-        return response;
+        areaDetails.getAreaProperty().addAll(areaProperties);
+        return areaDetails;
     }
 }

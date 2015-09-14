@@ -1,15 +1,12 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.mapper;
 
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.EezDto;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.EezDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
 
-/**
- * //TODO create test
- */
 @Mapper(componentModel = "cdi", uses = GeometryTypeMapper.class)
 public interface EezDtoMapper {
 

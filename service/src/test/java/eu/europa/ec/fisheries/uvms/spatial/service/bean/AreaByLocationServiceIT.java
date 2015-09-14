@@ -1,19 +1,17 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.PointType;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.ejb.EJB;
+import java.util.List;
 
 import static junit.framework.TestCase.assertNotNull;
 
-/**
- * Created by kopyczmi on 19-Aug-15.
- */
 @RunWith(Arquillian.class)
 public class AreaByLocationServiceIT extends AbstractArquillianIT {
 
@@ -27,13 +25,18 @@ public class AreaByLocationServiceIT extends AbstractArquillianIT {
     @Test
     public void shouldGetAreasByLocation() throws Exception {
         // given
-        AreaByLocationSpatialRQ request = new AreaByLocationSpatialRQ(new PointType(LONGITUDE, LATITUDE, DEFAULT_CRS));
+        PointType pointType = new PointType();
+        pointType.setCrs(DEFAULT_CRS);
+        pointType.setLatitude(LATITUDE);
+        pointType.setLongitude(LONGITUDE);
+        AreaByLocationSpatialRQ byLocationSpatialRQ = new AreaByLocationSpatialRQ();
+        byLocationSpatialRQ.setPoint(pointType);
+        AreaByLocationSpatialRQ request = byLocationSpatialRQ;
 
         // when
-        AreaByLocationSpatialRS areasByLocation = areaByLocationService.getAreasByLocation(request);
+        List<AreaTypeEntry> areaTypesByLocation = areaByLocationService.getAreaTypesByLocation(request);
 
         //then
-        assertNotNull(areasByLocation);
-        assertNotNull(areasByLocation.getAreasByLocation());
+        assertNotNull(areaTypesByLocation);
     }
 }

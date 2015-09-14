@@ -35,7 +35,7 @@
         <hibernate.version>4.3.5.Final</hibernate.version>
         <hibernate-spatial.version>4.3</hibernate-spatial.version>
         <geotools.version>14-M1</geotools.version>
-        <uvms.commons.version>1.0-SNAPSHOT</uvms.commons.version>
+        <uvms.commons.version>1.1-SNAPSHOT</uvms.commons.version>
     </properties>
 
     <dependencyManagement>
@@ -112,12 +112,6 @@
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
                 <version>2.4</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.jvnet.jaxb2_commons</groupId>
-                <artifactId>jaxb2-basics-runtime</artifactId>
-                <version>0.9.4</version>
             </dependency>
 
             <dependency>
@@ -210,6 +204,19 @@
                 <artifactId>arquillian-junit-container</artifactId>
                 <version>1.1.8.Final</version>
                 <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.wildfly.arquillian</groupId>
+                <artifactId>wildfly-arquillian-container-remote</artifactId>
+                <version>1.0.0.Alpha5</version>
+                <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>sun.jdk</groupId>
+                        <artifactId>jconsole</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <dependency>

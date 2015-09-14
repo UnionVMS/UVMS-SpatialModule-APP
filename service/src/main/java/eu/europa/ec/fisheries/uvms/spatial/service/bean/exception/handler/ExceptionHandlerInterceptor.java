@@ -1,8 +1,5 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler;
 
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ErrorMessageType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ErrorsType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ResponseMessageType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.ExceptionMapper;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
@@ -14,9 +11,6 @@ import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-
-import static com.google.common.collect.Lists.newArrayList;
 
 /**
  * Created by kopyczmi on 18-Aug-15.
@@ -65,16 +59,22 @@ public class ExceptionHandlerInterceptor {
     }
 
     private void setErrorMessage(Object rsObject, String errorMessage, Integer errorCode) {
-        set(rsObject, RESPONSE_MESSAGE, createErrorResponseMessage(errorMessage, errorCode));
+        //set(rsObject, RESPONSE_MESSAGE, createErrorResponseMessage(errorMessage, errorCode));
     }
 
-    private ResponseMessageType createErrorResponseMessage(String errorMessage, Integer errorCode) {
-        ResponseMessageType responseMessage = new ResponseMessageType();
-        ErrorMessageType errorMessageType = new ErrorMessageType(errorMessage, String.valueOf(errorCode));
-        ArrayList<ErrorMessageType> errorMessageTypes = newArrayList(errorMessageType);
-        responseMessage.setErrors(new ErrorsType(errorMessageTypes));
-        return responseMessage;
-    }
+//    private ResponseMessageType createErrorResponseMessage(String errorMessage, Integer errorCode) {
+//        ResponseMessageType responseMessage = new ResponseMessageType();
+//        ErrorMessageType errorMessageType = new ErrorMessageType();
+//        errorMessageType.setErrorCode(String.valueOf(errorCode));
+//        errorMessageType.setValue(errorMessage);
+//        List<ErrorMessageType> errorMessageTypes = newArrayList(errorMessageType);
+//        ErrorsType errorsType = new ErrorsType();
+//        if(errorMessageTypes != null){
+//            errorsType.getErrorMessage().addAll(errorMessageTypes);
+//        }
+//        responseMessage.setErrors(errorsType);
+//        return responseMessage;
+//    }
 
     private void logError(Exception ex) {
         log.error("Exception: ", ex);

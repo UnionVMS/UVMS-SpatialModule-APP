@@ -1,15 +1,14 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
+import eu.europa.ec.fisheries.uvms.service.CrudService;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.RfmoEntity;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetailsSpatialRequest;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import org.geotools.geometry.jts.GeometryBuilder;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,14 +19,14 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import eu.europa.ec.fisheries.uvms.service.CrudService;
-import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.RfmoEntity;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetailsSpatialRequest;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetailsSpatialResponse;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @author padhyad
@@ -58,10 +57,15 @@ public class AreaDetailsServiceTest {
 		areaEntities.add(getMockAreaTypeEntity("EEZ", true));		
 		EezEntity eezEntity = getMockedEezEntity();		
 		mockCrudServiceBean(areaEntities, eezEntity);
-		AreaDetailsSpatialRequest request = new AreaDetailsSpatialRequest(new AreaTypeEntry("1", "eez"));
-		AreaDetailsSpatialResponse response = areaDetailsServiceBean.getAreaDetails(request);
-		assertNotNull(response);
-		List<AreaProperty> list = response.getAreaDetails().getAreaProperties();
+        AreaDetailsSpatialRequest areaDetailsSpatialRequest = new AreaDetailsSpatialRequest();
+        AreaTypeEntry areaTypeEntry = new AreaTypeEntry();
+        areaTypeEntry.setAreaType("eez");
+        areaTypeEntry.setId("1");
+        areaDetailsSpatialRequest.setAreaType(areaTypeEntry);
+		AreaDetailsSpatialRequest request = areaDetailsSpatialRequest;
+        AreaDetails areaDetails = areaDetailsServiceBean.getAreaDetails(request);
+        assertNotNull(areaDetails);
+		List<AreaProperty> list = areaDetails.getAreaProperty();
 		assertEquals(list.isEmpty(), false);
 	}
 	
@@ -73,11 +77,16 @@ public class AreaDetailsServiceTest {
 		List<AreaLocationTypesEntity> areaEntities = new ArrayList<AreaLocationTypesEntity>();
 		areaEntities.add(getMockAreaTypeEntity("RFMO", true));		
 		RfmoEntity rfmoEntity = getMockedRfmoEntity();
-		mockCrudServiceBean(areaEntities, rfmoEntity);		
-		AreaDetailsSpatialRequest request = new AreaDetailsSpatialRequest(new AreaTypeEntry("1", "rfmo"));
-		AreaDetailsSpatialResponse response = areaDetailsServiceBean.getAreaDetails(request);
-		assertNotNull(response);
-		List<AreaProperty> list = response.getAreaDetails().getAreaProperties();
+		mockCrudServiceBean(areaEntities, rfmoEntity);
+        AreaDetailsSpatialRequest areaDetailsSpatialRequest = new AreaDetailsSpatialRequest();
+        AreaTypeEntry areaTypeEntry = new AreaTypeEntry();
+        areaTypeEntry.setAreaType("rfmo");
+        areaTypeEntry.setId("1");
+        areaDetailsSpatialRequest.setAreaType(areaTypeEntry);
+		AreaDetailsSpatialRequest request = areaDetailsSpatialRequest;
+        AreaDetails areaDetails = areaDetailsServiceBean.getAreaDetails(request);
+        assertNotNull(areaDetails);
+		List<AreaProperty> list = areaDetails.getAreaProperty();
 		assertEquals(list.isEmpty(), false);
 	}
 	
@@ -86,7 +95,12 @@ public class AreaDetailsServiceTest {
 	 */
 	@Test(expected=SpatialServiceException.class)
 	public void invalidEntityTest() {
-		AreaDetailsSpatialRequest request = new AreaDetailsSpatialRequest(new AreaTypeEntry("1", "INVALID_ENTITY"));
+        AreaDetailsSpatialRequest areaDetailsSpatialRequest = new AreaDetailsSpatialRequest();
+        AreaTypeEntry areaTypeEntry = new AreaTypeEntry();
+        areaTypeEntry.setAreaType("INVALID_ENTITY");
+        areaTypeEntry.setId("1");
+        areaDetailsSpatialRequest.setAreaType(areaTypeEntry);
+		AreaDetailsSpatialRequest request = areaDetailsSpatialRequest;
 		areaDetailsServiceBean.getAreaDetails(request);
 	}
 	
@@ -95,8 +109,12 @@ public class AreaDetailsServiceTest {
 	 */
 	@Test(expected=SpatialServiceException.class)
 	public void invalidRowTest() {
-		AreaDetailsSpatialRequest request = new AreaDetailsSpatialRequest(new AreaTypeEntry("INVALID_ROW", "EEZ"));
-		areaDetailsServiceBean.getAreaDetails(request);
+        AreaDetailsSpatialRequest areaDetailsSpatialRequest = new AreaDetailsSpatialRequest();
+        AreaTypeEntry areaTypeEntry = new AreaTypeEntry();
+        areaTypeEntry.setAreaType("EEZ");
+        areaTypeEntry.setId("INVALID_ROW");
+        areaDetailsSpatialRequest.setAreaType(areaTypeEntry);
+        areaDetailsServiceBean.getAreaDetails(areaDetailsSpatialRequest);
 	}
 	
 	
@@ -105,8 +123,12 @@ public class AreaDetailsServiceTest {
 	 */
 	@Test(expected=SpatialServiceException.class)
 	public void nonExistingRowTest() {
-		AreaDetailsSpatialRequest request = new AreaDetailsSpatialRequest(new AreaTypeEntry("10000", "EEZ"));
-		areaDetailsServiceBean.getAreaDetails(request);
+        AreaDetailsSpatialRequest areaDetailsSpatialRequest = new AreaDetailsSpatialRequest();
+        AreaTypeEntry areaTypeEntry = new AreaTypeEntry();
+        areaTypeEntry.setAreaType("EEZ");
+        areaTypeEntry.setId("10000");
+        areaDetailsSpatialRequest.setAreaType(areaTypeEntry);
+        areaDetailsServiceBean.getAreaDetails(areaDetailsSpatialRequest);
 	}
 
 	

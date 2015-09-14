@@ -25,26 +25,16 @@ public class GeometryMapperTest {
 
     @Test
     public void shouldReturnGeometryTypeWithTypePoint() {
-        // given
         geometry = new GeometryFactory().createPoint(new Coordinate(1, 11));
-
-        // when
         GeometryType geometryType = mapper.geometryToGeometryType(geometry);
-
-        // then
         assertEquals("POINT (1 11)", geometryType.getGeometry());
     }
 
     @Test
     public void shouldReturnGeometryTypeWithTypePolygon() {
-        // given
         List<Coordinate> coordinates = Arrays.asList(new Coordinate(1, 11), new Coordinate(1, 11), new Coordinate(1, 11), new Coordinate(1, 11));
         Polygon polygon = new GeometryFactory().createPolygon((Coordinate[]) coordinates.toArray());
-
-        // when
         GeometryType geometryType = mapper.geometryToGeometryType(polygon);
-
-        // then
         assertEquals("POLYGON ((1 11, 1 11, 1 11, 1 11))", geometryType.getGeometry());
     }
 }

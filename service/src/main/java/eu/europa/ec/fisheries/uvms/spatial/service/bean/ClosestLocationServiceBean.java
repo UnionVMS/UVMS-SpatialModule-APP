@@ -5,28 +5,25 @@ import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.service.CrudService;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestLocationSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Location;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationType;
 import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestLocationDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.EnrichmentDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.MeasurementUnit;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler.ExceptionHandlerInterceptor;
 import eu.europa.ec.fisheries.uvms.util.SpatialUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
-import javax.interceptor.Interceptors;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static eu.europa.ec.fisheries.uvms.util.ModelUtils.containsError;
-import static eu.europa.ec.fisheries.uvms.util.ModelUtils.createSuccessResponseMessage;
 import static eu.europa.ec.fisheries.uvms.util.SpatialUtils.convertToPointInWGS84;
 
 /**
@@ -45,34 +42,13 @@ public class ClosestLocationServiceBean implements ClosestLocationService {
     private CrudService crudService;
 
     @Override
-    public SpatialEnrichmentRS handleSpatialEnrichment(SpatialEnrichmentRQ request, SpatialEnrichmentRS response) {
-        List<LocationType> locationTypes = request.getLocationTypes().getLocationTypes();
-        ClosestLocationSpatialRS closestLocationsRS = getClosestLocations(new ClosestLocationSpatialRQ(request.getPoint(), new ClosestLocationSpatialRQ.LocationTypes(locationTypes), request.getUnit()));
-
-        if (containsError(closestLocationsRS.getResponseMessage())) {
-            return new SpatialEnrichmentRS(closestLocationsRS.getResponseMessage(), null, null, null);
-        }
-        response.setClosestLocations(closestLocationsRS.getClosestLocations());
-
-        return response;
-    }
-
-    @Override
-    public EnrichmentDto handleSpatialEnrichment(double lat, double lon, int crs, String unit, List<String> areaTypes, List<String> locationTypes, EnrichmentDto enrichmentDto) {
-        List<ClosestLocationDto> closestLocations = getClosestLocationsRest(lat, lon, crs, unit, locationTypes);
-        enrichmentDto.setClosestLocations(closestLocations);
-        return enrichmentDto;
-    }
-
-    @Override
-    @Interceptors(value = ExceptionHandlerInterceptor.class)
-    public ClosestLocationSpatialRS getClosestLocations(ClosestLocationSpatialRQ request) {
+    public List<Location> getClosestLocations(ClosestLocationSpatialRQ request) {
         Point point = convertToPointInWGS84(request.getPoint());
         MeasurementUnit measurementUnit = MeasurementUnit.getMeasurement(request.getUnit().name());
 
         Map<String, String> areaType2TableName = getLocationType2TableNameMap();
-        List<ClosestLocationEntry> closestLocations = newArrayList();
-        for (LocationType locationType : request.getLocationTypes().getLocationTypes()) {
+        List<Location> closestLocations = newArrayList();
+        for (LocationType locationType : request.getLocationTypes().getLocationType()) {
             String areaDbTable = areaType2TableName.get(locationType.value());
 
             List<ClosestLocationDto> closestAreaList = repository.findClosestlocation(point, measurementUnit, areaDbTable);
@@ -80,16 +56,20 @@ public class ClosestLocationServiceBean implements ClosestLocationService {
 
             ClosestLocationDto closestLocationDto = closestAreaList.get(0);
             if (closestLocationDto != null) {
-                ClosestLocationEntry closestLocationEntry = new ClosestLocationEntry(closestLocationDto.getId(), locationType, closestLocationDto.getDistance(), request.getUnit());
+                Location closestLocationEntry = new Location();
+                closestLocationEntry.setLocationType(locationType);
+                closestLocationEntry.setUnit(request.getUnit());
+                closestLocationEntry.setDistance(closestLocationDto.getDistance());
+                closestLocationEntry.setId(closestLocationDto.getId());
                 closestLocations.add(closestLocationEntry);
             }
         }
 
-        return createSuccessClosestLocationResponse(new ClosestLocationsType(closestLocations));
+        return closestLocations;
     }
 
     @Override
-    public List<ClosestLocationDto> getClosestLocationsRest(double lat, double lon, int crs, String unit, List<String> locations) {
+    public List<ClosestLocationDto> getClosestLocations(double lat, double lon, int crs, String unit, List<String> locations) {
         Point point = convertToPointInWGS84(lon, lat, crs);
         MeasurementUnit measurementUnit = MeasurementUnit.getMeasurement(unit);
 
@@ -135,7 +115,4 @@ public class ClosestLocationServiceBean implements ClosestLocationService {
         }
     }
 
-    private ClosestLocationSpatialRS createSuccessClosestLocationResponse(ClosestLocationsType closestLocationsType) {
-        return new ClosestLocationSpatialRS(createSuccessResponseMessage(), closestLocationsType);
-    }
 }

@@ -5,7 +5,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeNamesSpatialRS;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -19,9 +18,6 @@ import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
-/**
- * Created by kopyczmi on 06-Aug-15.
- */
 @RunWith(MockitoJUnitRunner.class)
 public class AreaTypeNamesServiceTest {
 
@@ -40,11 +36,11 @@ public class AreaTypeNamesServiceTest {
         when(crudService.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_ALL_AREAS)).thenReturn(createAreaLocationTypesList(AREA_TYPES));
 
         // when
-        AreaTypeNamesSpatialRS areaTypeRS = areaTypeNamesService.getAreaTypes();
+        List<String> areaTypeNames = areaTypeNamesService.listAllAreaTypeNames();
 
         //then
-        assertNotNull(areaTypeRS);
-        List<String> areaTypes = areaTypeRS.getAreaTypes().getAreaTypes();
+        assertNotNull(areaTypeNames);
+        List<String> areaTypes = areaTypeNames;
         assertThat(areaTypes).hasSize(AREA_TYPES.size());
         assertThat(areaTypes).containsOnly(AREA_TYPES.toArray());
     }
@@ -56,11 +52,11 @@ public class AreaTypeNamesServiceTest {
         when(crudService.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_ALL_AREAS)).thenReturn(Collections.emptyList());
 
         // when
-        AreaTypeNamesSpatialRS areaTypeRS = areaTypeNamesService.getAreaTypes();
+        List<String> areaTypeNames = areaTypeNamesService.listAllAreaTypeNames();
 
         // then
-        assertNotNull(areaTypeRS);
-        assertThat(areaTypeRS.getAreaTypes().getAreaTypes()).isEmpty();
+        assertNotNull(areaTypeNames);
+        assertThat(areaTypeNames).isEmpty();
     }
 
     private List<AreaLocationTypesEntity> createAreaLocationTypesList(List<String> areaTypes) {

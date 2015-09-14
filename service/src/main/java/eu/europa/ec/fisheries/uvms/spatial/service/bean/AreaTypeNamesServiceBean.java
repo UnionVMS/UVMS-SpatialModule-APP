@@ -5,18 +5,12 @@ import com.google.common.collect.Lists;
 import eu.europa.ec.fisheries.uvms.service.CrudService;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeNamesSpatialRS;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreasNameType;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler.ExceptionHandlerInterceptor;
 
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
-import javax.interceptor.Interceptors;
 import javax.transaction.Transactional;
 import java.util.List;
-
-import static eu.europa.ec.fisheries.uvms.util.ModelUtils.createSuccessResponseMessage;
 
 @Stateless
 @Local(AreaTypeNamesService.class)
@@ -28,13 +22,7 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
 
     @Override
     @SuppressWarnings("unchecked")
-    @Interceptors(value = ExceptionHandlerInterceptor.class)
-    public AreaTypeNamesSpatialRS getAreaTypes() {
-        List<String> areaTypes = findAllAreas();
-        return createSuccessGetAreaTypesResponse(areaTypes);
-    }
-
-    private List<String> findAllAreas() {
+    public List<String> listAllAreaTypeNames() {
         List<AreaLocationTypesEntity> areas = crudService.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_ALL_AREAS);
         return convertToTypeNameList(areas);
     }
@@ -47,15 +35,4 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
             }
         });
     }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public List<String> getAreaTypesRest() {
-        return findAllAreas();
-    }
-
-    private AreaTypeNamesSpatialRS createSuccessGetAreaTypesResponse(List<String> areaTypeNames) {
-        return new AreaTypeNamesSpatialRS(createSuccessResponseMessage(), new AreasNameType(areaTypeNames));
-    }
-
 }

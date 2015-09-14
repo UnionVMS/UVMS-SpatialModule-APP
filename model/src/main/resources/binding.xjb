@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <jaxb:bindings version="2.1"
                xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
-               xmlns:xsd="http://www.w3.org/2001/XMLSchema"
                xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc">
 
     <jaxb:globalBindings>
@@ -11,8 +10,6 @@
 
         <!-- Extension that makes "collection like" properties name plural. I.e: attribute => attributes -->
         <xjc:simple />
-
-        <!-- <xjc:superInterface name="eu.europa.ec.fisheries.uvms.spatial.model.interfaces.ResponseHolder"/> -->
 
     </jaxb:globalBindings>
 

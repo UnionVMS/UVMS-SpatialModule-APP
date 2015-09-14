@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.ejb.EJB;
+import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static junit.framework.TestCase.assertFalse;
@@ -27,46 +28,60 @@ public class ClosestAreaServiceIT extends AbstractArquillianIT {
 
     @Test
     public void shouldGetClosestArea() {
-        // given
-        PointType point = new PointType(LONGITUDE, LATITUDE, DEFAULT_CRS);
-        AreaTypes areas = new AreaTypes(newArrayList(AreaType.EEZ));
-        ClosestAreaSpatialRQ request = new ClosestAreaSpatialRQ(point, areas, UnitType.METERS);
+        PointType pointType = new PointType();
+        pointType.setLongitude(LONGITUDE);
+        pointType.setLatitude(LATITUDE);
+        pointType.setCrs(DEFAULT_CRS);
+        PointType point = pointType;
+        AreaTypes areas = new AreaTypes();
+        areas.getAreaType().addAll((newArrayList(AreaType.EEZ)));
 
-        // when
-        ClosestAreaSpatialRS response = closestAreaService.getClosestAreas(request);
+        ClosestAreaSpatialRQ closestAreaSpatialRQ = new ClosestAreaSpatialRQ();
+        closestAreaSpatialRQ.setAreaTypes(areas);
+        closestAreaSpatialRQ.setPoint(point);
+        closestAreaSpatialRQ.setUnit(UnitType.METERS);
+        ClosestAreaSpatialRQ request = closestAreaSpatialRQ;
 
-        //then
-        assertNotNull(response);
-        assertNotNull(response.getResponseMessage().getSuccess());
-        assertFalse(response.getClosestAreas().getClosestAreas().isEmpty());
+        List<Area> closestAreas = closestAreaService.getClosestAreas(request);
 
-        ClosestAreaEntry closestAreaEntry = response.getClosestAreas().getClosestAreas().get(0);
-        assertEquals("231", closestAreaEntry.getId());
-        assertEquals(0.0, closestAreaEntry.getDistance(), 0.01);
-        assertEquals(AreaType.EEZ, closestAreaEntry.getAreaType());
-        assertEquals(UnitType.METERS, closestAreaEntry.getUnit());
+        assertNotNull(closestAreas);
+        assertFalse(closestAreas.isEmpty());
+
+        Area area = closestAreas.get(0);
+        assertEquals("231", area.getId());
+        assertEquals(0.0, area.getDistance(), 0.01);
+        assertEquals(AreaType.EEZ, area.getAreaType());
+        assertEquals(UnitType.METERS, area.getUnit());
     }
 
     @Test
     public void shouldGetClosestAreaWithCrsTransform() {
-        // given
-        PointType point = new PointType(LONGITUDE_2, LATITUDE_2, CRS);
-        AreaTypes areas = new AreaTypes(newArrayList(AreaType.COUNTRY));
-        ClosestAreaSpatialRQ request = new ClosestAreaSpatialRQ(point, areas, UnitType.MILES);
+        PointType pointType = new PointType();
+        pointType.setLongitude(LONGITUDE_2);
+        pointType.setLatitude(LATITUDE_2);
+        pointType.setCrs(CRS);
+        PointType point = pointType;
+        AreaTypes areas = new AreaTypes();
+        areas.getAreaType().addAll((newArrayList(AreaType.COUNTRY)));
+
+        ClosestAreaSpatialRQ closestAreaSpatialRQ = new ClosestAreaSpatialRQ();
+        closestAreaSpatialRQ.setAreaTypes(areas);
+        closestAreaSpatialRQ.setPoint(point);
+        closestAreaSpatialRQ.setUnit(UnitType.MILES);
+        ClosestAreaSpatialRQ request = closestAreaSpatialRQ;
 
         // when
-        ClosestAreaSpatialRS response = closestAreaService.getClosestAreas(request);
+        List<Area> closestAreas = closestAreaService.getClosestAreas(request);
 
         //then
-        assertNotNull(response);
-        assertNotNull(response.getResponseMessage().getSuccess());
-        assertFalse(response.getClosestAreas().getClosestAreas().isEmpty());
+        assertNotNull(closestAreas);
+        assertFalse(closestAreas.isEmpty());
 
-        ClosestAreaEntry closestAreaEntry = response.getClosestAreas().getClosestAreas().get(0);
-        assertEquals("189", closestAreaEntry.getId());
-        assertEquals(367.705022199885, closestAreaEntry.getDistance(), 0.01);
-        assertEquals(AreaType.COUNTRY, closestAreaEntry.getAreaType());
-        assertEquals(UnitType.MILES, closestAreaEntry.getUnit());
+        Area area = closestAreas.get(0);
+        assertEquals("189", area.getId());
+        assertEquals(367.705022199885, area.getDistance(), 0.01);
+        assertEquals(AreaType.COUNTRY, area.getAreaType());
+        assertEquals(UnitType.MILES, area.getUnit());
     }
 
 }

@@ -33,18 +33,12 @@ public class EezMapperTest {
 
     @Test
     public void shouldReturnEezType() {
-        // given
         eez = createEez();
-
-        // when
         EezType eezType = mapper.eezEntityToEezType(eez);
-
-        // then
         assertEquals(eezType.getRemarks(), eez.getRemarks());
         assertEquals(eezType.getEez(), eez.getEez());
         assertEquals(eezType.getCountry(), eez.getCountry());
         assertEquals(eezType.getGeometry().getGeometry(), "POINT (1 11)");
-
     }
 
     private EezEntity createEez() {

@@ -1,57 +1,49 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import static com.google.common.collect.Maps.newHashMap;
-import static eu.europa.ec.fisheries.uvms.util.ModelUtils.createSuccessResponseMessage;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.ejb.EJB;
-import javax.ejb.Local;
-import javax.ejb.Stateless;
-import javax.interceptor.Interceptors;
-import javax.transaction.Transactional;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.common.collect.ImmutableMap;
-
 import eu.europa.ec.fisheries.uvms.service.CrudService;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.PortsEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationDetailsSpatialRequest;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationDetailsSpatialResponse;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationProperty;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler.ExceptionHandlerInterceptor;
 import eu.europa.ec.fisheries.uvms.util.ColumnAliasNameHelper;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.ejb.EJB;
+import javax.ejb.Local;
+import javax.ejb.Stateless;
+import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import static com.google.common.collect.Maps.newHashMap;
 
 @Stateless
 @Local(LocationDetailsService.class)
 @Transactional
 public class LocationDetailsServiceBean implements LocationDetailsService {
 	
-	private static Logger LOG = LoggerFactory.getLogger(LocationDetailsServiceBean.class.getName());
+	private static final Logger LOG = LoggerFactory.getLogger(LocationDetailsServiceBean.class.getName());
 	
     private ImmutableMap<String, Class> entityMap = ImmutableMap.<String, Class>builder()
             .put(LocationType.PORT.value(), PortsEntity.class).build();
 	
-    private static String TYPE_NAME = "typeName";
+    private static final String TYPE_NAME = "typeName";
     
     @EJB
     private CrudService crudService;
 
     @SuppressWarnings("unchecked")
     @Override
-    @Interceptors(value = ExceptionHandlerInterceptor.class)
-	public LocationDetailsSpatialResponse getLocationDetails(LocationDetailsSpatialRequest request) {
+	public LocationDetails getLocationDetails(LocationDetailsSpatialRequest request) {
         LocationType locationType = request.getLocationType().getLocationType();
         LOG.info("Location Type name received : " + locationType.value());
         Map<String, String> parameters = newHashMap();
@@ -59,7 +51,7 @@ public class LocationDetailsServiceBean implements LocationDetailsService {
         List<AreaLocationTypesEntity> locationTypes = crudService.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_TYPE_BY_ID, parameters, 1);
         if (!locationTypes.isEmpty()) {
         	Map<String, String> properties = getLocationDetails(locationTypes.get(0), request.getLocationType().getId());
-            return createLocationDetailsSpatialResponse(properties, request);
+            return createLocationDetails(properties, request);
         } else {
             throw new SpatialServiceException(SpatialServiceErrors.INVALID_LOCATION_TYPE, locationType.value());
         }
@@ -80,17 +72,17 @@ public class LocationDetailsServiceBean implements LocationDetailsService {
 		}
 	}
 
-    private LocationDetailsSpatialResponse createLocationDetailsSpatialResponse(Map<String, String> properties, LocationDetailsSpatialRequest request) {
+    private LocationDetails createLocationDetails(Map<String, String> properties, LocationDetailsSpatialRequest request) {
         List<LocationProperty> locationProperties = new ArrayList<LocationProperty>();
         for (Map.Entry<String, String> entry : properties.entrySet()) {
-        	locationProperties.add(new LocationProperty(entry.getKey(), entry.getValue()));
+            LocationProperty locationProperty = new LocationProperty();
+            locationProperty.setPropertyName(entry.getKey());
+            locationProperty.setPropertyValue(entry.getValue());
+            locationProperties.add(locationProperty);
         }
         LocationDetails locationDetails = new LocationDetails();
         locationDetails.setLocationType(request.getLocationType());
-        locationDetails.setLocationProperties(locationProperties);
-        LocationDetailsSpatialResponse response = new LocationDetailsSpatialResponse();
-        response.setLocationDetails(locationDetails);
-        response.setResponseMessage(createSuccessResponseMessage());
-        return response;
+        locationDetails.getLocationProperty().addAll(locationProperties);
+        return locationDetails;
     }
 }

@@ -1,8 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezSpatialRS;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ResponseMessageType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezType;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.EezTypeMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,7 +9,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 /**
@@ -28,15 +26,10 @@ public class EezServiceTest {
     private EezService service = new EezServiceBean();
 
     @Test
-    public void testGetEezById() {
+    public void testGetEezByIdNull() {
         EezSpatialRQ eezSpatialRQ = new EezSpatialRQ();
         eezSpatialRQ.setEezId(EEZ_ID);
-        EezSpatialRQ getEezSpatialRQ = eezSpatialRQ;
-        EezSpatialRS eezSpatialRS = service.getEezById(getEezSpatialRQ);
-        assertNotNull(eezSpatialRS);
-        ResponseMessageType responseMessage = eezSpatialRS.getResponseMessage();
-        assertNotNull(responseMessage);
-        assertNotNull(responseMessage.getSuccess());
-        assertNull(eezSpatialRS.getEez());
+        EezType eezById = service.getEezById(eezSpatialRQ);
+        assertNull(eezById);
     }
 }

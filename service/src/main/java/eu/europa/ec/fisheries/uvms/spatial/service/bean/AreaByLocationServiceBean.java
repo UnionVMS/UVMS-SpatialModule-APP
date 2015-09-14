@@ -5,27 +5,20 @@ import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.service.CrudService;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.EnrichmentDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.handler.ExceptionHandlerInterceptor;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
-import javax.interceptor.Interceptors;
 import javax.transaction.Transactional;
 import java.util.List;
 
-import static eu.europa.ec.fisheries.uvms.util.ModelUtils.containsError;
-import static eu.europa.ec.fisheries.uvms.util.ModelUtils.createSuccessResponseMessage;
 import static eu.europa.ec.fisheries.uvms.util.SpatialUtils.convertToPointInWGS84;
 
-/**
- * Created by kopyczmi on 18-Aug-15.
- */
 @Stateless
 @Local(AreaByLocationService.class)
 @Transactional
@@ -39,30 +32,12 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
     private CrudService crudService;
 
     @Override
-    public SpatialEnrichmentRS handleSpatialEnrichment(SpatialEnrichmentRQ request, SpatialEnrichmentRS response) {
-        AreaByLocationSpatialRS areaByLocationRS = getAreasByLocation(new AreaByLocationSpatialRQ(request.getPoint()));
-
-        if (containsError(areaByLocationRS.getResponseMessage())) {
-            return new SpatialEnrichmentRS(areaByLocationRS.getResponseMessage(), null, null, null);
-        }
-        response.setAreasByLocation(areaByLocationRS.getAreasByLocation());
-
-        return response;
-    }
-
-    @Override
-    public EnrichmentDto handleSpatialEnrichment(double lat, double lon, int crs, String unit, List<String> areaTypes, List<String> locationTypes, EnrichmentDto enrichmentDto) {
-        List<AreaDto> areasByLocation = getAreasByLocationRest(lat, lon, crs);
-        enrichmentDto.setAreasByLocation(areasByLocation);
-        return enrichmentDto;
-    }
-
-    @Override
-    @Interceptors(value = ExceptionHandlerInterceptor.class)
-    public AreaByLocationSpatialRS getAreasByLocation(AreaByLocationSpatialRQ request) {
+    @SuppressWarnings("unchecked")
+    public List<AreaTypeEntry> getAreaTypesByLocation(AreaByLocationSpatialRQ request) {
         Point point = convertToPointInWGS84(request.getPoint());
 
-        List<AreaLocationTypesEntity> systemAreaTypes = getAreaTypes();
+        List<AreaLocationTypesEntity> systemAreaTypes =
+                crudService.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_SYSTEM_AREAS);
         List<AreaTypeEntry> areaTypes = Lists.newArrayList();
         for (AreaLocationTypesEntity areaType : systemAreaTypes) {
             String areaDbTable = areaType.getAreaDbTable();
@@ -70,19 +45,22 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
 
             List<Integer> resultList = repository.findAreasIdByLocation(point, areaDbTable);
             for (Integer id : resultList) {
-                AreaTypeEntry area = new AreaTypeEntry(String.valueOf(id), areaTypeName);
-                areaTypes.add(area);
+                AreaTypeEntry areaTypeEntry = new AreaTypeEntry();
+                areaTypeEntry.setAreaType(areaTypeName);
+                areaTypeEntry.setId(String.valueOf(id));
+                areaTypes.add(areaTypeEntry);
             }
         }
-
-        return createSuccessGetAreasByLocationResponse(new AreasByLocationType(areaTypes));
+        return areaTypes;
     }
 
     @Override
-    public List<AreaDto> getAreasByLocationRest(double lat, double lon, int crs) {
+    @SuppressWarnings("unchecked")
+    public List<AreaDto> getAreaTypesByLocation(double lat, double lon, int crs) {
         Point point = convertToPointInWGS84(lon, lat, crs);
 
-        List<AreaLocationTypesEntity> systemAreaTypes = getAreaTypes();
+        List<AreaLocationTypesEntity> systemAreaTypes =
+                crudService.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_SYSTEM_AREAS);
         List<AreaDto> areaTypes = Lists.newArrayList();
         for (AreaLocationTypesEntity areaType : systemAreaTypes) {
             String areaDbTable = areaType.getAreaDbTable();
@@ -97,13 +75,4 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
 
         return areaTypes;
     }
-
-    private List<AreaLocationTypesEntity> getAreaTypes() {
-        return crudService.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_SYSTEM_AREAS);
-    }
-
-    private AreaByLocationSpatialRS createSuccessGetAreasByLocationResponse(AreasByLocationType areasByLocation) {
-        return new AreaByLocationSpatialRS(createSuccessResponseMessage(), areasByLocation);
-    }
-
 }

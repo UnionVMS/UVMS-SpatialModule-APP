@@ -1,6 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.service.CrudService;
+import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -92,8 +93,8 @@ public class CrudServiceIT {
     @Test
     @SuppressWarnings("unchecked")
     public void testFindEntityByNamedQuery() throws Exception {
-        List<String> areasType = genericDao.findEntityByNamedQuery(String.class, QueryNameConstants.FIND_ALL_AREAS);
-        assertThat(areasType).isNotEmpty();
+        List<AreaLocationTypesEntity> areas = genericDao.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_ALL_AREAS);
+        assertThat(areas).isNotEmpty();
     }
 
     private EezEntity createEezEntity() {

@@ -2,9 +2,6 @@ package eu.europa.ec.fisheries.uvms.spatial.service.dto;
 
 import java.io.Serializable;
 
-/**
- * //TODO create test
- */
 public class AuthenticationRequest implements Serializable{
 
     private static final long serialVersionUID = -8088379939241999781L;
