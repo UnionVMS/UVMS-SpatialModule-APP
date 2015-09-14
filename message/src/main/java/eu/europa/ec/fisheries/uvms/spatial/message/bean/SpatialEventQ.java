@@ -8,8 +8,7 @@ import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageErrorEven
 import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageEvent;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMarshallException;
 import eu.europa.ec.fisheries.uvms.spatial.model.mapper.JAXBMarshaller;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Resource;
 import javax.ejb.LocalBean;
@@ -22,9 +21,8 @@ import javax.jms.TextMessage;
 
 @Stateless
 @LocalBean
+@Slf4j
 public class SpatialEventQ extends AbstractProducer {
-
-    private static final Logger LOG = LoggerFactory.getLogger(SpatialEventQ.class);
 
     @Resource(mappedName = SpatialMessageConstants.QUEUE_MODULE_SPATIAL)
     private Destination eventQueue;
@@ -49,7 +47,7 @@ public class SpatialEventQ extends AbstractProducer {
 
     public void sendModuleErrorResponseMessage(@Observes @SpatialMessageErrorEvent SpatialMessageEvent message){
         try {
-            LOG.info("Sending message back to recipient from SpatialModule with correlationId {} on queue: {}", message.getMessage().getJMSMessageID(),
+            log.info("Sending message back to recipient from SpatialModule with correlationId {} on queue: {}", message.getMessage().getJMSMessageID(),
                     message.getMessage().getJMSReplyTo());
             connectQueue();
             String data = JAXBMarshaller.marshallJaxBObjectToString(message.getFault());
@@ -57,7 +55,7 @@ public class SpatialEventQ extends AbstractProducer {
             response.setJMSCorrelationID(message.getMessage().getJMSMessageID());
             getSession().createProducer(message.getMessage().getJMSReplyTo()).send(response);
         } catch (JMSException | SpatialModelMarshallException e) {
-            LOG.error("[ Error when returning module spatial request. ] {} {}", e.getMessage(), e.getStackTrace());
+            log.error("[ Error when returning module spatial request. ] {} {}", e.getMessage(), e.getStackTrace());
         } finally {
             disconnectQueue();
         }
