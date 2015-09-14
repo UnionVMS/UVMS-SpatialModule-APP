@@ -32,9 +32,6 @@ public class SpatialEventServiceBean implements SpatialEventService {
     private ClosestLocationService closestLocationService;
 
     @EJB
-    private AreaDetailsService areaDetailsService;
-
-    @EJB
     private SpatialEnrichmentService enrichmentService;
 
     @EJB
