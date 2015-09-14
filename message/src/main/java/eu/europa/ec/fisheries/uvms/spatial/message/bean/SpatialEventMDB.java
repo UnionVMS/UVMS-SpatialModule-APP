@@ -45,7 +45,7 @@ public class SpatialEventMDB implements MessageListener {
     Event<SpatialMessageEvent> enrichmentSpatialEvent;
 
     @Inject
-    @GetClosestAreaEvent
+    @GetClosestLocationEvent
     Event<SpatialMessageEvent> closestLocationSpatialEvent;
 
     @Inject

@@ -2,8 +2,10 @@ package eu.europa.ec.fisheries.uvms.spatial.service;
 
 import eu.europa.ec.fisheries.uvms.spatial.message.event.*;
 
+import javax.ejb.Local;
 import javax.enterprise.event.Observes;
 
+@Local
 public interface SpatialEventService {
 
     public void getAreaByLocation(@Observes @GetAreaByLocationEvent SpatialMessageEvent message);

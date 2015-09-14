@@ -19,7 +19,6 @@ import java.util.List;
 
 @Stateless
 @Slf4j
-@Local(SpatialEventService.class)
 public class SpatialEventServiceBean implements SpatialEventService {
 
     @EJB
