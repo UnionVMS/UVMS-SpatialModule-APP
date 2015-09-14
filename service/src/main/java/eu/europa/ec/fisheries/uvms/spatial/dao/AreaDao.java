@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.spatial.repository;
+package eu.europa.ec.fisheries.uvms.spatial.dao;
 
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestAreaDto;

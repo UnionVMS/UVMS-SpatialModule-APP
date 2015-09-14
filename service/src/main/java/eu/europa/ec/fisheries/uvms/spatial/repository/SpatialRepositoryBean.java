@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.repository;
 
+import eu.europa.ec.fisheries.uvms.spatial.dao.AreaDao;
 import eu.europa.ec.fisheries.uvms.util.SqlPropertyHolder;
 import lombok.experimental.Delegate;
 
