@@ -5,11 +5,12 @@ import eu.europa.ec.fisheries.uvms.spatial.message.SpatialMessageConstants;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.*;
 import eu.europa.ec.fisheries.uvms.spatial.model.FaultCode;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMapperException;
-import eu.europa.ec.fisheries.uvms.spatial.model.mapper.JAXBMarshaller;
+import eu.europa.ec.fisheries.uvms.spatial.model.mapper.SpatialJAXBMarshaller;
 import eu.europa.ec.fisheries.uvms.spatial.model.mapper.SpatialModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.annotation.PostConstruct;
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.MessageDriven;
 import javax.ejb.TransactionAttribute;
@@ -52,6 +53,13 @@ public class SpatialEventMDB implements MessageListener {
     @SpatialMessageErrorEvent
     Event<SpatialMessageEvent> spatialErrorEvent;
 
+    private SpatialJAXBMarshaller marshaller;
+
+    @PostConstruct
+    public void init(){
+        marshaller = new SpatialJAXBMarshaller();
+    }
+
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void onMessage(Message message) {
@@ -60,32 +68,32 @@ public class SpatialEventMDB implements MessageListener {
 
         try {
 
-            SpatialModuleRequest request = JAXBMarshaller.unmarshallTextMessage(textMessage, SpatialModuleRequest.class);
+            SpatialModuleRequest request = marshaller.unmarshall(textMessage, SpatialModuleRequest.class);
             SpatialModuleMethod method = request.getMethod();
 
             switch (method) {
                 case GET_AREA_BY_LOCATION:
-                    AreaByLocationSpatialRQ byLocationSpatialRQ = JAXBMarshaller.unmarshallTextMessage(textMessage, AreaByLocationSpatialRQ.class);
+                    AreaByLocationSpatialRQ byLocationSpatialRQ = marshaller.unmarshall(textMessage, AreaByLocationSpatialRQ.class);
                     SpatialMessageEvent areaByLocationEvent = new SpatialMessageEvent(textMessage, byLocationSpatialRQ);
                     areaByLocationSpatialEvent.fire(areaByLocationEvent);
                     break;
                 case GET_AREA_TYPES:
-                    AllAreaTypesRequest allAreaTypesRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, AllAreaTypesRequest.class);
+                    AllAreaTypesRequest allAreaTypesRequest = marshaller.unmarshall(textMessage, AllAreaTypesRequest.class);
                     SpatialMessageEvent areaTypeNamesEvent = new SpatialMessageEvent(textMessage, allAreaTypesRequest);
                     typeNamesEvent.fire(areaTypeNamesEvent);
                     break;
                 case GET_CLOSEST_AREA:
-                    ClosestAreaSpatialRQ closestAreaSpatialRQ = JAXBMarshaller.unmarshallTextMessage(textMessage, ClosestAreaSpatialRQ.class);
+                    ClosestAreaSpatialRQ closestAreaSpatialRQ = marshaller.unmarshall(textMessage, ClosestAreaSpatialRQ.class);
                     SpatialMessageEvent closestAreaEvent = new SpatialMessageEvent(textMessage, closestAreaSpatialRQ);
                     closestAreaSpatialEvent.fire(closestAreaEvent);
                     break;
                 case GET_CLOSEST_LOCATION:
-                    ClosestLocationSpatialRQ closestLocationSpatialRQ = JAXBMarshaller.unmarshallTextMessage(textMessage, ClosestLocationSpatialRQ.class);
+                    ClosestLocationSpatialRQ closestLocationSpatialRQ = marshaller.unmarshall(textMessage, ClosestLocationSpatialRQ.class);
                     SpatialMessageEvent closestLocationEvent = new SpatialMessageEvent(textMessage, closestLocationSpatialRQ);
                     closestLocationSpatialEvent.fire(closestLocationEvent);
                     break;
                 case GET_ENRICHMENT:
-                    SpatialEnrichmentRQ spatialEnrichmentRQ = JAXBMarshaller.unmarshallTextMessage(textMessage, SpatialEnrichmentRQ.class);
+                    SpatialEnrichmentRQ spatialEnrichmentRQ = marshaller.unmarshall(textMessage, SpatialEnrichmentRQ.class);
                     SpatialMessageEvent spatialEnrichmentEvent = new SpatialMessageEvent(textMessage, spatialEnrichmentRQ);
                     enrichmentSpatialEvent.fire(spatialEnrichmentEvent);
                     break;

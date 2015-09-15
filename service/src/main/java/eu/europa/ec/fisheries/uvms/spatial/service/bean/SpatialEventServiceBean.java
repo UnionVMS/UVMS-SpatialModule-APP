@@ -11,6 +11,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRS;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialEventService;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.annotation.PostConstruct;
 import javax.ejb.*;
 import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
@@ -43,6 +44,13 @@ public class SpatialEventServiceBean implements SpatialEventService {
     @SpatialMessageErrorEvent
     Event<SpatialMessageEvent> spatialErrorEvent;
 
+    private SpatialModuleResponseMapper mapper;
+
+    @PostConstruct
+    public void init(){
+        mapper = new SpatialModuleResponseMapper();
+    }
+
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void getAreaByLocation(@Observes @GetAreaByLocationEvent SpatialMessageEvent message) {
@@ -50,11 +58,10 @@ public class SpatialEventServiceBean implements SpatialEventService {
         try {
             List<AreaTypeEntry> areaTypesByLocation = areaByLocationService.getAreaTypesByLocation(message.getAreaByLocationSpatialRQ());
             log.debug("Send back areaByLocation response.");
-            messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapAreaByLocationResponse(areaTypesByLocation));
+            messageProducer.sendModuleResponseMessage(message.getMessage(), mapper.mapAreaByLocationResponse(areaTypesByLocation));
         }
         catch (Exception e){
-            log.error("[ Error when getting areaTypesByLocation from source. ] ", e);
-            spatialErrorEvent.fire(new SpatialMessageEvent(message.getMessage(), SpatialModuleResponseMapper.createFaultMessage(FaultCode.SPATIAL_MESSAGE, "Exception when getting areaTypesByLocation [ " + e.getMessage())));
+            sendError(message, e);
         }
     }
 
@@ -64,12 +71,16 @@ public class SpatialEventServiceBean implements SpatialEventService {
         try {
             List<String> areaTypeNames = areaTypeNamesService.listAllAreaTypeNames();
             log.debug("Send back area types response.");
-            messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapAreaTypeNamesResponse(areaTypeNames));
+            messageProducer.sendModuleResponseMessage(message.getMessage(), mapper.mapAreaTypeNamesResponse(areaTypeNames));
         }
         catch (Exception e) {
-            log.error("[ Error when getting area types from source. ] ", e);
-            spatialErrorEvent.fire(new SpatialMessageEvent(message.getMessage(), SpatialModuleResponseMapper.createFaultMessage(FaultCode.SPATIAL_MESSAGE, "Exception when getting areaByLocation [ " + e.getMessage())));
+            sendError(message, e);
         }
+    }
+
+    private void sendError(SpatialMessageEvent message, Exception e) {
+        log.error("[ Error when getting area types from source. ] ", e);
+        spatialErrorEvent.fire(new SpatialMessageEvent(message.getMessage(), SpatialModuleResponseMapper.createFaultMessage(FaultCode.SPATIAL_MESSAGE, "Exception when getting areaByLocation [ " + e.getMessage())));
     }
 
     @Override
@@ -78,11 +89,10 @@ public class SpatialEventServiceBean implements SpatialEventService {
         try {
             List<Area> closestAreas = closestAreaService.getClosestAreas(message.getClosestAreaSpatialRQ());
             log.debug("Send back closestAreas response.");
-            messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapClosestAreaResponse(closestAreas));
+            messageProducer.sendModuleResponseMessage(message.getMessage(), mapper.mapClosestAreaResponse(closestAreas));
         }
         catch (Exception e){
-            log.error("[ Error when getting closestAreas from source. ] ", e);
-            spatialErrorEvent.fire(new SpatialMessageEvent(message.getMessage(), SpatialModuleResponseMapper.createFaultMessage(FaultCode.SPATIAL_MESSAGE, "Exception when getting closestAreas [ " + e.getMessage())));
+            sendError(message, e);
         }
     }
 
@@ -92,11 +102,10 @@ public class SpatialEventServiceBean implements SpatialEventService {
         try {
             List<Location> closestLocations = closestLocationService.getClosestLocations(message.getClosestLocationSpatialRQ());
             log.debug("Send back closest locations response.");
-            messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapClosestLocationResponse(closestLocations));
+            messageProducer.sendModuleResponseMessage(message.getMessage(), mapper.mapClosestLocationResponse(closestLocations));
         }
         catch (Exception e){
-            log.error("[ Error when getting closest location from source. ] ", e);
-            spatialErrorEvent.fire(new SpatialMessageEvent(message.getMessage(), SpatialModuleResponseMapper.createFaultMessage(FaultCode.SPATIAL_MESSAGE, "Exception when getting closest locations [ " + e.getMessage())));
+            sendError(message, e);
         }
     }
 
@@ -106,11 +115,10 @@ public class SpatialEventServiceBean implements SpatialEventService {
         try {
             SpatialEnrichmentRS spatialEnrichmentRS = enrichmentService.getSpatialEnrichment(message.getSpatialEnrichmentRQ());
             log.debug("Send back enrichment response.");
-            messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapEnrichmentResponse(spatialEnrichmentRS));
+            messageProducer.sendModuleResponseMessage(message.getMessage(), mapper.mapEnrichmentResponse(spatialEnrichmentRS));
         }
         catch (Exception e){
-            log.error("[ Error when getting enrichment from source. ] ", e);
-            spatialErrorEvent.fire(new SpatialMessageEvent(message.getMessage(), SpatialModuleResponseMapper.createFaultMessage(FaultCode.SPATIAL_MESSAGE, "Exception when getting enrichment [ " + e.getMessage())));
+            sendError(message, e);
         }
     }
 }

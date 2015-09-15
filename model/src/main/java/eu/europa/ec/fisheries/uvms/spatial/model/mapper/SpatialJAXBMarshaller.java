@@ -1,6 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.model.mapper;
 
-import eu.europa.ec.fisheries.uvms.message.JAXBMarshallerUtils;
+import eu.europa.ec.fisheries.uvms.message.AbstractJAXBMarshaller;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMarshallException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,9 +9,9 @@ import javax.jms.JMSException;
 import javax.jms.TextMessage;
 import javax.xml.bind.JAXBException;
 
-public class JAXBMarshaller {
+public class SpatialJAXBMarshaller extends AbstractJAXBMarshaller {
 
-    private static Logger LOG = LoggerFactory.getLogger(JAXBMarshaller.class);
+    private static Logger LOG = LoggerFactory.getLogger(SpatialJAXBMarshaller.class);
 
     /**
      * Marshalls a JAXB Object to a XML String representation
@@ -21,9 +21,9 @@ public class JAXBMarshaller {
      * @return
      * @throws SpatialModelMarshallException
      */
-    public static <T> String marshallJaxBObjectToString(T data) throws SpatialModelMarshallException {
+    public <T> String marshall(T data) throws SpatialModelMarshallException {
         try {
-            return JAXBMarshallerUtils.marshallJaxBObjectToString(data);
+            return marshallJaxBObjectToString(data);
         } catch (JAXBException e) {
             LOG.error("[ Error when marshalling data. ] {}", e.getMessage());
             throw new SpatialModelMarshallException("Error when marshalling " + data.getClass().getName() + " to String");
@@ -40,9 +40,9 @@ public class JAXBMarshaller {
      * @return
      * @throws SpatialModelMarshallException
      */
-    public static <R> R unmarshallTextMessage(TextMessage textMessage, Class clazz) throws SpatialModelMarshallException {
+    public <R> R unmarshall(TextMessage textMessage, Class clazz) throws SpatialModelMarshallException {
         try {
-            return JAXBMarshallerUtils.unmarshallTextMessage(textMessage, clazz);
+            return unmarshallTextMessage(textMessage, clazz);
         } catch (JMSException | JAXBException e) {
             LOG.error("[ Error when unmarshalling data. ] {}", e.getMessage());
             throw new SpatialModelMarshallException("Error when unmarshalling response in ResponseMapper: " + e.getMessage());

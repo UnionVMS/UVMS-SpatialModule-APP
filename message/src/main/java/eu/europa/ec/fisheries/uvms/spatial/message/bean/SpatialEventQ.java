@@ -7,9 +7,10 @@ import eu.europa.ec.fisheries.uvms.spatial.message.SpatialMessageConstants;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageErrorEvent;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageEvent;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMarshallException;
-import eu.europa.ec.fisheries.uvms.spatial.model.mapper.JAXBMarshaller;
+import eu.europa.ec.fisheries.uvms.spatial.model.mapper.SpatialJAXBMarshaller;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -45,12 +46,19 @@ public class SpatialEventQ extends AbstractProducer {
         return eventQueue;
     }
 
+    private SpatialJAXBMarshaller marshaller;
+
+    @PostConstruct
+    public void init(){
+        marshaller = new SpatialJAXBMarshaller();
+    }
+
     public void sendModuleErrorResponseMessage(@Observes @SpatialMessageErrorEvent SpatialMessageEvent message){
         try {
             log.info("Sending message back to recipient from SpatialModule with correlationId {} on queue: {}", message.getMessage().getJMSMessageID(),
                     message.getMessage().getJMSReplyTo());
             connectQueue();
-            String data = JAXBMarshaller.marshallJaxBObjectToString(message.getFault());
+            String data = marshaller.marshall(message.getFault());
             TextMessage response = getSession().createTextMessage(data);
             response.setJMSCorrelationID(message.getMessage().getJMSMessageID());
             getSession().createProducer(message.getMessage().getJMSReplyTo()).send(response);

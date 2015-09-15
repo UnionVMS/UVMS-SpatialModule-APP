@@ -1,40 +1,49 @@
 package eu.europa.ec.fisheries.uvms.spatial.model.mapper;
 
-import eu.europa.ec.fisheries.uvms.message.JAXBMarshallerUtils;
+import eu.europa.ec.fisheries.uvms.message.AbstractJAXBMarshaller;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMarshallException;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AllAreaTypesRequest;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestLocationSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.PointType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialModuleMethod;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.UnitType;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.xml.bind.JAXBException;
 import java.util.List;
 
 @Slf4j
-public class SpatialModuleRequestMapper {
+public class SpatialModuleRequestMapper extends AbstractJAXBMarshaller {
 
-    public static String mapToCreateAreaByLocationRequest(PointType point) throws SpatialModelMarshallException {
+    public String mapToCreateAreaByLocationRequest(PointType point) throws SpatialModelMarshallException {
         AreaByLocationSpatialRQ request = new AreaByLocationSpatialRQ();
         request.setMethod(SpatialModuleMethod.GET_AREA_BY_LOCATION);
         request.setPoint(point);
         try {
-            return JAXBMarshallerUtils.marshallJaxBObjectToString(request);
+            return marshallJaxBObjectToString(request);
         } catch (JAXBException ex) {
             SpatialModuleRequestMapper.log.error("[ Error when marshalling object to string ] {} ", ex.getMessage());
             throw new SpatialModelMarshallException("[ Error when marshalling Object to String ]", ex);
         }
     }
 
-    public static String mapToCreateAllAreaTypesRequest() throws SpatialModelMarshallException {
+    public String mapToCreateAllAreaTypesRequest() throws SpatialModelMarshallException {
         AllAreaTypesRequest request = new AllAreaTypesRequest();
         request.setMethod(SpatialModuleMethod.GET_AREA_TYPES);
         try {
-            return JAXBMarshallerUtils.marshallJaxBObjectToString(request);
+            return marshallJaxBObjectToString(request);
         } catch (JAXBException ex) {
             SpatialModuleRequestMapper.log.error("[ Error when marshalling object to string ] {} ", ex.getMessage());
             throw new SpatialModelMarshallException("[ Error when marshalling Object to String ]", ex);
         }
     }
 
-    public static String mapToCreateClosestAreaRequest(PointType point, UnitType unit, List<AreaType> areaTypes) throws SpatialModelMarshallException {
+    public String mapToCreateClosestAreaRequest(PointType point, UnitType unit, List<AreaType> areaTypes) throws SpatialModelMarshallException {
         ClosestAreaSpatialRQ request = new ClosestAreaSpatialRQ();
         request.setMethod(SpatialModuleMethod.GET_CLOSEST_AREA);
         request.setPoint(point);
@@ -45,14 +54,14 @@ public class SpatialModuleRequestMapper {
         }
         request.setAreaTypes(area);
         try {
-            return JAXBMarshallerUtils.marshallJaxBObjectToString(request);
+            return marshallJaxBObjectToString(request);
         } catch (JAXBException ex) {
             SpatialModuleRequestMapper.log.error("[ Error when marshalling object to string ] {} ", ex.getMessage());
             throw new SpatialModelMarshallException("[ Error when marshalling Object to String ]", ex);
         }
     }
 
-    public static String mapToCreateClosestLocationRequest(PointType point, UnitType unit, List<LocationType> locationTypes) throws SpatialModelMarshallException {
+    public String mapToCreateClosestLocationRequest(PointType point, UnitType unit, List<LocationType> locationTypes) throws SpatialModelMarshallException {
         ClosestLocationSpatialRQ request = new ClosestLocationSpatialRQ();
         request.setMethod(SpatialModuleMethod.GET_CLOSEST_LOCATION);
         request.setPoint(point);
@@ -63,14 +72,14 @@ public class SpatialModuleRequestMapper {
         }
         request.setLocationTypes(loc);
         try {
-            return JAXBMarshallerUtils.marshallJaxBObjectToString(request);
+            return marshallJaxBObjectToString(request);
         } catch (JAXBException ex) {
             SpatialModuleRequestMapper.log.error("[ Error when marshalling object to string ] {} ", ex.getMessage());
             throw new SpatialModelMarshallException("[ Error when marshalling Object to String ]", ex);
         }
     }
 
-    public static String mapToCreateSpatialEnrichmentRequest(PointType point, UnitType unit, List<LocationType> locationTypes, List<AreaType> areaTypes) throws SpatialModelMarshallException {
+    public String mapToCreateSpatialEnrichmentRequest(PointType point, UnitType unit, List<LocationType> locationTypes, List<AreaType> areaTypes) throws SpatialModelMarshallException {
         SpatialEnrichmentRQ request = new SpatialEnrichmentRQ();
         request.setMethod(SpatialModuleMethod.GET_ENRICHMENT);
         request.setPoint(point);
@@ -88,7 +97,7 @@ public class SpatialModuleRequestMapper {
         request.setAreaTypes(area);
 
         try {
-            return JAXBMarshallerUtils.marshallJaxBObjectToString(request);
+            return marshallJaxBObjectToString(request);
         } catch (JAXBException ex) {
             SpatialModuleRequestMapper.log.error("[ Error when marshalling object to string ] {} ", ex.getMessage());
             throw new SpatialModelMarshallException("[ Error when marshalling Object to String ]", ex);
