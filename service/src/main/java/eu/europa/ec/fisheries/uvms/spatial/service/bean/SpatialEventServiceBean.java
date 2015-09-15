@@ -80,7 +80,7 @@ public class SpatialEventServiceBean implements SpatialEventService {
 
     private void sendError(SpatialMessageEvent message, Exception e) {
         log.error("[ Error when getting area types from source. ] ", e);
-        spatialErrorEvent.fire(new SpatialMessageEvent(message.getMessage(), SpatialModuleResponseMapper.createFaultMessage(FaultCode.SPATIAL_MESSAGE, "Exception when getting areaByLocation [ " + e.getMessage())));
+        spatialErrorEvent.fire(new SpatialMessageEvent(message.getMessage(), mapper.createFaultMessage(FaultCode.SPATIAL_MESSAGE, "Exception when getting areaByLocation [ " + e.getMessage())));
     }
 
     @Override

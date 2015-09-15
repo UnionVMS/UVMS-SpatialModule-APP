@@ -57,17 +57,13 @@ public class SpatialModuleRequestMapperTest {
     @Test
     public void testMapToCreateAreaByLocationRequestException() throws JAXBException {
 
-        PointType point = new PointType();
-        point.setLongitude(LONGITUDE);
-        point.setLatitude(LATITUDE);
-        point.setCrs(CRS);
         try {
             mapper = new SpatialModuleRequestMapper(){
                 protected <T> String marshallJaxBObjectToString(final T data) throws JAXBException {
                     throw new JAXBException("succes");
                 }
             };
-            mapper.mapToCreateAreaByLocationRequest(point);
+            mapper.mapToCreateAreaByLocationRequest(null);
             fail("Should throw exception");
         } catch (SpatialModelMarshallException e) {
            assertEquals("succes" , e.getCause().getMessage());

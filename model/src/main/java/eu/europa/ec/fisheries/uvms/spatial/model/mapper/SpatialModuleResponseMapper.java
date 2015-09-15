@@ -37,7 +37,7 @@ public class SpatialModuleResponseMapper extends SpatialJAXBMarshaller {
         }
     }
 
-    public static SpatialFault createFaultMessage(FaultCode code, String message) {
+    public SpatialFault createFaultMessage(FaultCode code, String message) {
         SpatialFault fault = new SpatialFault();
         fault.setCode(code.getCode());
         fault.setFault(message);

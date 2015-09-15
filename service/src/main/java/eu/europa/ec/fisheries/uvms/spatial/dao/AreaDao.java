@@ -88,6 +88,4 @@ public class AreaDao {
     private String replaceTableName(String queryString, String tableName) {
         return queryString.replace(TABLE_NAME_PLACEHOLDER, tableName);
     }
-
-
 }

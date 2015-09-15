@@ -55,9 +55,12 @@ public class SpatialEventMDB implements MessageListener {
 
     private SpatialJAXBMarshaller marshaller;
 
+    private SpatialModuleResponseMapper mapper;
+
     @PostConstruct
     public void init(){
         marshaller = new SpatialJAXBMarshaller();
+        mapper = new SpatialModuleResponseMapper();
     }
 
     @Override
@@ -99,12 +102,12 @@ public class SpatialEventMDB implements MessageListener {
                     break;
                 default:
                     log.error("[ Not implemented method consumed: {} ]", method);
-                    spatialErrorEvent.fire(new SpatialMessageEvent(textMessage, SpatialModuleResponseMapper.createFaultMessage(FaultCode.SPATIAL_MESSAGE, "Method not implemented")));
+                    spatialErrorEvent.fire(new SpatialMessageEvent(textMessage, mapper.createFaultMessage(FaultCode.SPATIAL_MESSAGE, "Method not implemented")));
             }
 
         } catch (SpatialModelMapperException e) {
             log.error("[ Error when receiving message in SpatialModule. ]", e);
-            spatialErrorEvent.fire(new SpatialMessageEvent(textMessage, SpatialModuleResponseMapper.createFaultMessage(FaultCode.SPATIAL_MESSAGE, "Method not implemented")));
+            spatialErrorEvent.fire(new SpatialMessageEvent(textMessage, mapper.createFaultMessage(FaultCode.SPATIAL_MESSAGE, "Method not implemented")));
         }
     }
 }
