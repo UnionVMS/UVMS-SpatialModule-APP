@@ -8,6 +8,7 @@ package eu.europa.ec.fisheries.uvms.spatial.entity.util;
 public class QueryNameConstants {
 	
 	/** Find all */
+    public static final String FIND_ALL_AREA_TYPE_NAMES = "AreaType.findAllAreaTypeNames";
     public static final String FIND_ALL_AREAS = "AreaType.findAllAreas";
     public static final String FIND_ALL_LOCATIONS = "AreaType.findAllLocations";
 

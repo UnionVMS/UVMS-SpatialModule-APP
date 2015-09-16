@@ -1,8 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import org.junit.Test;
@@ -33,16 +31,15 @@ public class AreaTypeNamesServiceTest {
     @SuppressWarnings("unchecked")
     public void shouldReturnAreaTypes() throws Exception {
         // given
-        when(crudService.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_ALL_AREAS)).thenReturn(createAreaLocationTypesList(AREA_TYPES));
+        when(crudService.findEntityByNamedQuery(String.class, QueryNameConstants.FIND_ALL_AREA_TYPE_NAMES)).thenReturn(AREA_TYPES);
 
         // when
         List<String> areaTypeNames = areaTypeNamesService.listAllAreaTypeNames();
 
         //then
         assertNotNull(areaTypeNames);
-        List<String> areaTypes = areaTypeNames;
-        assertThat(areaTypes).hasSize(AREA_TYPES.size());
-        assertThat(areaTypes).containsOnly(AREA_TYPES.toArray());
+        assertThat(areaTypeNames).hasSize(AREA_TYPES.size());
+        assertThat(areaTypeNames).containsOnly(AREA_TYPES.toArray());
     }
 
     @Test
@@ -58,16 +55,4 @@ public class AreaTypeNamesServiceTest {
         assertNotNull(areaTypeNames);
         assertThat(areaTypeNames).isEmpty();
     }
-
-    private List<AreaLocationTypesEntity> createAreaLocationTypesList(List<String> areaTypes) {
-        return Lists.transform(areaTypes, new Function<String, AreaLocationTypesEntity>() {
-            @Override
-            public AreaLocationTypesEntity apply(String areaType) {
-                AreaLocationTypesEntity entity = new AreaLocationTypesEntity();
-                entity.setTypeName(areaType);
-                return entity;
-            }
-        });
-    }
-
 }

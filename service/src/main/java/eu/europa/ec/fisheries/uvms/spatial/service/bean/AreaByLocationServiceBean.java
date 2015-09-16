@@ -29,7 +29,6 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
     @EJB
     private SpatialRepository repository;
 
-
     @EJB
     private SqlPropertyHolder sqlPropertyHolder;
 

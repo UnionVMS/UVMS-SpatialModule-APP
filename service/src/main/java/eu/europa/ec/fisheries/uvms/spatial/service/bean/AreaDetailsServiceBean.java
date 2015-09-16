@@ -31,7 +31,7 @@ import static eu.europa.ec.fisheries.uvms.util.ColumnAliasNameHelper.getFieldMap
 @Transactional
 public class AreaDetailsServiceBean implements AreaDetailsService {
 
-    private static Logger LOG = LoggerFactory.getLogger(AreaDetailsServiceBean.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(AreaDetailsServiceBean.class.getName());
 
     private ImmutableMap<String, Class> entityMap = ImmutableMap.<String, Class>builder()
             .put(AreaType.EEZ.value(), EezEntity.class)
@@ -43,7 +43,7 @@ public class AreaDetailsServiceBean implements AreaDetailsService {
             .put(AreaType.S_TAT_RECT.value(), StatRectEntity.class)
             .build();
     
-    private static String TYPE_NAME = "typeName";
+    private static final String TYPE_NAME = "typeName";
 
     @EJB
     private CrudService crudService;
