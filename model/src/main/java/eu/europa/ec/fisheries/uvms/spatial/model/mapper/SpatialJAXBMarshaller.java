@@ -2,16 +2,13 @@ package eu.europa.ec.fisheries.uvms.spatial.model.mapper;
 
 import eu.europa.ec.fisheries.uvms.message.AbstractJAXBMarshaller;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMarshallException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import javax.jms.JMSException;
 import javax.jms.TextMessage;
 import javax.xml.bind.JAXBException;
 
+@Slf4j
 public class SpatialJAXBMarshaller extends AbstractJAXBMarshaller {
-
-    private static Logger LOG = LoggerFactory.getLogger(SpatialJAXBMarshaller.class);
 
     /**
      * Marshalls a JAXB Object to a XML String representation
@@ -25,7 +22,7 @@ public class SpatialJAXBMarshaller extends AbstractJAXBMarshaller {
         try {
             return marshallJaxBObjectToString(data);
         } catch (JAXBException e) {
-            LOG.error("[ Error when marshalling data. ] {}", e.getMessage());
+            log.error("[ Error when marshalling data. ] {}", e.getMessage());
             throw new SpatialModelMarshallException("Error when marshalling " + data.getClass().getName() + " to String");
         }
     }
@@ -44,7 +41,7 @@ public class SpatialJAXBMarshaller extends AbstractJAXBMarshaller {
         try {
             return unmarshallTextMessage(textMessage, clazz);
         } catch (JMSException | JAXBException e) {
-            LOG.error("[ Error when unmarshalling data. ] {}", e.getMessage());
+            log.error("[ Error when unmarshalling data. ] {}", e.getMessage());
             throw new SpatialModelMarshallException("Error when unmarshalling response in ResponseMapper: " + e.getMessage());
         }
     }
