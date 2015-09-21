@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.util;
+package eu.europa.ec.fisheries.uvms.spatial.util;
 
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;

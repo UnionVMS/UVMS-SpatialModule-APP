@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.util;
+package eu.europa.ec.fisheries.uvms.spatial.util;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;

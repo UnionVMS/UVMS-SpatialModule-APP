@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.util;
+package eu.europa.ec.fisheries.uvms.spatial.util;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
