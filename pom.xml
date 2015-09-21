@@ -36,6 +36,7 @@
         <hibernate-spatial.version>4.3</hibernate-spatial.version>
         <geotools.version>14-M1</geotools.version>
         <uvms.commons.version>1.1-SNAPSHOT</uvms.commons.version>
+        <hibernate.validator.version>5.2.1.Final</hibernate.validator.version>
     </properties>
 
     <dependencyManagement>
@@ -77,6 +78,12 @@
                 <artifactId>vessel-model</artifactId>
                 <version>${vessel.module.version}</version>
             </dependency>
+            
+	        <dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-validator</artifactId>
+				<version>${hibernate.validator.version}</version>
+			</dependency>
 
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
@@ -239,6 +246,40 @@
                 <version>3.0.10.Final</version>
                 <scope>test</scope>
             </dependency>
+            
+                        <!-- Arquillian -->
+            <dependency>
+                <groupId>org.jboss.arquillian.junit</groupId>
+                <artifactId>arquillian-junit-container</artifactId>
+                <version>1.1.8.Final</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jboss.resteasy</groupId>
+                <artifactId>resteasy-jaxrs</artifactId>
+                <version>3.0.11.Final</version>
+               	<scope>test</scope>
+            </dependency>
+            
+            <dependency>
+            	<groupId>org.jboss.resteasy</groupId>
+			    <artifactId>resteasy-jaxb-provider</artifactId>
+			  	<version>3.0.11.Final</version>
+			</dependency>
+			
+			<dependency>
+			    <groupId>org.jboss.resteasy</groupId>
+			    <artifactId>jaxrs-api</artifactId>
+			    <version>3.0.11.Final</version>
+			</dependency>
+            
+            <dependency>
+                <groupId>org.jboss.resteasy</groupId>
+                <artifactId>resteasy-client</artifactId>
+                <version>3.0.11.Final</version>
+                <scope>test</scope>
+            </dependency>
 
             <dependency>
                 <groupId>com.github.tomakehurst</groupId>
@@ -311,8 +352,7 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
             <version>${logback.core.version}</version>
-        </dependency>
-
+        </dependency> 
     </dependencies>
 
     <distributionManagement>
