@@ -18,5 +18,14 @@ public class QueryNameConstants {
 
     /** Find Area By Id */
     public static final String FIND_TYPE_BY_ID = "AreaType.findAreaById";
-
+    
+    /** Named Native queries */
+    public static final String EEZ_BY_COORDINATE = "eezEntity.ByCoordinate";
+    public static final String RFMO_BY_COORDINATE = "rfmoEntity.ByCoordinate";
+    public static final String COUNTRY_BY_COORDINATE = "countryEntity.ByCoordinate";
+    public static final String FAO_BY_COORDINATE = "faoEntity.ByCoordinate";
+    public static final String GFCM_BY_COORDINATE = "gfcmEntity.ByCoordinate";
+    public static final String RAC_BY_COORDINATE = "racEntity.ByCoordinate";
+    public static final String STAT_RECT_BY_COORDINATE = "statRectEntity.ByCoordinate";
+    public static final String PORT_BY_COORDINATE = "portEntity.ByCoordinate";
 }
