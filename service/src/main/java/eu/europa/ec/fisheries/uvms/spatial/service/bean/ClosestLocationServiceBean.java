@@ -13,7 +13,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestLocationDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.MeasurementUnit;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
-import eu.europa.ec.fisheries.uvms.util.SpatialUtils;
+import eu.europa.ec.fisheries.uvms.spatial.util.SpatialUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.ejb.EJB;
@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static eu.europa.ec.fisheries.uvms.util.SpatialUtils.convertToPointInWGS84;
+import static eu.europa.ec.fisheries.uvms.spatial.util.SpatialUtils.convertToPointInWGS84;
 
 /**
  * Created by Michal Kopyczok on 03-Sep-15.

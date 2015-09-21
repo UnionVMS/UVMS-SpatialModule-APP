@@ -9,16 +9,17 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaDto;
-import eu.europa.ec.fisheries.uvms.util.SqlPropertyHolder;
+import eu.europa.ec.fisheries.uvms.spatial.util.SqlPropertyHolder;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.transaction.Transactional;
-import java.util.List;
 
-import static eu.europa.ec.fisheries.uvms.util.SpatialUtils.convertToPointInWGS84;
+import static eu.europa.ec.fisheries.uvms.spatial.util.SpatialUtils.convertToPointInWGS84;
+
+import java.util.List;
 
 @Stateless
 @Local(AreaByLocationService.class)
