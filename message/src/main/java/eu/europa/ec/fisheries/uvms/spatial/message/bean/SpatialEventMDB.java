@@ -1,7 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.message.bean;
 
-import eu.europa.ec.fisheries.uvms.common.MessageConstants;
-import eu.europa.ec.fisheries.uvms.spatial.message.SpatialMessageConstants;
+import static eu.europa.ec.fisheries.uvms.message.MessageConstants.*;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.*;
 import eu.europa.ec.fisheries.uvms.spatial.model.FaultCode;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMapperException;
@@ -21,10 +20,10 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 
-@MessageDriven(mappedName = SpatialMessageConstants.QUEUE_MODULE_SPATIAL, activationConfig = {
-        @ActivationConfigProperty(propertyName = "messagingType", propertyValue = MessageConstants.CONNECTION_TYPE),
-        @ActivationConfigProperty(propertyName = "destinationType", propertyValue = MessageConstants.DESTINATION_TYPE_QUEUE),
-        @ActivationConfigProperty(propertyName = "destination", propertyValue = SpatialMessageConstants.QUEUE_MODULE_SPATIAL_NAME)
+@MessageDriven(mappedName = QUEUE_MODULE_SPATIAL, activationConfig = {
+        @ActivationConfigProperty(propertyName = "messagingType", propertyValue = CONNECTION_TYPE),
+        @ActivationConfigProperty(propertyName = "destinationType", propertyValue = DESTINATION_TYPE_QUEUE),
+        @ActivationConfigProperty(propertyName = "destination", propertyValue = QUEUE_MODULE_SPATIAL_NAME)
 })
 @Slf4j
 public class SpatialEventMDB implements MessageListener {

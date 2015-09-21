@@ -1,6 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import eu.europa.ec.fisheries.uvms.spatial.message.bean.SpatialEventQ;
+import eu.europa.ec.fisheries.uvms.spatial.message.bean.SpatialMessageServiceBean;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.*;
 import eu.europa.ec.fisheries.uvms.spatial.model.FaultCode;
 import eu.europa.ec.fisheries.uvms.spatial.model.mapper.SpatialModuleResponseMapper;
@@ -38,7 +38,7 @@ public class SpatialEventServiceBean implements SpatialEventService {
     private AreaTypeNamesService areaTypeNamesService;
 
     @EJB
-    private SpatialEventQ messageProducer;
+    private SpatialMessageServiceBean messageProducer;
 
     @Inject
     @SpatialMessageErrorEvent

@@ -1,7 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 
-import eu.europa.ec.fisheries.uvms.spatial.message.bean.SpatialEventQ;
+import eu.europa.ec.fisheries.uvms.spatial.message.bean.SpatialMessageServiceBean;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageEvent;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMarshallException;
 import eu.europa.ec.fisheries.uvms.spatial.model.mapper.SpatialModuleResponseMapper;
@@ -44,7 +44,7 @@ public class SpatialEventServiceTest {
     private AreaTypeNamesService areaTypeNamesService;
 
     @Mock
-    private SpatialEventQ messageProducer;
+    private SpatialMessageServiceBean messageProducer;
 
     @Mock
     Event<SpatialMessageEvent> spatialErrorEvent;

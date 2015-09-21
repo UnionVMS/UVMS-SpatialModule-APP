@@ -1,9 +1,8 @@
 package eu.europa.ec.fisheries.uvms.spatial.message.bean;
 
-import eu.europa.ec.fisheries.uvms.message.AbstractProducer;
-import eu.europa.ec.fisheries.uvms.message.MessageConstants;
+import eu.europa.ec.fisheries.uvms.message.AbstractMessageService;
+import static eu.europa.ec.fisheries.uvms.message.MessageConstants.*;
 import eu.europa.ec.fisheries.uvms.spatial.message.SpatialConstants;
-import eu.europa.ec.fisheries.uvms.spatial.message.SpatialMessageConstants;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageErrorEvent;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageEvent;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMarshallException;
@@ -15,20 +14,17 @@ import javax.annotation.Resource;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.enterprise.event.Observes;
-import javax.jms.ConnectionFactory;
-import javax.jms.Destination;
-import javax.jms.JMSException;
-import javax.jms.TextMessage;
+import javax.jms.*;
 
 @Stateless
 @LocalBean
 @Slf4j
-public class SpatialEventQ extends AbstractProducer {
+public class SpatialMessageServiceBean extends AbstractMessageService {
 
-    @Resource(mappedName = SpatialMessageConstants.QUEUE_MODULE_SPATIAL)
-    private Destination eventQueue;
+    @Resource(mappedName = QUEUE_MODULE_SPATIAL)
+    private Destination request;
 
-    @Resource(lookup = MessageConstants.CONNECTION_FACTORY)
+    @Resource(lookup = CONNECTION_FACTORY)
     private ConnectionFactory connectionFactory;
 
     @Override
@@ -37,13 +33,18 @@ public class SpatialEventQ extends AbstractProducer {
     }
 
     @Override
-    public String getModuleName() {
-        return SpatialConstants.MODULE_NAME;
+    protected Destination getEventDestination() {
+        return request;
     }
 
     @Override
-    public Destination getDestination() {
-        return eventQueue;
+    protected Destination getResponseDestination() {
+        return null;
+    }
+
+    @Override
+    public String getModuleName() {
+        return SpatialConstants.MODULE_NAME;
     }
 
     private SpatialJAXBMarshaller marshaller;
@@ -57,11 +58,11 @@ public class SpatialEventQ extends AbstractProducer {
         try {
             log.info("Sending message back to recipient from SpatialModule with correlationId {} on queue: {}", message.getMessage().getJMSMessageID(),
                     message.getMessage().getJMSReplyTo());
-            connectQueue();
+            Session session = connectToQueue();
             String data = marshaller.marshall(message.getFault());
-            TextMessage response = getSession().createTextMessage(data);
+            TextMessage response = session.createTextMessage(data);
             response.setJMSCorrelationID(message.getMessage().getJMSMessageID());
-            getSession().createProducer(message.getMessage().getJMSReplyTo()).send(response);
+            session.createProducer(message.getMessage().getJMSReplyTo()).send(response);
         } catch (JMSException | SpatialModelMarshallException e) {
             log.error("[ Error when returning module spatial request. ] {} {}", e.getMessage(), e.getStackTrace());
         } finally {
