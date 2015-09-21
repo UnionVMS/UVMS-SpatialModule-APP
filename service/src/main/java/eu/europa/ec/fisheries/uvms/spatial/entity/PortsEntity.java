@@ -4,21 +4,36 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityResult;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedNativeQuery;
+import javax.persistence.SqlResultSetMapping;
+import javax.persistence.SqlResultSetMappings;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Type;
 
 import com.vividsolutions.jts.geom.Geometry;
 
+import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 
 @Entity
-@Table(name = "ports", schema = "spatial")
+@SqlResultSetMappings({
+	@SqlResultSetMapping(name = "implicit.port", entities = @EntityResult(entityClass = PortsEntity.class))
+})
+@NamedNativeQuery(
+		name = QueryNameConstants.PORT_BY_COORDINATE, 
+		query = "select * from port order by ST_Distance_Spheroid(geom, st_geomfromtext(CAST(:wktPoint as text), :crs), 'SPHEROID[\"WGS 84\",6378137,298.257223563]') limit 1"
+				, resultSetMapping = "implicit.port")
+
+@Table(name = "port", schema = "spatial")
 public class PortsEntity implements Serializable {
-	
-	private static final long serialVersionUID = 6797853213499502865L;
-	
+
+	private static final long serialVersionUID = -2233177907262739920L;
+
 	@Id
 	@Column(name = "gid")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +41,8 @@ public class PortsEntity implements Serializable {
 	private long gid;
 	
 	@Column(name = "geom", nullable = false)
-	@ColumnAliasName(aliasName="geom")
+	@Type(type = "org.hibernate.spatial.GeometryType")
+	@ColumnAliasName(aliasName="geometry")
 	private Geometry geom;
 	
 	@Column(name = "scalerank")

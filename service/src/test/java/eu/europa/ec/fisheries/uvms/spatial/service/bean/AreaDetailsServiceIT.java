@@ -1,17 +1,20 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetailsSpatialRequest;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
-import org.jboss.arquillian.junit.Arquillian;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
 
-import static org.junit.Assert.*;
+import org.jboss.arquillian.junit.Arquillian;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetailsSpatialRequest;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 
 /**
  * @author padhyad
@@ -22,6 +25,47 @@ public class AreaDetailsServiceIT extends AbstractArquillianIT {
 	
 	@EJB
 	private AreaDetailsService areaDetailsService;
+	
+
+	@Test
+	public void getEezAreaDetailsByCoordinates() {
+		AreaTypeEntry areaCoordinate = new AreaTypeEntry();
+		areaCoordinate.setAreaType("eez");
+		areaCoordinate.setLatitude(41.0);
+		areaCoordinate.setLongitude(-9.5);
+		areaCoordinate.setCrs(4326);
+		AreaDetails areaDetails = areaDetailsService.getAreaDetails(areaCoordinate);
+		assertNotNull(areaDetails.getAreaProperty());
+		assertEquals(areaDetails.getAreaProperty().isEmpty(), false);
+	}
+	
+	@Test
+	public void getAreaInvalidCoordinate() {
+		try {
+			AreaTypeEntry areaCoordinate = new AreaTypeEntry();
+			areaCoordinate.setAreaType("eez");
+			areaCoordinate.setLatitude(410.0);
+			areaCoordinate.setLongitude(-90.5);
+			areaCoordinate.setCrs(4326);
+			areaDetailsService.getAreaDetails(areaCoordinate);
+		} catch (Exception e) {
+			assertEquals(5010, ((SpatialServiceException)((EJBException) e).getCausedByException()).getError().getErrorCode().intValue());
+		}
+	}
+	
+	@Test
+	public void getAreaInvalidCrsCodeTest() {
+		try {
+			AreaTypeEntry areaCoordinate = new AreaTypeEntry();
+			areaCoordinate.setAreaType("eez");
+			areaCoordinate.setLatitude(41.0);
+			areaCoordinate.setLongitude(-9.5);
+			areaCoordinate.setCrs(43260);
+			areaDetailsService.getAreaDetails(areaCoordinate);
+		} catch (Exception e) {
+			assertEquals(5002, ((SpatialServiceException)((EJBException) e).getCausedByException()).getError().getErrorCode().intValue());
+		}
+	}
 	
 	/**
 	 * Test EEZ entity for valid response

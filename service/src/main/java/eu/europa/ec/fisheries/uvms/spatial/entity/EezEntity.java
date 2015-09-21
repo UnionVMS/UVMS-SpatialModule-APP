@@ -6,19 +6,30 @@ import java.math.BigDecimal;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityResult;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedNativeQuery;
+import javax.persistence.SqlResultSetMapping;
+import javax.persistence.SqlResultSetMappings;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
 
 import com.vividsolutions.jts.geom.Geometry;
 
+import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 
 
 @Entity
+@SqlResultSetMappings({
+	@SqlResultSetMapping(name = "implicit.eez", entities = @EntityResult(entityClass = EezEntity.class))
+})
+@NamedNativeQuery(
+		name = QueryNameConstants.EEZ_BY_COORDINATE, 
+		query = "select * from eez where st_intersects(geom, st_geomfromtext(CAST(:wktPoint as text), :crs))", resultSetMapping = "implicit.eez")
 @Table(name = "eez", schema = "spatial")
 public class EezEntity implements Serializable {
 

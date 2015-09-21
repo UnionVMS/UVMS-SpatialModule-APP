@@ -1,14 +1,15 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import eu.europa.ec.fisheries.uvms.service.CrudService;
-import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.RfmoEntity;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetailsSpatialRequest;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 import org.geotools.geometry.jts.GeometryBuilder;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,14 +20,18 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import com.vividsolutions.jts.geom.Point;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import eu.europa.ec.fisheries.uvms.service.CrudService;
+import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.RfmoEntity;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetailsSpatialRequest;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
+import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 
 /**
  * @author padhyad
@@ -39,6 +44,9 @@ public class AreaDetailsServiceTest {
 	@Mock
 	private CrudService crudServiceBean;
 	
+	@Mock
+	private SpatialRepository repository;
+	
 	@InjectMocks
 	private AreaDetailsServiceBean areaDetailsServiceBean;
 	
@@ -47,6 +55,44 @@ public class AreaDetailsServiceTest {
     public void initMocks() {
         MockitoAnnotations.initMocks(this);
     }
+	
+	@Test
+	public void getEezDetailsByCoordinates() {
+		List<AreaLocationTypesEntity> areaEntities = new ArrayList<AreaLocationTypesEntity>();
+		areaEntities.add(getMockAreaTypeEntity("EEZ", true));		
+		EezEntity eezEntity = getMockedEezEntity();		
+		mockCrudServiceBean(areaEntities, eezEntity);
+		mockEntityByCoordinate(Arrays.asList(eezEntity));
+		AreaDetailsSpatialRequest areaDetailsSpatialRequest = new AreaDetailsSpatialRequest();
+        AreaTypeEntry areaTypeEntry = new AreaTypeEntry();
+        areaTypeEntry.setAreaType("eez");
+        areaTypeEntry.setLatitude(41.0);
+        areaTypeEntry.setLongitude(-9.5);
+        areaTypeEntry.setCrs(4326);
+        areaDetailsSpatialRequest.setAreaType(areaTypeEntry);
+		AreaDetailsSpatialRequest request = areaDetailsSpatialRequest;
+        AreaDetails areaDetails = areaDetailsServiceBean.getAreaDetails(request);		
+		assertNotNull(areaDetails.getAreaProperty());
+		assertEquals(areaDetails.getAreaProperty().isEmpty(), false);
+	}
+	
+	@Test(expected=SpatialServiceException.class)
+	public void invalidCoordinateTest() {
+		List<AreaLocationTypesEntity> areaEntities = new ArrayList<AreaLocationTypesEntity>();
+		areaEntities.add(getMockAreaTypeEntity("EEZ", true));		
+		EezEntity eezEntity = getMockedEezEntity();		
+		mockCrudServiceBean(areaEntities, eezEntity);
+		mockEntityByCoordinate(new ArrayList());
+		AreaDetailsSpatialRequest areaDetailsSpatialRequest = new AreaDetailsSpatialRequest();
+        AreaTypeEntry areaTypeEntry = new AreaTypeEntry();
+        areaTypeEntry.setAreaType("eez");
+        areaTypeEntry.setLatitude(41.0);
+        areaTypeEntry.setLongitude(-9.5);
+        areaTypeEntry.setCrs(4326);
+        areaDetailsSpatialRequest.setAreaType(areaTypeEntry);
+		AreaDetailsSpatialRequest request = areaDetailsSpatialRequest;
+        areaDetailsServiceBean.getAreaDetails(request);
+	}
 	
 	/**
 	 * Test EEZ entity for valid response
@@ -115,8 +161,7 @@ public class AreaDetailsServiceTest {
         areaTypeEntry.setId("INVALID_ROW");
         areaDetailsSpatialRequest.setAreaType(areaTypeEntry);
         areaDetailsServiceBean.getAreaDetails(areaDetailsSpatialRequest);
-	}
-	
+	}	
 	
 	/**
 	 * Test for non existing row in DB
@@ -126,11 +171,14 @@ public class AreaDetailsServiceTest {
         AreaDetailsSpatialRequest areaDetailsSpatialRequest = new AreaDetailsSpatialRequest();
         AreaTypeEntry areaTypeEntry = new AreaTypeEntry();
         areaTypeEntry.setAreaType("EEZ");
-        areaTypeEntry.setId("10000");
+        areaTypeEntry.setId("100000");
         areaDetailsSpatialRequest.setAreaType(areaTypeEntry);
         areaDetailsServiceBean.getAreaDetails(areaDetailsSpatialRequest);
 	}
 
+	private void mockEntityByCoordinate(List list) {
+		Mockito.when(repository.findAreaByCoordinates(Mockito.any(Point.class), Mockito.any(String.class))).thenReturn(list);
+	}
 	
 	@SuppressWarnings("unchecked")
 	public void mockCrudServiceBean(List<AreaLocationTypesEntity> returnList, Object entity) {

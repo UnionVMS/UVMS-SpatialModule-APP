@@ -1,17 +1,24 @@
 package eu.europa.ec.fisheries.uvms.spatial.dao;
 
-import com.vividsolutions.jts.geom.Point;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestAreaDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestLocationDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.MeasurementUnit;
-import eu.europa.ec.fisheries.uvms.util.SqlPropertyHolder;
+import static eu.europa.ec.fisheries.uvms.spatial.util.SpatialUtils.convertToWkt;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.persistence.EntityManager;
+
+import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
-import javax.persistence.EntityManager;
-import java.util.List;
 
-import static eu.europa.ec.fisheries.uvms.util.SpatialUtils.convertToWkt;
+import com.vividsolutions.jts.geom.Point;
+
+import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestLocationDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.MeasurementUnit;
+import eu.europa.ec.fisheries.uvms.spatial.util.SqlPropertyHolder;
 
 public class AreaDao {
 
@@ -21,12 +28,13 @@ public class AreaDao {
     private static final String FIND_AREAS_ID_BY_LOCATION = "sql.findAreasIdByLocation";
     private static final String CLOSEST_AREA_QUERY = "sql.findClosestArea";
     private static final String CLOSEST_LOCATION_QUERY = "sql.findClosestLocation";
+    private static final String FIND_AREA_BY_COORDINATE = "sql.findAreaByCoordinate";
     private static final String TABLE_NAME_PLACEHOLDER = "{tableName}";
 
     private SqlPropertyHolder propertyHolder;
     private EntityManager em;
 
-    public AreaDao(EntityManager em, SqlPropertyHolder propertyHolder){
+    public AreaDao(EntityManager em, SqlPropertyHolder propertyHolder) {
         this.em = em;
         this.propertyHolder = propertyHolder;
     }
@@ -41,11 +49,17 @@ public class AreaDao {
         String queryString = propertyHolder.getProperty(CLOSEST_AREA_QUERY);
         return executeClosest(queryString, point, unit, areaDbTable, ClosestAreaDto.class);
     }
-
+    
     @SuppressWarnings("unchecked")
     public List<ClosestLocationDto> findClosestlocation(Point point, MeasurementUnit unit, String areaDbTable) {
         String queryString = propertyHolder.getProperty(CLOSEST_LOCATION_QUERY);
         return executeClosest(queryString, point, unit, areaDbTable, ClosestLocationDto.class);
+    }
+    
+    public List findAreaByCoordinates(Point point, String nativeQueryString) {
+    	String wktPoint = convertToWkt(point);
+		int crs = point.getSRID();
+		return createNamedNativeQuery(nativeQueryString, wktPoint, crs).list();
     }
 
     @SuppressWarnings("unchecked")
@@ -72,6 +86,13 @@ public class AreaDao {
         sqlQuery.setInteger(CRS, crs);
         sqlQuery.setDouble(UNIT, unit);
         return sqlQuery;
+    }
+    
+    private Query createNamedNativeQuery(String nativeQueryString, String wktPoint, int crs) {
+        Query query = getSession().getNamedQuery(nativeQueryString);
+        query.setParameter(WKT, wktPoint);
+        query.setParameter(CRS, crs);
+        return query;
     }
 
     private SQLQuery createSQLQueryForClosestArea(String queryString, String wktPoint, int crs) {
