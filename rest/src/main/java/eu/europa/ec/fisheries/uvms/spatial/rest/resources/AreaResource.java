@@ -1,25 +1,44 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources;
 
-import eu.europa.ec.fisheries.uvms.service.CrudService;
+import java.util.List;
+
+import javax.ejb.EJB;
+import javax.interceptor.Interceptors;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import eu.europa.ec.fisheries.uvms.rest.FeatureToGeoJsonMapper;
+import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
+import eu.europa.ec.fisheries.uvms.service.interceptor.ValidationInterceptor;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
+import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaDetailsDto;
+import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaTypeDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseCode;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.error.ErrorHandler;
+import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.AreaLocationDtoMapper;
+import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ValidationUtils;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaByLocationService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaDetailsService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.ClosestAreaService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestAreaDto;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.ejb.EJB;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import java.util.List;
-
 @Path("/")
 @Slf4j
-public class AreaResource {
+public class AreaResource extends UnionVMSResource {
 
     @EJB
     private AreaTypeNamesService areaTypeService;
@@ -29,6 +48,11 @@ public class AreaResource {
 
     @EJB
     private ClosestAreaService closestAreaService;
+    
+    @EJB
+    private AreaDetailsService areaDetailsService;
+    
+    private AreaLocationDtoMapper mapper = AreaLocationDtoMapper.INSTANCE;
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
@@ -80,6 +104,22 @@ public class AreaResource {
             log.error("[ Error when getting closest areas. ] ", ex);
             return ErrorHandler.getFault(ex);
         }
+    }
+    
+    @POST
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/areadetails")
+    @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
+    public Response getAreaDetails(AreaTypeDto areaDto) throws Exception {
+    	AreaDetails areaDetails = areaDetailsService.getAreaDetails(mapper.getAreaTypeEntry(areaDto));
+    	AreaDetailsDto areaDetailsDto = mapper.getAreaDetailsDto(areaDetails);
+    	if (!areaDto.getIsGeom()) {
+    		areaDetailsDto.removeGeometry();
+        	return createSuccessResponse(areaDetailsDto.getProperties());
+    	}    	
+    	String geojson = new FeatureToGeoJsonMapper().convert(areaDetailsDto.toFeature());
+    	return createSuccessResponse(new ObjectMapper().readTree(geojson));
     }
 
     public void validateInputParameters(Double lat, Double lon, List<String> areaTypes) {
