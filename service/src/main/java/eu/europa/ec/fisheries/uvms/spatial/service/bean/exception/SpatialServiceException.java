@@ -44,6 +44,10 @@ public class SpatialServiceException extends RuntimeException {
     public Integer getErrorCode() {
         return this.error.getErrorCode();
     }
+    
+    public String getErrorMessageCode() {
+        return this.error.getErrorMessageCode();
+    }
 
     public SpatialServiceErrors getError() {
         return this.error;
