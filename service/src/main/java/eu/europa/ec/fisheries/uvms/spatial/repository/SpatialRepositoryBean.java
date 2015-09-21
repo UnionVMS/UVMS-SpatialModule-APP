@@ -1,7 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.repository;
 
 import eu.europa.ec.fisheries.uvms.spatial.dao.AreaDao;
-import eu.europa.ec.fisheries.uvms.util.SqlPropertyHolder;
+import eu.europa.ec.fisheries.uvms.spatial.util.SqlPropertyHolder;
 import lombok.experimental.Delegate;
 
 import javax.annotation.PostConstruct;

@@ -6,6 +6,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestLocationDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.MeasurementUnit;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Michal Kopyczok on 21-Aug-15.
@@ -16,4 +17,6 @@ public interface SpatialRepository {
     List<ClosestAreaDto> findClosestArea(Point point, MeasurementUnit unit, String areaDbTable);
 
     List<ClosestLocationDto> findClosestlocation(Point point, MeasurementUnit unit, String areaDbTable);
+    
+    List findAreaByCoordinates(Point point, String nativeQueryString);
 }
