@@ -56,7 +56,7 @@ public class AreaDao {
         return executeClosest(queryString, point, unit, areaDbTable, ClosestLocationDto.class);
     }
     
-    public List findAreaByCoordinates(Point point, String nativeQueryString) {
+    public List findAreaOrLocationByCoordinates(Point point, String nativeQueryString) {
     	String wktPoint = convertToWkt(point);
 		int crs = point.getSRID();
 		return createNamedNativeQuery(nativeQueryString, wktPoint, crs).list();

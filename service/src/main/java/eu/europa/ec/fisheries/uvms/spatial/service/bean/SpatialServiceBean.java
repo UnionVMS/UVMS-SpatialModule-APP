@@ -1,7 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import static eu.europa.ec.fisheries.uvms.spatial.util.ColumnAliasNameHelper.getFieldMap;
-import static eu.europa.ec.fisheries.uvms.spatial.util.SpatialTypeEnum.GetEntityClassByType;
+import static eu.europa.ec.fisheries.uvms.spatial.util.SpatialTypeEnum.getEntityClassByType;
 import static eu.europa.ec.fisheries.uvms.spatial.util.SpatialTypeEnum.getNativeQueryByType;
 import static eu.europa.ec.fisheries.uvms.spatial.util.SpatialUtils.convertToPointInWGS84;
 
@@ -53,7 +53,7 @@ public abstract class SpatialServiceBean {
     
     @SuppressWarnings("unchecked")
 	protected Map<String, String> getAreaLocationDetailsById(Number id, AreaLocationTypesEntity areaLocationTypeEntity) {
-		Object object = crudService.findEntityById(GetEntityClassByType(areaLocationTypeEntity.getTypeName()), id);
+		Object object = crudService.findEntityById(getEntityClassByType(areaLocationTypeEntity.getTypeName()), id);
 		if (object == null) {
 			throw new SpatialServiceException(SpatialServiceErrors.ENTITY_NOT_FOUND, areaLocationTypeEntity.getTypeName());
 		}
@@ -63,7 +63,7 @@ public abstract class SpatialServiceBean {
     @SuppressWarnings("rawtypes")
 	protected Map<String, String> getAreaLocationDetailsByCoordinates(Coordinate request, AreaLocationTypesEntity areaLocationTypeEntry) {
     	Point point = convertToPointInWGS84(request.getLongitude(), request.getLatitude(), request.getCrs());
-    	List list = repository.findAreaByCoordinates(point, getNativeQueryByType(areaLocationTypeEntry.getTypeName()));
+    	List list = repository.findAreaOrLocationByCoordinates(point, getNativeQueryByType(areaLocationTypeEntry.getTypeName()));
     	if (list.isEmpty()) {
     		throw new SpatialServiceException(SpatialServiceErrors.ENTITY_NOT_FOUND, areaLocationTypeEntry.getTypeName());
     	}

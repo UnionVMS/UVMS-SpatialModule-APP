@@ -41,7 +41,7 @@ public enum SpatialTypeEnum {
 		return this.entityClass;
 	}
     
-	public static Class GetEntityClassByType(String value) {
+	public static Class getEntityClassByType(String value) {
 		for (SpatialTypeEnum areaType : SpatialTypeEnum.values()) {
 			if(areaType.getType().equalsIgnoreCase(value)) {
 				return areaType.getEntityClass();

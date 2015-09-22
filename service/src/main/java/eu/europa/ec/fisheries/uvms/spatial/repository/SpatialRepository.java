@@ -18,5 +18,5 @@ public interface SpatialRepository {
 
     List<ClosestLocationDto> findClosestlocation(Point point, MeasurementUnit unit, String areaDbTable);
     
-    List findAreaByCoordinates(Point point, String nativeQueryString);
+    List findAreaOrLocationByCoordinates(Point point, String nativeQueryString);
 }
