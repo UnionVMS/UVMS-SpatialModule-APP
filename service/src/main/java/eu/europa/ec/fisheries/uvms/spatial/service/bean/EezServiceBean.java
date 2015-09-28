@@ -1,9 +1,9 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import eu.europa.ec.fisheries.uvms.service.CrudService;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezType;
+import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.EezDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.EezDtoMapper;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.EezTypeMapper;
@@ -20,7 +20,7 @@ import javax.transaction.Transactional;
 public class EezServiceBean implements EezService {
 
     @EJB
-    private CrudService crudService;
+    private SpatialRepository repository;
 
     @Inject
     private EezTypeMapper eezMapper;
@@ -28,14 +28,14 @@ public class EezServiceBean implements EezService {
     @Override
     @SuppressWarnings("unchecked")
     public EezType getEezById(EezSpatialRQ getEezSpatialRQ) {
-        EezEntity eez = (EezEntity) crudService.findEntityById(EezEntity.class, Integer.parseInt(getEezSpatialRQ.getEezId()));
+        EezEntity eez = (EezEntity) repository.findEntityById(EezEntity.class, Integer.parseInt(getEezSpatialRQ.getEezId()));
         return eezMapper.eezEntityToEezType(eez);
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public EezDto getEezById(int id) {
-        EezEntity eez = (EezEntity) crudService.findEntityById(EezEntity.class, id);
+        EezEntity eez = (EezEntity) repository.findEntityById(EezEntity.class, id);
         return EezDtoMapper.INSTANCE.eezEntityToEezDto(eez);
     }
 }

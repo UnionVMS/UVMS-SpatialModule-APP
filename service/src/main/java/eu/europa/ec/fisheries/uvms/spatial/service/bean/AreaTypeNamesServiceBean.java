@@ -1,7 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import eu.europa.ec.fisheries.uvms.service.CrudService;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
+import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
 
 import javax.ejb.EJB;
 import javax.ejb.Local;
@@ -15,11 +15,11 @@ import java.util.List;
 public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
 
     @EJB
-    private CrudService crudService;
+    private SpatialRepository repository;
 
     @Override
     @SuppressWarnings("unchecked")
     public List<String> listAllAreaTypeNames() {
-        return crudService.findEntityByNamedQuery(String.class, QueryNameConstants.FIND_ALL_AREA_TYPE_NAMES);
+        return repository.findEntityByNamedQuery(String.class, QueryNameConstants.FIND_ALL_AREA_TYPE_NAMES);
     }
 }

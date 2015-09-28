@@ -3,6 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 import com.google.common.collect.ImmutableList;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
+import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -22,7 +23,7 @@ public class AreaTypeNamesServiceTest {
     private final static List<String> AREA_TYPES = ImmutableList.of("Portugal", "Belgium", "Poland", "Bulgaria", "India");
 
     @Mock
-    private CrudServiceBean crudService;
+    private SpatialRepository repository;
 
     @InjectMocks
     private AreaTypeNamesService areaTypeNamesService = new AreaTypeNamesServiceBean();
@@ -31,7 +32,7 @@ public class AreaTypeNamesServiceTest {
     @SuppressWarnings("unchecked")
     public void shouldReturnAreaTypes() throws Exception {
         // given
-        when(crudService.findEntityByNamedQuery(String.class, QueryNameConstants.FIND_ALL_AREA_TYPE_NAMES)).thenReturn(AREA_TYPES);
+        when(repository.findEntityByNamedQuery(String.class, QueryNameConstants.FIND_ALL_AREA_TYPE_NAMES)).thenReturn(AREA_TYPES);
 
         // when
         List<String> areaTypeNames = areaTypeNamesService.listAllAreaTypeNames();
@@ -46,7 +47,7 @@ public class AreaTypeNamesServiceTest {
     @SuppressWarnings("unchecked")
     public void shouldNotThrowNullPointerException() throws Exception {
         // given
-        when(crudService.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_ALL_AREAS)).thenReturn(Collections.emptyList());
+        when(repository.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_ALL_AREAS)).thenReturn(Collections.emptyList());
 
         // when
         List<String> areaTypeNames = areaTypeNamesService.listAllAreaTypeNames();
