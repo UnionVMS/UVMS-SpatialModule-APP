@@ -1,6 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import eu.europa.ec.fisheries.uvms.service.CrudService;
+import eu.europa.ec.fisheries.uvms.service.DAO;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
@@ -65,7 +65,7 @@ public class CrudServiceIT {
     private static final String AUSTRALIA = "Australia";
 
     @EJB
-    private CrudService genericDao;
+    private DAO genericDao;
 
     @Before
     public void beforeEach() {

@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import eu.europa.ec.fisheries.uvms.service.DAO;
+import lombok.SneakyThrows;
 import org.geotools.geometry.jts.GeometryBuilder;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +22,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import com.vividsolutions.jts.geom.Point;
 
-import eu.europa.ec.fisheries.uvms.service.CrudService;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.PortsEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationDetails;
@@ -33,9 +34,6 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialService
 @RunWith(MockitoJUnitRunner.class)
 public class LocationDetailsServiceTest {
 
-	@Mock
-	private CrudService crudServiceBean;
-	
 	@Mock
 	private SpatialRepository repository;
 	
@@ -137,9 +135,10 @@ public class LocationDetailsServiceTest {
 	}
 	
 	@SuppressWarnings("unchecked")
+    @SneakyThrows
 	private void mockCrudServiceBean(List<AreaLocationTypesEntity> returnList, Object entity) {
-		Mockito.when(crudServiceBean.findEntityByNamedQuery(Mockito.any(Class.class), Mockito.any(String.class), Mockito.any(Map.class), Mockito.any(Integer.class))).thenReturn(returnList);
-		Mockito.when(crudServiceBean.findEntityById(Mockito.any(Class.class), Mockito.any(Object.class))).thenReturn(entity);
+		Mockito.when(repository.findEntityByNamedQuery(Mockito.any(Class.class), Mockito.any(String.class), Mockito.any(Map.class), Mockito.any(Integer.class))).thenReturn(returnList);
+		Mockito.when(repository.findEntityById(Mockito.any(Class.class), Mockito.any(Object.class))).thenReturn(entity);
 	}
 	
 	private void mockEntityByCoordinate(List list) {

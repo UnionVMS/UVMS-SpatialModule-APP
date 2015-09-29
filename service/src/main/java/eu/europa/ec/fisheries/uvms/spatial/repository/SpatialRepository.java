@@ -1,16 +1,14 @@
 package eu.europa.ec.fisheries.uvms.spatial.repository;
 
 import com.vividsolutions.jts.geom.Point;
-import eu.europa.ec.fisheries.uvms.service.AbstractCrudService;
-import eu.europa.ec.fisheries.uvms.service.CrudService;
+import eu.europa.ec.fisheries.uvms.service.DAO;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestLocationDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.MeasurementUnit;
 
 import java.util.List;
-import java.util.Map;
 
-public interface SpatialRepository extends CrudService {
+public interface SpatialRepository extends DAO {
 
     List<Integer> findAreasIdByLocation(Point point, String areaDbTable);
 

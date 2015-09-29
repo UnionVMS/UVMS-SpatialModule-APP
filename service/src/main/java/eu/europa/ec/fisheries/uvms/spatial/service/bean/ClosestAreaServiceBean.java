@@ -2,7 +2,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.google.common.collect.Maps;
 import com.vividsolutions.jts.geom.Point;
-import eu.europa.ec.fisheries.uvms.service.CrudService;
+import eu.europa.ec.fisheries.uvms.service.DAO;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Area;
@@ -14,6 +14,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.MeasurementUnit;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.util.SpatialUtils;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.ejb.EJB;
@@ -34,9 +35,6 @@ public class ClosestAreaServiceBean implements ClosestAreaService {
 
     @EJB
     private SpatialRepository repository;
-
-    @EJB
-    private CrudService crudService;
 
     @Override
     public List<Area> getClosestAreas(ClosestAreaSpatialRQ request) {
@@ -97,8 +95,9 @@ public class ClosestAreaServiceBean implements ClosestAreaService {
         }
     }
 
+    @SneakyThrows
     private Map<String, String> getAreaType2TableNameMap() {
-        List<AreaLocationTypesEntity> areas = crudService.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_ALL_AREAS);
+        List<AreaLocationTypesEntity> areas = repository.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_ALL_AREAS);
         Map<String, String> areaMap = Maps.newHashMap();
         for (AreaLocationTypesEntity area : areas) {
             areaMap.put(area.getTypeName().toUpperCase(), area.getAreaDbTable());

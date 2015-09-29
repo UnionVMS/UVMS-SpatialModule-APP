@@ -10,12 +10,13 @@ import java.util.Map;
 
 import javax.ejb.EJB;
 
+import eu.europa.ec.fisheries.uvms.service.DAO;
+import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.collect.ImmutableMap;
 import com.vividsolutions.jts.geom.Point;
 
-import eu.europa.ec.fisheries.uvms.service.CrudService;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Coordinate;
@@ -28,17 +29,15 @@ import lombok.extern.slf4j.Slf4j;
 public abstract class SpatialServiceBean {
 	
     protected static final String TYPE_NAME = "typeName";
-    
-    @EJB
-    protected CrudService crudService;
-    
+
     @EJB
     private SpatialRepository repository;
 	
     @SuppressWarnings("unchecked")
+    @SneakyThrows
 	protected AreaLocationTypesEntity getAreaLocationType(String type) {
     	Map<String, String> parameters = ImmutableMap.<String, String>builder().put(TYPE_NAME, type.toUpperCase()).build();
-     	List<AreaLocationTypesEntity> areasLocationTypes = crudService.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_TYPE_BY_ID, parameters, 1);
+     	List<AreaLocationTypesEntity> areasLocationTypes = repository.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_TYPE_BY_ID, parameters, 1);
      	if (areasLocationTypes.isEmpty()) {
      		throw new SpatialServiceException(SpatialServiceErrors.INVALID_AREA_LOCATION_TYPE, areasLocationTypes);
      	}
@@ -52,8 +51,9 @@ public abstract class SpatialServiceBean {
     }
     
     @SuppressWarnings("unchecked")
+    @SneakyThrows
 	protected Map<String, String> getAreaLocationDetailsById(Number id, AreaLocationTypesEntity areaLocationTypeEntity) {
-		Object object = crudService.findEntityById(getEntityClassByType(areaLocationTypeEntity.getTypeName()), id);
+		Object object = repository.findEntityById(getEntityClassByType(areaLocationTypeEntity.getTypeName()), id);
 		if (object == null) {
 			throw new SpatialServiceException(SpatialServiceErrors.ENTITY_NOT_FOUND, areaLocationTypeEntity.getTypeName());
 		}

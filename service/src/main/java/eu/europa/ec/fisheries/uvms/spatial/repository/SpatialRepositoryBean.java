@@ -1,13 +1,12 @@
 package eu.europa.ec.fisheries.uvms.spatial.repository;
 
 import com.vividsolutions.jts.geom.Point;
-import eu.europa.ec.fisheries.uvms.service.AbstractCrudService;
+import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.spatial.dao.AreaDao;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestLocationDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.MeasurementUnit;
 import eu.europa.ec.fisheries.uvms.spatial.util.SqlPropertyHolder;
-import lombok.experimental.Delegate;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -22,7 +21,7 @@ import java.util.List;
 @Stateless
 @Local(value = SpatialRepository.class)
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
-public class SpatialRepositoryBean extends AbstractCrudService implements SpatialRepository {
+public class SpatialRepositoryBean extends AbstractDAO implements SpatialRepository {
 
     @PersistenceContext(unitName = "spatialPU")
     private EntityManager em;

@@ -7,6 +7,7 @@ import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.EezDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.EezDtoMapper;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.EezTypeMapper;
+import lombok.SneakyThrows;
 
 import javax.ejb.EJB;
 import javax.ejb.Local;
@@ -27,12 +28,14 @@ public class EezServiceBean implements EezService {
 
     @Override
     @SuppressWarnings("unchecked")
+    @SneakyThrows
     public EezType getEezById(EezSpatialRQ getEezSpatialRQ) {
         EezEntity eez = (EezEntity) repository.findEntityById(EezEntity.class, Integer.parseInt(getEezSpatialRQ.getEezId()));
         return eezMapper.eezEntityToEezType(eez);
     }
 
     @Override
+    @SneakyThrows
     @SuppressWarnings("unchecked")
     public EezDto getEezById(int id) {
         EezEntity eez = (EezEntity) repository.findEntityById(EezEntity.class, id);

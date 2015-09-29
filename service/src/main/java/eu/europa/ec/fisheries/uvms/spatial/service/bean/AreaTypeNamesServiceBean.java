@@ -2,6 +2,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
+import lombok.SneakyThrows;
 
 import javax.ejb.EJB;
 import javax.ejb.Local;
@@ -19,6 +20,7 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
 
     @Override
     @SuppressWarnings("unchecked")
+    @SneakyThrows
     public List<String> listAllAreaTypeNames() {
         return repository.findEntityByNamedQuery(String.class, QueryNameConstants.FIND_ALL_AREA_TYPE_NAMES);
     }
