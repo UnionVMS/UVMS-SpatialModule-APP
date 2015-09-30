@@ -1,12 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.repository;
 
-import com.vividsolutions.jts.geom.Point;
-import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
-import eu.europa.ec.fisheries.uvms.spatial.dao.AreaDao;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestAreaDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestLocationDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.MeasurementUnit;
-import eu.europa.ec.fisheries.uvms.spatial.util.SqlPropertyHolder;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -16,7 +10,16 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.List;
+
+import com.vividsolutions.jts.geom.Point;
+
+import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
+import eu.europa.ec.fisheries.uvms.spatial.dao.AreaDao;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaLayerDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestLocationDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.MeasurementUnit;
+import eu.europa.ec.fisheries.uvms.spatial.util.SqlPropertyHolder;
 
 @Stateless
 @Local(value = SpatialRepository.class)
@@ -60,4 +63,9 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     public List findAreaOrLocationByCoordinates(Point point, String nativeQueryString) {
         return areaDao.findAreaOrLocationByCoordinates(point, nativeQueryString);
     }
+    
+	@Override
+    public List<AreaLayerDto> findSystemAreaLayerMapping() {
+    	return areaDao.findSystemAreaLayerMapping();
+    } 
 }

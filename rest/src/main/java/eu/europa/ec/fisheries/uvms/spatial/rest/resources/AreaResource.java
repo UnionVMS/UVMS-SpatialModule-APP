@@ -121,6 +121,14 @@ public class AreaResource extends UnionVMSResource {
     	String geojson = new FeatureToGeoJsonMapper().convert(areaDetailsDto.toFeature());
     	return createSuccessResponse(new ObjectMapper().readTree(geojson));
     }
+   
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/arealayers")
+    @Interceptors(value = {ExceptionInterceptor.class})
+    public Response getSystemAreaLayerMapping() {
+    	return createSuccessResponse(areaTypeService.listSystemAreaLayerMapping());
+    }
 
     public void validateInputParameters(Double lat, Double lon, List<String> areaTypes) {
         ValidationUtils.validateCoordinates(lat, lon);

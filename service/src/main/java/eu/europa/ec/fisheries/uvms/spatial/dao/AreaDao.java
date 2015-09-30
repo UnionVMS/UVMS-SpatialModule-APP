@@ -3,11 +3,9 @@ package eu.europa.ec.fisheries.uvms.spatial.dao;
 import static eu.europa.ec.fisheries.uvms.spatial.util.SpatialUtils.convertToWkt;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.EntityManager;
 
-import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
@@ -15,7 +13,8 @@ import org.hibernate.transform.Transformers;
 
 import com.vividsolutions.jts.geom.Point;
 
-import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestLocationDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.MeasurementUnit;
@@ -61,6 +60,11 @@ public class AreaDao {
     	String wktPoint = convertToWkt(point);
 		int crs = point.getSRID();
 		return createNamedNativeQuery(nativeQueryString, wktPoint, crs).list();
+    }
+    
+	@SuppressWarnings("unchecked")
+	public List<AreaLayerDto> findSystemAreaLayerMapping() {		
+		return createQuery(QueryNameConstants.FIND_SYSTEM_AREA_LAYER, AreaLayerDto.class).list();
     }
 
     @SuppressWarnings("unchecked")
@@ -110,4 +114,10 @@ public class AreaDao {
     private String replaceTableName(String queryString, String tableName) {
         return queryString.replace(TABLE_NAME_PLACEHOLDER, tableName);
     }
+    
+	private <T> Query createQuery(String nativeQuery, Class<T> dtoClass) {
+		Query query = getSession().getNamedQuery(nativeQuery);
+		query.setResultTransformer(Transformers.aliasToBean(dtoClass));
+		return query;
+	}
 }

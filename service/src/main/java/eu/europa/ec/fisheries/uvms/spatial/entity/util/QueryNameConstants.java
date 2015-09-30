@@ -15,6 +15,7 @@ public class QueryNameConstants {
     /** Find System */
     public static final String FIND_SYSTEM_AREAS = "AreaType.findSystemAreas";
     public static final String FIND_SYSTEM_LOCATIONS = "AreaType.findSystemLocations";
+    public static final String FIND_SYSTEM_AREA_LAYER = "AreaType.findSystemAreaLayerMappings";
 
     /** Find Area By Id */
     public static final String FIND_TYPE_BY_ID = "AreaType.findAreaById";

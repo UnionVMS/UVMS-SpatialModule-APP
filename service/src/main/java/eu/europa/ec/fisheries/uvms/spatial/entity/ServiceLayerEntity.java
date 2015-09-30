@@ -1,10 +1,22 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
-import eu.europa.ec.fisheries.uvms.spatial.entity.converter.CharBooleanConverter;
-
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import eu.europa.ec.fisheries.uvms.spatial.entity.converter.CharBooleanConverter;
 
 @Entity
 @Table(name = "service_layer", schema = "spatial")
@@ -42,8 +54,7 @@ public class ServiceLayerEntity implements Serializable {
     @Column(name = "short_copyright", nullable = false, length = 255)
     private String shortCopyright;
 
-    @Lob
-    @Column(name = "long_copyright")
+    @Column(columnDefinition = "text", name = "long_copyright")
     private String longCopyright;
 
     @Convert(converter = CharBooleanConverter.class)

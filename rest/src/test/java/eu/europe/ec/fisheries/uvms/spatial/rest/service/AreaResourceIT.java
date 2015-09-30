@@ -1,7 +1,6 @@
 package eu.europe.ec.fisheries.uvms.spatial.rest.service;
 
 import static org.junit.Assert.assertEquals;
-
 import java.net.URL;
 
 import javax.servlet.http.HttpServletResponse;
@@ -26,86 +25,60 @@ public class AreaResourceIT extends AbstractArquillianIT {
 	
 	@ArquillianResource
     private URL deploymentURL;
+	
+	@Test
+	public void getAreaLayerMappingTest(@ArquillianResteasyResource("rest/") ResteasyWebTarget webTarget) {
+		Response response = webTarget.path("/arealayers" ).request().get();		
+		testOk(response);
+	}
     
     @Test
     public void getEezAreaByIdTest(@ArquillianResteasyResource("rest/") ResteasyWebTarget webTarget) {    	
-    	AreaTypeDto areaDto = getareaTypeDto("1", "EEZ", null, null, null, true);
-    	
+    	AreaTypeDto areaDto = getareaTypeDto("1", "EEZ", null, null, null, true);    	
     	Response response = webTarget.path("/areadetails" ).request(MediaType.APPLICATION_JSON).post(Entity.entity(areaDto,MediaType.APPLICATION_JSON));
-    	
-    	assertEquals(HttpServletResponse.SC_OK, response.getStatus());
-    	ResponseDto responseDto = response.readEntity(ResponseDto.class);
-    	assertEquals(HttpServletResponse.SC_OK, responseDto.getCode());
+    	testOk(response);
     } 
     
     @Test
     public void getEezAreaByCoordinatesTest(@ArquillianResteasyResource("rest/") ResteasyWebTarget webTarget) {    	
-    	AreaTypeDto areaDto = getareaTypeDto("1", "EEZ", -9.5, 41.0, 4326, true);
-    	
-    	Response response = webTarget.path("/areadetails" ).request(MediaType.APPLICATION_JSON).post(Entity.entity(areaDto,MediaType.APPLICATION_JSON));
-    	
-    	assertEquals(HttpServletResponse.SC_OK, response.getStatus());
-    	ResponseDto responseDto = response.readEntity(ResponseDto.class);
-    	assertEquals(HttpServletResponse.SC_OK, responseDto.getCode());
+    	AreaTypeDto areaDto = getareaTypeDto("1", "EEZ", -9.5, 41.0, 4326, true);    	
+    	Response response = webTarget.path("/areadetails" ).request(MediaType.APPLICATION_JSON).post(Entity.entity(areaDto,MediaType.APPLICATION_JSON));    	
+    	testOk(response);
     } 
     
     @Test
     public void getRfmoAreaByIdTest(@ArquillianResteasyResource("rest/") ResteasyWebTarget webTarget) {    	
-    	AreaTypeDto areaDto = getareaTypeDto("1", "RFMO", null, null, null, true);
-    	
-    	Response response = webTarget.path("/areadetails" ).request(MediaType.APPLICATION_JSON).post(Entity.entity(areaDto,MediaType.APPLICATION_JSON));
-    	
-    	assertEquals(HttpServletResponse.SC_OK, response.getStatus());
-    	ResponseDto responseDto = response.readEntity(ResponseDto.class);
-    	assertEquals(HttpServletResponse.SC_OK, responseDto.getCode());
+    	AreaTypeDto areaDto = getareaTypeDto("1", "RFMO", null, null, null, true);    	
+    	Response response = webTarget.path("/areadetails" ).request(MediaType.APPLICATION_JSON).post(Entity.entity(areaDto,MediaType.APPLICATION_JSON));    	
+    	testOk(response);
     } 
     
     @Test
     public void serviceExceptionTest(@ArquillianResteasyResource("rest/") ResteasyWebTarget webTarget) {    	
-    	AreaTypeDto areaDto = getareaTypeDto("1", "INVALLID", null, null, null, true);
-    	
-    	Response response = webTarget.path("/areadetails" ).request(MediaType.APPLICATION_JSON).post(Entity.entity(areaDto,MediaType.APPLICATION_JSON));
-    	
-    	assertEquals(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, response.getStatus());
-    	ResponseDto responseDto = response.readEntity(ResponseDto.class);
-    	assertEquals(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, responseDto.getCode());
-    	assertEquals("INVALID_AREA_LOCATION_TYPE", responseDto.getMsg());
+    	AreaTypeDto areaDto = getareaTypeDto("1", "INVALLID", null, null, null, true);    	
+    	Response response = webTarget.path("/areadetails" ).request(MediaType.APPLICATION_JSON).post(Entity.entity(areaDto,MediaType.APPLICATION_JSON));    	
+    	testInternalServerError(response);
     }
     
     @Test
     public void areaTypeInputValidationTest(@ArquillianResteasyResource("rest/") ResteasyWebTarget webTarget) {    	
-    	AreaTypeDto areaDto = getareaTypeDto("1", null, null, null, null, true);
-    	
-    	Response response = webTarget.path("/areadetails" ).request(MediaType.APPLICATION_JSON).post(Entity.entity(areaDto,MediaType.APPLICATION_JSON));
-    	
-    	assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.getStatus());
-    	ResponseDto responseDto = response.readEntity(ResponseDto.class);
-    	assertEquals(HttpServletResponse.SC_BAD_REQUEST, responseDto.getCode());
-    	assertEquals("INPUT_VALIDATION_FAILED", responseDto.getMsg());
+    	AreaTypeDto areaDto = getareaTypeDto("1", null, null, null, null, true);    	
+    	Response response = webTarget.path("/areadetails" ).request(MediaType.APPLICATION_JSON).post(Entity.entity(areaDto,MediaType.APPLICATION_JSON));    	
+    	testBadRequest(response);
     }
     
     @Test
     public void coordinateInputValidationTest(@ArquillianResteasyResource("rest/") ResteasyWebTarget webTarget) {    	
-    	AreaTypeDto areaDto = getareaTypeDto(null, "PORT", 10.0, 10.0, null, true);
-    	
-    	Response response = webTarget.path("/areadetails" ).request(MediaType.APPLICATION_JSON).post(Entity.entity(areaDto,MediaType.APPLICATION_JSON));
-    	
-    	assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.getStatus());
-    	ResponseDto responseDto = response.readEntity(ResponseDto.class);
-    	assertEquals(HttpServletResponse.SC_BAD_REQUEST, responseDto.getCode());
-    	assertEquals("INPUT_VALIDATION_FAILED", responseDto.getMsg());
+    	AreaTypeDto areaDto = getareaTypeDto(null, "PORT", 10.0, 10.0, null, true);    	
+    	Response response = webTarget.path("/areadetails" ).request(MediaType.APPLICATION_JSON).post(Entity.entity(areaDto,MediaType.APPLICATION_JSON));    	
+    	testBadRequest(response);
     }
     
     @Test
     public void isGeomInputValidationTest(@ArquillianResteasyResource("rest/") ResteasyWebTarget webTarget) {    	
-    	AreaTypeDto areaDto = getareaTypeDto(null, "PORT", 10.0, 10.0, null, null);
-    	
-    	Response response = webTarget.path("/areadetails" ).request(MediaType.APPLICATION_JSON).post(Entity.entity(areaDto,MediaType.APPLICATION_JSON));
-    	
-    	assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.getStatus());
-    	ResponseDto responseDto = response.readEntity(ResponseDto.class);
-    	assertEquals(HttpServletResponse.SC_BAD_REQUEST, responseDto.getCode());
-    	assertEquals("INPUT_VALIDATION_FAILED", responseDto.getMsg());
+    	AreaTypeDto areaDto = getareaTypeDto(null, "PORT", 10.0, 10.0, null, null);    	
+    	Response response = webTarget.path("/areadetails" ).request(MediaType.APPLICATION_JSON).post(Entity.entity(areaDto,MediaType.APPLICATION_JSON));    	
+    	testBadRequest(response);
     }
     
     private AreaTypeDto getareaTypeDto(String id, String areaType, Double longitude, Double latitude, Integer crs, Boolean isGeom) {
@@ -118,4 +91,23 @@ public class AreaResourceIT extends AbstractArquillianIT {
     	areaTypeDto.setIsGeom(isGeom);
     	return areaTypeDto;
     }
+    
+    private void testOk(Response response) {
+		assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+		ResponseDto responseDto = response.readEntity(ResponseDto.class);
+    	assertEquals(HttpServletResponse.SC_OK, responseDto.getCode());
+	}
+	
+    private void testBadRequest(Response response) {
+		assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.getStatus());
+    	ResponseDto responseDto = response.readEntity(ResponseDto.class);
+    	assertEquals(HttpServletResponse.SC_BAD_REQUEST, responseDto.getCode());
+    	assertEquals("INPUT_VALIDATION_FAILED", responseDto.getMsg());
+	}
+	
+    private void testInternalServerError(Response response) {
+		assertEquals(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, response.getStatus());
+    	ResponseDto responseDto = response.readEntity(ResponseDto.class);
+    	assertEquals(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, responseDto.getCode());
+	}
 }

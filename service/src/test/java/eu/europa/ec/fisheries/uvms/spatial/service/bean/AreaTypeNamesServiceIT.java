@@ -4,6 +4,8 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaLayerDto;
+
 import javax.ejb.EJB;
 import java.util.List;
 
@@ -28,5 +30,14 @@ public class AreaTypeNamesServiceIT extends AbstractArquillianIT {
         assertNotNull(areaTypeNames);
         assertFalse(areaTypeNames.isEmpty());
     }
+    
+    @Test
+    public void shouldReturnAreaLayerMappings() {
+        // when
+        List<AreaLayerDto> areaLayerMappings = areaTypeNamesService.listSystemAreaLayerMapping();
 
+        //then
+        assertNotNull(areaLayerMappings);
+        assertFalse(areaLayerMappings.isEmpty());
+    }
 }

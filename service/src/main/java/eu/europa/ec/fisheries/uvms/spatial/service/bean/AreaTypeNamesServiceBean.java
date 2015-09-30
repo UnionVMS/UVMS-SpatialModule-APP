@@ -1,14 +1,18 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
-import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
-import lombok.SneakyThrows;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.transaction.Transactional;
-import java.util.List;
+
+import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
+import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaLayerDto;
+import lombok.SneakyThrows;
 
 @Stateless
 @Local(AreaTypeNamesService.class)
@@ -23,5 +27,10 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
     @SneakyThrows
     public List<String> listAllAreaTypeNames() {
         return repository.findEntityByNamedQuery(String.class, QueryNameConstants.FIND_ALL_AREA_TYPE_NAMES);
+    }
+    
+    @Override
+    public List<AreaLayerDto> listSystemAreaLayerMapping() {    	
+    	return repository.findSystemAreaLayerMapping();
     }
 }
