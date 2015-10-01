@@ -1,6 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.repository;
 
 import java.util.List;
+import java.util.Map;
 
 import com.vividsolutions.jts.geom.Point;
 
@@ -21,4 +22,6 @@ public interface SpatialRepository extends DAO {
     List findAreaOrLocationByCoordinates(Point point, String nativeQueryString);
     
     List<AreaLayerDto> findSystemAreaLayerMapping();
+    
+    List<Map<String, String>> findAreaByFilter(String areaType, String filter);
 }

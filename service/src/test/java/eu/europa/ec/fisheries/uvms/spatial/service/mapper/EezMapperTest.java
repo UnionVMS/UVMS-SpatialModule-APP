@@ -36,7 +36,7 @@ public class EezMapperTest {
         eez = createEez();
         EezType eezType = mapper.eezEntityToEezType(eez);
         assertEquals(eezType.getRemarks(), eez.getRemarks());
-        assertEquals(eezType.getEez(), eez.getEez());
+        assertEquals(eezType.getName(), eez.getName());
         assertEquals(eezType.getCountry(), eez.getCountry());
         assertEquals(eezType.getGeometry().getGeometry(), "POINT (1 11)");
     }
@@ -44,7 +44,7 @@ public class EezMapperTest {
     private EezEntity createEez() {
         eez = new EezEntity();
         eez.setRemarks("remarks");
-        eez.setEez("eez");
+        eez.setName("eez");
         eez.setCountry("country");
         eez.setGeom(new GeometryFactory().createPoint(new Coordinate(1, 11)));
         return eez;

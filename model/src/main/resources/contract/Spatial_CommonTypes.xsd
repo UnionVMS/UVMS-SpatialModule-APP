@@ -20,13 +20,13 @@
         <xs:sequence>
             <xs:element name="Gid" type="xs:integer" />
             <xs:element name="Geometry" type="GeometryType" />
-            <xs:element name="Eez" type="xs:string" />
+            <xs:element name="Name" type="xs:string" />
             <xs:element name="Country" type="xs:string" />
             <xs:element name="Sovereign" type="xs:string" />
             <xs:element name="Remarks" type="xs:string" />
             <xs:element name="SovId" type="xs:int" />
             <xs:element name="EezId" type="xs:int" />
-            <xs:element name="Iso3Digit" type="xs:string" />
+            <xs:element name="Code" type="xs:string" />
             <xs:element name="Mrgid" type="xs:integer" />
             <xs:element name="DateChang" type="xs:string" />
             <xs:element name="AreaM2" type="xs:double" />

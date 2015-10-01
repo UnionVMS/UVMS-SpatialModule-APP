@@ -16,11 +16,11 @@ public class EezDto {
 
     private static final String GID = "gid";
     private static final String GEOMETRY = "geometry";
-    private static final String EEZ = "eez";
+    private static final String NAME = "name";
     private static final String COUNTRY = "country";
     private static final String SOV_ID = "sovId";
     private static final String EEZ_ID = "eezId";
-    private static final String ISO_3_DIGIT = "iso3Digit";
+    private static final String CODE = "code";
     private static final String MRG_ID = "mrgId";
     private static final String AREA_M_2 = "areaM2";
     private static final String LONGITUDE = "longitude";
@@ -30,11 +30,11 @@ public class EezDto {
     private static final String REMARKS = "remarks";
 
     private Geometry geometry;
-    private String eez;
+    private String name;
     private String country;
     private String sovereign;
     private String remarks;
-    private String iso3Digit;
+    private String code;
     private String dateChange;
     private Integer sovId;
     private Integer eezId;
@@ -51,11 +51,11 @@ public class EezDto {
         sb.setName("EEZ");
         sb.add(GEOMETRY, MultiPolygon.class);
         sb.add(GID, BigInteger.class);
-        sb.add(EEZ, String.class);
+        sb.add(NAME, String.class);
         sb.add(COUNTRY, String.class);
         sb.add(SOV_ID, Integer.class);
         sb.add(EEZ_ID, Integer.class);
-        sb.add(ISO_3_DIGIT, String.class);
+        sb.add(CODE, String.class);
         sb.add(MRG_ID, BigInteger.class);
         sb.add(AREA_M_2, Double.class);
         sb.add(LONGITUDE, Double.class);
@@ -70,11 +70,11 @@ public class EezDto {
         SimpleFeatureBuilder featureBuilder = new SimpleFeatureBuilder(EEZ_FEATURE);
         featureBuilder.set(GEOMETRY, getGeometry());
         featureBuilder.set(GID, getGid());
-        featureBuilder.set(EEZ, getEez());
+        featureBuilder.set(NAME, getName());
         featureBuilder.set(COUNTRY, getCountry());
         featureBuilder.set(SOV_ID, getSovId());
         featureBuilder.set(EEZ_ID, getEezId());
-        featureBuilder.set(ISO_3_DIGIT, getIso3Digit());
+        featureBuilder.set(CODE, getCode());
         featureBuilder.set(MRG_ID, getMrgid());
         featureBuilder.set(AREA_M_2, getAreaM2());
         featureBuilder.set(LONGITUDE, getLongitude());
@@ -101,12 +101,12 @@ public class EezDto {
         this.geometry = geometry;
     }
 
-    public String getEez() {
-        return eez;
+    public String getName() {
+        return name;
     }
 
-    public void setEez(String eez) {
-        this.eez = eez;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getCountry() {
@@ -149,12 +149,12 @@ public class EezDto {
         this.eezId = eezId;
     }
 
-    public String getIso3Digit() {
-        return iso3Digit;
+    public String getCode() {
+        return code;
     }
 
-    public void setIso3Digit(String iso3Digit) {
-        this.iso3Digit = iso3Digit;
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public BigInteger getMrgid() {

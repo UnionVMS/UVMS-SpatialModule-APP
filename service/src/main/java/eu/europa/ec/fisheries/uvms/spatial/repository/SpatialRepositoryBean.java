@@ -1,6 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.repository;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -67,5 +68,10 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
 	@Override
     public List<AreaLayerDto> findSystemAreaLayerMapping() {
     	return areaDao.findSystemAreaLayerMapping();
-    } 
+    }
+
+	@Override
+	public List<Map<String, String>> findAreaByFilter(String areaType, String filter) {
+		return areaDao.findAreaByFilter(areaType, filter);
+	}
 }

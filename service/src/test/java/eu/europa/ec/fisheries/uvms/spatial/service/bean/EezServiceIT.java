@@ -22,7 +22,7 @@ public class EezServiceIT extends AbstractArquillianIT {
         eezSpatialRQ.setEezId("123");
         EezType eez = service.getEezById(eezSpatialRQ);
         assertNotNull(eez);
-        assertNotNull(eez.getEez());
+        assertNotNull(eez.getName());
     }
 
 }

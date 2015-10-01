@@ -80,7 +80,7 @@ public class CrudServiceIT {
         EezEntity createdEez = (EezEntity) genericDao.createEntity(eez);
         assertNotNull(createdEez);
         assertEquals(createdEez.getRemarks(), REMARKS);
-        assertEquals(createdEez.getEez(), EEZ);
+        assertEquals(createdEez.getName(), EEZ);
     }
 
     @Test
@@ -100,7 +100,7 @@ public class CrudServiceIT {
     private EezEntity createEezEntity() {
         EezEntity eez = new EezEntity();
         eez.setRemarks(REMARKS);
-        eez.setEez(EEZ);
+        eez.setName(EEZ);
         return eez;
     }
 }

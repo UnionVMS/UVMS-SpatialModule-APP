@@ -21,6 +21,7 @@ import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.service.interceptor.ValidationInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaDetailsDto;
+import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaFilterDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaTypeDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseCode;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseDto;
@@ -32,6 +33,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaByLocationService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaDetailsService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.ClosestAreaService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.SearchAreaService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestAreaDto;
 import lombok.extern.slf4j.Slf4j;
@@ -51,6 +53,9 @@ public class AreaResource extends UnionVMSResource {
     
     @EJB
     private AreaDetailsService areaDetailsService;
+    
+	@EJB
+	private SearchAreaService searchAreaService;
     
     private AreaLocationDtoMapper mapper = AreaLocationDtoMapper.INSTANCE;
 
@@ -128,6 +133,15 @@ public class AreaResource extends UnionVMSResource {
     @Interceptors(value = {ExceptionInterceptor.class})
     public Response getSystemAreaLayerMapping() {
     	return createSuccessResponse(areaTypeService.listSystemAreaLayerMapping());
+    }
+    
+    @POST
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/areasbyfilter")
+    @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
+    public Response getAreasByFilter(AreaFilterDto areaFilterDto) {
+    	return createSuccessResponse(searchAreaService.getAreasByFilter(areaFilterDto.getAreaType(), areaFilterDto.getFilter()));
     }
 
     public void validateInputParameters(Double lat, Double lon, List<String> areaTypes) {

@@ -3,12 +3,14 @@ package eu.europa.ec.fisheries.uvms.spatial.dao;
 import static eu.europa.ec.fisheries.uvms.spatial.util.SpatialUtils.convertToWkt;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
+import org.hibernate.transform.AliasToEntityMapResultTransformer;
 import org.hibernate.transform.Transformers;
 
 import com.vividsolutions.jts.geom.Point;
@@ -28,8 +30,10 @@ public class AreaDao {
     private static final String FIND_AREAS_ID_BY_LOCATION = "sql.findAreasIdByLocation";
     private static final String CLOSEST_AREA_QUERY = "sql.findClosestArea";
     private static final String CLOSEST_LOCATION_QUERY = "sql.findClosestLocation";
-    private static final String FIND_AREA_BY_COORDINATE = "sql.findAreaByCoordinate";
     private static final String TABLE_NAME_PLACEHOLDER = "{tableName}";
+    private static final String SEARCH_AREA = "sql.searchArea"; 
+    private static final String NAME_PLACEHOLDER = "{name}";
+    private static final String CODE_PLACEHOLDER = "{code}";
 
     private SqlPropertyHolder propertyHolder;
     private EntityManager em;
@@ -66,6 +70,13 @@ public class AreaDao {
 	public List<AreaLayerDto> findSystemAreaLayerMapping() {		
 		return createQuery(QueryNameConstants.FIND_SYSTEM_AREA_LAYER, AreaLayerDto.class).list();
     }
+	
+	@SuppressWarnings("unchecked")
+	public List<Map<String, String>> findAreaByFilter(String areaType, String filter) {
+		String queryString = propertyHolder.getProperty(SEARCH_AREA);
+		queryString = replaceSearchStrings(queryString, areaType, filter);
+		return createSQLQuery(queryString).list();
+	}
 
     @SuppressWarnings("unchecked")
     private List<Integer> executeAreasByLocation(String queryString, Point point, String areaDbTable) {
@@ -93,6 +104,12 @@ public class AreaDao {
         return sqlQuery;
     }
     
+	private SQLQuery createSQLQuery(String queryString) {
+		SQLQuery sqlQuery = getSession().createSQLQuery(queryString);
+		sqlQuery.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
+		return sqlQuery;
+	}
+    
     private Query createNamedNativeQuery(String nativeQueryString, String wktPoint, int crs) {
         Query query = getSession().getNamedQuery(nativeQueryString);
         query.setParameter(WKT, wktPoint);
@@ -106,6 +123,12 @@ public class AreaDao {
         sqlQuery.setInteger(CRS, crs);
         return sqlQuery;
     }
+    
+	private <T> Query createQuery(String nativeQuery, Class<T> dtoClass) {
+		Query query = getSession().getNamedQuery(nativeQuery);
+		query.setResultTransformer(Transformers.aliasToBean(dtoClass));
+		return query;
+	}
 
     private Session getSession() {
         return em.unwrap(Session.class);
@@ -114,10 +137,8 @@ public class AreaDao {
     private String replaceTableName(String queryString, String tableName) {
         return queryString.replace(TABLE_NAME_PLACEHOLDER, tableName);
     }
-    
-	private <T> Query createQuery(String nativeQuery, Class<T> dtoClass) {
-		Query query = getSession().getNamedQuery(nativeQuery);
-		query.setResultTransformer(Transformers.aliasToBean(dtoClass));
-		return query;
+	
+	private String replaceSearchStrings(String queryString, String tableName, String filter) {
+		return queryString.replace(TABLE_NAME_PLACEHOLDER, tableName).replace(NAME_PLACEHOLDER, filter).replace(CODE_PLACEHOLDER, filter);
 	}
 }

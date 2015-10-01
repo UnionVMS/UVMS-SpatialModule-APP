@@ -17,6 +17,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import eu.europa.ec.fisheries.uvms.rest.dto.ResponseDto;
+import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaFilterDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaTypeDto;
 
 @RunWith(Arquillian.class)
@@ -25,6 +26,13 @@ public class AreaResourceIT extends AbstractArquillianIT {
 	
 	@ArquillianResource
     private URL deploymentURL;
+	
+	@Test
+	public void getAreaFilterTest(@ArquillianResteasyResource("rest/") ResteasyWebTarget webTarget) {
+		AreaFilterDto areaFilterDto = new AreaFilterDto("eez", "islands");
+		Response response = webTarget.path("/areasbyfilter").request(MediaType.APPLICATION_JSON).post(Entity.entity(areaFilterDto,MediaType.APPLICATION_JSON));
+		testOk(response);
+	}
 	
 	@Test
 	public void getAreaLayerMappingTest(@ArquillianResteasyResource("rest/") ResteasyWebTarget webTarget) {

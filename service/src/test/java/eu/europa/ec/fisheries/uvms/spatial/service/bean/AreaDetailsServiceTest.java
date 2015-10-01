@@ -196,11 +196,11 @@ public class AreaDetailsServiceTest {
 		eezEntity.setAreaM2(50.0);
 		eezEntity.setCountry("Belgium");
 		eezEntity.setDateChang(String.valueOf(new Date().getTime()));
-		eezEntity.setEez("EEZ");
+		eezEntity.setName("EEZ");
 		eezEntity.setEezId(123);
 		eezEntity.setGeom(new GeometryBuilder().point());
 		eezEntity.setGid(1);
-		eezEntity.setIso3digit("iso3digit");
+		eezEntity.setCode("iso3digit");
 		eezEntity.setLatitude(345.60);
 		eezEntity.setLongitude(234.54);
 		eezEntity.setMrgid(new BigDecimal("100"));
@@ -216,7 +216,7 @@ public class AreaDetailsServiceTest {
 		rfmoEntity.setGeom(new GeometryBuilder().point());
 		rfmoEntity.setGid(1);
 		rfmoEntity.setName("RFMO");
-		rfmoEntity.setRfmo("Test RFMO");
+		rfmoEntity.setCode("Test RFMO");
 		rfmoEntity.setTuna("no");
 		return rfmoEntity;
 	}

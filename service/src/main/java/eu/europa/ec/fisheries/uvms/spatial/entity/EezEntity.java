@@ -47,9 +47,9 @@ public class EezEntity implements Serializable {
     @ColumnAliasName(aliasName ="geometry")
 	private Geometry geom;
 
-    @Column(name = "eez", length = 200)
-    @ColumnAliasName(aliasName ="eez")
-	private String eez;
+    @Column(name = "name", length = 200)
+    @ColumnAliasName(aliasName ="name")
+	private String name;
 
     @Column(name = "country", length = 100)
     @ColumnAliasName(aliasName ="country")
@@ -71,9 +71,9 @@ public class EezEntity implements Serializable {
     @ColumnAliasName(aliasName ="eezId")
 	private Integer eezId;
 
-    @Column(name = "iso_3digit", length = 5)
-    @ColumnAliasName(aliasName ="iso3digit")
-	private String iso3digit;
+    @Column(name = "code", length = 5)
+    @ColumnAliasName(aliasName ="code")
+	private String code;
 
     @Column(name = "mrgid")
     @ColumnAliasName(aliasName ="mrgid")
@@ -118,12 +118,12 @@ public class EezEntity implements Serializable {
 		this.geom = geom;
 	}
 
-	public String getEez() {
-		return this.eez;
+	public String getName() {
+		return this.name;
 	}
 
-	public void setEez(String eez) {
-		this.eez = eez;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getCountry() {
@@ -166,12 +166,12 @@ public class EezEntity implements Serializable {
 		this.eezId = eezId;
 	}
 
-	public String getIso3digit() {
-		return this.iso3digit;
+	public String getCode() {
+		return this.code;
 	}
 
-	public void setIso3digit(String iso3digit) {
-		this.iso3digit = iso3digit;
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 	public BigDecimal getMrgid() {

@@ -46,9 +46,9 @@ public class RfmoEntity implements Serializable {
     @ColumnAliasName(aliasName="geometry")
 	private Geometry geom;
     
-    @Column(name = "rfmo", length = 10)
-    @ColumnAliasName(aliasName="rfmo")
-	private String rfmo;
+    @Column(name = "code", length = 10)
+    @ColumnAliasName(aliasName="code")
+	private String code;
     
     @Column(name = "name", length = 125)
     @ColumnAliasName(aliasName="name")
@@ -77,12 +77,12 @@ public class RfmoEntity implements Serializable {
 		this.geom = geom;
 	}
 
-	public String getRfmo() {
-		return this.rfmo;
+	public String getCode() {
+		return this.code;
 	}
 
-	public void setRfmo(String rfmo) {
-		this.rfmo = rfmo;
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 	public String getName() {
