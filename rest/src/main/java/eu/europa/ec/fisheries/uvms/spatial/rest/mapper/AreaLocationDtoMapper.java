@@ -23,6 +23,8 @@ import eu.europa.ec.fisheries.uvms.spatial.rest.dto.LocationTypeDto;
 @Mapper
 public abstract class AreaLocationDtoMapper {
 	
+	private static String AREA_TYPE = "areaType";
+	
 	public static AreaLocationDtoMapper INSTANCE = Mappers.getMapper(AreaLocationDtoMapper.class);
 	
 	public abstract AreaTypeEntry getAreaTypeEntry(AreaTypeDto areaDto);
@@ -45,6 +47,9 @@ public abstract class AreaLocationDtoMapper {
 		Map<String, String> propertyMap = new HashMap<String, String>();
 		for (AreaProperty property : areaDetails.getAreaProperty()) {
 			propertyMap.put(property.getPropertyName(), property.getPropertyValue());
+		}
+		if (!propertyMap.isEmpty()) {
+			propertyMap.put(AREA_TYPE, String.valueOf(areaDetails.getAreaType().getAreaType()).toUpperCase());
 		}
 		return propertyMap;
 	}
