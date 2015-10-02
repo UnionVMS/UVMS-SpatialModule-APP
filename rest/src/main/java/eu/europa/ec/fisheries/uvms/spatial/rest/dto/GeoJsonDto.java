@@ -10,11 +10,16 @@ import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.ParseException;
+import com.vividsolutions.jts.io.WKTReader;
+import com.vividsolutions.jts.io.WKTWriter;
 
 public abstract class GeoJsonDto {
 	
 	private static String GEOMETRY = "geometry";
+	
+	private static String EXTENT = "extent";
 	
 	protected Map<String, String> properties = new HashMap<String, String>();
 	
@@ -63,10 +68,17 @@ public abstract class GeoJsonDto {
     }
     
     public Map<String, String> removeGeometry() {
-    	if(properties.containsKey(GEOMETRY)) {
-    		properties.remove(GEOMETRY);
-    	}
-    	return properties;
+    	try {
+    		if(properties.containsKey(GEOMETRY)) {
+        		Geometry geometry = new WKTReader().read(properties.get(GEOMETRY));
+        		String extend = new WKTWriter().write(geometry.getEnvelope());
+        		properties.put(EXTENT, extend);
+        		properties.remove(GEOMETRY);
+        	}
+        	return properties;
+    	} catch (ParseException e) {
+    		return properties;
+    	}    	
     }
 
 }
