@@ -62,11 +62,16 @@ public abstract class SpatialServiceBean {
     
     @SuppressWarnings("rawtypes")
 	protected Map<String, String> getAreaLocationDetailsByCoordinates(Coordinate request, AreaLocationTypesEntity areaLocationTypeEntry) {
+    	List list = getAllAreaByCoordinates(request, areaLocationTypeEntry);
+    	return getFieldMap(list.get(0));
+    }
+    
+    protected List getAllAreaByCoordinates(Coordinate request, AreaLocationTypesEntity areaLocationTypeEntry) {
     	Point point = convertToPointInWGS84(request.getLongitude(), request.getLatitude(), request.getCrs());
     	List list = repository.findAreaOrLocationByCoordinates(point, getNativeQueryByType(areaLocationTypeEntry.getTypeName()));
     	if (list.isEmpty()) {
     		throw new SpatialServiceException(SpatialServiceErrors.ENTITY_NOT_FOUND, areaLocationTypeEntry.getTypeName());
     	}
-    	return getFieldMap(list.get(0));
+    	return list;
     }
 }

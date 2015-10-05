@@ -20,6 +20,7 @@ import eu.europa.ec.fisheries.uvms.rest.FeatureToGeoJsonMapper;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.service.interceptor.ValidationInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationDetails;
+import eu.europa.ec.fisheries.uvms.spatial.rest.dto.LocationDetailsDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.LocationTypeDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseCode;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseDto;
@@ -73,8 +74,8 @@ public class LocationResource extends UnionVMSResource {
     @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
     public Response getLocationDetails(LocationTypeDto locationDto) throws Exception {
     	LocationDetails locationDetails = locationDetailsService.getLocationDetails(mapper.getLocationTypeEntry(locationDto));
-    	String geojson = new FeatureToGeoJsonMapper().convert(mapper.getLocationDetailsDto(locationDetails).toFeature());
-    	return createSuccessResponse(new ObjectMapper().readTree(geojson));
+    	LocationDetailsDto locationDetailsDto = mapper.getLocationDetailsDto(locationDetails);
+    	return createSuccessResponse(locationDetailsDto.convert());
     }
 
     private void validateInputParameters(Double lat, Double lon, List<String> locationTypes) {

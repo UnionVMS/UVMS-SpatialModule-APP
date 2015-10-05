@@ -1,8 +1,11 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
+
+import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
@@ -34,9 +37,10 @@ public class AreaDetailsServiceIT extends AbstractArquillianIT {
 		areaCoordinate.setLatitude(41.0);
 		areaCoordinate.setLongitude(-9.5);
 		areaCoordinate.setCrs(4326);
-		AreaDetails areaDetails = areaDetailsService.getAreaDetails(areaCoordinate);
-		assertNotNull(areaDetails.getAreaProperty());
-		assertEquals(areaDetails.getAreaProperty().isEmpty(), false);
+		List<AreaDetails> areaDetails = areaDetailsService.getAreaDetailsByLocation(areaCoordinate);
+		assertFalse(areaDetails.isEmpty());
+		assertNotNull(areaDetails.get(0).getAreaProperty());
+		assertEquals(areaDetails.get(0).getAreaProperty().isEmpty(), false);
 	}
 	
 	@Test
@@ -47,7 +51,7 @@ public class AreaDetailsServiceIT extends AbstractArquillianIT {
 			areaCoordinate.setLatitude(410.0);
 			areaCoordinate.setLongitude(-90.5);
 			areaCoordinate.setCrs(4326);
-			areaDetailsService.getAreaDetails(areaCoordinate);
+			areaDetailsService.getAreaDetailsByLocation(areaCoordinate);
 		} catch (Exception e) {
 			assertEquals(5010, ((SpatialServiceException)((EJBException) e).getCausedByException()).getError().getErrorCode().intValue());
 		}
@@ -61,7 +65,7 @@ public class AreaDetailsServiceIT extends AbstractArquillianIT {
 			areaCoordinate.setLatitude(41.0);
 			areaCoordinate.setLongitude(-9.5);
 			areaCoordinate.setCrs(43260);
-			areaDetailsService.getAreaDetails(areaCoordinate);
+			areaDetailsService.getAreaDetailsByLocation(areaCoordinate);
 		} catch (Exception e) {
 			assertEquals(5002, ((SpatialServiceException)((EJBException) e).getCausedByException()).getError().getErrorCode().intValue());
 		}

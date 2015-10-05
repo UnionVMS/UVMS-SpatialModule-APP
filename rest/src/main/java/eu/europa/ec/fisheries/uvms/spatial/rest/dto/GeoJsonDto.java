@@ -45,7 +45,7 @@ public abstract class GeoJsonDto {
 		this.properties = properties;
 	}
 
-	protected SimpleFeatureType build(Class geometryType) {
+	protected SimpleFeatureType build(Class geometryType, Map<String, String> properties) {
         SimpleFeatureTypeBuilder sb = new SimpleFeatureTypeBuilder();
         sb.setCRS(DefaultGeographicCRS.WGS84);
         sb.setName(type.toUpperCase());
@@ -60,7 +60,16 @@ public abstract class GeoJsonDto {
     }
     
     public SimpleFeature toFeature(Class geometryType) throws ParseException {
-        SimpleFeatureBuilder featureBuilder = new SimpleFeatureBuilder(build(geometryType));
+    	return toFeature(geometryType, properties);
+        /*SimpleFeatureBuilder featureBuilder = new SimpleFeatureBuilder(build(geometryType));
+        for (Entry<String, String> entrySet : properties.entrySet()) {
+        	featureBuilder.set(entrySet.getKey(), entrySet.getValue());
+        }
+        return featureBuilder.buildFeature(null);*/
+    }
+    
+    public SimpleFeature toFeature(Class geometryType, Map<String, String> properties) throws ParseException {
+        SimpleFeatureBuilder featureBuilder = new SimpleFeatureBuilder(build(geometryType, properties));
         for (Entry<String, String> entrySet : properties.entrySet()) {
         	featureBuilder.set(entrySet.getKey(), entrySet.getValue());
         }
@@ -68,17 +77,19 @@ public abstract class GeoJsonDto {
     }
     
     public Map<String, String> removeGeometry() {
-    	try {
-    		if(properties.containsKey(GEOMETRY)) {
-        		Geometry geometry = new WKTReader().read(properties.get(GEOMETRY));
-        		String extend = new WKTWriter().write(geometry.getEnvelope());
-        		properties.put(EXTENT, extend);
-        		properties.remove(GEOMETRY);
-        	}
-        	return properties;
-    	} catch (ParseException e) {
-    		return properties;
-    	}    	
+    	if(properties.containsKey(GEOMETRY)) {
+    		properties.put(EXTENT, getExtend(properties.get(GEOMETRY)));
+    		properties.remove(GEOMETRY);
+    	}
+    	return properties;   	
     }
 
+    protected String getExtend(String geometry) {
+    	try {    	
+    		Geometry geom = new WKTReader().read(geometry);
+    		return new WKTWriter().write(geom.getEnvelope());
+    	} catch (ParseException e) {
+    		return geometry;
+    	}
+    }
 }

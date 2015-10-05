@@ -60,17 +60,14 @@ public class AreaDetailsServiceTest {
 		EezEntity eezEntity = getMockedEezEntity();		
 		mockCrudServiceBean(areaEntities, eezEntity);
 		mockEntityByCoordinate(Arrays.asList(eezEntity));
-		AreaDetailsSpatialRequest areaDetailsSpatialRequest = new AreaDetailsSpatialRequest();
-        AreaTypeEntry areaTypeEntry = new AreaTypeEntry();
-        areaTypeEntry.setAreaType("eez");
-        areaTypeEntry.setLatitude(41.0);
-        areaTypeEntry.setLongitude(-9.5);
-        areaTypeEntry.setCrs(4326);
-        areaDetailsSpatialRequest.setAreaType(areaTypeEntry);
-		AreaDetailsSpatialRequest request = areaDetailsSpatialRequest;
-        AreaDetails areaDetails = areaDetailsServiceBean.getAreaDetails(request);		
-		assertNotNull(areaDetails.getAreaProperty());
-		assertEquals(areaDetails.getAreaProperty().isEmpty(), false);
+        AreaTypeEntry request = new AreaTypeEntry();
+        request.setAreaType("eez");
+        request.setLatitude(41.0);
+        request.setLongitude(-9.5);
+        request.setCrs(4326);
+        List<AreaDetails> areaDetails = areaDetailsServiceBean.getAreaDetailsByLocation(request);		
+		assertNotNull(areaDetails.get(0).getAreaProperty());
+		assertEquals(areaDetails.get(0).getAreaProperty().isEmpty(), false);
 	}
 	
 	@Test(expected=SpatialServiceException.class)
@@ -80,15 +77,12 @@ public class AreaDetailsServiceTest {
 		EezEntity eezEntity = getMockedEezEntity();		
 		mockCrudServiceBean(areaEntities, eezEntity);
 		mockEntityByCoordinate(new ArrayList());
-		AreaDetailsSpatialRequest areaDetailsSpatialRequest = new AreaDetailsSpatialRequest();
-        AreaTypeEntry areaTypeEntry = new AreaTypeEntry();
-        areaTypeEntry.setAreaType("eez");
-        areaTypeEntry.setLatitude(41.0);
-        areaTypeEntry.setLongitude(-9.5);
-        areaTypeEntry.setCrs(4326);
-        areaDetailsSpatialRequest.setAreaType(areaTypeEntry);
-		AreaDetailsSpatialRequest request = areaDetailsSpatialRequest;
-        areaDetailsServiceBean.getAreaDetails(request);
+        AreaTypeEntry request = new AreaTypeEntry();
+        request.setAreaType("eez");
+        request.setLatitude(41.0);
+        request.setLongitude(-9.5);
+        request.setCrs(4326);
+        areaDetailsServiceBean.getAreaDetailsByLocation(request);
 	}
 	
 	/**

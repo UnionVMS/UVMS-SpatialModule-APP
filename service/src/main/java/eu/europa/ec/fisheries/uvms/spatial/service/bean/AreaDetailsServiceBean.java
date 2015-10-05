@@ -1,5 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
+import static eu.europa.ec.fisheries.uvms.spatial.util.ColumnAliasNameHelper.getFieldMap;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,11 +27,11 @@ public class AreaDetailsServiceBean extends SpatialServiceBean implements AreaDe
 
     @Override
     public AreaDetails getAreaDetails(AreaDetailsSpatialRequest request) {
-    	return getAreaDetails(request.getAreaType());
+    	return getAreaDetailsById(request.getAreaType());
     }
     
     @Override
-    public AreaDetails getAreaDetails(AreaTypeEntry request) {
+    public AreaDetails getAreaDetailsById(AreaTypeEntry request) {
     	AreaLocationTypesEntity areaType = getAreaLocationType(request.getAreaType());
     	if (areaType.getIsSystemWide()) {
     		return getSystemAreaDetails(request, areaType);
@@ -37,16 +39,32 @@ public class AreaDetailsServiceBean extends SpatialServiceBean implements AreaDe
     		// TODO Get area details for custom areas and User Areas
     		throw new NotImplementedException("Not implemented");
     	} 
+    }    
+    
+    @Override
+    public List<AreaDetails> getAreaDetailsByLocation(AreaTypeEntry request) {
+    	AreaLocationTypesEntity areaType = getAreaLocationType(request.getAreaType());
+    	if (areaType.getIsSystemWide()) {
+    		List allAreas = getAllAreaByCoordinates(request, areaType);
+    		return getAllAreaDetails(allAreas, request);
+    	} else {
+    		// TODO Get area details for custom areas and User Areas
+    		throw new NotImplementedException("Not implemented");
+    	}
     }
     
-    private AreaDetails getSystemAreaDetails(AreaTypeEntry request, AreaLocationTypesEntity areaType) {
-    	Map<String, String> properties;
-    	if (request.getId() != null) {
-    		validateId(request.getId());
-    		properties = getAreaLocationDetailsById(Integer.parseInt(request.getId()), areaType);
-    	} else {
-    		properties = getAreaLocationDetailsByCoordinates(request, areaType);
-    	}
+    private List<AreaDetails> getAllAreaDetails(List allAreas, AreaTypeEntry request) {
+    	List<AreaDetails> areaDetailsList = new ArrayList<AreaDetails>();
+		for (int i = 0 ; i < allAreas.size() ; i ++) {
+			Map<String, String> properties = getFieldMap(allAreas.get(i));
+			areaDetailsList.add(createAreaDetailsSpatialResponse(properties, request));
+		}
+		return areaDetailsList;
+	}
+
+	private AreaDetails getSystemAreaDetails(AreaTypeEntry request, AreaLocationTypesEntity areaType) {
+		validateId(request.getId());
+    	Map<String, String> properties = getAreaLocationDetailsById(Integer.parseInt(request.getId()), areaType);
     	return createAreaDetailsSpatialResponse(properties, request);
     }
 

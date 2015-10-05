@@ -14,9 +14,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import eu.europa.ec.fisheries.uvms.rest.FeatureToGeoJsonMapper;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.service.interceptor.ValidationInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
@@ -116,15 +113,12 @@ public class AreaResource extends UnionVMSResource {
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/areadetails")
     @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
-    public Response getAreaDetails(AreaTypeDto areaDto) throws Exception {
-    	AreaDetails areaDetails = areaDetailsService.getAreaDetails(mapper.getAreaTypeEntry(areaDto));
-    	AreaDetailsDto areaDetailsDto = mapper.getAreaDetailsDto(areaDetails);
-    	if (!areaDto.getIsGeom()) {
-    		areaDetailsDto.removeGeometry();
-        	return createSuccessResponse(areaDetailsDto.getProperties());
-    	}    	
-    	String geojson = new FeatureToGeoJsonMapper().convert(areaDetailsDto.toFeature());
-    	return createSuccessResponse(new ObjectMapper().readTree(geojson));
+    public Response getAreaDetails(AreaTypeDto areaDto) throws Exception { 	
+    	if (areaDto.getId() != null) {
+    		return getAreaDetailsById(areaDto);
+    	} else {
+    		return getAreaDetailsByLocation(areaDto);
+    	}
     }
    
     @GET
@@ -147,6 +141,25 @@ public class AreaResource extends UnionVMSResource {
     public void validateInputParameters(Double lat, Double lon, List<String> areaTypes) {
         ValidationUtils.validateCoordinates(lat, lon);
         ValidationUtils.validateAreaTypes(areaTypes);
+    }    
+    
+    private Response getAreaDetailsById(AreaTypeDto areaDto) throws Exception {
+    	AreaDetails areaDetails = areaDetailsService.getAreaDetailsById(mapper.getAreaTypeEntry(areaDto));
+    	AreaDetailsDto areaDetailsDto = mapper.getAreaDetailsDto(areaDetails);
+    	if (!areaDto.getIsGeom()) {
+    		areaDetailsDto.removeGeometry();
+        	return createSuccessResponse(areaDetailsDto.getProperties());
+    	}  
+    	return createSuccessResponse(areaDetailsDto.convert());
     }
-
+    
+    private Response getAreaDetailsByLocation(AreaTypeDto areaDto) throws Exception {
+    	List<AreaDetails> areaDetailsList = areaDetailsService.getAreaDetailsByLocation(mapper.getAreaTypeEntry(areaDto));
+		AreaDetailsDto areaDetailsDto = mapper.getAreaDetailsDtoForAllAreas(areaDetailsList, areaDto);    		
+		if (!areaDto.getIsGeom()) {
+    		areaDetailsDto.removeGeometryAllAreas();
+        	return createSuccessResponse(areaDetailsDto.getAllAreaProperties());
+    	}
+		return createSuccessResponse(areaDetailsDto.convertAll());
+    }
 }
