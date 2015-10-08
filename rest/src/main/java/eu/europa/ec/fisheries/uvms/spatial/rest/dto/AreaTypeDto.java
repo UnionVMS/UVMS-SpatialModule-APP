@@ -15,7 +15,7 @@ public class AreaTypeDto extends GeoCoordinateDto implements Serializable {
 	private String areaType;
 	
 	@NotNull
-	private Boolean isGeom;
+	private Boolean isGeom = false;
 	
 	public String getAreaType() {
 		return areaType;

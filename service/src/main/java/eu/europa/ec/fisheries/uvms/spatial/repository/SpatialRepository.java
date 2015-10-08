@@ -24,4 +24,6 @@ public interface SpatialRepository extends DAO {
     List<AreaLayerDto> findSystemAreaLayerMapping();
     
     List<Map<String, String>> findAreaByFilter(String areaType, String filter);
+    
+    List<Map<String, String>> findSelectedAreaColumns(String namedQueryString, Number gid);
 }

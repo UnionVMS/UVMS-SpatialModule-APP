@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedNativeQuery;
+import javax.persistence.NamedQuery;
 import javax.persistence.SqlResultSetMapping;
 import javax.persistence.SqlResultSetMappings;
 import javax.persistence.Table;
@@ -28,6 +29,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasNa
 @NamedNativeQuery(
 		name = QueryNameConstants.RFMO_BY_COORDINATE, 
 		query = "select * from rfmo where st_intersects(geom, st_geomfromtext(CAST(:wktPoint as text), :crs))", resultSetMapping = "implicit.rfmo")
+@NamedQuery(name = QueryNameConstants.RFMO_COLUMNS, query = "select rfmo.name as name, rfmo.code as code from RfmoEntity as rfmo where rfmo.gid =:gid")
 
 @Table(name = "rfmo", schema = "spatial")
 public class RfmoEntity implements Serializable {

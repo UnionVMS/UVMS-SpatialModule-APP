@@ -34,6 +34,7 @@ public class AreaDao {
     private static final String SEARCH_AREA = "sql.searchArea"; 
     private static final String NAME_PLACEHOLDER = "{name}";
     private static final String CODE_PLACEHOLDER = "{code}";
+    private static final String GID = "gid";
 
     private SqlPropertyHolder propertyHolder;
     private EntityManager em;
@@ -70,6 +71,11 @@ public class AreaDao {
 	public List<AreaLayerDto> findSystemAreaLayerMapping() {		
 		return createQuery(QueryNameConstants.FIND_SYSTEM_AREA_LAYER, AreaLayerDto.class).list();
     }
+	
+	@SuppressWarnings("unchecked")
+	public List<Map<String, String>> findSelectedAreaColumns(String namedQueryString, Number gid) {
+		return createNamedQuery(namedQueryString, gid).list();
+	}
 	
 	@SuppressWarnings("unchecked")
 	public List<Map<String, String>> findAreaByFilter(String areaType, String filter) {
@@ -115,6 +121,13 @@ public class AreaDao {
         query.setParameter(WKT, wktPoint);
         query.setParameter(CRS, crs);
         return query;
+    }
+    
+    private Query createNamedQuery(String namedQueryString, Number gid) {
+    	Query query = getSession().getNamedQuery(namedQueryString);
+    	query.setParameter(GID, gid);
+    	query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
+    	return query;
     }
 
     private SQLQuery createSQLQueryForClosestArea(String queryString, String wktPoint, int crs) {

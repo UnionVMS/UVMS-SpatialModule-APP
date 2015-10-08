@@ -74,4 +74,9 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
 	public List<Map<String, String>> findAreaByFilter(String areaType, String filter) {
 		return areaDao.findAreaByFilter(areaType, filter);
 	}
+	
+	@Override
+	public List<Map<String, String>> findSelectedAreaColumns(String namedQueryString, Number gid) {
+		return areaDao.findSelectedAreaColumns(namedQueryString, gid);
+	}
 }

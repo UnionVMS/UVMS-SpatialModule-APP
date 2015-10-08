@@ -4,11 +4,13 @@ import java.io.Serializable;
 
 import org.hibernate.validator.constraints.ScriptAssert;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @ScriptAssert(script="_this.isInputValid(_this.id,_this.crs,_this.longitude,_this.latitude)", lang = "javascript")
 public class GeoCoordinateDto implements Serializable {
 	
 	private static final long serialVersionUID = 4875764412505175274L;
-
+	
 	protected String id;
 	
 	protected Double longitude;
@@ -17,12 +19,24 @@ public class GeoCoordinateDto implements Serializable {
 	
 	protected Integer crs;
 
+	@JsonProperty("id")
 	public String getId() {
 		return id;
 	}
 
+	@JsonProperty("id")
 	public void setId(String id) {
 		this.id = id;
+	}
+	
+	@JsonProperty("gid")
+	public String getGid() {
+		return id;
+	}
+
+	@JsonProperty("gid")
+	public void setGid(String gid) {
+		this.id = gid;
 	}
 
 	public Double getLongitude() {

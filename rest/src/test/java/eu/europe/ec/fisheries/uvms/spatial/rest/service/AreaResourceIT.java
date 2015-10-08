@@ -2,6 +2,8 @@ package eu.europe.ec.fisheries.uvms.spatial.rest.service;
 
 import static org.junit.Assert.assertEquals;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.client.Entity;
@@ -26,6 +28,13 @@ public class AreaResourceIT extends AbstractArquillianIT {
 	
 	@ArquillianResource
     private URL deploymentURL;
+	
+	
+	@Test
+	public void getAreaPropertiesTest(@ArquillianResteasyResource("rest/") ResteasyWebTarget webTarget) {
+		Response response = webTarget.path("/areaproperties").request(MediaType.APPLICATION_JSON).post(Entity.entity(getMockedAreaTypeDto(),MediaType.APPLICATION_JSON));
+		testOk(response);		
+	}
 	
 	@Test
 	public void getAreaFilterTest(@ArquillianResteasyResource("rest/") ResteasyWebTarget webTarget) {
@@ -88,6 +97,18 @@ public class AreaResourceIT extends AbstractArquillianIT {
     	Response response = webTarget.path("/areadetails" ).request(MediaType.APPLICATION_JSON).post(Entity.entity(areaDto,MediaType.APPLICATION_JSON));    	
     	testBadRequest(response);
     }
+    
+	private List<AreaTypeDto> getMockedAreaTypeDto() {
+		AreaTypeDto areaOne = new AreaTypeDto();
+		areaOne.setAreaType("eez");
+		areaOne.setGid("1");
+		
+		AreaTypeDto areaTwo = new AreaTypeDto();
+		areaTwo.setAreaType("rfmo");
+		areaTwo.setGid("2");
+		
+		return Arrays.asList(areaOne, areaTwo);
+	}
     
     private AreaTypeDto getareaTypeDto(String id, String areaType, Double longitude, Double latitude, Integer crs, Boolean isGeom) {
     	AreaTypeDto areaTypeDto = new AreaTypeDto();
