@@ -46,6 +46,8 @@ public abstract class AreaLocationDtoMapper {
 	})
 	public abstract AreaDetailsDto getAreaDetailsDto(AreaDetails areaDetails);
 	
+	public abstract List<AreaTypeEntry> getAreaTypeEntryList(List<AreaTypeDto> areaDtoList);
+	
 	public AreaDetailsDto getAreaDetailsDtoForAllAreas(List<AreaDetails> areaDetailsList, AreaTypeDto areaDto) {
 		AreaDetailsDto areaDetailsDto = new AreaDetailsDto();
 		areaDetailsDto.setAllAreaProperties(extractProperties(areaDetailsList));
