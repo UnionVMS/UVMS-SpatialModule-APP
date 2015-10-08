@@ -64,6 +64,15 @@ public class ServiceLayerEntity implements Serializable {
     @Convert(converter = CharBooleanConverter.class)
     @Column(name = "is_internal", nullable = false, length = 1)
     private Boolean isInternal = false;
+    
+    @Column(name = "style_geom", length = 255)
+    private String styleGeom;
+    
+    @Column(name = "style_label", length = 255)
+    private String styleLabel;
+    
+    @Column(name = "style_label_geom", length = 255)
+    private String styleLabelGeom;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "serviceLayer", cascade = CascadeType.ALL)
     private Set<AreaLocationTypesEntity> areaTypeses;
@@ -170,7 +179,31 @@ public class ServiceLayerEntity implements Serializable {
         this.isInternal = isInternal;
     }
 
-    public Set<AreaLocationTypesEntity> getAreaTypeses() {
+    public String getStyleGeom() {
+		return styleGeom;
+	}
+
+	public void setStyleGeom(String styleGeom) {
+		this.styleGeom = styleGeom;
+	}
+
+	public String getStyleLabel() {
+		return styleLabel;
+	}
+
+	public void setStyleLabel(String styleLabel) {
+		this.styleLabel = styleLabel;
+	}
+
+	public String getStyleLabelGeom() {
+		return styleLabelGeom;
+	}
+
+	public void setStyleLabelGeom(String styleLabelGeom) {
+		this.styleLabelGeom = styleLabelGeom;
+	}
+
+	public Set<AreaLocationTypesEntity> getAreaTypeses() {
         return this.areaTypeses;
     }
 

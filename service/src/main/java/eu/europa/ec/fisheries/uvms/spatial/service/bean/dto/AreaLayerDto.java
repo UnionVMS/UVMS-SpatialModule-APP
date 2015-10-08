@@ -18,16 +18,28 @@ public class AreaLayerDto implements Serializable {
 	
 	private String serviceType;
 	
+	private String style;
+	
 	public AreaLayerDto() {
 	}
 	
-	public AreaLayerDto(String typeName, String areaTypeDesc, String geoName, String serviceUrl, String serviceType) {
+	public AreaLayerDto(String typeName, String areaTypeDesc, String geoName, String serviceUrl, String serviceType, String style) {
 		super();
 		this.typeName = typeName;
 		this.areaTypeDesc = areaTypeDesc;
 		this.geoName = geoName;
 		this.serviceUrl = serviceUrl;
 		this.serviceType = serviceType;
+		this.style = style;
+	}
+
+	@JsonProperty("style")
+	public String getStyle() {
+		return style;
+	}
+
+	public void setStyle(String style) {
+		this.style = style;
 	}
 
 	@JsonProperty("typeName")
