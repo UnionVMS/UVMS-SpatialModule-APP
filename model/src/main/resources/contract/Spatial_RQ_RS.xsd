@@ -50,15 +50,19 @@
             </xs:sequence>
         </xs:complexType>
     </xs:element>
-		
-    <xs:element name="FilterAreasSpatialRQ">
-        <xs:complexType>
-		    <xs:sequence>
-                <xs:element name="UserAreas" type="UserAreasType" />
-                <xs:element name="ScopeAreas" type="ScopeAreasType" />        
-			</xs:sequence>	
-        </xs:complexType>
-    </xs:element>
+
+	<xs:element name="FilterAreasSpatialRQ">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="SpatialModuleRequest">
+					<xs:sequence>
+						<xs:element name="UserAreas" type="UserAreasType" />
+						<xs:element name="ScopeAreas" type="ScopeAreasType" />
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
 	
 	<xs:element name="FilterAreasSpatialRS">
 		<xs:complexType>
