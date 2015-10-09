@@ -74,7 +74,9 @@
 	
 	<xs:element name="FilterAreasSpatialRS">
 		<xs:complexType>
-			<xs:element name="Geometry" type="xs:string" />
+			<xs:sequence>
+				<xs:element name="Geometry" type="xs:string" maxOccurs="1"/>
+			</xs:sequence>			
 		</xs:complexType>
     </xs:element>
 		
