@@ -3,13 +3,11 @@ package eu.europa.ec.fisheries.uvms.spatial.repository;
 import java.util.List;
 import java.util.Map;
 
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 
 import eu.europa.ec.fisheries.uvms.service.DAO;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaLayerDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestAreaDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestLocationDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.MeasurementUnit;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.*;
 
 public interface SpatialRepository extends DAO {
 
@@ -26,4 +24,6 @@ public interface SpatialRepository extends DAO {
     List<Map<String, String>> findAreaByFilter(String areaType, String filter);
     
     List<Map<String, String>> findSelectedAreaColumns(String namedQueryString, Number gid);
+
+    Geometry filterAreas(List<AreaIdentifierDto> userAreas, List<AreaIdentifierDto> scopeAreas);
 }

@@ -9,17 +9,16 @@ import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.spatial.dao.AreaDao;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaLayerDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestAreaDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestLocationDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.MeasurementUnit;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.*;
 import eu.europa.ec.fisheries.uvms.spatial.util.SqlPropertyHolder;
 
 @Stateless
@@ -30,15 +29,8 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     @PersistenceContext(unitName = "spatialPU")
     private EntityManager em;
 
-    @EJB
-    private SqlPropertyHolder sql;
-
+    @Inject
     private AreaDao areaDao;
-
-    @PostConstruct
-    public void init(){
-        areaDao = new AreaDao(em, sql);
-    }
 
     @Override
     public EntityManager getEntityManager() {
@@ -79,4 +71,9 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
 	public List<Map<String, String>> findSelectedAreaColumns(String namedQueryString, Number gid) {
 		return areaDao.findSelectedAreaColumns(namedQueryString, gid);
 	}
+
+    @Override
+    public Geometry filterAreas(List<AreaIdentifierDto> userAreas, List<AreaIdentifierDto> scopeAreas) {
+        return areaDao.filterAreas(userAreas, scopeAreas);
+    }
 }

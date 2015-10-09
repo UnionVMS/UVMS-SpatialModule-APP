@@ -24,6 +24,9 @@ public class EezServiceBean implements EezService {
     private SpatialRepository repository;
 
     @Inject
+    private EezDtoMapper eezDtoMapper;
+
+    @Inject
     private EezTypeMapper eezMapper;
 
     @Override
@@ -39,6 +42,6 @@ public class EezServiceBean implements EezService {
     @SuppressWarnings("unchecked")
     public EezDto getEezById(int id) {
         EezEntity eez = (EezEntity) repository.findEntityById(EezEntity.class, id);
-        return EezDtoMapper.INSTANCE.eezEntityToEezDto(eez);
+        return eezDtoMapper.eezEntityToEezDto(eez);
     }
 }

@@ -1,7 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaIdentifierDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestLocationDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.EnrichmentDto;
@@ -80,7 +80,7 @@ public class SpatialEnrichmentServiceBean implements SpatialEnrichmentService {
     @Override
     public EnrichmentDto getSpatialEnrichment(double lat, double lon, int crs, String unit, List<String> areaTypes, List<String> locationTypes) {
 
-        List<AreaDto> areasByLocation = areaByLocationService.getAreaTypesByLocation(lat, lon, crs);
+        List<AreaIdentifierDto> areasByLocation = areaByLocationService.getAreaTypesByLocation(lat, lon, crs);
         List<ClosestAreaDto> closestAreas = closestAreaService.getClosestAreas(lat, lon, crs, unit, areaTypes);
         List<ClosestLocationDto> closestLocations = closestLocationService.getClosestLocations(lat, lon, crs, unit, locationTypes);
         EnrichmentDto dto = new EnrichmentDto();

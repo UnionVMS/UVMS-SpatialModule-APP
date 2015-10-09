@@ -3,14 +3,11 @@ package eu.europa.ec.fisheries.uvms.spatial.rest.resources;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseCode;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.error.ErrorHandler;
-import eu.europa.ec.fisheries.uvms.spatial.rest.util.ValidationUtils;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaByLocationService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.ClosestAreaService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaIdentifierDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestAreaDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +17,6 @@ import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 import static eu.europa.ec.fisheries.uvms.spatial.rest.util.ValidationUtils.validateInputParameters;
-import static org.apache.commons.collections.CollectionUtils.isEmpty;
 
 @Path("/")
 public class AreaTypeResource {
@@ -63,7 +59,7 @@ public class AreaTypeResource {
         try {
             LOG.info("Getting areas by location");
             validateInputParameters(lat, lon);
-            List<AreaDto> areasByLocation = areaByLocationService.getAreaTypesByLocation(lat, lon, crs);
+            List<AreaIdentifierDto> areasByLocation = areaByLocationService.getAreaTypesByLocation(lat, lon, crs);
             return new ResponseDto(areasByLocation, ResponseCode.OK);
         } catch (Exception ex) {
             LOG.error("[ Error when getting areas by location. ] ", ex);

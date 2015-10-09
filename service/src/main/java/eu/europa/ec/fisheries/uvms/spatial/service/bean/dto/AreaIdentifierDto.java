@@ -3,12 +3,15 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto;
 /**
  * Created by Michal Kopyczok on 24-Aug-15.
  */
-public class AreaDto {
+public class AreaIdentifierDto {
 
     private String id;
     private String areaType;
 
-    public AreaDto(String id, String areaType) {
+    public AreaIdentifierDto() {
+    }
+
+    public AreaIdentifierDto(String id, String areaType) {
         this.id = id;
         this.areaType = areaType;
     }

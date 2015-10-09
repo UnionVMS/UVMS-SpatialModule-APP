@@ -3,6 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.util;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.io.WKTWriter;
@@ -76,6 +77,10 @@ public class SpatialUtils {
 
     public static String convertToWkt(Point point) {
         return new WKTWriter().write(point);
+    }
+
+    public static String convertToWkt(Geometry geometry) {
+        return new WKTWriter().write(geometry);
     }
 
     public static boolean isDefaultCrs(int crs) {
