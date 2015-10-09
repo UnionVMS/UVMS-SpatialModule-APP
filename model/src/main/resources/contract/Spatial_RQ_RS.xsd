@@ -56,15 +56,15 @@
 		    <xs:sequence>
 				<xs:element name="UserAreas">
 				    <xs:complexType>
-						<xs:sequence>
-							<xs:element name="UserArea" type="AreaType" minOccurs="0" />
+						<xs:sequence maxOccurs="100">
+							<xs:element name="UserArea" type="AreaIdentifierType" minOccurs="0" />
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>
 				<xs:element name="ScopeAreas">
 				    <xs:complexType>
-						<xs:sequence>
-							<xs:element name="ScopeArea" type="AreaType" minOccurs="0" />
+						<xs:sequence maxOccurs="100">
+							<xs:element name="ScopeArea" type="AreaIdentifierType" minOccurs="0" />
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>

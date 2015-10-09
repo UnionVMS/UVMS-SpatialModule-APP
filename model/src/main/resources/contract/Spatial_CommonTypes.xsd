@@ -148,8 +148,8 @@
 
 	<xs:complexType name="AreaIdentifierType">
         <xs:sequence>
-			<xs:element name="Id" type="NumericStringLength1to9" />
-			<xs:element name="AreaType" type="StringLength1to255" />
+			<xs:element name="Id" type="NumericStringLength1to9" nillable="false" />
+			<xs:element name="AreaType" type="StringLength1to255" nillable="false" />
         </xs:sequence>
     </xs:complexType>
 	
