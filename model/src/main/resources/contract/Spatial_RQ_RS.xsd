@@ -42,7 +42,7 @@
             </xs:complexContent>
         </xs:complexType>
     </xs:element>
-
+	
     <xs:element name="AreaByLocationSpatialRS">
         <xs:complexType>
             <xs:sequence>
@@ -50,6 +50,34 @@
             </xs:sequence>
         </xs:complexType>
     </xs:element>
+		
+    <xs:element name="FilterAreasSpatialRQ">
+        <xs:complexType>
+		    <xs:sequence>
+				<xs:element name="UserAreas">
+				    <xs:complexType>
+						<xs:sequence>
+							<xs:element name="UserArea" type="AreaType" minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="ScopeAreas">
+				    <xs:complexType>
+						<xs:sequence>
+							<xs:element name="ScopeArea" type="AreaType" minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>	
+        </xs:complexType>
+    </xs:element>
+	
+	<xs:element name="FilterAreasSpatialRS">
+		<xs:complexType>
+			<xs:element name="Geometry" type="xs:string" />
+		</xs:complexType>
+    </xs:element>
+		
     <xs:element name="ClosestAreaSpatialRQ">
         <xs:complexType>
             <xs:complexContent>

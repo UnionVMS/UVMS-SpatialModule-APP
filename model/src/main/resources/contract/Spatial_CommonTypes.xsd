@@ -146,4 +146,11 @@
         </xs:complexType>
     </xs:element>
 
+	<xs:complexType name="AreaIdentifierType">
+        <xs:sequence>
+			<xs:element name="Id" type="NumericStringLength1to9" />
+			<xs:element name="AreaType" type="StringLength1to255" />
+        </xs:sequence>
+    </xs:complexType>
+	
 </xs:schema>
