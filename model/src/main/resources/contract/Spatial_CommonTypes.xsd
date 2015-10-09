@@ -154,4 +154,16 @@
         </xs:sequence>
     </xs:complexType>
 	
+	<xs:complexType name="UserAreasType">
+		<xs:sequence minOccurs="0" maxOccurs="200">
+			<xs:element name="UserArea" type="AreaIdentifierType" minOccurs="0" />
+		</xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="ScopeAreasType">
+		<xs:sequence minOccurs="0" maxOccurs="200">
+			<xs:element name="ScopeArea" type="AreaIdentifierType" minOccurs="0" />
+		</xs:sequence>
+    </xs:complexType>
+	
 </xs:schema>

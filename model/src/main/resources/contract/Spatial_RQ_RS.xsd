@@ -54,20 +54,8 @@
     <xs:element name="FilterAreasSpatialRQ">
         <xs:complexType>
 		    <xs:sequence>
-				<xs:element name="UserAreas">
-				    <xs:complexType>
-						<xs:sequence maxOccurs="100">
-							<xs:element name="UserArea" type="AreaIdentifierType" minOccurs="0" />
-						</xs:sequence>
-					</xs:complexType>
-				</xs:element>
-				<xs:element name="ScopeAreas">
-				    <xs:complexType>
-						<xs:sequence maxOccurs="100">
-							<xs:element name="ScopeArea" type="AreaIdentifierType" minOccurs="0" />
-						</xs:sequence>
-					</xs:complexType>
-				</xs:element>
+                <xs:element name="UserAreas" type="UserAreasType" />
+                <xs:element name="ScopeAreas" type="ScopeAreasType" />        
 			</xs:sequence>	
         </xs:complexType>
     </xs:element>
