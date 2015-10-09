@@ -1,18 +1,15 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
+import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaLayerDto;
+import lombok.SneakyThrows;
 
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.transaction.Transactional;
-
-import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
-import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaLayerDto;
-import lombok.SneakyThrows;
+import java.util.List;
 
 @Stateless
 @Local(AreaTypeNamesService.class)
