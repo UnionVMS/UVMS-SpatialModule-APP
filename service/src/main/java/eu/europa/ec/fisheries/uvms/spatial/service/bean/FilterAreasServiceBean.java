@@ -18,7 +18,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Stateless
-@Local(SpatialEnrichmentService.class)
+@Local(FilterAreasService.class)
 @Transactional
 @Slf4j
 public class FilterAreasServiceBean implements FilterAreasService {
