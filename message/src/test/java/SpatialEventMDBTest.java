@@ -49,6 +49,9 @@ public class SpatialEventMDBTest {
 
     @Mock
     private Event<SpatialMessageEvent> closestLocationSpatialEvent;
+    
+    @Mock
+    private Event<SpatialMessageEvent> filterAreaSpatialEvent;
 
     @Mock
     private Event<SpatialMessageEvent> spatialErrorEvent;
@@ -188,6 +191,25 @@ public class SpatialEventMDBTest {
 
         verify(spatialErrorEvent, times(1)).fire(any(SpatialMessageEvent.class));
 
+    }
+    
+    @Test
+    public void testOnMessageWithFilterAreasMethod() throws SpatialModelMarshallException, JMSException {
+    	AreaIdentifierType areaType = new AreaIdentifierType();
+    	areaType.setAreaType("EEZ");
+    	areaType.setId("1");
+    	
+    	String requestString = requestMapper.mapToFilterAreaSpatialRequest(Arrays.asList(areaType), Arrays.asList(areaType));
+    	TextMessage mock = Mockito.mock(TextMessage.class);
+    	when(mock.getText()).thenReturn(requestString);
+    	
+    	FilterAreasSpatialRQ request = new FilterAreasSpatialRQ();
+    	request.setMethod(SpatialModuleMethod.GET_FILTERED_AREA);
+    	when(marshaller.unmarshall(mock, SpatialModuleRequest.class)).thenReturn(request);
+    	mdb.onMessage(mock);
+    	
+    	verify(filterAreaSpatialEvent, times(1)).fire(any(SpatialMessageEvent.class));
+        verify(spatialErrorEvent, times(0)).fire(any(SpatialMessageEvent.class));
     }
 
 }

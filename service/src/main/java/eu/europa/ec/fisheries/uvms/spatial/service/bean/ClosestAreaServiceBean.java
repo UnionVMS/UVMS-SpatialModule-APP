@@ -43,7 +43,7 @@ public class ClosestAreaServiceBean implements ClosestAreaService {
 
         Map<String, String> areaType2TableName = getAreaType2TableNameMap();
         List<Area> closestAreas = newArrayList();
-        for (AreaType areaType : request.getAreaTypes().getAreaType()) {
+        for (AreaType areaType : request.getAreaTypes().getAreaTypes()) {
             String areaDbTable = areaType2TableName.get(areaType.value());
 
             List<ClosestAreaDto> closestAreaList = repository.findClosestArea(point, measurementUnit, areaDbTable);

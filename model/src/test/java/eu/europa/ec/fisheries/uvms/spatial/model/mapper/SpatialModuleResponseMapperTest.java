@@ -100,8 +100,8 @@ public class SpatialModuleResponseMapperTest {
             when(mock.getText()).thenReturn(sw.toString());
 
             AreasByLocationType areasByLocationType = mapper.mapToAreasByLocationTypeFromResponse(mock, "666");
-            assertEquals("2", areasByLocationType.getArea().get(0).getId());
-            assertEquals("EEZ", areasByLocationType.getArea().get(0).getAreaType());
+            assertEquals("2", areasByLocationType.getAreas().get(0).getId());
+            assertEquals("EEZ", areasByLocationType.getAreas().get(0).getAreaType());
         } catch (SpatialModelMapperException | JMSException | JAXBException e) {
             fail("test should not throw these exceptions");
         }
@@ -138,8 +138,8 @@ public class SpatialModuleResponseMapperTest {
             String responseString = mapper.mapAreaByLocationResponse(entryList);
             StringReader reader = new StringReader(responseString);
             AreaByLocationSpatialRS result = (AreaByLocationSpatialRS) jaxbUnmarshaller.unmarshal(reader);
-            assertEquals(result.getAreasByLocation().getArea().get(0).getAreaType(), response.getAreasByLocation().getArea().get(0).getAreaType());
-            assertEquals(result.getAreasByLocation().getArea().get(0).getId(), response.getAreasByLocation().getArea().get(0).getId());
+            assertEquals(result.getAreasByLocation().getAreas().get(0).getAreaType(), response.getAreasByLocation().getAreas().get(0).getAreaType());
+            assertEquals(result.getAreasByLocation().getAreas().get(0).getId(), response.getAreasByLocation().getAreas().get(0).getId());
         } catch (SpatialModelMarshallException e) {
             fail("should not throw error");
         }
@@ -181,7 +181,7 @@ public class SpatialModuleResponseMapperTest {
             String responseString = mapper.mapAreaTypeNamesResponse(names);
             StringReader reader = new StringReader(responseString);
             AreaTypeNamesSpatialRS result = (AreaTypeNamesSpatialRS) jaxbUnmarshaller.unmarshal(reader);
-            assertEquals(result.getAreaTypes().getAreaType().get(0), response.getAreaTypes().getAreaType().get(0));
+            assertEquals(result.getAreaTypes().getAreaTypes().get(0), response.getAreaTypes().getAreaTypes().get(0));
         } catch (SpatialModelMarshallException e) {
             fail("should not throw error");
         }
@@ -278,10 +278,10 @@ public class SpatialModuleResponseMapperTest {
             String responseString = mapper.mapClosestAreaResponse(areas);
             StringReader reader = new StringReader(responseString);
             ClosestAreaSpatialRS result = (ClosestAreaSpatialRS) jaxbUnmarshaller.unmarshal(reader);
-            assertEquals(result.getClosestArea().getClosestArea().get(0).getId(), response.getClosestArea().getClosestArea().get(0).getId());
-            assertEquals(result.getClosestArea().getClosestArea().get(0).getDistance(), response.getClosestArea().getClosestArea().get(0).getDistance(), 0.01);
-            assertEquals(result.getClosestArea().getClosestArea().get(0).getUnit(), response.getClosestArea().getClosestArea().get(0).getUnit());
-            assertEquals(result.getClosestArea().getClosestArea().get(0).getAreaType(), response.getClosestArea().getClosestArea().get(0).getAreaType());
+            assertEquals(result.getClosestArea().getClosestAreas().get(0).getId(), response.getClosestArea().getClosestAreas().get(0).getId());
+            assertEquals(result.getClosestArea().getClosestAreas().get(0).getDistance(), response.getClosestArea().getClosestAreas().get(0).getDistance(), 0.01);
+            assertEquals(result.getClosestArea().getClosestAreas().get(0).getUnit(), response.getClosestArea().getClosestAreas().get(0).getUnit());
+            assertEquals(result.getClosestArea().getClosestAreas().get(0).getAreaType(), response.getClosestArea().getClosestAreas().get(0).getAreaType());
         } catch (SpatialModelMarshallException e) {
             fail("should not throw error");
         }
@@ -337,7 +337,7 @@ public class SpatialModuleResponseMapperTest {
 
         SpatialEnrichmentRS enrichment = new SpatialEnrichmentRS();
         ClosestAreasType closestAreasType = new ClosestAreasType();
-        closestAreasType.getClosestArea().addAll(areas);
+        closestAreasType.getClosestAreas().addAll(areas);
         enrichment.setClosestAreas(closestAreasType);
         ClosestLocationsType closestLocationsType = new ClosestLocationsType();
         closestLocationsType.getClosestLocations().addAll(locations);
@@ -348,10 +348,10 @@ public class SpatialModuleResponseMapperTest {
             String responseString = mapper.mapEnrichmentResponse(enrichment);
             StringReader reader = new StringReader(responseString);
             SpatialEnrichmentRS result = (SpatialEnrichmentRS) jaxbUnmarshaller.unmarshal(reader);
-            assertEquals(result.getClosestAreas().getClosestArea().get(0).getId(), response.getClosestAreas().getClosestArea().get(0).getId());
-            assertEquals(result.getClosestAreas().getClosestArea().get(0).getAreaType(), response.getClosestAreas().getClosestArea().get(0).getAreaType());
-            assertEquals(result.getClosestAreas().getClosestArea().get(0).getDistance(), response.getClosestAreas().getClosestArea().get(0).getDistance(), 0.01);
-            assertEquals(result.getClosestAreas().getClosestArea().get(0).getUnit(), response.getClosestAreas().getClosestArea().get(0).getUnit());
+            assertEquals(result.getClosestAreas().getClosestAreas().get(0).getId(), response.getClosestAreas().getClosestAreas().get(0).getId());
+            assertEquals(result.getClosestAreas().getClosestAreas().get(0).getAreaType(), response.getClosestAreas().getClosestAreas().get(0).getAreaType());
+            assertEquals(result.getClosestAreas().getClosestAreas().get(0).getDistance(), response.getClosestAreas().getClosestAreas().get(0).getDistance(), 0.01);
+            assertEquals(result.getClosestAreas().getClosestAreas().get(0).getUnit(), response.getClosestAreas().getClosestAreas().get(0).getUnit());
             assertEquals(result.getClosestLocations().getClosestLocations().get(0).getId(), response.getClosestLocations().getClosestLocations().get(0).getId());
             assertEquals(result.getClosestLocations().getClosestLocations().get(0).getDistance(), response.getClosestLocations().getClosestLocations().get(0).getDistance(), 0.01);
             assertEquals(result.getClosestLocations().getClosestLocations().get(0).getUnit(), response.getClosestLocations().getClosestLocations().get(0).getUnit());
@@ -383,7 +383,7 @@ public class SpatialModuleResponseMapperTest {
 
             SpatialEnrichmentRS enrichment = new SpatialEnrichmentRS();
             ClosestAreasType closestAreasType = new ClosestAreasType();
-            closestAreasType.getClosestArea().addAll(areas);
+            closestAreasType.getClosestAreas().addAll(areas);
             enrichment.setClosestAreas(closestAreasType);
             ClosestLocationsType closestLocationsType = new ClosestLocationsType();
             closestLocationsType.getClosestLocations().addAll(locations);

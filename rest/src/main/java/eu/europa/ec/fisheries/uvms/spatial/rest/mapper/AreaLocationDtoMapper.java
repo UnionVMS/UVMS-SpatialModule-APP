@@ -57,7 +57,7 @@ public abstract class AreaLocationDtoMapper {
 	
 	protected Map<String, String> extractProperties(AreaDetails areaDetails) {
 		Map<String, String> propertyMap = new HashMap<String, String>();
-		for (AreaProperty property : areaDetails.getAreaProperty()) {
+		for (AreaProperty property : areaDetails.getAreaProperties()) {
 			propertyMap.put(property.getPropertyName(), property.getPropertyValue());
 		}
 		if (!propertyMap.isEmpty()) {
@@ -85,7 +85,7 @@ public abstract class AreaLocationDtoMapper {
 	
 	protected Map<String, String> extractProperties(LocationDetails locationDetails) {
 		Map<String, String> propertyMap = new HashMap<String, String>();
-		for (LocationProperty property : locationDetails.getLocationProperty()) {
+		for (LocationProperty property : locationDetails.getLocationProperties()) {
 			propertyMap.put(property.getPropertyName(), property.getPropertyValue());
 		}
 		if (!propertyMap.isEmpty()) {

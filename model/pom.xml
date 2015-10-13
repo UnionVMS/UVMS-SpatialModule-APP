@@ -75,9 +75,9 @@
                             <bindingExcludes>
                                 <include>**/*.xj</include>
                             </bindingExcludes>
-
+							
                             <schemaDirectory>${project.basedir}/src/main/resources/contract</schemaDirectory>
-                            <bindingDirectory>${project.basedir}/src/main/resources/contract</bindingDirectory>
+                            <!-- <bindingDirectory>${project.basedir}/src/main/resources</bindingDirectory> -->
                             <generateDirectory>${basedir}/src/main/java/</generateDirectory>
                         </configuration>
 

@@ -30,10 +30,10 @@ public class SpatialEnrichmentServiceIT extends AbstractArquillianIT {
         pointType.setCrs(DEFAULT_CRS);
         SpatialEnrichmentRQ request = new SpatialEnrichmentRQ();
         SpatialEnrichmentRQ.AreaTypes areaTypes = new SpatialEnrichmentRQ.AreaTypes();
-        areaTypes.getAreaType().addAll(newArrayList(AreaType.EEZ));
+        areaTypes.getAreaTypes().addAll(newArrayList(AreaType.EEZ));
         request.setAreaTypes(areaTypes);
         SpatialEnrichmentRQ.LocationTypes locationTypes = new SpatialEnrichmentRQ.LocationTypes();
-        locationTypes.getLocationType().addAll(newArrayList(LocationType.PORT));
+        locationTypes.getLocationTypes().addAll(newArrayList(LocationType.PORT));
         request.setLocationTypes(locationTypes);
         request.setPoint(pointType);
         request.setUnit(UnitType.METERS);
@@ -46,10 +46,10 @@ public class SpatialEnrichmentServiceIT extends AbstractArquillianIT {
         assertNotNull(response.getAreasByLocation());
         assertNotNull(response.getClosestAreas());
         assertNotNull(response.getClosestLocations());
-        assertFalse(response.getClosestAreas().getClosestArea().isEmpty());
+        assertFalse(response.getClosestAreas().getClosestAreas().isEmpty());
         assertFalse(response.getClosestLocations().getClosestLocations().isEmpty());
 
-        Area area = response.getClosestAreas().getClosestArea().get(0);
+        Area area = response.getClosestAreas().getClosestAreas().get(0);
         assertEquals("231", area.getId());
         assertEquals(0.0, area.getDistance(), 0.01);
         assertEquals(AreaType.EEZ, area.getAreaType());

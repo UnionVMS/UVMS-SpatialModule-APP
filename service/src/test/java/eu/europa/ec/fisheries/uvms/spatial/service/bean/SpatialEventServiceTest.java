@@ -45,6 +45,9 @@ public class SpatialEventServiceTest {
 
     @Mock
     private SpatialMessageServiceBean messageProducer;
+    
+    @Mock
+    private FilterAreasServiceBean filterAreasService;
 
     @Mock
     Event<SpatialMessageEvent> spatialErrorEvent;
@@ -140,5 +143,18 @@ public class SpatialEventServiceTest {
         verify(enrichmentService, times(1)).getSpatialEnrichment(request);
         verify(messageProducer, times(0)).sendModuleResponseMessage(mock, null);
         verify(spatialErrorEvent, times(1)).fire(any(SpatialMessageEvent.class));
+    }
+    
+    @Test
+    public void testGetFilterAreas() {
+    	FilterAreasSpatialRQ request = new FilterAreasSpatialRQ();
+    	TextMessage mock = Mockito.mock(TextMessage.class);
+    	SpatialMessageEvent message = new SpatialMessageEvent(mock, request);
+    	
+    	service.getFilterAreas(message);
+    	
+    	verify(filterAreasService, times(1)).filterAreas(request);
+    	verify(messageProducer, times(1)).sendModuleResponseMessage(mock, null);
+        verify(spatialErrorEvent, times(0)).fire(message);
     }
 }

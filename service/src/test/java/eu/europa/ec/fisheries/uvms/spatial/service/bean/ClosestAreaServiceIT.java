@@ -34,7 +34,7 @@ public class ClosestAreaServiceIT extends AbstractArquillianIT {
         pointType.setCrs(DEFAULT_CRS);
         PointType point = pointType;
         AreaTypes areas = new AreaTypes();
-        areas.getAreaType().addAll((newArrayList(AreaType.EEZ)));
+        areas.getAreaTypes().addAll((newArrayList(AreaType.EEZ)));
 
         ClosestAreaSpatialRQ closestAreaSpatialRQ = new ClosestAreaSpatialRQ();
         closestAreaSpatialRQ.setAreaTypes(areas);
@@ -62,7 +62,7 @@ public class ClosestAreaServiceIT extends AbstractArquillianIT {
         pointType.setCrs(CRS);
         PointType point = pointType;
         AreaTypes areas = new AreaTypes();
-        areas.getAreaType().addAll((newArrayList(AreaType.COUNTRY)));
+        areas.getAreaTypes().addAll((newArrayList(AreaType.COUNTRY)));
 
         ClosestAreaSpatialRQ closestAreaSpatialRQ = new ClosestAreaSpatialRQ();
         closestAreaSpatialRQ.setAreaTypes(areas);

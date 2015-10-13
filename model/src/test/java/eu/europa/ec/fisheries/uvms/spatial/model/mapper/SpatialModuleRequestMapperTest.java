@@ -126,7 +126,7 @@ public class SpatialModuleRequestMapperTest {
             assertEquals(result.getPoint().getLongitude(), request.getPoint().getLongitude(), 0.01);
             assertEquals(result.getMethod(), request.getMethod());
             assertEquals(result.getUnit(), request.getUnit());
-            assertEquals(result.getAreaTypes().getAreaType().get(0), request.getAreaTypes().getAreaType().get(0));
+            assertEquals(result.getAreaTypes().getAreaTypes().get(0), request.getAreaTypes().getAreaTypes().get(0));
         } catch (SpatialModelMarshallException e) {
             fail("Should not throw exception");
         }
@@ -170,7 +170,7 @@ public class SpatialModuleRequestMapperTest {
             assertEquals(result.getPoint().getLongitude(), request.getPoint().getLongitude(), 0.01);
             assertEquals(result.getMethod(), request.getMethod());
             assertEquals(result.getUnit(), request.getUnit());
-            assertEquals(result.getLocationTypes().getLocationType().get(0), request.getLocationTypes().getLocationType().get(0));
+            assertEquals(result.getLocationTypes().getLocationTypes().get(0), request.getLocationTypes().getLocationTypes().get(0));
         } catch (SpatialModelMarshallException e) {
             fail("Should not throw exception");
         }
@@ -214,8 +214,8 @@ public class SpatialModuleRequestMapperTest {
             assertEquals(result.getPoint().getLongitude(), request.getPoint().getLongitude(), 0.01);
             assertEquals(result.getMethod(), request.getMethod());
             assertEquals(result.getUnit(), request.getUnit());
-            assertEquals(result.getLocationTypes().getLocationType().get(0), request.getLocationTypes().getLocationType().get(0));
-            assertEquals(result.getAreaTypes().getAreaType().get(0), request.getAreaTypes().getAreaType().get(0));
+            assertEquals(result.getLocationTypes().getLocationTypes().get(0), request.getLocationTypes().getLocationTypes().get(0));
+            assertEquals(result.getAreaTypes().getAreaTypes().get(0), request.getAreaTypes().getAreaTypes().get(0));
         } catch (SpatialModelMarshallException e) {
             fail("Should not throw exception");
         }

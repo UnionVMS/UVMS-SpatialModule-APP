@@ -23,11 +23,13 @@
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.movement</groupId>
             <artifactId>movement-model</artifactId>
+            <scope>provided</scope>
         </dependency>
         
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.vessel</groupId>
             <artifactId>vessel-model</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>

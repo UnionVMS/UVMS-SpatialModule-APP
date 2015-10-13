@@ -59,8 +59,8 @@ public class LocationDetailsServiceTest {
 		locationEntry.setLongitude(-9.5);
 		locationEntry.setCrs(4326);
 		LocationDetails locationDetails = locationDetailsServiceBean.getLocationDetails(locationEntry);
-		assertNotNull(locationDetails.getLocationProperty());
-		assertEquals(locationDetails.getLocationProperty().isEmpty(), false);
+		assertNotNull(locationDetails.getLocationProperties());
+		assertEquals(locationDetails.getLocationProperties().isEmpty(), false);
 	}
 	
 	/**
@@ -89,7 +89,7 @@ public class LocationDetailsServiceTest {
 		locationEntry.setLocationType("PORT");        
         LocationDetails locationDetails = locationDetailsServiceBean.getLocationDetails(locationEntry);
         assertNotNull(locationDetails);
-		List<LocationProperty> list = locationDetails.getLocationProperty();
+		List<LocationProperty> list = locationDetails.getLocationProperties();
 		assertEquals(list.isEmpty(), false);
 	}	
 	

@@ -6,6 +6,8 @@ import eu.europa.ec.fisheries.uvms.spatial.model.FaultCode;
 import eu.europa.ec.fisheries.uvms.spatial.model.mapper.SpatialModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Area;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRS;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Location;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRS;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialEventService;
@@ -16,6 +18,7 @@ import javax.ejb.*;
 import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
+
 import java.util.List;
 
 @Stateless
@@ -36,6 +39,9 @@ public class SpatialEventServiceBean implements SpatialEventService {
 
     @EJB
     private AreaTypeNamesService areaTypeNamesService;
+    
+    @EJB
+    private FilterAreasService filterAreasService;
 
     @EJB
     private SpatialMessageServiceBean messageProducer;
@@ -121,4 +127,17 @@ public class SpatialEventServiceBean implements SpatialEventService {
             sendError(message, e);
         }
     }
+
+	@Override
+	public void getFilterAreas(@Observes @GetFilterAreaEvent SpatialMessageEvent message) {
+		log.info("Get Filtered Area");
+		try {
+ 			FilterAreasSpatialRQ filterAreaSpatialRQ = message.getFilterAreasSpatialRQ();
+			FilterAreasSpatialRS filterAreasSpatialRS = filterAreasService.filterAreas(filterAreaSpatialRQ);
+			log.debug("Send back filtered Area");
+			messageProducer.sendModuleResponseMessage(message.getMessage(), mapper.mapFilterAreasResponse(filterAreasSpatialRS));
+		} catch (Exception e){
+            sendError(message, e);
+        }		
+	}
 }

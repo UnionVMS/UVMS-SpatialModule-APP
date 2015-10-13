@@ -17,5 +17,7 @@ public interface SpatialEventService {
     public void getSpatialEnrichment(@Observes @GetSpatialEnrichmentEvent SpatialMessageEvent message);
 
     public void getAreaTypeNames(@Observes @GetAreaTypeNamesEvent SpatialMessageEvent message);
+    
+    public void getFilterAreas(@Observes @GetFilterAreaEvent SpatialMessageEvent message);
 
 }

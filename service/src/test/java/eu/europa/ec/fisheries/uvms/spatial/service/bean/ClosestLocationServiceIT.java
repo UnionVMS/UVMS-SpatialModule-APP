@@ -39,7 +39,7 @@ public class ClosestLocationServiceIT extends AbstractArquillianIT {
         point.setCrs(DEFAULT_CRS);
         ClosestLocationSpatialRQ request = new ClosestLocationSpatialRQ();
         ClosestLocationSpatialRQ.LocationTypes locationTypes = new ClosestLocationSpatialRQ.LocationTypes();
-        locationTypes.getLocationType().addAll(newArrayList(LocationType.PORT));
+        locationTypes.getLocationTypes().addAll(newArrayList(LocationType.PORT));
         request.setLocationTypes(locationTypes);
         request.setPoint(point);
         request.setUnit(UnitType.METERS);
@@ -67,7 +67,7 @@ public class ClosestLocationServiceIT extends AbstractArquillianIT {
         point.setCrs(CRS);
         ClosestLocationSpatialRQ request = new ClosestLocationSpatialRQ();
         ClosestLocationSpatialRQ.LocationTypes locationTypes = new ClosestLocationSpatialRQ.LocationTypes();
-        locationTypes.getLocationType().addAll(newArrayList(LocationType.PORT));
+        locationTypes.getLocationTypes().addAll(newArrayList(LocationType.PORT));
         request.setLocationTypes(locationTypes);
         request.setPoint(point);
         request.setUnit(UnitType.METERS);

@@ -47,6 +47,10 @@ public class SpatialEventMDB implements MessageListener {
     @Inject
     @GetClosestLocationEvent
     Event<SpatialMessageEvent> closestLocationSpatialEvent;
+    
+    @Inject
+    @GetFilterAreaEvent
+    Event<SpatialMessageEvent> filterAreaSpatialEvent;
 
     @Inject
     @SpatialMessageErrorEvent
@@ -99,6 +103,12 @@ public class SpatialEventMDB implements MessageListener {
                     SpatialMessageEvent spatialEnrichmentEvent = new SpatialMessageEvent(textMessage, spatialEnrichmentRQ);
                     enrichmentSpatialEvent.fire(spatialEnrichmentEvent);
                     break;
+                    
+                case GET_FILTERED_AREA:
+                	FilterAreasSpatialRQ filterAreasSpatialRQ = marshaller.unmarshall(textMessage, FilterAreasSpatialRQ.class);
+                	SpatialMessageEvent filterAreaEvent = new SpatialMessageEvent(textMessage, filterAreasSpatialRQ);
+                	filterAreaSpatialEvent.fire(filterAreaEvent);
+                	break;
                 default:
                     log.error("[ Not implemented method consumed: {} ]", method);
                     spatialErrorEvent.fire(new SpatialMessageEvent(textMessage, mapper.createFaultMessage(FaultCode.SPATIAL_MESSAGE, "Method not implemented")));

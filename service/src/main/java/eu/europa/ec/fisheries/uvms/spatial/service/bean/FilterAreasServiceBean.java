@@ -42,14 +42,14 @@ public class FilterAreasServiceBean implements FilterAreasService {
 
     private List<AreaIdentifierDto> mapToDtoList(ScopeAreasType scopeAreasType) {
         if (scopeAreasType != null) {
-            return convertToDtoList(scopeAreasType.getScopeArea());
+            return convertToDtoList(scopeAreasType.getScopeAreas());
         }
         return Collections.emptyList();
     }
 
     private List<AreaIdentifierDto> mapToDtoList(UserAreasType userAreasType) {
         if (userAreasType != null) {
-            return convertToDtoList(userAreasType.getUserArea());
+            return convertToDtoList(userAreasType.getUserAreas());
         }
         return Collections.emptyList();
     }

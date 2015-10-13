@@ -34,7 +34,7 @@ public class ClosestAreaServiceBeanIT extends AbstractArquillianIT {
         pointType.setCrs(DEFAULT_CRS);
         PointType point = pointType;
         AreaTypes areaTypes = new AreaTypes();
-        areaTypes.getAreaType().addAll(newArrayList(AreaType.EEZ));
+        areaTypes.getAreaTypes().addAll(newArrayList(AreaType.EEZ));
         AreaTypes areas = areaTypes;
         ClosestAreaSpatialRQ closestAreaSpatialRQ = new ClosestAreaSpatialRQ();
         closestAreaSpatialRQ.setPoint(point);
@@ -58,7 +58,7 @@ public class ClosestAreaServiceBeanIT extends AbstractArquillianIT {
         pointType.setLatitude(LATITUDE_2);
         pointType.setLongitude(LONGITUDE_2);
         AreaTypes areaTypes = new AreaTypes();
-        areaTypes.getAreaType().addAll(newArrayList(AreaType.COUNTRY));
+        areaTypes.getAreaTypes().addAll(newArrayList(AreaType.COUNTRY));
         AreaTypes areas = areaTypes;
         ClosestAreaSpatialRQ closestAreaSpatialRQ = new ClosestAreaSpatialRQ();
         closestAreaSpatialRQ.setPoint(pointType);

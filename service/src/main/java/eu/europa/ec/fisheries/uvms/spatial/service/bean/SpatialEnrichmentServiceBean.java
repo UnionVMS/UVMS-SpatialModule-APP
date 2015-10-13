@@ -34,22 +34,22 @@ public class SpatialEnrichmentServiceBean implements SpatialEnrichmentService {
         AreaByLocationSpatialRQ areaByLocationSpatialRQ = new AreaByLocationSpatialRQ();
         areaByLocationSpatialRQ.setPoint(request.getPoint());
         List<AreaTypeEntry> areaTypesByLocation = areaByLocationService.getAreaTypesByLocation(areaByLocationSpatialRQ);
-        List<AreaType> areaTypes = request.getAreaTypes().getAreaType();
+        List<AreaType> areaTypes = request.getAreaTypes().getAreaTypes();
         ClosestAreaSpatialRQ closestAreaSpatialRQ = new ClosestAreaSpatialRQ();
         ClosestAreaSpatialRQ.AreaTypes types = new ClosestAreaSpatialRQ.AreaTypes();
-        types.getAreaType().addAll(areaTypes);
+        types.getAreaTypes().addAll(areaTypes);
         closestAreaSpatialRQ.setAreaTypes(types);
         closestAreaSpatialRQ.setUnit(request.getUnit());
         closestAreaSpatialRQ.setPoint(request.getPoint());
 
         List<Area> closestAreas = closestAreaService.getClosestAreas(closestAreaSpatialRQ);
 
-        List<LocationType> locationTypes = request.getLocationTypes().getLocationType();
+        List<LocationType> locationTypes = request.getLocationTypes().getLocationTypes();
         ClosestLocationSpatialRQ closestLocationSpatialRQ = new ClosestLocationSpatialRQ();
         closestLocationSpatialRQ.setPoint(request.getPoint());
         closestLocationSpatialRQ.setUnit(request.getUnit());
         ClosestLocationSpatialRQ.LocationTypes locationTp = new ClosestLocationSpatialRQ.LocationTypes();
-        locationTp.getLocationType().addAll(locationTypes);
+        locationTp.getLocationTypes().addAll(locationTypes);
         closestLocationSpatialRQ.setLocationTypes(locationTp);
 
         List<Location> closestLocations = closestLocationService.getClosestLocations(closestLocationSpatialRQ);
@@ -58,13 +58,13 @@ public class SpatialEnrichmentServiceBean implements SpatialEnrichmentService {
 
         if(areaTypesByLocation != null){
             AreasByLocationType areasByLocationType = new AreasByLocationType();
-            areasByLocationType.getArea().addAll(areaTypesByLocation);
+            areasByLocationType.getAreas().addAll(areaTypesByLocation);
             response.setAreasByLocation(areasByLocationType);
         }
 
         if (closestAreas != null) {
             ClosestAreasType closestAreasType = new ClosestAreasType();
-            closestAreasType.getClosestArea().addAll(closestAreas);
+            closestAreasType.getClosestAreas().addAll(closestAreas);
             response.setClosestAreas(closestAreasType);
         }
 

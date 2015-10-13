@@ -66,8 +66,8 @@ public class AreaDetailsServiceTest {
         request.setLongitude(-9.5);
         request.setCrs(4326);
         List<AreaDetails> areaDetails = areaDetailsServiceBean.getAreaDetailsByLocation(request);		
-		assertNotNull(areaDetails.get(0).getAreaProperty());
-		assertEquals(areaDetails.get(0).getAreaProperty().isEmpty(), false);
+		assertNotNull(areaDetails.get(0).getAreaProperties());
+		assertEquals(areaDetails.get(0).getAreaProperties().isEmpty(), false);
 	}
 	
 	@Test(expected=SpatialServiceException.class)
@@ -102,7 +102,7 @@ public class AreaDetailsServiceTest {
 		AreaDetailsSpatialRequest request = areaDetailsSpatialRequest;
         AreaDetails areaDetails = areaDetailsServiceBean.getAreaDetails(request);
         assertNotNull(areaDetails);
-		List<AreaProperty> list = areaDetails.getAreaProperty();
+		List<AreaProperty> list = areaDetails.getAreaProperties();
 		assertEquals(list.isEmpty(), false);
 	}
 	
@@ -123,7 +123,7 @@ public class AreaDetailsServiceTest {
 		AreaDetailsSpatialRequest request = areaDetailsSpatialRequest;
         AreaDetails areaDetails = areaDetailsServiceBean.getAreaDetails(request);
         assertNotNull(areaDetails);
-		List<AreaProperty> list = areaDetails.getAreaProperty();
+		List<AreaProperty> list = areaDetails.getAreaProperties();
 		assertEquals(list.isEmpty(), false);
 	}
 	

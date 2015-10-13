@@ -79,7 +79,7 @@ public class AreaDetailsServiceBean extends SpatialServiceBean implements AreaDe
 
         AreaDetails areaDetails = new AreaDetails();
         areaDetails.setAreaType(areaType);
-        areaDetails.getAreaProperty().addAll(areaProperties);
+        areaDetails.getAreaProperties().addAll(areaProperties);
         return areaDetails;
     }
 }

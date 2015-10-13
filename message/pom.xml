@@ -66,6 +66,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>model</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -76,6 +77,7 @@
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.movement</groupId>
             <artifactId>movement-model</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

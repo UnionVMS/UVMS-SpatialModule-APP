@@ -46,7 +46,7 @@ public class ClosestLocationServiceBean implements ClosestLocationService {
 
         Map<String, String> areaType2TableName = getLocationType2TableNameMap();
         List<Location> closestLocations = newArrayList();
-        for (LocationType locationType : request.getLocationTypes().getLocationType()) {
+        for (LocationType locationType : request.getLocationTypes().getLocationTypes()) {
             String areaDbTable = areaType2TableName.get(locationType.value());
 
             List<ClosestLocationDto> closestAreaList = repository.findClosestlocation(point, measurementUnit, areaDbTable);

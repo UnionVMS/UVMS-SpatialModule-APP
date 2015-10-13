@@ -39,8 +39,8 @@ public class AreaDetailsServiceIT extends AbstractArquillianIT {
 		areaCoordinate.setCrs(4326);
 		List<AreaDetails> areaDetails = areaDetailsService.getAreaDetailsByLocation(areaCoordinate);
 		assertFalse(areaDetails.isEmpty());
-		assertNotNull(areaDetails.get(0).getAreaProperty());
-		assertEquals(areaDetails.get(0).getAreaProperty().isEmpty(), false);
+		assertNotNull(areaDetails.get(0).getAreaProperties());
+		assertEquals(areaDetails.get(0).getAreaProperties().isEmpty(), false);
 	}
 	
 	@Test
@@ -82,8 +82,8 @@ public class AreaDetailsServiceIT extends AbstractArquillianIT {
         areaTypeEntry.setId("1");
         areaDetailsSpatialRequest.setAreaType(areaTypeEntry);
         AreaDetails areaDetails = areaDetailsService.getAreaDetails(areaDetailsSpatialRequest);
-		assertNotNull(areaDetails.getAreaProperty());
-		assertEquals(areaDetails.getAreaProperty().isEmpty(), false);
+		assertNotNull(areaDetails.getAreaProperties());
+		assertEquals(areaDetails.getAreaProperties().isEmpty(), false);
 	}
 	
 	/**
@@ -97,8 +97,8 @@ public class AreaDetailsServiceIT extends AbstractArquillianIT {
         areaTypeEntry.setId("1");
         areaDetailsSpatialRequest.setAreaType(areaTypeEntry);
         AreaDetails areaDetails = areaDetailsService.getAreaDetails(areaDetailsSpatialRequest);
-        assertNotNull(areaDetails.getAreaProperty());
-		assertEquals(areaDetails.getAreaProperty().isEmpty(), false);
+        assertNotNull(areaDetails.getAreaProperties());
+		assertEquals(areaDetails.getAreaProperties().isEmpty(), false);
 	}
 	
 

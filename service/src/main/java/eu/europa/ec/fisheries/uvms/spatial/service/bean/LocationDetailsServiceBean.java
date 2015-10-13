@@ -43,7 +43,7 @@ public class LocationDetailsServiceBean extends SpatialServiceBean implements Lo
         }
         LocationDetails locationDetails = new LocationDetails();
         locationDetails.setLocationType(locationType);
-        locationDetails.getLocationProperty().addAll(locationProperties);
+        locationDetails.getLocationProperties().addAll(locationProperties);
         return locationDetails;
     }
 }

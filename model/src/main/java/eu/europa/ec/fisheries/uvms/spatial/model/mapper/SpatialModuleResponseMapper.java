@@ -49,7 +49,7 @@ public class SpatialModuleResponseMapper extends SpatialJAXBMarshaller {
             AreaByLocationSpatialRS response = new AreaByLocationSpatialRS();
             AreasByLocationType areasByLocationType = new AreasByLocationType();
             if(areasByLocation != null){
-                areasByLocationType.getArea().addAll(areasByLocation);
+                areasByLocationType.getAreas().addAll(areasByLocation);
             }
             response.setAreasByLocation(areasByLocationType);
             return marshallJaxBObjectToString(response);
@@ -75,7 +75,7 @@ public class SpatialModuleResponseMapper extends SpatialJAXBMarshaller {
             AreaTypeNamesSpatialRS response = new AreaTypeNamesSpatialRS();
             AreasNameType areasNameType = new AreasNameType();
             if(areaTypeNames != null){
-                areasNameType.getAreaType().addAll(areaTypeNames);
+                areasNameType.getAreaTypes().addAll(areaTypeNames);
             }
             response.setAreaTypes(areasNameType);
             return marshallJaxBObjectToString(response);
@@ -125,7 +125,7 @@ public class SpatialModuleResponseMapper extends SpatialJAXBMarshaller {
             ClosestAreaSpatialRS response = new ClosestAreaSpatialRS();
             ClosestAreasType closestAreasType = new ClosestAreasType();
             if(closestAreas != null){
-                closestAreasType.getClosestArea().addAll(closestAreas);
+                closestAreasType.getClosestAreas().addAll(closestAreas);
             }
             response.setClosestArea(closestAreasType);
             return marshallJaxBObjectToString(response);
@@ -162,10 +162,17 @@ public class SpatialModuleResponseMapper extends SpatialJAXBMarshaller {
             throw new SpatialModelMapperException("Error when returning AreasByLocationType from response in ResponseMapper: " + e.getMessage());
         }
     }
+    
+	public String mapFilterAreasResponse(FilterAreasSpatialRS filterAreasSpatialRS) throws SpatialModelMarshallException {
+		try {
+			return marshallJaxBObjectToString(filterAreasSpatialRS);
+		} catch (JAXBException e) {
+            return exception(filterAreasSpatialRS, e);
+        }
+	}
 
     private static <T> String exception(T data, JAXBException e) throws SpatialModelMarshallException {
         log.error("[ Error when marshalling data. ] {}", e.getMessage());
         throw new SpatialModelMarshallException("Error when marshalling " + data.getClass().getName() + " to String");
     }
-
 }

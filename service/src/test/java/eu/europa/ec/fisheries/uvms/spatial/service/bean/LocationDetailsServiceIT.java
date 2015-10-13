@@ -29,8 +29,8 @@ public class LocationDetailsServiceIT extends AbstractArquillianIT {
 		locationEntry.setLongitude(-9.5);
 		locationEntry.setCrs(4326);
 		LocationDetails locationDetails = locationDetailsService.getLocationDetails(locationEntry);
-		assertNotNull(locationDetails.getLocationProperty());
-		assertEquals(locationDetails.getLocationProperty().isEmpty(), false);
+		assertNotNull(locationDetails.getLocationProperties());
+		assertEquals(locationDetails.getLocationProperties().isEmpty(), false);
 	}
 	
 	@Test
@@ -70,8 +70,8 @@ public class LocationDetailsServiceIT extends AbstractArquillianIT {
         locationTypeEntry.setLocationType("PORT");
         locationTypeEntry.setId("1");
         LocationDetails locationDetails = locationDetailsService.getLocationDetails(locationTypeEntry);
-		assertNotNull(locationDetails.getLocationProperty());
-		assertEquals(locationDetails.getLocationProperty().isEmpty(), false);
+		assertNotNull(locationDetails.getLocationProperties());
+		assertEquals(locationDetails.getLocationProperties().isEmpty(), false);
 	}
 	
 	/**

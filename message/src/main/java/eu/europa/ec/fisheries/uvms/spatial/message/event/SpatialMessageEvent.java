@@ -1,8 +1,14 @@
 package eu.europa.ec.fisheries.uvms.spatial.message.event;
 
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
-
 import javax.jms.TextMessage;
+
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AllAreaTypesRequest;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestLocationSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialFault;
 
 public class SpatialMessageEvent {
 
@@ -12,6 +18,7 @@ public class SpatialMessageEvent {
     private SpatialEnrichmentRQ spatialEnrichmentRQ;
     private AllAreaTypesRequest allAreaTypesRequest;
     private ClosestLocationSpatialRQ closestLocationSpatialRQ;
+    private FilterAreasSpatialRQ filterAreasSpatialRQ;
     private SpatialFault fault;
 
     public SpatialMessageEvent(TextMessage message, AreaByLocationSpatialRQ areaByLocationSpatialRQ){
@@ -43,6 +50,11 @@ public class SpatialMessageEvent {
         this.message = textMessage;
         this.closestLocationSpatialRQ = closestLocationSpatialRQ;
     }
+    
+    public SpatialMessageEvent(TextMessage textMessage, FilterAreasSpatialRQ filterAreasSpatialRQ) {
+    	this.message = textMessage;
+    	this.filterAreasSpatialRQ = filterAreasSpatialRQ;
+    }
 
     public TextMessage getMessage() {
         return message;
@@ -66,5 +78,13 @@ public class SpatialMessageEvent {
 
     public ClosestLocationSpatialRQ getClosestLocationSpatialRQ() {
         return closestLocationSpatialRQ;
+    }
+    
+    public FilterAreasSpatialRQ getFilterAreasSpatialRQ() {
+    	return filterAreasSpatialRQ;
+    }
+    
+    public AllAreaTypesRequest getAllAreaTypesRequest() {
+    	return allAreaTypesRequest;
     }
 }
