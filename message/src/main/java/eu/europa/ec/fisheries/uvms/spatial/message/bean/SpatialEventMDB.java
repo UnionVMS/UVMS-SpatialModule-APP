@@ -104,7 +104,7 @@ public class SpatialEventMDB implements MessageListener {
                     enrichmentSpatialEvent.fire(spatialEnrichmentEvent);
                     break;
                     
-                case GET_FILTERED_AREA:
+                case GET_FILTER_AREA:
                 	FilterAreasSpatialRQ filterAreasSpatialRQ = marshaller.unmarshall(textMessage, FilterAreasSpatialRQ.class);
                 	SpatialMessageEvent filterAreaEvent = new SpatialMessageEvent(textMessage, filterAreasSpatialRQ);
                 	filterAreaSpatialEvent.fire(filterAreaEvent);

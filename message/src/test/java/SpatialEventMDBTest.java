@@ -204,7 +204,7 @@ public class SpatialEventMDBTest {
     	when(mock.getText()).thenReturn(requestString);
     	
     	FilterAreasSpatialRQ request = new FilterAreasSpatialRQ();
-    	request.setMethod(SpatialModuleMethod.GET_FILTERED_AREA);
+    	request.setMethod(SpatialModuleMethod.GET_FILTER_AREA);
     	when(marshaller.unmarshall(mock, SpatialModuleRequest.class)).thenReturn(request);
     	mdb.onMessage(mock);
     	

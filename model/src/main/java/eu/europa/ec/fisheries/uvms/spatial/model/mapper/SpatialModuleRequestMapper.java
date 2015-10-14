@@ -115,7 +115,7 @@ public class SpatialModuleRequestMapper extends AbstractJAXBMarshaller {
         	UserAreasType userAreas = new UserAreasType();
         	scopeAreas.getScopeAreas().addAll(scopeAreaList); // Set scope areas received
         	userAreas.getUserAreas().addAll(userAreaList); // Set user areas received
-        	request.setMethod(SpatialModuleMethod.GET_FILTERED_AREA);
+        	request.setMethod(SpatialModuleMethod.GET_FILTER_AREA);
         	request.setScopeAreas(scopeAreas);
         	request.setUserAreas(userAreas);
         	return marshallJaxBObjectToString(request);

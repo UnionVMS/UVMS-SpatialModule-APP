@@ -5,7 +5,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaIdentifierDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-@Mapper(componentModel = "cdi")
+@Mapper
 public interface AreaIdentifierDtoMapper {
 
     AreaIdentifierDtoMapper INSTANCE = Mappers.getMapper(AreaIdentifierDtoMapper.class);

@@ -130,11 +130,11 @@ public class SpatialEventServiceBean implements SpatialEventService {
 
 	@Override
 	public void getFilterAreas(@Observes @GetFilterAreaEvent SpatialMessageEvent message) {
-		log.info("Get Filtered Area");
+		log.info("Getting Filter Areas");
 		try {
  			FilterAreasSpatialRQ filterAreaSpatialRQ = message.getFilterAreasSpatialRQ();
 			FilterAreasSpatialRS filterAreasSpatialRS = filterAreasService.filterAreas(filterAreaSpatialRQ);
-			log.debug("Send back filtered Area");
+			log.debug("Send back Filterd Areas");
 			messageProducer.sendModuleResponseMessage(message.getMessage(), mapper.mapFilterAreasResponse(filterAreasSpatialRS));
 		} catch (Exception e){
             sendError(message, e);

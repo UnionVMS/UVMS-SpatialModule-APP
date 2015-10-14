@@ -42,6 +42,12 @@
             <artifactId>javaee-api</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.jvnet.jaxb2_commons</groupId>
+            <artifactId>jaxb2-basics-runtime</artifactId>
+            <version>0.9.4</version>
+        </dependency>
+
     </dependencies>
 
     <profiles>
@@ -75,10 +81,42 @@
                             <bindingExcludes>
                                 <include>**/*.xj</include>
                             </bindingExcludes>
-							
+
                             <schemaDirectory>${project.basedir}/src/main/resources/contract</schemaDirectory>
                             <!-- <bindingDirectory>${project.basedir}/src/main/resources</bindingDirectory> -->
                             <generateDirectory>${basedir}/src/main/java/</generateDirectory>
+
+                            <extension>true</extension>
+                            <args>
+                                <arg>-Xsetters</arg>
+                                <arg>-Xvalue-constructor</arg>
+                                <arg>-Xsetters-mode=direct</arg>
+                                <arg>-Xannotate</arg>
+                            </args>
+
+                            <plugins>
+                                <plugin>
+                                    <groupId>org.jvnet.jaxb2_commons</groupId>
+                                    <artifactId>jaxb2-basics</artifactId>
+                                    <version>0.9.4</version>
+                                </plugin>
+                                <plugin>
+                                    <groupId>org.jvnet.jaxb2_commons</groupId>
+                                    <artifactId>jaxb2-value-constructor</artifactId>
+                                    <version>3.0</version>
+                                </plugin>
+                                <plugin>
+                                    <groupId>org.jvnet.jaxb2_commons</groupId>
+                                    <artifactId>jaxb2-basics-annotate</artifactId>
+                                    <version>1.0.1</version>
+                                </plugin>
+                                <plugin>
+                                    <groupId>org.jvnet.jaxb2_commons</groupId>
+                                    <artifactId>jaxb2-annotate-plugin-test-annox-annotations</artifactId>
+                                    <version>1.0.0</version>
+                                </plugin>
+                            </plugins>
+
                         </configuration>
 
                     </plugin>

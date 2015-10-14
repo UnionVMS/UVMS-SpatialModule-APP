@@ -31,6 +31,7 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
     @NamedQuery(name = QueryNameConstants.FIND_SYSTEM_AREAS, query = "SELECT area FROM AreaLocationTypesEntity area WHERE area.isLocation = 'N' AND area.isSystemWide = 'Y'"),
     @NamedQuery(name = QueryNameConstants.FIND_SYSTEM_LOCATIONS, query = "SELECT area FROM AreaLocationTypesEntity area WHERE area.isLocation = 'N' AND area.isSystemWide = 'Y'"),
     @NamedQuery(name = QueryNameConstants.FIND_TYPE_BY_ID, query = "SELECT area FROM AreaLocationTypesEntity area WHERE area.typeName= :typeName"),
+	@NamedQuery(name = QueryNameConstants.FIND_TYPE_BY_IDS, query = "SELECT area FROM AreaLocationTypesEntity area WHERE area.typeName in (:typeNames)"),
     @NamedQuery(name = QueryNameConstants.FIND_SYSTEM_AREA_LAYER, query = "select area.typeName as typeName, area.areaTypeDesc as areaTypeDesc,"
     									+ " layer.geoName as geoName, layer.serviceUrl as serviceUrl, layer.styleLabelGeom as style,"
 										+ " provider.serviceType as serviceType FROM AreaLocationTypesEntity as area INNER JOIN area.serviceLayer as layer"

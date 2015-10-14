@@ -19,7 +19,8 @@ public class QueryNameConstants {
 
     /** Find Area By Id */
     public static final String FIND_TYPE_BY_ID = "AreaType.findAreaById";
-    
+    public static final String FIND_TYPE_BY_IDS = "AreaType.findAreaByIds";
+
     /** Named Native queries */
     public static final String EEZ_BY_COORDINATE = "eezEntity.ByCoordinate";
     public static final String RFMO_BY_COORDINATE = "rfmoEntity.ByCoordinate";

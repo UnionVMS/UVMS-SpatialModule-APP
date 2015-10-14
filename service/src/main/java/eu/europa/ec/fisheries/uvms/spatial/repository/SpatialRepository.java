@@ -25,5 +25,5 @@ public interface SpatialRepository extends DAO {
     
     List<Map<String, String>> findSelectedAreaColumns(String namedQueryString, Number gid);
 
-    Geometry filterAreas(List<AreaIdentifierDto> userAreas, List<AreaIdentifierDto> scopeAreas);
+    String filterAreas(List<AreaIdentifierDto> userAreas, List<AreaIdentifierDto> scopeAreas);
 }
