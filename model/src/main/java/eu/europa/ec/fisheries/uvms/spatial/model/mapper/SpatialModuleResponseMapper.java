@@ -170,6 +170,16 @@ public class SpatialModuleResponseMapper extends SpatialJAXBMarshaller {
             return exception(filterAreasSpatialRS, e);
         }
 	}
+	
+	public String mapToFilterAreasSpatialRSFromResponse(TextMessage response, String correlationId) throws SpatialModelMapperException {
+		try {
+			validateResponse(response, correlationId);
+			return unmarshallTextMessage(response, FilterAreasSpatialRS.class);
+		} catch (JAXBException | JMSException e) {
+			log.error("[ Error when mapping response to filter area response. ] {}", e.getMessage());
+            throw new SpatialModelMapperException("Error when returning filter area from response in ResponseMapper: " + e.getMessage());
+		}		
+	}
 
     private static <T> String exception(T data, JAXBException e) throws SpatialModelMarshallException {
         log.error("[ Error when marshalling data. ] {}", e.getMessage());
