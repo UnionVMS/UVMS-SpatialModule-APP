@@ -134,7 +134,7 @@
             <xs:enumeration value="GET_CLOSEST_AREA"/>
             <xs:enumeration value="GET_BUFFER_GEOM"/>
             <xs:enumeration value="GET_ENRICHMENT"/>
-            <xs:enumeration value="GET_FILTERED_AREA"/>
+            <xs:enumeration value="GET_FILTER_AREA"/>
         </xs:restriction>
     </xs:simpleType>
 
