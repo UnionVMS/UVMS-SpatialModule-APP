@@ -6,9 +6,6 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaIdentifierDto;
 
 import java.util.List;
 
-/**
- * Created by kopyczmi on 18-Aug-15.
- */
 public interface AreaByLocationService {
     List<AreaTypeEntry> getAreaTypesByLocation(AreaByLocationSpatialRQ request);
 

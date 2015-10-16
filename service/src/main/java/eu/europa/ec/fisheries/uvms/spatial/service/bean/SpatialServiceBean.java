@@ -10,7 +10,6 @@ import java.util.Map;
 
 import javax.ejb.EJB;
 
-import eu.europa.ec.fisheries.uvms.service.DAO;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 
@@ -37,7 +36,7 @@ public abstract class SpatialServiceBean {
     @SneakyThrows
 	protected AreaLocationTypesEntity getAreaLocationType(String type) {
     	Map<String, String> parameters = ImmutableMap.<String, String>builder().put(TYPE_NAME, type.toUpperCase()).build();
-     	List<AreaLocationTypesEntity> areasLocationTypes = repository.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_TYPE_BY_ID, parameters, 1);
+     	List<AreaLocationTypesEntity> areasLocationTypes = repository.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_TYPE_BY_NAME, parameters, 1);
      	if (areasLocationTypes.isEmpty()) {
      		throw new SpatialServiceException(SpatialServiceErrors.INVALID_AREA_LOCATION_TYPE, areasLocationTypes);
      	}

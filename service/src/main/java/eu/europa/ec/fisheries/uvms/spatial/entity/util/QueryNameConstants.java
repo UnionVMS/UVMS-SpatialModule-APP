@@ -8,18 +8,18 @@ package eu.europa.ec.fisheries.uvms.spatial.entity.util;
 public class QueryNameConstants {
 	
 	/** Find all */
-    public static final String FIND_ALL_AREA_TYPE_NAMES = "AreaType.findAllAreaTypeNames";
-    public static final String FIND_ALL_AREAS = "AreaType.findAllAreas";
-    public static final String FIND_ALL_LOCATIONS = "AreaType.findAllLocations";
+    public static final String FIND_ALL_AREA_TYPE_NAMES = "AreaLocationType.findAllAreaTypeNames";
+    public static final String FIND_ALL_AREAS = "AreaLocationType.findAllAreas";
+    public static final String FIND_ALL_LOCATIONS = "AreaLocationType.findAllLocations";
 
     /** Find System */
-    public static final String FIND_SYSTEM_AREAS = "AreaType.findSystemAreas";
-    public static final String FIND_SYSTEM_LOCATIONS = "AreaType.findSystemLocations";
-    public static final String FIND_SYSTEM_AREA_LAYER = "AreaType.findSystemAreaLayerMappings";
+    public static final String FIND_SYSTEM_AREAS = "AreaLocationType.findSystemAreas";
+    public static final String FIND_SYSTEM_LOCATIONS = "AreaLocationType.findSystemLocations";
+    public static final String FIND_SYSTEM_AREA_LAYER = "AreaLocationType.findSystemAreaLayerMappings";
 
-    /** Find Area By Id */
-    public static final String FIND_TYPE_BY_ID = "AreaType.findAreaById";
-    public static final String FIND_TYPE_BY_IDS = "AreaType.findAreaByIds";
+    /** Find Area By Name */
+    public static final String FIND_TYPE_BY_NAME = "AreaLocationType.findAreaByName";
+    public static final String FIND_TYPE_BY_NAMES = "AreaLocationType.findAreaByNames";
 
     /** Named Native queries */
     public static final String EEZ_BY_COORDINATE = "eezEntity.ByCoordinate";

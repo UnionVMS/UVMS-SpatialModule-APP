@@ -1,6 +1,5 @@
 package eu.europa.ec.fisheries.uvms.spatial.repository;
 
-import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.spatial.dao.AreaDao;
@@ -29,7 +28,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
 
     @PostConstruct
     public void init() {
-        areaDao = new AreaDao(em, sql);
+        areaDao = new AreaDao(em, sql, this);
     }
 
     @Override
@@ -73,7 +72,8 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     }
 
     @Override
-    public String filterAreas(List<AreaIdentifierDto> userAreas, List<AreaIdentifierDto> scopeAreas) {
-        return areaDao.filterAreas(userAreas, scopeAreas);
+    public String filterAreas(List<String> userAreaTables, List<String> userAreaIds) {
+        return areaDao.filterAreas(userAreaTables, userAreaIds);
     }
+
 }

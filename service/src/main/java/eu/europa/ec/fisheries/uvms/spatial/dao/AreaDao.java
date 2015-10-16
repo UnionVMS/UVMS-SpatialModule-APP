@@ -1,12 +1,10 @@
 package eu.europa.ec.fisheries.uvms.spatial.dao;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
+import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepositoryBean;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.*;
 import eu.europa.ec.fisheries.uvms.spatial.util.SqlPropertyHolder;
-import eu.europa.ec.fisheries.uvms.spatial.util.TransformUtils;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
@@ -34,15 +32,17 @@ public class AreaDao {
     private static final String NAME_PLACEHOLDER = "{name}";
     private static final String CODE_PLACEHOLDER = "{code}";
     private static final String GID = "gid";
-    private static final String USER_AREA_TYPES = "userAreaTypes";
+    private static final String USER_AREA_TABLES = "userAreaTypes";
     private static final String USER_AREA_IDS = "userAreaIds";
 
     private EntityManager em;
+    private SpatialRepositoryBean repository;
     private SqlPropertyHolder propertyHolder;
 
-    public AreaDao(EntityManager em, SqlPropertyHolder propertyHolder) {
+    public AreaDao(EntityManager em, SqlPropertyHolder propertyHolder, SpatialRepositoryBean spatialRepositoryBean) {
         this.em = em;
         this.propertyHolder = propertyHolder;
+        this.repository = spatialRepositoryBean;
     }
 
     public List<Integer> findAreasIdByLocation(Point point, String areaDbTable) {
@@ -86,18 +86,13 @@ public class AreaDao {
     }
 
     @SuppressWarnings("unchecked")
-    public String filterAreas(List<AreaIdentifierDto> userAreas, List<AreaIdentifierDto> scopeAreas) {
-        List<String> userAreaTypes = Lists.transform(userAreas, TransformUtils.AREA_DTO_TO_TYPE_STRING);
-        List<String> userAreaIds = Lists.transform(userAreas, TransformUtils.AREA_DTO_TO_ID_STRING);
-
-        //String queryString = propertyHolder.getProperty(FILTER_AREAS_QUERY);
-
-        String userAreaTypesString = convertToString(userAreaTypes);
+    public String filterAreas(List<String> userAreaTables, List<String> userAreaIds) {
+        String userAreaTablesString = convertToString(userAreaTables);
         String userAreaIdsString = convertToString(userAreaIds);
 
         String queryString = propertyHolder.getProperty(FILTER_AREAS_QUERY);
         Query query = getSession().createSQLQuery(queryString)
-                .setParameter(USER_AREA_TYPES, userAreaTypesString)
+                .setParameter(USER_AREA_TABLES, userAreaTablesString)
                 .setParameter(USER_AREA_IDS, userAreaIdsString);
 
         return (String) query.list().get(0);
