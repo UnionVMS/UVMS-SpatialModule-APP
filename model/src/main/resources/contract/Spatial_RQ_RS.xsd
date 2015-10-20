@@ -68,6 +68,7 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element name="Geometry" type="xs:string" maxOccurs="1"/>
+                <xs:element name="Code" type="xs:int" maxOccurs="1"/>
 			</xs:sequence>			
 		</xs:complexType>
     </xs:element>

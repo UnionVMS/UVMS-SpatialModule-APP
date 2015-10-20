@@ -13,6 +13,7 @@ import javax.ejb.EJB;
 import java.util.ArrayList;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
@@ -37,6 +38,7 @@ public class FilterAreasServiceIT extends AbstractArquillianIT {
         // then
         assertNotNull(filterAreasSpatialRS);
         assertNotNull(filterAreasSpatialRS.getGeometry());
+        assertEquals(3, filterAreasSpatialRS.getCode());
     }
 
     @Test

@@ -88,7 +88,7 @@ public class AreaDao {
     }
 
     @SuppressWarnings("unchecked")
-    public String filterAreas(List<String> userAreaTables, List<String> userAreaIds, List<String> scopeAreaTables, List<String> scopeAreaIds) {
+    public FilterAreasDto filterAreas(List<String> userAreaTables, List<String> userAreaIds, List<String> scopeAreaTables, List<String> scopeAreaIds) {
         String userAreaTablesString = convertToString(userAreaTables);
         String userAreaIdsString = convertToString(userAreaIds);
 
@@ -100,9 +100,10 @@ public class AreaDao {
                 .setParameter(USER_AREA_TABLES, userAreaTablesString)
                 .setParameter(USER_AREA_IDS, userAreaIdsString)
                 .setParameter(SCOPE_AREA_TABLES, scopeAreaTablesString)
-                .setParameter(SCOPE_AREA_IDS, scopeAreaIdsString);
+                .setParameter(SCOPE_AREA_IDS, scopeAreaIdsString)
+                .setResultTransformer(Transformers.aliasToBean(FilterAreasDto.class));
 
-        return (String) query.list().get(0);
+        return (FilterAreasDto) query.list().get(0);
     }
 
     private String convertToString(List<String> userAreaTypes) {

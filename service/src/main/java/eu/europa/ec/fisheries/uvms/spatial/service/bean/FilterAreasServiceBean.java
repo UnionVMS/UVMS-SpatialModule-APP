@@ -8,12 +8,12 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.FilterAreasDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.util.TransformUtils;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.ejb.EJB;
 import javax.ejb.Local;
@@ -52,10 +52,9 @@ public class FilterAreasServiceBean implements FilterAreasService {
         List<String> userAreaTables = convertToAreaTables(userAreaTypes, areaType2TableName);
         List<String> scopeAreaTables = convertToAreaTables(scopeAreaTypes, areaType2TableName);
 
-        String wktGeometry = repository.filterAreas(userAreaTables, userAreaIds, scopeAreaTables, scopeAreaIds);
-        validateResponse(wktGeometry);
+        FilterAreasDto result = repository.filterAreas(userAreaTables, userAreaIds, scopeAreaTables, scopeAreaIds);
 
-        return createResponse(wktGeometry);
+        return createResponse(result);
     }
 
     private List<String> createUnionAreas(List<String> userAreaTypes, List<String> scopeAreaTypes) {
@@ -131,15 +130,10 @@ public class FilterAreasServiceBean implements FilterAreasService {
         return userAreas == null || isEmpty(userAreas.getUserAreas());
     }
 
-    private void validateResponse(String wktGeometry) {
-        if (StringUtils.isBlank(wktGeometry)) {
-            throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
-        }
-    }
-
-    private FilterAreasSpatialRS createResponse(String geometry) {
+    private FilterAreasSpatialRS createResponse(FilterAreasDto result) {
         FilterAreasSpatialRS response = new FilterAreasSpatialRS();
-        response.setGeometry(geometry);
+        response.setGeometry(result.getWkt_geometry());
+        response.setCode(result.getResult_code());
         return response;
     }
 
