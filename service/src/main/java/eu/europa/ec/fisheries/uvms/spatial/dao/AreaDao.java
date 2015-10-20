@@ -34,6 +34,8 @@ public class AreaDao {
     private static final String GID = "gid";
     private static final String USER_AREA_TABLES = "userAreaTypes";
     private static final String USER_AREA_IDS = "userAreaIds";
+    private static final String SCOPE_AREA_TABLES = "scopeAreaTypes";
+    private static final String SCOPE_AREA_IDS = "scopeAreaIds";
 
     private EntityManager em;
     private SpatialRepositoryBean repository;
@@ -86,14 +88,19 @@ public class AreaDao {
     }
 
     @SuppressWarnings("unchecked")
-    public String filterAreas(List<String> userAreaTables, List<String> userAreaIds) {
+    public String filterAreas(List<String> userAreaTables, List<String> userAreaIds, List<String> scopeAreaTables, List<String> scopeAreaIds) {
         String userAreaTablesString = convertToString(userAreaTables);
         String userAreaIdsString = convertToString(userAreaIds);
+
+        String scopeAreaTablesString = convertToString(scopeAreaTables);
+        String scopeAreaIdsString = convertToString(scopeAreaIds);
 
         String queryString = propertyHolder.getProperty(FILTER_AREAS_QUERY);
         Query query = getSession().createSQLQuery(queryString)
                 .setParameter(USER_AREA_TABLES, userAreaTablesString)
-                .setParameter(USER_AREA_IDS, userAreaIdsString);
+                .setParameter(USER_AREA_IDS, userAreaIdsString)
+                .setParameter(SCOPE_AREA_TABLES, scopeAreaTablesString)
+                .setParameter(SCOPE_AREA_IDS, scopeAreaIdsString);
 
         return (String) query.list().get(0);
     }

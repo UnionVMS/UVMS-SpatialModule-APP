@@ -4,8 +4,8 @@ import com.google.common.collect.Lists;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
-import org.fest.assertions.Assertions;
 import org.jboss.arquillian.junit.Arquillian;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -27,7 +27,7 @@ public class FilterAreasServiceIT extends AbstractArquillianIT {
     private FilterAreasService filterAreasService;
 
     @Test
-    public void shouldReturMergedAreaAndSkipNotExisting() throws Exception {
+    public void shouldReturnMergedAreaAndSkipNotExisting() throws Exception {
         // given
         FilterAreasSpatialRQ request = createRequest(RFMO);
 
@@ -62,9 +62,15 @@ public class FilterAreasServiceIT extends AbstractArquillianIT {
         userAreaIdentifiers.add(new AreaIdentifierType("10", RFMO));
         userAreaIdentifiers.add(new AreaIdentifierType("18", RFMO));
         userAreaIdentifiers.add(new AreaIdentifierType("20", areaType));
-        UserAreasType userAreasType = new UserAreasType(userAreaIdentifiers);
 
-        return new FilterAreasSpatialRQ(SpatialModuleMethod.GET_FILTER_AREA, userAreasType, new ScopeAreasType());
+        ArrayList<AreaIdentifierType> scopeAreaIdentifiers = Lists.newArrayList();
+        scopeAreaIdentifiers.add(new AreaIdentifierType("1", EEZ));
+        scopeAreaIdentifiers.add(new AreaIdentifierType("44", EEZ));
+
+        UserAreasType userAreasType = new UserAreasType(userAreaIdentifiers);
+        ScopeAreasType scopeAreasType = new ScopeAreasType(scopeAreaIdentifiers);
+
+        return new FilterAreasSpatialRQ(SpatialModuleMethod.GET_FILTER_AREA, userAreasType, scopeAreasType);
     }
 
 }

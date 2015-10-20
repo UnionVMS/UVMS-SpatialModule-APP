@@ -6,10 +6,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaIdentifierType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRS;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.UserAreasType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
@@ -44,23 +41,37 @@ public class FilterAreasServiceBean implements FilterAreasService {
     @SneakyThrows
     public FilterAreasSpatialRS filterAreas(FilterAreasSpatialRQ request) {
         UserAreasType userAreas = request.getUserAreas();
-        validateUserAreas(userAreas);
+        ScopeAreasType scopeAreas = request.getScopeAreas();
+        validateAreas(userAreas, scopeAreas);
 
         List<String> userAreaTypes = mapToStringList(userAreas, TransformUtils.EXTRACT_AREA_TYPE);
         List<String> userAreaIds = mapToStringList(userAreas, TransformUtils.EXTRACT_AREA_ID);
+        List<String> userAreaTables = convertToUserAreaTables(userAreaTypes);
 
-        String wktGeometry = repository.filterAreas(convertToUserAreaTables(userAreaTypes), userAreaIds);
+        List<String> scopeAreaTypes = mapToStringList(scopeAreas, TransformUtils.EXTRACT_AREA_TYPE);
+        List<String> scopeAreaIds = mapToStringList(scopeAreas, TransformUtils.EXTRACT_AREA_ID);
+        List<String> scopeAreaTables = convertToUserAreaTables(scopeAreaTypes);
+
+        String wktGeometry = repository.filterAreas(userAreaTables, userAreaIds, scopeAreaTables, scopeAreaIds);
         validateResponse(wktGeometry);
 
         return createResponse(wktGeometry);
     }
 
+    // TODO Marge find by Names from user and scope areas into one request
     @SneakyThrows
-    private List<String> convertToUserAreaTables(List<String> userAreaTypes)  {
+    private List<String> convertToUserAreaTables(List<String> userAreaTypes) {
         Map<String, List<String>> parameters = createParameters(userAreaTypes);
         List<AreaLocationTypesEntity> areaEntities = repository.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_TYPE_BY_NAMES, parameters);
         Map<String, String> areaType2TableMap = createAreaType2TableMap(areaEntities);
         return validateAndTransform(userAreaTypes, areaType2TableMap);
+    }
+
+    private List<String> mapToStringList(ScopeAreasType scopeAreasType, Function<AreaIdentifierType, String> func) {
+        if (scopeAreasType != null) {
+            return Lists.transform(scopeAreasType.getScopeAreas(), func);
+        }
+        return Collections.emptyList();
     }
 
     private List<String> mapToStringList(UserAreasType userAreasType, Function<AreaIdentifierType, String> func) {
@@ -99,10 +110,18 @@ public class FilterAreasServiceBean implements FilterAreasService {
         });
     }
 
-    private void validateUserAreas(UserAreasType userAreas) {
-        if (userAreas == null || isEmpty(userAreas.getUserAreas())) {
+    private void validateAreas(UserAreasType userAreas, ScopeAreasType scopeAreas) {
+        if (isUserAreasEmpty(userAreas) && isScopeAreasEmpty(scopeAreas)) {
             throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
         }
+    }
+
+    private boolean isScopeAreasEmpty(ScopeAreasType scopeAreas) {
+        return scopeAreas == null || isEmpty(scopeAreas.getScopeAreas());
+    }
+
+    private boolean isUserAreasEmpty(UserAreasType userAreas) {
+        return userAreas == null || isEmpty(userAreas.getUserAreas());
     }
 
     private void validateResponse(String wktGeometry) {
