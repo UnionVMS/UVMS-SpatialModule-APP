@@ -19,9 +19,7 @@ import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.transaction.Transactional;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.apache.commons.collections.CollectionUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -46,11 +44,13 @@ public class FilterAreasServiceBean implements FilterAreasService {
 
         List<String> userAreaTypes = mapToStringList(userAreas, TransformUtils.EXTRACT_AREA_TYPE);
         List<String> userAreaIds = mapToStringList(userAreas, TransformUtils.EXTRACT_AREA_ID);
-        List<String> userAreaTables = convertToUserAreaTables(userAreaTypes);
 
         List<String> scopeAreaTypes = mapToStringList(scopeAreas, TransformUtils.EXTRACT_AREA_TYPE);
         List<String> scopeAreaIds = mapToStringList(scopeAreas, TransformUtils.EXTRACT_AREA_ID);
-        List<String> scopeAreaTables = convertToUserAreaTables(scopeAreaTypes);
+
+        Map<String, String> areaType2TableName = createAreaTableMapping(createUnionAreas(userAreaTypes, scopeAreaTypes));
+        List<String> userAreaTables = convertToAreaTables(userAreaTypes, areaType2TableName);
+        List<String> scopeAreaTables = convertToAreaTables(scopeAreaTypes, areaType2TableName);
 
         String wktGeometry = repository.filterAreas(userAreaTables, userAreaIds, scopeAreaTables, scopeAreaIds);
         validateResponse(wktGeometry);
@@ -58,13 +58,37 @@ public class FilterAreasServiceBean implements FilterAreasService {
         return createResponse(wktGeometry);
     }
 
-    // TODO Marge find by Names from user and scope areas into one request
+    private List<String> createUnionAreas(List<String> userAreaTypes, List<String> scopeAreaTypes) {
+        Set<String> uniqueAreasSet = new HashSet(userAreaTypes);
+        uniqueAreasSet.addAll(scopeAreaTypes);
+        return Lists.newArrayList(uniqueAreasSet);
+    }
+
+    private List<String> convertToAreaTables(List<String> areaTypes, final Map<String, String> areaType2TableName) {
+        return Lists.transform(areaTypes, new Function<String, String>() {
+            @Override
+            public String apply(String areaType) {
+                return areaType2TableName.get(areaType);
+            }
+        });
+    }
+
     @SneakyThrows
-    private List<String> convertToUserAreaTables(List<String> userAreaTypes) {
+    private Map<String, String> createAreaTableMapping(List<String> userAreaTypes) {
         Map<String, List<String>> parameters = createParameters(userAreaTypes);
         List<AreaLocationTypesEntity> areaEntities = repository.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_TYPE_BY_NAMES, parameters);
         Map<String, String> areaType2TableMap = createAreaType2TableMap(areaEntities);
-        return validateAndTransform(userAreaTypes, areaType2TableMap);
+        validateTableNames(userAreaTypes, areaType2TableMap);
+        return areaType2TableMap;
+    }
+
+    private void validateTableNames(List<String> areaTypes, final Map<String, String> areaType2TableName) {
+        for (String areaType : areaTypes) {
+            String userAreaTableName = areaType2TableName.get(areaType);
+            if (isBlank(userAreaTableName)) {
+                throw new SpatialServiceException(SpatialServiceErrors.INVALID_AREA_TYPE, areaType);
+            }
+        }
     }
 
     private List<String> mapToStringList(ScopeAreasType scopeAreasType, Function<AreaIdentifierType, String> func) {
@@ -91,23 +115,6 @@ public class FilterAreasServiceBean implements FilterAreasService {
 
     private Map<String, List<String>> createParameters(List<String> userAreaTypes) {
         return ImmutableMap.<String, List<String>>builder().put(TYPE_NAMES, userAreaTypes).build();
-    }
-
-    private List<String> validateAndTransform(List<String> userAreaTypes, final Map<String, String> areaType2TableName) {
-        return Lists.transform(userAreaTypes, new Function<String, String>() {
-            @Override
-            public String apply(String userAreaType) {
-                String userAreaTableName = areaType2TableName.get(userAreaType);
-                validateTableName(userAreaType, userAreaTableName);
-                return userAreaTableName;
-            }
-
-            private void validateTableName(String userAreaType, String userAreaTableName) {
-                if (isBlank(userAreaTableName)) {
-                    throw new SpatialServiceException(SpatialServiceErrors.INVALID_AREA_TYPE, userAreaType);
-                }
-            }
-        });
     }
 
     private void validateAreas(UserAreasType userAreas, ScopeAreasType scopeAreas) {
