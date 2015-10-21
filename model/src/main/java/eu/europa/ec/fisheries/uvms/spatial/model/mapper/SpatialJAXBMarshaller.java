@@ -3,6 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.model.mapper;
 import eu.europa.ec.fisheries.uvms.message.AbstractJAXBMarshaller;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMarshallException;
 import lombok.extern.slf4j.Slf4j;
+
 import javax.jms.JMSException;
 import javax.jms.TextMessage;
 import javax.xml.bind.JAXBException;
@@ -18,11 +19,11 @@ public class SpatialJAXBMarshaller extends AbstractJAXBMarshaller {
      * @return
      * @throws SpatialModelMarshallException
      */
-    public <T> String marshall(T data) throws SpatialModelMarshallException {
+    public static <T> String marshall(T data) throws SpatialModelMarshallException {
         try {
             return marshallJaxBObjectToString(data);
         } catch (JAXBException e) {
-            log.error("[ Error when marshalling data. ] {}", e.getMessage());
+            log.error("[ Error when marshalling object to string. ] {}", e.getMessage());
             throw new SpatialModelMarshallException("Error when marshalling " + data.getClass().getName() + " to String");
         }
     }
@@ -33,15 +34,15 @@ public class SpatialJAXBMarshaller extends AbstractJAXBMarshaller {
      *
      * @param <R>
      * @param textMessage
-     * @param clazz clazz
+     * @param clazz       clazz
      * @return
      * @throws SpatialModelMarshallException
      */
-    public <R> R unmarshall(TextMessage textMessage, Class clazz) throws SpatialModelMarshallException {
+    public static <R> R unmarshall(TextMessage textMessage, Class clazz) throws SpatialModelMarshallException {
         try {
             return unmarshallTextMessage(textMessage, clazz);
         } catch (JMSException | JAXBException e) {
-            log.error("[ Error when unmarshalling data. ] {}", e.getMessage());
+            log.error("[ Error when unmarshalling Text message to object. ] {}", e.getMessage());
             throw new SpatialModelMarshallException("Error when unmarshalling response in ResponseMapper: " + e.getMessage());
         }
     }

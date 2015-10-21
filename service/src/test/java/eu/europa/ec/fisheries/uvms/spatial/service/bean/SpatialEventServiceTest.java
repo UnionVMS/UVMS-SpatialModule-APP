@@ -7,6 +7,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMarshallE
 import eu.europa.ec.fisheries.uvms.spatial.model.mapper.SpatialModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialEventService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -18,143 +19,122 @@ import javax.enterprise.event.Event;
 import javax.jms.TextMessage;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SpatialEventServiceTest {
 
-    @InjectMocks
-    private SpatialEventService service = new SpatialEventServiceBean();
-
-    @Mock
-    private AreaByLocationService areaByLocationService;
-
-    @Mock
-    private ClosestAreaService closestAreaService;
-
-    @Mock
-    private ClosestLocationService closestLocationService;
-
-    @Mock
-    private SpatialEnrichmentService enrichmentService;
-
-    @Mock
-    private AreaTypeNamesService areaTypeNamesService;
-
-    @Mock
-    private SpatialMessageServiceBean messageProducer;
-    
-    @Mock
-    private FilterAreasServiceBean filterAreasService;
-
     @Mock
     Event<SpatialMessageEvent> spatialErrorEvent;
-
+    @InjectMocks
+    private SpatialEventService service = new SpatialEventServiceBean();
+    @Mock
+    private AreaByLocationService areaByLocationService;
+    @Mock
+    private ClosestAreaService closestAreaService;
+    @Mock
+    private ClosestLocationService closestLocationService;
+    @Mock
+    private SpatialEnrichmentService enrichmentService;
+    @Mock
+    private AreaTypeNamesService areaTypeNamesService;
+    @Mock
+    private SpatialMessageServiceBean messageProducer;
+    @Mock
+    private FilterAreasServiceBean filterAreasService;
     @Mock
     private SpatialModuleResponseMapper mapper;
+    @Mock
+    private TextMessage textMessage;
 
     @Test
-    public void testGetAreaByLocation(){
-
-        AreaByLocationSpatialRQ request = new AreaByLocationSpatialRQ();
-        TextMessage mock = Mockito.mock(TextMessage.class);
-        SpatialMessageEvent message = new SpatialMessageEvent(mock, request);
+    public void testGetAreaByLocation() {
+        SpatialMessageEvent message = new SpatialMessageEvent(textMessage, new AreaByLocationSpatialRQ());
 
         service.getAreaByLocation(message);
 
-        verify(areaByLocationService, times(1)).getAreaTypesByLocation(request);
-        verify(messageProducer, times(1)).sendModuleResponseMessage(mock, null);
+        verify(areaByLocationService, times(1)).getAreaTypesByLocation(any(AreaByLocationSpatialRQ.class));
+        verify(messageProducer, times(1)).sendModuleResponseMessage(eq(textMessage), anyString());
         verify(spatialErrorEvent, times(0)).fire(message);
-
     }
 
     @Test
-    public void testGetClosestArea(){
-
-        ClosestAreaSpatialRQ request = new ClosestAreaSpatialRQ();
-        TextMessage mock = Mockito.mock(TextMessage.class);
-        SpatialMessageEvent message = new SpatialMessageEvent(mock, request);
+    public void testGetClosestArea() {
+        SpatialMessageEvent message = new SpatialMessageEvent(textMessage, new ClosestAreaSpatialRQ());
 
         service.getClosestArea(message);
 
-        verify(closestAreaService, times(1)).getClosestAreas(request);
-        verify(messageProducer, times(1)).sendModuleResponseMessage(mock, null);
+        verify(closestAreaService, times(1)).getClosestAreas(any(ClosestAreaSpatialRQ.class));
+        verify(messageProducer, times(1)).sendModuleResponseMessage(eq(textMessage), anyString());
         verify(spatialErrorEvent, times(0)).fire(message);
-
     }
 
     @Test
-    public void testGetClosestLocation(){
-
-        ClosestLocationSpatialRQ request = new ClosestLocationSpatialRQ();
-        TextMessage mock = Mockito.mock(TextMessage.class);
-        SpatialMessageEvent message = new SpatialMessageEvent(mock, request);
+    public void testGetClosestLocation() {
+        SpatialMessageEvent message = new SpatialMessageEvent(textMessage, new ClosestLocationSpatialRQ());
 
         service.getClosestLocation(message);
 
-        verify(closestLocationService, times(1)).getClosestLocations(request);
-        verify(messageProducer, times(1)).sendModuleResponseMessage(mock, null);
+        verify(closestLocationService, times(1)).getClosestLocations(any(ClosestLocationSpatialRQ.class));
+        verify(messageProducer, times(1)).sendModuleResponseMessage(eq(textMessage), anyString());
         verify(spatialErrorEvent, times(0)).fire(message);
-
     }
 
     @Test
-    public void testGetAreaTypeNames(){
-
-        AllAreaTypesRequest request = new AllAreaTypesRequest();
-        TextMessage mock = Mockito.mock(TextMessage.class);
-        SpatialMessageEvent message = new SpatialMessageEvent(mock, request);
+    public void testGetAreaTypeNames() {
+        SpatialMessageEvent message = new SpatialMessageEvent(textMessage, new AllAreaTypesRequest());
 
         service.getAreaTypeNames(message);
 
         verify(areaTypeNamesService, times(1)).listAllAreaTypeNames();
-        verify(messageProducer, times(1)).sendModuleResponseMessage(mock, null);
+        verify(messageProducer, times(1)).sendModuleResponseMessage(eq(textMessage), anyString());
         verify(spatialErrorEvent, times(0)).fire(message);
-
     }
 
     @Test
-    public void testGetSpatialEnrichment(){
-
-        SpatialEnrichmentRQ request = new SpatialEnrichmentRQ();
-        TextMessage mock = Mockito.mock(TextMessage.class);
-        SpatialMessageEvent message = new SpatialMessageEvent(mock, request);
+    public void testGetSpatialEnrichment() {
+        SpatialMessageEvent message = new SpatialMessageEvent(textMessage, new SpatialEnrichmentRQ());
+        when(enrichmentService.getSpatialEnrichment(any(SpatialEnrichmentRQ.class))).thenReturn(new SpatialEnrichmentRS());
 
         service.getSpatialEnrichment(message);
 
-        verify(enrichmentService, times(1)).getSpatialEnrichment(request);
-        verify(messageProducer, times(1)).sendModuleResponseMessage(mock, null);
+        verify(enrichmentService, times(1)).getSpatialEnrichment(any(SpatialEnrichmentRQ.class));
+        verify(messageProducer, times(1)).sendModuleResponseMessage(eq(textMessage), anyString());
         verify(spatialErrorEvent, times(0)).fire(message);
-
     }
 
     @Test
     public void testGetSpatialEnrichmentError() throws SpatialModelMarshallException {
-
-        SpatialEnrichmentRQ request = new SpatialEnrichmentRQ();
-        TextMessage mock = Mockito.mock(TextMessage.class);
-        SpatialMessageEvent message = new SpatialMessageEvent(mock, request);
-
-        when(mapper.mapEnrichmentResponse(any(SpatialEnrichmentRS.class))).thenThrow(SpatialModelMarshallException.class);
+        SpatialMessageEvent message = new SpatialMessageEvent(textMessage, new SpatialEnrichmentRQ());
+        when(enrichmentService.getSpatialEnrichment(any(SpatialEnrichmentRQ.class))).thenThrow(SpatialServiceException.class);
 
         service.getSpatialEnrichment(message);
-        verify(enrichmentService, times(1)).getSpatialEnrichment(request);
-        verify(messageProducer, times(0)).sendModuleResponseMessage(mock, null);
+
+        verify(enrichmentService, times(1)).getSpatialEnrichment(any(SpatialEnrichmentRQ.class));
+        verify(messageProducer, times(0)).sendModuleResponseMessage(eq(textMessage), anyString());
         verify(spatialErrorEvent, times(1)).fire(any(SpatialMessageEvent.class));
     }
-    
+
     @Test
     public void testGetFilterAreas() {
-    	FilterAreasSpatialRQ request = new FilterAreasSpatialRQ();
-    	TextMessage mock = Mockito.mock(TextMessage.class);
-    	SpatialMessageEvent message = new SpatialMessageEvent(mock, request);
-    	
-    	service.getFilterAreas(message);
-    	
-    	verify(filterAreasService, times(1)).filterAreas(request);
-    	verify(messageProducer, times(1)).sendModuleResponseMessage(mock, null);
+        SpatialMessageEvent message = new SpatialMessageEvent(textMessage, new FilterAreasSpatialRQ());
+        when(filterAreasService.filterAreas(any(FilterAreasSpatialRQ.class))).thenReturn(new FilterAreasSpatialRS());
+
+        service.getFilterAreas(message);
+
+        verify(filterAreasService, times(1)).filterAreas(any(FilterAreasSpatialRQ.class));
+        verify(messageProducer, times(1)).sendModuleResponseMessage(eq(textMessage), anyString());
+        verify(spatialErrorEvent, times(0)).fire(message);
+    }
+
+    @Test
+    public void testPing() {
+        SpatialMessageEvent message = new SpatialMessageEvent(textMessage, new PingRQ());
+
+        service.ping(message);
+
+        verify(messageProducer, times(1)).sendModuleResponseMessage(eq(textMessage), anyString());
         verify(spatialErrorEvent, times(0)).fire(message);
     }
 }

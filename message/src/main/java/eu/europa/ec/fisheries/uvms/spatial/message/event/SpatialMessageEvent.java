@@ -2,13 +2,7 @@ package eu.europa.ec.fisheries.uvms.spatial.message.event;
 
 import javax.jms.TextMessage;
 
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AllAreaTypesRequest;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestLocationSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialFault;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 
 public class SpatialMessageEvent {
 
@@ -19,8 +13,9 @@ public class SpatialMessageEvent {
     private AllAreaTypesRequest allAreaTypesRequest;
     private ClosestLocationSpatialRQ closestLocationSpatialRQ;
     private FilterAreasSpatialRQ filterAreasSpatialRQ;
+    private PingRQ pingRQ;
     private SpatialFault fault;
-
+    
     public SpatialMessageEvent(TextMessage message, AreaByLocationSpatialRQ areaByLocationSpatialRQ){
         this.message = message;
         this.areaByLocationSpatialRQ = areaByLocationSpatialRQ;
@@ -50,10 +45,15 @@ public class SpatialMessageEvent {
         this.message = textMessage;
         this.closestLocationSpatialRQ = closestLocationSpatialRQ;
     }
-    
+
     public SpatialMessageEvent(TextMessage textMessage, FilterAreasSpatialRQ filterAreasSpatialRQ) {
     	this.message = textMessage;
     	this.filterAreasSpatialRQ = filterAreasSpatialRQ;
+    }
+
+    public SpatialMessageEvent(TextMessage textMessage, PingRQ pingRQ) {
+        this.message = textMessage;
+        this.pingRQ = pingRQ;
     }
 
     public TextMessage getMessage() {
@@ -79,11 +79,15 @@ public class SpatialMessageEvent {
     public ClosestLocationSpatialRQ getClosestLocationSpatialRQ() {
         return closestLocationSpatialRQ;
     }
-    
+
     public FilterAreasSpatialRQ getFilterAreasSpatialRQ() {
     	return filterAreasSpatialRQ;
     }
-    
+
+    public PingRQ getPingRQ() {
+        return pingRQ;
+    }
+
     public AllAreaTypesRequest getAllAreaTypesRequest() {
     	return allAreaTypesRequest;
     }

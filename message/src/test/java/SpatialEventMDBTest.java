@@ -1,5 +1,6 @@
+import com.google.common.collect.Lists;
 import eu.europa.ec.fisheries.uvms.spatial.message.bean.SpatialEventMDB;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.*;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageEvent;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMarshallException;
 import eu.europa.ec.fisheries.uvms.spatial.model.mapper.SpatialJAXBMarshaller;
 import eu.europa.ec.fisheries.uvms.spatial.model.mapper.SpatialModuleRequestMapper;
@@ -11,17 +12,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+
 import javax.enterprise.event.Event;
-import javax.inject.Inject;
 import javax.jms.JMSException;
 import javax.jms.TextMessage;
-
 import java.util.Arrays;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SpatialEventMDBTest {
@@ -31,9 +30,6 @@ public class SpatialEventMDBTest {
 
     @InjectMocks
     private SpatialEventMDB mdb = new SpatialEventMDB();
-
-    @Mock
-    private SpatialJAXBMarshaller marshaller;
 
     @Mock
     private Event<SpatialMessageEvent> areaByLocationSpatialEvent;
@@ -49,7 +45,7 @@ public class SpatialEventMDBTest {
 
     @Mock
     private Event<SpatialMessageEvent> closestLocationSpatialEvent;
-    
+
     @Mock
     private Event<SpatialMessageEvent> filterAreaSpatialEvent;
 
@@ -59,156 +55,132 @@ public class SpatialEventMDBTest {
     @Mock
     private SpatialModuleResponseMapper responseMapper;
 
+    @Mock
+    TextMessage textMessage;
+
     private SpatialModuleRequestMapper requestMapper = new SpatialModuleRequestMapper();
 
     @Test
     public void testOnMessageWithGetAreaByLocation() throws SpatialModelMarshallException, JMSException {
-
         PointType point = new PointType();
         point.setLongitude(LONGITUDE);
         point.setLatitude(LATITUDE);
         point.setCrs(CRS);
         String requestString = requestMapper.mapToCreateAreaByLocationRequest(point);
 
-        TextMessage mock = Mockito.mock(TextMessage.class);
-        when(mock.getText()).thenReturn(requestString);
+        when(textMessage.getText()).thenReturn(requestString);
 
         SpatialModuleRequest request = new AreaByLocationSpatialRQ();
         request.setMethod(SpatialModuleMethod.GET_AREA_BY_LOCATION);
-        when(marshaller.unmarshall(mock, SpatialModuleRequest.class)).thenReturn(request);
 
-        mdb.onMessage(mock);
+        mdb.onMessage(textMessage);
 
         verify(areaByLocationSpatialEvent, times(1)).fire(any(SpatialMessageEvent.class));
         verify(spatialErrorEvent, times(0)).fire(any(SpatialMessageEvent.class));
-
     }
 
     @Test
     public void testOnMessageWithAllAreaTypesRequest() throws SpatialModelMarshallException, JMSException {
-
         String requestString = requestMapper.mapToCreateAllAreaTypesRequest();
-        TextMessage mock = Mockito.mock(TextMessage.class);
-        when(mock.getText()).thenReturn(requestString);
+        when(textMessage.getText()).thenReturn(requestString);
 
         SpatialModuleRequest request = new AreaByLocationSpatialRQ();
         request.setMethod(SpatialModuleMethod.GET_AREA_TYPES);
-        when(marshaller.unmarshall(mock, SpatialModuleRequest.class)).thenReturn(request);
 
-        mdb.onMessage(mock);
+        mdb.onMessage(textMessage);
 
         verify(typeNamesEvent, times(1)).fire(any(SpatialMessageEvent.class));
         verify(spatialErrorEvent, times(0)).fire(any(SpatialMessageEvent.class));
-
     }
 
     @Test
     public void testOnMessageWithClosestAreaRequest() throws SpatialModelMarshallException, JMSException {
-
         PointType point = new PointType();
         point.setLongitude(LONGITUDE);
         point.setLatitude(LATITUDE);
         point.setCrs(CRS);
 
         String requestString = requestMapper.mapToCreateClosestAreaRequest(point, UnitType.METERS, Arrays.asList(AreaType.EEZ));
-        TextMessage mock = Mockito.mock(TextMessage.class);
-        when(mock.getText()).thenReturn(requestString);
+        when(textMessage.getText()).thenReturn(requestString);
 
         SpatialModuleRequest request = new ClosestAreaSpatialRQ();
         request.setMethod(SpatialModuleMethod.GET_CLOSEST_AREA);
-        when(marshaller.unmarshall(mock, SpatialModuleRequest.class)).thenReturn(request);
 
-        mdb.onMessage(mock);
+        mdb.onMessage(textMessage);
 
         verify(closestAreaSpatialEvent, times(1)).fire(any(SpatialMessageEvent.class));
         verify(spatialErrorEvent, times(0)).fire(any(SpatialMessageEvent.class));
-
     }
 
     @Test
     public void testOnMessageWithClosestLocationRequest() throws SpatialModelMarshallException, JMSException {
-
         PointType point = new PointType();
         point.setLongitude(LONGITUDE);
         point.setLatitude(LATITUDE);
         point.setCrs(CRS);
 
         String requestString = requestMapper.mapToCreateClosestLocationRequest(point, UnitType.METERS, Arrays.asList(LocationType.PORT));
-        TextMessage mock = Mockito.mock(TextMessage.class);
-        when(mock.getText()).thenReturn(requestString);
+        when(textMessage.getText()).thenReturn(requestString);
 
         SpatialModuleRequest request = new ClosestLocationSpatialRQ();
         request.setMethod(SpatialModuleMethod.GET_CLOSEST_LOCATION);
-        when(marshaller.unmarshall(mock, SpatialModuleRequest.class)).thenReturn(request);
 
-        mdb.onMessage(mock);
+        mdb.onMessage(textMessage);
 
         verify(closestLocationSpatialEvent, times(1)).fire(any(SpatialMessageEvent.class));
         verify(spatialErrorEvent, times(0)).fire(any(SpatialMessageEvent.class));
-
     }
 
     @Test
     public void testOnMessageWithEnrichmentRequest() throws SpatialModelMarshallException, JMSException {
-
         PointType point = new PointType();
         point.setLongitude(LONGITUDE);
         point.setLatitude(LATITUDE);
         point.setCrs(CRS);
 
         String requestString = requestMapper.mapToCreateSpatialEnrichmentRequest(point, UnitType.METERS, Arrays.asList(LocationType.PORT), Arrays.asList(AreaType.EEZ));
-        TextMessage mock = Mockito.mock(TextMessage.class);
-        when(mock.getText()).thenReturn(requestString);
+        when(textMessage.getText()).thenReturn(requestString);
 
         SpatialModuleRequest request = new SpatialEnrichmentRQ();
         request.setMethod(SpatialModuleMethod.GET_ENRICHMENT);
-        when(marshaller.unmarshall(mock, SpatialModuleRequest.class)).thenReturn(request);
 
-        mdb.onMessage(mock);
+        mdb.onMessage(textMessage);
 
         verify(enrichmentSpatialEvent, times(1)).fire(any(SpatialMessageEvent.class));
         verify(spatialErrorEvent, times(0)).fire(any(SpatialMessageEvent.class));
-
     }
 
     @Test
     public void testOnMessageWithUnimplementedMethod() throws SpatialModelMarshallException, JMSException {
-
         PointType point = new PointType();
         point.setLongitude(LONGITUDE);
         point.setLatitude(LATITUDE);
         point.setCrs(CRS);
 
-        String requestString = requestMapper.mapToCreateSpatialEnrichmentRequest(point, UnitType.METERS, Arrays.asList(LocationType.PORT), Arrays.asList(AreaType.EEZ));
-        TextMessage mock = Mockito.mock(TextMessage.class);
-        when(mock.getText()).thenReturn(requestString);
-
         SpatialModuleRequest request = new SpatialEnrichmentRQ();
         request.setMethod(SpatialModuleMethod.GET_BUFFER_GEOM);
-        when(marshaller.unmarshall(mock, SpatialModuleRequest.class)).thenReturn(request);
+        when(textMessage.getText()).thenReturn(SpatialJAXBMarshaller.marshall(request));
 
-        mdb.onMessage(mock);
+        mdb.onMessage(textMessage);
 
         verify(spatialErrorEvent, times(1)).fire(any(SpatialMessageEvent.class));
-
     }
-    
+
     @Test
     public void testOnMessageWithFilterAreasMethod() throws SpatialModelMarshallException, JMSException {
-    	AreaIdentifierType areaType = new AreaIdentifierType();
-    	areaType.setAreaType("EEZ");
-    	areaType.setId("1");
-    	
-    	String requestString = requestMapper.mapToFilterAreaSpatialRequest(Arrays.asList(areaType), Arrays.asList(areaType));
-    	TextMessage mock = Mockito.mock(TextMessage.class);
-    	when(mock.getText()).thenReturn(requestString);
-    	
-    	FilterAreasSpatialRQ request = new FilterAreasSpatialRQ();
-    	request.setMethod(SpatialModuleMethod.GET_FILTER_AREA);
-    	when(marshaller.unmarshall(mock, SpatialModuleRequest.class)).thenReturn(request);
-    	mdb.onMessage(mock);
-    	
-    	verify(filterAreaSpatialEvent, times(1)).fire(any(SpatialMessageEvent.class));
+        AreaIdentifierType areaType = new AreaIdentifierType();
+        areaType.setAreaType("EEZ");
+        areaType.setId("1");
+
+        String requestString = requestMapper.mapToFilterAreaSpatialRequest(Arrays.asList(areaType), Arrays.asList(areaType));
+        when(textMessage.getText()).thenReturn(requestString);
+
+        FilterAreasSpatialRQ request = new FilterAreasSpatialRQ();
+        request.setMethod(SpatialModuleMethod.GET_FILTER_AREA);
+
+        mdb.onMessage(textMessage);
+
+        verify(filterAreaSpatialEvent, times(1)).fire(any(SpatialMessageEvent.class));
         verify(spatialErrorEvent, times(0)).fire(any(SpatialMessageEvent.class));
     }
 

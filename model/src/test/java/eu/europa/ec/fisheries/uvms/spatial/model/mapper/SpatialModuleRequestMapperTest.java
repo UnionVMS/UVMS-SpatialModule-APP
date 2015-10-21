@@ -55,22 +55,6 @@ public class SpatialModuleRequestMapperTest {
     }
 
     @Test
-    public void testMapToCreateAreaByLocationRequestException() throws JAXBException {
-
-        try {
-            mapper = new SpatialModuleRequestMapper(){
-                protected <T> String marshallJaxBObjectToString(final T data) throws JAXBException {
-                    throw new JAXBException("succes");
-                }
-            };
-            mapper.mapToCreateAreaByLocationRequest(null);
-            fail("Should throw exception");
-        } catch (SpatialModelMarshallException e) {
-           assertEquals("succes" , e.getCause().getMessage());
-        }
-    }
-
-    @Test
     public void testMapToCreateAllAreaTypesRequest() throws JAXBException {
 
         InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream("allAreaTypesRequest.xml");
@@ -85,22 +69,6 @@ public class SpatialModuleRequestMapperTest {
             assertEquals(result.getMethod(), request.getMethod());
         } catch (SpatialModelMarshallException e) {
             fail("Should not throw exception");
-        }
-    }
-
-    @Test
-    public void testMapToCreateAllAreaTypesRequestException() throws JAXBException {
-
-        try {
-            mapper = new SpatialModuleRequestMapper(){
-                protected <T> String marshallJaxBObjectToString(final T data) throws JAXBException {
-                    throw new JAXBException("succes");
-                }
-            };
-            mapper.mapToCreateAllAreaTypesRequest();
-            fail("Should throw exception");
-        } catch (SpatialModelMarshallException e) {
-            assertEquals("succes" , e.getCause().getMessage());
         }
     }
 
@@ -133,22 +101,6 @@ public class SpatialModuleRequestMapperTest {
     }
 
     @Test
-    public void testMapToCreateClosestAreaRequestException() throws JAXBException {
-
-        try {
-            mapper = new SpatialModuleRequestMapper(){
-                protected <T> String marshallJaxBObjectToString(final T data) throws JAXBException {
-                    throw new JAXBException("succes");
-                }
-            };
-            mapper.mapToCreateClosestAreaRequest(null, null, null);
-            fail("Should throw exception");
-        } catch (SpatialModelMarshallException e) {
-            assertEquals("succes" , e.getCause().getMessage());
-        }
-    }
-
-    @Test
     public void testMapToCreateClosestLocationRequest() throws JAXBException {
 
         InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream("closestLocationSpatialRQ.xml");
@@ -173,22 +125,6 @@ public class SpatialModuleRequestMapperTest {
             assertEquals(result.getLocationTypes().getLocationTypes().get(0), request.getLocationTypes().getLocationTypes().get(0));
         } catch (SpatialModelMarshallException e) {
             fail("Should not throw exception");
-        }
-    }
-
-    @Test
-    public void testMapToCreateClosestLocationRequestException() throws JAXBException {
-
-        try {
-            mapper = new SpatialModuleRequestMapper(){
-                protected <T> String marshallJaxBObjectToString(final T data) throws JAXBException {
-                    throw new JAXBException("succes");
-                }
-            };
-            mapper.mapToCreateClosestLocationRequest(null, null, null);
-            fail("Should throw exception");
-        } catch (SpatialModelMarshallException e) {
-            assertEquals("succes" , e.getCause().getMessage());
         }
     }
 
@@ -218,22 +154,6 @@ public class SpatialModuleRequestMapperTest {
             assertEquals(result.getAreaTypes().getAreaTypes().get(0), request.getAreaTypes().getAreaTypes().get(0));
         } catch (SpatialModelMarshallException e) {
             fail("Should not throw exception");
-        }
-    }
-
-    @Test
-    public void testMapToCreateSpatialEnrichmentRequestException() throws JAXBException {
-
-        try {
-            mapper = new SpatialModuleRequestMapper(){
-                protected <T> String marshallJaxBObjectToString(final T data) throws JAXBException {
-                    throw new JAXBException("succes");
-                }
-            };
-            mapper.mapToCreateSpatialEnrichmentRequest(null, null, null, null);
-            fail("Should throw exception");
-        } catch (SpatialModelMarshallException e) {
-            assertEquals("succes" , e.getCause().getMessage());
         }
     }
 

@@ -64,15 +64,32 @@
 		</xs:complexType>
 	</xs:element>
 	
-	<xs:element name="FilterAreasSpatialRS">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="Geometry" type="xs:string" maxOccurs="1"/>
-                <xs:element name="Code" type="xs:int" maxOccurs="1"/>
-			</xs:sequence>			
-		</xs:complexType>
+	<xs:element name="PingRQ">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="SpatialModuleRequest">
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
     </xs:element>
-		
+
+    <xs:element name="PingRS">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="response" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="FilterAreasSpatialRS">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Geometry" type="xs:string" maxOccurs="1"/>
+                <xs:element name="Code" type="xs:int" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
     <xs:element name="ClosestAreaSpatialRQ">
         <xs:complexType>
             <xs:complexContent>

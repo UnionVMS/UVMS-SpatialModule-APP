@@ -57,6 +57,15 @@ public class FilterAreasServiceBean implements FilterAreasService {
         return createResponse(result);
     }
 
+    @SneakyThrows
+    private Map<String, String> createAreaTableMapping(List<String> userAreaTypes) {
+        Map<String, List<String>> parameters = createParameters(userAreaTypes);
+        List<AreaLocationTypesEntity> areaEntities = repository.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_TYPE_BY_NAMES, parameters);
+        Map<String, String> areaType2TableMap = createAreaType2TableMap(areaEntities);
+        validateTableNames(userAreaTypes, areaType2TableMap);
+        return areaType2TableMap;
+    }
+
     private List<String> createUnionAreas(List<String> userAreaTypes, List<String> scopeAreaTypes) {
         Set<String> uniqueAreasSet = new HashSet(userAreaTypes);
         uniqueAreasSet.addAll(scopeAreaTypes);
@@ -70,15 +79,6 @@ public class FilterAreasServiceBean implements FilterAreasService {
                 return areaType2TableName.get(areaType);
             }
         });
-    }
-
-    @SneakyThrows
-    private Map<String, String> createAreaTableMapping(List<String> userAreaTypes) {
-        Map<String, List<String>> parameters = createParameters(userAreaTypes);
-        List<AreaLocationTypesEntity> areaEntities = repository.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_TYPE_BY_NAMES, parameters);
-        Map<String, String> areaType2TableMap = createAreaType2TableMap(areaEntities);
-        validateTableNames(userAreaTypes, areaType2TableMap);
-        return areaType2TableMap;
     }
 
     private void validateTableNames(List<String> areaTypes, final Map<String, String> areaType2TableName) {
