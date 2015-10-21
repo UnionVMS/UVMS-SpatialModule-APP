@@ -4,6 +4,8 @@ import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepositoryBean;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.*;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.util.SqlPropertyHolder;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
@@ -89,6 +91,8 @@ public class AreaDao {
 
     @SuppressWarnings("unchecked")
     public FilterAreasDto filterAreas(List<String> userAreaTables, List<String> userAreaIds, List<String> scopeAreaTables, List<String> scopeAreaIds) {
+        validateInput(userAreaTables, userAreaIds, scopeAreaTables, scopeAreaIds);
+
         String userAreaTablesString = convertToString(userAreaTables);
         String userAreaIdsString = convertToString(userAreaIds);
 
@@ -104,6 +108,12 @@ public class AreaDao {
                 .setResultTransformer(Transformers.aliasToBean(FilterAreasDto.class));
 
         return (FilterAreasDto) query.list().get(0);
+    }
+
+    private void validateInput(List<String> userAreaTables, List<String> userAreaIds, List<String> scopeAreaTables, List<String> scopeAreaIds) {
+        if ((userAreaTables.size() != userAreaIds.size()) || (scopeAreaTables.size() != scopeAreaIds.size())) {
+            throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
+        }
     }
 
     private String convertToString(List<String> userAreaTypes) {
