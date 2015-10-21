@@ -5,7 +5,7 @@ import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaIdentifierType;
 import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaIdentifierDto;
 import eu.europa.ec.fisheries.uvms.spatial.util.SqlPropertyHolder;
@@ -36,22 +36,22 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
     @Override
     @SuppressWarnings("unchecked")
     @SneakyThrows
-    public List<AreaTypeEntry> getAreaTypesByLocation(AreaByLocationSpatialRQ request) {
+    public List<AreaIdentifierType> getAreaTypesByLocation(AreaByLocationSpatialRQ request) {
         Point point = convertToPointInWGS84(request.getPoint());
 
         List<AreaLocationTypesEntity> systemAreaTypes =
                 repository.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_SYSTEM_AREAS);
-        List<AreaTypeEntry> areaTypes = Lists.newArrayList();
+        List<AreaIdentifierType> areaTypes = Lists.newArrayList();
         for (AreaLocationTypesEntity areaType : systemAreaTypes) {
             String areaDbTable = areaType.getAreaDbTable();
             String areaTypeName = areaType.getTypeName();
 
             List<Integer> resultList = repository.findAreasIdByLocation(point, areaDbTable);
             for (Integer id : resultList) {
-                AreaTypeEntry areaTypeEntry = new AreaTypeEntry();
-                areaTypeEntry.setAreaType(areaTypeName);
-                areaTypeEntry.setId(String.valueOf(id));
-                areaTypes.add(areaTypeEntry);
+                AreaIdentifierType areaIdentifier = new AreaIdentifierType();
+                areaIdentifier.setAreaType(areaTypeName);
+                areaIdentifier.setId(String.valueOf(id));
+                areaTypes.add(areaIdentifier);
             }
         }
         return areaTypes;

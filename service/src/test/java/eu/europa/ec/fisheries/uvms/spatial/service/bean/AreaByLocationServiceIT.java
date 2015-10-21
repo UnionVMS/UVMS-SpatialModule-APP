@@ -1,7 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaIdentifierType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.PointType;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
@@ -34,7 +34,7 @@ public class AreaByLocationServiceIT extends AbstractArquillianIT {
         AreaByLocationSpatialRQ request = byLocationSpatialRQ;
 
         // when
-        List<AreaTypeEntry> areaTypesByLocation = areaByLocationService.getAreaTypesByLocation(request);
+        List<AreaIdentifierType> areaTypesByLocation = areaByLocationService.getAreaTypesByLocation(request);
 
         //then
         assertNotNull(areaTypesByLocation);
