@@ -15,7 +15,7 @@ public class SpatialMessageEvent {
     private FilterAreasSpatialRQ filterAreasSpatialRQ;
     private PingRQ pingRQ;
     private SpatialFault fault;
-    
+
     public SpatialMessageEvent(TextMessage message, AreaByLocationSpatialRQ areaByLocationSpatialRQ){
         this.message = message;
         this.areaByLocationSpatialRQ = areaByLocationSpatialRQ;
