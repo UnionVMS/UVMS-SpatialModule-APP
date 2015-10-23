@@ -47,19 +47,13 @@ public class SpatialMessageServiceBean extends AbstractMessageService {
         return SpatialConstants.MODULE_NAME;
     }
 
-    private SpatialJAXBMarshaller marshaller;
-
-    @PostConstruct
-    public void init(){
-        marshaller = new SpatialJAXBMarshaller();
-    }
 
     public void sendModuleErrorResponseMessage(@Observes @SpatialMessageErrorEvent SpatialMessageEvent message){
         try {
             log.info("Sending message back to recipient from SpatialModule with correlationId {} on queue: {}", message.getMessage().getJMSMessageID(),
                     message.getMessage().getJMSReplyTo());
             Session session = connectToQueue();
-            String data = marshaller.marshall(message.getFault());
+            String data = SpatialJAXBMarshaller.marshall(message.getFault());
             TextMessage response = session.createTextMessage(data);
             response.setJMSCorrelationID(message.getMessage().getJMSMessageID());
             session.createProducer(message.getMessage().getJMSReplyTo()).send(response);
