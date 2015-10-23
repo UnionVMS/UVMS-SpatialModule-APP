@@ -20,13 +20,6 @@ public class SpatialModuleRequestMapperTest {
     private static final double LATITUDE = 45.11557, LONGITUDE = -7.14925;
     private static final int CRS = 3857;
 
-    private SpatialModuleRequestMapper mapper;
-
-    @Before
-    public void init(){
-        mapper = new SpatialModuleRequestMapper();
-    }
-
     @Test
     public void testMapToCreateAreaByLocationRequest() throws JAXBException {
         InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream("areaByLocationSpatialRQ.xml");
@@ -40,7 +33,7 @@ public class SpatialModuleRequestMapperTest {
         point.setCrs(CRS);
 
         try {
-            String requestString = mapper.mapToCreateAreaByLocationRequest(point);
+            String requestString = SpatialModuleRequestMapper.mapToCreateAreaByLocationRequest(point);
             StringReader reader = new StringReader(requestString);
             AreaByLocationSpatialRQ result = (AreaByLocationSpatialRQ) jaxbUnmarshaller.unmarshal(reader);
 
@@ -63,7 +56,7 @@ public class SpatialModuleRequestMapperTest {
         AllAreaTypesRequest request = (AllAreaTypesRequest) jaxbUnmarshaller.unmarshal(resourceAsStream);
 
         try {
-            String requestString = mapper.mapToCreateAllAreaTypesRequest();
+            String requestString = SpatialModuleRequestMapper.mapToCreateAllAreaTypesRequest();
             StringReader reader = new StringReader(requestString);
             AllAreaTypesRequest result = (AllAreaTypesRequest) jaxbUnmarshaller.unmarshal(reader);
             assertEquals(result.getMethod(), request.getMethod());
@@ -86,7 +79,7 @@ public class SpatialModuleRequestMapperTest {
         point.setCrs(CRS);
 
         try {
-            String requestString = mapper.mapToCreateClosestAreaRequest(point, UnitType.METERS, Arrays.asList(AreaType.EEZ));
+            String requestString = SpatialModuleRequestMapper.mapToCreateClosestAreaRequest(point, UnitType.METERS, Arrays.asList(AreaType.EEZ));
             StringReader reader = new StringReader(requestString);
             ClosestAreaSpatialRQ result = (ClosestAreaSpatialRQ) jaxbUnmarshaller.unmarshal(reader);
             assertEquals(result.getPoint().getCrs(), request.getPoint().getCrs());
@@ -114,7 +107,7 @@ public class SpatialModuleRequestMapperTest {
         point.setCrs(CRS);
 
         try {
-            String requestString = mapper.mapToCreateClosestLocationRequest(point, UnitType.METERS, Arrays.asList(LocationType.PORT));
+            String requestString = SpatialModuleRequestMapper.mapToCreateClosestLocationRequest(point, UnitType.METERS, Arrays.asList(LocationType.PORT));
             StringReader reader = new StringReader(requestString);
             ClosestLocationSpatialRQ result = (ClosestLocationSpatialRQ) jaxbUnmarshaller.unmarshal(reader);
             assertEquals(result.getPoint().getCrs(), request.getPoint().getCrs());
@@ -142,7 +135,7 @@ public class SpatialModuleRequestMapperTest {
         point.setCrs(CRS);
 
         try {
-            String requestString = mapper.mapToCreateSpatialEnrichmentRequest(point, UnitType.METERS, Arrays.asList(LocationType.PORT), Arrays.asList(AreaType.EEZ));
+            String requestString = SpatialModuleRequestMapper.mapToCreateSpatialEnrichmentRequest(point, UnitType.METERS, Arrays.asList(LocationType.PORT), Arrays.asList(AreaType.EEZ));
             StringReader reader = new StringReader(requestString);
             SpatialEnrichmentRQ result = (SpatialEnrichmentRQ) jaxbUnmarshaller.unmarshal(reader);
             assertEquals(result.getPoint().getCrs(), request.getPoint().getCrs());

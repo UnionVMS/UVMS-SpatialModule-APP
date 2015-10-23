@@ -9,7 +9,7 @@ import java.util.List;
 @Slf4j
 public class SpatialModuleRequestMapper {
 
-    public String mapToCreateAreaByLocationRequest(PointType point) throws SpatialModelMarshallException {
+    public static String mapToCreateAreaByLocationRequest(PointType point) throws SpatialModelMarshallException {
         AreaByLocationSpatialRQ request = new AreaByLocationSpatialRQ();
         request.setMethod(SpatialModuleMethod.GET_AREA_BY_LOCATION);
         request.setPoint(point);
@@ -21,7 +21,7 @@ public class SpatialModuleRequestMapper {
         }
     }
 
-    public String mapToCreateAllAreaTypesRequest() throws SpatialModelMarshallException {
+    public static String mapToCreateAllAreaTypesRequest() throws SpatialModelMarshallException {
         AllAreaTypesRequest request = new AllAreaTypesRequest();
         request.setMethod(SpatialModuleMethod.GET_AREA_TYPES);
         try {
@@ -32,7 +32,7 @@ public class SpatialModuleRequestMapper {
         }
     }
 
-    public String mapToCreateClosestAreaRequest(PointType point, UnitType unit, List<AreaType> areaTypes) throws SpatialModelMarshallException {
+    public static String mapToCreateClosestAreaRequest(PointType point, UnitType unit, List<AreaType> areaTypes) throws SpatialModelMarshallException {
         ClosestAreaSpatialRQ request = new ClosestAreaSpatialRQ();
         request.setMethod(SpatialModuleMethod.GET_CLOSEST_AREA);
         request.setPoint(point);
@@ -50,7 +50,7 @@ public class SpatialModuleRequestMapper {
         }
     }
 
-    public String mapToCreateClosestLocationRequest(PointType point, UnitType unit, List<LocationType> locationTypes) throws SpatialModelMarshallException {
+    public static String mapToCreateClosestLocationRequest(PointType point, UnitType unit, List<LocationType> locationTypes) throws SpatialModelMarshallException {
         ClosestLocationSpatialRQ request = new ClosestLocationSpatialRQ();
         request.setMethod(SpatialModuleMethod.GET_CLOSEST_LOCATION);
         request.setPoint(point);
@@ -68,7 +68,7 @@ public class SpatialModuleRequestMapper {
         }
     }
 
-    public String mapToCreateSpatialEnrichmentRequest(PointType point, UnitType unit, List<LocationType> locationTypes, List<AreaType> areaTypes) throws SpatialModelMarshallException {
+    public static String mapToCreateSpatialEnrichmentRequest(PointType point, UnitType unit, List<LocationType> locationTypes, List<AreaType> areaTypes) throws SpatialModelMarshallException {
         SpatialEnrichmentRQ request = new SpatialEnrichmentRQ();
         request.setMethod(SpatialModuleMethod.GET_ENRICHMENT);
         request.setPoint(point);
@@ -93,7 +93,7 @@ public class SpatialModuleRequestMapper {
         }
     }
 
-    public String mapToFilterAreaSpatialRequest(List<AreaIdentifierType> scopeAreaList, List<AreaIdentifierType> userAreaList) throws SpatialModelMarshallException {
+    public static String mapToFilterAreaSpatialRequest(List<AreaIdentifierType> scopeAreaList, List<AreaIdentifierType> userAreaList) throws SpatialModelMarshallException {
         try {
             FilterAreasSpatialRQ request = new FilterAreasSpatialRQ();
             ScopeAreasType scopeAreas = new ScopeAreasType();

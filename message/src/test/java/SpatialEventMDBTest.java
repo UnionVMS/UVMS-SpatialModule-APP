@@ -58,15 +58,13 @@ public class SpatialEventMDBTest {
     @Mock
     TextMessage textMessage;
 
-    private SpatialModuleRequestMapper requestMapper = new SpatialModuleRequestMapper();
-
     @Test
     public void testOnMessageWithGetAreaByLocation() throws SpatialModelMarshallException, JMSException {
         PointType point = new PointType();
         point.setLongitude(LONGITUDE);
         point.setLatitude(LATITUDE);
         point.setCrs(CRS);
-        String requestString = requestMapper.mapToCreateAreaByLocationRequest(point);
+        String requestString = SpatialModuleRequestMapper.mapToCreateAreaByLocationRequest(point);
 
         when(textMessage.getText()).thenReturn(requestString);
 
@@ -81,7 +79,7 @@ public class SpatialEventMDBTest {
 
     @Test
     public void testOnMessageWithAllAreaTypesRequest() throws SpatialModelMarshallException, JMSException {
-        String requestString = requestMapper.mapToCreateAllAreaTypesRequest();
+        String requestString = SpatialModuleRequestMapper.mapToCreateAllAreaTypesRequest();
         when(textMessage.getText()).thenReturn(requestString);
 
         SpatialModuleRequest request = new AreaByLocationSpatialRQ();
@@ -100,7 +98,7 @@ public class SpatialEventMDBTest {
         point.setLatitude(LATITUDE);
         point.setCrs(CRS);
 
-        String requestString = requestMapper.mapToCreateClosestAreaRequest(point, UnitType.METERS, Arrays.asList(AreaType.EEZ));
+        String requestString = SpatialModuleRequestMapper.mapToCreateClosestAreaRequest(point, UnitType.METERS, Arrays.asList(AreaType.EEZ));
         when(textMessage.getText()).thenReturn(requestString);
 
         SpatialModuleRequest request = new ClosestAreaSpatialRQ();
@@ -119,7 +117,7 @@ public class SpatialEventMDBTest {
         point.setLatitude(LATITUDE);
         point.setCrs(CRS);
 
-        String requestString = requestMapper.mapToCreateClosestLocationRequest(point, UnitType.METERS, Arrays.asList(LocationType.PORT));
+        String requestString = SpatialModuleRequestMapper.mapToCreateClosestLocationRequest(point, UnitType.METERS, Arrays.asList(LocationType.PORT));
         when(textMessage.getText()).thenReturn(requestString);
 
         SpatialModuleRequest request = new ClosestLocationSpatialRQ();
@@ -138,7 +136,7 @@ public class SpatialEventMDBTest {
         point.setLatitude(LATITUDE);
         point.setCrs(CRS);
 
-        String requestString = requestMapper.mapToCreateSpatialEnrichmentRequest(point, UnitType.METERS, Arrays.asList(LocationType.PORT), Arrays.asList(AreaType.EEZ));
+        String requestString = SpatialModuleRequestMapper.mapToCreateSpatialEnrichmentRequest(point, UnitType.METERS, Arrays.asList(LocationType.PORT), Arrays.asList(AreaType.EEZ));
         when(textMessage.getText()).thenReturn(requestString);
 
         SpatialModuleRequest request = new SpatialEnrichmentRQ();
@@ -172,7 +170,7 @@ public class SpatialEventMDBTest {
         areaType.setAreaType("EEZ");
         areaType.setId("1");
 
-        String requestString = requestMapper.mapToFilterAreaSpatialRequest(Arrays.asList(areaType), Arrays.asList(areaType));
+        String requestString = SpatialModuleRequestMapper.mapToFilterAreaSpatialRequest(Arrays.asList(areaType), Arrays.asList(areaType));
         when(textMessage.getText()).thenReturn(requestString);
 
         FilterAreasSpatialRQ request = new FilterAreasSpatialRQ();
