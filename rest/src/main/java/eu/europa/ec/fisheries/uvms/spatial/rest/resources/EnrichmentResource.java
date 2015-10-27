@@ -13,9 +13,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-/**
- * Created by Michal Kopyczok on 09-Sep-15.
- */
 @Path("/")
 @Slf4j
 public class EnrichmentResource {

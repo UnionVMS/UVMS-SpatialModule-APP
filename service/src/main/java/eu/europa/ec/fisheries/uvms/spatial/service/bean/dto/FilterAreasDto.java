@@ -1,8 +1,5 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto;
 
-/**
- * Created by Cegeka on 20-Oct-15.
- */
 public class FilterAreasDto {
     private String wkt_geometry;
     private int result_code;

@@ -1,8 +1,5 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto;
 
-/**
- * Created by Michal Kopyczok on 03-Sep-15.
- */
 public class ClosestLocationDto {
     private String id;
     private String locationType;

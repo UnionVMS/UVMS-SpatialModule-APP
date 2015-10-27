@@ -33,9 +33,6 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.LocationDetailsService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestLocationDto;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * Created by Michal Kopyczok on 03-Sep-15.
- */
 @Path("/")
 @Slf4j
 public class LocationResource extends UnionVMSResource {
