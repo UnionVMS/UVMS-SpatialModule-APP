@@ -179,7 +179,7 @@ public class SpatialModuleResponseMapper {
         }
     }
 
-	public static String mapToFilterAreasSpatialRSFromResponse(TextMessage response, String correlationId) throws SpatialModelMapperException {
+	public static FilterAreasSpatialRS mapToFilterAreasSpatialRSFromResponse(TextMessage response, String correlationId) throws SpatialModelMapperException {
 		try {
 			validateResponse(response, correlationId);
 			return SpatialJAXBMarshaller.unmarshall(response, FilterAreasSpatialRS.class);
