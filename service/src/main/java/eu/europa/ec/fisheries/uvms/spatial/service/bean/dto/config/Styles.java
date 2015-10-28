@@ -1,20 +1,13 @@
-
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config;
+
+import com.fasterxml.jackson.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
-import javax.annotation.Generated;
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Generated("org.jsonschema2pojo")
 @JsonPropertyOrder({
-    "geom"
+        "geom"
 })
 public class Styles {
 
@@ -25,34 +18,19 @@ public class Styles {
 
     /**
      * No args constructor for use in serialization
-     * 
      */
     public Styles() {
     }
 
-    /**
-     * 
-     * @param geom
-     */
     public Styles(String geom) {
         this.geom = geom;
     }
 
-    /**
-     * 
-     * @return
-     *     The geom
-     */
     @JsonProperty("geom")
     public String getGeom() {
         return geom;
     }
 
-    /**
-     * 
-     * @param geom
-     *     The geom
-     */
     @JsonProperty("geom")
     public void setGeom(String geom) {
         this.geom = geom;

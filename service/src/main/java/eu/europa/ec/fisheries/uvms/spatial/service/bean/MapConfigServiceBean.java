@@ -29,8 +29,8 @@ public class MapConfigServiceBean implements MapConfigService {
 
     private FlagState createFlagState() {
         return new FlagState()
-                .withAdditionalProperty("dnk", "#0066FF")
-                .withAdditionalProperty("swe", "#FF0066");
+                .withFlagState("dnk", "#0066FF")
+                .withFlagState("swe", "#FF0066");
     }
 
     private ArrayList<Layer> createLayers() {
