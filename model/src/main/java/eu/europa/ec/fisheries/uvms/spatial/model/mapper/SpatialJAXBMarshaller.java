@@ -1,15 +1,19 @@
 package eu.europa.ec.fisheries.uvms.spatial.model.mapper;
 
-import eu.europa.ec.fisheries.uvms.message.AbstractJAXBMarshaller;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMarshallException;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.jms.JMSException;
 import javax.jms.TextMessage;
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import java.io.StringReader;
+import java.io.StringWriter;
 
 @Slf4j
-public class SpatialJAXBMarshaller extends AbstractJAXBMarshaller {
+public class SpatialJAXBMarshaller {
 
     /**
      * Marshalls a JAXB Object to a XML String representation
@@ -21,7 +25,12 @@ public class SpatialJAXBMarshaller extends AbstractJAXBMarshaller {
      */
     public static <T> String marshall(T data) throws SpatialModelMarshallException {
         try {
-            return marshallJaxBObjectToString(data);
+            JAXBContext jaxbContext = JAXBContext.newInstance(new Class[]{data.getClass()});
+            Marshaller marshaller = jaxbContext.createMarshaller();
+            marshaller.setProperty("jaxb.formatted.output", Boolean.valueOf(true));
+            StringWriter sw = new StringWriter();
+            marshaller.marshal(data, sw);
+            return sw.toString();
         } catch (JAXBException e) {
             log.error("[ Error when marshalling object to string. ] {}", e.getMessage());
             throw new SpatialModelMarshallException("Error when marshalling " + data.getClass().getName() + " to String");
@@ -40,7 +49,10 @@ public class SpatialJAXBMarshaller extends AbstractJAXBMarshaller {
      */
     public static <R> R unmarshall(TextMessage textMessage, Class clazz) throws SpatialModelMarshallException {
         try {
-            return unmarshallTextMessage(textMessage, clazz);
+            JAXBContext jc = JAXBContext.newInstance(new Class[]{clazz});
+            Unmarshaller unmarshaller = jc.createUnmarshaller();
+            StringReader sr = new StringReader(textMessage.getText());
+            return (R) unmarshaller.unmarshal(sr);
         } catch (JMSException | JAXBException e) {
             log.error("[ Error when unmarshalling Text message to object. ] {}", e.getMessage());
             throw new SpatialModelMarshallException("Error when unmarshalling response in ResponseMapper: " + e.getMessage());
