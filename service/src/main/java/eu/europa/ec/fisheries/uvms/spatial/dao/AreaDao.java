@@ -40,13 +40,11 @@ public class AreaDao {
     private static final String SCOPE_AREA_IDS = "scopeAreaIds";
 
     private EntityManager em;
-    private SpatialRepositoryBean repository;
     private SqlPropertyHolder propertyHolder;
 
-    public AreaDao(EntityManager em, SqlPropertyHolder propertyHolder, SpatialRepositoryBean spatialRepositoryBean) {
+    public AreaDao(EntityManager em, SqlPropertyHolder propertyHolder) {
         this.em = em;
         this.propertyHolder = propertyHolder;
-        this.repository = spatialRepositoryBean;
     }
 
     public List<Integer> findAreasIdByLocation(Point point, String areaDbTable) {

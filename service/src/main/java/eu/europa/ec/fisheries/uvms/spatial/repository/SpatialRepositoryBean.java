@@ -28,7 +28,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
 
     @PostConstruct
     public void init() {
-        areaDao = new AreaDao(em, sql, this);
+        areaDao = new AreaDao(em, sql);
     }
 
     @Override
