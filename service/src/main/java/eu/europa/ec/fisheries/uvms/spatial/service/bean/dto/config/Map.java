@@ -16,7 +16,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonPropertyOrder({
     "projection",
     "controls",
-    "tb-controls",
+    "tbControls",
     "layers"
 })
 public class Map {
@@ -25,7 +25,7 @@ public class Map {
     private Projection projection;
     @JsonProperty("controls")
     private List<Control> controls = new ArrayList<Control>();
-    @JsonProperty("tb-controls")
+    @JsonProperty("tbControls")
     private List<TbControl> tbControls = new ArrayList<TbControl>();
     @JsonProperty("layers")
     private List<Layer> layers = new ArrayList<Layer>();
@@ -76,12 +76,12 @@ public class Map {
         return this;
     }
 
-    @JsonProperty("tb-controls")
+    @JsonProperty("tbControls")
     public List<TbControl> getTbControls() {
         return tbControls;
     }
 
-    @JsonProperty("tb-controls")
+    @JsonProperty("tbControls")
     public void setTbControls(List<TbControl> tbControls) {
         this.tbControls = tbControls;
     }
