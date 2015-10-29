@@ -8,6 +8,7 @@ import java.util.Map;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
         "type",
+        "areaType",
         "title",
         "isBaseLayer",
         "attribution",
@@ -20,6 +21,8 @@ public class Layer {
 
     @JsonProperty("type")
     private String type;
+    @JsonProperty("areaType")
+    private String areaType;
     @JsonProperty("title")
     private String title;
     @JsonProperty("isBaseLayer")
@@ -41,8 +44,9 @@ public class Layer {
     public Layer() {
     }
 
-    public Layer(String type, String title, Boolean isBaseLayer, String attribution, String url, String serverType, String layerGeoName, Styles styles) {
+    public Layer(String type, String areaType, String title, Boolean isBaseLayer, String attribution, String url, String serverType, String layerGeoName, Styles styles) {
         this.type = type;
+        this.areaType = areaType;
         this.title = title;
         this.isBaseLayer = isBaseLayer;
         this.attribution = attribution;
@@ -64,6 +68,21 @@ public class Layer {
 
     public Layer withType(String type) {
         this.type = type;
+        return this;
+    }
+
+    @JsonProperty("areaType")
+    public String getAreaType() {
+        return areaType;
+    }
+
+    @JsonProperty("areaType")
+    public void setAreaType(String areaType) {
+        this.areaType = areaType;
+    }
+
+    public Layer withAreaType(String areaType) {
+        this.areaType = areaType;
         return this;
     }
 
