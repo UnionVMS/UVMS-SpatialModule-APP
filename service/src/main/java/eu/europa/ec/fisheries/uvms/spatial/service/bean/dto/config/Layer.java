@@ -8,7 +8,7 @@ import java.util.Map;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
         "type",
-        "areaType",
+        "layerType",
         "title",
         "isBaseLayer",
         "attribution",
@@ -21,8 +21,8 @@ public class Layer {
 
     @JsonProperty("type")
     private String type;
-    @JsonProperty("areaType")
-    private String areaType;
+    @JsonProperty("layerType")
+    private String layerType;
     @JsonProperty("title")
     private String title;
     @JsonProperty("isBaseLayer")
@@ -44,9 +44,9 @@ public class Layer {
     public Layer() {
     }
 
-    public Layer(String type, String areaType, String title, Boolean isBaseLayer, String attribution, String url, String serverType, String layerGeoName, Styles styles) {
+    public Layer(String type, String layerType, String title, Boolean isBaseLayer, String attribution, String url, String serverType, String layerGeoName, Styles styles) {
         this.type = type;
-        this.areaType = areaType;
+        this.layerType = layerType;
         this.title = title;
         this.isBaseLayer = isBaseLayer;
         this.attribution = attribution;
@@ -71,18 +71,18 @@ public class Layer {
         return this;
     }
 
-    @JsonProperty("areaType")
-    public String getAreaType() {
-        return areaType;
+    @JsonProperty("layerType")
+    public String getLayerType() {
+        return layerType;
     }
 
-    @JsonProperty("areaType")
-    public void setAreaType(String areaType) {
-        this.areaType = areaType;
+    @JsonProperty("layerType")
+    public void setlayerType(String layerType) {
+        this.layerType = layerType;
     }
 
-    public Layer withAreaType(String areaType) {
-        this.areaType = areaType;
+    public Layer withLayerType(String layerType) {
+        this.layerType = layerType;
         return this;
     }
 
