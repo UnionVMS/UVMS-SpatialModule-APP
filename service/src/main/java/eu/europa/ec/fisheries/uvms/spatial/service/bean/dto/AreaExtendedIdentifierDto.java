@@ -1,5 +1,13 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+@JsonPropertyOrder({
+        "id",
+        "areaType",
+        "code",
+        "name",
+})
 public class AreaExtendedIdentifierDto {
 
     private String id;

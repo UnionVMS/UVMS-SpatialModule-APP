@@ -1,5 +1,15 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+@JsonPropertyOrder({
+        "id",
+        "areaType",
+        "code",
+        "name",
+        "distance",
+        "unit"
+})
 public class ClosestAreaDto {
     private String id;
     private String areaType;

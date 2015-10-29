@@ -2,9 +2,6 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto;
 
 import java.util.List;
 
-/**
- * Created by Michal Kopyczok on 09-Sep-15.
- */
 public class EnrichmentDto {
     private List<AreaExtendedIdentifierDto> areasByLocation;
     private List<ClosestAreaDto> closestAreas;

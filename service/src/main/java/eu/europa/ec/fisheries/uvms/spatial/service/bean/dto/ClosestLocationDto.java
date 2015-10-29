@@ -1,5 +1,16 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+@JsonPropertyOrder({
+        "id",
+        "locationType",
+        "code",
+        "name",
+        "distance",
+        "unit"
+})
 public class ClosestLocationDto {
     private String id;
     private String locationType;
