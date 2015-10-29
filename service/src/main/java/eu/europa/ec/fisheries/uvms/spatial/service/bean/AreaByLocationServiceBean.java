@@ -5,9 +5,9 @@ import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaIdentifierType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaExtendedIdentifierType;
 import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaIdentifierDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaExtendedIdentifierDto;
 import eu.europa.ec.fisheries.uvms.spatial.util.SqlPropertyHolder;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -16,10 +16,9 @@ import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.transaction.Transactional;
+import java.util.List;
 
 import static eu.europa.ec.fisheries.uvms.spatial.util.SpatialUtils.convertToPointInWGS84;
-
-import java.util.List;
 
 @Stateless
 @Local(AreaByLocationService.class)
@@ -36,21 +35,19 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
     @Override
     @SuppressWarnings("unchecked")
     @SneakyThrows
-    public List<AreaIdentifierType> getAreaTypesByLocation(AreaByLocationSpatialRQ request) {
+    public List<AreaExtendedIdentifierType> getAreaTypesByLocation(AreaByLocationSpatialRQ request) {
         Point point = convertToPointInWGS84(request.getPoint());
 
         List<AreaLocationTypesEntity> systemAreaTypes =
                 repository.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_SYSTEM_AREAS);
-        List<AreaIdentifierType> areaTypes = Lists.newArrayList();
+        List<AreaExtendedIdentifierType> areaTypes = Lists.newArrayList();
         for (AreaLocationTypesEntity areaType : systemAreaTypes) {
             String areaDbTable = areaType.getAreaDbTable();
             String areaTypeName = areaType.getTypeName();
 
-            List<Integer> resultList = repository.findAreasIdByLocation(point, areaDbTable);
-            for (Integer id : resultList) {
-                AreaIdentifierType areaIdentifier = new AreaIdentifierType();
-                areaIdentifier.setAreaType(areaTypeName);
-                areaIdentifier.setId(String.valueOf(id));
+            List<AreaExtendedIdentifierDto> resultList = repository.findAreasIdByLocation(point, areaDbTable);
+            for (AreaExtendedIdentifierDto area : resultList) {
+                AreaExtendedIdentifierType areaIdentifier = new AreaExtendedIdentifierType(area.getId(), areaTypeName, area.getCode(), area.getName());
                 areaTypes.add(areaIdentifier);
             }
         }
@@ -60,18 +57,18 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
     @Override
     @SuppressWarnings("unchecked")
     @SneakyThrows
-    public List<AreaIdentifierDto> getAreaTypesByLocation(double lat, double lon, int crs) {
+    public List<AreaExtendedIdentifierDto> getAreaTypesByLocation(double lat, double lon, int crs) {
         Point point = convertToPointInWGS84(lon, lat, crs);
         List<AreaLocationTypesEntity> systemAreaTypes =
                 repository.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_SYSTEM_AREAS);
-        List<AreaIdentifierDto> areaTypes = Lists.newArrayList();
+        List<AreaExtendedIdentifierDto> areaTypes = Lists.newArrayList();
         for (AreaLocationTypesEntity areaType : systemAreaTypes) {
             String areaDbTable = areaType.getAreaDbTable();
             String areaTypeName = areaType.getTypeName();
-            List<Integer> resultList = repository.findAreasIdByLocation(point, areaDbTable);
-            for (Integer id : resultList) {
-                AreaIdentifierDto areaIdentifierDto = new AreaIdentifierDto(String.valueOf(id), areaTypeName);
-                areaTypes.add(areaIdentifierDto);
+            List<AreaExtendedIdentifierDto> resultList = repository.findAreasIdByLocation(point, areaDbTable);
+            for (AreaExtendedIdentifierDto area : resultList) {
+                area.setAreaType(areaTypeName);
+                areaTypes.add(area);
             }
         }
 

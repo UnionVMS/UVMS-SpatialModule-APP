@@ -61,9 +61,9 @@ public class CountriesEntity implements Serializable {
     @ColumnAliasName(aliasName="admin")
 	private String admin;
     
-    @Column(name = "adm0_a3", length = 3)
-    @ColumnAliasName(aliasName="adm0A3")
-	private String adm0A3;
+    @Column(name = "code", length = 3)
+    @ColumnAliasName(aliasName="code")
+	private String code;
     
     @Column(name = "name", length = 36)
     @ColumnAliasName(aliasName="name")
@@ -152,12 +152,12 @@ public class CountriesEntity implements Serializable {
 		this.admin = admin;
 	}
 
-	public String getAdm0A3() {
-		return this.adm0A3;
+	public String getCode() {
+		return this.code;
 	}
 
-	public void setAdm0A3(String adm0A3) {
-		this.adm0A3 = adm0A3;
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 	public String getName() {

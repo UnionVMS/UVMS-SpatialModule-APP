@@ -9,7 +9,7 @@ import java.util.Map;
 
 public interface SpatialRepository extends DAO {
 
-    List<Integer> findAreasIdByLocation(Point point, String areaDbTable);
+    List<AreaExtendedIdentifierDto> findAreasIdByLocation(Point point, String areaDbTable);
 
     List<ClosestAreaDto> findClosestArea(Point point, MeasurementUnit unit, String areaDbTable);
 

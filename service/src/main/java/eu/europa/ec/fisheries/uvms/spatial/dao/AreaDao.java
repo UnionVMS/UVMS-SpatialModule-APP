@@ -2,7 +2,6 @@ package eu.europa.ec.fisheries.uvms.spatial.dao;
 
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
-import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepositoryBean;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
@@ -47,7 +46,7 @@ public class AreaDao {
         this.propertyHolder = propertyHolder;
     }
 
-    public List<Integer> findAreasIdByLocation(Point point, String areaDbTable) {
+    public List<AreaExtendedIdentifierDto> findAreasIdByLocation(Point point, String areaDbTable) {
         String queryString = propertyHolder.getProperty(FIND_AREAS_ID_BY_LOCATION);
         return executeAreasByLocation(queryString, point, areaDbTable);
     }
@@ -122,7 +121,7 @@ public class AreaDao {
     }
 
     @SuppressWarnings("unchecked")
-    private List<Integer> executeAreasByLocation(String queryString, Point point, String areaDbTable) {
+    private List<AreaExtendedIdentifierDto> executeAreasByLocation(String queryString, Point point, String areaDbTable) {
         queryString = replaceTableName(queryString, areaDbTable);
         String wktPoint = convertToWkt(point);
         int crs = point.getSRID();
@@ -171,6 +170,7 @@ public class AreaDao {
         SQLQuery sqlQuery = getSession().createSQLQuery(queryString);
         sqlQuery.setString(WKT, wktPoint);
         sqlQuery.setInteger(CRS, crs);
+        sqlQuery.setResultTransformer(Transformers.aliasToBean(AreaExtendedIdentifierDto.class));
         return sqlQuery;
     }
 

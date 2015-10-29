@@ -31,7 +31,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaDetailsService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.ClosestAreaService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SearchAreaService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaIdentifierDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaExtendedIdentifierDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestAreaDto;
 import lombok.extern.slf4j.Slf4j;
 
@@ -80,7 +80,7 @@ public class AreaResource extends UnionVMSResource {
         try {
             log.info("Getting spatial enrichment by location");
             ValidationUtils.validateInputParameters(lat, lon);
-            List<AreaIdentifierDto> areasByLocation = areaByLocationService.getAreaTypesByLocation(lat, lon, crs);
+            List<AreaExtendedIdentifierDto> areasByLocation = areaByLocationService.getAreaTypesByLocation(lat, lon, crs);
             return new ResponseDto(areasByLocation, ResponseCode.OK);
         } catch (Exception ex) {
             log.error("[ Error when getting areas by location. ] ", ex);

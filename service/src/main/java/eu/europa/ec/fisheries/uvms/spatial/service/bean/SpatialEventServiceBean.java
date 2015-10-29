@@ -41,7 +41,7 @@ public class SpatialEventServiceBean implements SpatialEventService {
     public void getAreaByLocation(@Observes @GetAreaByLocationEvent SpatialMessageEvent message) {
         log.info("Getting area by location.");
         try {
-            List<AreaIdentifierType> areaTypesByLocation = areaByLocationService.getAreaTypesByLocation(message.getAreaByLocationSpatialRQ());
+            List<AreaExtendedIdentifierType> areaTypesByLocation = areaByLocationService.getAreaTypesByLocation(message.getAreaByLocationSpatialRQ());
             log.debug("Send back areaByLocation response.");
             messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapAreaByLocationResponse(areaTypesByLocation));
         } catch (Exception e) {

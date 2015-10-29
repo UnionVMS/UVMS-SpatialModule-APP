@@ -1,11 +1,10 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto;
 
-/**
- * Created by Michal Kopyczok on 03-Sep-15.
- */
 public class ClosestAreaDto {
     private String id;
     private String areaType;
+    private String code;
+    private String name;
     private double distance;
     private String unit;
 
@@ -39,5 +38,21 @@ public class ClosestAreaDto {
 
     public void setUnit(String unit) {
         this.unit = unit;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

@@ -44,7 +44,7 @@ public class SpatialModuleResponseMapper {
         return fault;
     }
 
-    public static String mapAreaByLocationResponse(final List<AreaIdentifierType> areasByLocation) throws SpatialModelMarshallException {
+    public static String mapAreaByLocationResponse(final List<AreaExtendedIdentifierType> areasByLocation) throws SpatialModelMarshallException {
         try {
             AreaByLocationSpatialRS response = new AreaByLocationSpatialRS();
             AreasByLocationType areasByLocationType = new AreasByLocationType();

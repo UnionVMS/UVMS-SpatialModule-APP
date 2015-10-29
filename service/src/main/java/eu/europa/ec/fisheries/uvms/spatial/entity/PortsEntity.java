@@ -56,6 +56,10 @@ public class PortsEntity implements Serializable {
 	@Column(name = "name", length = 50)
 	@ColumnAliasName(aliasName="name")
 	private String name;
+
+	@Column(name = "code", length = 5)
+	@ColumnAliasName(aliasName="code")
+	private String code;
 	
 	@Column(name = "website", length = 254)
 	@ColumnAliasName(aliasName="website")
@@ -122,5 +126,13 @@ public class PortsEntity implements Serializable {
 
 	public void setNatlscale(Double natlscale) {
 		this.natlscale = natlscale;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 }

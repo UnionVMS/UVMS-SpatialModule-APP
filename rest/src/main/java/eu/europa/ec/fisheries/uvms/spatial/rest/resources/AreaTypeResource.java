@@ -6,7 +6,7 @@ import eu.europa.ec.fisheries.uvms.spatial.rest.error.ErrorHandler;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaByLocationService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.ClosestAreaService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaIdentifierDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaExtendedIdentifierDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestAreaDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,7 +59,7 @@ public class AreaTypeResource {
         try {
             LOG.info("Getting areas by location");
             validateInputParameters(lat, lon);
-            List<AreaIdentifierDto> areasByLocation = areaByLocationService.getAreaTypesByLocation(lat, lon, crs);
+            List<AreaExtendedIdentifierDto> areasByLocation = areaByLocationService.getAreaTypesByLocation(lat, lon, crs);
             return new ResponseDto(areasByLocation, ResponseCode.OK);
         } catch (Exception ex) {
             LOG.error("[ Error when getting areas by location. ] ", ex);

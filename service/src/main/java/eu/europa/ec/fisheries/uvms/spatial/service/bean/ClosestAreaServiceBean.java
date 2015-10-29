@@ -2,7 +2,6 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.google.common.collect.Maps;
 import com.vividsolutions.jts.geom.Point;
-import eu.europa.ec.fisheries.uvms.service.DAO;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Area;

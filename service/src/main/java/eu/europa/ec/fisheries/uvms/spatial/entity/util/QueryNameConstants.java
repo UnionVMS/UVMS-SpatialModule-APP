@@ -2,26 +2,34 @@ package eu.europa.ec.fisheries.uvms.spatial.entity.util;
 
 /**
  * All constants for Spatial modules
- * @author padhyad 
  *
+ * @author padhyad
  */
 public class QueryNameConstants {
-	
-	/** Find all */
+
+    /**
+     * Find all
+     */
     public static final String FIND_ALL_AREA_TYPE_NAMES = "AreaLocationType.findAllAreaTypeNames";
     public static final String FIND_ALL_AREAS = "AreaLocationType.findAllAreas";
     public static final String FIND_ALL_LOCATIONS = "AreaLocationType.findAllLocations";
 
-    /** Find System */
+    /**
+     * Find System
+     */
     public static final String FIND_SYSTEM_AREAS = "AreaLocationType.findSystemAreas";
     public static final String FIND_SYSTEM_LOCATIONS = "AreaLocationType.findSystemLocations";
     public static final String FIND_SYSTEM_AREA_LAYER = "AreaLocationType.findSystemAreaLayerMappings";
 
-    /** Find Area By Name */
+    /**
+     * Find Area By Name
+     */
     public static final String FIND_TYPE_BY_NAME = "AreaLocationType.findAreaByName";
     public static final String FIND_TYPE_BY_NAMES = "AreaLocationType.findAreaByNames";
 
-    /** Named Native queries */
+    /**
+     * Named Native queries
+     */
     public static final String EEZ_BY_COORDINATE = "eezEntity.ByCoordinate";
     public static final String RFMO_BY_COORDINATE = "rfmoEntity.ByCoordinate";
     public static final String COUNTRY_BY_COORDINATE = "countryEntity.ByCoordinate";
@@ -30,8 +38,10 @@ public class QueryNameConstants {
     public static final String RAC_BY_COORDINATE = "racEntity.ByCoordinate";
     public static final String STAT_RECT_BY_COORDINATE = "statRectEntity.ByCoordinate";
     public static final String PORT_BY_COORDINATE = "portEntity.ByCoordinate";
-    
-    /** Native Queries */
+
+    /**
+     * Native Queries
+     */
     public static final String EEZ_COLUMNS = "eezEntity.findSelectedColumns";
     public static final String RFMO_COLUMNS = "rfmoEntity.findSelectedColumns";
     public static final String COUNTRY_COLUMNS = "countryEntity.findSelectedColumns";

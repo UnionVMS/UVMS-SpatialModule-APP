@@ -124,10 +124,12 @@ public class SpatialModuleResponseMapperTest {
         Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
         AreaByLocationSpatialRS response = (AreaByLocationSpatialRS) jaxbUnmarshaller.unmarshal(resourceAsStream);
 
-        List<AreaIdentifierType> entryList = new ArrayList<>();
-        AreaIdentifierType entry = new AreaIdentifierType();
+        List<AreaExtendedIdentifierType> entryList = new ArrayList<>();
+        AreaExtendedIdentifierType entry = new AreaExtendedIdentifierType();
         entry.setAreaType("EEZ");
         entry.setId("2");
+        entry.setName("EEZ name");
+        entry.setCode("ECD");
         entryList.add(entry);
         try {
             String responseString = SpatialModuleResponseMapper.mapAreaByLocationResponse(entryList);

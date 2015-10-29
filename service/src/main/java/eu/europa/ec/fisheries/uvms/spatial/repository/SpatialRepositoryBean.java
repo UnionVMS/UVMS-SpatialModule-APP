@@ -37,7 +37,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     }
 
     @Override
-    public List<Integer> findAreasIdByLocation(Point point, String areaDbTable) {
+    public List<AreaExtendedIdentifierDto> findAreasIdByLocation(Point point, String areaDbTable) {
         return areaDao.findAreasIdByLocation(point, areaDbTable);
     }
 
