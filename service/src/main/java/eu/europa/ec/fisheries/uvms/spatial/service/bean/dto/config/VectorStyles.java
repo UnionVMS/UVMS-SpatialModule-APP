@@ -6,12 +6,12 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-        "flag_state",
+        "flagState",
         "speed"
 })
 public class VectorStyles {
 
-    @JsonProperty("flag_state")
+    @JsonProperty("flagState")
     private FlagState flagState;
     @JsonProperty("speed")
     private Speed speed;
@@ -27,12 +27,12 @@ public class VectorStyles {
         this.speed = speed;
     }
 
-    @JsonProperty("flag_state")
+    @JsonProperty("flagState")
     public FlagState getFlagState() {
         return flagState;
     }
 
-    @JsonProperty("flag_state")
+    @JsonProperty("flagState")
     public void setFlagState(FlagState flagState) {
         this.flagState = flagState;
     }
