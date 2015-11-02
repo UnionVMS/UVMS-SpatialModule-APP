@@ -27,6 +27,7 @@ public class RestActivator extends Application {
         set.add(EezResource.class);
         set.add(EnrichmentResource.class);
         set.add(MapConfigResource.class);
+        set.add(UserAreaResource.class);
         LOG.info(RestConstants.MODULE_NAME + " module starting up");
     }
 
