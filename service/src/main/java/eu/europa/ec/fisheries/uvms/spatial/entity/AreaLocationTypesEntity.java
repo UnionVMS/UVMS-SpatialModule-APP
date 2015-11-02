@@ -36,7 +36,11 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
     									+ " layer.geoName as geoName, layer.serviceUrl as serviceUrl, layer.styleLabelGeom as style,"
 										+ " provider.serviceType as serviceType FROM AreaLocationTypesEntity as area INNER JOIN area.serviceLayer as layer"
 										+ " INNER JOIN layer.providerFormat as provider WHERE area.isSystemWide = 'Y' AND area.isLocation =  'N'"
-										+ " AND area.serviceLayer = layer AND layer.providerFormat = provider")
+										+ " AND area.serviceLayer = layer AND layer.providerFormat = provider"),
+    @NamedQuery(name = QueryNameConstants.FIND_USER_AREA_LAYER, query = "SELECT layer.geoName as geoName, layer.serviceUrl as serviceUrl, layer.styleLabelGeom as style,"
+										+ " provider.serviceType as serviceType FROM AreaLocationTypesEntity as area INNER JOIN area.serviceLayer as layer"
+										+ " INNER JOIN layer.providerFormat as provider WHERE area.isSystemWide = 'N' AND area.isLocation =  'N'"
+										+ " AND area.serviceLayer = layer AND area.areaDbTable = 'user_areas' AND layer.providerFormat = provider")
 })
 
 public class AreaLocationTypesEntity implements Serializable {

@@ -20,6 +20,13 @@ public class QueryNameConstants {
     public static final String FIND_SYSTEM_AREAS = "AreaLocationType.findSystemAreas";
     public static final String FIND_SYSTEM_LOCATIONS = "AreaLocationType.findSystemLocations";
     public static final String FIND_SYSTEM_AREA_LAYER = "AreaLocationType.findSystemAreaLayerMappings";
+    public static final String FIND_USER_AREA_LAYER = "AreaLocationType.findUserAreaLayerMappings";
+    
+    /**
+     * Find User Area
+     */
+    public static final String FIND_GID_BY_USER = "UserArea.findGidByUserNameOrScope";
+    public static final String USER_AREA_DETAILS = "UserArea.findUserAreaDetails";
 
     /**
      * Find Area By Name

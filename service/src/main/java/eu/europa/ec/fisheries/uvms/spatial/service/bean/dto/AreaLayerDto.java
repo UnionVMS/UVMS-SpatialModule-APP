@@ -2,23 +2,25 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class AreaLayerDto implements Serializable {
 
 	private static final long serialVersionUID = 1751448380717332660L;
 
-	private String typeName;
+	protected String typeName;
 	
-	private String areaTypeDesc;
+	protected String areaTypeDesc;
 	
-	private String geoName;
+	protected String geoName;
 	
-	private String serviceUrl;
+	protected String serviceUrl;
 	
-	private String serviceType;
+	protected String serviceType;
 	
-	private String style;
+	protected String style;
 	
 	public AreaLayerDto() {
 	}

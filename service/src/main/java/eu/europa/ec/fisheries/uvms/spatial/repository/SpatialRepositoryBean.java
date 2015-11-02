@@ -3,6 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.repository;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.spatial.dao.AreaDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.UserAreaDao;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.*;
 import eu.europa.ec.fisheries.uvms.spatial.util.SqlPropertyHolder;
 
@@ -25,10 +26,13 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     private SqlPropertyHolder sql;
 
     private AreaDao areaDao;
+    
+    private UserAreaDao userAreaDao;
 
     @PostConstruct
     public void init() {
         areaDao = new AreaDao(em, sql);
+        userAreaDao = new UserAreaDao(em);
     }
 
     @Override
@@ -60,10 +64,19 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     public List<AreaLayerDto> findSystemAreaLayerMapping() {
         return areaDao.findSystemAreaLayerMapping();
     }
+    
+    @Override
+    public List<UserAreaLayerDto> findUserAreaLayerMapping() {
+    	return userAreaDao.findUserAreaLayerMapping();
+    }
 
     @Override
     public List<Map<String, String>> findAreaByFilter(String areaType, String filter) {
         return areaDao.findAreaByFilter(areaType, filter);
+    }
+    
+    public List<UserAreaDto> findUserAreaDetails(String userName, String scopeName) {
+    	return userAreaDao.findUserAreaDetails(userName, scopeName);
     }
 
     @Override

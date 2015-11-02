@@ -18,10 +18,14 @@ public interface SpatialRepository extends DAO {
     List findAreaOrLocationByCoordinates(Point point, String nativeQueryString);
 
     List<AreaLayerDto> findSystemAreaLayerMapping();
+    
+    List<UserAreaLayerDto> findUserAreaLayerMapping();
 
     List<Map<String, String>> findAreaByFilter(String areaType, String filter);
 
     List<Map<String, String>> findSelectedAreaColumns(String namedQueryString, Number gid);
+    
+    List<UserAreaDto> findUserAreaDetails(String userName, String scopeName);
 
     FilterAreasDto filterAreas(List<String> userAreaTables, List<String> userAreaIds, List<String> scopeAreaTables, List<String> scopeAreaIds);
 }

@@ -7,12 +7,15 @@ import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
+import javax.persistence.NamedNativeQuery;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -22,8 +25,18 @@ import org.hibernate.annotations.Type;
 
 import com.vividsolutions.jts.geom.Geometry;
 
+import eu.europa.ec.fisheries.uvms.spatial.entity.converter.CharBooleanConverter;
+import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
+
 @Entity
 @Table(name = "user_areas", schema = "spatial")
+@NamedQueries({
+    @NamedQuery(name = QueryNameConstants.FIND_GID_BY_USER, 
+    		query = "SELECT area.gid FROM UserAreasEntity area WHERE area.userName = :userName OR area.scopeName = :scopeName AND area.isShared = 'Y'"),
+    })
+@NamedNativeQuery(
+		name = QueryNameConstants.USER_AREA_DETAILS, 
+		query = "select gid, name, area_desc as desc, CAST(st_astext(st_extent(geom))AS TEXT) as extent from spatial.user_areas where user_name=:userName OR scope_name=:scopeName AND is_shared='Y' group by gid")
 public class UserAreasEntity implements Serializable {
 	
 	private static final long serialVersionUID = 6797853213499502873L;
@@ -33,17 +46,16 @@ public class UserAreasEntity implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long gid;
 	
-	@Column(name = "user_id", nullable = false)
-	private long userId;
+	@Column(name = "user_name", nullable = false, length = 255)
+	private String userName;
 	
-	@Column(name = "scope_id")
-	private Long scopeId;
+	@Column(name = "scope_name", length = 255)
+	private String scopeName;
 	
 	@Column(name = "name", nullable = false, length = 255)
 	private String name;
 	
-	@Lob
-	@Column(name = "area_desc")
+	@Column(columnDefinition = "text", name = "area_desc")
 	private String areaDesc;
 	
     @Basic
@@ -55,6 +67,10 @@ public class UserAreasEntity implements Serializable {
 	@Column(name = "created_on", nullable = false)
 	private Date createdOn;
 	
+	@Convert(converter = CharBooleanConverter.class)
+	@Column(name = "is_shared", nullable = false, length = 1)
+	private Boolean isShared;
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "userAreas", cascade = CascadeType.ALL)
 	private Set<AreaStatusEntity> areaStatuses;
 
@@ -67,22 +83,6 @@ public class UserAreasEntity implements Serializable {
 
 	public void setGid(long gid) {
 		this.gid = gid;
-	}
-
-	public long getUserId() {
-		return this.userId;
-	}
-
-	public void setUserId(long userId) {
-		this.userId = userId;
-	}
-
-	public Long getScopeId() {
-		return this.scopeId;
-	}
-
-	public void setScopeId(Long scopeId) {
-		this.scopeId = scopeId;
 	}
 
 	public String getName() {
@@ -125,4 +125,27 @@ public class UserAreasEntity implements Serializable {
 		this.areaStatuses = areaStatuses;
 	}
 
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getScopeName() {
+		return scopeName;
+	}
+
+	public void setScopeName(String scopeName) {
+		this.scopeName = scopeName;
+	}
+	
+	public Boolean getIsShared() {
+		return isShared;
+	}
+
+	public void setIsShared(Boolean isShared) {
+		this.isShared = isShared;
+	}
 }

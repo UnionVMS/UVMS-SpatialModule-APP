@@ -1,29 +1,31 @@
 package eu.europa.ec.fisheries.uvms.spatial.dao;
 
-import com.vividsolutions.jts.geom.Point;
-import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.*;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.util.SqlPropertyHolder;
-import org.hibernate.Query;
-import org.hibernate.SQLQuery;
-import org.hibernate.Session;
-import org.hibernate.transform.AliasToEntityMapResultTransformer;
-import org.hibernate.transform.Transformers;
+import static eu.europa.ec.fisheries.uvms.spatial.util.SpatialUtils.convertToWkt;
 
-import javax.persistence.EntityManager;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import static eu.europa.ec.fisheries.uvms.spatial.util.SpatialUtils.convertToWkt;
+import javax.persistence.EntityManager;
 
-public class AreaDao {
+import org.hibernate.Query;
+import org.hibernate.transform.Transformers;
 
-    private static final String CRS = "crs";
-    private static final String WKT = "wktPoint";
-    private static final String UNIT = "unit";
+import com.vividsolutions.jts.geom.Point;
+
+import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaExtendedIdentifierDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaLayerDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestLocationDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.FilterAreasDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.MeasurementUnit;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.util.SqlPropertyHolder;
+
+public class AreaDao extends AbstractDao {
+
     private static final String FIND_AREAS_ID_BY_LOCATION = "sql.findAreasIdByLocation";
     private static final String CLOSEST_AREA_QUERY = "sql.findClosestArea";
     private static final String CLOSEST_LOCATION_QUERY = "sql.findClosestLocation";
@@ -32,17 +34,15 @@ public class AreaDao {
     private static final String SEARCH_AREA = "sql.searchArea";
     private static final String NAME_PLACEHOLDER = "{name}";
     private static final String CODE_PLACEHOLDER = "{code}";
-    private static final String GID = "gid";
     private static final String USER_AREA_TABLES = "userAreaTypes";
     private static final String USER_AREA_IDS = "userAreaIds";
     private static final String SCOPE_AREA_TABLES = "scopeAreaTypes";
     private static final String SCOPE_AREA_IDS = "scopeAreaIds";
 
-    private EntityManager em;
     private SqlPropertyHolder propertyHolder;
 
     public AreaDao(EntityManager em, SqlPropertyHolder propertyHolder) {
-        this.em = em;
+    	super(em);
         this.propertyHolder = propertyHolder;
     }
 
@@ -135,53 +135,6 @@ public class AreaDao {
         int crs = point.getSRID();
         double unitRatio = unit.getRatio();
         return createSQLQuery(queryString, wktPoint, crs, unitRatio, resultClass).list();
-    }
-
-    private SQLQuery createSQLQuery(String queryString, String wktPoint, int crs, double unit, Class resultClass) {
-        SQLQuery sqlQuery = getSession().createSQLQuery(queryString);
-        sqlQuery.setResultTransformer(Transformers.aliasToBean(resultClass));
-        sqlQuery.setString(WKT, wktPoint);
-        sqlQuery.setInteger(CRS, crs);
-        sqlQuery.setDouble(UNIT, unit);
-        return sqlQuery;
-    }
-
-    private SQLQuery createSQLQuery(String queryString) {
-        SQLQuery sqlQuery = getSession().createSQLQuery(queryString);
-        sqlQuery.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
-        return sqlQuery;
-    }
-
-    private Query createNamedNativeQuery(String nativeQueryString, String wktPoint, int crs) {
-        Query query = getSession().getNamedQuery(nativeQueryString);
-        query.setParameter(WKT, wktPoint);
-        query.setParameter(CRS, crs);
-        return query;
-    }
-
-    private Query createNamedQuery(String namedQueryString, Number gid) {
-        Query query = getSession().getNamedQuery(namedQueryString);
-        query.setParameter(GID, gid);
-        query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
-        return query;
-    }
-
-    private SQLQuery createSQLQueryForClosestArea(String queryString, String wktPoint, int crs) {
-        SQLQuery sqlQuery = getSession().createSQLQuery(queryString);
-        sqlQuery.setString(WKT, wktPoint);
-        sqlQuery.setInteger(CRS, crs);
-        sqlQuery.setResultTransformer(Transformers.aliasToBean(AreaExtendedIdentifierDto.class));
-        return sqlQuery;
-    }
-
-    private <T> Query createQuery(String nativeQuery, Class<T> dtoClass) {
-        Query query = getSession().getNamedQuery(nativeQuery);
-        query.setResultTransformer(Transformers.aliasToBean(dtoClass));
-        return query;
-    }
-
-    private Session getSession() {
-        return em.unwrap(Session.class);
     }
 
     private String replaceTableName(String queryString, String tableName) {
