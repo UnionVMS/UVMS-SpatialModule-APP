@@ -12,7 +12,7 @@ import org.hibernate.transform.Transformers;
 
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaExtendedIdentifierDto;
 
-public abstract class AbstractDao {
+public abstract class CommonDao {
 	
 	protected EntityManager em;
 	
@@ -21,7 +21,7 @@ public abstract class AbstractDao {
 	private static final String UNIT = "unit";
 	private static final String GID = "gid";
 	
-	public AbstractDao(EntityManager em) {
+	public CommonDao(EntityManager em) {
 		this.em = em;
 	}
 

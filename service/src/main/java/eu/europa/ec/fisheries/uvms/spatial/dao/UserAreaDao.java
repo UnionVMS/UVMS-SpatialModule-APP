@@ -14,7 +14,7 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
 
-public class UserAreaDao extends AbstractDao {
+public class UserAreaDao extends CommonDao {
 	
 	private static final String USER_NAME = "userName";
 	private static final String SCOPE_NAME = "scopeName";

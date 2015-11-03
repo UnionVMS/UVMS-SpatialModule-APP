@@ -24,7 +24,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialService
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.util.SqlPropertyHolder;
 
-public class AreaDao extends AbstractDao {
+public class AreaDao extends CommonDao {
 
     private static final String FIND_AREAS_ID_BY_LOCATION = "sql.findAreasIdByLocation";
     private static final String CLOSEST_AREA_QUERY = "sql.findClosestArea";
