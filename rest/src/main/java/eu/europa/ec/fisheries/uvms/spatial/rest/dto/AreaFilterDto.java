@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-public class AreaFilterDto implements Serializable {
+public class AreaFilterDto extends FilterDto implements Serializable {
 
 	private static final long serialVersionUID = -7738213219041918102L;
 	
@@ -14,18 +14,13 @@ public class AreaFilterDto implements Serializable {
 	@NotEmpty
 	private String areaType;
 	
-	@NotNull
-	@NotEmpty
-	private String filter;
-	
 	public AreaFilterDto() {
-		
+		super();
 	}
 
 	public AreaFilterDto(String areaType, String filter) {
-		super();
+		super(filter);
 		this.areaType = areaType;
-		this.filter = filter;
 	}
 
 	public String getAreaType() {
@@ -34,13 +29,5 @@ public class AreaFilterDto implements Serializable {
 
 	public void setAreaType(String areaType) {
 		this.areaType = areaType;
-	}
-
-	public String getFilter() {
-		return filter;
-	}
-
-	public void setFilter(String filter) {
-		this.filter = filter;
 	}
 }

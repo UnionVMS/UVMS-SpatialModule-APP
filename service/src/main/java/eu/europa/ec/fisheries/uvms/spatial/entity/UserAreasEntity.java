@@ -13,6 +13,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedNativeQueries;
 import javax.persistence.NamedNativeQuery;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -34,9 +35,18 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
     @NamedQuery(name = QueryNameConstants.FIND_GID_BY_USER, 
     		query = "SELECT area.gid FROM UserAreasEntity area WHERE area.userName = :userName OR area.scopeName = :scopeName AND area.isShared = 'Y'"),
     })
-@NamedNativeQuery(
-		name = QueryNameConstants.USER_AREA_DETAILS, 
-		query = "select gid, name, area_desc as desc, CAST(st_astext(st_extent(geom))AS TEXT) as extent from spatial.user_areas where user_name=:userName OR scope_name=:scopeName AND is_shared='Y' group by gid")
+@NamedNativeQueries({
+	@NamedNativeQuery(
+			name = QueryNameConstants.USER_AREA_DETAILS, 
+			query = "select gid, name, area_desc as desc, CAST(st_astext(st_extent(geom))AS TEXT) as extent from spatial.user_areas"
+					+ " WHERE (user_name=:userName OR (scope_name=:scopeName AND is_shared='Y'))"
+					+ " AND st_intersects(geom, st_geomfromtext(CAST(:wktPoint as text), :crs)) group by gid"),
+	@NamedNativeQuery(
+			name = QueryNameConstants.SEARCH_USER_AREA,
+			query = "select gid, name, area_desc as desc, CAST(st_astext(st_extent(geom))AS TEXT) as extent from spatial.user_areas"
+					+ " WHERE (user_name=:userName OR (scope_name=:scopeName AND is_shared='Y'))"
+					+ " AND (UPPER(name) LIKE(UPPER(:name)) OR UPPER(area_desc) LIKE(UPPER(:desc))) group by gid")
+})
 public class UserAreasEntity implements Serializable {
 	
 	private static final long serialVersionUID = 6797853213499502873L;

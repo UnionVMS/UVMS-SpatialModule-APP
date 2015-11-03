@@ -13,11 +13,13 @@ import org.mapstruct.factory.Mappers;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Coordinate;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationProperty;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaDetailsDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaTypeDto;
+import eu.europa.ec.fisheries.uvms.spatial.rest.dto.GeoCoordinateDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.LocationDetailsDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.LocationTypeDto;
 
@@ -54,6 +56,8 @@ public abstract class AreaLocationDtoMapper {
 		areaDetailsDto.setType(extractType(areaDto));
 		return areaDetailsDto;
 	}
+	
+	public abstract Coordinate getCoordinateFromDto(GeoCoordinateDto geoCoordinateDto);
 	
 	protected Map<String, String> extractProperties(AreaDetails areaDetails) {
 		Map<String, String> propertyMap = new HashMap<String, String>();

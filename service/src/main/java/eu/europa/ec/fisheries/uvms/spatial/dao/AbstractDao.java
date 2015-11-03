@@ -47,17 +47,8 @@ public abstract class AbstractDao {
 		query.setParameter(CRS, crs);
 		return query;
 	}
-
-	protected Query createNamedNativeQuery(String nativeQueryString, Map<String, String> parameters) {
-		Query query = getSession().getNamedQuery(nativeQueryString);
-		for (String key : parameters.keySet()) {
-			query.setParameter(key, parameters.get(key));
-		}
-		query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
-		return query;
-	}
 	
-	protected <T> Query createNamedNativeQuery(String nativeQueryString, Map<String, String> parameters, Class<T> dtoClass) {
+	protected <T> Query createNamedNativeQuery(String nativeQueryString, Map<String, Object> parameters, Class<T> dtoClass) {
 		Query query = getSession().getNamedQuery(nativeQueryString);
 		for (String key : parameters.keySet()) {
 			query.setParameter(key, parameters.get(key));

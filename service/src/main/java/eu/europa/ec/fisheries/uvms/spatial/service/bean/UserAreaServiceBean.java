@@ -1,5 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
+import static eu.europa.ec.fisheries.uvms.spatial.util.SpatialUtils.convertToPointInWGS84;
+
 import java.util.List;
 import java.util.Map;
 
@@ -9,9 +11,11 @@ import javax.ejb.Stateless;
 import javax.transaction.Transactional;
 
 import com.google.common.collect.ImmutableMap;
+import com.vividsolutions.jts.geom.Point;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Coordinate;
 import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
@@ -37,11 +41,16 @@ public class UserAreaServiceBean implements UserAreaService {
 		return userAreaLayerDto;
 	}
 	
-	public List<UserAreaDto> getUserAreaDetails(String userName, String scopeName) {
-		List<UserAreaDto> userAreaDetails = repository.findUserAreaDetails(userName, scopeName);
+	public List<UserAreaDto> getUserAreaDetails(Coordinate coordinate, String userName, String scopeName) {
+		Point point = convertToPointInWGS84(coordinate.getLongitude(), coordinate.getLatitude(), coordinate.getCrs());
+		List<UserAreaDto> userAreaDetails = repository.findUserAreaDetails(userName, scopeName, point);
 		return userAreaDetails;
 	}
 	
+	public List<UserAreaDto> searchUserAreasByCriteria(String userName, String scopeName, String searchCriteria) {
+		List<UserAreaDto> userAreaDetails = repository.findUserAreaDetailsBySearchCriteria(userName, scopeName, searchCriteria);
+		return userAreaDetails;
+	}	
 	
 	private List<UserAreaLayerDto> getUserAreaLayerMapping() {
 		return repository.findUserAreaLayerMapping();

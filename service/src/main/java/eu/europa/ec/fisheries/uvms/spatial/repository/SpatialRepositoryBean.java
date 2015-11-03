@@ -75,8 +75,12 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
         return areaDao.findAreaByFilter(areaType, filter);
     }
     
-    public List<UserAreaDto> findUserAreaDetails(String userName, String scopeName) {
-    	return userAreaDao.findUserAreaDetails(userName, scopeName);
+    public List<UserAreaDto> findUserAreaDetails(String userName, String scopeName, Point point) {
+    	return userAreaDao.findUserAreaDetails(userName, scopeName, point);
+    }
+    
+    public List<UserAreaDto> findUserAreaDetailsBySearchCriteria(String userName, String scopeName, String searchCriteria) {
+    	return userAreaDao.findUserAreaDetailsBySearchCriteria(userName, scopeName, searchCriteria);
     }
 
     @Override
