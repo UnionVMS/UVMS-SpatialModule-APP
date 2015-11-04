@@ -155,11 +155,8 @@ public class LocationDetailsServiceTest {
 		PortsEntity portsEntity = new PortsEntity();
 		portsEntity.setGid(1);
 		portsEntity.setName("TEST");
-		portsEntity.setNatlscale(20.0);
-		portsEntity.setScalerRank(123);
-		portsEntity.setWebsite("www.test.com");
+		portsEntity.setCode("Code");
 		portsEntity.setGeom(new GeometryBuilder().point());
-		portsEntity.setFeaturecla("Test feature");
 		return portsEntity;
 	}
 }

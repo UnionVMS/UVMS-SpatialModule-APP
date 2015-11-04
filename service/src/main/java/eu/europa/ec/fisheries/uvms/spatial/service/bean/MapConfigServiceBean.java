@@ -17,6 +17,9 @@ public class MapConfigServiceBean implements MapConfigService {
 
     private static final String LABEL = "label";
     private static final String LABEL_GEOM = "labelGeom";
+    private static final String CUSTOM_LAYER_FROM_UNION_VMS = "Custom layer from UnionVMS.";
+    private static final String WMS = "WMS";
+    private static final String URL = "http://localhost:8080/geoserver/wms";
 
     @Override
     public MapConfig getMockReportConfig(int reportId) {
@@ -35,20 +38,26 @@ public class MapConfigServiceBean implements MapConfigService {
 
     private ArrayList<Layer> createLayers() {
         ArrayList<Layer> layers = Lists.newArrayList();
+
+        Styles portStyles = new Styles("port")
+                .withAdditionalProperty(LABEL, "port_label")
+                .withAdditionalProperty(LABEL_GEOM, "port_label_geom");
+        layers.add(new Layer(WMS, "port", "Ports", false, CUSTOM_LAYER_FROM_UNION_VMS, URL, "geoserver", "uvms:port", portStyles));
+
         Styles eezStyles = new Styles("eez")
                 .withAdditionalProperty(LABEL, "eez_label")
                 .withAdditionalProperty(LABEL_GEOM, "eez_label_geom");
-        layers.add(new Layer("WMS", "area", "EEZ", false, "Custom layer from UnionVMS", "http://localhost:8080/geoserver/wms", "geoserver", "uvms:eez", eezStyles));
+        layers.add(new Layer(WMS, "area", "EEZ", false, CUSTOM_LAYER_FROM_UNION_VMS, URL, "geoserver", "uvms:eez", eezStyles));
 
         Styles rfmoStyles = new Styles("rfmo")
                 .withAdditionalProperty(LABEL, "rfmo_label")
                 .withAdditionalProperty(LABEL_GEOM, "rfmo_label_geom");
-        layers.add(new Layer("WMS", "area", "RFMO", false, "Custom layer from UnionVMS", "http://localhost:8080/geoserver/wms", "geoserver", "uvms:rfmo", rfmoStyles));
+        layers.add(new Layer(WMS, "area", "RFMO", false, CUSTOM_LAYER_FROM_UNION_VMS, URL, "geoserver", "uvms:rfmo", rfmoStyles));
 
         layers.add(new Layer().withType("OSEA").withTitle("OpenSeaMap").withIsBaseLayer(false));
         layers.add(new Layer().withType("OSM").withTitle("OpenStreetMap").withIsBaseLayer(true));
 
-        layers.add(new Layer("WMS", "other", "Countries", true, "Custom layer from UnionVMS", "http://localhost:8080/geoserver/wms", "geoserver", "uvms:countries", new Styles("polygon")));
+        layers.add(new Layer(WMS, "other", "Countries", true, CUSTOM_LAYER_FROM_UNION_VMS, URL, "geoserver", "uvms:countries", new Styles("polygon")));
 
         return layers;
     }

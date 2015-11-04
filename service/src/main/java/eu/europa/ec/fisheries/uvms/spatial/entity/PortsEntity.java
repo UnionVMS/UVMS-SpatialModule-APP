@@ -44,30 +44,30 @@ public class PortsEntity implements Serializable {
 	@Type(type = "org.hibernate.spatial.GeometryType")
 	@ColumnAliasName(aliasName="geometry")
 	private Geometry geom;
-	
-	@Column(name = "scalerank")
-	@ColumnAliasName(aliasName="scalerank")
-	private Integer scalerank;
-	
-	@Column(name = "featurecla", length = 80)
-	@ColumnAliasName(aliasName="featurecla")
-	private String featurecla;
-	
-	@Column(name = "name", length = 50)
+
+	@Column(name = "country_code", length = 3)
+	@ColumnAliasName(aliasName="countrycode")
+	private String countryCode;
+
+	@Column(name = "code", length = 10)
+	@ColumnAliasName(aliasName="code")
+	private String code;
+
+	@Column(name = "name", length = 100)
 	@ColumnAliasName(aliasName="name")
 	private String name;
 
-	@Column(name = "code", length = 5)
-	@ColumnAliasName(aliasName="code")
-	private String code;
-	
-	@Column(name = "website", length = 254)
-	@ColumnAliasName(aliasName="website")
-	private String website;
-	
-	@Column(name = "natlscale")
-	@ColumnAliasName(aliasName="natlscale")
-	private Double natlscale;
+	@Column(name = "fishing_port", length = 1)
+	@ColumnAliasName(aliasName="fishingport")
+	private String fishingPort;
+
+	@Column(name = "landing_place")
+	@ColumnAliasName(aliasName="landingplace")
+	private String landingPlace;
+
+	@Column(name = "commercial_port")
+	@ColumnAliasName(aliasName="commercialport")
+	private String commercialPort;
 
 	public PortsEntity() {
 	}
@@ -88,20 +88,20 @@ public class PortsEntity implements Serializable {
 		this.geom = geom;
 	}
 
-	public Integer getScalerRank() {
-		return scalerank;
+	public String getCode() {
+		return code;
 	}
 
-	public void setScalerRank(Integer scalerRank) {
-		this.scalerank = scalerRank;
+	public void setCode(String code) {
+		this.code = code;
 	}
 
-	public String getFeaturecla() {
-		return featurecla;
+	public String getCountryCode() {
+		return countryCode;
 	}
 
-	public void setFeaturecla(String featurecla) {
-		this.featurecla = featurecla;
+	public void setCountryCode(String countryCode) {
+		this.countryCode = countryCode;
 	}
 
 	public String getName() {
@@ -112,27 +112,27 @@ public class PortsEntity implements Serializable {
 		this.name = name;
 	}
 
-	public String getWebsite() {
-		return website;
+	public String getFishingPort() {
+		return fishingPort;
 	}
 
-	public void setWebsite(String website) {
-		this.website = website;
+	public void setFishingPort(String fishingPort) {
+		this.fishingPort = fishingPort;
 	}
 
-	public Double getNatlscale() {
-		return natlscale;
+	public String getLandingPlace() {
+		return landingPlace;
 	}
 
-	public void setNatlscale(Double natlscale) {
-		this.natlscale = natlscale;
+	public void setLandingPlace(String landingPlace) {
+		this.landingPlace = landingPlace;
 	}
 
-	public String getCode() {
-		return code;
+	public String getCommercialPort() {
+		return commercialPort;
 	}
 
-	public void setCode(String code) {
-		this.code = code;
+	public void setCommercialPort(String commercialPort) {
+		this.commercialPort = commercialPort;
 	}
 }
