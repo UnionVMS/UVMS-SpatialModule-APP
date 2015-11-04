@@ -54,6 +54,8 @@ public class ClosestAreaServiceBean implements ClosestAreaService {
                 closestAreaEntry.setId(closestAreaDto.getId());
                 closestAreaEntry.setDistance(closestAreaDto.getDistance());
                 closestAreaEntry.setUnit(request.getUnit());
+                closestAreaEntry.setCode(closestAreaDto.getCode());
+                closestAreaEntry.setName(closestAreaDto.getName());
                 closestAreaEntry.setAreaType(areaType);
                 closestAreas.add(closestAreaEntry);
             }

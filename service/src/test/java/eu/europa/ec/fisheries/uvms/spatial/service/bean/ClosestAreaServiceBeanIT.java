@@ -47,6 +47,7 @@ public class ClosestAreaServiceBeanIT extends AbstractArquillianIT {
         Area area = closestAreas.get(0);
         assertEquals("231", area.getId());
         assertEquals(0.0, area.getDistance(), 0.01);
+        assertEquals("MAR", area.getCode());
         assertEquals(AreaType.EEZ, area.getAreaType());
         assertEquals(UnitType.METERS, area.getUnit());
     }
@@ -71,6 +72,7 @@ public class ClosestAreaServiceBeanIT extends AbstractArquillianIT {
         Area area = closestAreas.get(0);
         assertEquals("94", area.getId());
         assertEquals(354.0293920161582, area.getDistance(), 0.01);
+        assertEquals("KNA", area.getCode());
         assertEquals(AreaType.COUNTRY, area.getAreaType());
         assertEquals(UnitType.MILES, area.getUnit());
     }
