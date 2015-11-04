@@ -1,9 +1,5 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-/**
- * Created by Michal Kopyczok on 09-Sep-15.
- */
-
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
@@ -52,8 +48,8 @@ public class ClosestLocationServiceIT extends AbstractArquillianIT {
         assertFalse(closestLocations.isEmpty());
 
         Location location = closestLocations.get(0);
-        assertEquals("693", location.getId());
-        assertEquals(153285.16322748494, location.getDistance(), 0.01);
+        assertEquals("4623", location.getId());
+        assertEquals(200508.9634032084, location.getDistance(), 0.01);
         assertEquals(LocationType.PORT, location.getLocationType());
         assertEquals(UnitType.METERS, location.getUnit());
     }
@@ -80,8 +76,8 @@ public class ClosestLocationServiceIT extends AbstractArquillianIT {
         assertFalse(closestLocations.isEmpty());
 
         Location location = closestLocations.get(0);
-        assertEquals("848", location.getId());
-        assertEquals(573578.8382019936, location.getDistance(), 0.01);
+        assertEquals("3751", location.getId());
+        assertEquals(626489.5020191947, location.getDistance(), 0.01);
         assertEquals(LocationType.PORT, location.getLocationType());
         assertEquals(UnitType.METERS, location.getUnit());
     }
