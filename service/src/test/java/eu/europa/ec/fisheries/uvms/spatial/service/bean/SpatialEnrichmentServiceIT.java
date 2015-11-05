@@ -59,7 +59,7 @@ public class SpatialEnrichmentServiceIT extends AbstractArquillianIT {
         Location location = response.getClosestLocations().getClosestLocations().get(0);
         assertEquals("4627", location.getId());
         assertEquals(200508.9634032084, location.getDistance(), 0.01);
-        assertEquals("GHTEM", location.getCode());
+        assertEquals("MAJFL", location.getCode());
         assertEquals(LocationType.PORT, location.getLocationType());
         assertEquals(UnitType.METERS, location.getUnit());
     }
