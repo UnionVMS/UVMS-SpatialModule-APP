@@ -9,7 +9,6 @@ import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMarshallE
 import eu.europa.ec.fisheries.uvms.spatial.model.mapper.SpatialJAXBMarshaller;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
