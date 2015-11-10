@@ -70,7 +70,10 @@ public class SpatialUtils {
         return Lists.transform(textValue, new Function<String, String>() {
             @Override
             public String apply(String value) {
-                return value.toUpperCase();
+                if (value != null) {
+                    return value.toUpperCase();
+                }
+                return "";
             }
         });
     }

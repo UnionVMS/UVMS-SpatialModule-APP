@@ -50,8 +50,8 @@ public abstract class CommonDao {
 	
 	protected <T> Query createNamedNativeQuery(String nativeQueryString, Map<String, Object> parameters, Class<T> dtoClass) {
 		Query query = getSession().getNamedQuery(nativeQueryString);
-		for (String key : parameters.keySet()) {
-			query.setParameter(key, parameters.get(key));
+		for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+			query.setParameter(entry.getKey(), entry.getValue());
 		}
 		query.setResultTransformer(Transformers.aliasToBean(dtoClass));
 		return query;
