@@ -9,13 +9,15 @@ import com.vividsolutions.jts.io.ParseException;
 
 import eu.europa.ec.fisheries.uvms.rest.FeatureToGeoJsonMapper;
 
+import java.io.IOException;
+
 public class LocationDetailsDto extends GeoJsonDto {
 	
     public SimpleFeature toFeature() throws ParseException {
     	return super.toFeature(Point.class);
     }
     
-	public JsonNode convert() throws Exception {
+	public JsonNode convert() throws ParseException, IOException {
 		return new ObjectMapper().readTree(new FeatureToGeoJsonMapper().convert(toFeature()));
 	}
 }

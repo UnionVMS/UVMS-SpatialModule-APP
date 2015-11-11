@@ -26,11 +26,15 @@ import eu.europa.ec.fisheries.uvms.spatial.rest.dto.LocationTypeDto;
 @Mapper
 public abstract class AreaLocationDtoMapper {
 	
-	private static String AREA_TYPE = "areaType";
+	private static final String AREA_TYPE = "areaType";
 	
-	private static String LOCATION_TYPE = "locationType";
+	private static final String LOCATION_TYPE = "locationType";
 	
-	public static AreaLocationDtoMapper INSTANCE = Mappers.getMapper(AreaLocationDtoMapper.class);
+	private static final AreaLocationDtoMapper INSTANCE = Mappers.getMapper(AreaLocationDtoMapper.class);
+
+	public static AreaLocationDtoMapper mapper() {
+		return INSTANCE;
+	}
 	
 	public abstract AreaTypeEntry getAreaTypeEntry(AreaTypeDto areaDto);
 

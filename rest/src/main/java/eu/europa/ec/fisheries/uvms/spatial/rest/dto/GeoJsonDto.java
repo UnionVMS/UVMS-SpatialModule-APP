@@ -17,9 +17,9 @@ import com.vividsolutions.jts.io.WKTWriter;
 
 public abstract class GeoJsonDto {
 	
-	private static String GEOMETRY = "geometry";
+	private static final String GEOMETRY = "geometry";
 	
-	private static String EXTENT = "extent";
+	private static final String EXTENT = "extent";
 	
 	protected Map<String, String> properties = new HashMap<String, String>();
 	
@@ -61,11 +61,6 @@ public abstract class GeoJsonDto {
     
     public SimpleFeature toFeature(Class geometryType) throws ParseException {
     	return toFeature(geometryType, properties);
-        /*SimpleFeatureBuilder featureBuilder = new SimpleFeatureBuilder(build(geometryType));
-        for (Entry<String, String> entrySet : properties.entrySet()) {
-        	featureBuilder.set(entrySet.getKey(), entrySet.getValue());
-        }
-        return featureBuilder.buildFeature(null);*/
     }
     
     public SimpleFeature toFeature(Class geometryType, Map<String, String> properties) throws ParseException {

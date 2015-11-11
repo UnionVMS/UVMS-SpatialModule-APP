@@ -1,9 +1,11 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.dto;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.opengis.feature.simple.SimpleFeature;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -15,9 +17,9 @@ import eu.europa.ec.fisheries.uvms.rest.FeatureToGeoJsonMapper;
 
 public class AreaDetailsDto extends GeoJsonDto {
 	
-	private static String GEOMETRY = "geometry";
+	private static final String GEOMETRY = "geometry";
 	
-	private static String EXTENT = "extent";
+	private static final String EXTENT = "extent";
 	
 	private List<Map<String, String>> allAreaProperties = new ArrayList<Map<String, String>>();
 	
@@ -33,15 +35,15 @@ public class AreaDetailsDto extends GeoJsonDto {
 		return allAreaProperties;
 	}
 	
-	public JsonNode convert() throws Exception {
+	public JsonNode convert() throws ParseException, IOException {
 		return new ObjectMapper().readTree(new FeatureToGeoJsonMapper().convert(toFeature()));
 	}
 	
-	public JsonNode convert(Map<String, String> featureMap) throws Exception {
+	public JsonNode convert(Map<String, String> featureMap) throws ParseException, IOException {
 		return new ObjectMapper().readTree(new FeatureToGeoJsonMapper().convert(toFeature(featureMap)));
 	}
 	
-	public List<JsonNode> convertAll() throws Exception {
+	public List<JsonNode> convertAll() throws IOException, ParseException {
 		List<JsonNode> nodeList = new ArrayList<JsonNode>();
 		for (Map<String, String> featureMap : allAreaProperties) {
 			nodeList.add(convert(featureMap));

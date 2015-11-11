@@ -6,6 +6,8 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialService
 
 public class ErrorHandler {
 
+    private ErrorHandler(){}
+
     public static ResponseDto getFault(Exception ex) {
         Throwable cause = ex.getCause();
         if (cause instanceof SpatialServiceException) {

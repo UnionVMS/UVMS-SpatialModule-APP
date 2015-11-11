@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -16,6 +17,7 @@ import javax.ws.rs.core.Response;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import com.vividsolutions.jts.io.ParseException;
 import eu.europa.ec.fisheries.uvms.rest.FeatureToGeoJsonMapper;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.service.interceptor.ValidationInterceptor;
@@ -42,7 +44,7 @@ public class LocationResource extends UnionVMSResource {
     @EJB
     private LocationDetailsService locationDetailsService;
     
-    private AreaLocationDtoMapper mapper = AreaLocationDtoMapper.INSTANCE;
+    private AreaLocationDtoMapper mapper = AreaLocationDtoMapper.mapper();
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
@@ -69,7 +71,7 @@ public class LocationResource extends UnionVMSResource {
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/locationdetails")
     @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
-    public Response getLocationDetails(LocationTypeDto locationDto) throws Exception {
+    public Response getLocationDetails(LocationTypeDto locationDto) throws IOException, ParseException {
     	LocationDetails locationDetails = locationDetailsService.getLocationDetails(mapper.getLocationTypeEntry(locationDto));
     	LocationDetailsDto locationDetailsDto = mapper.getLocationDetailsDto(locationDetails);
     	return createSuccessResponse(locationDetailsDto.convert());

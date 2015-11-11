@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ExceptionInterceptor extends UnionVMSResource {
 	
 	@AroundInvoke
-	public Object createResponse(final InvocationContext ic) throws Exception {
+	public Object createResponse(final InvocationContext ic) {
 		log.info("ExceptionInterceptor received");	
 		try {
 			return ic.proceed();
@@ -24,7 +24,7 @@ public class ExceptionInterceptor extends UnionVMSResource {
     		if (e.getCause() instanceof SpatialServiceException) {
     			return createErrorResponse(((SpatialServiceException)e.getCause()).getErrorMessageCode());
     		}
-			return createErrorResponse();
+			return createErrorResponse(ErrorCodes.INTERNAL_SERVER_ERROR);
 		}
 	}	
 }

@@ -11,6 +11,9 @@ import static org.apache.commons.collections.CollectionUtils.isEmpty;
  * Created by Michal Kopyczok on 03-Sep-15.
  */
 public class ValidationUtils {
+
+    private ValidationUtils(){}
+
     public static void validateInputParameters(Double lat, Double lon) {
         validateCoordinates(lat, lon);
     }

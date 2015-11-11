@@ -2,6 +2,8 @@ package eu.europa.ec.fisheries.uvms.spatial.rest.constants;
 
 public class RestConstants {
 
+    private RestConstants(){}
+
     public static final String REST_URL = "/rest";
     public static final String MODULE_NAME = "spatial";
 

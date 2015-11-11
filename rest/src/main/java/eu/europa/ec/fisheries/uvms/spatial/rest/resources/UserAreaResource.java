@@ -32,7 +32,7 @@ public class UserAreaResource extends UnionVMSResource {
 	@EJB
 	private UserAreaService userAreaService;
 	
-	private AreaLocationDtoMapper mapper = AreaLocationDtoMapper.INSTANCE;
+	private AreaLocationDtoMapper mapper = AreaLocationDtoMapper.mapper();
 	
     @GET
     @Produces({MediaType.APPLICATION_JSON})

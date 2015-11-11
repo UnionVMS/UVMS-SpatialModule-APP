@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -14,6 +15,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.vividsolutions.jts.io.ParseException;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.service.interceptor.ValidationInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
@@ -54,7 +56,7 @@ public class AreaResource extends UnionVMSResource {
 	@EJB
 	private SearchAreaService searchAreaService;
     
-    private AreaLocationDtoMapper mapper = AreaLocationDtoMapper.INSTANCE;
+    private AreaLocationDtoMapper mapper = AreaLocationDtoMapper.mapper();
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
@@ -113,7 +115,7 @@ public class AreaResource extends UnionVMSResource {
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/areadetails")
     @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
-    public Response getAreaDetails(AreaTypeDto areaDto) throws Exception { 	
+    public Response getAreaDetails(AreaTypeDto areaDto) throws IOException, ParseException {
     	if (areaDto.getId() != null) {
     		return getAreaDetailsById(areaDto);
     	} else {
@@ -126,7 +128,7 @@ public class AreaResource extends UnionVMSResource {
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/areaproperties")
     @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
-    public Response getAreaProperties(List<AreaTypeDto> areaDtoList) throws Exception { 	
+    public Response getAreaProperties(List<AreaTypeDto> areaDtoList) {
     	return createSuccessResponse(searchAreaService.getSelectedAreaColumns(mapper.getAreaTypeEntryList(areaDtoList)));
     }
    
@@ -152,7 +154,7 @@ public class AreaResource extends UnionVMSResource {
         ValidationUtils.validateAreaTypes(areaTypes);
     }    
     
-    private Response getAreaDetailsById(AreaTypeDto areaDto) throws Exception {
+    private Response getAreaDetailsById(AreaTypeDto areaDto) throws IOException, ParseException {
     	AreaDetails areaDetails = areaDetailsService.getAreaDetailsById(mapper.getAreaTypeEntry(areaDto));
     	AreaDetailsDto areaDetailsDto = mapper.getAreaDetailsDto(areaDetails);
     	if (!areaDto.getIsGeom()) {
@@ -162,7 +164,7 @@ public class AreaResource extends UnionVMSResource {
     	return createSuccessResponse(areaDetailsDto.convert());
     }
     
-    private Response getAreaDetailsByLocation(AreaTypeDto areaDto) throws Exception {
+    private Response getAreaDetailsByLocation(AreaTypeDto areaDto) throws IOException, ParseException {
     	List<AreaDetails> areaDetailsList = areaDetailsService.getAreaDetailsByLocation(mapper.getAreaTypeEntry(areaDto));
 		AreaDetailsDto areaDetailsDto = mapper.getAreaDetailsDtoForAllAreas(areaDetailsList, areaDto);    		
 		if (!areaDto.getIsGeom()) {
