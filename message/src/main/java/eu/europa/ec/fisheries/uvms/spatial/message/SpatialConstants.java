@@ -1,6 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.message;
 
-public class SpatialConstants {
+public final class SpatialConstants {
 
     private SpatialConstants() {
     }

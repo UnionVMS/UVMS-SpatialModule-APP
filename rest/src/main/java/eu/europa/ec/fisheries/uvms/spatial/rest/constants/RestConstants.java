@@ -1,6 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.constants;
 
-public class RestConstants {
+public final class RestConstants {
 
     private RestConstants(){}
 
