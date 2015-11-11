@@ -30,35 +30,35 @@ public class SpatialEventMDB implements MessageListener {
 
     @Inject
     @GetAreaByLocationEvent
-    Event<SpatialMessageEvent> areaByLocationSpatialEvent;
+    private Event<SpatialMessageEvent> areaByLocationSpatialEvent;
 
     @Inject
     @GetAreaTypeNamesEvent
-    Event<SpatialMessageEvent> typeNamesEvent;
+    private Event<SpatialMessageEvent> typeNamesEvent;
 
     @Inject
     @GetClosestAreaEvent
-    Event<SpatialMessageEvent> closestAreaSpatialEvent;
+    private Event<SpatialMessageEvent> closestAreaSpatialEvent;
 
     @Inject
     @GetSpatialEnrichmentEvent
-    Event<SpatialMessageEvent> enrichmentSpatialEvent;
+    private Event<SpatialMessageEvent> enrichmentSpatialEvent;
 
     @Inject
     @GetClosestLocationEvent
-    Event<SpatialMessageEvent> closestLocationSpatialEvent;
+    private Event<SpatialMessageEvent> closestLocationSpatialEvent;
     
     @Inject
     @GetFilterAreaEvent
-    Event<SpatialMessageEvent> filterAreaSpatialEvent;
+    private Event<SpatialMessageEvent> filterAreaSpatialEvent;
 
     @Inject
     @PingEvent
-    Event<SpatialMessageEvent> pingSpatialEvent;
+    private Event<SpatialMessageEvent> pingSpatialEvent;
 
     @Inject
     @SpatialMessageErrorEvent
-    Event<SpatialMessageEvent> spatialErrorEvent;
+    private Event<SpatialMessageEvent> spatialErrorEvent;
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
