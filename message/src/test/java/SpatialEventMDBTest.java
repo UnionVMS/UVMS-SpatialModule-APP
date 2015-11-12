@@ -1,8 +1,7 @@
-import com.google.common.collect.Lists;
 import eu.europa.ec.fisheries.uvms.spatial.message.bean.SpatialEventMDB;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageEvent;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMarshallException;
-import eu.europa.ec.fisheries.uvms.spatial.model.mapper.SpatialJAXBMarshaller;
+import eu.europa.ec.fisheries.uvms.spatial.model.mapper.JAXBMarshaller;
 import eu.europa.ec.fisheries.uvms.spatial.model.mapper.SpatialModuleRequestMapper;
 import eu.europa.ec.fisheries.uvms.spatial.model.mapper.SpatialModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
@@ -10,7 +9,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.enterprise.event.Event;
@@ -18,7 +16,6 @@ import javax.jms.JMSException;
 import javax.jms.TextMessage;
 import java.util.Arrays;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
@@ -157,7 +154,7 @@ public class SpatialEventMDBTest {
 
         SpatialModuleRequest request = new SpatialEnrichmentRQ();
         request.setMethod(SpatialModuleMethod.GET_BUFFER_GEOM);
-        when(textMessage.getText()).thenReturn(SpatialJAXBMarshaller.marshall(request));
+        when(textMessage.getText()).thenReturn(JAXBMarshaller.marshall(request));
 
         mdb.onMessage(textMessage);
 

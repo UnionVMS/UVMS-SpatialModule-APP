@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.jms.JMSException;
 import javax.jms.TextMessage;
-import javax.xml.bind.JAXBException;
 import java.util.List;
 
 @Slf4j
@@ -30,7 +29,7 @@ public class SpatialModuleResponseMapper {
         }
 
         try {
-            SpatialFault fault = SpatialJAXBMarshaller.unmarshall(response, SpatialFault.class);
+            SpatialFault fault = JAXBMarshaller.unmarshall(response, SpatialFault.class);
             throw new SpatialModelValidationException(fault.getCode() + " : " + fault.getFault());
         } catch (SpatialModelMarshallException e) {
             //everything is well
@@ -52,7 +51,7 @@ public class SpatialModuleResponseMapper {
                 areasByLocationType.getAreas().addAll(areasByLocation);
             }
             response.setAreasByLocation(areasByLocationType);
-            return SpatialJAXBMarshaller.marshall(response);
+            return JAXBMarshaller.marshall(response);
         } catch (SpatialModelMarshallException e) {
             return exception(areasByLocation, e);
         }
@@ -61,7 +60,7 @@ public class SpatialModuleResponseMapper {
     public static AreasByLocationType mapToAreasByLocationTypeFromResponse(TextMessage response, String correlationId) throws SpatialModelMapperException {
         try {
             validateResponse(response, correlationId);
-            AreaByLocationSpatialRS areaByLocationSpatialRS = SpatialJAXBMarshaller.unmarshall(response, AreaByLocationSpatialRS.class);
+            AreaByLocationSpatialRS areaByLocationSpatialRS = JAXBMarshaller.unmarshall(response, AreaByLocationSpatialRS.class);
             return areaByLocationSpatialRS.getAreasByLocation();
         } catch (SpatialModelMarshallException | JMSException e) {
             log.error("[ Error when mapping response to AreasByLocationType response. ] {}", e.getMessage());
@@ -78,7 +77,7 @@ public class SpatialModuleResponseMapper {
                 areasNameType.getAreaTypes().addAll(areaTypeNames);
             }
             response.setAreaTypes(areasNameType);
-            return SpatialJAXBMarshaller.marshall(response);
+            return JAXBMarshaller.marshall(response);
         } catch (SpatialModelMarshallException e) {
             return exception(areaTypeNames, e);
         }
@@ -87,7 +86,7 @@ public class SpatialModuleResponseMapper {
     public static AreasNameType mapToAreasNameTypeFromResponse(TextMessage response, String correlationId) throws SpatialModelMapperException {
         try {
             validateResponse(response, correlationId);
-            AreaTypeNamesSpatialRS areaTypeNamesSpatialRS = SpatialJAXBMarshaller.unmarshall(response, AreaTypeNamesSpatialRS.class);
+            AreaTypeNamesSpatialRS areaTypeNamesSpatialRS = JAXBMarshaller.unmarshall(response, AreaTypeNamesSpatialRS.class);
             return areaTypeNamesSpatialRS.getAreaTypes();
         } catch (SpatialModelMarshallException | JMSException e) {
             log.error("[ Error when mapping response to AreasByLocationType response. ] {}", e.getMessage());
@@ -103,7 +102,7 @@ public class SpatialModuleResponseMapper {
                 closestLocationsType.getClosestLocations().addAll(closestLocations);
             }
             response.setClosestLocations(closestLocationsType);
-            return SpatialJAXBMarshaller.marshall(response);
+            return JAXBMarshaller.marshall(response);
         } catch (SpatialModelMarshallException e) {
             return exception(closestLocations, e);
         }
@@ -112,7 +111,7 @@ public class SpatialModuleResponseMapper {
     public static ClosestLocationsType mapToClosestLocationsTypeFromResponse(TextMessage response, String correlationId) throws SpatialModelMapperException {
         try {
             validateResponse(response, correlationId);
-            ClosestLocationSpatialRS closestLocationSpatialRS = SpatialJAXBMarshaller.unmarshall(response, ClosestLocationSpatialRS.class);
+            ClosestLocationSpatialRS closestLocationSpatialRS = JAXBMarshaller.unmarshall(response, ClosestLocationSpatialRS.class);
             return closestLocationSpatialRS.getClosestLocations();
         } catch (SpatialModelMarshallException | JMSException e) {
             log.error("[ Error when mapping response to AreasByLocationType response. ] {}", e.getMessage());
@@ -128,7 +127,7 @@ public class SpatialModuleResponseMapper {
                 closestAreasType.getClosestAreas().addAll(closestAreas);
             }
             response.setClosestArea(closestAreasType);
-            return SpatialJAXBMarshaller.marshall(response);
+            return JAXBMarshaller.marshall(response);
         } catch (SpatialModelMarshallException e) {
             return exception(closestAreas, e);
         }
@@ -137,7 +136,7 @@ public class SpatialModuleResponseMapper {
     public static ClosestAreasType mapToClosestAreasTypeFromResponse(TextMessage response, String correlationId) throws SpatialModelMapperException {
         try {
             validateResponse(response, correlationId);
-            ClosestAreaSpatialRS closestAreaSpatialRS = SpatialJAXBMarshaller.unmarshall(response, ClosestAreaSpatialRS.class);
+            ClosestAreaSpatialRS closestAreaSpatialRS = JAXBMarshaller.unmarshall(response, ClosestAreaSpatialRS.class);
             return closestAreaSpatialRS.getClosestArea();
         } catch (SpatialModelMarshallException | JMSException e) {
             log.error("[ Error when mapping response to AreasByLocationType response. ] {}", e.getMessage());
@@ -147,7 +146,7 @@ public class SpatialModuleResponseMapper {
 
     public static String mapEnrichmentResponse(final SpatialEnrichmentRS spatialEnrichmentRS) throws SpatialModelMarshallException {
         try {
-            return SpatialJAXBMarshaller.marshall(spatialEnrichmentRS);
+            return JAXBMarshaller.marshall(spatialEnrichmentRS);
         } catch (SpatialModelMarshallException e) {
             return exception(spatialEnrichmentRS, e);
         }
@@ -156,7 +155,7 @@ public class SpatialModuleResponseMapper {
     public static SpatialEnrichmentRS mapToSpatialEnrichmentRSFromResponse(TextMessage response, String correlationId) throws SpatialModelMapperException {
         try {
             validateResponse(response, correlationId);
-            return SpatialJAXBMarshaller.unmarshall(response, SpatialEnrichmentRS.class);
+            return JAXBMarshaller.unmarshall(response, SpatialEnrichmentRS.class);
         } catch (SpatialModelMarshallException | JMSException e) {
             log.error("[ Error when mapping response to AreasByLocationType response. ] {}", e.getMessage());
             throw new SpatialModelMapperException("Error when returning AreasByLocationType from response in ResponseMapper: " + e.getMessage());
@@ -165,7 +164,7 @@ public class SpatialModuleResponseMapper {
     
 	public static String mapFilterAreasResponse(FilterAreasSpatialRS filterAreasSpatialRS) throws SpatialModelMarshallException {
 		try {
-			return SpatialJAXBMarshaller.marshall(filterAreasSpatialRS);
+			return JAXBMarshaller.marshall(filterAreasSpatialRS);
 		} catch (SpatialModelMarshallException e) {
             return exception(filterAreasSpatialRS, e);
         }
@@ -173,7 +172,7 @@ public class SpatialModuleResponseMapper {
 
     public static String mapPingResponse(PingRS pingRS) throws SpatialModelMarshallException {
         try {
-            return SpatialJAXBMarshaller.marshall(pingRS);
+            return JAXBMarshaller.marshall(pingRS);
         } catch (SpatialModelMarshallException e) {
             return exception(pingRS, e);
         }
@@ -182,7 +181,7 @@ public class SpatialModuleResponseMapper {
 	public static FilterAreasSpatialRS mapToFilterAreasSpatialRSFromResponse(TextMessage response, String correlationId) throws SpatialModelMapperException {
 		try {
 			validateResponse(response, correlationId);
-			return SpatialJAXBMarshaller.unmarshall(response, FilterAreasSpatialRS.class);
+			return JAXBMarshaller.unmarshall(response, FilterAreasSpatialRS.class);
 		} catch (SpatialModelMarshallException | JMSException e) {
 			log.error("[ Error when mapping response to filter area response. ] {}", e.getMessage());
             throw new SpatialModelMapperException("Error when returning filter area from response in ResponseMapper: " + e.getMessage());

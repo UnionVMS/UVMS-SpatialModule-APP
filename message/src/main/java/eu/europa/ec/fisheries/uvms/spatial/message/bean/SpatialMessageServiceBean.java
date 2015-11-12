@@ -6,7 +6,7 @@ import eu.europa.ec.fisheries.uvms.spatial.message.SpatialConstants;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageErrorEvent;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageEvent;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMarshallException;
-import eu.europa.ec.fisheries.uvms.spatial.model.mapper.SpatialJAXBMarshaller;
+import eu.europa.ec.fisheries.uvms.spatial.model.mapper.JAXBMarshaller;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Resource;
@@ -52,7 +52,7 @@ public class SpatialMessageServiceBean extends AbstractMessageService {
             log.info("Sending message back to recipient from SpatialModule with correlationId {} on queue: {}", message.getMessage().getJMSMessageID(),
                     message.getMessage().getJMSReplyTo());
             Session session = connectToQueue();
-            String data = SpatialJAXBMarshaller.marshall(message.getFault());
+            String data = JAXBMarshaller.marshall(message.getFault());
             TextMessage response = session.createTextMessage(data);
             response.setJMSCorrelationID(message.getMessage().getJMSMessageID());
             session.createProducer(message.getMessage().getJMSReplyTo()).send(response);

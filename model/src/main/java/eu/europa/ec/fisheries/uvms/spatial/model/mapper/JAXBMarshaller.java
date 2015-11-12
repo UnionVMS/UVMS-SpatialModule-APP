@@ -13,7 +13,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 
 @Slf4j
-public class SpatialJAXBMarshaller {
+public class JAXBMarshaller {
 
     /**
      * Marshalls a JAXB Object to a XML String representation

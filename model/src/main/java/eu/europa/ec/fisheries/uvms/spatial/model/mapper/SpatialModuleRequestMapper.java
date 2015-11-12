@@ -14,7 +14,7 @@ public class SpatialModuleRequestMapper {
         request.setMethod(SpatialModuleMethod.GET_AREA_BY_LOCATION);
         request.setPoint(point);
         try {
-            return SpatialJAXBMarshaller.marshall(request);
+            return JAXBMarshaller.marshall(request);
         } catch (SpatialModelMarshallException ex) {
             log.error("[ Error when marshalling object to string ] {} ", ex.getMessage());
             throw new SpatialModelMarshallException("[ Error when marshalling Object to String ]", ex);
@@ -25,7 +25,7 @@ public class SpatialModuleRequestMapper {
         AllAreaTypesRequest request = new AllAreaTypesRequest();
         request.setMethod(SpatialModuleMethod.GET_AREA_TYPES);
         try {
-            return SpatialJAXBMarshaller.marshall(request);
+            return JAXBMarshaller.marshall(request);
         } catch (SpatialModelMarshallException ex) {
             log.error("[ Error when marshalling object to string ] {} ", ex.getMessage());
             throw new SpatialModelMarshallException("[ Error when marshalling Object to String ]", ex);
@@ -43,7 +43,7 @@ public class SpatialModuleRequestMapper {
         }
         request.setAreaTypes(area);
         try {
-            return SpatialJAXBMarshaller.marshall(request);
+            return JAXBMarshaller.marshall(request);
         } catch (SpatialModelMarshallException ex) {
             log.error("[ Error when marshalling object to string ] {} ", ex.getMessage());
             throw new SpatialModelMarshallException("[ Error when marshalling Object to String ]", ex);
@@ -61,7 +61,7 @@ public class SpatialModuleRequestMapper {
         }
         request.setLocationTypes(loc);
         try {
-            return SpatialJAXBMarshaller.marshall(request);
+            return JAXBMarshaller.marshall(request);
         } catch (SpatialModelMarshallException ex) {
             log.error("[ Error when marshalling object to string ] {} ", ex.getMessage());
             throw new SpatialModelMarshallException("[ Error when marshalling Object to String ]", ex);
@@ -86,7 +86,7 @@ public class SpatialModuleRequestMapper {
         request.setAreaTypes(area);
 
         try {
-            return SpatialJAXBMarshaller.marshall(request);
+            return JAXBMarshaller.marshall(request);
         } catch (SpatialModelMarshallException ex) {
             log.error("[ Error when marshalling object to string ] {} ", ex.getMessage());
             throw new SpatialModelMarshallException("[ Error when marshalling Object to String ]", ex);
@@ -103,7 +103,7 @@ public class SpatialModuleRequestMapper {
             request.setMethod(SpatialModuleMethod.GET_FILTER_AREA);
             request.setScopeAreas(scopeAreas);
             request.setUserAreas(userAreas);
-            return SpatialJAXBMarshaller.marshall(request);
+            return JAXBMarshaller.marshall(request);
         } catch (SpatialModelMarshallException ex) {
             log.error("[ Error when marshalling object to string ] {} ", ex.getMessage());
             throw new SpatialModelMarshallException("[ Error when marshalling Object to String ]", ex);
