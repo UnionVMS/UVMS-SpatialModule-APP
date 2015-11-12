@@ -5,7 +5,9 @@ package eu.europa.ec.fisheries.uvms.spatial.entity.util;
  *
  * @author padhyad
  */
-public class QueryNameConstants {
+public final class QueryNameConstants {
+
+    private QueryNameConstants() {}
 
     /**
      * Find all
