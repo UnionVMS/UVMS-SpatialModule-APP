@@ -174,7 +174,7 @@ public class AreaDetailsServiceTest {
 	@SuppressWarnings("unchecked")
     @SneakyThrows
 	public void mockCrudServiceBean(List<AreaLocationTypesEntity> returnList, Object entity) {
-		Mockito.when(repository.findEntityByNamedQuery(Mockito.any(Class.class), Mockito.any(String.class), Mockito.any(Map.class), Mockito.any(Integer.class))).thenReturn(returnList);
+		Mockito.when(repository.findEntityByNamedQuery(Mockito.any(String.class), Mockito.any(Map.class), Mockito.any(Integer.class))).thenReturn(returnList);
 		Mockito.when(repository.findEntityById(Mockito.any(Class.class), Mockito.any(Object.class))).thenReturn(entity);
 	}
 	

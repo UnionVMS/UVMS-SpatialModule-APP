@@ -20,10 +20,9 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
     private SpatialRepository repository;
 
     @Override
-    @SuppressWarnings("unchecked")
     @SneakyThrows
     public List<String> listAllAreaTypeNames() {
-        return repository.findEntityByNamedQuery(String.class, QueryNameConstants.FIND_ALL_AREA_TYPE_NAMES);
+        return repository.findEntityByNamedQuery(QueryNameConstants.FIND_ALL_AREA_TYPE_NAMES);
     }
     
     @Override

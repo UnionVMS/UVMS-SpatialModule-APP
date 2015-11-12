@@ -32,7 +32,7 @@ public class AreaTypeNamesServiceTest {
     @SuppressWarnings("unchecked")
     public void shouldReturnAreaTypes() throws Exception {
         // given
-        when(repository.findEntityByNamedQuery(String.class, QueryNameConstants.FIND_ALL_AREA_TYPE_NAMES)).thenReturn(AREA_TYPES);
+        when(repository.findEntityByNamedQuery(QueryNameConstants.FIND_ALL_AREA_TYPE_NAMES)).thenReturn(AREA_TYPES);
 
         // when
         List<String> areaTypeNames = areaTypeNamesService.listAllAreaTypeNames();
@@ -47,7 +47,7 @@ public class AreaTypeNamesServiceTest {
     @SuppressWarnings("unchecked")
     public void shouldNotThrowNullPointerException() throws Exception {
         // given
-        when(repository.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_ALL_AREAS)).thenReturn(Collections.emptyList());
+        when(repository.findEntityByNamedQuery(QueryNameConstants.FIND_ALL_AREAS)).thenReturn(Collections.emptyList());
 
         // when
         List<String> areaTypeNames = areaTypeNamesService.listAllAreaTypeNames();

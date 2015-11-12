@@ -102,7 +102,7 @@ public class ClosestLocationServiceBean implements ClosestLocationService {
 
     @SneakyThrows
     private Map<String, String> getLocationType2TableNameMap() {
-        List<AreaLocationTypesEntity> locations = repository.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_ALL_LOCATIONS);
+        List<AreaLocationTypesEntity> locations = repository.findEntityByNamedQuery(QueryNameConstants.FIND_ALL_LOCATIONS);
         Map<String, String> locationMap = Maps.newHashMap();
         for (AreaLocationTypesEntity location : locations) {
             locationMap.put(location.getTypeName().toUpperCase(), location.getAreaDbTable());

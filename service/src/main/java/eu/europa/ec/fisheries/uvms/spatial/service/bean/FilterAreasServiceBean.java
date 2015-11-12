@@ -60,7 +60,7 @@ public class FilterAreasServiceBean implements FilterAreasService {
     @SneakyThrows
     private Map<String, String> createAreaTableMapping(List<String> userAreaTypes) {
         Map<String, List<String>> parameters = createParameters(userAreaTypes);
-        List<AreaLocationTypesEntity> areaEntities = repository.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_TYPE_BY_NAMES, parameters);
+        List<AreaLocationTypesEntity> areaEntities = repository.findEntityByNamedQuery(QueryNameConstants.FIND_TYPE_BY_NAMES, parameters);
         Map<String, String> areaType2TableMap = createAreaType2TableMap(areaEntities);
         validateTableNames(userAreaTypes, areaType2TableMap);
         return areaType2TableMap;

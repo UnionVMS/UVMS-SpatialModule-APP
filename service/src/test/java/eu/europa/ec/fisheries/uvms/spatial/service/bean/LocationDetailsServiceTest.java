@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import eu.europa.ec.fisheries.uvms.service.DAO;
 import lombok.SneakyThrows;
 import org.geotools.geometry.jts.GeometryBuilder;
 import org.junit.Before;
@@ -137,7 +136,7 @@ public class LocationDetailsServiceTest {
 	@SuppressWarnings("unchecked")
     @SneakyThrows
 	private void mockCrudServiceBean(List<AreaLocationTypesEntity> returnList, Object entity) {
-		Mockito.when(repository.findEntityByNamedQuery(Mockito.any(Class.class), Mockito.any(String.class), Mockito.any(Map.class), Mockito.any(Integer.class))).thenReturn(returnList);
+		Mockito.when(repository.findEntityByNamedQuery(Mockito.any(String.class), Mockito.any(Map.class), Mockito.any(Integer.class))).thenReturn(returnList);
 		Mockito.when(repository.findEntityById(Mockito.any(Class.class), Mockito.any(Object.class))).thenReturn(entity);
 	}
 	
