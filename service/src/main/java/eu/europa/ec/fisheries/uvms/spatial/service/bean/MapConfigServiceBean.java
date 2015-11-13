@@ -65,6 +65,7 @@ public class MapConfigServiceBean implements MapConfigService {
     private ArrayList<TbControl> createTbControls() {
         ArrayList<TbControl> controls = Lists.newArrayList();
         controls.add(new TbControl("measure"));
+        controls.add(new TbControl("fullscreen"));
         return controls;
     }
 
@@ -73,7 +74,6 @@ public class MapConfigServiceBean implements MapConfigService {
         controls.add(new Control("zoom"));
         controls.add(new Control("drag"));
         controls.add(new Control("scale").withUnits("nautical"));
-        controls.add(new Control("fullscreen"));
         controls.add(new Control("mousecoords").withEpsgCode(4326).withFormat("dd"));
         controls.add(new Control("history"));
         controls.add(new Control("measure"));

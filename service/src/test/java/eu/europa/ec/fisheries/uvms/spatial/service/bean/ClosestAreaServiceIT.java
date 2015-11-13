@@ -17,9 +17,9 @@ import static org.junit.Assert.assertEquals;
 @RunWith(Arquillian.class)
 public class ClosestAreaServiceIT extends AbstractArquillianIT {
 
-    private static final double LATITUDE = 32.85615;
+    private static final double LATITUDE = -10.85615;
     private static final double LATITUDE_2 = 45.11557;
-    private static final double LONGITUDE = -10.74118;
+    private static final double LONGITUDE = 4.74118;
     private static final double LONGITUDE_2 = -7.14925;
     private static final int DEFAULT_CRS = 4326;
     private static final int CRS = 3857;
@@ -48,9 +48,10 @@ public class ClosestAreaServiceIT extends AbstractArquillianIT {
         assertFalse(closestAreas.isEmpty());
 
         Area area = closestAreas.get(0);
-        assertEquals("231", area.getId());
-        assertEquals(0.0, area.getDistance(), 0.01);
-        assertEquals("MAR", area.getCode());
+        assertEquals("163", area.getId());
+        assertEquals(524023.77798891655, area.getDistance(), 0.01);
+        assertEquals("AGO", area.getCode());
+        assertEquals("Angolan Exclusive Economic Zone", area.getName());
         assertEquals(AreaType.EEZ, area.getAreaType());
         assertEquals(UnitType.METERS, area.getUnit());
     }
@@ -82,6 +83,7 @@ public class ClosestAreaServiceIT extends AbstractArquillianIT {
         assertEquals("94", area.getId());
         assertEquals(354.0293920161582, area.getDistance(), 0.01);
         assertEquals("GHA", area.getCode());
+        assertEquals("Ghana", area.getName());
         assertEquals(AreaType.COUNTRY, area.getAreaType());
         assertEquals(UnitType.MILES, area.getUnit());
     }

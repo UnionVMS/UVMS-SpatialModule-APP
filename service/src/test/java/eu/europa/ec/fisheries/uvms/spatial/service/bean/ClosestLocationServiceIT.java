@@ -51,6 +51,7 @@ public class ClosestLocationServiceIT extends AbstractArquillianIT {
         assertEquals("4627", location.getId());
         assertEquals(200508.9634032084, location.getDistance(), 0.01);
         assertEquals("MAJFL", location.getCode());
+        assertEquals("Jorf Lasfar", location.getName());
         assertEquals(LocationType.PORT, location.getLocationType());
         assertEquals(UnitType.METERS, location.getUnit());
     }
@@ -80,6 +81,7 @@ public class ClosestLocationServiceIT extends AbstractArquillianIT {
         assertEquals("3751", location.getId());
         assertEquals(626489.5020191947, location.getDistance(), 0.01);
         assertEquals("GHTEM", location.getCode());
+        assertEquals("Tema", location.getName());
         assertEquals(LocationType.PORT, location.getLocationType());
         assertEquals(UnitType.METERS, location.getUnit());
     }
