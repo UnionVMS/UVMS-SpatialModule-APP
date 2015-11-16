@@ -44,8 +44,6 @@ public class SpatialEventServiceTest {
     @Mock
     private FilterAreasServiceBean filterAreasService;
     @Mock
-    private SpatialModuleResponseMapper mapper;
-    @Mock
     private TextMessage textMessage;
 
     @Test

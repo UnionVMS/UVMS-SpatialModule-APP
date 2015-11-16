@@ -50,9 +50,6 @@ public class SpatialEventMDBTest {
     private Event<SpatialMessageEvent> spatialErrorEvent;
 
     @Mock
-    private SpatialModuleResponseMapper responseMapper;
-
-    @Mock
     TextMessage textMessage;
 
     @Test
