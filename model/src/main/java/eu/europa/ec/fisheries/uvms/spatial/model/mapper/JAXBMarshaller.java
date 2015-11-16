@@ -13,7 +13,9 @@ import java.io.StringReader;
 import java.io.StringWriter;
 
 @Slf4j
-public class JAXBMarshaller {
+public final class JAXBMarshaller {
+
+    private JAXBMarshaller() {}
 
     /**
      * Marshalls a JAXB Object to a XML String representation
@@ -27,13 +29,13 @@ public class JAXBMarshaller {
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(new Class[]{data.getClass()});
             Marshaller marshaller = jaxbContext.createMarshaller();
-            marshaller.setProperty("jaxb.formatted.output", Boolean.valueOf(true));
+            marshaller.setProperty("jaxb.formatted.output", Boolean.TRUE);
             StringWriter sw = new StringWriter();
             marshaller.marshal(data, sw);
             return sw.toString();
         } catch (JAXBException e) {
-            log.error("[ Error when marshalling object to string. ] {}", e.getMessage());
-            throw new SpatialModelMarshallException("Error when marshalling " + data.getClass().getName() + " to String");
+            log.error("[ Error when marshalling object to string. ]", e.getMessage());
+            throw new SpatialModelMarshallException("Error when marshalling " , e);
         }
     }
 
@@ -54,8 +56,8 @@ public class JAXBMarshaller {
             StringReader sr = new StringReader(textMessage.getText());
             return (R) unmarshaller.unmarshal(sr);
         } catch (JMSException | JAXBException e) {
-            log.error("[ Error when unmarshalling Text message to object. ] {}", e.getMessage());
-            throw new SpatialModelMarshallException("Error when unmarshalling response in ResponseMapper: " + e.getMessage());
+            log.error("[ Error when unmarshalling Text message to object. ]", e);
+            throw new SpatialModelMarshallException("Error when unmarshalling response in ResponseMapper: ", e);
         }
     }
 
