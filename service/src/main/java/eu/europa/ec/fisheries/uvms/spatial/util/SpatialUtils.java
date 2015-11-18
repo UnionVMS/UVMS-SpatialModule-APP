@@ -10,6 +10,7 @@ import com.vividsolutions.jts.io.WKTWriter;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.PointType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
+import lombok.extern.slf4j.Slf4j;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -24,6 +25,7 @@ import java.util.List;
 /**
  * Created by Michal Kopyczok on 02-Sep-15.
  */
+@Slf4j
 public class SpatialUtils {
 
     private static final String EPSG = "EPSG:";
@@ -46,9 +48,11 @@ public class SpatialUtils {
             point.setSRID(DEFAULT_CRS);
             return point;
         } catch (FactoryException ex) {
-            throw new SpatialServiceException(SpatialServiceErrors.NO_SUCH_CRS_CODE_ERROR, String.valueOf(crs));
+            log.error("Exception while conversion to point", ex);
+            throw new SpatialServiceException(SpatialServiceErrors.NO_SUCH_CRS_CODE_ERROR, String.valueOf(crs), ex);
         } catch (MismatchedDimensionException | TransformException ex) {
-            throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
+            log.error("Exception while transformation to point", ex);
+            throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR, ex);
         }
     }
 

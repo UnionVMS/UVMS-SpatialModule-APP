@@ -132,8 +132,8 @@ public class FilterAreasServiceBean implements FilterAreasService {
 
     private FilterAreasSpatialRS createResponse(FilterAreasDto result) {
         FilterAreasSpatialRS response = new FilterAreasSpatialRS();
-        response.setGeometry(result.getWkt_geometry());
-        response.setCode(result.getResult_code());
+        response.setGeometry(result.getWktGeometry());
+        response.setCode(result.getResultCode());
         return response;
     }
 
