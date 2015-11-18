@@ -2,17 +2,7 @@ package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import java.io.Serializable;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EntityResult;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.NamedNativeQuery;
-import javax.persistence.SqlResultSetMapping;
-import javax.persistence.SqlResultSetMappings;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import org.hibernate.annotations.Type;
 
@@ -28,10 +18,13 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasNa
 @NamedNativeQuery(
 		name = QueryNameConstants.COUNTRY_BY_COORDINATE, 
 		query = "select * from countries where st_intersects(geom, st_geomfromtext(CAST(:wktPoint as text), :crs))", resultSetMapping = "implicit.country")
-
+@NamedQueries({
+		@NamedQuery(name = QueryNameConstants.FIND_ALL_COUNTRY_DESC,
+		query = "SELECT country.code AS code, country.name AS name FROM CountriesEntity country WHERE country.code IN (SELECT DISTINCT c.code FROM CountriesEntity c)")
+})
 @Table(name = "countries", schema = "spatial")
 public class CountriesEntity implements Serializable {
-	
+
 	private static final long serialVersionUID = 6797853213499502861L;
 
 	@Id

@@ -64,18 +64,24 @@ public abstract class CommonDao {
 		return query;
 	}
 
+	protected <T> Query createNamedQuery(String nativeQuery, Class<T> dtoClass) {
+		Query query = getSession().getNamedQuery(nativeQuery);
+		query.setResultTransformer(Transformers.aliasToBean(dtoClass));
+		return query;
+	}
+
+	protected Query createNamedQuery(String nativeQuery) {
+		Query query = getSession().getNamedQuery(nativeQuery);
+		query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
+		return query;
+	}
+
 	protected SQLQuery createSQLQueryForClosestArea(String queryString, String wktPoint, int crs) {
 		SQLQuery sqlQuery = getSession().createSQLQuery(queryString);
 		sqlQuery.setString(WKT, wktPoint);
 		sqlQuery.setInteger(CRS, crs);
 		sqlQuery.setResultTransformer(Transformers.aliasToBean(AreaExtendedIdentifierDto.class));
 		return sqlQuery;
-	}
-
-	protected <T> Query createQuery(String nativeQuery, Class<T> dtoClass) {
-		Query query = getSession().getNamedQuery(nativeQuery);
-		query.setResultTransformer(Transformers.aliasToBean(dtoClass));
-		return query;
 	}
 
 	protected Session getSession() {

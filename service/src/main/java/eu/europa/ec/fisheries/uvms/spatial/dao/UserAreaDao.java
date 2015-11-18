@@ -29,7 +29,7 @@ public class UserAreaDao extends CommonDao {
 	
     @SuppressWarnings("unchecked")
     public List<UserAreaLayerDto> findUserAreaLayerMapping() {
-    	return createQuery(QueryNameConstants.FIND_USER_AREA_LAYER, UserAreaLayerDto.class).list();
+    	return createNamedQuery(QueryNameConstants.FIND_USER_AREA_LAYER, UserAreaLayerDto.class).list();
     }
     
     @SuppressWarnings("unchecked")

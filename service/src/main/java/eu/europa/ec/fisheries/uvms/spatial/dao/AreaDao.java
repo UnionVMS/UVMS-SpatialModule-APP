@@ -71,7 +71,7 @@ public class AreaDao extends CommonDao {
 
     @SuppressWarnings("unchecked")
     public List<AreaLayerDto> findSystemAreaLayerMapping() {
-        return createQuery(QueryNameConstants.FIND_SYSTEM_AREA_LAYER, AreaLayerDto.class).list();
+        return createNamedQuery(QueryNameConstants.FIND_SYSTEM_AREA_LAYER, AreaLayerDto.class).list();
     }
 
     @SuppressWarnings("unchecked")

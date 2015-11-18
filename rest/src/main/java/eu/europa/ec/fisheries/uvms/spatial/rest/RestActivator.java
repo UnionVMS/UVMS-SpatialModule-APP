@@ -28,6 +28,7 @@ public class RestActivator extends Application {
         set.add(EnrichmentResource.class);
         set.add(MapConfigResource.class);
         set.add(UserAreaResource.class);
+        set.add(CountryResource.class);
         LOG.info(RestConstants.MODULE_NAME + " module starting up");
     }
 

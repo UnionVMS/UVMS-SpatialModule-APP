@@ -3,6 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.repository;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.spatial.dao.AreaDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.CountryDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.UserAreaDao;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.*;
 import eu.europa.ec.fisheries.uvms.spatial.util.SqlPropertyHolder;
@@ -29,10 +30,13 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     
     private UserAreaDao userAreaDao;
 
+    private CountryDao countryDao;
+
     @PostConstruct
     public void init() {
         areaDao = new AreaDao(em, sql);
         userAreaDao = new UserAreaDao(em);
+        countryDao = new CountryDao(em);
     }
 
     @Override
@@ -91,6 +95,11 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     @Override
     public FilterAreasDto filterAreas(List<String> userAreaTables, List<String> userAreaIds, List<String> scopeAreaTables, List<String> scopeAreaIds) {
         return areaDao.filterAreas(userAreaTables, userAreaIds, scopeAreaTables, scopeAreaIds);
+    }
+
+    @Override
+    public List<Map<String, String>> findAllCountriesDesc() {
+        return countryDao.findAllCountriesDesc();
     }
 
 }
