@@ -1,13 +1,22 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
+import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ProjectionEntity;
+import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.*;
+import eu.europa.ec.fisheries.uvms.spatial.service.mapper.GeometryTypeMapper;
+import eu.europa.ec.fisheries.uvms.spatial.service.mapper.ProjectionMapper;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.List;
 
 @Stateless
 @Local(MapConfigService.class)
@@ -21,9 +30,27 @@ public class MapConfigServiceBean implements MapConfigService {
     private static final String WMS = "WMS";
     private static final String URL = "http://localhost:8080/geoserver/wms";
 
+    @EJB
+    private SpatialRepository repository;
+
+    @Inject
+    private ProjectionMapper projectionMapper;
+
+    @Override
+    @SneakyThrows
+    public List<Projection> getAllProjections() {
+        List<ProjectionEntity> projections = repository.findAllEntity(ProjectionEntity.class);
+        return Lists.transform(projections, new Function<ProjectionEntity, Projection>() {
+            @Override
+            public Projection apply(ProjectionEntity projection) {
+                return projectionMapper.projectionEntityToProjectionDto(projection);
+            }
+        });
+    }
+
     @Override
     public MapConfig getMockReportConfig(int reportId) {
-        Map map = new Map(createProjection(), createControls(), createTbControls(), createLayers());
+        Map map = new Map(getProjections(), createControls(), createTbControls(), createLayers());
         FlagState flagState = createFlagState();
         VectorStyles vectorStyles = new VectorStyles(flagState, new Speed("#1a9641", "#a6d96a", "#fdae61", "#d7191c"));
 
@@ -80,8 +107,8 @@ public class MapConfigServiceBean implements MapConfigService {
         return controls;
     }
 
-    private Projection createProjection() {
-        return new Projection(3857, "m", true);
+    private Projection getProjections() {
+        return new Projection(null, 3857, null, "m", true);
     }
 
 }

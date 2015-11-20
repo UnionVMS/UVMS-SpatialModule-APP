@@ -1,19 +1,11 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
+import eu.europa.ec.fisheries.uvms.spatial.entity.converter.CharBooleanConverter;
+
 import java.io.Serializable;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "projection", schema = "spatial", uniqueConstraints = { @UniqueConstraint(columnNames = "name"),
@@ -32,9 +24,8 @@ public class ProjectionEntity implements Serializable {
 	
 	@Column(name = "srs_code", unique = true, nullable = false)
 	private int srsCode;
-	
-	@Lob
-	@Column(name = "proj_def", nullable = false)
+
+	@Column(columnDefinition = "text",name = "proj_def", nullable = false)
 	private String projDef;
 	
 	@Column(name = "formats", nullable = false, length = 255)
@@ -42,9 +33,10 @@ public class ProjectionEntity implements Serializable {
 	
 	@Column(name = "units", nullable = false, length = 255)
 	private String units;
-	
+
+	@Convert(converter = CharBooleanConverter.class)
 	@Column(name = "world", nullable = false, length = 1)
-	private char world;
+	private Boolean isSystemWide;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "projectionByMapProjId", cascade = CascadeType.ALL)
 	private Set<ReportConnectSpatialEntity> reportConnectSpatialsForMapProjId;
@@ -103,12 +95,12 @@ public class ProjectionEntity implements Serializable {
 		this.units = units;
 	}
 
-	public char getWorld() {
-		return this.world;
+	public Boolean getIsSystemWide() {
+		return this.isSystemWide;
 	}
 
-	public void setWorld(char world) {
-		this.world = world;
+	public void setIsSystemWide(Boolean isSystemWide) {
+		this.isSystemWide = isSystemWide;
 	}
 
 	public Set<ReportConnectSpatialEntity> getReportConnectSpatialsForMapProjId() {

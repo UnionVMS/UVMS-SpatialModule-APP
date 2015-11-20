@@ -4,6 +4,7 @@ import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.MapConfigService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.MapConfig;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.Projection;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.ejb.EJB;
@@ -14,6 +15,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 @Path("/config")
 @Slf4j
@@ -30,6 +32,16 @@ public class MapConfigResource extends UnionVMSResource {
         log.info("Getting map configuration for report with id = {}", id);
         MapConfig mapConfig = mapConfigService.getMockReportConfig(id);
         return createSuccessResponse(mapConfig);
+    }
+
+    @GET
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Path("/projections")
+    @Interceptors(value = {ExceptionInterceptor.class})
+    public Response getAllProjections() {
+        log.info("Getting all projections");
+        List<Projection> projections = mapConfigService.getAllProjections();
+        return createSuccessResponse(projections);
     }
 
 }

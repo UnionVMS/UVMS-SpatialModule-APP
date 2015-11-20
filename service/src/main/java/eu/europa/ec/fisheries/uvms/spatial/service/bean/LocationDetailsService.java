@@ -5,5 +5,5 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationDetailsSpatialR
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationTypeEntry;
 
 public interface LocationDetailsService {	
-	public LocationDetails getLocationDetails(LocationTypeEntry locationTypeEntry);
+	LocationDetails getLocationDetails(LocationTypeEntry locationTypeEntry);
 }

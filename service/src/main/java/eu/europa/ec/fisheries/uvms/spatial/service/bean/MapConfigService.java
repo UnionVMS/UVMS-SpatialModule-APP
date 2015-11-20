@@ -1,7 +1,13 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.MapConfig;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.Projection;
+import lombok.SneakyThrows;
+
+import java.util.List;
 
 public interface MapConfigService {
+    List<Projection> getAllProjections();
+
     MapConfig getMockReportConfig(int reportId);
 }
