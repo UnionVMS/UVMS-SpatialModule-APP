@@ -10,18 +10,22 @@ public class FilterAreasDto {
     @JsonProperty("result_code")
     private int resultCode;
 
+    @JsonProperty("wkt_geometry")
     public String getWktGeometry() {
         return wktGeometry;
     }
 
+    @JsonProperty("wkt_geometry")
     public void setWktGeometry(String wktGeometry) {
         this.wktGeometry = wktGeometry;
     }
 
+    @JsonProperty("result_code")
     public int getResultCode() {
         return resultCode;
     }
 
+    @JsonProperty("result_code")
     public void setResultCode(int resultCode) {
         this.resultCode = resultCode;
     }
