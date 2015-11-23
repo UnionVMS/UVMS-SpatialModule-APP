@@ -197,6 +197,15 @@ public final class SpatialModuleResponseMapper {
         }
     }
 
+    public static SpatialSaveMapConfigurationRS mapToSpatialSaveMapConfigurationRS(TextMessage response, String correlationId) throws SpatialModelMapperException {
+        try {
+            validateResponse(response, correlationId);
+            return JAXBMarshaller.unmarshall(response, SpatialSaveMapConfigurationRS.class);
+        } catch (SpatialModelMarshallException e) {
+            return exception(e);
+        }
+    }
+
     private static <T> String exception(T data, SpatialModelMarshallException e) throws SpatialModelMarshallException {
         log.error("[ Error when marshalling data. ] {}", e);
         throw new SpatialModelMarshallException("Error when marshalling " + data.getClass().getName() + " to String");
