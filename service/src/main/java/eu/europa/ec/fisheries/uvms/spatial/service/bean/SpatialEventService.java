@@ -1,6 +1,13 @@
-package eu.europa.ec.fisheries.uvms.spatial.service;
+package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import eu.europa.ec.fisheries.uvms.spatial.message.event.*;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.GetAreaByLocationEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.GetAreaTypeNamesEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.GetClosestAreaEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.GetClosestLocationEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.GetFilterAreaEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.GetSpatialEnrichmentEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.PingEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageEvent;
 
 import javax.ejb.Local;
 import javax.enterprise.event.Observes;

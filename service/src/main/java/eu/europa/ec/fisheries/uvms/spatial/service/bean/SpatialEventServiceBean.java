@@ -1,11 +1,24 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.spatial.message.bean.SpatialMessageServiceBean;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.*;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.GetAreaByLocationEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.GetAreaTypeNamesEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.GetClosestAreaEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.GetClosestLocationEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.GetFilterAreaEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.GetSpatialEnrichmentEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.PingEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageErrorEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageEvent;
 import eu.europa.ec.fisheries.uvms.spatial.model.FaultCode;
 import eu.europa.ec.fisheries.uvms.spatial.model.mapper.SpatialModuleResponseMapper;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
-import eu.europa.ec.fisheries.uvms.spatial.service.SpatialEventService;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Area;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaExtendedIdentifierType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Location;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.PingRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRS;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.ejb.EJB;
@@ -22,18 +35,25 @@ public class SpatialEventServiceBean implements SpatialEventService {
     @Inject
     @SpatialMessageErrorEvent
     Event<SpatialMessageEvent> spatialErrorEvent;
+
     @EJB
     private AreaByLocationService areaByLocationService;
+
     @EJB
     private ClosestAreaService closestAreaService;
+
     @EJB
     private ClosestLocationService closestLocationService;
+
     @EJB
     private SpatialEnrichmentService enrichmentService;
+
     @EJB
     private AreaTypeNamesService areaTypeNamesService;
+
     @EJB
     private FilterAreasService filterAreasService;
+
     @EJB
     private SpatialMessageServiceBean messageProducer;
 
