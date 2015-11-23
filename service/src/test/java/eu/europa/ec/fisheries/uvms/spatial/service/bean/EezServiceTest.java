@@ -3,7 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezType;
 import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
-import eu.europa.ec.fisheries.uvms.spatial.service.mapper.EezTypeMapper;
+import eu.europa.ec.fisheries.uvms.spatial.service.mapper.EezMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -20,7 +20,7 @@ public class EezServiceTest {
 
     private static final String EEZ_ID = "123";
     @Mock
-    EezTypeMapper eezMapper;
+    EezMapper eezMapper;
     @Mock
     private SpatialRepository repository;
     @InjectMocks

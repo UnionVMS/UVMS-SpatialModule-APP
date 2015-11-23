@@ -2,8 +2,21 @@ package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import java.io.Serializable;
 
-import javax.persistence.*;
-
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EntityResult;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedNativeQuery;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.SqlResultSetMapping;
+import javax.persistence.SqlResultSetMappings;
+import javax.persistence.Table;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.Type;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -17,15 +30,14 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasNa
 })
 @NamedNativeQuery(
 		name = QueryNameConstants.COUNTRY_BY_COORDINATE, 
-		query = "select * from countries where st_intersects(geom, st_geomfromtext(CAST(:wktPoint as text), :crs))", resultSetMapping = "implicit.country")
+		query = "select * from spatial.countries where st_intersects(geom, st_geomfromtext(CAST(:wktPoint as text), :crs))", resultSetMapping = "implicit.country")
 @NamedQueries({
 		@NamedQuery(name = QueryNameConstants.FIND_ALL_COUNTRY_DESC,
 		query = "SELECT country.code AS code, country.name AS name FROM CountriesEntity country WHERE country.code IN (SELECT DISTINCT c.code FROM CountriesEntity c)")
 })
 @Table(name = "countries", schema = "spatial")
-public class CountriesEntity implements Serializable {
-
-	private static final long serialVersionUID = 6797853213499502861L;
+@EqualsAndHashCode
+public class CountriesEntity implements Serializable { // TODO rename to CountryEntity
 
 	@Id
 	@Column(name = "id")
@@ -97,7 +109,26 @@ public class CountriesEntity implements Serializable {
 	public CountriesEntity() {
 	}
 
-	public int getId() {
+    @Builder
+    public CountriesEntity(Geometry geom, String sovereignt, String sovA3, String type, String admin, String code, String name, String nameLong, Double popEst, Double gdpMdEst, String incomeGrp, String continent, String regionUn, String subregion, String regionWb) {
+        this.geom = geom;
+        this.sovereignt = sovereignt;
+        this.sovA3 = sovA3;
+        this.type = type;
+        this.admin = admin;
+        this.code = code;
+        this.name = name;
+        this.nameLong = nameLong;
+        this.popEst = popEst;
+        this.gdpMdEst = gdpMdEst;
+        this.incomeGrp = incomeGrp;
+        this.continent = continent;
+        this.regionUn = regionUn;
+        this.subregion = subregion;
+        this.regionWb = regionWb;
+    }
+
+    public int getId() {
 		return this.id;
 	}
 

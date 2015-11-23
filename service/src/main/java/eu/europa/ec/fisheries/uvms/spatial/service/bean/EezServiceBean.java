@@ -5,8 +5,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezType;
 import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.EezDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.mapper.EezDtoMapper;
-import eu.europa.ec.fisheries.uvms.spatial.service.mapper.EezTypeMapper;
+import eu.europa.ec.fisheries.uvms.spatial.service.mapper.EezMapper;
 import lombok.SneakyThrows;
 
 import javax.ejb.EJB;
@@ -24,17 +23,13 @@ public class EezServiceBean implements EezService {
     private SpatialRepository repository;
 
     @Inject
-    private EezDtoMapper eezDtoMapper;
-
-    @Inject
-    private EezTypeMapper eezMapper;
+    private EezMapper mapper;
 
     @Override
-    @SuppressWarnings("unchecked")
     @SneakyThrows
     public EezType getEezById(EezSpatialRQ getEezSpatialRQ) {
-        EezEntity eez = (EezEntity) repository.findEntityById(EezEntity.class, Integer.parseInt(getEezSpatialRQ.getEezId()));
-        return eezMapper.eezEntityToEezType(eez);
+        EezEntity eezById = repository.getEezById(Integer.parseInt(getEezSpatialRQ.getEezId()));
+        return mapper.eezEntityToEezType(eezById);
     }
 
     @Override
@@ -42,6 +37,6 @@ public class EezServiceBean implements EezService {
     @SuppressWarnings("unchecked")
     public EezDto getEezById(int id) {
         EezEntity eez = (EezEntity) repository.findEntityById(EezEntity.class, id);
-        return eezDtoMapper.eezEntityToEezDto(eez);
+        return mapper.eezEntityToEezDto(eez);
     }
 }

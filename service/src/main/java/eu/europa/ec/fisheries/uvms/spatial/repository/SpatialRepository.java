@@ -1,13 +1,15 @@
 package eu.europa.ec.fisheries.uvms.spatial.repository;
 
 import com.vividsolutions.jts.geom.Point;
+import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.DAO;
+import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.*;
 
 import java.util.List;
 import java.util.Map;
 
-public interface SpatialRepository extends DAO {
+public interface SpatialRepository extends DAO{
 
     List<AreaExtendedIdentifierDto> findAreasIdByLocation(Point point, String areaDbTable);
 
@@ -32,4 +34,6 @@ public interface SpatialRepository extends DAO {
     FilterAreasDto filterAreas(List<String> userAreaTables, List<String> userAreaIds, List<String> scopeAreaTables, List<String> scopeAreaIds);
 
     List<Map<String, String>> findAllCountriesDesc();
+
+    EezEntity getEezById(Integer id) throws ServiceException;
 }

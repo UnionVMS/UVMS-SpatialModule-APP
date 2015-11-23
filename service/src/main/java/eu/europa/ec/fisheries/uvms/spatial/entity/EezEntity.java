@@ -16,13 +16,14 @@ import javax.persistence.SqlResultSetMapping;
 import javax.persistence.SqlResultSetMappings;
 import javax.persistence.Table;
 
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.Type;
 
 import com.vividsolutions.jts.geom.Geometry;
 
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
-
 
 @Entity
 @SqlResultSetMappings({
@@ -33,9 +34,8 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasNa
 		query = "select * from eez where st_intersects(geom, st_geomfromtext(CAST(:wktPoint as text), :crs))", resultSetMapping = "implicit.eez")
 @NamedQuery(name = QueryNameConstants.EEZ_COLUMNS, query = "select eez.name as name, eez.code as code from EezEntity as eez where eez.gid =:gid")
 @Table(name = "eez", schema = "spatial")
+@EqualsAndHashCode
 public class EezEntity implements Serializable {
-
-	private static final long serialVersionUID = 6797853213499502862L;
 
 	@Id
 	@Column(name = "gid")
@@ -101,7 +101,27 @@ public class EezEntity implements Serializable {
     @ColumnAliasName(aliasName ="mrgidEez")
 	private Integer mrgidEez;
 
-	public EezEntity() {
+    @Builder
+    public EezEntity(Geometry geom, String name, String country, String sovereign, String remarks, Integer sovId,
+                     Integer eezId, String code, BigDecimal mrgid, String dateChang, Double areaM2, Double longitude,
+                     Double latitude, Integer mrgidEez) {
+        this.geom = geom;
+        this.name = name;
+        this.country = country;
+        this.sovereign = sovereign;
+        this.remarks = remarks;
+        this.sovId = sovId;
+        this.eezId = eezId;
+        this.code = code;
+        this.mrgid = mrgid;
+        this.dateChang = dateChang;
+        this.areaM2 = areaM2;
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.mrgidEez = mrgidEez;
+    }
+
+    public EezEntity() {
 	}
 
 	public int getGid() {

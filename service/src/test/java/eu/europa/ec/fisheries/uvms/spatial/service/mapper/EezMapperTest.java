@@ -14,15 +14,15 @@ import static org.junit.Assert.assertEquals;
 
 public class EezMapperTest {
 
-    private EezTypeMapper mapper;
+    private EezMapper mapper;
     private EezEntity eez;
 
     @Before
     public void beforeTest() {
-        mapper = new EezTypeMapperImpl();
+        mapper = new EezMapperImpl();
 
         try {
-            Field field = EezTypeMapperImpl.class.getDeclaredField("geometryTypeMapper");
+            Field field = EezMapperImpl.class.getDeclaredField("geometryTypeMapper");
             field.setAccessible(true);
             GeometryTypeMapper geometryMapper = new GeometryTypeMapperImpl();
             field.set(mapper, geometryMapper);

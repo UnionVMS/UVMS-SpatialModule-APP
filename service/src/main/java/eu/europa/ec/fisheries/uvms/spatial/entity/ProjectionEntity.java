@@ -1,18 +1,29 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import eu.europa.ec.fisheries.uvms.spatial.entity.converter.CharBooleanConverter;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
-
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
 @Table(name = "projection", schema = "spatial", uniqueConstraints = { @UniqueConstraint(columnNames = "name"),
 		@UniqueConstraint(columnNames = "srs_code") })
+@EqualsAndHashCode(exclude = { "reportConnectSpatialsForMapProjId", "reportConnectSpatialsForDisplayProjId"})
 public class ProjectionEntity implements Serializable {
-	
-	private static final long serialVersionUID = 6797853213499502866L;
 
 	@Id
 	@Column(name = "id")
@@ -39,15 +50,25 @@ public class ProjectionEntity implements Serializable {
 	private Boolean isSystemWide;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "projectionByMapProjId", cascade = CascadeType.ALL)
-	private Set<ReportConnectSpatialEntity> reportConnectSpatialsForMapProjId;
+	private Set<ReportConnectSpatialEntity> reportConnectSpatialsForMapProjId = new HashSet<>();
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "projectionByDisplayProjId", cascade = CascadeType.ALL)
-	private Set<ReportConnectSpatialEntity> reportConnectSpatialsForDisplayProjId;
+	private Set<ReportConnectSpatialEntity> reportConnectSpatialsForDisplayProjId = new HashSet<>();
 
 	public ProjectionEntity() {
 	}
 
-	public long getId() {
+    @Builder
+    public ProjectionEntity(String name, int srsCode, String projDef, String formats, String units, Boolean isSystemWide) {
+        this.name = name;
+        this.srsCode = srsCode;
+        this.projDef = projDef;
+        this.formats = formats;
+        this.units = units;
+        this.isSystemWide = isSystemWide;
+    }
+
+    public long getId() {
 		return this.id;
 	}
 

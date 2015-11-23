@@ -2,15 +2,21 @@ package eu.europa.ec.fisheries.uvms.spatial.service.mapper;
 
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezType;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.EezDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "cdi", uses = GeometryTypeMapper.class)
-public interface EezTypeMapper {
+public interface EezMapper {
 
-    EezTypeMapper INSTANCE = Mappers.getMapper(EezTypeMapper.class);
+    EezMapper INSTANCE = Mappers.getMapper(EezMapper.class);
+
+    @Mappings({
+            @Mapping(source = "geom", target = "geometry"),
+    })
+    EezDto eezEntityToEezDto(EezEntity eezEntity);
 
     @Mappings({
             @Mapping(source = "geom", target = "geometry"),
