@@ -3,21 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.entity;
 import java.io.Serializable;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 
 import eu.europa.ec.fisheries.uvms.spatial.entity.converter.CharBooleanConverter;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
@@ -52,7 +38,7 @@ public class AreaLocationTypesEntity implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "service_layer_id", nullable = false)
 	private ServiceLayerEntity serviceLayer;
 	
@@ -72,6 +58,9 @@ public class AreaLocationTypesEntity implements Serializable {
 	@Convert(converter = CharBooleanConverter.class)
 	@Column(name = "is_location", nullable = false, length = 1)
 	private Boolean isLocation = false;
+
+	@Column(name = "area_group_type", length = 255)
+	private String areaGroupType;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "areaLocationTypes", cascade = CascadeType.ALL)
 	private Set<AreaConnectGroupEntity> areaConnectGroups;
@@ -133,6 +122,14 @@ public class AreaLocationTypesEntity implements Serializable {
 
 	public void setIsLocation(Boolean isLocation) {
 		this.isLocation = isLocation;
+	}
+
+	public String getAreaGroupType() {
+		return areaGroupType;
+	}
+
+	public void setAreaGroupType(String areaGroupType) {
+		this.areaGroupType = areaGroupType;
 	}
 
 	public Set<AreaConnectGroupEntity> getAreaConnectGroups() {
