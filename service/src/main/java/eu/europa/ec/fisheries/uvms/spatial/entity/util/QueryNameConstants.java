@@ -61,4 +61,10 @@ public final class QueryNameConstants {
     public static final String RAC_COLUMNS = "racEntity.findSelectedColumns";
     public static final String STAT_RECT_COLUMNS = "statRectEntity.findSelectedColumns";
     public static final String PORT_COLUMNS = "portEntity.findSelectedColumns";
+
+    /**
+     * MapDto Config queries
+     */
+    public static final String FIND_MAP_PROJ_BY_ID = "ReportLayerConfig.findMapProjectionById";
+    public static final String FIND_REPORT_SERVICE_AREAS = "ReportLayerConfig.findReportConnectServiceAreas";
 }
