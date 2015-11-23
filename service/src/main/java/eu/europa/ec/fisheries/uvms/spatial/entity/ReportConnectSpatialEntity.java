@@ -1,5 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
+import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
+
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.DisplayFormatType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ScaleBarType;
 import lombok.Builder;
@@ -8,21 +10,16 @@ import lombok.EqualsAndHashCode;
 import java.io.Serializable;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "report_connect_spatial", schema = "spatial")
+@NamedQueries(
+		@NamedQuery(name = QueryNameConstants.FIND_MAP_PROJ_BY_ID,
+				query = "SELECT projection.srsCode AS epsgCode, projection.units AS units, projection.isWorld AS global " +
+						"FROM ReportConnectSpatialEntity rcs INNER JOIN rcs.projectionByMapProjId AS projection " +
+						"WHERE rcs.reportId = :reportId")
+)
 @EqualsAndHashCode(exclude = {"id", "reportConnectServiceAreases"})
 public class ReportConnectSpatialEntity implements Serializable {
 
@@ -48,7 +45,7 @@ public class ReportConnectSpatialEntity implements Serializable {
 	@Column(name = "map_zoom", nullable = false)
 	private int mapZoom;
 	
-	@Column(name = "map_extent")
+	@Column(columnDefinition = "text", name = "map_extent")
 	private String mapExtent;
 	
 	@Column(name = "display_format", length = 255)
@@ -59,13 +56,11 @@ public class ReportConnectSpatialEntity implements Serializable {
 	
 	@Column(name = "scalebar_units", length = 255)
 	private ScaleBarType scaleBarType;
-	
-	@Lob
-	@Column(name = "vector_styles")
+
+	@Column(columnDefinition = "text", name = "vector_styles")
 	private String vectorStyles;
-	
-	@Lob
-	@Column(name = "json_report_definition")
+
+	@Column(columnDefinition = "text", name = "json_report_definition")
 	private String jsonReportDefinition;
 	
 	@Column(name = "app_version", nullable = false, length = 255)
