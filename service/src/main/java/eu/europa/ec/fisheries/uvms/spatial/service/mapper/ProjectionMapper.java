@@ -1,7 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.mapper;
 
 import eu.europa.ec.fisheries.uvms.spatial.entity.ProjectionEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.Projection;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
