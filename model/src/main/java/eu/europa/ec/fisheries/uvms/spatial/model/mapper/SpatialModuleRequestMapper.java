@@ -93,15 +93,7 @@ public final class SpatialModuleRequestMapper {
 
     public static String mapToSpatialSaveMapConfigurationRQ(Integer mapProjection, Integer displayProjection, CoordinatesFormat coordinatesFormat, ScaleBarUnits scaleBarUnits) throws SpatialModelMarshallException {
         try {
-            MapConfigurationType mapConfiguration = new MapConfigurationType();
-            if (mapProjection != null) {
-                mapConfiguration.setMapProjection(mapProjection);
-            }
-            if (displayProjection != null) {
-                mapConfiguration.setDisplayProjection(displayProjection);
-            }
-            mapConfiguration.setCoordinatesFormat(coordinatesFormat);
-            mapConfiguration.setScaleBarUnits(scaleBarUnits);
+            MapConfigurationType mapConfiguration = new MapConfigurationType(mapProjection, displayProjection, coordinatesFormat, scaleBarUnits);
             return JAXBMarshaller.marshall(new SpatialSaveMapConfigurationRQ(mapConfiguration));
         } catch (SpatialModelMarshallException ex) {
             return logException(ex);
