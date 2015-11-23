@@ -3,8 +3,8 @@ package eu.europa.ec.fisheries.uvms.spatial.rest.resources;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.MapConfigService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.MapConfig;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.Projection;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.MapConfigDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.ejb.EJB;
@@ -30,7 +30,7 @@ public class MapConfigResource extends UnionVMSResource {
     @Interceptors(value = {ExceptionInterceptor.class})
     public Response getExclusiveEconomicZoneById(@PathParam("id") int id) {
         log.info("Getting map configuration for report with id = {}", id);
-        MapConfig mapConfig = mapConfigService.getMockReportConfig(id);
+        MapConfigDto mapConfig = mapConfigService.getReportConfig(id);
         return createSuccessResponse(mapConfig);
     }
 
@@ -40,7 +40,7 @@ public class MapConfigResource extends UnionVMSResource {
     @Interceptors(value = {ExceptionInterceptor.class})
     public Response getAllProjections() {
         log.info("Getting all projections");
-        List<Projection> projections = mapConfigService.getAllProjections();
+        List<ProjectionDto> projections = mapConfigService.getAllProjections();
         return createSuccessResponse(projections);
     }
 
