@@ -34,7 +34,6 @@ public final class JAXBMarshaller {
             marshaller.marshal(data, sw);
             return sw.toString();
         } catch (JAXBException e) {
-            log.error("[ Error when marshalling object to string. ]", e.getMessage());
             throw new SpatialModelMarshallException("Error when marshalling " , e);
         }
     }
@@ -56,7 +55,6 @@ public final class JAXBMarshaller {
             StringReader sr = new StringReader(textMessage.getText());
             return (R) unmarshaller.unmarshal(sr);
         } catch (JMSException | JAXBException e) {
-            log.error("[ Error when unmarshalling Text message to object. ]", e);
             throw new SpatialModelMarshallException("Error when unmarshalling response in ResponseMapper: ", e);
         }
     }
