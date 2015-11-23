@@ -189,12 +189,11 @@ public final class SpatialModuleResponseMapper {
         }
     }
 
-    public static SpatialSaveMapConfigurationRS mapToSpatialSaveMapConfigurationRS(TextMessage response, String correlationId) throws SpatialModelMapperException {
+    public static String mapSpatialSaveMapConfigurationRSToString(SpatialSaveMapConfigurationRS spatialSaveMapConfigurationRS) throws SpatialModelMarshallException {
         try {
-            validateResponse(response, correlationId);
-            return JAXBMarshaller.unmarshall(response, SpatialSaveMapConfigurationRS.class);
+            return JAXBMarshaller.marshall(spatialSaveMapConfigurationRS);
         } catch (SpatialModelMarshallException e) {
-            return exception(e);
+            return exception(spatialSaveMapConfigurationRS, e);
         }
     }
 

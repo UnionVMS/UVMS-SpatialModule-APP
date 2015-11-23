@@ -142,6 +142,7 @@
             <xs:enumeration value="GET_BUFFER_GEOM"/>
             <xs:enumeration value="GET_ENRICHMENT"/>
             <xs:enumeration value="GET_FILTER_AREA"/>
+            <xs:enumeration value="SAVE_MAP_CONFIGURATION"/>
             <xs:enumeration value="PING"/>
         </xs:restriction>
     </xs:simpleType>

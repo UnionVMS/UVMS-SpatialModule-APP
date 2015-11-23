@@ -3,20 +3,14 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ProjectionEntity;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveMapConfigurationRS;
 import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.Control;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.FlagState;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.Layer;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.Map;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.MapConfig;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.Projection;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.Speed;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.Styles;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.TbControl;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.VectorStyles;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.ProjectionMapper;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.NotImplementedException;
 
 import javax.ejb.EJB;
 import javax.ejb.Local;
@@ -63,6 +57,11 @@ public class MapConfigServiceBean implements MapConfigService {
         VectorStyles vectorStyles = new VectorStyles(flagState, new Speed("#1a9641", "#a6d96a", "#fdae61", "#d7191c"));
 
         return new MapConfig(map, vectorStyles);
+    }
+
+    @Override
+    public SpatialSaveMapConfigurationRS saveMapConfiguration(SpatialEnrichmentRQ spatialEnrichmentRQ) {
+        throw new NotImplementedException("Not implemented yet");
     }
 
     private FlagState createFlagState() {

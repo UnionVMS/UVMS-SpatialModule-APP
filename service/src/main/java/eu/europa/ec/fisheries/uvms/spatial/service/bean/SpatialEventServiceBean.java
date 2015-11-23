@@ -1,24 +1,10 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.spatial.message.bean.SpatialMessageServiceBean;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.GetAreaByLocationEvent;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.GetAreaTypeNamesEvent;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.GetClosestAreaEvent;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.GetClosestLocationEvent;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.GetFilterAreaEvent;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.GetSpatialEnrichmentEvent;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.PingEvent;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageErrorEvent;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.*;
 import eu.europa.ec.fisheries.uvms.spatial.model.FaultCode;
 import eu.europa.ec.fisheries.uvms.spatial.model.mapper.SpatialModuleResponseMapper;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Area;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaExtendedIdentifierType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRS;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Location;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.PingRS;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.ejb.EJB;
@@ -47,6 +33,9 @@ public class SpatialEventServiceBean implements SpatialEventService {
 
     @EJB
     private SpatialEnrichmentService enrichmentService;
+
+    @EJB
+    private MapConfigService mapConfigService;
 
     @EJB
     private AreaTypeNamesService areaTypeNamesService;
@@ -130,6 +119,18 @@ public class SpatialEventServiceBean implements SpatialEventService {
             FilterAreasSpatialRS filterAreasSpatialRS = filterAreasService.filterAreas(filterAreaSpatialRQ);
             log.debug("Send back Filterd Areas");
             messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapFilterAreasResponse(filterAreasSpatialRS));
+        } catch (Exception e) {
+            sendError(message, e);
+        }
+    }
+
+    @Override
+    public void saveMapConfiguration(@Observes @SaveMapConfigurationEvent SpatialMessageEvent message) {
+        log.info("Getting spatial enrichment.");
+        try {
+            SpatialSaveMapConfigurationRS saveMapConfigurationRS = mapConfigService.saveMapConfiguration(message.getSpatialEnrichmentRQ());
+            log.debug("Send back enrichment response.");
+            messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapSpatialSaveMapConfigurationRSToString(saveMapConfigurationRS));
         } catch (Exception e) {
             sendError(message, e);
         }

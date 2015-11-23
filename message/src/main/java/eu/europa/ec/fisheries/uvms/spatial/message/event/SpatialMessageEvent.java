@@ -13,6 +13,7 @@ public class SpatialMessageEvent {
     private AllAreaTypesRequest allAreaTypesRequest;
     private ClosestLocationSpatialRQ closestLocationSpatialRQ;
     private FilterAreasSpatialRQ filterAreasSpatialRQ;
+    private SpatialSaveMapConfigurationRQ spatialSaveMapConfigurationRQ;
     private PingRQ pingRQ;
     private SpatialFault fault;
 
@@ -56,6 +57,11 @@ public class SpatialMessageEvent {
         this.pingRQ = pingRQ;
     }
 
+    public SpatialMessageEvent(TextMessage textMessage, SpatialSaveMapConfigurationRQ spatialSaveMapConfigurationRQ) {
+        this.message = textMessage;
+        this.spatialSaveMapConfigurationRQ = spatialSaveMapConfigurationRQ;
+    }
+
     public TextMessage getMessage() {
         return message;
     }
@@ -86,6 +92,10 @@ public class SpatialMessageEvent {
 
     public PingRQ getPingRQ() {
         return pingRQ;
+    }
+
+    public SpatialSaveMapConfigurationRQ getSpatialSaveMapConfigurationRQ() {
+        return spatialSaveMapConfigurationRQ;
     }
 
     public AllAreaTypesRequest getAllAreaTypesRequest() {
