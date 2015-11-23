@@ -76,6 +76,14 @@ public abstract class CommonDao {
 		return query;
 	}
 
+	protected Query createNamedQuery(String nativeQuery, Map<String, Object> parameters) {
+		Query query = getSession().getNamedQuery(nativeQuery);
+		for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+			query.setParameter(entry.getKey(), entry.getValue());
+		}
+		return query;
+	}
+
 	protected SQLQuery createSQLQueryForClosestArea(String queryString, String wktPoint, int crs) {
 		SQLQuery sqlQuery = getSession().createSQLQuery(queryString);
 		sqlQuery.setString(WKT, wktPoint);

@@ -1,12 +1,8 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
@@ -15,7 +11,7 @@ import java.util.Map;
         "epsgCode",
         "format"
 })
-public class Control {
+public class ControlDto {
 
     @JsonProperty("type")
     private String type;
@@ -29,14 +25,14 @@ public class Control {
     /**
      * No args constructor for use in serialization
      */
-    public Control() {
+    public ControlDto() {
     }
 
-    public Control(String type) {
+    public ControlDto(String type) {
         this.type = type;
     }
 
-    public Control(String type, String units, Integer epsgCode, String format) {
+    public ControlDto(String type, String units, Integer epsgCode, String format) {
         this.type = type;
         this.units = units;
         this.epsgCode = epsgCode;
@@ -53,11 +49,6 @@ public class Control {
         this.type = type;
     }
 
-    public Control withType(String type) {
-        this.type = type;
-        return this;
-    }
-
     @JsonProperty("units")
     public String getUnits() {
         return units;
@@ -66,11 +57,6 @@ public class Control {
     @JsonProperty("units")
     public void setUnits(String units) {
         this.units = units;
-    }
-
-    public Control withUnits(String units) {
-        this.units = units;
-        return this;
     }
 
     @JsonProperty("epsgCode")
@@ -83,11 +69,6 @@ public class Control {
         this.epsgCode = epsgCode;
     }
 
-    public Control withEpsgCode(Integer epsgCode) {
-        this.epsgCode = epsgCode;
-        return this;
-    }
-
     @JsonProperty("format")
     public String getFormat() {
         return format;
@@ -97,10 +78,4 @@ public class Control {
     public void setFormat(String format) {
         this.format = format;
     }
-
-    public Control withFormat(String format) {
-        this.format = format;
-        return this;
-    }
-
 }
