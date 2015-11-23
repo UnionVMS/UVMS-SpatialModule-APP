@@ -5,13 +5,21 @@ import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.spatial.dao.*;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.*;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaExtendedIdentifierDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaLayerDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestLocationDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.FilterAreasDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.MeasurementUnit;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.util.SqlPropertyHolder;
-
 import javax.annotation.PostConstruct;
-import javax.ejb.*;
+import javax.ejb.EJB;
+import javax.ejb.Local;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
@@ -40,6 +48,9 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
 
     private EezDao eezDao;
 
+    private SysConfigDao sysConfigDao;
+
+
     @PostConstruct
     public void init() {
         areaDao = new AreaDao(em, sql);
@@ -48,11 +59,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
         mapConfigDao = new MapConfigDao(em);
         projectionDao = new ProjectionDao(em);
         eezDao = new EezDao(em);
-    }
-
-    @Override
-    public EntityManager getEntityManager() {
-        return em;
+        sysConfigDao = new SysConfigDao(em);
     }
 
     @Override
@@ -126,5 +133,20 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     @Override
     public EezEntity getEezById(final Integer id) throws ServiceException {
         return eezDao.getEezById(id);
+    }
+
+    @Override
+    public void updateSystemConfigs(List<SysConfigEntity> sysConfigs) {
+       sysConfigDao.updateSystemConfigs(sysConfigs);
+    }
+
+    @Override
+    public List<SysConfigEntity> findSystemConfigs() {
+        return sysConfigDao.findSystemConfigs();
+    }
+
+    @Override
+    public EntityManager getEntityManager() {
+        return em;
     }
 }

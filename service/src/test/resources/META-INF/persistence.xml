@@ -24,6 +24,7 @@
         <class>eu.europa.ec.fisheries.uvms.spatial.entity.StatRectEntity</class>
         <class>eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity</class>
         <class>eu.europa.ec.fisheries.uvms.spatial.entity.ReportLayerConfigEntity</class>
+        <class> eu.europa.ec.fisheries.uvms.spatial.entity.config.SysConfigEntity</class>
         <properties>
             <property name="javax.persistence.schema-generation.scripts.action" value="create"/>
             <property name="javax.persistence.schema-generation.create-source" value="metadata"/>
