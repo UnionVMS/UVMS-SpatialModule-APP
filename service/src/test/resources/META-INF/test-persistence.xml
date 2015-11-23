@@ -7,8 +7,6 @@
     <persistence-unit name="spatialPU" transaction-type="JTA">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <jta-data-source>java:jboss/datasources/uvms_spatial</jta-data-source>
-        <mapping-file>META-INF/orm.xml</mapping-file>
-
         <properties>
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.dialect" value="org.hibernate.spatial.dialect.postgis.PostgisDialect"/>
