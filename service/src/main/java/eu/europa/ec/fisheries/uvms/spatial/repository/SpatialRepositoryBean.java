@@ -1,25 +1,18 @@
 package eu.europa.ec.fisheries.uvms.spatial.repository;
 
 import com.vividsolutions.jts.geom.Point;
-import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
-import eu.europa.ec.fisheries.uvms.spatial.dao.*;
-import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaExtendedIdentifierDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaLayerDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestAreaDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestLocationDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.FilterAreasDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.MeasurementUnit;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
+import eu.europa.ec.fisheries.uvms.spatial.dao.AreaDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.CountryDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.MapConfigDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.UserAreaDao;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.*;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
 import eu.europa.ec.fisheries.uvms.spatial.util.SqlPropertyHolder;
+
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
-import javax.ejb.Local;
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
+import javax.ejb.*;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
@@ -42,19 +35,19 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
 
     private CountryDao countryDao;
 
-    private ProjectionDao projectionDao;
-
-    private EezDao eezDao;
-
+    private MapConfigDao mapConfigDao;
 
     @PostConstruct
     public void init() {
         areaDao = new AreaDao(em, sql);
         userAreaDao = new UserAreaDao(em);
         countryDao = new CountryDao(em);
-        projectionDao = new ProjectionDao(em);
-        eezDao = new EezDao(em);
+        mapConfigDao = new MapConfigDao(em);
+    }
 
+    @Override
+    public EntityManager getEntityManager() {
+        return em;
     }
 
     @Override
@@ -116,12 +109,13 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     }
 
     @Override
-    public EezEntity getEezById(final Integer id) throws ServiceException {
-        return eezDao.getEezById(id);
+    public List<ProjectionDto> findProjectionByMap(long reportId) {
+        return mapConfigDao.findProjectionByMap(reportId);
     }
 
     @Override
-    public EntityManager getEntityManager() {
-        return em;
+    public List<ReportConnectServiceAreasEntity> findReportConnectServiceAreas(long reportId) {
+        return mapConfigDao.findReportConnectServiceAreas(reportId);
     }
+
 }
