@@ -3,20 +3,10 @@ package eu.europa.ec.fisheries.uvms.spatial.entity;
 import java.io.Serializable;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import eu.europa.ec.fisheries.uvms.spatial.entity.converter.CharBooleanConverter;
+import org.apache.commons.lang3.StringUtils;
 
 @Entity
 @Table(name = "service_layer", schema = "spatial")
@@ -51,15 +41,11 @@ public class ServiceLayerEntity implements Serializable {
     @Column(name = "srs_code")
     private Integer srsCode;
 
-    @Column(name = "short_copyright", nullable = false, length = 255)
+    @Column(name = "short_copyright", length = 255)
     private String shortCopyright;
 
     @Column(columnDefinition = "text", name = "long_copyright")
     private String longCopyright;
-
-    @Convert(converter = CharBooleanConverter.class)
-    @Column(name = "is_background", nullable = false, length = 1)
-    private Boolean isBackground = false;
 
     @Convert(converter = CharBooleanConverter.class)
     @Column(name = "is_internal", nullable = false, length = 1)
@@ -74,8 +60,8 @@ public class ServiceLayerEntity implements Serializable {
     @Column(name = "style_label_geom", length = 255)
     private String styleLabelGeom;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "serviceLayer", cascade = CascadeType.ALL)
-    private Set<AreaLocationTypesEntity> areaTypeses;
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "serviceLayer", cascade = CascadeType.ALL)
+    private AreaLocationTypesEntity areaType;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "serviceLayer", cascade = CascadeType.ALL)
     private Set<ReportConnectServiceAreasEntity> reportConnectServiceAreas;
@@ -163,14 +149,6 @@ public class ServiceLayerEntity implements Serializable {
         this.longCopyright = longCopyright;
     }
 
-    public Boolean getIsBackground() {
-        return this.isBackground;
-    }
-
-    public void setIsBackground(Boolean isBackground) {
-        this.isBackground = isBackground;
-    }
-
     public Boolean getIsInternal() {
         return this.isInternal;
     }
@@ -203,12 +181,12 @@ public class ServiceLayerEntity implements Serializable {
 		this.styleLabelGeom = styleLabelGeom;
 	}
 
-	public Set<AreaLocationTypesEntity> getAreaTypeses() {
-        return this.areaTypeses;
+	public AreaLocationTypesEntity getAreaType() {
+        return this.areaType;
     }
 
-    public void setAreaTypeses(Set<AreaLocationTypesEntity> areaTypeses) {
-        this.areaTypeses = areaTypeses;
+    public void setAreaType(AreaLocationTypesEntity areaType) {
+        this.areaType = areaType;
     }
 
     public Set<ReportConnectServiceAreasEntity> getReportConnectServiceAreas() {
@@ -219,4 +197,7 @@ public class ServiceLayerEntity implements Serializable {
         this.reportConnectServiceAreas = reportConnectServiceAreas;
     }
 
+    public boolean isStyleEmpty() {
+        return (StringUtils.isEmpty(styleGeom) && StringUtils.isEmpty(styleLabel) && StringUtils.isEmpty(styleLabelGeom));
+    }
 }
