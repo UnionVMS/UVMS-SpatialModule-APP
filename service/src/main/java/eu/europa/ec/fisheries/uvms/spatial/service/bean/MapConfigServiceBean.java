@@ -1,7 +1,11 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
+
+import com.google.common.collect.ImmutableMap;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ProjectionEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveMapConfigurationRS;
@@ -17,7 +21,7 @@ import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
 
 @Stateless
@@ -25,12 +29,6 @@ import java.util.List;
 @Transactional
 @Slf4j
 public class MapConfigServiceBean implements MapConfigService {
-
-    private static final String LABEL = "label";
-    private static final String LABEL_GEOM = "labelGeom";
-    private static final String CUSTOM_LAYER_FROM_UNION_VMS = "Custom layer from UnionVMS.";
-    private static final String WMS = "WMS";
-    private static final String URL = "http://localhost:8080/geoserver/wms";
 
     @EJB
     private SpatialRepository repository;
@@ -40,82 +38,78 @@ public class MapConfigServiceBean implements MapConfigService {
 
     @Override
     @SneakyThrows
-    public List<Projection> getAllProjections() {
+    public List<ProjectionDto> getAllProjections() {
         List<ProjectionEntity> projections = repository.findAllEntity(ProjectionEntity.class);
-        return Lists.transform(projections, new Function<ProjectionEntity, Projection>() {
+        return Lists.transform(projections, new Function<ProjectionEntity, ProjectionDto>() {
             @Override
-            public Projection apply(ProjectionEntity projection) {
+            public ProjectionDto apply(ProjectionEntity projection) {
                 return projectionMapper.projectionEntityToProjectionDto(projection);
             }
         });
     }
 
-    @Override
-    public MapConfig getMockReportConfig(int reportId) {
-        Map map = new Map(getProjections(), createControls(), createTbControls(), createLayers());
-        FlagState flagState = createFlagState();
-        VectorStyles vectorStyles = new VectorStyles(flagState, new Speed("#1a9641", "#a6d96a", "#fdae61", "#d7191c"));
-
-        return new MapConfig(map, vectorStyles);
+    public MapConfigDto getReportConfig(int reportId) {
+        MapDto map = new MapDto(getMapProjection(reportId), createMockControls(), createMockTbControls(), getServiceAreaLayer(reportId));
+        return new MapConfigDto(map, createMockVectorStyle());
     }
 
+    private ProjectionDto getMapProjection(int reportId) {
+        List<ProjectionDto> projectionDtoList = repository.findProjectionByMap(reportId);
+        return (projectionDtoList != null && !projectionDtoList.isEmpty()) ? projectionDtoList.get(0) : null;
+    }
     @Override
     public SpatialSaveMapConfigurationRS saveMapConfiguration(SpatialEnrichmentRQ spatialEnrichmentRQ) {
         throw new NotImplementedException("Not implemented yet");
     }
 
-    private FlagState createFlagState() {
-        return new FlagState()
-                .withFlagState("dnk", "#0066FF")
-                .withFlagState("swe", "#FF0066");
+    private List<LayerDto> getServiceAreaLayer(int reportId) {
+        List<LayerDto> layerDtos = new ArrayList<LayerDto>();
+        for (ReportConnectServiceAreasEntity reportConnectServiceArea : getReportConnectServiceAreas(reportId)) {
+            layerDtos.add(reportConnectServiceArea.convertToServiceLayer());
+        }
+        return !layerDtos.isEmpty() ? layerDtos : null;
     }
 
-    private ArrayList<Layer> createLayers() {
-        ArrayList<Layer> layers = Lists.newArrayList();
-
-        Styles portStyles = new Styles("port")
-                .withAdditionalProperty(LABEL, "port_label")
-                .withAdditionalProperty(LABEL_GEOM, "port_label_geom");
-        layers.add(new Layer(WMS, "port", "Ports", false, CUSTOM_LAYER_FROM_UNION_VMS, URL, "geoserver", "uvms:port", portStyles));
-
-        Styles eezStyles = new Styles("eez")
-                .withAdditionalProperty(LABEL, "eez_label")
-                .withAdditionalProperty(LABEL_GEOM, "eez_label_geom");
-        layers.add(new Layer(WMS, "area", "EEZ", false, CUSTOM_LAYER_FROM_UNION_VMS, URL, "geoserver", "uvms:eez", eezStyles));
-
-        Styles rfmoStyles = new Styles("rfmo")
-                .withAdditionalProperty(LABEL, "rfmo_label")
-                .withAdditionalProperty(LABEL_GEOM, "rfmo_label_geom");
-        layers.add(new Layer(WMS, "area", "RFMO", false, CUSTOM_LAYER_FROM_UNION_VMS, URL, "geoserver", "uvms:rfmo", rfmoStyles));
-
-        layers.add(new Layer().withType("OSEA").withTitle("OpenSeaMap").withIsBaseLayer(false));
-        layers.add(new Layer().withType("OSM").withTitle("OpenStreetMap").withIsBaseLayer(true));
-
-        layers.add(new Layer(WMS, "other", "Countries", true, CUSTOM_LAYER_FROM_UNION_VMS, URL, "geoserver", "uvms:countries", new Styles("polygon")));
-
-        return layers;
+    private List<ReportConnectServiceAreasEntity> getReportConnectServiceAreas(int reportId) {
+        List<ReportConnectServiceAreasEntity> reportConnectServiceAreas = repository.findReportConnectServiceAreas(reportId);
+        Collections.sort(reportConnectServiceAreas);
+        return reportConnectServiceAreas;
     }
 
-    private ArrayList<TbControl> createTbControls() {
-        ArrayList<TbControl> controls = Lists.newArrayList();
-        controls.add(new TbControl("measure"));
-        controls.add(new TbControl("fullscreen"));
+    private ArrayList<TbControlDto> createMockTbControls() {
+        ArrayList<TbControlDto> controls = Lists.newArrayList();
+        controls.add(new TbControlDto("measure"));
+        controls.add(new TbControlDto("fullscreen"));
+        controls.add(new TbControlDto("print"));
         return controls;
     }
 
-    private ArrayList<Control> createControls() {
-        ArrayList<Control> controls = Lists.newArrayList();
-        controls.add(new Control("zoom"));
-        controls.add(new Control("drag"));
-        controls.add(new Control("scale").withUnits("nautical"));
-        controls.add(new Control("mousecoords").withEpsgCode(4326).withFormat("dd"));
-        controls.add(new Control("history"));
-        controls.add(new Control("measure"));
-        return controls;
-    }
+    private ArrayList<ControlDto> createMockControls() {
+            ArrayList<ControlDto> controlDtos = Lists.newArrayList();
+            controlDtos.add(new ControlDto("zoom"));
+            controlDtos.add(new ControlDto("drag"));
+            controlDtos.add(new ControlDto("scale", "nautical", null, null));
+            controlDtos.add(new ControlDto("mousecoords", null, 4326, "dd"));
+            controlDtos.add(new ControlDto("history"));
+            controlDtos.add(new ControlDto("measure"));
+            return controlDtos;
+        }
 
-    private Projection getProjections() {
-        return new Projection(null, 3857, null, "m", true);
-    }
+    private VectorStylesDto createMockVectorStyle() {
+        PositionsDto positionsDto = new PositionsDto();
+        positionsDto.setAttribute("fs");
+        positionsDto.setStyle(Arrays.asList((Map<String, String>)
+                        ImmutableMap.<String, String>builder().put("dnk", "#0066FF").build(),
+                ImmutableMap.<String, String>builder().put("swe", "#FF0066").build()));
 
+        SegmentDto segmentDto = new SegmentDto();
+        segmentDto.setAttribute("speed");
+        segmentDto.setStyle(Arrays.asList((Map<String, String>)
+                        ImmutableMap.<String, String>builder().put("color", "#1a9641").put("speed", "0-24").build(),
+                        ImmutableMap.<String, String>builder().put("color", "#a6d96a").put("speed", "25-49").build(),
+                        ImmutableMap.<String, String>builder().put("color", "#fdae61").put("speed", "50-74").build(),
+                        ImmutableMap.<String, String>builder().put("color", "#d7191c").put("speed", "75-100").build()));
+
+        return new VectorStylesDto(positionsDto, segmentDto);
+    }
 }
