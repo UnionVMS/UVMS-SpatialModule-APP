@@ -1,29 +1,17 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import eu.europa.ec.fisheries.uvms.spatial.entity.converter.CharBooleanConverter;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+
+import javax.persistence.*;
 
 @Entity
-@Table(name = "projection", schema = "spatial", uniqueConstraints = { @UniqueConstraint(columnNames = "name"),
-		@UniqueConstraint(columnNames = "srs_code") })
-@EqualsAndHashCode(exclude = { "reportConnectSpatialsForMapProjId", "reportConnectSpatialsForDisplayProjId"})
+@Table(name = "projection", schema = "spatial")
 public class ProjectionEntity implements Serializable {
+	
+	private static final long serialVersionUID = 6797853213499502866L;
 
 	@Id
 	@Column(name = "id")
@@ -36,7 +24,7 @@ public class ProjectionEntity implements Serializable {
 	@Column(name = "srs_code", unique = true, nullable = false)
 	private int srsCode;
 
-	@Column(columnDefinition = "text",name = "proj_def", nullable = false)
+	@Column(columnDefinition = "text", name = "proj_def")
 	private String projDef;
 	
 	@Column(name = "formats", nullable = false, length = 255)
@@ -47,28 +35,18 @@ public class ProjectionEntity implements Serializable {
 
 	@Convert(converter = CharBooleanConverter.class)
 	@Column(name = "world", nullable = false, length = 1)
-	private Boolean isSystemWide;
+	private Boolean isWorld;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "projectionByMapProjId", cascade = CascadeType.ALL)
-	private Set<ReportConnectSpatialEntity> reportConnectSpatialsForMapProjId = new HashSet<>();
+	private Set<ReportConnectSpatialEntity> reportConnectSpatialsForMapProjId;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "projectionByDisplayProjId", cascade = CascadeType.ALL)
-	private Set<ReportConnectSpatialEntity> reportConnectSpatialsForDisplayProjId = new HashSet<>();
+	private Set<ReportConnectSpatialEntity> reportConnectSpatialsForDisplayProjId;
 
 	public ProjectionEntity() {
 	}
 
-    @Builder
-    public ProjectionEntity(String name, int srsCode, String projDef, String formats, String units, Boolean isSystemWide) {
-        this.name = name;
-        this.srsCode = srsCode;
-        this.projDef = projDef;
-        this.formats = formats;
-        this.units = units;
-        this.isSystemWide = isSystemWide;
-    }
-
-    public long getId() {
+	public long getId() {
 		return this.id;
 	}
 
@@ -116,12 +94,12 @@ public class ProjectionEntity implements Serializable {
 		this.units = units;
 	}
 
-	public Boolean getIsSystemWide() {
-		return this.isSystemWide;
+	public Boolean getWorld() {
+		return this.isWorld;
 	}
 
-	public void setIsSystemWide(Boolean isSystemWide) {
-		this.isSystemWide = isSystemWide;
+	public void setWorld(Boolean isWorld) {
+		this.isWorld = isWorld;
 	}
 
 	public Set<ReportConnectSpatialEntity> getReportConnectSpatialsForMapProjId() {
