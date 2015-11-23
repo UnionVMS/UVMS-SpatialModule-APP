@@ -3,6 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.repository;
 import com.google.common.collect.ImmutableMap;
 import eu.europa.ec.fisheries.uvms.spatial.dao.AreaDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.CountryDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.MapConfigDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.UserAreaDao;
 import eu.europa.ec.fisheries.uvms.spatial.util.SqlPropertyHolder;
 import org.junit.Before;
@@ -42,6 +43,9 @@ public class SpatialRepositoryTest {
 
     @Mock
     private CountryDao countryDao;
+
+    @Mock
+    private MapConfigDao mapConfigDao;
 
     @InjectMocks
     private SpatialRepositoryBean spatialRepositoryBean;
