@@ -2,15 +2,11 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveMapConfigurationRS;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.MapConfig;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.Projection;
-
-import java.util.List;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.MapConfigDto;
 
 public interface MapConfigService {
-    List<Projection> getAllProjections();
 
-    MapConfig getMockReportConfig(int reportId);
+    MapConfigDto getReportConfig(int reportId);
 
     SpatialSaveMapConfigurationRS saveMapConfiguration(SpatialEnrichmentRQ spatialEnrichmentRQ);
 }
