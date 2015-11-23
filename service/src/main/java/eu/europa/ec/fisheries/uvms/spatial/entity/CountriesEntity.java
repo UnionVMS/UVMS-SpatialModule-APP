@@ -36,7 +36,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasNa
 		query = "SELECT country.code AS code, country.name AS name FROM CountriesEntity country WHERE country.code IN (SELECT DISTINCT c.code FROM CountriesEntity c)")
 })
 @Table(name = "countries", schema = "spatial")
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = "id")
 public class CountriesEntity implements Serializable { // TODO rename to CountryEntity
 
 	@Id
