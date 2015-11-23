@@ -1,7 +1,9 @@
 package eu.europa.ec.fisheries.uvms.spatial.repository;
 
 import com.vividsolutions.jts.geom.Point;
+import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.DAO;
+import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
@@ -34,6 +36,8 @@ public interface SpatialRepository extends DAO {
     FilterAreasDto filterAreas(List<String> userAreaTables, List<String> userAreaIds, List<String> scopeAreaTables, List<String> scopeAreaIds);
 
     List<Map<String, String>> findAllCountriesDesc();
+
+    EezEntity getEezById(Integer id) throws ServiceException;
 
     List<ProjectionDto> findProjectionByMap(long reportId);
 

@@ -1,11 +1,10 @@
 package eu.europa.ec.fisheries.uvms.spatial.repository;
 
 import com.vividsolutions.jts.geom.Point;
+import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
-import eu.europa.ec.fisheries.uvms.spatial.dao.AreaDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.CountryDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.MapConfigDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.UserAreaDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.*;
+import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
@@ -37,12 +36,18 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
 
     private MapConfigDao mapConfigDao;
 
+    private ProjectionDao projectionDao;
+
+    private EezDao eezDao;
+
     @PostConstruct
     public void init() {
         areaDao = new AreaDao(em, sql);
         userAreaDao = new UserAreaDao(em);
         countryDao = new CountryDao(em);
         mapConfigDao = new MapConfigDao(em);
+        projectionDao = new ProjectionDao(em);
+        eezDao = new EezDao(em);
     }
 
     @Override
@@ -118,4 +123,8 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
         return mapConfigDao.findReportConnectServiceAreas(reportId);
     }
 
+    @Override
+    public EezEntity getEezById(final Integer id) throws ServiceException {
+        return eezDao.getEezById(id);
+    }
 }
