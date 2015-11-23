@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonPropertyOrder({
         "type"
 })
-public class TbControl {
+public class TbControlDto {
 
     @JsonProperty("type")
     private String type;
@@ -16,10 +16,10 @@ public class TbControl {
     /**
      * No args constructor for use in serialization
      */
-    public TbControl() {
+    public TbControlDto() {
     }
 
-    public TbControl(String type) {
+    public TbControlDto(String type) {
         this.type = type;
     }
 
@@ -32,10 +32,4 @@ public class TbControl {
     public void setType(String type) {
         this.type = type;
     }
-
-    public TbControl withType(String type) {
-        this.type = type;
-        return this;
-    }
-
 }
