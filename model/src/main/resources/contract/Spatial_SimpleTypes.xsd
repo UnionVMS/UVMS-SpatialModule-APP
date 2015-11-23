@@ -572,4 +572,22 @@
             <xs:enumeration value="NAUTICAL_MILES" />
         </xs:restriction>
     </xs:simpleType>
+
+    <xs:simpleType name="ScaleBarType" final="restriction">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="METRIC" />
+            <xs:enumeration value="DEGREES" />
+            <xs:enumeration value="NAUTICAL" />
+            <xs:enumeration value="IMPERIAL" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="DisplayFormatType" final="restriction">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="DD" />
+            <xs:enumeration value="DMS" />
+            <xs:enumeration value="DDM" />
+            <xs:enumeration value="M" />
+        </xs:restriction>
+    </xs:simpleType>
 </xs:schema>
