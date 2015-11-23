@@ -14,7 +14,8 @@ import java.util.List;
 @Slf4j
 public final class SpatialModuleResponseMapper {
 
-    private SpatialModuleResponseMapper() {}
+    private SpatialModuleResponseMapper() {
+    }
 
     private static void validateResponse(TextMessage response, String correlationId) throws SpatialModelValidationException {
 
@@ -53,7 +54,7 @@ public final class SpatialModuleResponseMapper {
         try {
             AreaByLocationSpatialRS response = new AreaByLocationSpatialRS();
             AreasByLocationType areasByLocationType = new AreasByLocationType();
-            if(areasByLocation != null){
+            if (areasByLocation != null) {
                 areasByLocationType.getAreas().addAll(areasByLocation);
             }
             response.setAreasByLocation(areasByLocationType);
@@ -68,7 +69,7 @@ public final class SpatialModuleResponseMapper {
             validateResponse(response, correlationId);
             AreaByLocationSpatialRS areaByLocationSpatialRS = JAXBMarshaller.unmarshall(response, AreaByLocationSpatialRS.class);
             return areaByLocationSpatialRS.getAreasByLocation();
-        } catch (SpatialModelMarshallException  e) {
+        } catch (SpatialModelMarshallException e) {
             return exception(e);
         }
     }
@@ -78,7 +79,7 @@ public final class SpatialModuleResponseMapper {
 
             AreaTypeNamesSpatialRS response = new AreaTypeNamesSpatialRS();
             AreasNameType areasNameType = new AreasNameType();
-            if(areaTypeNames != null){
+            if (areaTypeNames != null) {
                 areasNameType.getAreaTypes().addAll(areaTypeNames);
             }
             response.setAreaTypes(areasNameType);
@@ -93,7 +94,7 @@ public final class SpatialModuleResponseMapper {
             validateResponse(response, correlationId);
             AreaTypeNamesSpatialRS areaTypeNamesSpatialRS = JAXBMarshaller.unmarshall(response, AreaTypeNamesSpatialRS.class);
             return areaTypeNamesSpatialRS.getAreaTypes();
-        } catch (SpatialModelMarshallException  e) {
+        } catch (SpatialModelMarshallException e) {
             return exception(e);
         }
     }
@@ -102,7 +103,7 @@ public final class SpatialModuleResponseMapper {
         try {
             ClosestLocationSpatialRS response = new ClosestLocationSpatialRS();
             ClosestLocationsType closestLocationsType = new ClosestLocationsType();
-            if(closestLocations != null){
+            if (closestLocations != null) {
                 closestLocationsType.getClosestLocations().addAll(closestLocations);
             }
             response.setClosestLocations(closestLocationsType);
@@ -117,7 +118,7 @@ public final class SpatialModuleResponseMapper {
             validateResponse(response, correlationId);
             ClosestLocationSpatialRS closestLocationSpatialRS = JAXBMarshaller.unmarshall(response, ClosestLocationSpatialRS.class);
             return closestLocationSpatialRS.getClosestLocations();
-        } catch (SpatialModelMarshallException  e) {
+        } catch (SpatialModelMarshallException e) {
             return exception(e);
         }
     }
@@ -126,7 +127,7 @@ public final class SpatialModuleResponseMapper {
         try {
             ClosestAreaSpatialRS response = new ClosestAreaSpatialRS();
             ClosestAreasType closestAreasType = new ClosestAreasType();
-            if(closestAreas != null){
+            if (closestAreas != null) {
                 closestAreasType.getClosestAreas().addAll(closestAreas);
             }
             response.setClosestArea(closestAreasType);
@@ -141,7 +142,7 @@ public final class SpatialModuleResponseMapper {
             validateResponse(response, correlationId);
             ClosestAreaSpatialRS closestAreaSpatialRS = JAXBMarshaller.unmarshall(response, ClosestAreaSpatialRS.class);
             return closestAreaSpatialRS.getClosestArea();
-        } catch (SpatialModelMarshallException  e) {
+        } catch (SpatialModelMarshallException e) {
             return exception(e);
         }
     }
@@ -158,18 +159,18 @@ public final class SpatialModuleResponseMapper {
         try {
             validateResponse(response, correlationId);
             return JAXBMarshaller.unmarshall(response, SpatialEnrichmentRS.class);
-        } catch (SpatialModelMarshallException  e) {
+        } catch (SpatialModelMarshallException e) {
             return exception(e);
         }
     }
-    
-	public static String mapFilterAreasResponse(FilterAreasSpatialRS filterAreasSpatialRS) throws SpatialModelMarshallException {
-		try {
-			return JAXBMarshaller.marshall(filterAreasSpatialRS);
-		} catch (SpatialModelMarshallException e) {
+
+    public static String mapFilterAreasResponse(FilterAreasSpatialRS filterAreasSpatialRS) throws SpatialModelMarshallException {
+        try {
+            return JAXBMarshaller.marshall(filterAreasSpatialRS);
+        } catch (SpatialModelMarshallException e) {
             return exception(filterAreasSpatialRS, e);
         }
-	}
+    }
 
     public static String mapPingResponse(PingRS pingRS) throws SpatialModelMarshallException {
         try {
@@ -179,14 +180,23 @@ public final class SpatialModuleResponseMapper {
         }
     }
 
-	public static FilterAreasSpatialRS mapToFilterAreasSpatialRSFromResponse(TextMessage response, String correlationId) throws SpatialModelMapperException {
-		try {
-			validateResponse(response, correlationId);
-			return JAXBMarshaller.unmarshall(response, FilterAreasSpatialRS.class);
-		} catch (SpatialModelMarshallException e) {
+    public static FilterAreasSpatialRS mapToFilterAreasSpatialRSFromResponse(TextMessage response, String correlationId) throws SpatialModelMapperException {
+        try {
+            validateResponse(response, correlationId);
+            return JAXBMarshaller.unmarshall(response, FilterAreasSpatialRS.class);
+        } catch (SpatialModelMarshallException e) {
             return exception(e);
-		}		
-	}
+        }
+    }
+
+    public static SpatialSaveMapConfigurationRS mapToSpatialSaveMapConfigurationRS(TextMessage response, String correlationId) throws SpatialModelMapperException {
+        try {
+            validateResponse(response, correlationId);
+            return JAXBMarshaller.unmarshall(response, SpatialSaveMapConfigurationRS.class);
+        } catch (SpatialModelMarshallException e) {
+            return exception(e);
+        }
+    }
 
     private static <T> String exception(T data, SpatialModelMarshallException e) throws SpatialModelMarshallException {
         log.error("[ Error when marshalling data. ] {}", e);

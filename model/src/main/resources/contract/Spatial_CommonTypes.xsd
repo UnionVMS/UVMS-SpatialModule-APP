@@ -185,4 +185,31 @@
         </xs:sequence>
     </xs:complexType>
 
+    <xs:simpleType name="CoordinatesFormat">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="m"/>
+            <xs:enumeration value="dd"/>
+            <xs:enumeration value="dms"/>
+            <xs:enumeration value="ddm"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="ScaleBarUnits">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="metric"/>
+            <xs:enumeration value="degrees"/>
+            <xs:enumeration value="nautical"/>
+            <xs:enumeration value="imperial"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="MapConfigurationType">
+        <xs:sequence>
+            <xs:element name="MapProjection" type="xs:int" minOccurs="0"/>
+            <xs:element name="DisplayProjection" type="xs:int" minOccurs="0"/>
+            <xs:element name="CoordinatesFormat" type="CoordinatesFormat" minOccurs="0"/>
+            <xs:element name="ScaleBarUnits" type="ScaleBarUnits" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
 </xs:schema>

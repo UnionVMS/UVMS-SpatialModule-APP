@@ -221,4 +221,24 @@
             </xs:sequence>
         </xs:complexType>
     </xs:element>
+    <xs:element name="SpatialSaveMapConfigurationRQ">
+        <xs:annotation>
+            <xs:documentation>Root element for store map configuration request</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="mapConfiguration" type="MapConfigurationType" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="SpatialSaveMapConfigurationRS">
+        <xs:annotation>
+            <xs:documentation>Root element for store map configuration request</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="response" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 </xs:schema>

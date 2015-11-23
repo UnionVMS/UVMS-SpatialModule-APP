@@ -9,7 +9,8 @@ import java.util.List;
 @Slf4j
 public final class SpatialModuleRequestMapper {
 
-    private SpatialModuleRequestMapper() {}
+    private SpatialModuleRequestMapper() {
+    }
 
     public static String mapToCreateAreaByLocationRequest(PointType point) throws SpatialModelMarshallException {
         AreaByLocationSpatialRQ request = new AreaByLocationSpatialRQ();
@@ -85,6 +86,23 @@ public final class SpatialModuleRequestMapper {
 
         try {
             return JAXBMarshaller.marshall(request);
+        } catch (SpatialModelMarshallException ex) {
+            return logException(ex);
+        }
+    }
+
+    public static String mapToSpatialSaveMapConfigurationRQ(Integer mapProjection, Integer displayProjection, CoordinatesFormat coordinatesFormat, ScaleBarUnits scaleBarUnits) throws SpatialModelMarshallException {
+        try {
+            MapConfigurationType mapConfiguration = new MapConfigurationType();
+            if (mapProjection != null) {
+                mapConfiguration.setMapProjection(mapProjection);
+            }
+            if (displayProjection != null) {
+                mapConfiguration.setDisplayProjection(displayProjection);
+            }
+            mapConfiguration.setCoordinatesFormat(coordinatesFormat);
+            mapConfiguration.setScaleBarUnits(scaleBarUnits);
+            return JAXBMarshaller.marshall(new SpatialSaveMapConfigurationRQ(mapConfiguration));
         } catch (SpatialModelMarshallException ex) {
             return logException(ex);
         }
