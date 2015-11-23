@@ -37,7 +37,7 @@ public class ReportConnectSpatialDaoTest extends BaseSpatialDaoTest {
                 .appVersion("2.6")
                 .displayFormatType(DisplayFormatType.DDM)
                 .scaleBarType(ScaleBarType.IMPERIAL)
-                .mapCenter("")
+                .mapCenter("mandatory")
                 .build();
 
         assertEquals(DisplayFormatType.DDM, dao.createEntity(build).getDisplayFormat());
