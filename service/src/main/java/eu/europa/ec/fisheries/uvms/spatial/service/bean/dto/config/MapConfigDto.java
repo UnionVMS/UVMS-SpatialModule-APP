@@ -2,59 +2,46 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config;
 
 import com.fasterxml.jackson.annotation.*;
 
-import java.util.HashMap;
-
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
         "map",
         "vectorStyles"
 })
-public class MapConfig {
+public class MapConfigDto {
 
     @JsonProperty("map")
-    private Map map;
+    private MapDto map;
     @JsonProperty("vectorStyles")
-    private VectorStyles vectorStyles;
+    private VectorStylesDto vectorStyles;
 
     /**
      * No args constructor for use in serialization
      */
-    public MapConfig() {
+    public MapConfigDto() {
     }
 
-    public MapConfig(Map map, VectorStyles vectorStyles) {
+    public MapConfigDto(MapDto map, VectorStylesDto vectorStyles) {
         this.map = map;
         this.vectorStyles = vectorStyles;
     }
 
     @JsonProperty("map")
-    public Map getMap() {
+    public MapDto getMap() {
         return map;
     }
 
     @JsonProperty("map")
-    public void setMap(Map map) {
+    public void setMap(MapDto map) {
         this.map = map;
-    }
-
-    public MapConfig withMap(Map map) {
-        this.map = map;
-        return this;
     }
 
     @JsonProperty("vectorStyles")
-    public VectorStyles getVectorStyles() {
+    public VectorStylesDto getVectorStyles() {
         return vectorStyles;
     }
 
     @JsonProperty("vectorStyles")
-    public void setVectorStyles(VectorStyles vectorStyles) {
+    public void setVectorStyles(VectorStylesDto vectorStyles) {
         this.vectorStyles = vectorStyles;
     }
-
-    public MapConfig withVectorStyles(VectorStyles vectorStyles) {
-        this.vectorStyles = vectorStyles;
-        return this;
-    }
-
 }
