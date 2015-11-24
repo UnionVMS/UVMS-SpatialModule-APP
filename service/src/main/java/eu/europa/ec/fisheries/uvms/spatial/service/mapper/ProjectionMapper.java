@@ -8,12 +8,15 @@ import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "cdi")
-public interface ProjectionMapper {
-    ProjectionMapper INSTANCE = Mappers.getMapper(ProjectionMapper.class);
+public abstract class ProjectionMapper {
+    private ProjectionMapper INSTANCE = Mappers.getMapper(ProjectionMapper.class);
 
     @Mappings({
-            @Mapping(source = "isSystemWide", target = "global"),
-            @Mapping(source = "srsCode", target = "epsgCode"),
+            @Mapping(source = "srsCode", target = "epsgCode")
     })
-    ProjectionDto projectionEntityToProjectionDto(ProjectionEntity projectionEntity);
+    public abstract ProjectionDto projectionEntityToProjectionDto(ProjectionEntity projectionEntity);
+
+    public ProjectionMapper getINSTANCE() {
+        return INSTANCE;
+    }
 }

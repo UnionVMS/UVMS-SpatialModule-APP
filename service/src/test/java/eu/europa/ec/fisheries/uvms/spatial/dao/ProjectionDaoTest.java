@@ -36,19 +36,19 @@ public class ProjectionDaoTest extends BaseSpatialDaoTest {
         dbSetupTracker.launchIfNecessary(dbSetup);
     }
 
-    @Test
-    @SneakyThrows
-    public void shouldCreateProjection(){
-
-        ProjectionEntity projectionEntity = ProjectionEntity.builder()
-                .formats("").name("").isSystemWide(true).projDef("Transverse_Mercator")
-                .units("metre").srsCode(4608)
-                .build();
-        ProjectionEntity entity = dao.createEntity(projectionEntity);
-
-        assertNotNull(entity.getId());
-
-    }
+//    @Test
+//    @SneakyThrows
+//    public void shouldCreateProjection(){
+//
+//        ProjectionEntity projectionEntity = ProjectionEntity.builder()
+//                .formats("").name("").isSystemWide(true).projDef("Transverse_Mercator")
+//                .units("metre").srsCode(4608)
+//                .build();
+//        ProjectionEntity entity = dao.createEntity(projectionEntity);
+//
+//        assertNotNull(entity.getId());
+//
+//    }
 
     @Test
     @SneakyThrows

@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.*;
 @JsonPropertyOrder({
         "epsgCode",
         "units",
-        "global"
+        "isWorld"
 })
 public class ProjectionDto {
 
@@ -14,8 +14,8 @@ public class ProjectionDto {
     private Integer epsgCode;
     @JsonProperty("units")
     private String units;
-    @JsonProperty("global")
-    private Boolean global;
+    @JsonProperty("isWorld")
+    private Boolean isWorld;
 
     /**
      * No args constructor for use in serialization
@@ -23,10 +23,10 @@ public class ProjectionDto {
     public ProjectionDto() {
     }
 
-    public ProjectionDto(Integer epsgCode, String units, Boolean global) {
+    public ProjectionDto(Integer epsgCode, String units, Boolean isWorld) {
         this.epsgCode = epsgCode;
         this.units = units;
-        this.global = global;
+        this.isWorld = isWorld;
     }
 
     @JsonProperty("epsgCode")
@@ -49,13 +49,13 @@ public class ProjectionDto {
         this.units = units;
     }
 
-    @JsonProperty("global")
-    public Boolean getGlobal() {
-        return global;
+    @JsonProperty("isWorld")
+    public Boolean getIsWorld() {
+        return isWorld;
     }
 
-    @JsonProperty("global")
-    public void setGlobal(Boolean global) {
-        this.global = global;
+    @JsonProperty("isWorld")
+    public void setIsWorld(Boolean isWorld) {
+        this.isWorld = isWorld;
     }
 }
