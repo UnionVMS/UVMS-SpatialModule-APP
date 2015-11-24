@@ -69,6 +69,7 @@ public class MapConfigServiceBean implements MapConfigService {
 
     @Override
     @Transactional
+    @SneakyThrows
     public SpatialSaveMapConfigurationRS saveMapConfiguration(final SpatialSaveMapConfigurationRQ request) {
 
         MapConfigurationType mapConfiguration = request.getMapConfiguration();
