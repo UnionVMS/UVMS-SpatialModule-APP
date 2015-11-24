@@ -1,21 +1,29 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
+        "name",
         "epsgCode",
         "units",
-        "isWorld"
+        "formats",
+        "global"
 })
 public class ProjectionDto {
 
+    @JsonProperty("name")
+    private String name;
     @JsonProperty("epsgCode")
     private Integer epsgCode;
+    @JsonProperty("formats")
+    private String formats;
     @JsonProperty("units")
     private String units;
-    @JsonProperty("isWorld")
-    private Boolean isWorld;
+    @JsonProperty("global")
+    private Boolean global;
 
     /**
      * No args constructor for use in serialization
@@ -23,10 +31,12 @@ public class ProjectionDto {
     public ProjectionDto() {
     }
 
-    public ProjectionDto(Integer epsgCode, String units, Boolean isWorld) {
+    public ProjectionDto(String name, Integer epsgCode, String units, String formats, Boolean global) {
+        this.name = name;
         this.epsgCode = epsgCode;
         this.units = units;
-        this.isWorld = isWorld;
+        this.formats = formats;
+        this.global = global;
     }
 
     @JsonProperty("epsgCode")
@@ -49,13 +59,33 @@ public class ProjectionDto {
         this.units = units;
     }
 
-    @JsonProperty("isWorld")
-    public Boolean getIsWorld() {
-        return isWorld;
+    @JsonProperty("global")
+    public Boolean getGlobal() {
+        return global;
     }
 
-    @JsonProperty("isWorld")
-    public void setIsWorld(Boolean isWorld) {
-        this.isWorld = isWorld;
+    @JsonProperty("global")
+    public void setGlobal(Boolean global) {
+        this.global = global;
+    }
+
+    @JsonProperty("name")
+    public String getName() {
+        return name;
+    }
+
+    @JsonProperty("name")
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @JsonProperty("formats")
+    public String getFormats() {
+        return formats;
+    }
+
+    @JsonProperty("formats")
+    public void setFormats(String formats) {
+        this.formats = formats;
     }
 }

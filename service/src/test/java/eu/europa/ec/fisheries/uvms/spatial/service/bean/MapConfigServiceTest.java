@@ -58,7 +58,7 @@ public class MapConfigServiceTest {
     }
 
     private void mockProjection() {
-        ProjectionDto projectionDto = new ProjectionDto(3857, "m", true);
+        ProjectionDto projectionDto = new ProjectionDto("Spherical Mercator", 3857, "m", "m", true);
         Mockito.when(repository.findProjectionByMap(Mockito.any(Integer.class))).thenReturn(Arrays.asList(projectionDto));
     }
 
