@@ -5,9 +5,6 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity;
 
 import javax.persistence.EntityManager;
 
-/**
- * //TODO create test
- */
 public class ReportConnectSpatialDao extends AbstractDAO<ReportConnectSpatialEntity> {
 
     private EntityManager em;
@@ -20,4 +17,6 @@ public class ReportConnectSpatialDao extends AbstractDAO<ReportConnectSpatialEnt
     public EntityManager getEntityManager() {
         return em;
     }
+
+
 }

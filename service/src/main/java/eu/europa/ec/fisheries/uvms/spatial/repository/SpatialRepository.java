@@ -45,7 +45,7 @@ public interface SpatialRepository extends DAO {
 
     List<ReportConnectServiceAreasEntity> findReportConnectServiceAreas(long reportId);
 
-    MapConfigurationType saveMapConfiguration(MapConfigurationType mapConfiguration);
+    MapConfigurationType saveMapConfiguration(MapConfigurationType mapConfiguration) throws ServiceException;
 
     void updateSystemConfigs(List<SysConfigEntity> sysConfigs);
 

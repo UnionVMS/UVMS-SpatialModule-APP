@@ -3,15 +3,10 @@ package eu.europa.ec.fisheries.uvms.spatial.repository;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
-import eu.europa.ec.fisheries.uvms.spatial.dao.AreaDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.CountryDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.EezDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.MapConfigDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.ProjectionDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.SysConfigDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.UserAreaDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.*;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.config.SysConfigEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.CoordinatesFormat;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.MapConfigurationType;
@@ -64,6 +59,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
 
     private SysConfigDao sysConfigDao;
 
+    private ReportConnectSpatialDao reportConnectSpatialDao;
 
     @PostConstruct
     public void init() {
@@ -74,6 +70,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
         projectionDao = new ProjectionDao(em);
         eezDao = new EezDao(em);
         sysConfigDao = new SysConfigDao(em);
+        reportConnectSpatialDao = new ReportConnectSpatialDao(em);
     }
 
     @Override
@@ -146,13 +143,22 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
 
     @Override
     @Transactional
-    public MapConfigurationType saveMapConfiguration(final MapConfigurationType mapConfiguration) {
+    public MapConfigurationType saveMapConfiguration(final MapConfigurationType mapConfiguration) throws ServiceException {
 
         CoordinatesFormat coordinatesFormat = mapConfiguration.getCoordinatesFormat();
         Integer displayProjection = mapConfiguration.getDisplayProjection();
         Integer mapProjection = mapConfiguration.getMapProjection();
         ScaleBarUnits scaleBarUnits = mapConfiguration.getScaleBarUnits();
         BigInteger reportId = mapConfiguration.getReportId();
+
+        ReportConnectSpatialEntity entity = ReportConnectSpatialEntity.builder()
+                .reportId(reportId.longValue())
+                .scaleBarType(scaleBarUnits)
+
+
+                .build();
+
+        reportConnectSpatialDao.createEntity(entity);
 
         throw new org.apache.commons.lang3.NotImplementedException("");
 

@@ -4,15 +4,32 @@ import eu.europa.ec.fisheries.uvms.spatial.model.FaultCode;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMapperException;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMarshallException;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelValidationException;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
-import lombok.extern.slf4j.Slf4j;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Area;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaExtendedIdentifierType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeNamesSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreasByLocationType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreasNameType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreasType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestLocationSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestLocationsType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Location;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.PingRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialFault;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveMapConfigurationRS;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jms.JMSException;
 import javax.jms.TextMessage;
 import java.util.List;
 
-@Slf4j
 public final class SpatialModuleResponseMapper {
+
+    final static Logger LOG = LoggerFactory.getLogger(JAXBMarshaller.class);
 
     private SpatialModuleResponseMapper() {
     }
@@ -36,10 +53,10 @@ public final class SpatialModuleResponseMapper {
             throw new SpatialModelValidationException(fault.getCode() + " : " + fault.getFault());
 
         } catch (JMSException e) {
-            log.error("JMS exception during validation ", e);
+            LOG.error("JMS exception during validation ", e);
             throw new SpatialModelValidationException("JMS exception during validation " + e.getMessage());
         } catch (SpatialModelMarshallException e) {
-            log.info("Expected Exception"); // Exception received in case if the validation is success
+            LOG.info("Expected Exception"); // Exception received in case if the validation is success
         }
     }
 
@@ -207,12 +224,12 @@ public final class SpatialModuleResponseMapper {
     }
 
     private static <T> String exception(T data, SpatialModelMarshallException e) throws SpatialModelMarshallException {
-        log.error("[ Error when marshalling data. ] {}", e);
+        LOG.error("[ Error when marshalling data. ] {}", e);
         throw new SpatialModelMarshallException("Error when marshalling " + data.getClass().getName() + " to String");
     }
 
     private static <T> T exception(SpatialModelMarshallException e) throws SpatialModelMarshallException {
-        log.error("[ Error when marshalling data. ] {}", e);
+        LOG.error("[ Error when marshalling data. ] {}", e);
         throw new SpatialModelMarshallException("Error when marshalling object to String", e);
     }
 }

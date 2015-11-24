@@ -2,13 +2,15 @@ package eu.europa.ec.fisheries.uvms.spatial.model.mapper;
 
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMarshallException;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigInteger;
 import java.util.List;
 
-@Slf4j
 public final class SpatialModuleRequestMapper {
+
+    final static Logger LOG = LoggerFactory.getLogger(JAXBMarshaller.class);
 
     private SpatialModuleRequestMapper() {
     }
@@ -119,7 +121,7 @@ public final class SpatialModuleRequestMapper {
     }
 
     private static String logException(SpatialModelMarshallException ex) throws SpatialModelMarshallException {
-        log.error("[ Error when marshalling object to string ] ", ex);
+        LOG.error("[ Error when marshalling object to string ] ", ex);
         throw new SpatialModelMarshallException("[ Error when marshalling Object to String ]", ex);
     }
 }

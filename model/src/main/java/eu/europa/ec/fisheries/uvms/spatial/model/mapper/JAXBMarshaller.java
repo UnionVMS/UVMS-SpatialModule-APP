@@ -1,7 +1,8 @@
 package eu.europa.ec.fisheries.uvms.spatial.model.mapper;
 
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMarshallException;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jms.JMSException;
 import javax.jms.TextMessage;
@@ -12,8 +13,9 @@ import javax.xml.bind.Unmarshaller;
 import java.io.StringReader;
 import java.io.StringWriter;
 
-@Slf4j
 public final class JAXBMarshaller {
+
+    final static Logger LOG = LoggerFactory.getLogger(JAXBMarshaller.class);
 
     private JAXBMarshaller() {}
 
