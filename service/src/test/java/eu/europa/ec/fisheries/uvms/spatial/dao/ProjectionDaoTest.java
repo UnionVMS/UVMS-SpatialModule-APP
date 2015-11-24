@@ -8,6 +8,7 @@ import lombok.SneakyThrows;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.persistence.EntityTransaction;
 import java.util.List;
 
 import static com.ninja_squad.dbsetup.Operations.insertInto;
@@ -36,19 +37,24 @@ public class ProjectionDaoTest extends BaseSpatialDaoTest {
         dbSetupTracker.launchIfNecessary(dbSetup);
     }
 
-//    @Test
-//    @SneakyThrows
-//    public void shouldCreateProjection(){
-//
-//        ProjectionEntity projectionEntity = ProjectionEntity.builder()
-//                .formats("").name("").isSystemWide(true).projDef("Transverse_Mercator")
-//                .units("metre").srsCode(4608)
-//                .build();
-//        ProjectionEntity entity = dao.createEntity(projectionEntity);
-//
-//        assertNotNull(entity.getId());
-//
-//    }
+    @Test
+    @SneakyThrows
+    public void shouldCreateProjection(){
+
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+
+        ProjectionEntity projectionEntity = ProjectionEntity.builder()
+                .formats("").name("").projDef("Transverse_Mercator")
+                .units("metre").srsCode(4608).isWorld(true)
+                .build();
+        ProjectionEntity entity = dao.createEntity(projectionEntity);
+
+        tx.commit();
+
+        assertNotNull(entity.getId());
+
+    }
 
     @Test
     @SneakyThrows
