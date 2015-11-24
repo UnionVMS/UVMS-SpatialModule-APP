@@ -3,10 +3,19 @@ package eu.europa.ec.fisheries.uvms.spatial.repository;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
-import eu.europa.ec.fisheries.uvms.spatial.dao.*;
+import eu.europa.ec.fisheries.uvms.spatial.dao.AreaDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.CountryDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.EezDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.MapConfigDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.ProjectionDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.SysConfigDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.UserAreaDao;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.config.SysConfigEntity;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.CoordinatesFormat;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.MapConfigurationType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ScaleBarUnits;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaExtendedIdentifierDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestAreaDto;
@@ -25,6 +34,8 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
@@ -40,7 +51,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     private SqlPropertyHolder sql;
 
     private AreaDao areaDao;
-    
+
     private UserAreaDao userAreaDao;
 
     private CountryDao countryDao;
@@ -89,7 +100,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     public List<AreaLayerDto> findSystemAreaLayerMapping() {
         return areaDao.findSystemAreaLayerMapping();
     }
-    
+
     @Override
     public List<UserAreaLayerDto> findUserAreaLayerMapping() {
     	return userAreaDao.findUserAreaLayerMapping();
@@ -99,11 +110,11 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     public List<Map<String, String>> findAreaByFilter(String areaType, String filter) {
         return areaDao.findAreaByFilter(areaType, filter);
     }
-    
+
     public List<UserAreaDto> findUserAreaDetails(String userName, String scopeName, Point point) {
     	return userAreaDao.findUserAreaDetails(userName, scopeName, point);
     }
-    
+
     public List<UserAreaDto> findUserAreaDetailsBySearchCriteria(String userName, String scopeName, String searchCriteria) {
     	return userAreaDao.findUserAreaDetailsBySearchCriteria(userName, scopeName, searchCriteria);
     }
@@ -131,6 +142,20 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     @Override
     public List<ReportConnectServiceAreasEntity> findReportConnectServiceAreas(long reportId) {
         return mapConfigDao.findReportConnectServiceAreas(reportId);
+    }
+
+    @Override
+    @Transactional
+    public MapConfigurationType saveMapConfiguration(final MapConfigurationType mapConfiguration) {
+
+        CoordinatesFormat coordinatesFormat = mapConfiguration.getCoordinatesFormat();
+        Integer displayProjection = mapConfiguration.getDisplayProjection();
+        Integer mapProjection = mapConfiguration.getMapProjection();
+        ScaleBarUnits scaleBarUnits = mapConfiguration.getScaleBarUnits();
+        BigInteger reportId = mapConfiguration.getReportId();
+
+        throw new org.apache.commons.lang3.NotImplementedException("");
+
     }
 
     @Override

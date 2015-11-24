@@ -1,16 +1,25 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
-
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.DisplayFormatType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ScaleBarType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.CoordinatesFormat;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ScaleBarUnits;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
-
 import java.io.Serializable;
 import java.util.Set;
-
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "report_connect_spatial", schema = "spatial")
@@ -49,13 +58,13 @@ public class ReportConnectSpatialEntity implements Serializable {
 	private String mapExtent;
 	
 	@Column(name = "display_format", length = 255)
-	private DisplayFormatType displayFormatType;
+	private CoordinatesFormat displayFormatType;
 	
 	@Column(name = "measurement_units", length = 255)
 	private String measurementUnits;
 	
 	@Column(name = "scalebar_units", length = 255)
-	private ScaleBarType scaleBarType;
+	private ScaleBarUnits scaleBarType;
 
 	@Column(columnDefinition = "text", name = "vector_styles")
 	private String vectorStyles;
@@ -76,8 +85,8 @@ public class ReportConnectSpatialEntity implements Serializable {
     public ReportConnectSpatialEntity(ProjectionEntity projectionByMapProjId,
                                       ProjectionEntity projectionByDisplayProjId,
                                       long reportId, String mapCenter, int mapZoom, String mapExtent,
-                                      DisplayFormatType displayFormatType, String measurementUnits,
-                                      ScaleBarType scaleBarType, String vectorStyles,
+                                      CoordinatesFormat displayFormatType, String measurementUnits,
+                                      ScaleBarUnits scaleBarType, String vectorStyles,
                                       String jsonReportDefinition, String appVersion,
                                       Set<ReportConnectServiceAreasEntity> reportConnectServiceAreases) {
         this.projectionByMapProjId = projectionByMapProjId;
@@ -151,14 +160,6 @@ public class ReportConnectSpatialEntity implements Serializable {
 		this.mapExtent = mapExtent;
 	}
 
-	public DisplayFormatType getDisplayFormat() {
-		return this.displayFormatType;
-	}
-
-    public void setDisplayFormat(DisplayFormatType displayFormatType) {
-		this.displayFormatType = displayFormatType;
-	}
-
 	public String getMeasurementUnits() {
 		return this.measurementUnits;
 	}
@@ -167,15 +168,23 @@ public class ReportConnectSpatialEntity implements Serializable {
 		this.measurementUnits = measurementUnits;
 	}
 
-	public ScaleBarType getScaleBarType() {
-		return this.scaleBarType;
-	}
+    public CoordinatesFormat getDisplayFormatType() {
+        return displayFormatType;
+    }
 
-	public void setScaleBarType(ScaleBarType scaleBarType) {
-		this.scaleBarType = scaleBarType;
-	}
+    public void setDisplayFormatType(CoordinatesFormat displayFormatType) {
+        this.displayFormatType = displayFormatType;
+    }
 
-	public String getVectorStyles() {
+    public ScaleBarUnits getScaleBarType() {
+        return scaleBarType;
+    }
+
+    public void setScaleBarType(ScaleBarUnits scaleBarType) {
+        this.scaleBarType = scaleBarType;
+    }
+
+    public String getVectorStyles() {
 		return this.vectorStyles;
 	}
 

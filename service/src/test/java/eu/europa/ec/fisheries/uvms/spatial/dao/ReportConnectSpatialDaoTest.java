@@ -5,8 +5,8 @@ import com.ninja_squad.dbsetup.DbSetup;
 import com.ninja_squad.dbsetup.destination.DataSourceDestination;
 import com.ninja_squad.dbsetup.operation.Operation;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.DisplayFormatType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ScaleBarType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.CoordinatesFormat;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ScaleBarUnits;
 import lombok.SneakyThrows;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,13 +35,13 @@ public class ReportConnectSpatialDaoTest extends BaseSpatialDaoTest {
 
         ReportConnectSpatialEntity build = ReportConnectSpatialEntity.builder()
                 .appVersion("2.6")
-                .displayFormatType(DisplayFormatType.DDM)
-                .scaleBarType(ScaleBarType.IMPERIAL)
+                .displayFormatType(CoordinatesFormat.DDM)
+                .scaleBarType(ScaleBarUnits.IMPERIAL)
                 .mapCenter("mandatory")
                 .build();
 
-        assertEquals(DisplayFormatType.DDM, dao.createEntity(build).getDisplayFormat());
-        assertEquals(ScaleBarType.IMPERIAL, dao.createEntity(build).getScaleBarType());
+        assertEquals(CoordinatesFormat.DDM, dao.createEntity(build).getDisplayFormatType());
+        assertEquals(ScaleBarUnits.IMPERIAL, dao.createEntity(build).getScaleBarType());
 
     }
 }

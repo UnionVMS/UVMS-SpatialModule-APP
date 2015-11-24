@@ -4,6 +4,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMarshallE
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import lombok.extern.slf4j.Slf4j;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @Slf4j
@@ -91,9 +92,10 @@ public final class SpatialModuleRequestMapper {
         }
     }
 
-    public static String mapToSpatialSaveMapConfigurationRQ(Integer mapProjection, Integer displayProjection, CoordinatesFormat coordinatesFormat, ScaleBarUnits scaleBarUnits) throws SpatialModelMarshallException {
+    public static String mapToSpatialSaveMapConfigurationRQ(Long reportId, Integer mapProjection, Integer displayProjection, CoordinatesFormat coordinatesFormat, ScaleBarUnits scaleBarUnits) throws SpatialModelMarshallException {
         try {
-            MapConfigurationType mapConfiguration = new MapConfigurationType(mapProjection, displayProjection, coordinatesFormat, scaleBarUnits);
+            MapConfigurationType mapConfiguration =
+                    new MapConfigurationType(BigInteger.valueOf(reportId), mapProjection, displayProjection, coordinatesFormat, scaleBarUnits);
             return JAXBMarshaller.marshall(new SpatialSaveMapConfigurationRQ(SpatialModuleMethod.SAVE_MAP_CONFIGURATION, mapConfiguration));
         } catch (SpatialModelMarshallException ex) {
             return logException(ex);

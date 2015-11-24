@@ -128,7 +128,7 @@ public class SpatialEventServiceBean implements SpatialEventService {
     public void saveMapConfiguration(@Observes @SaveMapConfigurationEvent SpatialMessageEvent message) {
         log.info("Getting spatial enrichment.");
         try {
-            SpatialSaveMapConfigurationRS saveMapConfigurationRS = mapConfigService.saveMapConfiguration(message.getSpatialEnrichmentRQ());
+            SpatialSaveMapConfigurationRS saveMapConfigurationRS = mapConfigService.saveMapConfiguration(message.getSpatialSaveMapConfigurationRQ());
             log.debug("Send back enrichment response.");
             messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapSpatialSaveMapConfigurationRSToString(saveMapConfigurationRS));
         } catch (Exception e) {

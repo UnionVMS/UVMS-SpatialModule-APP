@@ -6,6 +6,7 @@ import eu.europa.ec.fisheries.uvms.service.DAO;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.config.SysConfigEntity;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.MapConfigurationType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
 
@@ -43,6 +44,8 @@ public interface SpatialRepository extends DAO {
     List<ProjectionDto> findProjectionByMap(long reportId);
 
     List<ReportConnectServiceAreasEntity> findReportConnectServiceAreas(long reportId);
+
+    MapConfigurationType saveMapConfiguration(MapConfigurationType mapConfiguration);
 
     void updateSystemConfigs(List<SysConfigEntity> sysConfigs);
 

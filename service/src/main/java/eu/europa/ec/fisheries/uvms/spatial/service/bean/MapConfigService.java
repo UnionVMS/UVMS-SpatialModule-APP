@@ -1,6 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveMapConfigurationRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveMapConfigurationRS;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.MapConfigDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
@@ -13,5 +13,5 @@ public interface MapConfigService {
 
     List<ProjectionDto> getAllProjections();
 
-    SpatialSaveMapConfigurationRS saveMapConfiguration(SpatialEnrichmentRQ spatialEnrichmentRQ);
+    SpatialSaveMapConfigurationRS saveMapConfiguration(SpatialSaveMapConfigurationRQ spatialSaveMapConfigurationRQ);
 }

@@ -188,24 +188,25 @@
 
     <xs:simpleType name="CoordinatesFormat">
         <xs:restriction base="xs:string">
-            <xs:enumeration value="m"/>
-            <xs:enumeration value="dd"/>
-            <xs:enumeration value="dms"/>
-            <xs:enumeration value="ddm"/>
+            <xs:enumeration value="M"/>
+            <xs:enumeration value="DD"/>
+            <xs:enumeration value="DMS"/>
+            <xs:enumeration value="DDM"/>
         </xs:restriction>
     </xs:simpleType>
 
     <xs:simpleType name="ScaleBarUnits">
         <xs:restriction base="xs:string">
-            <xs:enumeration value="metric"/>
-            <xs:enumeration value="degrees"/>
-            <xs:enumeration value="nautical"/>
-            <xs:enumeration value="imperial"/>
+            <xs:enumeration value="METRIC"/>
+            <xs:enumeration value="DEGREES"/>
+            <xs:enumeration value="NAUTICAL"/>
+            <xs:enumeration value="IMPERIAL"/>
         </xs:restriction>
     </xs:simpleType>
 
     <xs:complexType name="MapConfigurationType">
         <xs:sequence>
+            <xs:element name="ReportId" type="xs:integer" minOccurs="1"/>
             <xs:element name="MapProjection" type="xs:int" minOccurs="0"/>
             <xs:element name="DisplayProjection" type="xs:int" minOccurs="0"/>
             <xs:element name="CoordinatesFormat" type="CoordinatesFormat" minOccurs="0"/>

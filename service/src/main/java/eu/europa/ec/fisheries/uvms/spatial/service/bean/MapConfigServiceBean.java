@@ -1,28 +1,37 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-
 import com.google.common.collect.ImmutableMap;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ProjectionEntity;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveMapConfigurationRS;
-import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.*;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ControlDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.LayerDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.MapConfigDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.MapDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.PositionsDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.SegmentDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.TbControlDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.VectorStylesDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.ProjectionMapper;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.NotImplementedException;
+import org.geotools.util.UnsupportedImplementationException;
 
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @Stateless
 @Local(MapConfigService.class)
@@ -57,9 +66,22 @@ public class MapConfigServiceBean implements MapConfigService {
         List<ProjectionDto> projectionDtoList = repository.findProjectionByMap(reportId);
         return (projectionDtoList != null && !projectionDtoList.isEmpty()) ? projectionDtoList.get(0) : null;
     }
+
     @Override
-    public SpatialSaveMapConfigurationRS saveMapConfiguration(SpatialEnrichmentRQ spatialEnrichmentRQ) {
-        throw new NotImplementedException("Not implemented yet");
+    @Transactional
+    public SpatialSaveMapConfigurationRS saveMapConfiguration(final SpatialSaveMapConfigurationRQ request) {
+
+        MapConfigurationType mapConfiguration = request.getMapConfiguration();
+
+        MapConfigurationType mapConfigurationType = repository.saveMapConfiguration(mapConfiguration);
+
+        SpatialSaveMapConfigurationRS response = new SpatialSaveMapConfigurationRS();
+
+        response.setResponse("OK");
+
+        throw new org.apache.commons.lang.NotImplementedException("not completed");
+        //return response;
+
     }
 
     private List<LayerDto> getServiceAreaLayer(int reportId) {

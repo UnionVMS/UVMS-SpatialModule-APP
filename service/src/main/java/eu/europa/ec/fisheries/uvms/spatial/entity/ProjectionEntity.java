@@ -1,17 +1,25 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import eu.europa.ec.fisheries.uvms.spatial.entity.converter.CharBooleanConverter;
-
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import java.io.Serializable;
 import java.util.Set;
-
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "projection", schema = "spatial")
+@EqualsAndHashCode(exclude = { "reportConnectSpatialsForMapProjId", "reportConnectSpatialsForDisplayProjId"})
 public class ProjectionEntity implements Serializable {
-	
-	private static final long serialVersionUID = 6797853213499502866L;
 
 	@Id
 	@Column(name = "id")
@@ -46,7 +54,19 @@ public class ProjectionEntity implements Serializable {
 	public ProjectionEntity() {
 	}
 
-	public long getId() {
+    @Builder
+    public ProjectionEntity(String name, int srsCode, String projDef, String formats, String units, Boolean isWorld, Set<ReportConnectSpatialEntity> reportConnectSpatialsForMapProjId, Set<ReportConnectSpatialEntity> reportConnectSpatialsForDisplayProjId) {
+        this.name = name;
+        this.srsCode = srsCode;
+        this.projDef = projDef;
+        this.formats = formats;
+        this.units = units;
+        this.isWorld = isWorld;
+        this.reportConnectSpatialsForMapProjId = reportConnectSpatialsForMapProjId;
+        this.reportConnectSpatialsForDisplayProjId = reportConnectSpatialsForDisplayProjId;
+    }
+
+    public long getId() {
 		return this.id;
 	}
 
