@@ -9,14 +9,14 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "cdi")
 public abstract class ProjectionMapper {
-    private ProjectionMapper INSTANCE = Mappers.getMapper(ProjectionMapper.class);
+    private static final ProjectionMapper INSTANCE = Mappers.getMapper(ProjectionMapper.class);
 
     @Mappings({
             @Mapping(source = "srsCode", target = "epsgCode")
     })
     public abstract ProjectionDto projectionEntityToProjectionDto(ProjectionEntity projectionEntity);
 
-    public ProjectionMapper getINSTANCE() {
+    public static ProjectionMapper mapper() {
         return INSTANCE;
     }
 }

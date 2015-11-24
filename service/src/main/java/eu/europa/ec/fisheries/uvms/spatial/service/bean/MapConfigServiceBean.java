@@ -42,8 +42,7 @@ public class MapConfigServiceBean implements MapConfigService {
     @EJB
     private SpatialRepository repository;
 
-    @Inject
-    private ProjectionMapper projectionMapper;
+    private ProjectionMapper projectionMapper = ProjectionMapper.mapper();
 
     @Override
     @SneakyThrows
@@ -68,7 +67,6 @@ public class MapConfigServiceBean implements MapConfigService {
     }
 
     @Override
-    @Transactional
     @SneakyThrows
     public SpatialSaveMapConfigurationRS saveMapConfiguration(final SpatialSaveMapConfigurationRQ request) {
 
