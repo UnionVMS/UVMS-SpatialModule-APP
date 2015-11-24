@@ -69,9 +69,6 @@ public class ReportConnectSpatialEntity implements Serializable {
 	@Column(columnDefinition = "text", name = "vector_styles")
 	private String vectorStyles;
 
-	@Column(columnDefinition = "text", name = "json_report_definition")
-	private String jsonReportDefinition;
-	
 	@Column(name = "app_version", nullable = false, length = 255)
 	private String appVersion;
 	
@@ -86,8 +83,7 @@ public class ReportConnectSpatialEntity implements Serializable {
                                       ProjectionEntity projectionByDisplayProjId,
                                       long reportId, String mapCenter, int mapZoom, String mapExtent,
                                       CoordinatesFormat displayFormatType, String measurementUnits,
-                                      ScaleBarUnits scaleBarType, String vectorStyles,
-                                      String jsonReportDefinition, String appVersion,
+                                      ScaleBarUnits scaleBarType, String vectorStyles, String appVersion,
                                       Set<ReportConnectServiceAreasEntity> reportConnectServiceAreases) {
         this.projectionByMapProjId = projectionByMapProjId;
         this.projectionByDisplayProjId = projectionByDisplayProjId;
@@ -99,7 +95,6 @@ public class ReportConnectSpatialEntity implements Serializable {
         this.measurementUnits = measurementUnits;
         this.scaleBarType = scaleBarType;
         this.vectorStyles = vectorStyles;
-        this.jsonReportDefinition = jsonReportDefinition;
         this.appVersion = appVersion;
         this.reportConnectServiceAreases = reportConnectServiceAreases;
     }
@@ -192,13 +187,6 @@ public class ReportConnectSpatialEntity implements Serializable {
 		this.vectorStyles = vectorStyles;
 	}
 
-	public String getJsonReportDefinition() {
-		return this.jsonReportDefinition;
-	}
-
-	public void setJsonReportDefinition(String jsonReportDefinition) {
-		this.jsonReportDefinition = jsonReportDefinition;
-	}
 
 	public String getAppVersion() {
 		return this.appVersion;
