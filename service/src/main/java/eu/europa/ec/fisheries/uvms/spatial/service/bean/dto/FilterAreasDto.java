@@ -1,32 +1,24 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 public class FilterAreasDto {
 
-    @JsonProperty("wkt_geometry")
-    private String wktGeometry;
+    private String wktgeometry;
 
-    @JsonProperty("result_code")
-    private int resultCode;
+    private int resultcode;
 
-    @JsonProperty("wkt_geometry")
-    public String getWktGeometry() {
-        return wktGeometry;
+    public String getWktgeometry() {
+        return wktgeometry;
     }
 
-    @JsonProperty("wkt_geometry")
-    public void setWktGeometry(String wktGeometry) {
-        this.wktGeometry = wktGeometry;
+    public void setWktgeometry(String wktgeometry) {
+        this.wktgeometry = wktgeometry;
     }
 
-    @JsonProperty("result_code")
-    public int getResultCode() {
-        return resultCode;
+    public int getResultcode() {
+        return resultcode;
     }
 
-    @JsonProperty("result_code")
-    public void setResultCode(int resultCode) {
-        this.resultCode = resultCode;
+    public void setResultcode(int resultcode) {
+        this.resultcode = resultcode;
     }
 }
