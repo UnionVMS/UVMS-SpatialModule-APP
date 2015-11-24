@@ -114,11 +114,11 @@ public class ProjectionEntity implements Serializable {
 		this.units = units;
 	}
 
-	public Boolean getWorld() {
+	public Boolean getIsWorld() {
 		return this.isWorld;
 	}
 
-	public void setWorld(Boolean isWorld) {
+	public void setIsWorld(Boolean isWorld) {
 		this.isWorld = isWorld;
 	}
 
