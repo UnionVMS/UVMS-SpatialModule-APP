@@ -3,39 +3,19 @@ package eu.europa.ec.fisheries.uvms.spatial.repository;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
-import eu.europa.ec.fisheries.uvms.spatial.dao.AreaDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.CountryDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.EezDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.MapConfigDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.ProjectionDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.ReportConnectSpatialDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.SysConfigDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.UserAreaDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.*;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.ProjectionEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.config.SysConfigEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.mapper.ReportConnectSpatialMapper;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.CoordinatesFormat;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.MapConfigurationType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ScaleBarUnits;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaExtendedIdentifierDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaLayerDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestAreaDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestLocationDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.FilterAreasDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.MeasurementUnit;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
 import eu.europa.ec.fisheries.uvms.spatial.util.SqlPropertyHolder;
+
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
-import javax.ejb.Local;
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
+import javax.ejb.*;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
@@ -101,7 +81,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
 
     @Override
     public List<UserAreaLayerDto> findUserAreaLayerMapping() {
-    	return userAreaDao.findUserAreaLayerMapping();
+        return userAreaDao.findUserAreaLayerMapping();
     }
 
     @Override
@@ -110,11 +90,11 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     }
 
     public List<UserAreaDto> findUserAreaDetails(String userName, String scopeName, Point point) {
-    	return userAreaDao.findUserAreaDetails(userName, scopeName, point);
+        return userAreaDao.findUserAreaDetails(userName, scopeName, point);
     }
 
     public List<UserAreaDto> findUserAreaDetailsBySearchCriteria(String userName, String scopeName, String searchCriteria) {
-    	return userAreaDao.findUserAreaDetailsBySearchCriteria(userName, scopeName, searchCriteria);
+        return userAreaDao.findUserAreaDetailsBySearchCriteria(userName, scopeName, searchCriteria);
     }
 
     @Override
@@ -145,7 +125,6 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     @Override
     @Transactional
     public void saveMapConfiguration(final MapConfigurationType mapConfiguration) throws ServiceException {
-
         if (mapConfiguration == null) {
             throw new IllegalArgumentException("MAP CONFIGURATION CAN NOT BE NULL");
         }
@@ -154,7 +133,6 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
                 ReportConnectSpatialMapper.INSTANCE.mapConfigurationTypeToReportConnectSpatialEntity(mapConfiguration);
 
         reportConnectSpatialDao.createEntity(entity);
-
     }
 
     @Override
@@ -164,7 +142,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
 
     @Override
     public void updateSystemConfigs(List<SysConfigEntity> sysConfigs) {
-       sysConfigDao.updateSystemConfigs(sysConfigs);
+        sysConfigDao.updateSystemConfigs(sysConfigs);
     }
 
     @Override

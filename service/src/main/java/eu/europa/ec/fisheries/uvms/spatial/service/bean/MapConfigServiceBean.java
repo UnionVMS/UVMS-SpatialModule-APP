@@ -57,8 +57,8 @@ public class MapConfigServiceBean implements MapConfigService {
 
     @Override
     @SneakyThrows
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
     public void saveMapConfiguration(final SpatialSaveMapConfigurationRQ request) {
-
         if (request == null) {
             throw new IllegalArgumentException("REQUEST CAN NOT BE NULL");
         }
