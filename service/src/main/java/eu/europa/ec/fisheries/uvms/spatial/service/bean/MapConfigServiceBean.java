@@ -38,14 +38,11 @@ public class MapConfigServiceBean implements MapConfigService {
     @EJB
     private SpatialRepository repository;
 
-    @Inject
-    private ProjectionMapper projectionMapper;
-
     @Override
     @SneakyThrows
     public List<ProjectionDto> getAllProjections() {
         List<ProjectionEntity> projections = repository.findAllEntity(ProjectionEntity.class);
-        return projectionMapper.projectionEntityListToProjectionDtoList(projections);
+        return ProjectionMapper.INSTANCE.projectionEntityListToProjectionDtoList(projections);
     }
 
     public MapConfigDto getReportConfig(int reportId) {
