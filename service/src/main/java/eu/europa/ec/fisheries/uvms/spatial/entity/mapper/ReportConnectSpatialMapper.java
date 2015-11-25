@@ -12,15 +12,26 @@ import org.mapstruct.factory.Mappers;
  * //TODO create test
  */
 @Mapper(componentModel = "cdi", imports = ProjectionEntity.class)
-public interface ReportConnectSpatialMapper {
+public abstract class ReportConnectSpatialMapper {
 
-    ReportConnectSpatialMapper INSTANCE = Mappers.getMapper(ReportConnectSpatialMapper.class);
+    public static ReportConnectSpatialMapper INSTANCE = Mappers.getMapper(ReportConnectSpatialMapper.class);
 
     @Mappings({
             @Mapping(source = "scaleBarUnits", target = "scaleBarType"),
             @Mapping(source = "coordinatesFormat", target = "displayFormatType"),
-            @Mapping(target = "projectionByMapProjId", expression = "java(new ProjectionEntity(map.getMapProjectionId()))"),
-            @Mapping(target = "projectionByDisplayProjId", expression = "java(new ProjectionEntity(map.getDisplayProjectionId()))")
+            @Mapping(target = "projectionByMapProjId", expression = "java(createProjection(map.getMapProjectionId()))"),
+            @Mapping(target = "projectionByDisplayProjId", expression = "java(createProjection(map.getDisplayProjectionId()))")
     })
-    ReportConnectSpatialEntity mapConfigurationTypeToReportConnectSpatialEntity(MapConfigurationType map);
+    public abstract ReportConnectSpatialEntity mapConfigurationTypeToReportConnectSpatialEntity(MapConfigurationType map);
+
+    ProjectionEntity createProjection(Long id) {
+
+        ProjectionEntity entity = null;
+
+        if (id != null) {
+            entity = new ProjectionEntity(id);
+        }
+
+        return entity;
+    }
 }
