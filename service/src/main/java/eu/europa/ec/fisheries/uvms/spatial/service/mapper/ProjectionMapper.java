@@ -9,13 +9,14 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-@Mapper(componentModel = "cdi")
+@Mapper
 public interface ProjectionMapper {
 
     ProjectionMapper INSTANCE = Mappers.getMapper(ProjectionMapper.class);
 
     @Mappings({
-            @Mapping(source = "srsCode", target = "epsgCode")
+            @Mapping(source = "srsCode", target = "epsgCode"),
+            @Mapping(source = "isWorld", target = "global")
     })
     ProjectionDto projectionEntityToProjectionDto(ProjectionEntity projectionEntity);
 

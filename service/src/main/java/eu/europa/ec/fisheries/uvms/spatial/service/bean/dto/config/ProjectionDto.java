@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
+        "id",
         "name",
         "epsgCode",
         "units",
@@ -14,6 +15,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 })
 public class ProjectionDto {
 
+    @JsonProperty("id")
+    private Long id;
     @JsonProperty("name")
     private String name;
     @JsonProperty("epsgCode")
@@ -31,12 +34,23 @@ public class ProjectionDto {
     public ProjectionDto() {
     }
 
-    public ProjectionDto(String name, Integer epsgCode, String units, String formats, Boolean global) {
+    public ProjectionDto(Long id, String name, Integer epsgCode, String units, String formats, Boolean global) {
+        this.id = id;
         this.name = name;
         this.epsgCode = epsgCode;
         this.units = units;
         this.formats = formats;
         this.global = global;
+    }
+
+    @JsonProperty("id")
+    public Long getId() {
+        return id;
+    }
+
+    @JsonProperty("id")
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @JsonProperty("epsgCode")

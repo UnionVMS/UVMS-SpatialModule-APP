@@ -110,10 +110,10 @@ public final class SpatialModuleRequestMapper {
         }
     }
 
-    public static String mapToSpatialSaveMapConfigurationRQ(Long reportId, Long mapProjection, Long displayProjection, CoordinatesFormat coordinatesFormat, ScaleBarUnits scaleBarUnits) throws SpatialModelMarshallException {
+    public static String mapToSpatialSaveMapConfigurationRQ(Long reportId, Long mapProjectionId, Long displayProjectionId, CoordinatesFormat coordinatesFormat, ScaleBarUnits scaleBarUnits) throws SpatialModelMarshallException {
         try {
             MapConfigurationType mapConfiguration =
-                    new MapConfigurationType(reportId, mapProjection, displayProjection, coordinatesFormat, scaleBarUnits);
+                    new MapConfigurationType(reportId, mapProjectionId, displayProjectionId, coordinatesFormat, scaleBarUnits);
             return JAXBMarshaller.marshall(new SpatialSaveMapConfigurationRQ(SpatialModuleMethod.SAVE_MAP_CONFIGURATION, mapConfiguration));
         } catch (SpatialModelMarshallException ex) {
             return logException(ex);

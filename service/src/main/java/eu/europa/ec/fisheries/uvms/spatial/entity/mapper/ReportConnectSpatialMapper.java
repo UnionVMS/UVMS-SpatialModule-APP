@@ -19,8 +19,8 @@ public interface ReportConnectSpatialMapper {
     @Mappings({
             @Mapping(source = "scaleBarUnits", target = "scaleBarType"),
             @Mapping(source = "coordinatesFormat", target = "displayFormatType"),
-            @Mapping(target = "projectionByMapProjId", expression = "java(new ProjectionEntity(map.getMapProjection()))"),
-            @Mapping(target = "projectionByDisplayProjId", expression = "java(new ProjectionEntity(map.getDisplayProjection()))")
+            @Mapping(target = "projectionByMapProjId", expression = "java(new ProjectionEntity(map.getMapProjectionId()))"),
+            @Mapping(target = "projectionByDisplayProjId", expression = "java(new ProjectionEntity(map.getDisplayProjectionId()))")
     })
     ReportConnectSpatialEntity mapConfigurationTypeToReportConnectSpatialEntity(MapConfigurationType map);
 }
