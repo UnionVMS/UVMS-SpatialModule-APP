@@ -48,10 +48,10 @@ public class ReportConnectSpatialEntity implements Serializable {
 	@Column(name = "report_id", nullable = false)
 	private long reportId;
 	
-	@Column(name = "map_center", nullable = false, length = 255)
+	@Column(name = "map_center", length = 255)
 	private String mapCenter;
 	
-	@Column(name = "map_zoom", nullable = false)
+	@Column(name = "map_zoom")
 	private int mapZoom;
 	
 	@Column(columnDefinition = "text", name = "map_extent")
