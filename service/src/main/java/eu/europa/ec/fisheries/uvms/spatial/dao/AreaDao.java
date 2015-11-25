@@ -1,18 +1,14 @@
 package eu.europa.ec.fisheries.uvms.spatial.dao;
 
-import static eu.europa.ec.fisheries.uvms.spatial.util.SpatialUtils.convertToWkt;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-
 import javax.persistence.EntityManager;
-
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GeometryType;
+import eu.europa.ec.fisheries.uvms.spatial.service.mapper.GeometryMapper;
 import org.hibernate.Query;
 import org.hibernate.transform.Transformers;
-
 import com.vividsolutions.jts.geom.Point;
-
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaExtendedIdentifierDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaLayerDto;
@@ -64,9 +60,9 @@ public class AreaDao extends CommonDao {
     }
 
     public List findAreaOrLocationByCoordinates(Point point, String nativeQueryString) {
-        String wktPoint = convertToWkt(point);
+        GeometryType geometryType = GeometryMapper.INSTANCE.geometryToWKT(point);
         int crs = point.getSRID();
-        return createNamedNativeQuery(nativeQueryString, wktPoint, crs).list();
+        return createNamedNativeQuery(nativeQueryString, geometryType.getGeometry(), crs).list();
     }
 
     @SuppressWarnings("unchecked")
@@ -123,18 +119,18 @@ public class AreaDao extends CommonDao {
     @SuppressWarnings("unchecked")
     private List<AreaExtendedIdentifierDto> executeAreasByLocation(String queryString, Point point, String areaDbTable) {
         queryString = replaceTableName(queryString, areaDbTable);
-        String wktPoint = convertToWkt(point);
+        GeometryType geometryType = GeometryMapper.INSTANCE.geometryToWKT(point);
         int crs = point.getSRID();
 
-        return createSQLQueryForClosestArea(queryString, wktPoint, crs).list();
+        return createSQLQueryForClosestArea(queryString, geometryType.getGeometry(), crs).list();
     }
 
     private List executeClosest(String queryString, Point point, MeasurementUnit unit, String areaDbTable, Class resultClass) {
         queryString = replaceTableName(queryString, areaDbTable);
-        String wktPoint = convertToWkt(point);
+        GeometryType geometryType = GeometryMapper.INSTANCE.geometryToWKT(point);
         int crs = point.getSRID();
         double unitRatio = unit.getRatio();
-        return createSQLQuery(queryString, wktPoint, crs, unitRatio, resultClass).list();
+        return createSQLQuery(queryString, geometryType.getGeometry(), crs, unitRatio, resultClass).list();
     }
 
     private String replaceTableName(String queryString, String tableName) {

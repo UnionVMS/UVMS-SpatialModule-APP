@@ -24,7 +24,7 @@ public class ProjectionEntity implements Serializable {
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private Long id;
 	
 	@Column(name = "name", unique = true, nullable = false, length = 255)
 	private String name;
@@ -54,8 +54,14 @@ public class ProjectionEntity implements Serializable {
 	public ProjectionEntity() {
 	}
 
+    public ProjectionEntity(Long id){
+        this.id = id;
+    }
+
     @Builder
-    public ProjectionEntity(String name, int srsCode, String projDef, String formats, String units, Boolean isWorld, Set<ReportConnectSpatialEntity> reportConnectSpatialsForMapProjId, Set<ReportConnectSpatialEntity> reportConnectSpatialsForDisplayProjId) {
+    public ProjectionEntity(String name, int srsCode, String projDef, String formats, String units,
+                            Boolean isWorld, Set<ReportConnectSpatialEntity> reportConnectSpatialsForMapProjId,
+                            Set<ReportConnectSpatialEntity> reportConnectSpatialsForDisplayProjId) {
         this.name = name;
         this.srsCode = srsCode;
         this.projDef = projDef;
@@ -66,11 +72,11 @@ public class ProjectionEntity implements Serializable {
         this.reportConnectSpatialsForDisplayProjId = reportConnectSpatialsForDisplayProjId;
     }
 
-    public long getId() {
+    public Long getId() {
 		return this.id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

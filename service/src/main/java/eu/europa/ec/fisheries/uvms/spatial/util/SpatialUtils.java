@@ -3,10 +3,8 @@ package eu.europa.ec.fisheries.uvms.spatial.util;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.io.WKTWriter;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.PointType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
@@ -22,9 +20,6 @@ import org.opengis.referencing.operation.TransformException;
 
 import java.util.List;
 
-/**
- * Created by Michal Kopyczok on 02-Sep-15.
- */
 @Slf4j
 public class SpatialUtils {
 
@@ -80,14 +75,6 @@ public class SpatialUtils {
                 return "";
             }
         });
-    }
-
-    public static String convertToWkt(Point point) {
-        return new WKTWriter().write(point);
-    }
-
-    public static String convertToWkt(Geometry geometry) {
-        return new WKTWriter().write(geometry);
     }
 
     public static boolean isDefaultCrs(int crs) {

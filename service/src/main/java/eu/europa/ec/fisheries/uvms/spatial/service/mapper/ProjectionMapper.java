@@ -7,16 +7,17 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+
 @Mapper(componentModel = "cdi")
-public abstract class ProjectionMapper {
-    private static final ProjectionMapper INSTANCE = Mappers.getMapper(ProjectionMapper.class);
+public interface ProjectionMapper {
+
+    ProjectionMapper INSTANCE = Mappers.getMapper(ProjectionMapper.class);
 
     @Mappings({
             @Mapping(source = "srsCode", target = "epsgCode")
     })
-    public abstract ProjectionDto projectionEntityToProjectionDto(ProjectionEntity projectionEntity);
+    ProjectionDto projectionEntityToProjectionDto(ProjectionEntity projectionEntity);
 
-    public static ProjectionMapper mapper() {
-        return INSTANCE;
-    }
+    List<ProjectionDto> projectionEntityListToProjectionDtoList(List<ProjectionEntity> projectionEntityList);
 }

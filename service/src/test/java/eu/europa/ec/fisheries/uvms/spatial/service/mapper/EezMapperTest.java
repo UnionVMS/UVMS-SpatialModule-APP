@@ -22,9 +22,9 @@ public class EezMapperTest {
         mapper = new EezMapperImpl();
 
         try {
-            Field field = EezMapperImpl.class.getDeclaredField("geometryTypeMapper");
+            Field field = EezMapperImpl.class.getDeclaredField("geometryMapper");
             field.setAccessible(true);
-            GeometryTypeMapper geometryMapper = new GeometryTypeMapperImpl();
+            GeometryMapper geometryMapper = new GeometryMapperImpl();
             field.set(mapper, geometryMapper);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             fail("Failed to initialize areaResultTypeMapper");

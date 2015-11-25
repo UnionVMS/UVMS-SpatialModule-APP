@@ -15,18 +15,18 @@ import static org.junit.Assert.assertEquals;
 
 public class GeometryMapperTest {
 
-    private GeometryTypeMapper mapper;
+    private GeometryMapper mapper;
     private Geometry geometry;
 
     @Before
     public void beforeTest() {
-        mapper = new GeometryTypeMapperImpl();
+        mapper = new GeometryMapperImpl();
     }
 
     @Test
     public void shouldReturnGeometryTypeWithTypePoint() {
         geometry = new GeometryFactory().createPoint(new Coordinate(1, 11));
-        GeometryType geometryType = mapper.geometryToGeometryType(geometry);
+        GeometryType geometryType = mapper.geometryToWKT(geometry);
         assertEquals("POINT (1 11)", geometryType.getGeometry());
     }
 
@@ -34,7 +34,7 @@ public class GeometryMapperTest {
     public void shouldReturnGeometryTypeWithTypePolygon() {
         List<Coordinate> coordinates = Arrays.asList(new Coordinate(1, 11), new Coordinate(1, 11), new Coordinate(1, 11), new Coordinate(1, 11));
         Polygon polygon = new GeometryFactory().createPolygon((Coordinate[]) coordinates.toArray());
-        GeometryType geometryType = mapper.geometryToGeometryType(polygon);
+        GeometryType geometryType = mapper.geometryToWKT(polygon);
         assertEquals("POLYGON ((1 11, 1 11, 1 11, 1 11))", geometryType.getGeometry());
     }
 }

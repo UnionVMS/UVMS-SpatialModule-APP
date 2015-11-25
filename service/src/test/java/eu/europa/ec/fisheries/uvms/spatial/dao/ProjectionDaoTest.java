@@ -7,13 +7,9 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.ProjectionEntity;
 import lombok.SneakyThrows;
 import org.junit.Before;
 import org.junit.Test;
-
-import javax.persistence.EntityTransaction;
 import java.util.List;
 
-import static com.ninja_squad.dbsetup.Operations.insertInto;
 import static com.ninja_squad.dbsetup.Operations.sequenceOf;
-import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;
 
 public class ProjectionDaoTest extends BaseSpatialDaoTest {
@@ -26,12 +22,7 @@ public class ProjectionDaoTest extends BaseSpatialDaoTest {
         Operation operation =
                 sequenceOf(
                         DELETE_ALL,
-                        INSERT_REFERENCE_DATA,
-                        insertInto("spatial.projection")
-                                .columns("ID", "NAME", "SRS_CODE", "FORMATS", "PROJ_DEF", "UNITS", "WORLD")
-                                .values(1L, "testUser", 2, "", "", "", 'N')
-                                .build());
-
+                        INSERT_REFERENCE_DATA);
 
         DbSetup dbSetup = new DbSetup(new DataSourceDestination(ds), operation);
         dbSetupTracker.launchIfNecessary(dbSetup);
@@ -39,36 +30,13 @@ public class ProjectionDaoTest extends BaseSpatialDaoTest {
 
     @Test
     @SneakyThrows
-    public void shouldCreateProjection(){
-
-        EntityTransaction tx = em.getTransaction();
-        tx.begin();
-
-        ProjectionEntity projectionEntity = ProjectionEntity.builder()
-                .formats("").name("").projDef("Transverse_Mercator")
-                .units("metre").srsCode(4608).isWorld(true)
-                .build();
-        ProjectionEntity entity = dao.createEntity(projectionEntity);
-
-        tx.commit();
-
-        assertNotNull(entity.getId());
-
-    }
-
-    @Test
-    @SneakyThrows
-    public void shouldReturnAListWithOneProjection(){
+    public void shouldReturnReferenceData(){
 
         dbSetupTracker.skipNextLaunch();
 
         List<ProjectionEntity> list = dao.findAllEntity(ProjectionEntity.class);
 
-        assertEquals(1, list.size());
-
-        assertEquals(1L, list.get(0).getId());
-        assertEquals(2, list.get(0).getSrsCode());
-        assertEquals("testUser", list.get(0).getName());
+        assertEquals(2, list.size());
 
     }
 }

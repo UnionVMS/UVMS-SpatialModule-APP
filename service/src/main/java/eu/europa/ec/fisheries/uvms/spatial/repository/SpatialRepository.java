@@ -7,7 +7,14 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.config.SysConfigEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.MapConfigurationType;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.*;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaExtendedIdentifierDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaLayerDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestLocationDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.FilterAreasDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.MeasurementUnit;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
 
 import java.util.List;
@@ -45,7 +52,7 @@ public interface SpatialRepository extends DAO {
 
     List<ReportConnectServiceAreasEntity> findReportConnectServiceAreas(long reportId);
 
-    MapConfigurationType saveMapConfiguration(MapConfigurationType mapConfiguration) throws ServiceException;
+    void saveMapConfiguration(MapConfigurationType mapConfiguration) throws ServiceException;
 
     void updateSystemConfigs(List<SysConfigEntity> sysConfigs);
 

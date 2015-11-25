@@ -1,18 +1,15 @@
 package eu.europa.ec.fisheries.uvms.spatial.dao;
 
-import static eu.europa.ec.fisheries.uvms.spatial.util.SpatialUtils.convertToWkt;
-
 import java.util.List;
 import java.util.Map;
-
 import javax.persistence.EntityManager;
-
 import com.google.common.collect.ImmutableMap;
 import com.vividsolutions.jts.geom.Point;
-
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GeometryType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.mapper.GeometryMapper;
 
 public class UserAreaDao extends CommonDao {
 	
@@ -34,12 +31,12 @@ public class UserAreaDao extends CommonDao {
     
     @SuppressWarnings("unchecked")
 	public List<UserAreaDto> findUserAreaDetails(String userName, String scopeName, Point point) {
-        String wktPoint = convertToWkt(point);
+        GeometryType geometryType = GeometryMapper.INSTANCE.geometryToWKT(point);
         int crs = point.getSRID();
     	Map<String, Object> parameters = ImmutableMap.<String, Object>builder().
     			put(USER_NAME, userName).
     			put(SCOPE_NAME, scopeName).
-    			put(WKT, wktPoint).
+    			put(WKT, geometryType.getGeometry()).
     			put(CRS, crs).
     			build();
     	return createNamedNativeQuery(QueryNameConstants.USER_AREA_DETAILS, parameters, UserAreaDto.class).list();

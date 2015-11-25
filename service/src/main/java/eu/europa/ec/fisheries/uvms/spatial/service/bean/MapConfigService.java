@@ -13,5 +13,5 @@ public interface MapConfigService {
 
     List<ProjectionDto> getAllProjections();
 
-    SpatialSaveMapConfigurationRS saveMapConfiguration(SpatialSaveMapConfigurationRQ spatialSaveMapConfigurationRQ);
+    void saveMapConfiguration(SpatialSaveMapConfigurationRQ spatialSaveMapConfigurationRQ);
 }

@@ -8,7 +8,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
 
-@Mapper(componentModel = "cdi", uses = GeometryTypeMapper.class)
+@Mapper(componentModel = "cdi", uses = GeometryMapper.class)
 public interface EezMapper {
 
     EezMapper INSTANCE = Mappers.getMapper(EezMapper.class);
