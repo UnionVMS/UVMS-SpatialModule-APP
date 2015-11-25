@@ -12,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import javax.annotation.Resource;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.enterprise.event.Observes;
 import javax.jms.*;
 
@@ -47,6 +49,7 @@ public class SpatialMessageServiceBean extends AbstractMessageService {
     }
 
 
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void sendModuleErrorResponseMessage(@Observes @SpatialMessageErrorEvent SpatialMessageEvent message){
         try {
             log.info("Sending message back to recipient from SpatialModule with correlationId {} on queue: {}", message.getMessage().getJMSMessageID(),
