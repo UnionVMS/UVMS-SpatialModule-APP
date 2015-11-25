@@ -132,7 +132,7 @@ public class SpatialEventServiceBean implements SpatialEventService {
         try {
             FilterAreasSpatialRQ filterAreaSpatialRQ = message.getFilterAreasSpatialRQ();
             FilterAreasSpatialRS filterAreasSpatialRS = filterAreasService.filterAreas(filterAreaSpatialRQ);
-            log.debug("Send back Filterd Areas");
+            log.debug("Send back filtered Areas");
             messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapFilterAreasResponse(filterAreasSpatialRS));
         } catch (Exception e) {
             sendError(message, e);
