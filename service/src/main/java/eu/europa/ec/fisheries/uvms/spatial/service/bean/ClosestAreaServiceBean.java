@@ -98,7 +98,7 @@ public class ClosestAreaServiceBean implements ClosestAreaService {
 
     @SneakyThrows
     private Map<String, String> getAreaType2TableNameMap() {
-        List<AreaLocationTypesEntity> areas = repository.findEntityByNamedQuery(QueryNameConstants.FIND_ALL_AREAS);
+        List<AreaLocationTypesEntity> areas = repository.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_ALL_AREAS);
         Map<String, String> areaMap = Maps.newHashMap();
         for (AreaLocationTypesEntity area : areas) {
             areaMap.put(area.getTypeName().toUpperCase(), area.getAreaDbTable());

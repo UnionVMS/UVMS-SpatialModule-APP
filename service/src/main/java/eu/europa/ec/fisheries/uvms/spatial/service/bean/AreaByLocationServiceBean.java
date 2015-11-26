@@ -39,7 +39,7 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
         Point point = convertToPointInWGS84(request.getPoint());
 
         List<AreaLocationTypesEntity> systemAreaTypes =
-                repository.findEntityByNamedQuery(QueryNameConstants.FIND_SYSTEM_AREAS);
+                repository.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_SYSTEM_AREAS);
         List<AreaExtendedIdentifierType> areaTypes = Lists.newArrayList();
         for (AreaLocationTypesEntity areaType : systemAreaTypes) {
             String areaDbTable = areaType.getAreaDbTable();
@@ -60,7 +60,7 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
     public List<AreaExtendedIdentifierDto> getAreaTypesByLocation(double lat, double lon, int crs) {
         Point point = convertToPointInWGS84(lon, lat, crs);
         List<AreaLocationTypesEntity> systemAreaTypes =
-                repository.findEntityByNamedQuery(QueryNameConstants.FIND_SYSTEM_AREAS);
+                repository.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_SYSTEM_AREAS);
         List<AreaExtendedIdentifierDto> areaTypes = Lists.newArrayList();
         for (AreaLocationTypesEntity areaType : systemAreaTypes) {
             String areaDbTable = areaType.getAreaDbTable();

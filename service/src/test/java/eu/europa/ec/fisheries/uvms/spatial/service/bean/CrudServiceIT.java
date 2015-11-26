@@ -93,7 +93,7 @@ public class CrudServiceIT {
     @Test
     @SuppressWarnings("unchecked")
     public void testFindEntityByNamedQuery() throws Exception {
-        List<AreaLocationTypesEntity> areas = genericDao.findEntityByNamedQuery(QueryNameConstants.FIND_ALL_AREAS);
+        List<AreaLocationTypesEntity> areas = genericDao.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_ALL_AREAS);
         assertThat(areas).isNotEmpty();
     }
 

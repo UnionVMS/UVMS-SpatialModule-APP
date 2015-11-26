@@ -22,7 +22,7 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
     @Override
     @SneakyThrows
     public List<String> listAllAreaTypeNames() {
-        return repository.findEntityByNamedQuery(QueryNameConstants.FIND_ALL_AREA_TYPE_NAMES);
+        return repository.findEntityByNamedQuery(String.class, QueryNameConstants.FIND_ALL_AREA_TYPE_NAMES);
     }
     
     @Override
