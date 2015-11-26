@@ -35,6 +35,7 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
     @Override
     @SuppressWarnings("unchecked")
     @SneakyThrows
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
     public List<AreaExtendedIdentifierType> getAreaTypesByLocation(AreaByLocationSpatialRQ request) {
         Point point = convertToPointInWGS84(request.getPoint());
 

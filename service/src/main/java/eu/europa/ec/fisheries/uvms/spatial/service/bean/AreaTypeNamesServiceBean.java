@@ -21,6 +21,7 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
 
     @Override
     @SneakyThrows
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
     public List<String> listAllAreaTypeNames() {
         return repository.findEntityByNamedQuery(String.class, QueryNameConstants.FIND_ALL_AREA_TYPE_NAMES);
     }

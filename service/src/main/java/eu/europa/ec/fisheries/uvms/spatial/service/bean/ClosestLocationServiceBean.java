@@ -40,6 +40,7 @@ public class ClosestLocationServiceBean implements ClosestLocationService {
     private SpatialRepository repository;
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
     public List<Location> getClosestLocations(ClosestLocationSpatialRQ request) {
         Point point = convertToPointInWGS84(request.getPoint());
         MeasurementUnit measurementUnit = MeasurementUnit.getMeasurement(request.getUnit().name());

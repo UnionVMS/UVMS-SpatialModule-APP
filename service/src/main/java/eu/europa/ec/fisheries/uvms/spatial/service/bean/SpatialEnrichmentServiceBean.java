@@ -29,6 +29,7 @@ public class SpatialEnrichmentServiceBean implements SpatialEnrichmentService {
     private ClosestLocationService closestLocationService;
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
     public SpatialEnrichmentRS getSpatialEnrichment(SpatialEnrichmentRQ request) {
 
         AreaByLocationSpatialRQ areaByLocationSpatialRQ = new AreaByLocationSpatialRQ();

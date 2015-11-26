@@ -37,6 +37,7 @@ public class FilterAreasServiceBean implements FilterAreasService {
 
     @Override
     @SneakyThrows
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
     public FilterAreasSpatialRS filterAreas(FilterAreasSpatialRQ request) {
         UserAreasType userAreas = request.getUserAreas();
         ScopeAreasType scopeAreas = request.getScopeAreas();

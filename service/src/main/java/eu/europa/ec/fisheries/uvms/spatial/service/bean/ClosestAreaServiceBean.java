@@ -36,6 +36,7 @@ public class ClosestAreaServiceBean implements ClosestAreaService {
     private SpatialRepository repository;
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
     public List<Area> getClosestAreas(ClosestAreaSpatialRQ request) {
         Point point = convertToPointInWGS84(request.getPoint());
         MeasurementUnit measurementUnit = MeasurementUnit.getMeasurement(request.getUnit().name());
