@@ -206,11 +206,11 @@
 
     <xs:complexType name="MapConfigurationType">
         <xs:sequence>
-            <xs:element name="ReportId" type="xs:long" minOccurs="1"/>
-            <xs:element name="MapProjectionId" type="xs:long" minOccurs="0"/>
-            <xs:element name="DisplayProjectionId" type="xs:long" minOccurs="0"/>
-            <xs:element name="CoordinatesFormat" type="CoordinatesFormat" minOccurs="0"/>
-            <xs:element name="ScaleBarUnits" type="ScaleBarUnits" minOccurs="0"/>
+            <xs:element name="reportId" type="xs:long" minOccurs="1"/>
+            <xs:element name="mapProjectionId" type="xs:long" minOccurs="0"/>
+            <xs:element name="displayProjectionId" type="xs:long" minOccurs="0"/>
+            <xs:element name="coordinatesFormat" type="CoordinatesFormat" minOccurs="0"/>
+            <xs:element name="scaleBarUnits" type="ScaleBarUnits" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 
