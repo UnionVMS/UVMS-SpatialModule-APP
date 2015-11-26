@@ -7,20 +7,38 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import java.io.Serializable;
 import java.util.Set;
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "report_connect_spatial", schema = "spatial")
-@NamedQueries(
-		@NamedQuery(name = QueryNameConstants.FIND_MAP_PROJ_BY_ID,
-				query = "SELECT projection.srsCode AS epsgCode, projection.units AS units, projection.isWorld AS global " +
-						"FROM ReportConnectSpatialEntity rcs INNER JOIN rcs.projectionByMapProjId AS projection " +
-						"WHERE rcs.reportId = :reportId")
-)
+@NamedQueries({
+        @NamedQuery(name = QueryNameConstants.FIND_MAP_PROJ_BY_ID,
+                query = "SELECT projection.srsCode AS epsgCode, projection.units AS units, projection.isWorld AS global " +
+                        "FROM ReportConnectSpatialEntity rcs INNER JOIN rcs.projectionByMapProjId AS projection " +
+                        "WHERE rcs.reportId = :reportId"),
+        @NamedQuery(name = ReportConnectSpatialEntity.FIND_BY_REPORT_ID,
+                query = "from ReportConnectSpatialEntity where reportId = :reportId")
+})
 @EqualsAndHashCode(exclude = {"id", "reportConnectServiceAreases"})
 public class ReportConnectSpatialEntity implements Serializable {
 
-	@Id
+    public static final String FIND_BY_REPORT_ID = "reportConnectSpatialEntity.findByReportId";
+
+    @Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;

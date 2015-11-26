@@ -2,8 +2,12 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ProjectionEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.mapper.ReportConnectSpatialMapper;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.MapConfigurationType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveMapConfigurationRQ;
 import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ControlDto;
@@ -18,7 +22,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.VectorStylesD
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.ProjectionMapper;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.jboss.arquillian.core.api.annotation.Inject;
+
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
@@ -50,6 +54,21 @@ public class MapConfigServiceBean implements MapConfigService {
         return new MapConfigDto(map, createMockVectorStyle());
     }
 
+    @Override
+    public MapConfigurationType getMapConfigurationType(final Long reportId) throws ServiceException {
+
+        if (reportId == null) {
+
+            throw new IllegalArgumentException("REPORT ID CAN NOT BE NULL");
+
+        }
+
+        ReportConnectSpatialEntity entity = repository.findReportConnectSpatialBy(reportId);
+
+        return ReportConnectSpatialMapper.INSTANCE.reportConnectSpatialEntityToReportConnectDto(entity);
+
+    }
+
     private ProjectionDto getMapProjection(int reportId) {
         List<ProjectionDto> projectionDtoList = repository.findProjectionByMap(reportId);
         return (projectionDtoList != null && !projectionDtoList.isEmpty()) ? projectionDtoList.get(0) : null;
@@ -62,9 +81,7 @@ public class MapConfigServiceBean implements MapConfigService {
         if (request == null) {
             throw new IllegalArgumentException("REQUEST CAN NOT BE NULL");
         }
-
         repository.saveMapConfiguration(request.getMapConfiguration());
-
     }
 
     private List<LayerDto> getServiceAreaLayer(int reportId) {

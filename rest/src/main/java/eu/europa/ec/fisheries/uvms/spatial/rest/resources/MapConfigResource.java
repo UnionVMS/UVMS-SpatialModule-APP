@@ -28,7 +28,7 @@ public class MapConfigResource extends UnionVMSResource {
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Path("{id}")
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response getExclusiveEconomicZoneById(@PathParam("id") int id) {
+    public Response getExclusiveEconomicZoneById(@PathParam("id") int id) { // TODO method name?
         log.info("Getting map configuration for report with id = {}", id);
         MapConfigDto mapConfig = mapConfigService.getReportConfig(id);
         return createSuccessResponse(mapConfig);

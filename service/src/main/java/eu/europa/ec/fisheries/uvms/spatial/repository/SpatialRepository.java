@@ -5,6 +5,7 @@ import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.DAO;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.config.SysConfigEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.MapConfigurationType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaExtendedIdentifierDto;
@@ -51,6 +52,8 @@ public interface SpatialRepository extends DAO {
     List<ProjectionDto> findProjectionByMap(long reportId);
 
     List<ReportConnectServiceAreasEntity> findReportConnectServiceAreas(long reportId);
+
+    ReportConnectSpatialEntity findReportConnectSpatialBy(Long reportId) throws ServiceException;
 
     void saveMapConfiguration(MapConfigurationType mapConfiguration) throws ServiceException;
 
