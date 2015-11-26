@@ -85,6 +85,14 @@ public class MapConfigServiceBean implements MapConfigService {
 
         }
 
+        final MapConfigurationType config = request.getMapConfiguration();
+
+        if (config.getDisplayProjectionId() != null && config.getMapProjectionId() == null) {
+
+            throw new IllegalArgumentException("MAP PROJECTION IS MANDATORY");
+
+        }
+
         repository.saveMapConfiguration(request.getMapConfiguration());
 
     }
