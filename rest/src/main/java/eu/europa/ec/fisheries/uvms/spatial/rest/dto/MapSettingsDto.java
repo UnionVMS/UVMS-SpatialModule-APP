@@ -12,7 +12,7 @@ public class MapSettingsDto {
         this.mapConfigurationType = mapConfigurationType;
     }
 
-    private interface Exclude {
-        String getReportId();
+    public interface Exclude {
+        Long getReportId();
     }
 }

@@ -3,6 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.rest.resources;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.MapConfigurationType;
+import eu.europa.ec.fisheries.uvms.spatial.rest.dto.MapSettingsDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.MapConfigService;
 import lombok.extern.slf4j.Slf4j;
 import javax.ejb.EJB;
@@ -33,7 +34,7 @@ public class ReportResource extends UnionVMSResource {
 
             MapConfigurationType mapConfigurationType = mapConfigService.getMapConfigurationType((long) reportId);
 
-            response = createSuccessResponse(mapConfigurationType);
+            response = createSuccessResponse(new MapSettingsDto(mapConfigurationType));
 
         } catch (ServiceException ex) {
 
