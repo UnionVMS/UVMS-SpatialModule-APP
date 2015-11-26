@@ -78,10 +78,15 @@ public class MapConfigServiceBean implements MapConfigService {
     @SneakyThrows
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public void saveMapConfiguration(final SpatialSaveMapConfigurationRQ request) {
+
         if (request == null) {
+
             throw new IllegalArgumentException("REQUEST CAN NOT BE NULL");
+
         }
+
         repository.saveMapConfiguration(request.getMapConfiguration());
+
     }
 
     private List<LayerDto> getServiceAreaLayer(int reportId) {
