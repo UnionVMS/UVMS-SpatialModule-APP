@@ -55,7 +55,7 @@ public class ClosestLocationServiceBean implements ClosestLocationService {
 
             ClosestLocationDto closestLocationDto = closestAreaList.get(0);
             if (closestLocationDto != null) {
-                Location closestLocationEntry = new Location(); // TODO add mapper
+                Location closestLocationEntry = new Location(); // TODO use generated LocationMapper
                 closestLocationEntry.setId(closestLocationDto.getId());
                 closestLocationEntry.setDistance(closestLocationDto.getDistance());
                 closestLocationEntry.setUnit(request.getUnit());
