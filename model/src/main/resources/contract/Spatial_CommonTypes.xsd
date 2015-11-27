@@ -211,8 +211,8 @@
 
     <xs:complexType name="MapConfigurationType">
         <xs:sequence>
-            <xs:element name="spatialConnect" type="xs:long" nillable="true"/>
-            <xs:element name="reportId" type="xs:long" nillable="true"/>
+            <xs:element name="spatialConnectId" type="xs:long" nillable="true"/>
+            <xs:element name="reportId" type="xs:long" nillable="false"/>
             <xs:element name="mapProjectionId" type="xs:long" minOccurs="0"/>
             <xs:element name="displayProjectionId" type="xs:long" minOccurs="0"/>
             <xs:element name="coordinatesFormat" type="CoordinatesFormat" minOccurs="0" />

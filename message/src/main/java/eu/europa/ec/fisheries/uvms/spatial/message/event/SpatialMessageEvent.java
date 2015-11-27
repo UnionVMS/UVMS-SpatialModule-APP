@@ -1,8 +1,8 @@
 package eu.europa.ec.fisheries.uvms.spatial.message.event;
 
-import javax.jms.TextMessage;
-
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
+
+import javax.jms.TextMessage;
 
 public class SpatialMessageEvent {
 
@@ -13,11 +13,11 @@ public class SpatialMessageEvent {
     private AllAreaTypesRequest allAreaTypesRequest;
     private ClosestLocationSpatialRQ closestLocationSpatialRQ;
     private FilterAreasSpatialRQ filterAreasSpatialRQ;
-    private SpatialSaveMapConfigurationRQ spatialSaveMapConfigurationRQ;
+    private SpatialSaveOrUpdateMapConfigurationRQ spatialSaveOrUpdateMapConfigurationRQ;
     private PingRQ pingRQ;
     private SpatialFault fault;
 
-    public SpatialMessageEvent(TextMessage message, AreaByLocationSpatialRQ areaByLocationSpatialRQ){
+    public SpatialMessageEvent(TextMessage message, AreaByLocationSpatialRQ areaByLocationSpatialRQ) {
         this.message = message;
         this.areaByLocationSpatialRQ = areaByLocationSpatialRQ;
     }
@@ -27,12 +27,12 @@ public class SpatialMessageEvent {
         this.fault = fault;
     }
 
-    public SpatialMessageEvent(TextMessage message, ClosestAreaSpatialRQ closestAreaSpatialRQ){
+    public SpatialMessageEvent(TextMessage message, ClosestAreaSpatialRQ closestAreaSpatialRQ) {
         this.message = message;
         this.closestAreaSpatialRQ = closestAreaSpatialRQ;
     }
 
-    public SpatialMessageEvent(TextMessage message, SpatialEnrichmentRQ spatialEnrichmentRQ){
+    public SpatialMessageEvent(TextMessage message, SpatialEnrichmentRQ spatialEnrichmentRQ) {
         this.message = message;
         this.spatialEnrichmentRQ = spatialEnrichmentRQ;
     }
@@ -48,8 +48,8 @@ public class SpatialMessageEvent {
     }
 
     public SpatialMessageEvent(TextMessage textMessage, FilterAreasSpatialRQ filterAreasSpatialRQ) {
-    	this.message = textMessage;
-    	this.filterAreasSpatialRQ = filterAreasSpatialRQ;
+        this.message = textMessage;
+        this.filterAreasSpatialRQ = filterAreasSpatialRQ;
     }
 
     public SpatialMessageEvent(TextMessage textMessage, PingRQ pingRQ) {
@@ -57,9 +57,9 @@ public class SpatialMessageEvent {
         this.pingRQ = pingRQ;
     }
 
-    public SpatialMessageEvent(TextMessage textMessage, SpatialSaveMapConfigurationRQ spatialSaveMapConfigurationRQ) {
+    public SpatialMessageEvent(TextMessage textMessage, SpatialSaveOrUpdateMapConfigurationRQ spatialSaveOrUpdateMapConfigurationRQ) {
         this.message = textMessage;
-        this.spatialSaveMapConfigurationRQ = spatialSaveMapConfigurationRQ;
+        this.spatialSaveOrUpdateMapConfigurationRQ = spatialSaveOrUpdateMapConfigurationRQ;
     }
 
     public TextMessage getMessage() {
@@ -87,18 +87,18 @@ public class SpatialMessageEvent {
     }
 
     public FilterAreasSpatialRQ getFilterAreasSpatialRQ() {
-    	return filterAreasSpatialRQ;
+        return filterAreasSpatialRQ;
     }
 
     public PingRQ getPingRQ() {
         return pingRQ;
     }
 
-    public SpatialSaveMapConfigurationRQ getSpatialSaveMapConfigurationRQ() {
-        return spatialSaveMapConfigurationRQ;
+    public SpatialSaveOrUpdateMapConfigurationRQ getSpatialSaveOrUpdateMapConfigurationRQ() {
+        return spatialSaveOrUpdateMapConfigurationRQ;
     }
 
     public AllAreaTypesRequest getAllAreaTypesRequest() {
-    	return allAreaTypesRequest;
+        return allAreaTypesRequest;
     }
 }

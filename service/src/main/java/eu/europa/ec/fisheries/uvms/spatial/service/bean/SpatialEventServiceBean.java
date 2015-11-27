@@ -1,34 +1,17 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.spatial.message.bean.SpatialMessageServiceBean;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.GetAreaByLocationEvent;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.GetAreaTypeNamesEvent;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.GetClosestAreaEvent;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.GetClosestLocationEvent;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.GetFilterAreaEvent;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.GetSpatialEnrichmentEvent;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.PingEvent;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.SaveMapConfigurationEvent;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageErrorEvent;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.*;
 import eu.europa.ec.fisheries.uvms.spatial.model.FaultCode;
-import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMarshallException;
 import eu.europa.ec.fisheries.uvms.spatial.model.mapper.SpatialModuleResponseMapper;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Area;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaExtendedIdentifierType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRS;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Location;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.PingRS;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRS;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveMapConfigurationRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import lombok.extern.slf4j.Slf4j;
+
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Stateless
@@ -145,9 +128,9 @@ public class SpatialEventServiceBean implements SpatialEventService {
     public void saveMapConfiguration(@Observes @SaveMapConfigurationEvent SpatialMessageEvent message) {
         log.info("Saving map configurations.");
         try {
-            mapConfigService.saveMapConfiguration(message.getSpatialSaveMapConfigurationRQ());
+            mapConfigService.saveMapConfiguration(message.getSpatialSaveOrUpdateMapConfigurationRQ());
             log.debug("Send back map configurations response.");
-            String response = SpatialModuleResponseMapper.mapSpatialSaveMapConfigurationRSToString(new SpatialSaveMapConfigurationRS());
+            String response = SpatialModuleResponseMapper.mapSpatialSaveMapConfigurationRSToString(new SpatialSaveOrUpdateMapConfigurationRS());
             messageProducer.sendModuleResponseMessage(message.getMessage(), response);
         } catch (Exception e) {
             sendError(message, e);

@@ -4,22 +4,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.FaultCode;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMapperException;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMarshallException;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelValidationException;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Area;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRS;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaExtendedIdentifierType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeNamesSpatialRS;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreasByLocationType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreasNameType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialRS;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreasType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestLocationSpatialRS;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestLocationsType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRS;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Location;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.PingRS;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRS;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialFault;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveMapConfigurationRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -206,7 +191,7 @@ public final class SpatialModuleResponseMapper {
         }
     }
 
-    public static String mapSpatialSaveMapConfigurationRSToString(SpatialSaveMapConfigurationRS spatialSaveMapConfigurationRS) throws SpatialModelMarshallException {
+    public static String mapSpatialSaveMapConfigurationRSToString(SpatialSaveOrUpdateMapConfigurationRS spatialSaveMapConfigurationRS) throws SpatialModelMarshallException {
         try {
             return JAXBMarshaller.marshall(spatialSaveMapConfigurationRS);
         } catch (SpatialModelMarshallException e) {
@@ -214,10 +199,10 @@ public final class SpatialModuleResponseMapper {
         }
     }
 
-    public static SpatialSaveMapConfigurationRS mapToSpatialSaveMapConfigurationRS(TextMessage response, String correlationId) throws SpatialModelMapperException {
+    public static SpatialSaveOrUpdateMapConfigurationRS mapToSpatialSaveMapConfigurationRS(TextMessage response, String correlationId) throws SpatialModelMapperException {
         try {
             validateResponse(response, correlationId);
-            return JAXBMarshaller.unmarshall(response, SpatialSaveMapConfigurationRS.class);
+            return JAXBMarshaller.unmarshall(response, SpatialSaveOrUpdateMapConfigurationRS.class);
         } catch (SpatialModelMarshallException e) {
             return exception(e);
         }

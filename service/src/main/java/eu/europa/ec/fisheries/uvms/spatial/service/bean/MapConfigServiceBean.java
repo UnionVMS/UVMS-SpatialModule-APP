@@ -2,24 +2,23 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.Lists;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ProjectionEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.mapper.ReportConnectSpatialMapper;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.MapConfigurationType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveMapConfigurationRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveOrUpdateMapConfigurationRQ;
 import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.ConfigurationDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.MapSettingsDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.MapConfigMapper;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.ProjectionMapper;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.jboss.arquillian.core.api.annotation.Inject;
+
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
@@ -39,15 +38,12 @@ import static eu.europa.ec.fisheries.uvms.spatial.service.mapper.ConfigurationMa
 @Slf4j
 public class MapConfigServiceBean implements MapConfigService {
 
+    private static final String SCALE = "scale";
+    private static final String MOUSECOORDS = "mousecoords";
     @EJB
     private SpatialRepository repository;
-
     @Inject
     private MapConfigMapper mapConfigMapper;
-
-    private static final String SCALE = "scale";
-
-    private static final String MOUSECOORDS = "mousecoords";
 
     @Override
     @SneakyThrows
@@ -68,7 +64,7 @@ public class MapConfigServiceBean implements MapConfigService {
     @Override
     @SneakyThrows
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public void saveMapConfiguration(final SpatialSaveMapConfigurationRQ request) {
+    public void saveMapConfiguration(final SpatialSaveOrUpdateMapConfigurationRQ request) {
         if (request == null) {
             throw new IllegalArgumentException("REQUEST CAN NOT BE NULL");
         }
@@ -101,7 +97,7 @@ public class MapConfigServiceBean implements MapConfigService {
         } else {
             String mapSrsCode = configurationDto.getMapSettings().getMapProjection();
             projectionDtoList = repository.findProjectionBySrsCode(Integer.parseInt(mapSrsCode));
-             return (projectionDtoList != null && !projectionDtoList.isEmpty()) ? projectionDtoList.get(0) : null;
+            return (projectionDtoList != null && !projectionDtoList.isEmpty()) ? projectionDtoList.get(0) : null;
         }
     }
 
@@ -128,7 +124,7 @@ public class MapConfigServiceBean implements MapConfigService {
     }
 
     private List<ControlDto> getControls(int reportId, ConfigurationDto configurationDto) {
-        List<ControlDto> controls =  mapConfigMapper.getControls(configurationDto.getToolSettings().getControl());
+        List<ControlDto> controls = mapConfigMapper.getControls(configurationDto.getToolSettings().getControl());
         ProjectionDto displayProjection = getDisplayProjection(reportId);
         if (displayProjection != null) {
             for (ControlDto controlDto : controls) {

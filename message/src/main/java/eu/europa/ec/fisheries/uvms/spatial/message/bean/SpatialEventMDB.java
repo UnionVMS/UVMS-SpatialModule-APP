@@ -1,6 +1,5 @@
 package eu.europa.ec.fisheries.uvms.spatial.message.bean;
 
-import static eu.europa.ec.fisheries.uvms.message.MessageConstants.*;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.*;
 import eu.europa.ec.fisheries.uvms.spatial.model.FaultCode;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMapperException;
@@ -18,6 +17,8 @@ import javax.inject.Inject;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
+
+import static eu.europa.ec.fisheries.uvms.message.MessageConstants.*;
 
 @MessageDriven(mappedName = QUEUE_MODULE_SPATIAL, activationConfig = {
         @ActivationConfigProperty(propertyName = "messagingType", propertyValue = CONNECTION_TYPE),
@@ -46,7 +47,7 @@ public class SpatialEventMDB implements MessageListener {
     @Inject
     @GetClosestLocationEvent
     private Event<SpatialMessageEvent> closestLocationSpatialEvent;
-    
+
     @Inject
     @GetFilterAreaEvent
     private Event<SpatialMessageEvent> filterAreaSpatialEvent;
@@ -101,12 +102,12 @@ public class SpatialEventMDB implements MessageListener {
                     enrichmentSpatialEvent.fire(spatialEnrichmentEvent);
                     break;
                 case GET_FILTER_AREA:
-                	FilterAreasSpatialRQ filterAreasSpatialRQ = JAXBMarshaller.unmarshall(textMessage, FilterAreasSpatialRQ.class);
-                	SpatialMessageEvent filterAreaEvent = new SpatialMessageEvent(textMessage, filterAreasSpatialRQ);
-                	filterAreaSpatialEvent.fire(filterAreaEvent);
-                	break;
+                    FilterAreasSpatialRQ filterAreasSpatialRQ = JAXBMarshaller.unmarshall(textMessage, FilterAreasSpatialRQ.class);
+                    SpatialMessageEvent filterAreaEvent = new SpatialMessageEvent(textMessage, filterAreasSpatialRQ);
+                    filterAreaSpatialEvent.fire(filterAreaEvent);
+                    break;
                 case SAVE_MAP_CONFIGURATION:
-                    SpatialSaveMapConfigurationRQ spatialSaveMapConfigurationRQ = JAXBMarshaller.unmarshall(textMessage, SpatialSaveMapConfigurationRQ.class);
+                    SpatialSaveOrUpdateMapConfigurationRQ spatialSaveMapConfigurationRQ = JAXBMarshaller.unmarshall(textMessage, SpatialSaveOrUpdateMapConfigurationRQ.class);
                     SpatialMessageEvent saveMapConfigurationEvent = new SpatialMessageEvent(textMessage, spatialSaveMapConfigurationRQ);
                     saveMapConfigurationSpatialEvent.fire(saveMapConfigurationEvent);
                     break;

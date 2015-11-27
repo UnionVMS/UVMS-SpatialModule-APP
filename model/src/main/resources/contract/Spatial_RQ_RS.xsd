@@ -222,7 +222,7 @@
             </xs:sequence>
         </xs:complexType>
     </xs:element>
-    <xs:element name="SpatialSaveMapConfigurationRQ">
+    <xs:element name="SpatialSaveOrUpdateMapConfigurationRQ">
         <xs:annotation>
             <xs:documentation>Root element for store map configuration request</xs:documentation>
         </xs:annotation>
@@ -236,7 +236,7 @@
             </xs:complexContent>
         </xs:complexType>
     </xs:element>
-    <xs:element name="SpatialSaveMapConfigurationRS">
+    <xs:element name="SpatialSaveOrUpdateMapConfigurationRS">
         <xs:annotation>
             <xs:documentation>Root element for store map configuration request</xs:documentation>
         </xs:annotation>
