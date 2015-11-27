@@ -77,7 +77,7 @@ public class SpatialRepositoryTest {
 
         ReportConnectSpatialEntity reportConnectSpatialEntity
                 = ReportConnectSpatialMapper.INSTANCE.mapConfigurationTypeToReportConnectSpatialEntity(config);
-        spatialRepositoryBean.saveMapConfiguration(config);
+        spatialRepositoryBean.saveOrUpdateMapConfiguration(config);
 
         Mockito.verify(reportConnectSpatialDao, Mockito.times(1)).createEntity(reportConnectSpatialEntity);
 
@@ -87,7 +87,7 @@ public class SpatialRepositoryTest {
     @SneakyThrows
     public void shouldThrowExceptionWhenSavingMapConfigurationIsNull(){
 
-        spatialRepositoryBean.saveMapConfiguration(null);
+        spatialRepositoryBean.saveOrUpdateMapConfiguration(null);
 
     }
 

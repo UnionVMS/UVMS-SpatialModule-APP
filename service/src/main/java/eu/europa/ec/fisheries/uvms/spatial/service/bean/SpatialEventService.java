@@ -20,7 +20,7 @@ public interface SpatialEventService {
 
     void getFilterAreas(@Observes @GetFilterAreaEvent SpatialMessageEvent message);
 
-    void saveMapConfiguration(@Observes @SaveMapConfigurationEvent SpatialMessageEvent message);
+    void saveOrUpdateMapConfiguration(@Observes @SaveMapConfigurationEvent SpatialMessageEvent message);
 
     void ping(@Observes @PingEvent SpatialMessageEvent message);
 }

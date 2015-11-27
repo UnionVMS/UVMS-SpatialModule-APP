@@ -166,15 +166,35 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
 
     @Override
     @Transactional
-    public void saveMapConfiguration(final MapConfigurationType mapConfiguration) throws ServiceException {
+    public MapConfigurationType saveOrUpdateMapConfiguration(final MapConfigurationType mapConfiguration) throws ServiceException {
+
         if (mapConfiguration == null) {
+
             throw new IllegalArgumentException("MAP CONFIGURATION CAN NOT BE NULL");
+
         }
 
         ReportConnectSpatialEntity entity =
                 ReportConnectSpatialMapper.INSTANCE.mapConfigurationTypeToReportConnectSpatialEntity(mapConfiguration);
 
-        reportConnectSpatialDao.createEntity(entity);
+
+        ReportConnectSpatialEntity persisted;
+
+        if (entity.getId() != null) {
+
+            persisted = reportConnectSpatialDao.updateEntity(entity);
+
+        }
+
+        else {
+
+            persisted = reportConnectSpatialDao.createEntity(entity);
+
+        }
+
+
+        return ReportConnectSpatialMapper.INSTANCE.reportConnectSpatialEntityToReportConnectDto(persisted);
+
     }
 
     @Override

@@ -10,7 +10,13 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.mapper.ReportConnectSpatialMap
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.MapConfigurationType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveOrUpdateMapConfigurationRQ;
 import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.*;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ControlDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.LayerDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.MapConfigDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.MapDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.TbControlDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.VectorStylesDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.ConfigurationDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.MapConfigMapper;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.ProjectionMapper;
@@ -48,31 +54,46 @@ public class MapConfigServiceBean implements MapConfigService {
     @Override
     @SneakyThrows
     public List<ProjectionDto> getAllProjections() {
-        List<ProjectionEntity> projections = repository.findAllEntity(ProjectionEntity.class);
+        List<ProjectionEntity> projections = repository.findAllEntity(ProjectionEntity.class); // TODO projectionDAO
         return ProjectionMapper.INSTANCE.projectionEntityListToProjectionDtoList(projections);
     }
 
     @Override
     public MapConfigurationType getMapConfigurationType(final Long reportId) throws ServiceException {
+
         if (reportId == null) {
+
             throw new IllegalArgumentException("REPORT ID CAN NOT BE NULL");
+
         }
+
         ReportConnectSpatialEntity entity = repository.findReportConnectSpatialBy(reportId);
+
         return ReportConnectSpatialMapper.INSTANCE.reportConnectSpatialEntityToReportConnectDto(entity);
+
     }
 
     @Override
     @SneakyThrows
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public void saveMapConfiguration(final SpatialSaveOrUpdateMapConfigurationRQ request) {
+    public MapConfigurationType saveOrUpdateMapConfiguration(final SpatialSaveOrUpdateMapConfigurationRQ request) {
+
         if (request == null) {
+
             throw new IllegalArgumentException("REQUEST CAN NOT BE NULL");
+
         }
+
         final MapConfigurationType config = request.getMapConfiguration();
+
         if (config.getDisplayProjectionId() != null && config.getMapProjectionId() == null) {
+
             throw new IllegalArgumentException("MAP PROJECTION IS MANDATORY");
+
         }
-        repository.saveMapConfiguration(request.getMapConfiguration());
+
+        return repository.saveOrUpdateMapConfiguration(request.getMapConfiguration());
+
     }
 
     @Override
