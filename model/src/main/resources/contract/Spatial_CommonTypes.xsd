@@ -126,7 +126,11 @@
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
-
+    <xs:complexType name="Marshaled">
+        <xs:sequence>
+            <xs:element name="value" type="xs:string" nillable="true"/>
+        </xs:sequence>
+    </xs:complexType>
     <xs:complexType name="SpatialModuleRequest" abstract="true">
         <xs:sequence>
             <xs:element name="method" type="SpatialModuleMethod" minOccurs="1"/>
@@ -143,6 +147,7 @@
             <xs:enumeration value="GET_ENRICHMENT"/>
             <xs:enumeration value="GET_FILTER_AREA"/>
             <xs:enumeration value="SAVE_MAP_CONFIGURATION"/>
+            <xs:enumeration value="UPDATE_MAP_CONFIG"/>
             <xs:enumeration value="PING"/>
         </xs:restriction>
     </xs:simpleType>
@@ -206,6 +211,7 @@
 
     <xs:complexType name="MapConfigurationType">
         <xs:sequence>
+            <xs:element name="spatialConnect" type="xs:long" nillable="true"/>
             <xs:element name="reportId" type="xs:long" nillable="true"/>
             <xs:element name="mapProjectionId" type="xs:long" minOccurs="0"/>
             <xs:element name="displayProjectionId" type="xs:long" minOccurs="0"/>
