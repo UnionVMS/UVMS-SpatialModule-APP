@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 public class VectorStylesDto {
 
     @JsonProperty("positions")
-    private PositionsDto positionsDto;
+    private PositionDto positionDto;
 
     @JsonProperty("segments")
     private SegmentDto segmentDto;
@@ -23,19 +23,19 @@ public class VectorStylesDto {
     public VectorStylesDto() {
     }
 
-    public VectorStylesDto(PositionsDto positionsDto, SegmentDto segmentDto) {
-        this.positionsDto = positionsDto;
+    public VectorStylesDto(PositionDto positionDto, SegmentDto segmentDto) {
+        this.positionDto = positionDto;
         this.segmentDto = segmentDto;
     }
 
     @JsonProperty("positions")
-    public PositionsDto getPositionsDto() {
-        return positionsDto;
+    public PositionDto getPositionDto() {
+        return positionDto;
     }
 
     @JsonProperty("positions")
-    public void setPositionsDto(PositionsDto positionsDto) {
-        this.positionsDto = positionsDto;
+    public void setPositionDto(PositionDto positionDto) {
+        this.positionDto = positionDto;
     }
 
     @JsonProperty("segments")

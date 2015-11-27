@@ -15,13 +15,13 @@ import java.util.Map;
         "attribute",
         "style"
 })
-public class PositionsDto {
+public class PositionDto {
 
     @JsonProperty("attribute")
     private String attribute;
 
     @JsonProperty("style")
-    private List<Map<String, String>> style;
+    private Map<String, String> style;
 
     @JsonProperty("attribute")
     public String getAttribute() {
@@ -34,12 +34,12 @@ public class PositionsDto {
     }
 
     @JsonProperty("style")
-    public List<Map<String, String>> getStyle() {
+    public Map<String, String> getStyle() {
         return style;
     }
 
     @JsonProperty("style")
-    public void setStyle(List<Map<String, String>> style) {
+    public void setStyle(Map<String, String> style) {
         this.style = style;
     }
 }
