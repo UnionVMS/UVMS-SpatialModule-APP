@@ -126,7 +126,7 @@
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
-    <xs:complexType name="Marshaled">
+    <xs:complexType name="StringWrapper">
         <xs:sequence>
             <xs:element name="value" type="xs:string" nillable="true"/>
         </xs:sequence>
