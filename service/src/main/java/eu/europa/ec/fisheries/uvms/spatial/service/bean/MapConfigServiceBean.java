@@ -1,6 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import com.google.common.collect.ImmutableMap;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ProjectionEntity;
@@ -10,28 +11,27 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.mapper.ReportConnectSpatialMap
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.MapConfigurationType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveMapConfigurationRQ;
 import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ControlDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.LayerDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.MapConfigDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.MapDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.PositionsDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.SegmentDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.TbControlDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.VectorStylesDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.*;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.ConfigurationDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.MapSettingsDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.mapper.MapConfigMapper;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.ProjectionMapper;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-
+import org.apache.commons.io.IOUtils;
+import org.jboss.arquillian.core.api.annotation.Inject;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.transaction.Transactional;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
+
+import static eu.europa.ec.fisheries.uvms.spatial.service.mapper.ConfigurationMapper.mergeConfiguration;
 
 @Stateless
 @Local(MapConfigService.class)
@@ -42,6 +42,13 @@ public class MapConfigServiceBean implements MapConfigService {
     @EJB
     private SpatialRepository repository;
 
+    @Inject
+    private MapConfigMapper mapConfigMapper;
+
+    private static final String SCALE = "scale";
+
+    private static final String MOUSECOORDS = "mousecoords";
+
     @Override
     @SneakyThrows
     public List<ProjectionDto> getAllProjections() {
@@ -49,52 +56,53 @@ public class MapConfigServiceBean implements MapConfigService {
         return ProjectionMapper.INSTANCE.projectionEntityListToProjectionDtoList(projections);
     }
 
-    public MapConfigDto getReportConfig(int reportId) {
-        MapDto map = new MapDto(getMapProjection(reportId), createMockControls(), createMockTbControls(), getServiceAreaLayer(reportId));
-        return new MapConfigDto(map, createMockVectorStyle());
-    }
-
     @Override
     public MapConfigurationType getMapConfigurationType(final Long reportId) throws ServiceException {
-
         if (reportId == null) {
-
             throw new IllegalArgumentException("REPORT ID CAN NOT BE NULL");
-
         }
-
         ReportConnectSpatialEntity entity = repository.findReportConnectSpatialBy(reportId);
-
         return ReportConnectSpatialMapper.INSTANCE.reportConnectSpatialEntityToReportConnectDto(entity);
-
-    }
-
-    private ProjectionDto getMapProjection(int reportId) {
-        List<ProjectionDto> projectionDtoList = repository.findProjectionByMap(reportId);
-        return (projectionDtoList != null && !projectionDtoList.isEmpty()) ? projectionDtoList.get(0) : null;
     }
 
     @Override
     @SneakyThrows
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public void saveMapConfiguration(final SpatialSaveMapConfigurationRQ request) {
-
         if (request == null) {
-
             throw new IllegalArgumentException("REQUEST CAN NOT BE NULL");
-
         }
-
         final MapConfigurationType config = request.getMapConfiguration();
-
         if (config.getDisplayProjectionId() != null && config.getMapProjectionId() == null) {
-
             throw new IllegalArgumentException("MAP PROJECTION IS MANDATORY");
-
         }
-
         repository.saveMapConfiguration(request.getMapConfiguration());
+    }
 
+    @Override
+    @SneakyThrows
+    public MapConfigDto getReportConfig(int reportId) {
+        ConfigurationDto configurationDto = getMergedMapConfig();
+        return new MapConfigDto(getMap(configurationDto, reportId), getVectorStyles(configurationDto));
+    }
+
+    private ConfigurationDto getMergedMapConfig() throws IOException {
+        return mergeConfiguration(getUserConfiguration(), getAdminConfiguration()); //Returns merged config object between Admin and User configuration from USM
+    }
+
+    private MapDto getMap(ConfigurationDto configurationDto, int reportId) {
+        return new MapDto(getMapProjection(reportId, configurationDto), getControls(reportId, configurationDto), getTbControls(configurationDto), getServiceAreaLayer(reportId));
+    }
+
+    private ProjectionDto getMapProjection(int reportId, ConfigurationDto configurationDto) {
+        List<ProjectionDto> projectionDtoList = repository.findProjectionByMap(reportId);
+        if (projectionDtoList != null && !projectionDtoList.isEmpty()) {
+            return projectionDtoList.get(0);
+        } else {
+            String mapSrsCode = configurationDto.getMapSettings().getMapProjection();
+            projectionDtoList = repository.findProjectionBySrsCode(Integer.parseInt(mapSrsCode));
+             return (projectionDtoList != null && !projectionDtoList.isEmpty()) ? projectionDtoList.get(0) : null;
+        }
     }
 
     private List<LayerDto> getServiceAreaLayer(int reportId) {
@@ -111,40 +119,64 @@ public class MapConfigServiceBean implements MapConfigService {
         return reportConnectServiceAreas;
     }
 
-    private ArrayList<TbControlDto> createMockTbControls() {
-        ArrayList<TbControlDto> controls = Lists.newArrayList();
-        controls.add(new TbControlDto("measure"));
-        controls.add(new TbControlDto("fullscreen"));
-        controls.add(new TbControlDto("print"));
+    private VectorStylesDto getVectorStyles(ConfigurationDto configurationDto) {
+        return mapConfigMapper.getStyleDtos(configurationDto.getStylesSettings());
+    }
+
+    private List<TbControlDto> getTbControls(ConfigurationDto configurationDto) {
+        return mapConfigMapper.getTbControls(configurationDto.getToolSettings().getTbControl());
+    }
+
+    private List<ControlDto> getControls(int reportId, ConfigurationDto configurationDto) {
+        List<ControlDto> controls =  mapConfigMapper.getControls(configurationDto.getToolSettings().getControl());
+        ProjectionDto displayProjection = getDisplayProjection(reportId);
+        if (displayProjection != null) {
+            for (ControlDto controlDto : controls) {
+                if (controlDto.getType().equalsIgnoreCase(SCALE)) {
+                    controlDto.setUnits(displayProjection.getUnits());
+                }
+                if (controlDto.getType().equalsIgnoreCase(MOUSECOORDS)) {
+                    controlDto.setEpsgCode(displayProjection.getEpsgCode());
+                    controlDto.setFormat(displayProjection.getFormats());
+                }
+            }
+        } else {
+            for (ControlDto controlDto : controls) {
+                if (controlDto.getType().equalsIgnoreCase(SCALE)) {
+                    controlDto.setUnits(configurationDto.getMapSettings().getScaleBarUnits());
+                }
+                if (controlDto.getType().equalsIgnoreCase(MOUSECOORDS)) {
+                    controlDto.setEpsgCode(Integer.parseInt(configurationDto.getMapSettings().getDisplayProjection()));
+                    controlDto.setFormat(configurationDto.getMapSettings().getCoordinatesFormat());
+                }
+            }
+        }
         return controls;
     }
 
-    private ArrayList<ControlDto> createMockControls() {
-            ArrayList<ControlDto> controlDtos = Lists.newArrayList();
-            controlDtos.add(new ControlDto("zoom"));
-            controlDtos.add(new ControlDto("drag"));
-            controlDtos.add(new ControlDto("scale", "nautical", null, null));
-            controlDtos.add(new ControlDto("mousecoords", null, 4326, "dd"));
-            controlDtos.add(new ControlDto("history"));
-            controlDtos.add(new ControlDto("measure"));
-            return controlDtos;
+    private ProjectionDto getDisplayProjection(int reportId) {
+        List<ProjectionDto> projectionDtoList = repository.findProjectionByMap(reportId);
+        if (projectionDtoList != null && !projectionDtoList.isEmpty()) {
+            return projectionDtoList.get(0);
         }
+        return null;
+    }
 
-    private VectorStylesDto createMockVectorStyle() {
-        PositionsDto positionsDto = new PositionsDto();
-        positionsDto.setAttribute("fs");
-        positionsDto.setStyle(Arrays.asList((Map<String, String>)
-                        ImmutableMap.<String, String>builder().put("dnk", "#0066FF").build(),
-                ImmutableMap.<String, String>builder().put("swe", "#FF0066").build()));
+    private ConfigurationDto getAdminConfiguration() throws IOException {
+        // TODO call USM
+        InputStream is = new FileInputStream("src/test/resources/Config.json");
+        String jsonTxt = IOUtils.toString(is);
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
+        return mapper.readValue(jsonTxt, ConfigurationDto.class);
+    }
 
-        SegmentDto segmentDto = new SegmentDto();
-        segmentDto.setAttribute("speed");
-        segmentDto.setStyle(Arrays.asList((Map<String, String>)
-                        ImmutableMap.<String, String>builder().put("color", "#1a9641").put("speed", "0-24").build(),
-                        ImmutableMap.<String, String>builder().put("color", "#a6d96a").put("speed", "25-49").build(),
-                        ImmutableMap.<String, String>builder().put("color", "#fdae61").put("speed", "50-74").build(),
-                        ImmutableMap.<String, String>builder().put("color", "#d7191c").put("speed", "75-100").build()));
-
-        return new VectorStylesDto(positionsDto, segmentDto);
+    private ConfigurationDto getUserConfiguration() throws IOException {
+        //TODO call USM
+        InputStream is = new FileInputStream("src/test/resources/UserConfig.json");
+        String jsonTxt = IOUtils.toString(is);
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
+        return mapper.readValue(jsonTxt, ConfigurationDto.class);
     }
 }

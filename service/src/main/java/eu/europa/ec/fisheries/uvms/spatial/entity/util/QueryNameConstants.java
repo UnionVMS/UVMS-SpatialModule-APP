@@ -66,5 +66,7 @@ public final class QueryNameConstants {
      * MapDto Config queries
      */
     public static final String FIND_MAP_PROJ_BY_ID = "ReportLayerConfig.findMapProjectionById";
+    public static final String FIND_DISPLAY_PROJ_BY_ID = "ReportLayerConfig.findDisplayProjectionById";
     public static final String FIND_REPORT_SERVICE_AREAS = "ReportLayerConfig.findReportConnectServiceAreas";
+    public static final String FIND_PROJECTION_BY_SRS_CODE = "ReportLayerConfig.findProjectionBySrsCode";
 }

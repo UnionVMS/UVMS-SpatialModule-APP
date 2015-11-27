@@ -26,12 +26,16 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "report_connect_spatial", schema = "spatial")
 @NamedQueries({
-        @NamedQuery(name = QueryNameConstants.FIND_MAP_PROJ_BY_ID,
-                query = "SELECT projection.srsCode AS epsgCode, projection.units AS units, projection.isWorld AS global " +
-                        "FROM ReportConnectSpatialEntity rcs INNER JOIN rcs.projectionByMapProjId AS projection " +
-                        "WHERE rcs.reportId = :reportId"),
-        @NamedQuery(name = ReportConnectSpatialEntity.FIND_BY_REPORT_ID,
-                query = "from ReportConnectSpatialEntity where reportId = :reportId")
+		@NamedQuery(name = QueryNameConstants.FIND_MAP_PROJ_BY_ID,
+				query = "SELECT projection.srsCode AS epsgCode, projection.units AS units, projection.isWorld AS global " +
+						"FROM ReportConnectSpatialEntity rcs INNER JOIN rcs.projectionByMapProjId AS projection " +
+						"WHERE rcs.reportId = :reportId"),
+		@NamedQuery(name = QueryNameConstants.FIND_DISPLAY_PROJ_BY_ID,
+				query = "SELECT projection.srsCode AS epsgCode, rcs.measurementUnits AS units, rcs.displayFormatType AS formats " +
+						"FROM ReportConnectSpatialEntity rcs INNER JOIN rcs.projectionByDisplayProjId AS projection " +
+						"WHERE rcs.reportId = :reportId"),
+		@NamedQuery(name = ReportConnectSpatialEntity.FIND_BY_REPORT_ID,
+				query = "from ReportConnectSpatialEntity where reportId = :reportId")
 })
 @EqualsAndHashCode(exclude = {"id", "reportConnectServiceAreases"})
 public class ReportConnectSpatialEntity implements Serializable {

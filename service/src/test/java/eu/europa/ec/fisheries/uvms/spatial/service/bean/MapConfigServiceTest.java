@@ -1,5 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ProviderFormatEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
@@ -8,6 +10,9 @@ import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.LayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.MapConfigDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.ConfigurationDto;
+import org.apache.commons.io.IOUtils;
+import org.json.simple.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +22,9 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 
@@ -42,6 +50,34 @@ public class MapConfigServiceTest {
     }
 
     @Test
+    public void TestDefaultAdminConfig() throws IOException {
+        //Given
+        //Read JSON from resources
+        InputStream is = new FileInputStream("src/test/resources/Config.json");
+        String jsonTxt = IOUtils.toString(is);
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
+        ConfigurationDto configDto = mapper.readValue(jsonTxt, ConfigurationDto.class);
+
+        //Test
+        assertNotNull(configDto);
+    }
+
+    @Test
+    public void TestUserConfig() throws IOException {
+        //Given
+        //Read JSON from resources
+        InputStream is = new FileInputStream("src/test/resources/UserConfig.json");
+        String jsonTxt = IOUtils.toString(is);
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
+        ConfigurationDto configDto = mapper.readValue(jsonTxt, ConfigurationDto.class);
+
+        //Test
+        assertNotNull(configDto);
+    }
+
+    //@Test
     public void testGetMapConfig() {
         //mock
         mockLayers();

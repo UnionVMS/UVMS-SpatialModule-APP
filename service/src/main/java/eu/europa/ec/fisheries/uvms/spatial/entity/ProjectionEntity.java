@@ -1,24 +1,21 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import eu.europa.ec.fisheries.uvms.spatial.entity.converter.CharBooleanConverter;
+import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import java.io.Serializable;
 import java.util.Set;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "projection", schema = "spatial")
 @EqualsAndHashCode(exclude = { "reportConnectSpatialsForMapProjId", "reportConnectSpatialsForDisplayProjId"})
+@NamedQueries({
+		@NamedQuery(name = QueryNameConstants.FIND_PROJECTION_BY_SRS_CODE,
+				query = "SELECT projection.srsCode AS epsgCode, projection.units AS units, projection.isWorld AS global " +
+						"FROM ProjectionEntity projection WHERE projection.srsCode = :srsCode")
+})
 public class ProjectionEntity implements Serializable {
 
 	@Id
