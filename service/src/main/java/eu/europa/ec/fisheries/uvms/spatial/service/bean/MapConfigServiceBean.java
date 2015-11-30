@@ -7,10 +7,7 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.ProjectionEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.mapper.ReportConnectSpatialMapper;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.MapConfigurationType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialGetMapConfigurationRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialGetMapConfigurationRS;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveOrUpdateMapConfigurationRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.ConfigurationDto;
@@ -78,18 +75,33 @@ public class MapConfigServiceBean implements MapConfigService {
     @Override
     @SneakyThrows
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public MapConfigurationType saveOrUpdateMapConfiguration(final SpatialSaveOrUpdateMapConfigurationRQ request) {
+    public SpatialSaveOrUpdateMapConfigurationRS saveOrUpdateMapConfiguration(final SpatialSaveOrUpdateMapConfigurationRQ request) {
         if (request == null) {
             throw new IllegalArgumentException("REQUEST CAN NOT BE NULL");
         }
 
-        final MapConfigurationType config = request.getMapConfiguration();
+        MapConfigurationType mapConfiguration = request.getMapConfiguration();
+        validateMapConfiguration(mapConfiguration);
 
-        if (config.getDisplayProjectionId() != null && config.getMapProjectionId() == null) {
+        if (mapConfiguration.getDisplayProjectionId() != null && mapConfiguration.getMapProjectionId() == null) {
             throw new IllegalArgumentException("MAP PROJECTION IS MANDATORY");
         }
 
-        return repository.saveOrUpdateMapConfiguration(request.getMapConfiguration());
+        ReportConnectSpatialEntity entity =
+                ReportConnectSpatialMapper.INSTANCE.mapConfigurationTypeToReportConnectSpatialEntity(mapConfiguration);
+
+        repository.saveOrUpdateMapConfiguration(entity);
+        return createSpatialSaveOrUpdateMapConfigurationRS();
+    }
+
+    private void validateMapConfiguration(MapConfigurationType mapConfiguration) {
+        if (mapConfiguration == null) {
+            throw new IllegalArgumentException("MAP CONFIGURATION CAN NOT BE NULL");
+        }
+    }
+
+    private SpatialSaveOrUpdateMapConfigurationRS createSpatialSaveOrUpdateMapConfigurationRS() {
+        return new SpatialSaveOrUpdateMapConfigurationRS();
     }
 
     @Override

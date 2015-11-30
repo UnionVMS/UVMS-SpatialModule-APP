@@ -1,14 +1,8 @@
 package eu.europa.ec.fisheries.uvms.spatial.repository;
 
 import com.google.common.collect.ImmutableMap;
-import eu.europa.ec.fisheries.uvms.spatial.dao.AreaDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.CountryDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.MapConfigDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.ReportConnectSpatialDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.UserAreaDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.*;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.mapper.ReportConnectSpatialMapper;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.MapConfigurationType;
 import eu.europa.ec.fisheries.uvms.spatial.util.SqlPropertyHolder;
 import lombok.SneakyThrows;
 import org.junit.Before;
@@ -19,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
+
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,22 +65,18 @@ public class SpatialRepositoryTest {
 
     @Test
     @SneakyThrows
-    public void shouldSaveMapConfiguration(){
+    public void shouldSaveMapConfiguration() {
+        ReportConnectSpatialEntity reportConnectSpatialEntity = new ReportConnectSpatialEntity();
+        reportConnectSpatialEntity.setDisplayFormatType(null);
 
-        MapConfigurationType config = new MapConfigurationType();
-        config.setCoordinatesFormat(null);
-
-        ReportConnectSpatialEntity reportConnectSpatialEntity
-                = ReportConnectSpatialMapper.INSTANCE.mapConfigurationTypeToReportConnectSpatialEntity(config);
-        spatialRepositoryBean.saveOrUpdateMapConfiguration(config);
+        spatialRepositoryBean.saveOrUpdateMapConfiguration(reportConnectSpatialEntity);
 
         Mockito.verify(reportConnectSpatialDao, Mockito.times(1)).createEntity(reportConnectSpatialEntity);
-
     }
 
     @Test(expected = IllegalArgumentException.class)
     @SneakyThrows
-    public void shouldThrowExceptionWhenSavingMapConfigurationIsNull(){
+    public void shouldThrowExceptionWhenSavingMapConfigurationIsNull() {
 
         spatialRepositoryBean.saveOrUpdateMapConfiguration(null);
 
@@ -98,7 +89,7 @@ public class SpatialRepositoryTest {
     private List<Map<String, String>> getMockCountries() {
         List<Map<String, String>> countries = new ArrayList<Map<String, String>>();
         countries.add(ImmutableMap.<String, String>builder().put("VEN", "Venezuela").build());
-        countries.add(ImmutableMap.<String, String>builder().put( "VIR","U.S. Virgin Is.").build());
+        countries.add(ImmutableMap.<String, String>builder().put("VIR", "U.S. Virgin Is.").build());
         countries.add(ImmutableMap.<String, String>builder().put("ZAF", "South Africa").build());
         countries.add(ImmutableMap.<String, String>builder().put("VNM", "Vietnam").build());
 

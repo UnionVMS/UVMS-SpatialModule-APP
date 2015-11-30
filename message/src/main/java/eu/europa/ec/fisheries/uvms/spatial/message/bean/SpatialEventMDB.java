@@ -115,7 +115,7 @@ public class SpatialEventMDB implements MessageListener {
                     SpatialMessageEvent getMapConfigurationEvent = new SpatialMessageEvent(textMessage, spatialGetMapConfigurationRQ);
                     saveMapConfigurationSpatialEvent.fire(getMapConfigurationEvent);
                     break;
-                case SAVE_MAP_CONFIGURATION:
+                case SAVE_OR_UPDATE_MAP_CONFIGURATION:
                     SpatialSaveOrUpdateMapConfigurationRQ spatialSaveMapConfigurationRQ = JAXBMarshaller.unmarshall(textMessage, SpatialSaveOrUpdateMapConfigurationRQ.class);
                     SpatialMessageEvent saveMapConfigurationEvent = new SpatialMessageEvent(textMessage, spatialSaveMapConfigurationRQ);
                     saveMapConfigurationSpatialEvent.fire(saveMapConfigurationEvent);

@@ -199,18 +199,27 @@ public final class SpatialModuleResponseMapper {
         }
     }
 
-    public static String mapSpatialSaveMapConfigurationRSToString(SpatialSaveOrUpdateMapConfigurationRS spatialSaveMapConfigurationRS) throws SpatialModelMarshallException {
+    public static String mapSpatialSaveOrUpdateMapConfigurationRSToString(SpatialSaveOrUpdateMapConfigurationRS spatialSaveOrUpdateMapConfigurationRS) throws SpatialModelMarshallException {
         try {
-            return JAXBMarshaller.marshall(spatialSaveMapConfigurationRS);
+            return JAXBMarshaller.marshall(spatialSaveOrUpdateMapConfigurationRS);
         } catch (SpatialModelMarshallException e) {
-            return exception(spatialSaveMapConfigurationRS, e);
+            return exception(spatialSaveOrUpdateMapConfigurationRS, e);
         }
     }
 
-    public static SpatialSaveOrUpdateMapConfigurationRS mapToSpatialSaveMapConfigurationRS(TextMessage response, String correlationId) throws SpatialModelMapperException {
+    public static SpatialSaveOrUpdateMapConfigurationRS mapToSpatialSaveOrUpdateMapConfigurationRS(TextMessage response, String correlationId) throws SpatialModelMapperException {
         try {
             validateResponse(response, correlationId);
             return JAXBMarshaller.unmarshall(response, SpatialSaveOrUpdateMapConfigurationRS.class);
+        } catch (SpatialModelMarshallException e) {
+            return exception(e);
+        }
+    }
+
+    public static SpatialGetMapConfigurationRS mapToSpatialGetMapConfigurationRS(TextMessage response, String correlationId) throws SpatialModelMapperException {
+        try {
+            validateResponse(response, correlationId);
+            return JAXBMarshaller.unmarshall(response, SpatialGetMapConfigurationRS.class);
         } catch (SpatialModelMarshallException e) {
             return exception(e);
         }
