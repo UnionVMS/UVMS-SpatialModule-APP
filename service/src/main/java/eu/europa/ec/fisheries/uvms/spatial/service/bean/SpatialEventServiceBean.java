@@ -71,8 +71,8 @@ public class SpatialEventServiceBean implements SpatialEventService {
     }
 
     private void sendError(SpatialMessageEvent message, Exception e) {
-        log.error("[ Error when getting area types from source. ] ", e);
-        spatialErrorEvent.fire(new SpatialMessageEvent(message.getMessage(), SpatialModuleResponseMapper.createFaultMessage(FaultCode.SPATIAL_MESSAGE, "Exception when getting areaByLocation [ " + e.getMessage())));
+        log.error("[ Error in spatial module. ] ", e);
+        spatialErrorEvent.fire(new SpatialMessageEvent(message.getMessage(), SpatialModuleResponseMapper.createFaultMessage(FaultCode.SPATIAL_MESSAGE, "Exception in spatial [ " + e.getMessage())));
     }
 
     @Override
@@ -125,7 +125,7 @@ public class SpatialEventServiceBean implements SpatialEventService {
     }
 
     @Override
-    public void saveOrUpdateMapConfiguration(@Observes @SaveMapConfigurationEvent SpatialMessageEvent message) {
+    public void saveOrUpdateMapConfiguration(@Observes @SaveOrUpdateMapConfigurationEvent SpatialMessageEvent message) {
         log.info("Saving/Updating map configurations.");
         try {
             mapConfigService.saveOrUpdateMapConfiguration(message.getSpatialSaveOrUpdateMapConfigurationRQ());

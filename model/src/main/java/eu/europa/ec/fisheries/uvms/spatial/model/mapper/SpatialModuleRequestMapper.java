@@ -104,7 +104,7 @@ public final class SpatialModuleRequestMapper {
     }
 
 
-    public static String mapToSpatialGetMapConfigurationRQ(Long reportId) throws SpatialModelMarshallException {
+    public static String mapToSpatialGetMapConfigurationRQ(long reportId) throws SpatialModelMarshallException {
         try {
             return JAXBMarshaller.marshall(new SpatialGetMapConfigurationRQ(SpatialModuleMethod.GET_MAP_CONFIGURATION, reportId));
         } catch (SpatialModelMarshallException ex) {
