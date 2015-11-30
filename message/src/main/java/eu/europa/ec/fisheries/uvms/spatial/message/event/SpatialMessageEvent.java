@@ -7,6 +7,7 @@ import javax.jms.TextMessage;
 public class SpatialMessageEvent {
 
     private TextMessage message;
+
     private AreaByLocationSpatialRQ areaByLocationSpatialRQ;
     private ClosestAreaSpatialRQ closestAreaSpatialRQ;
     private SpatialEnrichmentRQ spatialEnrichmentRQ;
@@ -14,6 +15,7 @@ public class SpatialMessageEvent {
     private ClosestLocationSpatialRQ closestLocationSpatialRQ;
     private FilterAreasSpatialRQ filterAreasSpatialRQ;
     private SpatialSaveOrUpdateMapConfigurationRQ spatialSaveOrUpdateMapConfigurationRQ;
+    private SpatialGetMapConfigurationRQ spatialGetMapConfigurationRQ;
     private PingRQ pingRQ;
     private SpatialFault fault;
 
@@ -62,6 +64,11 @@ public class SpatialMessageEvent {
         this.spatialSaveOrUpdateMapConfigurationRQ = spatialSaveOrUpdateMapConfigurationRQ;
     }
 
+    public SpatialMessageEvent(TextMessage textMessage, SpatialGetMapConfigurationRQ spatialGetMapConfigurationRQ) {
+        this.message = textMessage;
+        this.spatialGetMapConfigurationRQ = spatialGetMapConfigurationRQ;
+    }
+
     public TextMessage getMessage() {
         return message;
     }
@@ -96,6 +103,10 @@ public class SpatialMessageEvent {
 
     public SpatialSaveOrUpdateMapConfigurationRQ getSpatialSaveOrUpdateMapConfigurationRQ() {
         return spatialSaveOrUpdateMapConfigurationRQ;
+    }
+
+    public SpatialGetMapConfigurationRQ getSpatialGetMapConfigurationRQ() {
+        return spatialGetMapConfigurationRQ;
     }
 
     public AllAreaTypesRequest getAllAreaTypesRequest() {

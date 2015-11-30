@@ -22,5 +22,7 @@ public interface SpatialEventService {
 
     void saveOrUpdateMapConfiguration(@Observes @SaveMapConfigurationEvent SpatialMessageEvent message);
 
+    void getMapConfiguration(@Observes @GetMapConfigurationEvent SpatialMessageEvent message);
+
     void ping(@Observes @PingEvent SpatialMessageEvent message);
 }

@@ -174,6 +174,14 @@ public final class SpatialModuleResponseMapper {
         }
     }
 
+    public static String mapSpatialGetMapConfigurationResponse(SpatialGetMapConfigurationRS spatialGetMapConfigurationRS) throws SpatialModelMarshallException {
+        try {
+            return JAXBMarshaller.marshall(spatialGetMapConfigurationRS);
+        } catch (SpatialModelMarshallException e) {
+            return exception(spatialGetMapConfigurationRS, e);
+        }
+    }
+
     public static String mapPingResponse(PingRS pingRS) throws SpatialModelMarshallException {
         try {
             return JAXBMarshaller.marshall(pingRS);

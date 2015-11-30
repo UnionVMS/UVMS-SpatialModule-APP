@@ -246,4 +246,28 @@
             </xs:sequence>
         </xs:complexType>
     </xs:element>
+    <xs:element name="SpatialGetMapConfigurationRQ">
+        <xs:annotation>
+            <xs:documentation>Root element for store map configuration request</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="SpatialModuleRequest">
+                    <xs:sequence>
+                        <xs:element name="reportId" type="xs:long"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="SpatialGetMapConfigurationRS">
+        <xs:annotation>
+            <xs:documentation>Root element for store map configuration request</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="mapConfiguration" type="MapConfigurationType" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 </xs:schema>

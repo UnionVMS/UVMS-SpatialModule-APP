@@ -57,6 +57,10 @@ public class SpatialEventMDB implements MessageListener {
     private Event<SpatialMessageEvent> saveMapConfigurationSpatialEvent;
 
     @Inject
+    @GetMapConfigurationEvent
+    private Event<SpatialMessageEvent> getMapConfigurationSpatialEvent;
+
+    @Inject
     @PingEvent
     private Event<SpatialMessageEvent> pingSpatialEvent;
 
@@ -105,6 +109,11 @@ public class SpatialEventMDB implements MessageListener {
                     FilterAreasSpatialRQ filterAreasSpatialRQ = JAXBMarshaller.unmarshall(textMessage, FilterAreasSpatialRQ.class);
                     SpatialMessageEvent filterAreaEvent = new SpatialMessageEvent(textMessage, filterAreasSpatialRQ);
                     filterAreaSpatialEvent.fire(filterAreaEvent);
+                    break;
+                case GET_MAP_CONFIGURATION:
+                    SpatialGetMapConfigurationRQ spatialGetMapConfigurationRQ = JAXBMarshaller.unmarshall(textMessage, SpatialGetMapConfigurationRQ.class);
+                    SpatialMessageEvent getMapConfigurationEvent = new SpatialMessageEvent(textMessage, spatialGetMapConfigurationRQ);
+                    saveMapConfigurationSpatialEvent.fire(getMapConfigurationEvent);
                     break;
                 case SAVE_MAP_CONFIGURATION:
                     SpatialSaveOrUpdateMapConfigurationRQ spatialSaveMapConfigurationRQ = JAXBMarshaller.unmarshall(textMessage, SpatialSaveOrUpdateMapConfigurationRQ.class);
