@@ -25,6 +25,7 @@ public abstract class ReportConnectSpatialMapper {
     public abstract ReportConnectSpatialEntity mapConfigurationTypeToReportConnectSpatialEntity(MapConfigurationType map);
 
     @Mappings({
+            @Mapping(source = "id", target = "spatialConnectId"),
             @Mapping(source = "projectionByMapProjId.id", target = "mapProjectionId"),
             @Mapping(source = "projectionByDisplayProjId.id", target = "displayProjectionId"),
             @Mapping(source = "displayFormatType", target = "coordinatesFormat"),
