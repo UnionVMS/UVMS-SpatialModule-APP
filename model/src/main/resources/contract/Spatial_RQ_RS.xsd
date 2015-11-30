@@ -230,7 +230,7 @@
             <xs:complexContent>
                 <xs:extension base="SpatialModuleRequest">
                     <xs:sequence>
-                        <xs:element name="mapConfiguration" type="MapConfigurationType" minOccurs="0"/>
+                        <xs:element name="mapConfiguration" type="MapConfigurationType" minOccurs="1"/>
                     </xs:sequence>
                 </xs:extension>
             </xs:complexContent>
