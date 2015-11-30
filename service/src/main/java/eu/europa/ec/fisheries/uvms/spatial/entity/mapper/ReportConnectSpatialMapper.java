@@ -17,6 +17,7 @@ public abstract class ReportConnectSpatialMapper {
     public static ReportConnectSpatialMapper INSTANCE = Mappers.getMapper(ReportConnectSpatialMapper.class);
 
     @Mappings({
+            @Mapping(source = "spatialConnectId", target = "id"),
             @Mapping(source = "scaleBarUnits", target = "scaleBarType"),
             @Mapping(source = "coordinatesFormat", target = "displayFormatType"),
             @Mapping(target = "projectionByMapProjId", expression = "java(createProjection(map.getMapProjectionId()))"),
