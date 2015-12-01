@@ -146,7 +146,7 @@ public class ReportConnectServiceAreasEntity implements Serializable, Comparable
 		layerDto.setShortCopyright(serviceLayer.getShortCopyright());
 		layerDto.setLongCopyright(serviceLayer.getLongCopyright());
 		if (!(serviceLayer.getName().equalsIgnoreCase("OSM") || serviceLayer.getName().equalsIgnoreCase("OSEA"))) {
-			layerDto.setUrl(geoServerUrl.concat(serviceLayer.getProviderFormat().getServiceType()));
+			layerDto.setUrl(geoServerUrl.concat(serviceLayer.getProviderFormat().getServiceType().toLowerCase()));
 		}
 		layerDto.setServerType(serviceLayer.getIsInternal() ? GEOSERVER : null);
 		layerDto.setLayerGeoName(serviceLayer.getGeoName());

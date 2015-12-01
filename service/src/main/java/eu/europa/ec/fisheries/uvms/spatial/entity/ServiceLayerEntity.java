@@ -219,7 +219,7 @@ public class ServiceLayerEntity implements Serializable {
         layerDto.setShortCopyright(getShortCopyright());
         layerDto.setLongCopyright(getLongCopyright());
         if(!(getName().equalsIgnoreCase("OSM") || getName().equalsIgnoreCase("OSEA"))) {
-            layerDto.setUrl(geoServerUrl.concat(getProviderFormat().getServiceType()));
+            layerDto.setUrl(geoServerUrl.concat(getProviderFormat().getServiceType().toLowerCase()));
         }
         layerDto.setServerType(getIsInternal() ? GEOSERVER : null);
         layerDto.setLayerGeoName(getGeoName());
