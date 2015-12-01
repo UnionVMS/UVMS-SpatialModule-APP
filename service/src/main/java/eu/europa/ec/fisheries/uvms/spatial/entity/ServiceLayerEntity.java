@@ -6,13 +6,22 @@ import java.util.Set;
 import javax.persistence.*;
 
 import eu.europa.ec.fisheries.uvms.spatial.entity.converter.CharBooleanConverter;
+import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.LayerDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.StylesDto;
 import org.apache.commons.lang3.StringUtils;
 
 @Entity
 @Table(name = "service_layer", schema = "spatial")
+@NamedQueries({
+        @NamedQuery(name = QueryNameConstants.FIND_SERVICE_LAYERS_BY_ID,
+                query = "SELECT serviceLayer FROM ServiceLayerEntity serviceLayer WHERE serviceLayer.id in (:ids) order by serviceLayer.id")
+})
 public class ServiceLayerEntity implements Serializable {
 
     private static final long serialVersionUID = 6797853213499502871L;
+
+    private static final String GEOSERVER = "geoserver";
 
     @Id
     @Column(name = "id")
@@ -199,5 +208,28 @@ public class ServiceLayerEntity implements Serializable {
 
     public boolean isStyleEmpty() {
         return (StringUtils.isEmpty(styleGeom) && StringUtils.isEmpty(styleLabel) && StringUtils.isEmpty(styleLabelGeom));
+    }
+
+    public LayerDto convertToServiceLayer(String geoServerUrl, boolean isBaseLayer) {
+        LayerDto layerDto = new LayerDto();
+        layerDto.setType(getProviderFormat().getServiceType());
+        layerDto.setGroupType(getAreaType().getAreaGroupType());
+        layerDto.setTitle(getName());
+        layerDto.setIsBaseLayer(isBaseLayer);
+        layerDto.setShortCopyright(getShortCopyright());
+        layerDto.setLongCopyright(getLongCopyright());
+        if(!(getName().equalsIgnoreCase("OSM") || getName().equalsIgnoreCase("OSEA"))) {
+            layerDto.setUrl(geoServerUrl.concat(getProviderFormat().getServiceType()));
+        }
+        layerDto.setServerType(getIsInternal() ? GEOSERVER : null);
+        layerDto.setLayerGeoName(getGeoName());
+        setStyle(layerDto);
+        return layerDto;
+    }
+
+    private void setStyle(LayerDto layerDto) {
+        if(!isStyleEmpty()) {
+            layerDto.setStyles(new StylesDto(getStyleGeom(), getStyleLabel(), getStyleLabelGeom()));
+        }
     }
 }
