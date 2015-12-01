@@ -194,19 +194,19 @@
 
     <xs:simpleType name="CoordinatesFormat">
         <xs:restriction base="xs:string">
-            <xs:enumeration value="M"/>
-            <xs:enumeration value="DD"/>
-            <xs:enumeration value="DMS"/>
-            <xs:enumeration value="DDM"/>
+            <xs:enumeration value="m"/>
+            <xs:enumeration value="dd"/>
+            <xs:enumeration value="dms"/>
+            <xs:enumeration value="ddm"/>
         </xs:restriction>
     </xs:simpleType>
 
     <xs:simpleType name="ScaleBarUnits">
         <xs:restriction base="xs:string">
-            <xs:enumeration value="METRIC"/>
-            <xs:enumeration value="DEGREES"/>
-            <xs:enumeration value="NAUTICAL"/>
-            <xs:enumeration value="IMPERIAL"/>
+            <xs:enumeration value="metric"/>
+            <xs:enumeration value="degrees"/>
+            <xs:enumeration value="nautical"/>
+            <xs:enumeration value="imperial"/>
         </xs:restriction>
     </xs:simpleType>
 
