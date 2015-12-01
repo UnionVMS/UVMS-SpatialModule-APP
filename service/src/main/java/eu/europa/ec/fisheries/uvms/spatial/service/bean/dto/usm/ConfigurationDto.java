@@ -24,14 +24,18 @@ public class ConfigurationDto {
     @JsonProperty("mapSettings")
     private MapSettingsDto mapSettings;
 
+    @JsonProperty("visibilitySettings")
+    private VisibilitySettingsDto visibilitySettings;
+
     public ConfigurationDto() {}
 
-    public ConfigurationDto(ToolSettingsDto toolSettings, StyleSettingsDto stylesSettings, SystemSettingsDto systemSettings, LayerSettingsDto layerSettings, MapSettingsDto mapSettings) {
+    public ConfigurationDto(ToolSettingsDto toolSettings, StyleSettingsDto stylesSettings, SystemSettingsDto systemSettings, LayerSettingsDto layerSettings, MapSettingsDto mapSettings, VisibilitySettingsDto visibilitySettings) {
         this.toolSettings = toolSettings;
         this.systemSettings = systemSettings;
         this.stylesSettings = stylesSettings;
         this.layerSettings = layerSettings;
         this.mapSettings = mapSettings;
+        this.visibilitySettings = visibilitySettings;
     }
 
     @JsonProperty("toolSettings")
@@ -82,6 +86,16 @@ public class ConfigurationDto {
     @JsonProperty("mapSettings")
     public void setMapSettings(MapSettingsDto mapSettings) {
         this.mapSettings = mapSettings;
+    }
+
+    @JsonProperty("visibilitySettings")
+    public VisibilitySettingsDto getVisibilitySettings() {
+        return visibilitySettings;
+    }
+
+    @JsonProperty("visibilitySettings")
+    public void setVisibilitySettings(VisibilitySettingsDto visibilitySettings) {
+        this.visibilitySettings = visibilitySettings;
     }
 
     @Override

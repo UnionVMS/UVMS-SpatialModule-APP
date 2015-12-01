@@ -43,6 +43,12 @@ public class ProjectionDto {
         this.global = global;
     }
 
+    public ProjectionDto(Integer epsgCode, String units, String formats) {
+        this.epsgCode = epsgCode;
+        this.units = units;
+        this.formats = formats;
+    }
+
     @JsonProperty("id")
     public Long getId() {
         return id;

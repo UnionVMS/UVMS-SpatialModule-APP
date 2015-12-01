@@ -17,6 +17,7 @@ public class ConfigurationMapper {
         target.setStylesSettings(source.getStylesSettings() == null ? target.getStylesSettings() : source.getStylesSettings());
         target.setToolSettings(source.getToolSettings() == null ? target.getToolSettings() : source.getToolSettings());
         target.setLayerSettings(source.getLayerSettings() == null ? target.getLayerSettings() : source.getLayerSettings());
+        target.setVisibilitySettings(source.getVisibilitySettings() == null ? target.getVisibilitySettings() : source.getVisibilitySettings());
         mergeMapSettings(source.getMapSettings(), target.getMapSettings());
         return target;
     }
