@@ -82,10 +82,8 @@ public class MapConfigServiceBean implements MapConfigService {
         SpatialValidator.validate(reportId);
 
         ReportConnectSpatialEntity entity = repository.findReportConnectSpatialBy(reportId);
-        MapConfigurationType mapConfigurationType = ReportConnectSpatialMapper.INSTANCE.reportConnectSpatialEntityToMapConfigurationType(entity);
-        return mapConfigurationType;
 
-        return ReportConnectSpatialMapper.INSTANCE.reportConnectSpatialEntityToReportConnectDto(entity);
+        return ReportConnectSpatialMapper.INSTANCE.reportConnectSpatialEntityToMapConfigurationType(entity);
     }
 
     @Override
