@@ -153,14 +153,15 @@ public class MapConfigServiceBean implements MapConfigService {
 
     private List<LayerDto> getServiceAreaLayer(int reportId, ConfigurationDto configurationDto) throws ServiceException {
         List<ReportConnectServiceAreasEntity> reportConnectServiceAreas = getReportConnectServiceAreas(reportId);
+        String geoServerUrl = getGeoServerUrl(configurationDto);
         if (reportConnectServiceAreas != null && !reportConnectServiceAreas.isEmpty()) { // If report is having service layer then return it
             List<LayerDto> layerDtos = new ArrayList<LayerDto>();
             for (ReportConnectServiceAreasEntity reportConnectServiceArea : reportConnectServiceAreas) {
-                layerDtos.add(reportConnectServiceArea.convertToServiceLayer(configurationDto.getSystemSettings().getGeoserverUrl()));
+                layerDtos.add(reportConnectServiceArea.convertToServiceLayer(geoServerUrl));
             }
             return layerDtos;
         } else { // otherwise get the default layer configuration from USM
-            return getServiceAreaLayersFromConfig(configurationDto);
+            return getServiceAreaLayersFromConfig(configurationDto, geoServerUrl);
         }
     }
 
@@ -172,8 +173,7 @@ public class MapConfigServiceBean implements MapConfigService {
         return configurationDto.getVisibilitySettings();
     }
 
-    private List<LayerDto> getServiceAreaLayersFromConfig(ConfigurationDto configurationDto) throws ServiceException {
-        String geoServerUrl = getGeoServerUrl(configurationDto);
+    private List<LayerDto> getServiceAreaLayersFromConfig(ConfigurationDto configurationDto, String geoServerUrl) throws ServiceException {
         List<LayersDto> overlayLayers = configurationDto.getLayerSettings().getOverlayLayers(); // Get Service Layers for Overlay layers
         List<Integer> overlayServiceLayerIds = getServiceLayerIds(overlayLayers);
         List<ServiceLayerEntity> overlayServiceLayerEntities = sort(repository.findServiceLayerEntityByIds(overlayServiceLayerIds), overlayServiceLayerIds);
