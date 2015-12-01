@@ -128,9 +128,9 @@ public class SpatialEventServiceBean implements SpatialEventService {
     public void saveOrUpdateMapConfiguration(@Observes @SaveOrUpdateMapConfigurationEvent SpatialMessageEvent message) {
         log.info("Saving/Updating map configurations.");
         try {
-            mapConfigService.saveOrUpdateMapConfiguration(message.getSpatialSaveOrUpdateMapConfigurationRQ());
+            SpatialSaveOrUpdateMapConfigurationRS saveOrUpdateMapConfigurationRS = mapConfigService.saveOrUpdateMapConfiguration(message.getSpatialSaveOrUpdateMapConfigurationRQ());
             log.debug("Send back map configurations response.");
-            String response = SpatialModuleResponseMapper.mapSpatialSaveOrUpdateMapConfigurationRSToString(new SpatialSaveOrUpdateMapConfigurationRS());
+            String response = SpatialModuleResponseMapper.mapSpatialSaveOrUpdateMapConfigurationRSToString(saveOrUpdateMapConfigurationRS);
             messageProducer.sendModuleResponseMessage(message.getMessage(), response);
         } catch (Exception e) {
             sendError(message, e);
