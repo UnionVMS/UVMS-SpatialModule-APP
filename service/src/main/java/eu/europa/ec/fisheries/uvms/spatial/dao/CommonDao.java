@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.dao;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
@@ -80,6 +81,14 @@ public abstract class CommonDao {
 		Query query = getSession().getNamedQuery(nativeQuery);
 		for (Map.Entry<String, Object> entry : parameters.entrySet()) {
 			query.setParameter(entry.getKey(), entry.getValue());
+		}
+		return query;
+	}
+
+	protected Query createNamedQueryWithParameterList(String nativeQuery, Map<String, List<Integer>> parameters) {
+		Query query = getSession().getNamedQuery(nativeQuery);
+		for (Map.Entry<String, List<Integer>> entry : parameters.entrySet()) {
+			query.setParameterList(entry.getKey(), entry.getValue());
 		}
 		return query;
 	}

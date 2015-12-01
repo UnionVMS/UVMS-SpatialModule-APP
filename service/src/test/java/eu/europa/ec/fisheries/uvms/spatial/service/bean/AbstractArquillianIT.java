@@ -20,6 +20,8 @@ public class AbstractArquillianIT {
                         //.addAsResource("META-INF/jboss-deployment-structure.xml")
                 .addAsResource("nativeSql.properties")
                 .addAsResource("logback.xml")
+                .addAsResource("Config.json")
+                .addAsResource("UserConfig.json")
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
         File[] libs = Maven.resolver().loadPomFromFile("pom.xml").importDependencies(ScopeType.COMPILE, ScopeType.RUNTIME, ScopeType.TEST).resolve().withTransitivity().asFile();

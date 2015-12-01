@@ -343,5 +343,65 @@
         "type": "print"
       }
     ]
+  },
+  "visibilitySettings": {
+    "positions": {
+      "popup": [
+        "fs",
+        "extMark",
+        "ircs",
+        "cfr",
+        "posTime",
+        "crs",
+        "c_spd",
+        "m_spd",
+        "stat",
+        "lat",
+        "lon",
+        "msg_tp",
+        "act_tp",
+        "source"
+      ],
+      "labels": [
+        "fs",
+        "extMark",
+        "ircs",
+        "cfr",
+        "posTime",
+        "lon",
+        "lat",
+        "stat",
+        "m_spd",
+        "c_spd",
+        "crs",
+        "msg_tp",
+        "act_tp",
+        "source"
+      ]
+    },
+    "segments": {
+      "popup": [
+        "fs",
+        "extMark",
+        "ircs",
+        "cfr",
+        "dist",
+        "dur",
+        "spd",
+        "crs",
+        "cat"
+      ],
+      "labels": [
+        "extMark",
+        "ircs",
+        "cfr",
+        "dist",
+        "cat",
+        "crs",
+        "spd",
+        "dur",
+        "fs"
+      ]
+    }
   }
 }

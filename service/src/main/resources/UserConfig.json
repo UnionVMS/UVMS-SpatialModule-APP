@@ -9,6 +9,15 @@
   },
   "stylesSettings": {
     "positions": {
+      "attribute": "speedOverGround",
+      "style": {
+        "9": "#d7191c",
+        "0-2": "#1a9641",
+        "3-5": "#a6d96a",
+        "6-8": "#fdae61"
+      }
+    },
+    "segments": {
       "attribute": "countryCode",
       "style": {
         "BLZ": "#BA9566",
@@ -267,45 +276,6 @@
         "COK": "#0AF1CB",
         "SWE": "#EFF72A"
       }
-    },
-    "segments": {
-      "attribute": "speedOverGround",
-      "style": {
-        "9": "#d7191c",
-        "0-2": "#1a9641",
-        "3-5": "#a6d96a",
-        "6-8": "#fdae61"
-      }
     }
-  },
-  "layerSettings": {
-    "overlayLayers": [
-      {
-        "serviceLayerId": 4,
-        "type": "WMS"
-      },
-      {
-        "serviceLayerId": 1,
-        "type": "WMS"
-      },
-      {
-        "serviceLayerId": 2,
-        "type": "WMS"
-      },
-      {
-        "serviceLayerId": 7,
-        "type": "OSEA"
-      }
-    ],
-    "baseLayers": [
-      {
-        "serviceLayerId": 6,
-        "type": "OSM"
-      },
-      {
-        "serviceLayerId": 3,
-        "type": "WMS"
-      }
-    ]
   }
 }
