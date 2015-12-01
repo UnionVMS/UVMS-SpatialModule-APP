@@ -11,22 +11,31 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
         "epsgCode",
         "units",
         "formats",
-        "global"
+        "global",
+        "extent"
 })
 public class ProjectionDto {
 
     @JsonProperty("id")
     private Long id;
+
     @JsonProperty("name")
     private String name;
+
     @JsonProperty("epsgCode")
     private Integer epsgCode;
+
     @JsonProperty("formats")
     private String formats;
+
     @JsonProperty("units")
     private String units;
+
     @JsonProperty("global")
     private Boolean global;
+
+    @JsonProperty("extent")
+    private String extent;
 
     /**
      * No args constructor for use in serialization
@@ -107,5 +116,15 @@ public class ProjectionDto {
     @JsonProperty("formats")
     public void setFormats(String formats) {
         this.formats = formats;
+    }
+
+    @JsonProperty("extent")
+    public String getExtent() {
+        return extent;
+    }
+
+    @JsonProperty("extent")
+    public void setExtent(String extent) {
+        this.extent = extent;
     }
 }

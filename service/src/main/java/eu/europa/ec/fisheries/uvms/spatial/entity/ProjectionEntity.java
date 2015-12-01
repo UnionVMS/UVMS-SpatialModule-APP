@@ -13,7 +13,7 @@ import javax.persistence.*;
 @EqualsAndHashCode(exclude = { "reportConnectSpatialsForMapProjId", "reportConnectSpatialsForDisplayProjId"})
 @NamedQueries({
 		@NamedQuery(name = QueryNameConstants.FIND_PROJECTION_BY_SRS_CODE,
-				query = "SELECT projection.srsCode AS epsgCode, projection.units AS units, projection.isWorld AS global " +
+				query = "SELECT projection.srsCode AS epsgCode, projection.units AS units, projection.isWorld AS global, projection.extent as extent " +
 						"FROM ProjectionEntity projection WHERE projection.srsCode = :srsCode")
 })
 public class ProjectionEntity implements Serializable {
@@ -41,6 +41,9 @@ public class ProjectionEntity implements Serializable {
 	@Convert(converter = CharBooleanConverter.class)
 	@Column(name = "world", nullable = false, length = 1)
 	private Boolean isWorld;
+
+	@Column(name = "extent", nullable = false, length = 255)
+	private String extent;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "projectionByMapProjId", cascade = CascadeType.ALL)
 	private Set<ReportConnectSpatialEntity> reportConnectSpatialsForMapProjId;
@@ -123,6 +126,14 @@ public class ProjectionEntity implements Serializable {
 
 	public void setIsWorld(Boolean isWorld) {
 		this.isWorld = isWorld;
+	}
+
+	public String getExtent() {
+		return extent;
+	}
+
+	public void setExtent(String extent) {
+		this.extent = extent;
 	}
 
 	public Set<ReportConnectSpatialEntity> getReportConnectSpatialsForMapProjId() {
