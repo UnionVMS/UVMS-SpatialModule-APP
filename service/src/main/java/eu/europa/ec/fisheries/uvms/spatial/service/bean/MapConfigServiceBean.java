@@ -55,7 +55,7 @@ public class MapConfigServiceBean implements MapConfigService {
     public MapConfigurationType getMapConfigurationType(final Long reportId) throws ServiceException {
         validateReportId(reportId);
         ReportConnectSpatialEntity entity = repository.findReportConnectSpatialBy(reportId);
-        MapConfigurationType mapConfigurationType = ReportConnectSpatialMapper.INSTANCE.reportConnectSpatialEntityToReportConnectDto(entity);
+        MapConfigurationType mapConfigurationType = ReportConnectSpatialMapper.INSTANCE.reportConnectSpatialEntityToMapConfigurationType(entity);
         return mapConfigurationType;
     }
 

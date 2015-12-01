@@ -32,7 +32,7 @@ public abstract class ReportConnectSpatialMapper {
             @Mapping(source = "displayFormatType", target = "coordinatesFormat"),
             @Mapping(source = "scaleBarType", target = "scaleBarUnits"),
     })
-    public abstract MapConfigurationType reportConnectSpatialEntityToReportConnectDto(ReportConnectSpatialEntity entity);
+    public abstract MapConfigurationType reportConnectSpatialEntityToMapConfigurationType(ReportConnectSpatialEntity entity);
 
     ProjectionEntity createProjection(Long id) {
 
