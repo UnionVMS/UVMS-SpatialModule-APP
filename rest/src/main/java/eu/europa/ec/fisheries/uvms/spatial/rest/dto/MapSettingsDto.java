@@ -1,6 +1,8 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.dto;
 
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.CoordinatesFormat;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.MapConfigurationType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ScaleBarUnits;
 import lombok.experimental.Delegate;
 
 public class MapSettingsDto {
@@ -12,7 +14,21 @@ public class MapSettingsDto {
         this.mapConfigurationType = mapConfigurationType;
     }
 
+
     public interface Exclude {
-        Long getReportId();
+        CoordinatesFormat getCoordinatesFormat();
+        ScaleBarUnits getScaleBarUnits();
+    }
+
+    public String getCoordinatesFormat(){
+
+        return mapConfigurationType.getCoordinatesFormat().value().toLowerCase();
+
+    }
+
+    public String getScaleBarUnits(){
+
+        return mapConfigurationType.getScaleBarUnits().value().toLowerCase();
+
     }
 }

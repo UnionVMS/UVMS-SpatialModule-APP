@@ -34,7 +34,7 @@ public class MapConfigResource extends UnionVMSResource {
 
             MapConfigurationType mapConfigurationType = mapConfigService.getMapConfigurationType((long) reportId);
 
-            response = createSuccessResponse(mapConfigurationType);
+            response = createSuccessResponse(new MapSettingsDto(mapConfigurationType));
 
         } catch (ServiceException ex) {
 
