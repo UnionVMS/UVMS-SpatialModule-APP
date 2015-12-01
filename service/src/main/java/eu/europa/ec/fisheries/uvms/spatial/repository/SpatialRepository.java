@@ -65,4 +65,5 @@ public interface SpatialRepository extends DAO {
 
     List<SysConfigEntity> findSystemConfigs();
 
+    void deleteBy(List<Long> spatialConnectIds) throws ServiceException;
 }

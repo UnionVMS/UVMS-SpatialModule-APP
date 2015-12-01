@@ -15,7 +15,9 @@ public interface MapConfigService {
 
     SpatialGetMapConfigurationRS getMapConfiguration(SpatialGetMapConfigurationRQ mapConfigurationRQ) throws ServiceException;
 
-    SpatialSaveOrUpdateMapConfigurationRS saveOrUpdateMapConfiguration(SpatialSaveOrUpdateMapConfigurationRQ spatialSaveMapConfigurationRQ);
+    SpatialSaveOrUpdateMapConfigurationRS handleSpatialMapConfiguration(SpatialSaveOrUpdateMapConfigurationRQ spatialSaveMapConfigurationRQ);
 
     List<ProjectionDto> getAllProjections();
+
+    void handleDeleteMapConfiguration(SpatialDeleteMapConfigurationRQ spatialDeleteMapConfigurationRQ) throws ServiceException;
 }

@@ -13,8 +13,11 @@ import org.junit.Test;
 
 import javax.persistence.EntityTransaction;
 
+import java.util.Arrays;
+
 import static com.ninja_squad.dbsetup.Operations.sequenceOf;
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 
 public class ReportConnectSpatialDaoTest extends BaseSpatialDaoTest {
 
@@ -36,6 +39,8 @@ public class ReportConnectSpatialDaoTest extends BaseSpatialDaoTest {
     @SneakyThrows
     public void shouldCreateReportConnect(){
 
+        dbSetupTracker.skipNextLaunch();
+
         EntityTransaction tx = em.getTransaction();
 
         ReportConnectSpatialEntity entity = ReportConnectSpatialEntity.builder()
@@ -55,6 +60,26 @@ public class ReportConnectSpatialDaoTest extends BaseSpatialDaoTest {
 
         assertEquals(CoordinatesFormat.DDM, entity.getDisplayFormatType());
         assertEquals(ScaleBarUnits.IMPERIAL, entity.getScaleBarType());
+        assertNotNull(entity.getId());
+
+
+    }
+
+    @Test
+    @SneakyThrows
+    public void shouldDeleteReports(){
+
+        EntityTransaction tx = em.getTransaction();
+
+        assertEquals(2, dao.findAllEntity(ReportConnectSpatialEntity.class).size());
+
+        tx.begin();
+
+        dao.deleteById(Arrays.asList(1L, 2L));
+
+        tx.commit();
+
+        assertEquals(0, dao.findAllEntity(ReportConnectSpatialEntity.class).size());
 
     }
 }

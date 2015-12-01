@@ -148,6 +148,7 @@
             <xs:enumeration value="GET_FILTER_AREA"/>
             <xs:enumeration value="GET_MAP_CONFIGURATION"/>
             <xs:enumeration value="SAVE_OR_UPDATE_MAP_CONFIGURATION"/>
+            <xs:enumeration value="DELETE_MAP_CONFIGURATION"/>
             <xs:enumeration value="PING"/>
         </xs:restriction>
     </xs:simpleType>

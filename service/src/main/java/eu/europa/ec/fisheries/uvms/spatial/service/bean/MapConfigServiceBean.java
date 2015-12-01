@@ -7,17 +7,28 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.ProjectionEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.mapper.ReportConnectSpatialMapper;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.MapConfigurationType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialDeleteMapConfigurationRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialGetMapConfigurationRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialGetMapConfigurationRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveOrUpdateMapConfigurationRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveOrUpdateMapConfigurationRS;
 import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.*;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ControlDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.LayerDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.MapConfigDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.MapDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.TbControlDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.VectorStylesDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.ConfigurationDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.MapConfigMapper;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.ProjectionMapper;
+import eu.europa.ec.fisheries.uvms.spatial.validator.SpatialValidator;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.jboss.arquillian.core.api.annotation.Inject;
-
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
@@ -41,68 +52,68 @@ public class MapConfigServiceBean implements MapConfigService {
     private static final String MOUSECOORDS = "mousecoords";
     @EJB
     private SpatialRepository repository;
+
     @Inject
     private MapConfigMapper mapConfigMapper;
 
     @Override
     @SneakyThrows
     public List<ProjectionDto> getAllProjections() {
+
         List<ProjectionEntity> projections = repository.findAllEntity(ProjectionEntity.class); // TODO projectionDAO
+
         return ProjectionMapper.INSTANCE.projectionEntityListToProjectionDtoList(projections);
-    }
 
-    @Override
-    public MapConfigurationType getMapConfigurationType(final Long reportId) throws ServiceException {
-        validateReportId(reportId);
-        ReportConnectSpatialEntity entity = repository.findReportConnectSpatialBy(reportId);
-        MapConfigurationType mapConfigurationType = ReportConnectSpatialMapper.INSTANCE.reportConnectSpatialEntityToMapConfigurationType(entity);
-        return mapConfigurationType;
-    }
-
-    @Override
-    @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public SpatialGetMapConfigurationRS getMapConfiguration(SpatialGetMapConfigurationRQ mapConfigurationRQ) throws ServiceException {
-        long reportId = mapConfigurationRQ.getReportId();
-        return new SpatialGetMapConfigurationRS(getMapConfigurationType(reportId));
-    }
-
-    private void validateReportId(Long reportId) {
-        if (reportId == null) {
-            throw new IllegalArgumentException("REPORT ID CAN NOT BE NULL");
-        }
     }
 
     @Override
     @SneakyThrows
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public SpatialSaveOrUpdateMapConfigurationRS saveOrUpdateMapConfiguration(final SpatialSaveOrUpdateMapConfigurationRQ request) {
-        if (request == null) {
-            throw new IllegalArgumentException("REQUEST CAN NOT BE NULL");
-        }
+    public void handleDeleteMapConfiguration(SpatialDeleteMapConfigurationRQ request) throws ServiceException {
 
-        MapConfigurationType mapConfiguration = request.getMapConfiguration();
-        validateMapConfiguration(mapConfiguration);
+        SpatialValidator.validate(request);
 
-        if (mapConfiguration.getDisplayProjectionId() != null && mapConfiguration.getMapProjectionId() == null) {
-            throw new IllegalArgumentException("MAP PROJECTION IS MANDATORY");
-        }
+        repository.deleteBy(request.getSpatialConnectIds());
+    }
+
+    @Override
+    public MapConfigurationType getMapConfigurationType(final Long reportId) throws ServiceException {
+
+        SpatialValidator.validate(reportId);
+
+        ReportConnectSpatialEntity entity = repository.findReportConnectSpatialBy(reportId);
+        MapConfigurationType mapConfigurationType = ReportConnectSpatialMapper.INSTANCE.reportConnectSpatialEntityToMapConfigurationType(entity);
+        return mapConfigurationType;
+
+        return ReportConnectSpatialMapper.INSTANCE.reportConnectSpatialEntityToReportConnectDto(entity);
+    }
+
+    @Override
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
+    public SpatialGetMapConfigurationRS getMapConfiguration(SpatialGetMapConfigurationRQ mapConfigurationRQ) throws ServiceException {
+
+        long reportId = mapConfigurationRQ.getReportId();
+
+        return new SpatialGetMapConfigurationRS(getMapConfigurationType(reportId));
+
+    }
+
+    @Override
+    @SneakyThrows
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
+    public SpatialSaveOrUpdateMapConfigurationRS handleSpatialMapConfiguration(final SpatialSaveOrUpdateMapConfigurationRQ request) {
+
+        SpatialValidator.validate(request);
 
         ReportConnectSpatialEntity entity =
-                ReportConnectSpatialMapper.INSTANCE.mapConfigurationTypeToReportConnectSpatialEntity(mapConfiguration);
+                ReportConnectSpatialMapper.INSTANCE.mapConfigurationTypeToReportConnectSpatialEntity(request.getMapConfiguration());
 
         repository.saveOrUpdateMapConfiguration(entity);
-        return createSpatialSaveOrUpdateMapConfigurationRS();
-    }
 
-    private void validateMapConfiguration(MapConfigurationType mapConfiguration) {
-        if (mapConfiguration == null) {
-            throw new IllegalArgumentException("MAP CONFIGURATION CAN NOT BE NULL");
-        }
-    }
-
-    private SpatialSaveOrUpdateMapConfigurationRS createSpatialSaveOrUpdateMapConfigurationRS() {
         return new SpatialSaveOrUpdateMapConfigurationRS();
+
     }
+
 
     @Override
     @SneakyThrows

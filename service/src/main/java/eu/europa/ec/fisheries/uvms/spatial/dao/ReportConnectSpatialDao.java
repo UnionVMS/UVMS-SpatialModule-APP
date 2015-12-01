@@ -2,7 +2,6 @@ package eu.europa.ec.fisheries.uvms.spatial.dao;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
-import eu.europa.ec.fisheries.uvms.service.QueryParameter;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity;
 
 import javax.persistence.EntityManager;
@@ -29,6 +28,13 @@ public class ReportConnectSpatialDao extends AbstractDAO<ReportConnectSpatialEnt
         return findEntityByNamedQuery(
                 ReportConnectSpatialEntity.class, ReportConnectSpatialEntity.FIND_BY_REPORT_ID,
                 with("reportId", reportId).parameters(), 1
+        );
+    }
+
+    public void deleteById(List<Long> reportIds) throws ServiceException {
+
+        deleteEntityByNamedQuery(ReportConnectSpatialEntity.class, ReportConnectSpatialEntity.DELETE_BY_ID_LIST,
+                with("idList", reportIds).parameters()
         );
     }
 }

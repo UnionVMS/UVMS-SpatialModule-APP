@@ -35,12 +35,16 @@ import javax.persistence.Table;
 						"FROM ReportConnectSpatialEntity rcs INNER JOIN rcs.projectionByDisplayProjId AS projection " +
 						"WHERE rcs.reportId = :reportId"),
 		@NamedQuery(name = ReportConnectSpatialEntity.FIND_BY_REPORT_ID,
-				query = "from ReportConnectSpatialEntity where reportId = :reportId")
+				query = "from ReportConnectSpatialEntity where reportId = :reportId"),
+        @NamedQuery(name = ReportConnectSpatialEntity.DELETE_BY_ID_LIST,
+                query = "DELETE FROM ReportConnectSpatialEntity where id in :idList")
 })
 @EqualsAndHashCode(exclude = {"id", "reportConnectServiceAreases"})
 public class ReportConnectSpatialEntity implements Serializable {
 
     public static final String FIND_BY_REPORT_ID = "reportConnectSpatialEntity.findByReportId";
+
+    public static final String DELETE_BY_ID_LIST = "reportConnectSpatialEntity.deleteByIdList";
 
     @Id
 	@Column(name = "id")
@@ -62,7 +66,7 @@ public class ReportConnectSpatialEntity implements Serializable {
 	private String mapCenter;
 	
 	@Column(name = "map_zoom")
-	private int mapZoom;
+	private Integer mapZoom;
 	
 	@Column(columnDefinition = "text", name = "map_extent")
 	private String mapExtent;
@@ -151,11 +155,11 @@ public class ReportConnectSpatialEntity implements Serializable {
 		this.mapCenter = mapCenter;
 	}
 
-	public int getMapZoom() {
+	public Integer getMapZoom() {
 		return this.mapZoom;
 	}
 
-	public void setMapZoom(int mapZoom) {
+	public void setMapZoom(Integer mapZoom) {
 		this.mapZoom = mapZoom;
 	}
 

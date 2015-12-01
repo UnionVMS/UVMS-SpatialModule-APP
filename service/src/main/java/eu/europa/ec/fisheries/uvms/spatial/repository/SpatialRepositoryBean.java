@@ -15,8 +15,6 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.config.SysConfigEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.mapper.ReportConnectSpatialMapper;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.MapConfigurationType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaExtendedIdentifierDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestAreaDto;
@@ -167,22 +165,26 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     @Override
     @Transactional
     public boolean saveOrUpdateMapConfiguration(final ReportConnectSpatialEntity mapConfiguration) throws ServiceException {
-        validateMapConfiguration(mapConfiguration);
 
-        ReportConnectSpatialEntity persistedMapConfiguration;
-        if (mapConfiguration.getId() != null) {
-            persistedMapConfiguration = reportConnectSpatialDao.updateEntity(mapConfiguration);
-        } else {
-            persistedMapConfiguration = reportConnectSpatialDao.createEntity(mapConfiguration);
-        }
-
-        return persistedMapConfiguration != null;
-    }
-
-    private void validateMapConfiguration(ReportConnectSpatialEntity mapConfiguration) {
         if (mapConfiguration == null) {
+
             throw new IllegalArgumentException("MAP CONFIGURATION CAN NOT BE NULL");
+
         }
+
+        ReportConnectSpatialEntity persisted;
+
+        if (mapConfiguration.getId() != null) {
+
+            persisted = reportConnectSpatialDao.updateEntity(mapConfiguration);
+
+        } else {
+
+            persisted = reportConnectSpatialDao.createEntity(mapConfiguration);
+
+        }
+
+        return persisted != null;
     }
 
     @Override
@@ -198,6 +200,14 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     @Override
     public List<SysConfigEntity> findSystemConfigs() {
         return sysConfigDao.findSystemConfigs();
+    }
+
+    @Override
+    @Transactional
+    public void deleteBy(final List<Long> spatialConnectIds) throws ServiceException {
+
+        reportConnectSpatialDao.deleteById(spatialConnectIds);
+
     }
 
     @Override

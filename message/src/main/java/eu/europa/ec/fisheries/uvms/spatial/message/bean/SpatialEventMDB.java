@@ -120,6 +120,11 @@ public class SpatialEventMDB implements MessageListener {
                     SpatialMessageEvent saveMapConfigurationEvent = new SpatialMessageEvent(textMessage, spatialSaveMapConfigurationRQ);
                     saveOrUpdateMapConfigurationSpatialEvent.fire(saveMapConfigurationEvent);
                     break;
+                case DELETE_MAP_CONFIGURATION:
+                    SpatialDeleteMapConfigurationRQ mapConfigurationRQ = JAXBMarshaller.unmarshall(textMessage, SpatialDeleteMapConfigurationRQ.class);
+                    SpatialMessageEvent spatialMessageEvent = new SpatialMessageEvent(textMessage, mapConfigurationRQ);
+                    saveOrUpdateMapConfigurationSpatialEvent.fire(spatialMessageEvent);
+                    break;
                 case PING:
                     PingRQ pingRQ = JAXBMarshaller.unmarshall(textMessage, PingRQ.class);
                     SpatialMessageEvent pingEvent = new SpatialMessageEvent(textMessage, pingRQ);

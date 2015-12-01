@@ -3,6 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 import eu.europa.ec.fisheries.uvms.spatial.message.bean.SpatialMessageServiceBean;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.*;
 import eu.europa.ec.fisheries.uvms.spatial.model.FaultCode;
+import eu.europa.ec.fisheries.uvms.spatial.model.mapper.SpatialModuleMapper;
 import eu.europa.ec.fisheries.uvms.spatial.model.mapper.SpatialModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import lombok.extern.slf4j.Slf4j;
@@ -112,6 +113,19 @@ public class SpatialEventServiceBean implements SpatialEventService {
     }
 
     @Override
+    public void getDeleteMapConfiguration(@Observes @GetDeleteMapConfigurationEvent SpatialMessageEvent message) {
+        log.info("Delete map configurations.");
+        try {
+            mapConfigService.handleDeleteMapConfiguration(message.getSpatialDeleteMapConfigurationRQ());
+            log.debug("Send back map configurations response.");
+            String value = SpatialModuleMapper.INSTANCE.marshal(new SpatialDeleteMapConfigurationRS()).getValue();
+            messageProducer.sendModuleResponseMessage(message.getMessage(), value);
+        } catch (Exception e) {
+            sendError(message, e);
+        }
+    }
+
+    @Override
     public void getFilterAreas(@Observes @GetFilterAreaEvent SpatialMessageEvent message) {
         log.info("Getting Filter Areas");
         try {
@@ -125,10 +139,10 @@ public class SpatialEventServiceBean implements SpatialEventService {
     }
 
     @Override
-    public void saveOrUpdateMapConfiguration(@Observes @SaveOrUpdateMapConfigurationEvent SpatialMessageEvent message) {
+    public void getSpatialMapConfiguration(@Observes @SaveOrUpdateMapConfigurationEvent SpatialMessageEvent message) {
         log.info("Saving/Updating map configurations.");
         try {
-            SpatialSaveOrUpdateMapConfigurationRS saveOrUpdateMapConfigurationRS = mapConfigService.saveOrUpdateMapConfiguration(message.getSpatialSaveOrUpdateMapConfigurationRQ());
+            SpatialSaveOrUpdateMapConfigurationRS saveOrUpdateMapConfigurationRS = mapConfigService.handleSpatialMapConfiguration(message.getSpatialSaveOrUpdateMapConfigurationRQ());
             log.debug("Send back map configurations response.");
             String response = SpatialModuleResponseMapper.mapSpatialSaveOrUpdateMapConfigurationRSToString(saveOrUpdateMapConfigurationRS);
             messageProducer.sendModuleResponseMessage(message.getMessage(), response);

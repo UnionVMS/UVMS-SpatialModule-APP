@@ -236,6 +236,30 @@
             </xs:complexContent>
         </xs:complexType>
     </xs:element>
+    <xs:element name="SpatialDeleteMapConfigurationRQ">
+        <xs:annotation>
+            <xs:documentation>Root element for store map configuration request</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="SpatialModuleRequest">
+                    <xs:sequence>
+                        <xs:element name="spatialConnectId" type="xs:long" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="SpatialDeleteMapConfigurationRS">
+        <xs:annotation>
+            <xs:documentation>Root element for deleting map configurations request</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="response" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
     <xs:element name="SpatialSaveOrUpdateMapConfigurationRS">
         <xs:annotation>
             <xs:documentation>Root element for store map configuration request</xs:documentation>

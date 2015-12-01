@@ -14,6 +14,7 @@ public class SpatialMessageEvent {
     private AllAreaTypesRequest allAreaTypesRequest;
     private ClosestLocationSpatialRQ closestLocationSpatialRQ;
     private FilterAreasSpatialRQ filterAreasSpatialRQ;
+    private SpatialDeleteMapConfigurationRQ spatialDeleteMapConfigurationRQ;
     private SpatialSaveOrUpdateMapConfigurationRQ spatialSaveOrUpdateMapConfigurationRQ;
     private SpatialGetMapConfigurationRQ spatialGetMapConfigurationRQ;
     private PingRQ pingRQ;
@@ -69,6 +70,11 @@ public class SpatialMessageEvent {
         this.spatialGetMapConfigurationRQ = spatialGetMapConfigurationRQ;
     }
 
+    public SpatialMessageEvent(TextMessage textMessage, SpatialDeleteMapConfigurationRQ mapConfigurationRQ) {
+        this.message = textMessage;
+        this.spatialDeleteMapConfigurationRQ = mapConfigurationRQ;
+    }
+
     public TextMessage getMessage() {
         return message;
     }
@@ -111,5 +117,9 @@ public class SpatialMessageEvent {
 
     public AllAreaTypesRequest getAllAreaTypesRequest() {
         return allAreaTypesRequest;
+    }
+
+    public SpatialDeleteMapConfigurationRQ getSpatialDeleteMapConfigurationRQ() {
+        return spatialDeleteMapConfigurationRQ;
     }
 }
