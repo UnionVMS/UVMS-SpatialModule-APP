@@ -274,10 +274,10 @@
     "segments": {
       "attribute": "speedOverGround",
       "style": {
-        "9": "#d7191c",
         "0-2": "#1a9641",
-        "3-5": "#a6d96a",
-        "6-8": "#fdae61"
+        "2-5": "#a6d96a",
+        "5-8": "#fdae61",
+        "default": "#d7191c"
       }
     }
   },
