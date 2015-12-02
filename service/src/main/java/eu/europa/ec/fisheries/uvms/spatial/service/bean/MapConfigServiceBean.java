@@ -70,7 +70,6 @@ public class MapConfigServiceBean implements MapConfigService {
     @SneakyThrows
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public void handleDeleteMapConfiguration(SpatialDeleteMapConfigurationRQ request) throws ServiceException {
-
         SpatialValidator.validate(request);
 
         repository.deleteBy(request.getSpatialConnectIds());
@@ -78,7 +77,6 @@ public class MapConfigServiceBean implements MapConfigService {
 
     @Override
     public MapConfigurationType getMapConfigurationType(final Long reportId) throws ServiceException {
-
         SpatialValidator.validate(reportId);
 
         ReportConnectSpatialEntity entity = repository.findReportConnectSpatialBy(reportId);
@@ -89,7 +87,6 @@ public class MapConfigServiceBean implements MapConfigService {
     @Override
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public SpatialGetMapConfigurationRS getMapConfiguration(SpatialGetMapConfigurationRQ mapConfigurationRQ) throws ServiceException {
-
         long reportId = mapConfigurationRQ.getReportId();
 
         return new SpatialGetMapConfigurationRS(getMapConfigurationType(reportId));
@@ -99,15 +96,19 @@ public class MapConfigServiceBean implements MapConfigService {
     @Override
     @SneakyThrows
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public SpatialSaveOrUpdateMapConfigurationRS handleSpatialMapConfiguration(final SpatialSaveOrUpdateMapConfigurationRQ request) {
+    public SpatialSaveOrUpdateMapConfigurationRS handleSaveOrUpdateSpatialMapConfiguration(final SpatialSaveOrUpdateMapConfigurationRQ request) {
         SpatialValidator.validate(request);
 
         ReportConnectSpatialEntity entity =
                 ReportConnectSpatialMapper.INSTANCE.mapConfigurationTypeToReportConnectSpatialEntity(request.getMapConfiguration());
 
         repository.saveOrUpdateMapConfiguration(entity);
-        return new SpatialSaveOrUpdateMapConfigurationRS();
+        return createSaveOrUpdateMapConfigurationResponse();
 
+    }
+
+    private SpatialSaveOrUpdateMapConfigurationRS createSaveOrUpdateMapConfigurationResponse() {
+        return new SpatialSaveOrUpdateMapConfigurationRS();
     }
 
     @Override

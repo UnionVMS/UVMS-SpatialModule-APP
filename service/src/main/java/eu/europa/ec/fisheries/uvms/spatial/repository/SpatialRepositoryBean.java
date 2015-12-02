@@ -14,6 +14,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.DisplayProjectionDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
 import eu.europa.ec.fisheries.uvms.spatial.util.SqlPropertyHolder;
+import org.apache.commons.collections.CollectionUtils;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.*;
@@ -22,6 +23,8 @@ import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
+
+import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 
 @Stateless
 @Local(value = SpatialRepository.class)
@@ -122,6 +125,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     public List<ProjectionDto> findProjectionBySrsCode(int srsCode) {
         return mapConfigDao.findProjectionBySrsCode(srsCode);
     }
+
     @Override
     public List<DisplayProjectionDto> findProjectionByDisplay(long reportId) {
         return mapConfigDao.findProjectionByDisplay(reportId);
@@ -139,15 +143,16 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
 
     @Override
     public ReportConnectSpatialEntity findReportConnectSpatialBy(final Long reportId) throws ServiceException {
-
         List<ReportConnectSpatialEntity> list = reportConnectSpatialDao.findReportConnectSpatialBy(reportId);
 
         ReportConnectSpatialEntity result = null;
 
-        if (list != null && list.size() == 1 ) {
-
-            result = list.get(0);
-
+        if (isNotEmpty(list)) {
+            if (list.size() > 1) {
+                throw new IllegalStateException("More than one map configuration has been found for report with id = " + reportId);
+            } else {
+                return list.get(0);
+            }
         }
 
         return result;
@@ -156,26 +161,14 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     @Override
     @Transactional
     public boolean saveOrUpdateMapConfiguration(final ReportConnectSpatialEntity mapConfiguration) throws ServiceException {
+        validateMapConfiguration(mapConfiguration);
+        return reportConnectSpatialDao.saveOrUpdateEntity(mapConfiguration) != null;
+    }
 
+    private void validateMapConfiguration(ReportConnectSpatialEntity mapConfiguration) {
         if (mapConfiguration == null) {
-
             throw new IllegalArgumentException("MAP CONFIGURATION CAN NOT BE NULL");
-
         }
-
-        ReportConnectSpatialEntity persisted;
-
-        if (mapConfiguration.getId() != null) {
-
-            persisted = reportConnectSpatialDao.updateEntity(mapConfiguration);
-
-        } else {
-
-            persisted = reportConnectSpatialDao.createEntity(mapConfiguration);
-
-        }
-
-        return persisted != null;
     }
 
     @Override
@@ -195,7 +188,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
 
     public String findSystemConfigByName(Map<String, String> parameters) throws ServiceException {
         List<String> geoServerUrl = findEntityByNamedQuery(String.class, QueryNameConstants.FIND_CONFIG_BY_NAME, parameters, 1);
-        return  (geoServerUrl != null && !geoServerUrl.isEmpty()) ? geoServerUrl.get(0) : null;
+        return (geoServerUrl != null && !geoServerUrl.isEmpty()) ? geoServerUrl.get(0) : null;
     }
 
     @Override

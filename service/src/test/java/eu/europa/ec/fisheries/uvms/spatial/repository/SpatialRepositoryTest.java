@@ -71,13 +71,12 @@ public class SpatialRepositoryTest {
 
         spatialRepositoryBean.saveOrUpdateMapConfiguration(reportConnectSpatialEntity);
 
-        Mockito.verify(reportConnectSpatialDao, Mockito.times(1)).createEntity(reportConnectSpatialEntity);
+        Mockito.verify(reportConnectSpatialDao, Mockito.times(1)).saveOrUpdateEntity(reportConnectSpatialEntity);
     }
 
     @Test(expected = IllegalArgumentException.class)
     @SneakyThrows
     public void shouldThrowExceptionWhenSavingMapConfigurationIsNull() {
-
         spatialRepositoryBean.saveOrUpdateMapConfiguration(null);
 
     }
