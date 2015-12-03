@@ -113,8 +113,8 @@ public class MapConfigServiceBean implements MapConfigService {
 
     @Override
     @SneakyThrows
-    public MapConfigDto getReportConfig(int reportId) {
-        ConfigurationDto configurationDto = mergeConfiguration(getUserConfiguration(), getAdminConfiguration()); //Returns merged config object between Admin and User configuration from USM
+    public MapConfigDto getReportConfig(int reportId, String userPreferences, String adminPreferences) {
+        ConfigurationDto configurationDto = mergeConfiguration(getUserConfiguration(userPreferences), getAdminConfiguration(adminPreferences)); //Returns merged config object between Admin and User configuration from USM
         return new MapConfigDto(getMap(configurationDto, reportId), getVectorStyles(configurationDto), getVisibilitySettings(configurationDto));
     }
 
@@ -223,7 +223,9 @@ public class MapConfigServiceBean implements MapConfigService {
 
     private List<ReportConnectServiceAreasEntity> getReportConnectServiceAreas(int reportId) {
         List<ReportConnectServiceAreasEntity> reportConnectServiceAreas = repository.findReportConnectServiceAreas(reportId);
-        Collections.sort(reportConnectServiceAreas);
+        if (reportConnectServiceAreas != null) {
+            Collections.sort(reportConnectServiceAreas);
+        }
         return reportConnectServiceAreas;
     }
 
@@ -245,23 +247,21 @@ public class MapConfigServiceBean implements MapConfigService {
         return (projectionDtoList != null && !projectionDtoList.isEmpty()) ? projectionDtoList.get(0) : null;
     }
 
-    private ConfigurationDto getAdminConfiguration() throws IOException {
-        // TODO call USM
-        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        InputStream is = classloader.getResourceAsStream("Config.json");
-        String jsonTxt = IOUtils.toString(is);
+    private ConfigurationDto getAdminConfiguration(String adminPreference) throws IOException {
+        if(adminPreference == null) {
+            return new ConfigurationDto();
+        }
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
-        return mapper.readValue(jsonTxt, ConfigurationDto.class);
+        return mapper.readValue(adminPreference, ConfigurationDto.class);
     }
 
-    private ConfigurationDto getUserConfiguration() throws IOException {
-        //TODO call USM
-        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        InputStream is = classloader.getResourceAsStream("UserConfig.json");
-        String jsonTxt = IOUtils.toString(is);
+    private ConfigurationDto getUserConfiguration(String userPreference) throws IOException {
+        if (userPreference == null) {
+            return new ConfigurationDto();
+        }
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
-        return mapper.readValue(jsonTxt, ConfigurationDto.class);
+        return mapper.readValue(userPreference, ConfigurationDto.class);
     }
 }
