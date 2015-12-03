@@ -30,12 +30,10 @@ import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.transaction.Transactional;
+import javax.xml.ws.Service;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static eu.europa.ec.fisheries.uvms.spatial.service.mapper.ConfigurationMapper.mergeConfiguration;
 
@@ -52,6 +50,8 @@ public class MapConfigServiceBean implements MapConfigService {
     private static final String NAME = "name";
 
     private static final String GEO_SERVER = "geo_server_url";
+
+    private static final Integer DEFAULT_EPSG = 3857;
 
     @EJB
     private SpatialRepository repository;
@@ -119,10 +119,11 @@ public class MapConfigServiceBean implements MapConfigService {
     }
 
     private MapDto getMap(ConfigurationDto configurationDto, int reportId) throws ServiceException {
-        return new MapDto(getMapProjection(reportId, configurationDto),
-                getControls(reportId, configurationDto),
-                getTbControls(configurationDto),
-                getServiceAreaLayer(reportId, configurationDto));
+        ProjectionDto projection = getMapProjection(reportId, configurationDto);
+        List<ControlDto> controls = getControls(reportId, configurationDto);
+        List<TbControlDto> tbControls = getTbControls(configurationDto);
+        List<LayerDto> layers = getServiceAreaLayer(reportId, configurationDto, projection);
+        return new MapDto(projection, controls, tbControls, layers);
     }
 
     private ProjectionDto getMapProjection(int reportId, ConfigurationDto configurationDto) {
@@ -152,8 +153,8 @@ public class MapConfigServiceBean implements MapConfigService {
         return MapConfigMapper.INSTANCE.getTbControls(configurationDto.getToolSettings().getTbControl());
     }
 
-    private List<LayerDto> getServiceAreaLayer(int reportId, ConfigurationDto configurationDto) throws ServiceException {
-        List<ReportConnectServiceAreasEntity> reportConnectServiceAreas = getReportConnectServiceAreas(reportId);
+    private List<LayerDto> getServiceAreaLayer(int reportId, ConfigurationDto configurationDto, ProjectionDto projection) throws ServiceException {
+        List<ReportConnectServiceAreasEntity> reportConnectServiceAreas = getReportConnectServiceAreas(reportId, projection);
         String geoServerUrl = getGeoServerUrl(configurationDto);
         if (reportConnectServiceAreas != null && !reportConnectServiceAreas.isEmpty()) { // If report is having service layer then return it
             List<LayerDto> layerDtos = new ArrayList<LayerDto>();
@@ -162,7 +163,7 @@ public class MapConfigServiceBean implements MapConfigService {
             }
             return layerDtos;
         } else { // otherwise get the default layer configuration from USM
-            return getServiceAreaLayersFromConfig(configurationDto, geoServerUrl);
+            return getServiceAreaLayersFromConfig(configurationDto, geoServerUrl, projection);
         }
     }
 
@@ -174,15 +175,15 @@ public class MapConfigServiceBean implements MapConfigService {
         return configurationDto.getVisibilitySettings();
     }
 
-    private List<LayerDto> getServiceAreaLayersFromConfig(ConfigurationDto configurationDto, String geoServerUrl) throws ServiceException {
+    private List<LayerDto> getServiceAreaLayersFromConfig(ConfigurationDto configurationDto, String geoServerUrl, ProjectionDto projection) throws ServiceException {
         List<LayersDto> overlayLayers = configurationDto.getLayerSettings().getOverlayLayers(); // Get Service Layers for Overlay layers
         List<Integer> overlayServiceLayerIds = getServiceLayerIds(overlayLayers);
-        List<ServiceLayerEntity> overlayServiceLayerEntities = sort(repository.findServiceLayerEntityByIds(overlayServiceLayerIds), overlayServiceLayerIds);
+        List<ServiceLayerEntity> overlayServiceLayerEntities = sort(getServiceLayers(overlayServiceLayerIds, projection), overlayServiceLayerIds);
         List<LayerDto> layerDtos = getLayerDtos(overlayServiceLayerEntities, geoServerUrl, false);
 
         List<LayersDto> baseLayers = configurationDto.getLayerSettings().getBaseLayers(); // Get Service Layers for base layers
         List<Integer> baseServiceLayerIds = getServiceLayerIds(baseLayers);
-        List<ServiceLayerEntity> baseServiceLayerEntities = sort(repository.findServiceLayerEntityByIds(baseServiceLayerIds), baseServiceLayerIds);
+        List<ServiceLayerEntity> baseServiceLayerEntities = sort(getServiceLayers(baseServiceLayerIds, projection), baseServiceLayerIds);
         layerDtos.addAll(getLayerDtos(baseServiceLayerEntities, geoServerUrl, true));
         return layerDtos;
     }
@@ -221,12 +222,32 @@ public class MapConfigServiceBean implements MapConfigService {
         return ids;
     }
 
-    private List<ReportConnectServiceAreasEntity> getReportConnectServiceAreas(int reportId) {
+    private List<ReportConnectServiceAreasEntity> getReportConnectServiceAreas(int reportId, ProjectionDto projection) {
         List<ReportConnectServiceAreasEntity> reportConnectServiceAreas = repository.findReportConnectServiceAreas(reportId);
         if (reportConnectServiceAreas != null) {
+            Iterator<ReportConnectServiceAreasEntity> areaIterator = reportConnectServiceAreas.iterator();
+            while (areaIterator.hasNext()) {
+                ReportConnectServiceAreasEntity reportConnectServiceArea = areaIterator.next();
+                if (!projection.getEpsgCode().equals(DEFAULT_EPSG) && !DEFAULT_EPSG.equals(reportConnectServiceArea.getServiceLayer().getSrsCode())) {
+                    areaIterator.remove();
+                }
+            }
             Collections.sort(reportConnectServiceAreas);
+
         }
         return reportConnectServiceAreas;
+    }
+
+    private List<ServiceLayerEntity> getServiceLayers(List<Integer> ids, ProjectionDto projection) {
+        List<ServiceLayerEntity> serviceLayers = repository.findServiceLayerEntityByIds(ids);
+        Iterator<ServiceLayerEntity> layerIterator = serviceLayers.iterator();
+        while(layerIterator.hasNext()) {
+            ServiceLayerEntity serviceLayer = layerIterator.next();
+            if(!projection.getEpsgCode().equals(DEFAULT_EPSG) && DEFAULT_EPSG.equals(serviceLayer.getSrsCode())) {
+                layerIterator.remove();
+            }
+        }
+        return serviceLayers;
     }
 
     private List<ControlDto> updateControls(List<ControlDto> controls, String scaleBarUnit, String epsgCode, String coordinateFormat) {

@@ -24,7 +24,7 @@
         "mapProjection": 3857,
         "displayProjection": 4326,
         "coordinatesFormat": "dd",
-        "scaleBarUnits": "metric",
+        "scaleBarUnits": "nautical",
         "refreshRate": 100,
         "refreshState": true
     },
