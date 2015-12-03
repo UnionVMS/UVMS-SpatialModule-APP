@@ -43,13 +43,14 @@ public class ProjectionDto {
     public ProjectionDto() {
     }
 
-    public ProjectionDto(Long id, String name, Integer epsgCode, String units, String formats, Boolean global) {
+    public ProjectionDto(Long id, String name, Integer epsgCode, String units, String formats, Boolean global, String extent) {
         this.id = id;
         this.name = name;
         this.epsgCode = epsgCode;
         this.units = units;
         this.formats = formats;
         this.global = global;
+        this.extent = extent;
     }
 
     public ProjectionDto(Integer epsgCode, String units, String formats) {

@@ -2,12 +2,16 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.LayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.MapConfigDto;
+import org.apache.commons.io.IOUtils;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.ejb.EJB;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import static org.junit.Assert.assertFalse;
@@ -24,9 +28,9 @@ public class MapConfigServiceIT extends AbstractArquillianIT {
     private MapConfigService mapConfigService;
 
     @Test
-    public void testGetMapConfig() {
+    public void testGetMapConfig() throws IOException {
         //given
-        MapConfigDto mapConfigDto = mapConfigService.getReportConfig(1);
+        MapConfigDto mapConfigDto = mapConfigService.getReportConfig(1, getConfig("src/test/resources/UserConfig.json"), getConfig("src/test/resources/Config.json"));
 
         //test
         assertNotNull(mapConfigDto.getMap().getProjectionDto());
@@ -36,13 +40,18 @@ public class MapConfigServiceIT extends AbstractArquillianIT {
     }
 
     @Test
-    public void testInvalidMapConfig() {
+    public void testInvalidMapConfig() throws IOException {
         //given
-        MapConfigDto mapConfigDto = mapConfigService.getReportConfig(1000000);
+        MapConfigDto mapConfigDto = mapConfigService.getReportConfig(1000000, getConfig("src/test/resources/UserConfig.json"), getConfig("src/test/resources/Config.json"));
 
         //test
         assertNull(mapConfigDto.getMap().getProjectionDto());
         List<LayerDto> layers =  mapConfigDto.getMap().getLayers();
         assertNull(layers);
+    }
+
+    private String getConfig(String file) throws IOException {
+        InputStream is = new FileInputStream(file);
+        return IOUtils.toString(is);
     }
 }

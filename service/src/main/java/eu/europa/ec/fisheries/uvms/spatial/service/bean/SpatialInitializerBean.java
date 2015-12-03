@@ -16,6 +16,8 @@ public class SpatialInitializerBean extends AbstractModuleInitializerBean {
         return this.getClass().getClassLoader().getResourceAsStream("usmDeploymentDescriptor.xml");
     }
 
-
-
+    @Override
+    protected boolean mustRedeploy() {
+        return true;
+    }
 }

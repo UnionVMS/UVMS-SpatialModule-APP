@@ -18,6 +18,12 @@ public class DisplayProjectionDto {
     @JsonProperty("units")
     private ScaleBarUnits units;
 
+    public DisplayProjectionDto(Integer epsgCode, CoordinatesFormat formats, ScaleBarUnits units) {
+        this.epsgCode = epsgCode;
+        this.formats = formats;
+        this.units = units;
+    }
+
     @JsonProperty("epsgCode")
     public Integer getEpsgCode() {
         return epsgCode;

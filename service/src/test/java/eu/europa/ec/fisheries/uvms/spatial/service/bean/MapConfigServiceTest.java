@@ -2,14 +2,15 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ProviderFormatEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.CoordinatesFormat;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ScaleBarUnits;
 import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.LayerDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.MapConfigDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.ConfigurationDto;
 import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONObject;
@@ -25,8 +26,10 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -77,32 +80,78 @@ public class MapConfigServiceTest {
         assertNotNull(configDto);
     }
 
-    //@Test
-    public void testGetMapConfig() {
+    @Test
+    public void testGetMapConfigWithDefaultConfig() throws IOException, ServiceException {
         //mock
-        mockLayers();
-        mockProjection();
+        mockGenMapProjectionWithDefaultConfig();
 
         //Given
-        MapConfigDto mapConfigDto = mapConfigServiceBean.getReportConfig(1);
-        List<LayerDto> layers = mapConfigDto.getMap().getLayers();
+        MapConfigDto mapConfigDto = mapConfigServiceBean.getReportConfig(1, getConfig("src/test/resources/UserConfig.json"), getConfig("src/test/resources/Config.json"));
+        MapDto mapDto = mapConfigDto.getMap();
+        List<LayerDto> layers = mapDto.getLayers();
 
         //Test
         assertNotNull(layers);
         assertFalse(layers.isEmpty());
-        assertEquals("WMS", layers.get(0).getType());
+        assertNotNull(mapConfigDto.getVectorStyles());
+        assertNotNull(mapConfigDto.getVisibilitySettings());
+        assertNotNull(mapDto.getControlDtos());
+        assertNotNull(mapDto.getTbControlDtos());
+        assertNotNull(mapDto.getProjectionDto());
     }
 
-    private void mockProjection() {
-        ProjectionDto projectionDto = new ProjectionDto(new Long(1), "Spherical Mercator", 3857, "m", "m", true);
-        Mockito.when(repository.findProjectionByMap(Mockito.any(Integer.class))).thenReturn(Arrays.asList(projectionDto));
+    @Test
+    public void testGetMapConfigWithoutDefaultConfig() throws IOException, ServiceException {
+        //mock
+        mockGenMapProjectionWithoutDefaultConfig();
+
+        //Given
+        MapConfigDto mapConfigDto = mapConfigServiceBean.getReportConfig(1, getConfig("src/test/resources/UserConfig.json"), getConfig("src/test/resources/Config.json"));
+        MapDto mapDto = mapConfigDto.getMap();
+        List<LayerDto> layers = mapDto.getLayers();
+
+        //Test
+        assertNotNull(layers);
+        assertFalse(layers.isEmpty());
+        assertNotNull(mapConfigDto.getVectorStyles());
+        assertNotNull(mapConfigDto.getVisibilitySettings());
+        assertNotNull(mapDto.getControlDtos());
+        assertNotNull(mapDto.getTbControlDtos());
+        assertNotNull(mapDto.getProjectionDto());
     }
 
-    private void mockLayers() {
+    private void mockGenMapProjectionWithDefaultConfig() throws IOException, ServiceException {
+        Mockito.when(repository.findProjectionByMap(Mockito.any(Integer.class))).thenReturn(null);
+        Mockito.when(repository.findProjectionBySrsCode(Mockito.any(Integer.class))).thenReturn(Arrays.asList(getProjectionDto()));
+        Mockito.when(repository.findReportConnectServiceAreas(Mockito.any(Integer.class))).thenReturn(null);
+        Mockito.when(repository.findSystemConfigByName(Mockito.any(Map.class))).thenReturn(null);
+        Mockito.when(repository.findServiceLayerEntityByIds(Mockito.any(List.class))).thenReturn(getServiceLayers());
+    }
+    private void mockGenMapProjectionWithoutDefaultConfig() throws IOException, ServiceException {
+        Mockito.when(repository.findProjectionByMap(Mockito.any(Integer.class))).thenReturn(Arrays.asList(getProjectionDto()));
+        Mockito.when(repository.findProjectionByDisplay(Mockito.any(Integer.class))).thenReturn(Arrays.asList(getDisplayProjectionDto()));
         Mockito.when(repository.findReportConnectServiceAreas(Mockito.any(Integer.class))).thenReturn(getReportConnectServiceAreas());
+        Mockito.when(repository.findSystemConfigByName(Mockito.any(Map.class))).thenReturn("http://localhost:8080/geoserver/");
     }
 
-    private ServiceLayerEntity getServiceLayerEntity(String serviceType, String groupType) {
+    private List<ServiceLayerEntity> getServiceLayers() {
+        List<ServiceLayerEntity> serviceLayerEntities = new ArrayList<ServiceLayerEntity>();
+        serviceLayerEntities.add(getServiceLayerEntity("OSM", "others", 4));
+        serviceLayerEntities.add(getServiceLayerEntity("WMS", "sysarea", 1));
+        serviceLayerEntities.add(getServiceLayerEntity("WMS", "sysarea", 2));
+        serviceLayerEntities.add(getServiceLayerEntity("WMS", "sysarea", 7));
+        return serviceLayerEntities;
+    }
+
+    private ProjectionDto getProjectionDto() {
+        return new ProjectionDto(new Long(1), "Spherical Mercator", 3857, "m", "m", true, "-20026376.39;-20048966.10;20026376.39;20048966.10");
+    }
+
+    private DisplayProjectionDto getDisplayProjectionDto() {
+        return new DisplayProjectionDto(3857, CoordinatesFormat.DDM, ScaleBarUnits.NAUTICAL);
+    }
+
+    private ServiceLayerEntity getServiceLayerEntity(String serviceType, String groupType, int id) {
         ServiceLayerEntity serviceLayerEntity = new ServiceLayerEntity();
         ProviderFormatEntity providerFormatEntity = new ProviderFormatEntity();
         providerFormatEntity.setServiceType(serviceType);
@@ -110,6 +159,8 @@ public class MapConfigServiceTest {
         AreaLocationTypesEntity areaLocationTypesEntity = new AreaLocationTypesEntity();
         areaLocationTypesEntity.setAreaGroupType(groupType);
         serviceLayerEntity.setAreaType(areaLocationTypesEntity);
+        serviceLayerEntity.setId(id);
+        serviceLayerEntity.setName(serviceType);
         return serviceLayerEntity;
     }
 
@@ -121,7 +172,7 @@ public class MapConfigServiceTest {
         entityOne.setIsBackground(true);
         entityOne.setLayerOrder(3);
         entityOne.setSqlFilter("Test filter");
-        entityOne.setServiceLayer(getServiceLayerEntity("OSM", "others"));
+        entityOne.setServiceLayer(getServiceLayerEntity("OSM", "others", 4));
 
         // second object
         ReportConnectServiceAreasEntity entityTwo = new ReportConnectServiceAreasEntity();
@@ -129,7 +180,7 @@ public class MapConfigServiceTest {
         entityTwo.setIsBackground(true);
         entityTwo.setLayerOrder(1);
         entityTwo.setSqlFilter("Test filter");
-        entityTwo.setServiceLayer(getServiceLayerEntity("WMS", "sysarea"));
+        entityTwo.setServiceLayer(getServiceLayerEntity("WMS", "sysarea", 1));
 
         //third object
         ReportConnectServiceAreasEntity entityThree = new ReportConnectServiceAreasEntity();
@@ -137,8 +188,13 @@ public class MapConfigServiceTest {
         entityThree.setIsBackground(false);
         entityThree.setLayerOrder(2);
         entityThree.setSqlFilter("Test filter");
-        entityThree.setServiceLayer(getServiceLayerEntity("OSM", "others"));
+        entityThree.setServiceLayer(getServiceLayerEntity("OSM", "others", 2));
 
         return Arrays.asList(entityOne, entityTwo, entityThree);
+    }
+
+    private String getConfig(String file) throws IOException {
+        InputStream is = new FileInputStream(file);
+        return IOUtils.toString(is);
     }
 }

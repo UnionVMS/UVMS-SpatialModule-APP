@@ -6,6 +6,12 @@
         <description>Deployment descriptor of module "Spatial" version "@application.version@".</description>
         <parent>Union VMS</parent>
 
+        <feature>
+            <name>DEFAULT_CONFIG_FEATURE</name>
+            <description>Temporary Feature for Spatial in USM</description>
+            <group>spatial config</group>
+        </feature>
+
         <option>
             <name>DEFAULT_CONFIG</name>
             <description>Default map configuation settings</description>
@@ -286,10 +292,10 @@
         "segments": {
             "attribute": "speedOverGround",
             "style": {
-                "9": "#d7191c",
-                "0-2": "#1a9641",
-                "3-5": "#a6d96a",
-                "6-8": "#fdae61"
+                    "0-2": "#1a9641",
+                    "2-5": "#a6d96a",
+                    "5-8": "#fdae61",
+                    "default": "#d7191c"
             }
         }
     },
@@ -339,9 +345,6 @@
             },
             {
                 "type": "history"
-            },
-            {
-                "type": "measure"
             }
         ],
         "tbControl": [
@@ -355,7 +358,67 @@
                 "type": "print"
             }
         ]
+    },
+  "visibilitySettings": {
+    "positions": {
+      "popup": [
+        "fs",
+        "extMark",
+        "ircs",
+        "cfr",
+        "posTime",
+        "crs",
+        "c_spd",
+        "m_spd",
+        "stat",
+        "lat",
+        "lon",
+        "msg_tp",
+        "act_tp",
+        "source"
+      ],
+      "labels": [
+        "fs",
+        "extMark",
+        "ircs",
+        "cfr",
+        "posTime",
+        "lon",
+        "lat",
+        "stat",
+        "m_spd",
+        "c_spd",
+        "crs",
+        "msg_tp",
+        "act_tp",
+        "source"
+      ]
+    },
+    "segments": {
+      "popup": [
+        "fs",
+        "extMark",
+        "ircs",
+        "cfr",
+        "dist",
+        "dur",
+        "spd",
+        "crs",
+        "cat"
+      ],
+      "labels": [
+        "extMark",
+        "ircs",
+        "cfr",
+        "dist",
+        "cat",
+        "crs",
+        "spd",
+        "dur",
+        "fs"
+      ]
     }
+  }
 }]]></defaultValue>
         </option>
 
