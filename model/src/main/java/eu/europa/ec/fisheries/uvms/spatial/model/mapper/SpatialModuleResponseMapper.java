@@ -207,6 +207,15 @@ public final class SpatialModuleResponseMapper {
         }
     }
 
+    public static SpatialDeleteMapConfigurationRS mapToSpatialDeleteMapConfigurationRS(TextMessage response, String correlationId) throws SpatialModelMapperException {
+        try {
+            validateResponse(response, correlationId);
+            return JAXBMarshaller.unmarshall(response, SpatialDeleteMapConfigurationRS.class);
+        } catch (SpatialModelMarshallException e) {
+            return exception(e);
+        }
+    }
+
     public static SpatialSaveOrUpdateMapConfigurationRS mapToSpatialSaveOrUpdateMapConfigurationRS(TextMessage response, String correlationId) throws SpatialModelMapperException {
         try {
             validateResponse(response, correlationId);

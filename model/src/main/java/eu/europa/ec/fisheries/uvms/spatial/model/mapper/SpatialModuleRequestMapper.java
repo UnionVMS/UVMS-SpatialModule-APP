@@ -103,10 +103,17 @@ public final class SpatialModuleRequestMapper {
         }
     }
 
-
     public static String mapToSpatialGetMapConfigurationRQ(long reportId) throws SpatialModelMarshallException {
         try {
             return JAXBMarshaller.marshall(new SpatialGetMapConfigurationRQ(SpatialModuleMethod.GET_MAP_CONFIGURATION, reportId));
+        } catch (SpatialModelMarshallException ex) {
+            return logException(ex);
+        }
+    }
+
+    public static String mapToSpatialDeleteMapConfigurationRQ(List<Long> spatialConnectIds) throws SpatialModelMarshallException {
+        try {
+            return JAXBMarshaller.marshall(new SpatialDeleteMapConfigurationRQ(SpatialModuleMethod.DELETE_MAP_CONFIGURATION, spatialConnectIds));
         } catch (SpatialModelMarshallException ex) {
             return logException(ex);
         }

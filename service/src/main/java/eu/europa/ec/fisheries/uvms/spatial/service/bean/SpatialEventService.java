@@ -20,9 +20,9 @@ public interface SpatialEventService {
 
     void getFilterAreas(@Observes @GetFilterAreaEvent SpatialMessageEvent message);
 
-    void getSpatialMapConfiguration(@Observes @SaveOrUpdateMapConfigurationEvent SpatialMessageEvent message);
+    void saveOrUpdateSpatialMapConfiguration(@Observes @SaveOrUpdateMapConfigurationEvent SpatialMessageEvent message);
 
-    void getDeleteMapConfiguration(@Observes @GetDeleteMapConfigurationEvent SpatialMessageEvent message);
+    void deleteMapConfiguration(@Observes @DeleteMapConfigurationEvent SpatialMessageEvent message);
 
     void getMapConfiguration(@Observes @GetMapConfigurationEvent SpatialMessageEvent message);
 

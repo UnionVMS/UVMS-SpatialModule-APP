@@ -113,7 +113,7 @@ public class SpatialEventServiceBean implements SpatialEventService {
     }
 
     @Override
-    public void getDeleteMapConfiguration(@Observes @GetDeleteMapConfigurationEvent SpatialMessageEvent message) {
+    public void deleteMapConfiguration(@Observes @DeleteMapConfigurationEvent SpatialMessageEvent message) {
         log.info("Delete map configurations.");
         try {
             mapConfigService.handleDeleteMapConfiguration(message.getSpatialDeleteMapConfigurationRQ());
@@ -139,7 +139,7 @@ public class SpatialEventServiceBean implements SpatialEventService {
     }
 
     @Override
-    public void getSpatialMapConfiguration(@Observes @SaveOrUpdateMapConfigurationEvent SpatialMessageEvent message) {
+    public void saveOrUpdateSpatialMapConfiguration(@Observes @SaveOrUpdateMapConfigurationEvent SpatialMessageEvent message) {
         log.info("Saving/Updating map configurations.");
         try {
             SpatialSaveOrUpdateMapConfigurationRS saveOrUpdateMapConfigurationRS = mapConfigService.handleSaveOrUpdateSpatialMapConfiguration(message.getSpatialSaveOrUpdateMapConfigurationRQ());
