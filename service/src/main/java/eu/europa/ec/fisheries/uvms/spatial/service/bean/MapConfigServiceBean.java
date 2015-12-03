@@ -9,7 +9,12 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntit
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.mapper.ReportConnectSpatialMapper;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.MapConfigurationType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialDeleteMapConfigurationRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialGetMapConfigurationRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialGetMapConfigurationRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveOrUpdateMapConfigurationRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveOrUpdateMapConfigurationRS;
 import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.ConfigurationDto;
@@ -20,13 +25,14 @@ import eu.europa.ec.fisheries.uvms.spatial.service.mapper.ProjectionMapper;
 import eu.europa.ec.fisheries.uvms.spatial.validator.SpatialValidator;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-
+import org.apache.commons.io.IOUtils;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.transaction.Transactional;
 import javax.xml.ws.Service;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 import static eu.europa.ec.fisheries.uvms.spatial.service.mapper.ConfigurationMapper.mergeConfiguration;
@@ -103,6 +109,12 @@ public class MapConfigServiceBean implements MapConfigService {
 
     private SpatialSaveOrUpdateMapConfigurationRS createSaveOrUpdateMapConfigurationResponse() {
         return new SpatialSaveOrUpdateMapConfigurationRS();
+    }
+
+    @Override
+    @SneakyThrows
+    public ConfigurationDto convertToAdminConfiguration(String config) {
+        return getConfiguration(config);
     }
 
     @Override
@@ -184,8 +196,8 @@ public class MapConfigServiceBean implements MapConfigService {
 
     private List<ServiceLayerEntity> sort(List<ServiceLayerEntity> overlayServiceLayerEntities, List<Integer> ids) {
         List<ServiceLayerEntity> tempList = new ArrayList<ServiceLayerEntity>();
-        for (Integer id : ids) {
-            for (ServiceLayerEntity serviceLayerEntity : overlayServiceLayerEntities) {
+        for(Integer id : ids) {
+            for(ServiceLayerEntity serviceLayerEntity : overlayServiceLayerEntities) {
                 if (id.equals(serviceLayerEntity.getId())) {
                     tempList.add(serviceLayerEntity);
                 }
@@ -263,20 +275,16 @@ public class MapConfigServiceBean implements MapConfigService {
     }
 
     private ConfigurationDto getAdminConfiguration(String adminPreference) throws IOException {
-        if (adminPreference == null) {
-            return new ConfigurationDto();
-        }
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
-        return mapper.readValue(adminPreference, ConfigurationDto.class);
+        return (adminPreference == null) ? new ConfigurationDto() : getConfiguration(adminPreference);
     }
 
     private ConfigurationDto getUserConfiguration(String userPreference) throws IOException {
-        if (userPreference == null) {
-            return new ConfigurationDto();
-        }
+        return (userPreference == null) ? new ConfigurationDto() : getConfiguration(userPreference);
+    }
+
+    private ConfigurationDto getConfiguration(String configString) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
-        return mapper.readValue(userPreference, ConfigurationDto.class);
+        return mapper.readValue(configString, ConfigurationDto.class);
     }
 }

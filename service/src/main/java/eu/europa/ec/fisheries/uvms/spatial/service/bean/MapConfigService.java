@@ -9,6 +9,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveOrUpdateMapC
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveOrUpdateMapConfigurationRS;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.MapConfigDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.ConfigurationDto;
 
 import java.util.List;
 
@@ -25,4 +26,6 @@ public interface MapConfigService {
     List<ProjectionDto> getAllProjections();
 
     void handleDeleteMapConfiguration(SpatialDeleteMapConfigurationRQ spatialDeleteMapConfigurationRQ) throws ServiceException;
+
+    ConfigurationDto convertToAdminConfiguration(String config);
 }
