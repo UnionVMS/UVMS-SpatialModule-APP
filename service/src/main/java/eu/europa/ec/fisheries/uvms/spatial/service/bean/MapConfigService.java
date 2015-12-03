@@ -14,7 +14,7 @@ import java.util.List;
 
 public interface MapConfigService {
 
-    MapConfigDto getReportConfig(int reportId);
+    MapConfigDto getReportConfig(int reportId, String userPreferences, String adminPreferences);
 
     MapConfigurationType getMapConfigurationType(final Long reportId) throws ServiceException;
 
