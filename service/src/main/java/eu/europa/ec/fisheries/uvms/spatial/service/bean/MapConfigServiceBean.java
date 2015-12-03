@@ -68,7 +68,7 @@ public class MapConfigServiceBean implements MapConfigService {
 
     @Override
     @SneakyThrows
-    @Transactional(Transactional.TxType.REQUIRES_NEW)
+    @Transactional(Transactional.TxType.REQUIRES_NEW) // annotation required to send error response
     public void handleDeleteMapConfiguration(SpatialDeleteMapConfigurationRQ request) throws ServiceException {
         SpatialValidator.validate(request);
 
