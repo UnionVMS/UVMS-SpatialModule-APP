@@ -28,4 +28,6 @@ public interface MapConfigService {
     void handleDeleteMapConfiguration(SpatialDeleteMapConfigurationRQ spatialDeleteMapConfigurationRQ) throws ServiceException;
 
     ConfigurationDto convertToAdminConfiguration(String config);
+
+    String convertToAdminJson(ConfigurationDto configurationDto, String defaultConfig);
 }

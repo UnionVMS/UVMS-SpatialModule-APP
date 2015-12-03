@@ -119,6 +119,14 @@ public class MapConfigServiceBean implements MapConfigService {
 
     @Override
     @SneakyThrows
+    public String convertToAdminJson(ConfigurationDto configurationDto, String defaultConfig) {
+        ConfigurationDto defaultConfigurationDto = convertToAdminConfiguration(defaultConfig);
+        configurationDto.setLayerSettings(defaultConfigurationDto.getLayerSettings()); // TODO fix layer settings, currently fixed value
+        return getJson(configurationDto);
+    }
+
+    @Override
+    @SneakyThrows
     public MapConfigDto getReportConfig(int reportId, String userPreferences, String adminPreferences) {
         ConfigurationDto configurationDto = mergeConfiguration(getUserConfiguration(userPreferences), getAdminConfiguration(adminPreferences)); //Returns merged config object between Admin and User configuration from USM
         return new MapConfigDto(getMap(configurationDto, reportId), getVectorStyles(configurationDto), getVisibilitySettings(configurationDto));
@@ -286,5 +294,10 @@ public class MapConfigServiceBean implements MapConfigService {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
         return mapper.readValue(configString, ConfigurationDto.class);
+    }
+
+    private String getJson(ConfigurationDto config) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writeValueAsString(config);
     }
 }

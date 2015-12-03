@@ -65,6 +65,18 @@ public class ConfigResource extends UnionVMSResource {
         return createSuccessResponse(mapConfigService.convertToAdminConfiguration(adminConfig));
     }
 
+    @POST
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Path("/admin/save")
+    @Interceptors(value = {ExceptionInterceptor.class})
+    public Response saveAdminPreferences(@Context HttpServletRequest request, ConfigurationDto configurationDto) throws ServiceException, IOException {
+        String applicationName = request.getServletContext().getInitParameter("usmApplication");
+        String defaultConfig = usmService.getOptionDefaultValue(DEFAULT_CONFIG, applicationName);
+        usmService.setOptionDefaultValue(DEFAULT_CONFIG, mapConfigService.convertToAdminJson(configurationDto, defaultConfig), applicationName);
+        return createSuccessResponse();
+    }
+
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Path("/projections")

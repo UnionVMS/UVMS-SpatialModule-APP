@@ -12,7 +12,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
         "units",
         "formats",
         "global",
-        "extent"
+        "extent",
+        "axis"
 })
 public class ProjectionDto {
 
@@ -36,6 +37,9 @@ public class ProjectionDto {
 
     @JsonProperty("extent")
     private String extent;
+
+    @JsonProperty("axis")
+    private String axis;
 
     /**
      * No args constructor for use in serialization
@@ -127,5 +131,15 @@ public class ProjectionDto {
     @JsonProperty("extent")
     public void setExtent(String extent) {
         this.extent = extent;
+    }
+
+    @JsonProperty("axis")
+    public String getAxis() {
+        return axis;
+    }
+
+    @JsonProperty("axis")
+    public void setAxis(String axis) {
+        this.axis = axis;
     }
 }
