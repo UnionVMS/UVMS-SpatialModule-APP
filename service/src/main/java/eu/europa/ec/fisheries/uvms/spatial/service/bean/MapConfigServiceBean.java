@@ -114,13 +114,16 @@ public class MapConfigServiceBean implements MapConfigService {
     @Override
     @SneakyThrows
     public ConfigurationDto convertToAdminConfiguration(String config) {
+        if (config == null || config.isEmpty()) {
+            return new ConfigurationDto();
+        }
         return getConfiguration(config);
     }
 
     @Override
     @SneakyThrows
     public ConfigurationDto convertToUserConfiguration(String config) {
-        if (config == null) {
+        if (config == null || config.isEmpty()) {
             return new ConfigurationDto();
         }
         return getConfiguration(config);
@@ -137,7 +140,11 @@ public class MapConfigServiceBean implements MapConfigService {
     @Override
     @SneakyThrows
     public String convertToUserJson(ConfigurationDto configurationDto) {
-        return getJson(configurationDto);
+        String json = getJson(configurationDto);
+        if (json == null || json.isEmpty()) {
+            throw new ServiceException("Invalid JSON");
+        }
+        return json;
     }
 
     @Override
@@ -303,11 +310,11 @@ public class MapConfigServiceBean implements MapConfigService {
     }
 
     private ConfigurationDto getAdminConfiguration(String adminPreference) throws IOException {
-        return (adminPreference == null) ? new ConfigurationDto() : getConfiguration(adminPreference);
+        return (adminPreference == null || adminPreference.isEmpty()) ? new ConfigurationDto() : getConfiguration(adminPreference);
     }
 
     private ConfigurationDto getUserConfiguration(String userPreference) throws IOException {
-        return (userPreference == null) ? new ConfigurationDto() : getConfiguration(userPreference);
+        return (userPreference == null || userPreference.isEmpty()) ? new ConfigurationDto() : getConfiguration(userPreference);
     }
 
     private ConfigurationDto getConfiguration(String configString) throws IOException {

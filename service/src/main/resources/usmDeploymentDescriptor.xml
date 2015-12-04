@@ -422,5 +422,12 @@
 }]]></defaultValue>
         </option>
 
+        <option>
+            <name>USER_CONFIG</name>
+            <description>Default map configuation settings</description>
+            <dataType>TEXT</dataType>
+            <defaultValue></defaultValue>
+        </option>
+
     </application>
 </ns2:deployApplicationRequest>

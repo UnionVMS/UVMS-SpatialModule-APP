@@ -32,6 +32,8 @@ public class ConfigResource extends UnionVMSResource {
 
     private static final String DEFAULT_CONFIG = "DEFAULT_CONFIG";
 
+    private static final String USER_CONFIG = "USER_CONFIG";
+
     @EJB
     private MapConfigService mapConfigService;
 
@@ -50,7 +52,7 @@ public class ConfigResource extends UnionVMSResource {
         final String username = request.getRemoteUser();
         String applicationName = request.getServletContext().getInitParameter("usmApplication");
         String adminPref = usmService.getOptionDefaultValue(DEFAULT_CONFIG, applicationName);
-        String userPref = usmService.getUserPreference(DEFAULT_CONFIG, username, applicationName, roleName, scopeName, jwtToken);
+        String userPref = usmService.getUserPreference(USER_CONFIG, username, applicationName, roleName, scopeName, jwtToken);
         log.info("Getting map configuration for report with id = {}", id);
         MapConfigDto mapConfig = mapConfigService.getReportConfig(id, userPref, adminPref);
         return createSuccessResponse(mapConfig);
@@ -89,7 +91,7 @@ public class ConfigResource extends UnionVMSResource {
                                        @HeaderParam(AuthConstants.HTTP_HEADER_AUTHORIZATION) String jwtToken) throws ServiceException, IOException {
         String applicationName = request.getServletContext().getInitParameter("usmApplication");
         final String username = request.getRemoteUser();
-        String userPref = usmService.getUserPreference(DEFAULT_CONFIG, username, applicationName, roleName, scopeName, jwtToken);
+        String userPref = usmService.getUserPreference(USER_CONFIG, username, applicationName, roleName, scopeName, jwtToken);
         return createSuccessResponse(mapConfigService.convertToUserConfiguration(userPref));
     }
 
@@ -106,7 +108,7 @@ public class ConfigResource extends UnionVMSResource {
         String applicationName = request.getServletContext().getInitParameter("usmApplication");
         final String username = request.getRemoteUser();
         String json = mapConfigService.convertToUserJson(configurationDto);
-        usmService.putUserPreference(DEFAULT_CONFIG, json, applicationName, scopeName, roleName, username, jwtToken);
+        usmService.putUserPreference(USER_CONFIG, json, applicationName, scopeName, roleName, username, jwtToken);
         return createSuccessResponse();
     }
 
