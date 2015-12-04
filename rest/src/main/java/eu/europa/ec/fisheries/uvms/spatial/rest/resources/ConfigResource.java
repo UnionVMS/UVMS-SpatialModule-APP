@@ -47,12 +47,11 @@ public class ConfigResource extends UnionVMSResource {
     public Response getReportMapConfig(@Context HttpServletRequest request,
                                        @HeaderParam(AuthConstants.HTTP_HEADER_SCOPE_NAME) String scopeName,
                                        @HeaderParam(AuthConstants.HTTP_HEADER_ROLE_NAME) String roleName,
-                                       @HeaderParam(AuthConstants.HTTP_HEADER_AUTHORIZATION) String jwtToken,
                                        @PathParam("id") int id) throws ServiceException {
         final String username = request.getRemoteUser();
         String applicationName = request.getServletContext().getInitParameter("usmApplication");
         String adminPref = usmService.getOptionDefaultValue(DEFAULT_CONFIG, applicationName);
-        String userPref = usmService.getUserPreference(USER_CONFIG, username, applicationName, roleName, scopeName, jwtToken);
+        String userPref = usmService.getUserPreference(USER_CONFIG, username, applicationName, roleName, scopeName);
         log.info("Getting map configuration for report with id = {}", id);
         MapConfigDto mapConfig = mapConfigService.getReportConfig(id, userPref, adminPref);
         return createSuccessResponse(mapConfig);
@@ -87,11 +86,10 @@ public class ConfigResource extends UnionVMSResource {
     @Interceptors(value = {ExceptionInterceptor.class})
     public Response getUserPreferences(@Context HttpServletRequest request,
                                        @HeaderParam(AuthConstants.HTTP_HEADER_SCOPE_NAME) String scopeName,
-                                       @HeaderParam(AuthConstants.HTTP_HEADER_ROLE_NAME) String roleName,
-                                       @HeaderParam(AuthConstants.HTTP_HEADER_AUTHORIZATION) String jwtToken) throws ServiceException, IOException {
+                                       @HeaderParam(AuthConstants.HTTP_HEADER_ROLE_NAME) String roleName) throws ServiceException, IOException {
         String applicationName = request.getServletContext().getInitParameter("usmApplication");
         final String username = request.getRemoteUser();
-        String userPref = usmService.getUserPreference(USER_CONFIG, username, applicationName, roleName, scopeName, jwtToken);
+        String userPref = usmService.getUserPreference(USER_CONFIG, username, applicationName, roleName, scopeName);
         return createSuccessResponse(mapConfigService.convertToUserConfiguration(userPref));
     }
 
@@ -103,12 +101,11 @@ public class ConfigResource extends UnionVMSResource {
     public Response saveUserPreferences(@Context HttpServletRequest request,
                                         @HeaderParam(AuthConstants.HTTP_HEADER_SCOPE_NAME) String scopeName,
                                         @HeaderParam(AuthConstants.HTTP_HEADER_ROLE_NAME) String roleName,
-                                        @HeaderParam(AuthConstants.HTTP_HEADER_AUTHORIZATION) String jwtToken,
                                         ConfigurationDto configurationDto) throws ServiceException, IOException {
         String applicationName = request.getServletContext().getInitParameter("usmApplication");
         final String username = request.getRemoteUser();
         String json = mapConfigService.convertToUserJson(configurationDto);
-        usmService.putUserPreference(USER_CONFIG, json, applicationName, scopeName, roleName, username, jwtToken);
+        usmService.putUserPreference(USER_CONFIG, json, applicationName, scopeName, roleName, username);
         return createSuccessResponse();
     }
 
