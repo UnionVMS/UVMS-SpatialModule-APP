@@ -3,15 +3,19 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * Created by padhyad on 11/30/2015.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class VisibilitySettingsDto {
 
+    @NotNull
     @JsonProperty("positions")
     private VisibilityPositionsDto visibilityPositionsDto;
 
+    @NotNull
     @JsonProperty("segments")
     private VisibilitySegmentDto visibilitySegmentDto;
 

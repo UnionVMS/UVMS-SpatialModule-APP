@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRawValue;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Map;
 
@@ -13,9 +14,11 @@ import java.util.Map;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SegmentsDto {
 
+    @NotNull
     @JsonProperty("attribute")
     private String attribute;
 
+    @NotNull
     @JsonProperty("style")
     private Map<String, String> style;
 

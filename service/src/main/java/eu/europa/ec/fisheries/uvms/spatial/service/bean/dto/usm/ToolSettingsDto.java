@@ -3,6 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -11,9 +12,11 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ToolSettingsDto {
 
+    @NotNull
     @JsonProperty("control")
     private List<ControlsDto> control;
 
+    @NotNull
     @JsonProperty("tbControl")
     private List<ControlsDto> tbControl;
 

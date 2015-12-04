@@ -3,27 +3,34 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * Created by padhyad on 11/25/2015.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ConfigurationDto {
 
+    @NotNull
     @JsonProperty("toolSettings")
     private ToolSettingsDto toolSettings;
 
+    @NotNull
     @JsonProperty("stylesSettings")
     private StyleSettingsDto stylesSettings;
 
+    @NotNull
     @JsonProperty("systemSettings")
     private SystemSettingsDto systemSettings;
 
     @JsonProperty("layerSettings")
     private LayerSettingsDto layerSettings;
 
+    @NotNull
     @JsonProperty("mapSettings")
     private MapSettingsDto mapSettings;
 
+    @NotNull
     @JsonProperty("visibilitySettings")
     private VisibilitySettingsDto visibilitySettings;
 
