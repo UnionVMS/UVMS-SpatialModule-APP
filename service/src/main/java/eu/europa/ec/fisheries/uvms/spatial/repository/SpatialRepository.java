@@ -53,7 +53,7 @@ public interface SpatialRepository extends DAO {
 
     List<ProjectionDto> findProjectionByMap(long reportId);
 
-    List<ProjectionDto> findProjectionBySrsCode(int srsCode);
+    List<ProjectionDto> findProjectionById(Long id);
 
     List<DisplayProjectionDto> findProjectionByDisplay(long reportId);
 

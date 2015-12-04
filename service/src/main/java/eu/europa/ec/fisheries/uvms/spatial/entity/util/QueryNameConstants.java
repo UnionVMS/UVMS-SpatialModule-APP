@@ -68,7 +68,7 @@ public final class QueryNameConstants {
     public static final String FIND_MAP_PROJ_BY_ID = "ReportLayerConfig.findMapProjectionById";
     public static final String FIND_DISPLAY_PROJ_BY_ID = "ReportLayerConfig.findDisplayProjectionById";
     public static final String FIND_REPORT_SERVICE_AREAS = "ReportLayerConfig.findReportConnectServiceAreas";
-    public static final String FIND_PROJECTION_BY_SRS_CODE = "ReportLayerConfig.findProjectionBySrsCode";
+    public static final String FIND_PROJECTION_BY_ID = "ReportLayerConfig.findProjectionById";
     public static final String FIND_SERVICE_LAYERS_BY_ID ="ReportLayerConfig.findServiceLayerById";
     public static final String FIND_BY_REPORT_ID = "ReportLayerConfig.findByReportId";
     public static final String FIND_CONFIG_BY_NAME = "SysConfig.findConfigById";

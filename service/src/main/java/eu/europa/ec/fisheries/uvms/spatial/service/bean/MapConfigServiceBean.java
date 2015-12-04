@@ -119,9 +119,24 @@ public class MapConfigServiceBean implements MapConfigService {
 
     @Override
     @SneakyThrows
+    public ConfigurationDto convertToUserConfiguration(String config) {
+        if (config == null) {
+            return new ConfigurationDto();
+        }
+        return getConfiguration(config);
+    }
+
+    @Override
+    @SneakyThrows
     public String convertToAdminJson(ConfigurationDto configurationDto, String defaultConfig) {
         ConfigurationDto defaultConfigurationDto = convertToAdminConfiguration(defaultConfig);
         configurationDto.setLayerSettings(defaultConfigurationDto.getLayerSettings()); // TODO fix layer settings, currently fixed value
+        return getJson(configurationDto);
+    }
+
+    @Override
+    @SneakyThrows
+    public String convertToUserJson(ConfigurationDto configurationDto) {
         return getJson(configurationDto);
     }
 
@@ -145,9 +160,8 @@ public class MapConfigServiceBean implements MapConfigService {
         if (projectionDtoList != null && !projectionDtoList.isEmpty()) { // Get Map Projection for report
             return projectionDtoList.get(0);
         } else { // If not available use Map Projection configured in USM
-            String mapSrsCode = configurationDto.getMapSettings().getMapProjection();
-            projectionDtoList = repository.findProjectionBySrsCode(Integer.parseInt(mapSrsCode));
-            return (projectionDtoList != null && !projectionDtoList.isEmpty()) ? projectionDtoList.get(0) : null;
+            int projectionId = configurationDto.getMapSettings().getMapProjectionId();
+            return getProjection(projectionId);
         }
     }
 
@@ -156,11 +170,17 @@ public class MapConfigServiceBean implements MapConfigService {
         DisplayProjectionDto displayProjection = getDisplayProjection(reportId);
         if (displayProjection != null) {
             return updateControls(controls, displayProjection.getUnits().value(),
-                    Integer.toString(displayProjection.getEpsgCode()), displayProjection.getFormats().value());
+                    displayProjection.getEpsgCode(), displayProjection.getFormats().value());
         } else {
+            ProjectionDto projection = getProjection(configurationDto.getMapSettings().getDisplayProjectionId());
             return updateControls(controls, configurationDto.getMapSettings().getScaleBarUnits(),
-                    configurationDto.getMapSettings().getDisplayProjection(), configurationDto.getMapSettings().getCoordinatesFormat());
+                    projection.getEpsgCode(), configurationDto.getMapSettings().getCoordinatesFormat());
         }
+    }
+
+    private ProjectionDto getProjection(Integer id) {
+        List<ProjectionDto> projectionDtoList = repository.findProjectionById(id.longValue());
+        return (projectionDtoList != null && !projectionDtoList.isEmpty()) ? projectionDtoList.get(0) : null;
     }
 
     private List<TbControlDto> getTbControls(ConfigurationDto configurationDto) {
@@ -264,13 +284,13 @@ public class MapConfigServiceBean implements MapConfigService {
         return serviceLayers;
     }
 
-    private List<ControlDto> updateControls(List<ControlDto> controls, String scaleBarUnit, String epsgCode, String coordinateFormat) {
+    private List<ControlDto> updateControls(List<ControlDto> controls, String scaleBarUnit, int epsgCode, String coordinateFormat) {
         for (ControlDto controlDto : controls) {
             if (controlDto.getType().equalsIgnoreCase(SCALE)) {
                 controlDto.setUnits(scaleBarUnit);
             }
             if (controlDto.getType().equalsIgnoreCase(MOUSECOORDS)) {
-                controlDto.setEpsgCode(Integer.parseInt(epsgCode));
+                controlDto.setEpsgCode(epsgCode);
                 controlDto.setFormat(coordinateFormat);
             }
         }

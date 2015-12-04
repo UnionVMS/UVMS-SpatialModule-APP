@@ -12,8 +12,8 @@ import javax.validation.constraints.NotNull;
 public class MapSettingsDto {
 
     @NotNull
-    @JsonProperty("refreshState")
-    private String refreshState;
+    @JsonProperty("refreshStatus")
+    private boolean refreshStatus;
 
     @NotNull
     @JsonProperty("scaleBarUnits")
@@ -24,36 +24,36 @@ public class MapSettingsDto {
     private String coordinatesFormat;
 
     @NotNull
-    @JsonProperty("mapProjection")
-    private String mapProjection;
+    @JsonProperty("mapProjectionId")
+    private int mapProjectionId;
 
     @NotNull
     @JsonProperty("refreshRate")
-    private String refreshRate;
+    private int refreshRate;
 
     @NotNull
-    @JsonProperty("displayProjection")
-    private String displayProjection;
+    @JsonProperty("displayProjectionId")
+    private int displayProjectionId;
 
     public MapSettingsDto() {}
 
-    public MapSettingsDto(String refreshState, String scaleBarUnits, String coordinatesFormat, String mapProjection, String refreshRate, String displayProjection) {
+    public MapSettingsDto(boolean refreshStatus, String scaleBarUnits, String coordinatesFormat, int mapProjectionId, int refreshRate, int displayProjectionId) {
         this.refreshRate = refreshRate;
         this.scaleBarUnits =scaleBarUnits;
         this.coordinatesFormat = coordinatesFormat;
-        this.mapProjection = mapProjection;
-        this.refreshState = refreshState;
-        this.displayProjection = displayProjection;
+        this.mapProjectionId = mapProjectionId;
+        this.refreshStatus = refreshStatus;
+        this.displayProjectionId = displayProjectionId;
     }
 
-    @JsonProperty("refreshState")
-    public String getRefreshState() {
-        return refreshState;
+    @JsonProperty("refreshStatus")
+    public boolean getRefreshStatus() {
+        return refreshStatus;
     }
 
-    @JsonProperty("refreshState")
-    public void setRefreshState(String refreshState) {
-        this.refreshState = refreshState;
+    @JsonProperty("refreshStatus")
+    public void setRefreshStatus(boolean refreshStatus) {
+        this.refreshStatus = refreshStatus;
     }
 
     @JsonProperty("scaleBarUnits")
@@ -76,38 +76,38 @@ public class MapSettingsDto {
         this.coordinatesFormat = coordinatesFormat;
     }
 
-    @JsonProperty("mapProjection")
-    public String getMapProjection() {
-        return mapProjection;
+    @JsonProperty("mapProjectionId")
+    public int getMapProjectionId() {
+        return mapProjectionId;
     }
 
-    @JsonProperty("mapProjection")
-    public void setMapProjection(String mapProjection) {
-        this.mapProjection = mapProjection;
+    @JsonProperty("mapProjectionId")
+    public void setMapProjectionId(int mapProjectionId) {
+        this.mapProjectionId = mapProjectionId;
     }
 
     @JsonProperty("refreshRate")
-    public String getRefreshRate() {
+    public int getRefreshRate() {
         return refreshRate;
     }
 
     @JsonProperty("refreshRate")
-    public void setRefreshRate(String refreshRate) {
+    public void setRefreshRate(int refreshRate) {
         this.refreshRate = refreshRate;
     }
 
-    @JsonProperty("displayProjection")
-    public String getDisplayProjection() {
-        return displayProjection;
+    @JsonProperty("displayProjectionId")
+    public int getDisplayProjectionId() {
+        return displayProjectionId;
     }
 
-    @JsonProperty("displayProjection")
-    public void setDisplayProjection(String displayProjection) {
-        this.displayProjection = displayProjection;
+    @JsonProperty("displayProjectionId")
+    public void setDisplayProjectionId(int displayProjectionId) {
+        this.displayProjectionId = displayProjectionId;
     }
 
     @Override
     public String toString() {
-        return "ClassPojo [refreshState = " + refreshState + ", scaleBarUnits = " + scaleBarUnits + ", coordinatesFormat = " + coordinatesFormat + ", mapProjection = " + mapProjection + ", refreshRate = " + refreshRate + ", displayProjection = " + displayProjection + "]";
+        return "ClassPojo [refreshState = " + refreshStatus + ", scaleBarUnits = " + scaleBarUnits + ", coordinatesFormat = " + coordinatesFormat + ", mapProjection = " + mapProjectionId + ", refreshRate = " + refreshRate + ", displayProjection = " + displayProjectionId + "]";
     }
 }

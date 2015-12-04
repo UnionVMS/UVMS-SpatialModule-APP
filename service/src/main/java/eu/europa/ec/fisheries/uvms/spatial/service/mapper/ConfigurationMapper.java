@@ -26,12 +26,12 @@ public class ConfigurationMapper {
         if ( source == null || target == null) {
             return;
         }
-        target.setRefreshState(source.getRefreshState() == null ? target.getRefreshState() : source.getRefreshState());
+        target.setRefreshStatus(source.getRefreshStatus());
         target.setScaleBarUnits(source.getScaleBarUnits() == null ? target.getScaleBarUnits() : source.getScaleBarUnits());
         target.setCoordinatesFormat(source.getCoordinatesFormat() == null ? target.getCoordinatesFormat() : source.getCoordinatesFormat());
-        target.setMapProjection(source.getMapProjection() == null ? target.getMapProjection() : source.getMapProjection());
-        target.setRefreshRate(source.getRefreshRate() == null ? target.getRefreshRate() : source.getRefreshRate());
-        target.setDisplayProjection(source.getDisplayProjection() == null ? target.getDisplayProjection() : source.getDisplayProjection());
+        target.setMapProjectionId(source.getMapProjectionId());
+        target.setRefreshRate(source.getRefreshRate());
+        target.setDisplayProjectionId(source.getDisplayProjectionId());
     }
 }
 

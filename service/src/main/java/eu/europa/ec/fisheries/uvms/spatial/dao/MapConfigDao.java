@@ -20,7 +20,7 @@ public class MapConfigDao extends CommonDao {
 
     private static final String REPORT_ID = "reportId";
 
-    private static final String SRS_CODE = "srsCode";
+    private static final String ID = "id";
 
     private static final String ID_LIST = "ids";
 
@@ -35,9 +35,9 @@ public class MapConfigDao extends CommonDao {
     }
 
     @SuppressWarnings("unchecked")
-    public List<ProjectionDto> findProjectionBySrsCode(int srsCode) {
-        Map<String, Object> parameters = ImmutableMap.<String, Object>builder().put(SRS_CODE, srsCode).build();
-        return createNamedNativeQuery(QueryNameConstants.FIND_PROJECTION_BY_SRS_CODE, parameters, ProjectionDto.class).list();
+    public List<ProjectionDto> findProjectionById(Long id) {
+        Map<String, Object> parameters = ImmutableMap.<String, Object>builder().put(ID, id).build();
+        return createNamedNativeQuery(QueryNameConstants.FIND_PROJECTION_BY_ID, parameters, ProjectionDto.class).list();
     }
 
     @SuppressWarnings("unchecked")

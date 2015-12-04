@@ -1,11 +1,11 @@
 {
   "mapSettings": {
-    "mapProjection": 3857,
-    "displayProjection": 4326,
+    "mapProjectionId": 1,
+    "displayProjectionId": 2,
     "coordinatesFormat": "dd",
     "scaleBarUnits": "metric",
     "refreshRate": 100,
-    "refreshState": true
+    "refreshStatus": true
   },
   "stylesSettings": {
     "positions": {

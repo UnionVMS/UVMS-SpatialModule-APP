@@ -122,8 +122,8 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     }
 
     @Override
-    public List<ProjectionDto> findProjectionBySrsCode(int srsCode) {
-        return mapConfigDao.findProjectionBySrsCode(srsCode);
+    public List<ProjectionDto> findProjectionById(Long id) {
+        return mapConfigDao.findProjectionById(id);
     }
 
     @Override
