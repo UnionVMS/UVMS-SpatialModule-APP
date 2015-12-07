@@ -22,7 +22,7 @@ public class CountryServiceIT extends AbstractArquillianIT {
 
     @Test
     public void TestGetAllCountries() {
-        List<Map<String, String>> allCountries =  countryService.getAllCountriesDesc();
+        Map<String, String> allCountries =  countryService.getAllCountriesDesc();
         assertNotNull(allCountries);
         assertFalse(allCountries.isEmpty());
     }

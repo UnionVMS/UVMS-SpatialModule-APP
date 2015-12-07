@@ -39,7 +39,7 @@ public class CountryServiceTest {
     @Test
     public void testGetCountriesTest() {
         mockCountries();
-        List<Map<String, String>> countries = countryServiceBean.getAllCountriesDesc();
+        Map<String, String> countries = countryServiceBean.getAllCountriesDesc();
         assertNotNull(countries);
         assertFalse(countries.isEmpty());
         Mockito.verify(repository, Mockito.times(1)).findAllCountriesDesc();

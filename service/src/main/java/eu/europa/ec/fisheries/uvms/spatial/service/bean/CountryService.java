@@ -8,5 +8,5 @@ import java.util.Map;
  */
 public interface CountryService {
 
-    public List<Map<String, String>> getAllCountriesDesc();
+    public Map<String, String> getAllCountriesDesc();
 }
