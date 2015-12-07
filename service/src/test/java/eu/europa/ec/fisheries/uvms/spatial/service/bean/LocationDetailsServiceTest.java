@@ -65,8 +65,21 @@ public class LocationDetailsServiceTest {
 	/**
 	 * Invalid coordinate test
 	 */
-	@Test(expected=SpatialServiceException.class)
-	public void inValidCoordinatesTest() {
+	@Test
+	public void shouldReturnEmptyResponseWhenNoAreaFound() {
+		// given
+		LocationTypeEntry locationEntry = createLocationTypeEntry();
+
+		// when
+		LocationDetails locationDetails = locationDetailsServiceBean.getLocationDetails(locationEntry);
+
+		// then
+		assertNotNull(locationDetails);
+		assertEquals("port", locationDetails.getLocationType().getLocationType());
+		assertEquals(0, locationDetails.getLocationProperties().size());
+	}
+
+	private LocationTypeEntry createLocationTypeEntry() {
 		setMocks(getMockedPortsEntity());
 		mockEntityByCoordinate(new ArrayList());
 		LocationTypeEntry locationEntry = new LocationTypeEntry();
@@ -74,9 +87,9 @@ public class LocationDetailsServiceTest {
 		locationEntry.setLatitude(410.0);
 		locationEntry.setLongitude(-90.5);
 		locationEntry.setCrs(4326);
-		locationDetailsServiceBean.getLocationDetails(locationEntry);
+		return locationEntry;
 	}
-		
+
 	/**
 	 * Test Port entity for valid response
 	 */

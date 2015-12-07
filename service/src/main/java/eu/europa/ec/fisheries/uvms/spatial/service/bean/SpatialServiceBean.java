@@ -4,13 +4,17 @@ import static eu.europa.ec.fisheries.uvms.spatial.util.ColumnAliasNameHelper.get
 import static eu.europa.ec.fisheries.uvms.spatial.util.SpatialTypeEnum.getEntityClassByType;
 import static eu.europa.ec.fisheries.uvms.spatial.util.SpatialTypeEnum.getNativeQueryByType;
 import static eu.europa.ec.fisheries.uvms.spatial.util.SpatialUtils.convertToPointInWGS84;
+import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.ejb.EJB;
 
+import com.google.common.collect.Maps;
 import lombok.SneakyThrows;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.collect.ImmutableMap;
@@ -61,16 +65,16 @@ public abstract class SpatialServiceBean {
     
     @SuppressWarnings("rawtypes")
 	protected Map<String, String> getAreaLocationDetailsByCoordinates(Coordinate request, AreaLocationTypesEntity areaLocationTypeEntry) {
-    	List list = getAllAreaByCoordinates(request, areaLocationTypeEntry);
-    	return getFieldMap(list.get(0));
+		Map<String, String> fieldMap = new HashMap();
+		List list = getAllAreaByCoordinates(request, areaLocationTypeEntry);
+		if (isNotEmpty(list)) {
+			fieldMap = getFieldMap(list.get(0));
+		}
+		return fieldMap;
     }
     
     protected List getAllAreaByCoordinates(Coordinate request, AreaLocationTypesEntity areaLocationTypeEntry) {
     	Point point = convertToPointInWGS84(request.getLongitude(), request.getLatitude(), request.getCrs());
-    	List list = repository.findAreaOrLocationByCoordinates(point, getNativeQueryByType(areaLocationTypeEntry.getTypeName()));
-    	if (list.isEmpty()) {
-    		throw new SpatialServiceException(SpatialServiceErrors.ENTITY_NOT_FOUND, areaLocationTypeEntry.getTypeName());
-    	}
-    	return list;
+		return repository.findAreaOrLocationByCoordinates(point, getNativeQueryByType(areaLocationTypeEntry.getTypeName()));
     }
 }

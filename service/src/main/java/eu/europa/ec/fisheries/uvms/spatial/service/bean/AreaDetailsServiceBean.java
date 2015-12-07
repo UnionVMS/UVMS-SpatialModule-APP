@@ -42,11 +42,11 @@ public class AreaDetailsServiceBean extends SpatialServiceBean implements AreaDe
     }    
     
     @Override
-    public List<AreaDetails> getAreaDetailsByLocation(AreaTypeEntry request) {
-    	AreaLocationTypesEntity areaType = getAreaLocationType(request.getAreaType());
+    public List<AreaDetails> getAreaDetailsByLocation(AreaTypeEntry areaTypeEntry) {
+    	AreaLocationTypesEntity areaType = getAreaLocationType(areaTypeEntry.getAreaType());
     	if (areaType.getIsSystemWide()) {
-    		List allAreas = getAllAreaByCoordinates(request, areaType);
-    		return getAllAreaDetails(allAreas, request);
+    		List allAreas = getAllAreaByCoordinates(areaTypeEntry, areaType);
+    		return getAllAreaDetails(allAreas, areaTypeEntry);
     	} else {
     		// TODO Get area details for custom areas and User Areas
     		throw new NotImplementedException("Not implemented");

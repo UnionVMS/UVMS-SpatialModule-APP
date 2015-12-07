@@ -21,16 +21,16 @@ import lombok.extern.slf4j.Slf4j;
 public class LocationDetailsServiceBean extends SpatialServiceBean implements LocationDetailsService {
 	
     @Override
-    public LocationDetails getLocationDetails(LocationTypeEntry request) {
-    	AreaLocationTypesEntity locationType = getAreaLocationType(request.getLocationType());
+    public LocationDetails getLocationDetails(LocationTypeEntry locationTypeEntry) {
+    	AreaLocationTypesEntity locationType = getAreaLocationType(locationTypeEntry.getLocationType());
     	Map<String, String> properties;
-    	if (request.getId() != null) {
-    		validateId(request.getId());
-    		properties = getAreaLocationDetailsById(Long.parseLong(request.getId()), locationType);
+    	if (locationTypeEntry.getId() != null) {
+    		validateId(locationTypeEntry.getId());
+    		properties = getAreaLocationDetailsById(Long.parseLong(locationTypeEntry.getId()), locationType);
     	} else {
-    		properties = getAreaLocationDetailsByCoordinates(request, locationType);
+    		properties = getAreaLocationDetailsByCoordinates(locationTypeEntry, locationType);
     	}
-        return createLocationDetailsResponse(properties, request);
+        return createLocationDetailsResponse(properties, locationTypeEntry);
     }
 
     private LocationDetails createLocationDetailsResponse(Map<String, String> properties, LocationTypeEntry locationType) {
