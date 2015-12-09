@@ -40,7 +40,7 @@ public class MapConfigResource extends UnionVMSResource {
 
             log.error("[ Error when getting map settings. ] ", ex);
 
-            response = createErrorResponse(ex.getMessage());
+            response = createErrorResponse(ex.getMessage());//FIXME this won't be translated properly
 
         }
 

@@ -6,10 +6,11 @@
         <description>Deployment descriptor of module "Spatial" version "@application.version@".</description>
         <parent>Union VMS</parent>
 
+
         <feature>
-            <name>DEFAULT_CONFIG_FEATURE</name>
-            <description>Temporary Feature for Spatial in USM</description>
-            <group>spatial config</group>
+            <name>MANAGE_SYSTEM_SPATIAL_CONFIGURATIONS</name>
+            <description>Allows you to view/update spatial configurations located under the Admin tab</description>
+            <group>spatial</group>
         </feature>
 
         <option>

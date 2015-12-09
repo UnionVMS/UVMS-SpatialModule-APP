@@ -281,7 +281,7 @@
                     </targetTests>
                 </configuration>
             </plugin>
-            <plugin>
+      <!--      <plugin>
                 <groupId>com.buschmais.jqassistant.scm</groupId>
                 <artifactId>jqassistant-maven-plugin</artifactId>
                 <version>1.1.0</version>
@@ -303,7 +303,7 @@
                         <version>1.1.0</version>
                     </dependency>
                 </dependencies>
-            </plugin>
+            </plugin>-->
         </plugins>
         <pluginManagement>
         	<plugins>

@@ -221,4 +221,11 @@
         </xs:sequence>
     </xs:complexType>
 
+
+    <xs:simpleType name="SpatialFeaturesEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="MANAGE_SYSTEM_SPATIAL_CONFIGURATIONS"/>
+        </xs:restriction>
+    </xs:simpleType>
+
 </xs:schema>

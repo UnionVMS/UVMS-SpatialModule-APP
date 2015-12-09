@@ -7,6 +7,7 @@ import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
 import eu.europa.ec.fisheries.uvms.service.interceptor.ValidationInterceptor;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialFeaturesEnum;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.MapConfigService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.MapConfigDto;
@@ -62,9 +63,18 @@ public class ConfigResource extends UnionVMSResource {
     @Path("/admin")
     @Interceptors(value = {ExceptionInterceptor.class})
     public Response getAdminPreferences(@Context HttpServletRequest request) throws ServiceException, IOException {
-        String applicationName = request.getServletContext().getInitParameter("usmApplication");
-        String adminConfig = usmService.getOptionDefaultValue(DEFAULT_CONFIG, applicationName);
-        return createSuccessResponse(mapConfigService.convertToAdminConfiguration(adminConfig));
+
+        Response response;
+
+        if (request.isUserInRole(SpatialFeaturesEnum.MANAGE_SYSTEM_SPATIAL_CONFIGURATIONS.toString())) {
+            String applicationName = request.getServletContext().getInitParameter("usmApplication");
+            String adminConfig = usmService.getOptionDefaultValue(DEFAULT_CONFIG, applicationName);
+            response = createSuccessResponse(mapConfigService.convertToAdminConfiguration(adminConfig));
+        } else {
+            response = createErrorResponse("User not authorized to access Spatial System Configurations.");
+        }
+
+        return response;
     }
 
     @POST
@@ -73,11 +83,19 @@ public class ConfigResource extends UnionVMSResource {
     @Path("/admin/save")
     @Interceptors(value = {ExceptionInterceptor.class, ValidationInterceptor.class})
     public Response saveAdminPreferences(@Context HttpServletRequest request, ConfigurationDto configurationDto) throws ServiceException, IOException {
-        String applicationName = request.getServletContext().getInitParameter("usmApplication");
-        String defaultConfig = usmService.getOptionDefaultValue(DEFAULT_CONFIG, applicationName);
-        String json = mapConfigService.convertToAdminJson(configurationDto, defaultConfig);
-        usmService.setOptionDefaultValue(DEFAULT_CONFIG, json, applicationName);
-        return createSuccessResponse();
+        Response response;
+
+        if (request.isUserInRole(SpatialFeaturesEnum.MANAGE_SYSTEM_SPATIAL_CONFIGURATIONS.toString())) {
+            String applicationName = request.getServletContext().getInitParameter("usmApplication");
+            String defaultConfig = usmService.getOptionDefaultValue(DEFAULT_CONFIG, applicationName);
+            String json = mapConfigService.convertToAdminJson(configurationDto, defaultConfig);
+            usmService.setOptionDefaultValue(DEFAULT_CONFIG, json, applicationName);
+            response = createSuccessResponse();
+        } else {
+            response = createErrorResponse("User not authorized to access Spatial System Configurations.");
+        }
+
+        return response;
     }
 
     @GET
