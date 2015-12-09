@@ -19,13 +19,15 @@ public class AreaLayerDto implements Serializable {
 	protected String serviceUrl;
 	
 	protected String serviceType;
-	
+
 	protected String style;
-	
+
+	protected Boolean isInternal;
+
 	public AreaLayerDto() {
 	}
 	
-	public AreaLayerDto(String typeName, String areaTypeDesc, String geoName, String serviceUrl, String serviceType, String style) {
+	public AreaLayerDto(String typeName, String areaTypeDesc, String geoName, String serviceUrl, String serviceType, String style, Boolean isInternal) {
 		super();
 		this.typeName = typeName;
 		this.areaTypeDesc = areaTypeDesc;
@@ -33,6 +35,7 @@ public class AreaLayerDto implements Serializable {
 		this.serviceUrl = serviceUrl;
 		this.serviceType = serviceType;
 		this.style = style;
+		this.isInternal = isInternal;
 	}
 
 	@JsonProperty("style")
@@ -87,5 +90,14 @@ public class AreaLayerDto implements Serializable {
 
 	public void setServiceType(String serviceType) {
 		this.serviceType = serviceType;
+	}
+
+	@JsonProperty("isInternal")
+	public Boolean getIsInternal() {
+		return isInternal;
+	}
+
+	public void setIsInternal(Boolean isInternal) {
+		this.isInternal = isInternal;
 	}
 }

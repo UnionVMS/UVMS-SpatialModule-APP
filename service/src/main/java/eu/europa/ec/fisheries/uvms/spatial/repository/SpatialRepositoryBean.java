@@ -14,7 +14,6 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.DisplayProjectionDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
 import eu.europa.ec.fisheries.uvms.spatial.util.SqlPropertyHolder;
-import org.apache.commons.collections.CollectionUtils;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.*;
@@ -186,6 +185,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
         return sysConfigDao.findSystemConfigs();
     }
 
+    @Override
     public String findSystemConfigByName(Map<String, String> parameters) throws ServiceException {
         List<String> geoServerUrl = findEntityByNamedQuery(String.class, QueryNameConstants.FIND_CONFIG_BY_NAME, parameters, 1);
         return (geoServerUrl != null && !geoServerUrl.isEmpty()) ? geoServerUrl.get(0) : null;
@@ -194,9 +194,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     @Override
     @Transactional
     public void deleteBy(final List<Long> spatialConnectIds) throws ServiceException {
-
         reportConnectSpatialDao.deleteById(spatialConnectIds);
-
     }
 
     @Override
