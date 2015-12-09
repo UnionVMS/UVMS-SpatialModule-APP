@@ -36,6 +36,7 @@ import java.io.InputStream;
 import java.util.*;
 
 import static eu.europa.ec.fisheries.uvms.spatial.service.mapper.ConfigurationMapper.mergeConfiguration;
+import static eu.europa.ec.fisheries.uvms.spatial.service.mapper.ConfigurationMapper.mergeUserConfiguration;
 
 @Stateless
 @Local(MapConfigService.class)
@@ -114,19 +115,15 @@ public class MapConfigServiceBean implements MapConfigService {
     @Override
     @SneakyThrows
     public ConfigurationDto convertToAdminConfiguration(String config) {
-        if (config == null || config.isEmpty()) {
-            return new ConfigurationDto();
-        }
-        return getConfiguration(config);
+        return getAdminConfiguration(config);
     }
 
     @Override
     @SneakyThrows
-    public ConfigurationDto convertToUserConfiguration(String config) {
-        if (config == null || config.isEmpty()) {
-            return new ConfigurationDto();
-        }
-        return getConfiguration(config);
+    public ConfigurationDto convertToUserConfiguration(String config , String defaultConfig) {
+        ConfigurationDto userConfig = getUserConfiguration(config);
+        ConfigurationDto adminConfig = getAdminConfiguration(defaultConfig);
+        return mergeUserConfiguration(adminConfig, userConfig);
     }
 
     @Override
@@ -139,12 +136,12 @@ public class MapConfigServiceBean implements MapConfigService {
 
     @Override
     @SneakyThrows
-    public String convertToUserJson(ConfigurationDto configurationDto) {
-        String json = getJson(configurationDto);
-        if (json == null || json.isEmpty()) {
+    public String convertToUserJson(ConfigurationDto configurationDto, String userPref) {
+        if(configurationDto == null) {
             throw new ServiceException("Invalid JSON");
         }
-        return json;
+        ConfigurationDto userConfig = getUserConfiguration(userPref);
+        return getJson(mergeConfiguration(configurationDto, userConfig));
     }
 
     @Override

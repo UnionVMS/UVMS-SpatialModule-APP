@@ -89,8 +89,9 @@ public class ConfigResource extends UnionVMSResource {
                                        @HeaderParam(AuthConstants.HTTP_HEADER_ROLE_NAME) String roleName) throws ServiceException, IOException {
         String applicationName = request.getServletContext().getInitParameter("usmApplication");
         final String username = request.getRemoteUser();
+        String adminPref = usmService.getOptionDefaultValue(DEFAULT_CONFIG, applicationName);
         String userPref = usmService.getUserPreference(USER_CONFIG, username, applicationName, roleName, scopeName);
-        return createSuccessResponse(mapConfigService.convertToUserConfiguration(userPref));
+        return createSuccessResponse(mapConfigService.convertToUserConfiguration(userPref, adminPref));
     }
 
     @POST
@@ -104,7 +105,8 @@ public class ConfigResource extends UnionVMSResource {
                                         ConfigurationDto configurationDto) throws ServiceException, IOException {
         String applicationName = request.getServletContext().getInitParameter("usmApplication");
         final String username = request.getRemoteUser();
-        String json = mapConfigService.convertToUserJson(configurationDto);
+        String userPref = usmService.getUserPreference(USER_CONFIG, username, applicationName, roleName, scopeName);
+        String json = mapConfigService.convertToUserJson(configurationDto, userPref);
         usmService.putUserPreference(USER_CONFIG, json, applicationName, scopeName, roleName, username);
         return createSuccessResponse();
     }

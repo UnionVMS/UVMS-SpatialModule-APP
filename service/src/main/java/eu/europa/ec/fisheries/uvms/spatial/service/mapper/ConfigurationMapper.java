@@ -18,7 +18,7 @@ public class ConfigurationMapper {
         target.setToolSettings(source.getToolSettings() == null ? target.getToolSettings() : source.getToolSettings());
         target.setLayerSettings(source.getLayerSettings() == null ? target.getLayerSettings() : source.getLayerSettings());
         target.setVisibilitySettings(source.getVisibilitySettings() == null ? target.getVisibilitySettings() : source.getVisibilitySettings());
-        mergeMapSettings(source.getMapSettings(), target.getMapSettings());
+        target.setMapSettings(source.getMapSettings() == null ? target.getMapSettings() : source.getMapSettings());
         return target;
     }
 
@@ -32,6 +32,16 @@ public class ConfigurationMapper {
         target.setMapProjectionId(source.getMapProjectionId());
         target.setRefreshRate(source.getRefreshRate());
         target.setDisplayProjectionId(source.getDisplayProjectionId());
+    }
+
+    public static ConfigurationDto mergeUserConfiguration(ConfigurationDto source, ConfigurationDto target) {
+        if ( source == null || target == null) {
+            return target;
+        }
+        target.setStylesSettings(target.getStylesSettings() == null ? source.getStylesSettings() : target.getStylesSettings());
+        target.setVisibilitySettings(target.getVisibilitySettings() == null ? source.getVisibilitySettings() : target.getVisibilitySettings());
+        target.setMapSettings(target.getMapSettings() == null ? source.getMapSettings() : target.getMapSettings());
+        return target;
     }
 }
 

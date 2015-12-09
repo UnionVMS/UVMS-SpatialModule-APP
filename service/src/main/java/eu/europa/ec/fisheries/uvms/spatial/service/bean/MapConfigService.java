@@ -31,7 +31,7 @@ public interface MapConfigService {
 
     String convertToAdminJson(ConfigurationDto configurationDto, String defaultConfig);
 
-    ConfigurationDto convertToUserConfiguration(String config);
+    ConfigurationDto convertToUserConfiguration(String config, String defaultConfig);
 
-    String convertToUserJson(ConfigurationDto configurationDto);
+    String convertToUserJson(ConfigurationDto configurationDto, String userPref);
 }
