@@ -127,11 +127,6 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     }
 
     @Override
-    public List<DisplayProjectionDto> findProjectionByDisplay(long reportId) {
-        return mapConfigDao.findProjectionByDisplay(reportId);
-    }
-
-    @Override
     public List<ReportConnectServiceAreasEntity> findReportConnectServiceAreas(long reportId) {
         return mapConfigDao.findReportConnectServiceAreas(reportId);
     }

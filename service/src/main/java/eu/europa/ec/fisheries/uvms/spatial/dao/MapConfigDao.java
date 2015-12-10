@@ -41,12 +41,6 @@ public class MapConfigDao extends CommonDao {
     }
 
     @SuppressWarnings("unchecked")
-    public List<DisplayProjectionDto> findProjectionByDisplay(long reportId) {
-        Map<String, Object> parameters = ImmutableMap.<String, Object>builder().put(REPORT_ID, reportId).build();
-        return createNamedNativeQuery(QueryNameConstants.FIND_DISPLAY_PROJ_BY_ID, parameters, DisplayProjectionDto.class).list();
-    }
-
-    @SuppressWarnings("unchecked")
     public List<ReportConnectServiceAreasEntity> findReportConnectServiceAreas(long reportId) {
         Map<String, Object> parameters = ImmutableMap.<String, Object>builder().put(REPORT_ID, reportId).build();
         return createNamedQuery(QueryNameConstants.FIND_REPORT_SERVICE_AREAS, parameters).list();

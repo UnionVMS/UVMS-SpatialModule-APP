@@ -9,12 +9,7 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntit
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.mapper.ReportConnectSpatialMapper;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.MapConfigurationType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialDeleteMapConfigurationRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialGetMapConfigurationRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialGetMapConfigurationRS;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveOrUpdateMapConfigurationRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveOrUpdateMapConfigurationRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.ConfigurationDto;
@@ -172,17 +167,11 @@ public class MapConfigServiceBean implements MapConfigService {
         }
     }
 
-    private List<ControlDto> getControls(int reportId, ConfigurationDto configurationDto) {
+    private List<ControlDto> getControls(int reportId, ConfigurationDto configurationDto) throws ServiceException {
         List<ControlDto> controls = MapConfigMapper.INSTANCE.getControls(configurationDto.getToolSettings().getControl());
-        DisplayProjectionDto displayProjection = getDisplayProjection(reportId);
-        if (displayProjection != null) {
-            return updateControls(controls, displayProjection.getUnits().value(),
-                    displayProjection.getEpsgCode(), displayProjection.getFormats().value());
-        } else {
-            ProjectionDto projection = getProjection(configurationDto.getMapSettings().getDisplayProjectionId());
-            return updateControls(controls, configurationDto.getMapSettings().getScaleBarUnits(),
-                    projection.getEpsgCode(), configurationDto.getMapSettings().getCoordinatesFormat());
-        }
+        DisplayProjectionDto displayProjection = getDisplayProjection(reportId, configurationDto);
+        return updateControls(controls, displayProjection.getUnits().value(),
+                displayProjection.getEpsgCode(), displayProjection.getFormats().value());
     }
 
     private ProjectionDto getProjection(Integer id) {
@@ -303,9 +292,30 @@ public class MapConfigServiceBean implements MapConfigService {
         return controls;
     }
 
-    private DisplayProjectionDto getDisplayProjection(int reportId) {
-        List<DisplayProjectionDto> projectionDtoList = repository.findProjectionByDisplay(reportId);
-        return (projectionDtoList != null && !projectionDtoList.isEmpty()) ? projectionDtoList.get(0) : null;
+    private DisplayProjectionDto getDisplayProjection(Integer reportId, ConfigurationDto configurationDto) throws ServiceException {
+        DisplayProjectionDto displayProjectionDto = new DisplayProjectionDto();
+        ReportConnectSpatialEntity entity = repository.findReportConnectSpatialBy(reportId.longValue());
+
+        if (entity != null && entity.getProjectionByDisplayProjId() != null) { // Check value in DB
+            displayProjectionDto.setEpsgCode(entity.getProjectionByDisplayProjId().getSrsCode());
+        } else { // If not get from config
+            ProjectionDto projection = getProjection(configurationDto.getMapSettings().getDisplayProjectionId());
+            displayProjectionDto.setEpsgCode(projection.getEpsgCode());
+        }
+
+        if (entity != null && entity.getScaleBarType() != null) { // Check value in DB
+            displayProjectionDto.setUnits(entity.getScaleBarType());
+        } else {  // If not get from config
+            displayProjectionDto.setUnits(ScaleBarUnits.fromValue(configurationDto.getMapSettings().getScaleBarUnits()));
+        }
+
+        if (entity != null && entity.getDisplayFormatType() != null) { // Check value in DB
+            displayProjectionDto.setFormats(entity.getDisplayFormatType());
+        } else {  // If not get from config
+            displayProjectionDto.setFormats(CoordinatesFormat.fromValue(configurationDto.getMapSettings().getCoordinatesFormat()));
+        }
+
+        return displayProjectionDto;
     }
 
     private ConfigurationDto getAdminConfiguration(String adminPreference) throws IOException {

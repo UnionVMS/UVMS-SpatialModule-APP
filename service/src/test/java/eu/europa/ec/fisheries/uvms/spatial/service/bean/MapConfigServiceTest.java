@@ -3,10 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.ProviderFormatEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.*;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.CoordinatesFormat;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ScaleBarUnits;
 import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
@@ -124,12 +121,13 @@ public class MapConfigServiceTest {
         Mockito.when(repository.findProjectionByMap(Mockito.any(Integer.class))).thenReturn(null);
         Mockito.when(repository.findProjectionById(Mockito.any(Long.class))).thenReturn(Arrays.asList(getProjectionDto()));
         Mockito.when(repository.findReportConnectServiceAreas(Mockito.any(Integer.class))).thenReturn(null);
+        Mockito.when(repository.findReportConnectSpatialBy(Mockito.any(Long.class))).thenReturn(null);
         Mockito.when(repository.findSystemConfigByName(Mockito.any(Map.class))).thenReturn("http://localhost:8080/geoserver/");
         Mockito.when(repository.findServiceLayerEntityByIds(Mockito.any(List.class))).thenReturn(getServiceLayers());
     }
     private void mockGenMapProjectionWithoutDefaultConfig() throws IOException, ServiceException {
         Mockito.when(repository.findProjectionByMap(Mockito.any(Integer.class))).thenReturn(Arrays.asList(getProjectionDto()));
-        Mockito.when(repository.findProjectionByDisplay(Mockito.any(Integer.class))).thenReturn(Arrays.asList(getDisplayProjectionDto()));
+        Mockito.when(repository.findReportConnectSpatialBy(Mockito.any(Long.class))).thenReturn(getReportConnectSpatialEntity());
         Mockito.when(repository.findReportConnectServiceAreas(Mockito.any(Integer.class))).thenReturn(getReportConnectServiceAreas());
         Mockito.when(repository.findSystemConfigByName(Mockito.any(Map.class))).thenReturn("http://localhost:8080/geoserver/");
     }
@@ -141,6 +139,20 @@ public class MapConfigServiceTest {
         serviceLayerEntities.add(getServiceLayerEntity("WMS", "sysarea", 2));
         serviceLayerEntities.add(getServiceLayerEntity("WMS", "sysarea", 7));
         return serviceLayerEntities;
+    }
+
+    private ReportConnectSpatialEntity getReportConnectSpatialEntity() {
+        ReportConnectSpatialEntity reportConnectSpatialEntity = new ReportConnectSpatialEntity();
+        reportConnectSpatialEntity.setId(1L);
+
+        ProjectionEntity projectionEntity = new ProjectionEntity();
+        projectionEntity.setSrsCode(3857);
+        reportConnectSpatialEntity.setProjectionByDisplayProjId(projectionEntity);
+
+        reportConnectSpatialEntity.setScaleBarType(ScaleBarUnits.DEGREES);
+        reportConnectSpatialEntity.setDisplayFormatType(CoordinatesFormat.DD);
+
+        return reportConnectSpatialEntity;
     }
 
     private ProjectionDto getProjectionDto() {

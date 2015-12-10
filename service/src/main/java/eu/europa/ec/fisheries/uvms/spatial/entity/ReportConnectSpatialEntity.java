@@ -30,10 +30,6 @@ import javax.persistence.Table;
 				query = "SELECT projection.srsCode AS epsgCode, projection.units AS units, projection.isWorld AS global, projection.extent as extent, projection.axis as axis " +
 						"FROM ReportConnectSpatialEntity rcs INNER JOIN rcs.projectionByMapProjId AS projection " +
 						"WHERE rcs.reportId = :reportId"),
-		@NamedQuery(name = QueryNameConstants.FIND_DISPLAY_PROJ_BY_ID,
-				query = "SELECT projection.srsCode AS epsgCode, rcs.scaleBarType AS units, rcs.displayFormatType AS formats " +
-						"FROM ReportConnectSpatialEntity rcs INNER JOIN rcs.projectionByDisplayProjId AS projection " +
-						"WHERE rcs.reportId = :reportId"),
 		@NamedQuery(name = QueryNameConstants.FIND_BY_REPORT_ID,
 				query = "from ReportConnectSpatialEntity where reportId = :reportId"),
         @NamedQuery(name = ReportConnectSpatialEntity.DELETE_BY_ID_LIST,

@@ -55,8 +55,6 @@ public interface SpatialRepository extends DAO {
 
     List<ProjectionDto> findProjectionById(Long id);
 
-    List<DisplayProjectionDto> findProjectionByDisplay(long reportId);
-
     List<ReportConnectServiceAreasEntity> findReportConnectServiceAreas(long reportId);
 
     List<ServiceLayerEntity> findServiceLayerEntityByIds(List<Integer> ids);
