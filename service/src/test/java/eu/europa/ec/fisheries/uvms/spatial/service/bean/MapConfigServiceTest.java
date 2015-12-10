@@ -124,7 +124,7 @@ public class MapConfigServiceTest {
         Mockito.when(repository.findProjectionByMap(Mockito.any(Integer.class))).thenReturn(null);
         Mockito.when(repository.findProjectionById(Mockito.any(Long.class))).thenReturn(Arrays.asList(getProjectionDto()));
         Mockito.when(repository.findReportConnectServiceAreas(Mockito.any(Integer.class))).thenReturn(null);
-        Mockito.when(repository.findSystemConfigByName(Mockito.any(Map.class))).thenReturn(null);
+        Mockito.when(repository.findSystemConfigByName(Mockito.any(Map.class))).thenReturn("http://localhost:8080/geoserver/");
         Mockito.when(repository.findServiceLayerEntityByIds(Mockito.any(List.class))).thenReturn(getServiceLayers());
     }
     private void mockGenMapProjectionWithoutDefaultConfig() throws IOException, ServiceException {

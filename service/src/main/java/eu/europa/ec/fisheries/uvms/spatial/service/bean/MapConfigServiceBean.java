@@ -19,20 +19,19 @@ import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.ConfigurationDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.LayersDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.SystemSettingsDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.VisibilitySettingsDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.MapConfigMapper;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.ProjectionMapper;
 import eu.europa.ec.fisheries.uvms.spatial.validator.SpatialValidator;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
+
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.transaction.Transactional;
-import javax.xml.ws.Service;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.*;
 
 import static eu.europa.ec.fisheries.uvms.spatial.service.mapper.ConfigurationMapper.mergeConfiguration;
@@ -114,13 +113,15 @@ public class MapConfigServiceBean implements MapConfigService {
 
     @Override
     @SneakyThrows
-    public ConfigurationDto convertToAdminConfiguration(String config) {
-        return getAdminConfiguration(config);
+    public ConfigurationDto retrieveAdminConfiguration(String config) {
+        ConfigurationDto configurationDto = getAdminConfiguration(config);
+        configurationDto.setSystemSettings(getConfigSystemSettings());
+        return configurationDto;
     }
 
     @Override
     @SneakyThrows
-    public ConfigurationDto convertToUserConfiguration(String config , String defaultConfig) {
+    public ConfigurationDto retrieveUserConfiguration(String config, String defaultConfig) {
         ConfigurationDto userConfig = getUserConfiguration(config);
         ConfigurationDto adminConfig = getAdminConfiguration(defaultConfig);
         return mergeUserConfiguration(adminConfig, userConfig);
@@ -128,15 +129,17 @@ public class MapConfigServiceBean implements MapConfigService {
 
     @Override
     @SneakyThrows
-    public String convertToAdminJson(ConfigurationDto configurationDto, String defaultConfig) {
-        ConfigurationDto defaultConfigurationDto = convertToAdminConfiguration(defaultConfig);
+    public String saveAdminJson(ConfigurationDto configurationDto, String defaultConfig) {
+        ConfigurationDto defaultConfigurationDto = retrieveAdminConfiguration(defaultConfig);
+        setConfigSystemSettings(configurationDto.getSystemSettings(), defaultConfigurationDto.getSystemSettings()); // Update system config in spatial DB
         configurationDto.setLayerSettings(defaultConfigurationDto.getLayerSettings()); // TODO fix layer settings, currently fixed value
+        configurationDto.setSystemSettings(null); // Not saving system settings in USM
         return getJson(configurationDto);
     }
 
     @Override
     @SneakyThrows
-    public String convertToUserJson(ConfigurationDto configurationDto, String userPref) {
+    public String saveUserJson(ConfigurationDto configurationDto, String userPref) {
         if(configurationDto == null) {
             throw new ServiceException("Invalid JSON");
         }
@@ -193,7 +196,7 @@ public class MapConfigServiceBean implements MapConfigService {
 
     private List<LayerDto> getServiceAreaLayer(int reportId, ConfigurationDto configurationDto, ProjectionDto projection) throws ServiceException {
         List<ReportConnectServiceAreasEntity> reportConnectServiceAreas = getReportConnectServiceAreas(reportId, projection);
-        String geoServerUrl = getGeoServerUrl(configurationDto);
+        String geoServerUrl = getGeoServerUrl();
         if (reportConnectServiceAreas != null && !reportConnectServiceAreas.isEmpty()) { // If report is having service layer then return it
             List<LayerDto> layerDtos = new ArrayList<LayerDto>();
             for (ReportConnectServiceAreasEntity reportConnectServiceArea : reportConnectServiceAreas) {
@@ -246,10 +249,9 @@ public class MapConfigServiceBean implements MapConfigService {
         return layerDtos;
     }
 
-    private String getGeoServerUrl(ConfigurationDto configurationDto) throws ServiceException {
+    private String getGeoServerUrl() throws ServiceException {
         Map<String, String> parameters = ImmutableMap.<String, String>builder().put(NAME, GEO_SERVER).build();
-        String geoServerUrl = repository.findSystemConfigByName(parameters);
-        return geoServerUrl != null ? geoServerUrl : configurationDto.getSystemSettings().getGeoserverUrl();
+        return repository.findSystemConfigByName(parameters);
     }
 
     private List<Integer> getServiceLayerIds(List<LayersDto> layers) {
@@ -323,5 +325,20 @@ public class MapConfigServiceBean implements MapConfigService {
     private String getJson(ConfigurationDto config) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         return mapper.writeValueAsString(config);
+    }
+
+    private SystemSettingsDto getConfigSystemSettings() throws ServiceException {
+        SystemSettingsDto systemSettingsDto = new SystemSettingsDto();
+        systemSettingsDto.setGeoserverUrl(getGeoServerUrl());
+        return systemSettingsDto;
+    }
+
+    private void setConfigSystemSettings(SystemSettingsDto systemSettingsDto, SystemSettingsDto defaultSystemSettingsDto) throws ServiceException {
+        String geoServerUrl = systemSettingsDto.getGeoserverUrl();
+        String defaultGeoServerUrl = defaultSystemSettingsDto.getGeoserverUrl();
+        if (geoServerUrl != null && geoServerUrl != defaultGeoServerUrl) {
+            Map<String, String> parameters = ImmutableMap.<String, String>builder().put(NAME, GEO_SERVER).build();
+            repository.updateSystemConfig(parameters, geoServerUrl);
+        }
     }
 }

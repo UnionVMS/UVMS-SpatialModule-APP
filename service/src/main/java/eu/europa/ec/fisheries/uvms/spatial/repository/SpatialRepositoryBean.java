@@ -20,6 +20,7 @@ import javax.ejb.*;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -178,6 +179,21 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     @Override
     public void updateSystemConfigs(List<SysConfigEntity> sysConfigs) {
         sysConfigDao.updateSystemConfigs(sysConfigs);
+    }
+
+    @Override
+    public void updateSystemConfig(Map<String, String> parameters, String value) throws ServiceException {
+        List<SysConfigEntity> configs = findEntityByNamedQuery(SysConfigEntity.class, QueryNameConstants.FIND_CONFIG, parameters);
+        if (configs != null && !configs.isEmpty()) {
+            SysConfigEntity sysConfigEntity = configs.get(0);
+            sysConfigEntity.setValue(value);
+        } else {
+            SysConfigEntity sysConfigEntity = new SysConfigEntity();
+            String name = new ArrayList<String>(parameters.keySet()).get(0);
+            sysConfigEntity.setName(name);
+            sysConfigEntity.setValue(value);
+            saveOrUpdateEntity(sysConfigEntity);
+        }
     }
 
     @Override

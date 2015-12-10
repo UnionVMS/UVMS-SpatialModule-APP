@@ -15,7 +15,9 @@ import java.io.Serializable;
 @EqualsAndHashCode
 @NamedQueries({
         @NamedQuery(name= QueryNameConstants.FIND_CONFIG_BY_NAME,
-        query = "SELECT config.value FROM SysConfigEntity config WHERE config.name = :name")
+        query = "SELECT config.value FROM SysConfigEntity config WHERE config.name = :name"),
+        @NamedQuery(name= QueryNameConstants.FIND_CONFIG,
+                query = "FROM SysConfigEntity config WHERE config.name = :name")
 })
 public class SysConfigEntity implements Serializable {
 

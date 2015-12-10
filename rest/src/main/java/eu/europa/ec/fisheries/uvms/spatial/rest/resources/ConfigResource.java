@@ -1,7 +1,5 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.uvms.constants.AuthConstants;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
@@ -18,14 +16,12 @@ import lombok.extern.slf4j.Slf4j;
 import javax.ejb.EJB;
 import javax.interceptor.Interceptors;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.List;
-import java.util.Set;
 
 @Path("/config")
 @Slf4j
@@ -69,7 +65,7 @@ public class ConfigResource extends UnionVMSResource {
         if (request.isUserInRole(SpatialFeaturesEnum.MANAGE_SYSTEM_SPATIAL_CONFIGURATIONS.toString())) {
             String applicationName = request.getServletContext().getInitParameter("usmApplication");
             String adminConfig = usmService.getOptionDefaultValue(DEFAULT_CONFIG, applicationName);
-            response = createSuccessResponse(mapConfigService.convertToAdminConfiguration(adminConfig));
+            response = createSuccessResponse(mapConfigService.retrieveAdminConfiguration(adminConfig));
         } else {
             response = createErrorResponse("User not authorized to access Spatial System Configurations.");
         }
@@ -88,7 +84,7 @@ public class ConfigResource extends UnionVMSResource {
         if (request.isUserInRole(SpatialFeaturesEnum.MANAGE_SYSTEM_SPATIAL_CONFIGURATIONS.toString())) {
             String applicationName = request.getServletContext().getInitParameter("usmApplication");
             String defaultConfig = usmService.getOptionDefaultValue(DEFAULT_CONFIG, applicationName);
-            String json = mapConfigService.convertToAdminJson(configurationDto, defaultConfig);
+            String json = mapConfigService.saveAdminJson(configurationDto, defaultConfig);
             usmService.setOptionDefaultValue(DEFAULT_CONFIG, json, applicationName);
             response = createSuccessResponse();
         } else {
@@ -109,7 +105,7 @@ public class ConfigResource extends UnionVMSResource {
         final String username = request.getRemoteUser();
         String adminPref = usmService.getOptionDefaultValue(DEFAULT_CONFIG, applicationName);
         String userPref = usmService.getUserPreference(USER_CONFIG, username, applicationName, roleName, scopeName);
-        return createSuccessResponse(mapConfigService.convertToUserConfiguration(userPref, adminPref));
+        return createSuccessResponse(mapConfigService.retrieveUserConfiguration(userPref, adminPref));
     }
 
     @POST
@@ -124,7 +120,7 @@ public class ConfigResource extends UnionVMSResource {
         String applicationName = request.getServletContext().getInitParameter("usmApplication");
         final String username = request.getRemoteUser();
         String userPref = usmService.getUserPreference(USER_CONFIG, username, applicationName, roleName, scopeName);
-        String json = mapConfigService.convertToUserJson(configurationDto, userPref);
+        String json = mapConfigService.saveUserJson(configurationDto, userPref);
         usmService.putUserPreference(USER_CONFIG, json, applicationName, scopeName, roleName, username);
         return createSuccessResponse();
     }

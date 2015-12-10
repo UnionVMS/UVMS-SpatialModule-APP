@@ -27,11 +27,11 @@ public interface MapConfigService {
 
     void handleDeleteMapConfiguration(SpatialDeleteMapConfigurationRQ spatialDeleteMapConfigurationRQ) throws ServiceException;
 
-    ConfigurationDto convertToAdminConfiguration(String config);
+    ConfigurationDto retrieveAdminConfiguration(String config);
 
-    String convertToAdminJson(ConfigurationDto configurationDto, String defaultConfig);
+    String saveAdminJson(ConfigurationDto configurationDto, String defaultConfig);
 
-    ConfigurationDto convertToUserConfiguration(String config, String defaultConfig);
+    ConfigurationDto retrieveUserConfiguration(String config, String defaultConfig);
 
-    String convertToUserJson(ConfigurationDto configurationDto, String userPref);
+    String saveUserJson(ConfigurationDto configurationDto, String userPref);
 }
