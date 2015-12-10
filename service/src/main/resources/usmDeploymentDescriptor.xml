@@ -13,6 +13,12 @@
             <group>spatial</group>
         </feature>
 
+        <feature>
+            <name>USE_SPATIAL_CONFIGURATIONS</name>
+            <description>Allows you to read spatial configurations while creating/running reports</description>
+            <group>spatial</group>
+        </feature>
+
         <option>
             <name>DEFAULT_CONFIG</name>
             <description>Default map configuation settings</description>
