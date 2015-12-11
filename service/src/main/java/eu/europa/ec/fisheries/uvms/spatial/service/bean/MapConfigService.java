@@ -34,4 +34,6 @@ public interface MapConfigService {
     ConfigurationDto retrieveUserConfiguration(String config, String defaultConfig);
 
     String saveUserJson(ConfigurationDto configurationDto, String userPref);
+
+    String resetUserJson(ConfigurationDto configurationDto, String userPref);
 }

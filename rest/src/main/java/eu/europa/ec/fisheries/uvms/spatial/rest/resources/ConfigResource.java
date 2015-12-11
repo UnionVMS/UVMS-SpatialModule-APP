@@ -125,6 +125,23 @@ public class ConfigResource extends UnionVMSResource {
         return createSuccessResponse();
     }
 
+    @POST
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Path("/user/reset")
+    @Interceptors(value = {ExceptionInterceptor.class})
+    public Response resetUserPreferences(@Context HttpServletRequest request,
+                                         @HeaderParam(AuthConstants.HTTP_HEADER_SCOPE_NAME) String scopeName,
+                                         @HeaderParam(AuthConstants.HTTP_HEADER_ROLE_NAME) String roleName,
+                                         ConfigurationDto configurationDto) throws ServiceException {
+        String applicationName = request.getServletContext().getInitParameter("usmApplication");
+        final String username = request.getRemoteUser();
+        String userPref = usmService.getUserPreference(USER_CONFIG, username, applicationName, roleName, scopeName);
+        String json = mapConfigService.resetUserJson(configurationDto, userPref);
+        usmService.putUserPreference(USER_CONFIG, json, applicationName, scopeName, roleName, username);
+        return createSuccessResponse();
+    }
+
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Path("/projections")

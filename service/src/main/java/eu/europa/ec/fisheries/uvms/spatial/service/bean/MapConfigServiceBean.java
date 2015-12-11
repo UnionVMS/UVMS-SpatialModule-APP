@@ -31,6 +31,7 @@ import java.util.*;
 
 import static eu.europa.ec.fisheries.uvms.spatial.service.mapper.ConfigurationMapper.mergeConfiguration;
 import static eu.europa.ec.fisheries.uvms.spatial.service.mapper.ConfigurationMapper.mergeUserConfiguration;
+import static eu.europa.ec.fisheries.uvms.spatial.service.mapper.ConfigurationMapper.resetUserConfiguration;
 
 @Stateless
 @Local(MapConfigService.class)
@@ -140,6 +141,16 @@ public class MapConfigServiceBean implements MapConfigService {
         }
         ConfigurationDto userConfig = getUserConfiguration(userPref);
         return getJson(mergeConfiguration(configurationDto, userConfig));
+    }
+
+    @Override
+    @SneakyThrows
+    public String resetUserJson(ConfigurationDto configurationDto, String userPref) {
+        if(configurationDto == null) {
+            throw new ServiceException("Invalid JSON");
+        }
+        ConfigurationDto userConfig = getUserConfiguration(userPref);
+        return getJson(resetUserConfiguration(userConfig, configurationDto));
     }
 
     @Override

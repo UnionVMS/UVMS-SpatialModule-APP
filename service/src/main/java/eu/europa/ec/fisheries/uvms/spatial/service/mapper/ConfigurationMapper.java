@@ -43,5 +43,15 @@ public class ConfigurationMapper {
         target.setMapSettings(target.getMapSettings() == null ? source.getMapSettings() : target.getMapSettings());
         return target;
     }
+
+    public static ConfigurationDto resetUserConfiguration(ConfigurationDto source, ConfigurationDto target) {
+        if ( source == null || target == null) {
+            return target;
+        }
+        target.setStylesSettings(source.getStylesSettings() != null ? null : target.getStylesSettings());
+        target.setVisibilitySettings(source.getVisibilitySettings() != null ? null : target.getVisibilitySettings());
+        target.setMapSettings(source.getMapSettings() != null ? null : target.getMapSettings());
+        return target;
+    }
 }
 
