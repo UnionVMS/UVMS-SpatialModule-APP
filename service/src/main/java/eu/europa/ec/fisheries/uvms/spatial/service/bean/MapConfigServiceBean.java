@@ -150,7 +150,7 @@ public class MapConfigServiceBean implements MapConfigService {
             throw new ServiceException("Invalid JSON");
         }
         ConfigurationDto userConfig = getUserConfiguration(userPref);
-        return getJson(resetUserConfiguration(userConfig, configurationDto));
+        return getJson(resetUserConfiguration(configurationDto, userConfig));
     }
 
     @Override
