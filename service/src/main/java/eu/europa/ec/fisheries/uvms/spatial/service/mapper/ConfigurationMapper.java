@@ -53,5 +53,13 @@ public class ConfigurationMapper {
         target.setMapSettings(source.getMapSettings() != null ? null : target.getMapSettings());
         return target;
     }
+
+    public static ConfigurationDto getDefaultNodeConfiguration(ConfigurationDto configurationDto, ConfigurationDto adminConfigurationDto) {
+        ConfigurationDto defaultNodeConfigurationDto = new ConfigurationDto();
+        defaultNodeConfigurationDto.setStylesSettings(configurationDto.getStylesSettings() != null ? adminConfigurationDto.getStylesSettings() : null);
+        defaultNodeConfigurationDto.setVisibilitySettings(configurationDto.getVisibilitySettings() != null ? adminConfigurationDto.getVisibilitySettings() : null);
+        defaultNodeConfigurationDto.setMapSettings(configurationDto.getMapSettings() != null ? adminConfigurationDto.getMapSettings() : null);
+        return defaultNodeConfigurationDto;
+    }
 }
 

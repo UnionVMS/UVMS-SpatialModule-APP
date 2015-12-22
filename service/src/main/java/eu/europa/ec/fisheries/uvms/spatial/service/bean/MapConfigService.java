@@ -36,4 +36,6 @@ public interface MapConfigService {
     String saveUserJson(ConfigurationDto configurationDto, String userPref);
 
     String resetUserJson(ConfigurationDto configurationDto, String userPref);
+
+    ConfigurationDto getNodeDefaultValue(ConfigurationDto configurationDto, String adminConfig);
 }

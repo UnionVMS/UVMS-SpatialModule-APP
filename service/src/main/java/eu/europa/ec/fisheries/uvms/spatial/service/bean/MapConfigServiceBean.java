@@ -29,9 +29,7 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.*;
 
-import static eu.europa.ec.fisheries.uvms.spatial.service.mapper.ConfigurationMapper.mergeConfiguration;
-import static eu.europa.ec.fisheries.uvms.spatial.service.mapper.ConfigurationMapper.mergeUserConfiguration;
-import static eu.europa.ec.fisheries.uvms.spatial.service.mapper.ConfigurationMapper.resetUserConfiguration;
+import static eu.europa.ec.fisheries.uvms.spatial.service.mapper.ConfigurationMapper.*;
 
 @Stateless
 @Local(MapConfigService.class)
@@ -151,6 +149,15 @@ public class MapConfigServiceBean implements MapConfigService {
         }
         ConfigurationDto userConfig = getUserConfiguration(userPref);
         return getJson(resetUserConfiguration(configurationDto, userConfig));
+    }
+
+    @Override
+    @SneakyThrows
+    public ConfigurationDto getNodeDefaultValue(ConfigurationDto configurationDto, String adminConfig) {
+        if(configurationDto == null || adminConfig == null) {
+            throw new ServiceException("Invalid JSON");
+        }
+        return getDefaultNodeConfiguration(configurationDto, getAdminConfiguration(adminConfig));
     }
 
     @Override

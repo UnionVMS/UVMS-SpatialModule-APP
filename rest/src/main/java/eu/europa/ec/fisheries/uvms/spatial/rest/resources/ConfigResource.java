@@ -59,18 +59,9 @@ public class ConfigResource extends UnionVMSResource {
     @Path("/admin")
     @Interceptors(value = {ExceptionInterceptor.class})
     public Response getAdminPreferences(@Context HttpServletRequest request) throws ServiceException, IOException {
-
-        Response response;
-
-        if (request.isUserInRole(SpatialFeaturesEnum.MANAGE_SYSTEM_SPATIAL_CONFIGURATIONS.toString())) {
-            String applicationName = request.getServletContext().getInitParameter("usmApplication");
-            String adminConfig = usmService.getOptionDefaultValue(DEFAULT_CONFIG, applicationName);
-            response = createSuccessResponse(mapConfigService.retrieveAdminConfiguration(adminConfig));
-        } else {
-            response = createErrorResponse("User not authorized to access Spatial System Configurations.");
-        }
-
-        return response;
+        String applicationName = request.getServletContext().getInitParameter("usmApplication");
+        String adminConfig = usmService.getOptionDefaultValue(DEFAULT_CONFIG, applicationName);
+        return createSuccessResponse(mapConfigService.retrieveAdminConfiguration(adminConfig));
     }
 
     @POST
@@ -139,7 +130,10 @@ public class ConfigResource extends UnionVMSResource {
         String userPref = usmService.getUserPreference(USER_CONFIG, username, applicationName, roleName, scopeName);
         String json = mapConfigService.resetUserJson(configurationDto, userPref);
         usmService.putUserPreference(USER_CONFIG, json, applicationName, scopeName, roleName, username);
-        return createSuccessResponse();
+
+        String adminConfig = usmService.getOptionDefaultValue(DEFAULT_CONFIG, applicationName);
+        ConfigurationDto defaultConfigurationDto = mapConfigService.getNodeDefaultValue(configurationDto, adminConfig);
+        return createSuccessResponse(defaultConfigurationDto);
     }
 
     @GET
