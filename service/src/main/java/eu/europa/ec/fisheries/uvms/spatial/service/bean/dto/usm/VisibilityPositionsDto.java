@@ -20,11 +20,16 @@ public class VisibilityPositionsDto {
     @JsonProperty("labels")
     private List<String> labels;
 
+    @NotNull
+    @JsonProperty("table")
+    private List<String> table;
+
     public VisibilityPositionsDto() {}
 
-    public VisibilityPositionsDto(List<String> popup, List<String> labels) {
+    public VisibilityPositionsDto(List<String> popup, List<String> labels, List<String> table) {
         this.popup = popup;
         this.labels = labels;
+        this.table = table;
     }
 
     @JsonProperty("popup")
@@ -45,5 +50,15 @@ public class VisibilityPositionsDto {
     @JsonProperty("labels")
     public void setLabels(List<String> labels) {
         this.labels = labels;
+    }
+
+    @JsonProperty("table")
+    public List<String> getTable() {
+        return table;
+    }
+
+    @JsonProperty("table")
+    public void setTable(List<String> table) {
+        this.table = table;
     }
 }

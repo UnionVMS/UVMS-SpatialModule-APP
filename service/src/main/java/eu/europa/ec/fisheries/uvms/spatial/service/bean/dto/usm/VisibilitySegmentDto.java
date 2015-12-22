@@ -3,6 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -17,11 +18,16 @@ public class VisibilitySegmentDto {
     @JsonProperty("labels")
     private List<String> labels;
 
+    @NotNull
+    @JsonProperty("table")
+    private List<String> table;
+
     public VisibilitySegmentDto() {}
 
-    public VisibilitySegmentDto(List<String> popup, List<String> labels) {
+    public VisibilitySegmentDto(List<String> popup, List<String> labels, List<String> table) {
         this.popup = popup;
         this.labels = labels;
+        this.table = table;
     }
 
     @JsonProperty("popup")
@@ -42,5 +48,15 @@ public class VisibilitySegmentDto {
     @JsonProperty("labels")
     public void setLabels(List<String> labels) {
         this.labels = labels;
+    }
+
+    @JsonProperty("table")
+    public List<String> getTable() {
+        return table;
+    }
+
+    @JsonProperty("table")
+    public void setTable(List<String> table) {
+        this.table = table;
     }
 }

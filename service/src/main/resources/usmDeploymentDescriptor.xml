@@ -379,7 +379,8 @@
         "lon",
         "msg_tp",
         "act_tp",
-        "source"
+        "source",
+        "name"
       ],
       "labels": [
         "fs",
@@ -395,7 +396,25 @@
         "crs",
         "msg_tp",
         "act_tp",
-        "source"
+        "source",
+        "name"
+      ],
+      "table": [
+        "fs",
+        "extMark",
+        "ircs",
+        "cfr",
+        "posTime",
+        "lon",
+        "lat",
+        "stat",
+        "m_spd",
+        "c_spd",
+        "crs",
+        "msg_tp",
+        "act_tp",
+        "source",
+        "name"
       ]
     },
     "segments": {
@@ -408,7 +427,8 @@
         "dur",
         "spd",
         "crs",
-        "cat"
+        "cat",
+        "name"
       ],
       "labels": [
         "extMark",
@@ -419,7 +439,32 @@
         "crs",
         "spd",
         "dur",
-        "fs"
+        "fs",
+        "name"
+      ],
+      "table": [
+        "extMark",
+        "ircs",
+        "cfr",
+        "dist",
+        "cat",
+        "crs",
+        "spd",
+        "dur",
+        "fs",
+        "name"
+      ]
+    },
+    "tracks": {
+       "table": [
+       "fs",
+       "extMark",
+       "ircs",
+       "cfr",
+       "name",
+       "dist",
+       "dur",
+       "timeSea"
       ]
     }
   }
