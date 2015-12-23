@@ -56,6 +56,20 @@ public class ConfigResource extends UnionVMSResource {
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
+    @Path("/report")
+    @Interceptors(value = {ExceptionInterceptor.class})
+    public Response getReportConfig(@Context HttpServletRequest request,
+                                    @HeaderParam(AuthConstants.HTTP_HEADER_SCOPE_NAME) String scopeName,
+                                    @HeaderParam(AuthConstants.HTTP_HEADER_ROLE_NAME) String roleName) throws ServiceException {
+        final String username = request.getRemoteUser();
+        String applicationName = request.getServletContext().getInitParameter("usmApplication");
+        String adminPref = usmService.getOptionDefaultValue(DEFAULT_CONFIG, applicationName);
+        String userPref = usmService.getUserPreference(USER_CONFIG, username, applicationName, roleName, scopeName);
+        return createSuccessResponse(mapConfigService.getReportConfigWithoutMap(userPref, adminPref));
+    }
+
+    @GET
+    @Produces(value = {MediaType.APPLICATION_JSON})
     @Path("/admin")
     @Interceptors(value = {ExceptionInterceptor.class})
     public Response getAdminPreferences(@Context HttpServletRequest request) throws ServiceException, IOException {

@@ -7,6 +7,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialGetMapConfigurat
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialGetMapConfigurationRS;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveOrUpdateMapConfigurationRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveOrUpdateMapConfigurationRS;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ConfigDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.MapConfigDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.ConfigurationDto;
@@ -38,4 +39,6 @@ public interface MapConfigService {
     String resetUserJson(ConfigurationDto configurationDto, String userPref);
 
     ConfigurationDto getNodeDefaultValue(ConfigurationDto configurationDto, String adminConfig);
+
+    ConfigDto getReportConfigWithoutMap(String userPref, String adminPref);
 }

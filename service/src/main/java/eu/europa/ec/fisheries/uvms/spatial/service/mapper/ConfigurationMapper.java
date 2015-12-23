@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.mapper;
 
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ConfigDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.ConfigurationDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.MapSettingsDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.SystemSettingsDto;
@@ -22,16 +23,13 @@ public class ConfigurationMapper {
         return target;
     }
 
-    public static void mergeMapSettings(MapSettingsDto source, MapSettingsDto target) {
+    public static ConfigDto mergeNoMapConfiguration(ConfigurationDto source, ConfigurationDto target) {
         if ( source == null || target == null) {
-            return;
+            return new ConfigDto();
         }
-        target.setRefreshStatus(source.getRefreshStatus());
-        target.setScaleBarUnits(source.getScaleBarUnits() == null ? target.getScaleBarUnits() : source.getScaleBarUnits());
-        target.setCoordinatesFormat(source.getCoordinatesFormat() == null ? target.getCoordinatesFormat() : source.getCoordinatesFormat());
-        target.setMapProjectionId(source.getMapProjectionId());
-        target.setRefreshRate(source.getRefreshRate());
-        target.setDisplayProjectionId(source.getDisplayProjectionId());
+        ConfigDto configDto = new ConfigDto();
+        configDto.setVisibilitySettings(source.getVisibilitySettings() == null ? target.getVisibilitySettings() : source.getVisibilitySettings());
+        return configDto;
     }
 
     public static ConfigurationDto mergeUserConfiguration(ConfigurationDto source, ConfigurationDto target) {

@@ -162,6 +162,13 @@ public class MapConfigServiceBean implements MapConfigService {
 
     @Override
     @SneakyThrows
+    public ConfigDto getReportConfigWithoutMap(String userPref, String adminPref) {
+        ConfigDto configDto = mergeNoMapConfiguration(getUserConfiguration(userPref), getAdminConfiguration(adminPref)); //Returns merged config object between Admin and User configuration from USM
+        return configDto;
+    }
+
+    @Override
+    @SneakyThrows
     public MapConfigDto getReportConfig(int reportId, String userPreferences, String adminPreferences) {
         ConfigurationDto configurationDto = mergeConfiguration(getUserConfiguration(userPreferences), getAdminConfiguration(adminPreferences)); //Returns merged config object between Admin and User configuration from USM
         return new MapConfigDto(getMap(configurationDto, reportId), getVectorStyles(configurationDto), getVisibilitySettings(configurationDto));
