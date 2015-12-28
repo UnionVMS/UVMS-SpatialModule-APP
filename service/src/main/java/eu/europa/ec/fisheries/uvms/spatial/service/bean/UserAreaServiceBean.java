@@ -2,6 +2,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import static eu.europa.ec.fisheries.uvms.spatial.util.SpatialUtils.convertToPointInWGS84;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -14,13 +15,16 @@ import com.google.common.collect.ImmutableMap;
 import com.vividsolutions.jts.geom.Point;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Coordinate;
 import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaGeomDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.service.mapper.UserAreaMapper;
 
 @Stateless
 @Local(UserAreaService.class)
@@ -33,7 +37,22 @@ public class UserAreaServiceBean implements UserAreaService {
     private static final String USER_NAME = "userName";
     
     private static final String SCOPE_NAME = "scopeName";
-	
+
+	@Override
+	public boolean storeUserArea(UserAreaGeomDto userAreaDto, String userName, String scopeName) throws ServiceException {
+		UserAreasEntity userAreasEntity = prepareEntity(userAreaDto, userName, scopeName);
+		UserAreasEntity persistedEntity = (UserAreasEntity) repository.createEntity(userAreasEntity);
+		return persistedEntity != null;
+	}
+
+	private UserAreasEntity prepareEntity(UserAreaGeomDto userAreaDto, String userName, String scopeName) {
+		UserAreasEntity userAreasEntity = UserAreaMapper.INSTANCE.fromDtoToEntity(userAreaDto);
+		userAreasEntity.setUserName(userName);
+		userAreasEntity.setScopeName(scopeName);
+		userAreasEntity.setCreatedOn(new Date());
+		return userAreasEntity;
+	}
+
 	public UserAreaLayerDto getUserAreaLayerDefination(String userName, String scopeName) {
 		List<UserAreaLayerDto> userAreaLayerDtoList = getUserAreaLayerMapping();
 		UserAreaLayerDto userAreaLayerDto = userAreaLayerDtoList.get(0);

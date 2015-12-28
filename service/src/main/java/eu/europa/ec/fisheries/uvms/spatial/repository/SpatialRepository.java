@@ -3,10 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.repository;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.DAO;
-import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.*;
 import eu.europa.ec.fisheries.uvms.spatial.entity.config.SysConfigEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.MapConfigurationType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaExtendedIdentifierDto;
@@ -72,4 +69,5 @@ public interface SpatialRepository extends DAO {
     List<SysConfigEntity> findSystemConfigs();
 
     void deleteBy(List<Long> spatialConnectIds) throws ServiceException;
+
 }

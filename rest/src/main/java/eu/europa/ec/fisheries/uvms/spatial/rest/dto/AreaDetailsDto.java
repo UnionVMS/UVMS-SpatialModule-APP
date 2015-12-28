@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.GeoJsonDto;
 import org.opengis.feature.simple.SimpleFeature;
 
 import com.fasterxml.jackson.databind.JsonNode;

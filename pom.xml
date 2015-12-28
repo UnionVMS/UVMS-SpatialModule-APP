@@ -135,6 +135,12 @@
             </dependency>
 
             <dependency>
+                <groupId>org.wololo</groupId>
+                <artifactId>jts2geojson</artifactId>
+                <version>0.7.0</version>
+            </dependency>
+
+            <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
                 <version>2.4</version>

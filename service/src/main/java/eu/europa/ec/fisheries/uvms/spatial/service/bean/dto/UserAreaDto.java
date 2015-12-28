@@ -1,5 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto;
 
+import com.vividsolutions.jts.geom.Geometry;
+
 import java.io.Serializable;
 
 public class UserAreaDto implements Serializable {
@@ -9,12 +11,22 @@ public class UserAreaDto implements Serializable {
 	private String areaType = "USERAREA";
 	
 	private Number gid;
-	
-	private String name;
-	
-	private String desc;
-	
-	private String extent;
+
+	private String areaName;
+
+	private String areaDesc;
+
+	private String geomExtent;
+
+	private Geometry geometry;
+
+	public Geometry getGeometry() {
+		return geometry;
+	}
+
+	public void setGeometry(Geometry geometry) {
+		this.geometry = geometry;
+	}
 
 	public String getAreaType() {
 		return areaType;
@@ -32,27 +44,27 @@ public class UserAreaDto implements Serializable {
 		this.gid = gid;
 	}
 
-	public String getName() {
-		return name;
+	public String getAreaName() {
+		return areaName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setAreaName(String areaName) {
+		this.areaName = areaName;
 	}
 
-	public String getDesc() {
-		return desc;
+	public String getAreaDesc() {
+		return areaDesc;
 	}
 
-	public void setDesc(String desc) {
-		this.desc = desc;
+	public void setAreaDesc(String areaDesc) {
+		this.areaDesc = areaDesc;
 	}
 
-	public String getExtent() {
-		return extent;
+	public String getGeomExtent() {
+		return geomExtent;
 	}
 
-	public void setExtent(String extent) {
-		this.extent = extent;
+	public void setGeomExtent(String geomExtent) {
+		this.geomExtent = geomExtent;
 	}
 }
