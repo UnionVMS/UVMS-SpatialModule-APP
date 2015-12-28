@@ -1,14 +1,15 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources;
 
+import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.service.interceptor.ValidationInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Coordinate;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.FilterDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.GeoCoordinateDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaGeomDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.AreaLocationDtoMapper;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.UserAreaService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaGeomDto;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.ejb.EJB;
@@ -35,18 +36,10 @@ public class UserAreaResource extends UnionVMSResource {
     @Interceptors(value = {ExceptionInterceptor.class})
     public Response storeUserArea(@Context HttpServletRequest request,
                                   UserAreaGeomDto userAreaGeomDto,
-                                  @HeaderParam("scopeName") String scopeName) {
-        try {
-            String userName = request.getRemoteUser();
-
-            log.debug("UserName from security : " + userName);
-            userAreaService.storeUserArea(userAreaGeomDto, request.getRemoteUser(), scopeName);
-
-            return createSuccessResponse();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return createErrorResponse();
+                                  @HeaderParam("scopeName") String scopeName) throws ServiceException {
+        log.debug("UserName from security : " + request.getRemoteUser());
+        userAreaService.storeUserArea(userAreaGeomDto, request.getRemoteUser(), scopeName);
+        return createSuccessResponse();
     }
 
     @GET
