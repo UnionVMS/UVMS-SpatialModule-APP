@@ -8,7 +8,6 @@ import javax.ejb.Startup;
 import eu.europa.ec.fisheries.uvms.init.AbstractModuleInitializerBean;
 
 @Singleton
-@Startup
 public class SpatialInitializerBean extends AbstractModuleInitializerBean {
 
     @Override
