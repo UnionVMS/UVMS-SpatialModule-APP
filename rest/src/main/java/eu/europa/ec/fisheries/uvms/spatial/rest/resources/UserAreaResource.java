@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import javax.ejb.EJB;
 import javax.interceptor.Interceptors;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -39,6 +40,19 @@ public class UserAreaResource extends UnionVMSResource {
                                   @HeaderParam("scopeName") String scopeName) throws ServiceException {
         log.debug("UserName from security : " + request.getRemoteUser());
         userAreaService.storeUserArea(userAreaGeomDto, request.getRemoteUser(), scopeName);
+        return createSuccessResponse();
+    }
+
+    @DELETE
+    @Path("/userarea/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Interceptors(value = {ExceptionInterceptor.class})
+    public Response deleteUserArea(@Context HttpServletRequest request,
+                                 @PathParam("id") Long userAreaId,
+                                 @HeaderParam("scopeName") String scopeName) throws ServiceException {
+        String userName = request.getRemoteUser();
+        log.info("{} is requesting deleteUserArea(...), with a ID={} and scopeName={}", userName, userAreaId, scopeName);
+        userAreaService.deleteUserArea(userAreaId, userName, scopeName);
         return createSuccessResponse();
     }
 

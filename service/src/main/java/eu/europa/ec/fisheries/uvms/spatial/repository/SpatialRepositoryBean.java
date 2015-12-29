@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.repository;
 
+import com.google.common.collect.ImmutableMap;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
@@ -8,9 +9,9 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.*;
 import eu.europa.ec.fisheries.uvms.spatial.entity.config.SysConfigEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.*;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.DisplayProjectionDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
 import eu.europa.ec.fisheries.uvms.spatial.util.SqlPropertyHolder;
+import org.apache.commons.collections.CollectionUtils;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.*;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static eu.europa.ec.fisheries.uvms.service.QueryParameter.with;
 import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 
 @Stateless
@@ -203,6 +205,15 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     @Transactional
     public void deleteBy(final List<Long> spatialConnectIds) throws ServiceException {
         reportConnectSpatialDao.deleteById(spatialConnectIds);
+    }
+
+    @Override
+    public UserAreasEntity findUserAreaById(Long userAreaId, String userName, String scopeName) throws ServiceException {
+        List<UserAreasEntity> userAreasEntities = findEntityByNamedQuery(UserAreasEntity.class, QueryNameConstants.FIND_USER_AREA_BY_ID, with("userAreaId", userAreaId).and("scopeName", scopeName).and("userName", userName).parameters(), 1);
+        if (CollectionUtils.isNotEmpty(userAreasEntities)) {
+            return userAreasEntities.get(0);
+        }
+        return null;
     }
 
     @Override

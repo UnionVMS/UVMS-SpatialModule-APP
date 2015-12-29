@@ -17,4 +17,6 @@ public interface UserAreaService {
 	List<UserAreaDto> getUserAreaDetails(Coordinate coordinate, String userName, String scopeName);
 	
 	List<UserAreaDto> searchUserAreasByCriteria(String userName, String scopeName, String searchCriteria);
+
+	void deleteUserArea(Long userAreaId, String userName, String scopeName) throws ServiceException;
 }

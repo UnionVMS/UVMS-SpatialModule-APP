@@ -21,8 +21,9 @@ public enum SpatialServiceErrors {
 	ENTITY_NOT_FOUND("ENTITY_NOT_FOUND", 5010, "Entity Type not found : {0}"),
     WRONG_LOCATION_TYPE("WRONG_LOCATION_TYPE", 5011, "Invalid parameter. Wrong Location Type: '{0}'.", "Wrong argument."),
     INVALID_ID_TYPE("INVALID_ID_TYPE", 5012, "Invalid id in the request : {0}"),
-    INVALID_AREA_TYPE("INVALID_AREA_TYPE", 5013, "Invalid area type: {0}", "Wrong argument.");
-
+    INVALID_AREA_TYPE("INVALID_AREA_TYPE", 5013, "Invalid area type: {0}", "Wrong argument."),
+    USER_AREA_DOES_NOT_EXIST("USER_AREA_DOES_NOT_EXIST", 5014, "User area wieh id: {0} does not exist.", "Wrong argument.")
+    ;
     //@formatter:on
 
     private final Integer errorCode;

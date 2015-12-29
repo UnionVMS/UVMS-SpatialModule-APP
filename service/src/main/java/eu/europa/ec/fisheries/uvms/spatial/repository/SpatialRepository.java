@@ -5,16 +5,7 @@ import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.DAO;
 import eu.europa.ec.fisheries.uvms.spatial.entity.*;
 import eu.europa.ec.fisheries.uvms.spatial.entity.config.SysConfigEntity;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.MapConfigurationType;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaExtendedIdentifierDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaLayerDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestAreaDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestLocationDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.FilterAreasDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.MeasurementUnit;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.DisplayProjectionDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
 
 import java.util.List;
@@ -31,15 +22,15 @@ public interface SpatialRepository extends DAO {
     List findAreaOrLocationByCoordinates(Point point, String nativeQueryString);
 
     List<AreaLayerDto> findSystemAreaLayerMapping();
-    
+
     List<UserAreaLayerDto> findUserAreaLayerMapping();
 
     List<Map<String, String>> findAreaByFilter(String areaType, String filter);
 
     List<Map<String, String>> findSelectedAreaColumns(String namedQueryString, Number gid);
-    
+
     List<UserAreaDto> findUserAreaDetails(String userName, String scopeName, Point point);
-    
+
     List<UserAreaDto> findUserAreaDetailsBySearchCriteria(String userName, String scopeName, String searchCriteria);
 
     FilterAreasDto filterAreas(List<String> userAreaTables, List<String> userAreaIds, List<String> scopeAreaTables, List<String> scopeAreaIds);
@@ -70,4 +61,5 @@ public interface SpatialRepository extends DAO {
 
     void deleteBy(List<Long> spatialConnectIds) throws ServiceException;
 
+    UserAreasEntity findUserAreaById(Long userAreaId, String userName, String scopeName) throws ServiceException;
 }

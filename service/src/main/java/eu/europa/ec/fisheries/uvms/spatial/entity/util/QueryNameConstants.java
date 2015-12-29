@@ -31,6 +31,7 @@ public final class QueryNameConstants {
     public static final String FIND_GID_BY_USER = "UserArea.findGidByUserNameOrScope";
     public static final String USER_AREA_DETAILS = "UserArea.findUserAreaDetails";
     public static final String SEARCH_USER_AREA = "UserArea.searchUserAreaByNameAndDesc";
+    public static final String FIND_USER_AREA_BY_ID = "UserArea.findUserAreaById";
 
     /**
      * Find Area By Name
