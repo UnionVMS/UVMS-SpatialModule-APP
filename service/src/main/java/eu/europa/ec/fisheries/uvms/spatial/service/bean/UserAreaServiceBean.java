@@ -36,17 +36,44 @@ public class UserAreaServiceBean implements UserAreaService {
 
     @Override
     public boolean storeUserArea(UserAreaGeomDto userAreaDto, String userName, String scopeName) throws ServiceException {
-        UserAreasEntity userAreasEntity = prepareEntity(userAreaDto, userName, scopeName);
+        UserAreasEntity userAreasEntity = prepareNewEntity(userAreaDto, userName, scopeName);
         UserAreasEntity persistedEntity = (UserAreasEntity) repository.createEntity(userAreasEntity);
         return persistedEntity != null;
     }
 
-    private UserAreasEntity prepareEntity(UserAreaGeomDto userAreaDto, String userName, String scopeName) {
+    private UserAreasEntity prepareNewEntity(UserAreaGeomDto userAreaDto, String userName, String scopeName) {
         UserAreasEntity userAreasEntity = UserAreaMapper.INSTANCE.fromDtoToEntity(userAreaDto);
         userAreasEntity.setUserName(userName);
         userAreasEntity.setScopeName(scopeName);
         userAreasEntity.setCreatedOn(new Date());
         return userAreasEntity;
+    }
+
+    @Override
+    public boolean updateUserArea(UserAreaGeomDto userAreaDto, String userName, String scopeName) throws ServiceException {
+        Long gid = userAreaDto.getGid();
+        validateGid(gid);
+
+        UserAreasEntity persistentUserArea = repository.findUserAreaById(gid, userName, scopeName);
+        validateNotNull(gid, persistentUserArea);
+
+        UserAreasEntity userAreasEntity = prepareUpdateEntity(persistentUserArea, userAreaDto, userName, scopeName);
+        UserAreasEntity persistedEntity = (UserAreasEntity) repository.updateEntity(userAreasEntity);
+        return persistedEntity != null;
+    }
+
+    private UserAreasEntity prepareUpdateEntity(UserAreasEntity persistentUserArea, UserAreaGeomDto userAreaDto, String userName, String scopeName) {
+        UserAreasEntity userAreasEntity = UserAreaMapper.INSTANCE.fromDtoToEntity(userAreaDto);
+        userAreasEntity.setUserName(userName);
+        userAreasEntity.setScopeName(scopeName);
+        userAreasEntity.setCreatedOn(persistentUserArea.getCreatedOn());
+        return userAreasEntity;
+    }
+
+    private void validateGid(Long gid) {
+        if (gid == null) {
+            throw new SpatialServiceException(SpatialServiceErrors.MISSING_USER_AREA_ID);
+        }
     }
 
     @Override

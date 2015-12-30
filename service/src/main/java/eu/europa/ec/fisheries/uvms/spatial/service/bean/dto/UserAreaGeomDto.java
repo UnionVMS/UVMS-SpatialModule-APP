@@ -7,6 +7,8 @@ public class UserAreaGeomDto extends GeoJsonDto {
     private static final String IS_SHARED = "isShared";
     private static final boolean DEFAULT_IS_SHARED_VALUE = false;
 
+    private Long gid;
+
     public String getName() {
         return properties.get(NAME);
     }
@@ -21,6 +23,14 @@ public class UserAreaGeomDto extends GeoJsonDto {
             return Boolean.valueOf(isShared);
         }
         return DEFAULT_IS_SHARED_VALUE;
+    }
+
+    public Long getGid() {
+        return gid;
+    }
+
+    public void setGid(Long gid) {
+        this.gid = gid;
     }
 
 }

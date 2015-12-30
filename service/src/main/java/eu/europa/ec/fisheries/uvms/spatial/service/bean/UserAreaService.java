@@ -10,13 +10,15 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
 
 public interface UserAreaService {
 
-	boolean storeUserArea(UserAreaGeomDto userAreaDto, String remoteUser, String scopeName) throws ServiceException;
-
 	UserAreaLayerDto getUserAreaLayerDefination(String userName, String scopeName);
 
 	List<UserAreaDto> getUserAreaDetails(Coordinate coordinate, String userName, String scopeName);
-	
+
 	List<UserAreaDto> searchUserAreasByCriteria(String userName, String scopeName, String searchCriteria);
+
+	boolean storeUserArea(UserAreaGeomDto userAreaDto, String remoteUser, String scopeName) throws ServiceException;
+
+	boolean updateUserArea(UserAreaGeomDto userAreaDto, String userName, String scopeName) throws ServiceException;
 
 	void deleteUserArea(Long userAreaId, String userName, String scopeName) throws ServiceException;
 }

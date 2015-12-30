@@ -15,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import javax.ejb.EJB;
 import javax.interceptor.Interceptors;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -38,8 +37,23 @@ public class UserAreaResource extends UnionVMSResource {
     public Response storeUserArea(@Context HttpServletRequest request,
                                   UserAreaGeomDto userAreaGeomDto,
                                   @HeaderParam("scopeName") String scopeName) throws ServiceException {
-        log.debug("UserName from security : " + request.getRemoteUser());
-        userAreaService.storeUserArea(userAreaGeomDto, request.getRemoteUser(), scopeName);
+        String userName = request.getRemoteUser();
+        log.info("{} is requesting storeUserArea(...)", userName);
+        userAreaService.storeUserArea(userAreaGeomDto, userName, scopeName);
+        return createSuccessResponse();
+    }
+
+    @PUT
+    @Path("userarea")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Interceptors(value = {ExceptionInterceptor.class})
+    public Response updateReport(@Context HttpServletRequest request,
+                                 UserAreaGeomDto userAreaGeomDto,
+                                 @HeaderParam("scopeName") String scopeName) throws ServiceException {
+        String userName = request.getRemoteUser();
+        log.info("{} is requesting updateUserArea(...), with a ID={}", userName, userAreaGeomDto.getGid());
+        userAreaService.updateUserArea(userAreaGeomDto, request.getRemoteUser(), scopeName);
         return createSuccessResponse();
     }
 
@@ -48,8 +62,8 @@ public class UserAreaResource extends UnionVMSResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Interceptors(value = {ExceptionInterceptor.class})
     public Response deleteUserArea(@Context HttpServletRequest request,
-                                 @PathParam("id") Long userAreaId,
-                                 @HeaderParam("scopeName") String scopeName) throws ServiceException {
+                                   @PathParam("id") Long userAreaId,
+                                   @HeaderParam("scopeName") String scopeName) throws ServiceException {
         String userName = request.getRemoteUser();
         log.info("{} is requesting deleteUserArea(...), with a ID={} and scopeName={}", userName, userAreaId, scopeName);
         userAreaService.deleteUserArea(userAreaId, userName, scopeName);
