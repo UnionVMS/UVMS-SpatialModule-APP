@@ -14,6 +14,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.ConfigurationDto
 import lombok.extern.slf4j.Slf4j;
 
 import javax.ejb.EJB;
+import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -25,6 +26,7 @@ import java.util.List;
 
 @Path("/config")
 @Slf4j
+@Stateless
 public class ConfigResource extends UnionVMSResource {
 
     private static final String DEFAULT_CONFIG = "DEFAULT_CONFIG";

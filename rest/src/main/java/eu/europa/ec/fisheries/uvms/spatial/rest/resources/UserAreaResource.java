@@ -13,6 +13,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaGeomDto;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.ejb.EJB;
+import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -22,6 +23,7 @@ import javax.ws.rs.core.Response;
 
 @Path("/")
 @Slf4j
+@Stateless
 public class UserAreaResource extends UnionVMSResource {
 
     @EJB

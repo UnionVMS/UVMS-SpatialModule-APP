@@ -9,12 +9,14 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.EnrichmentDto;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.ejb.EJB;
+import javax.ejb.Stateless;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 @Path("/")
 @Slf4j
+@Stateless
 public class EnrichmentResource {
 
     @EJB

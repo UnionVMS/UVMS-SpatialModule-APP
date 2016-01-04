@@ -6,6 +6,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.CountryService;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.ejb.EJB;
+import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -18,6 +19,7 @@ import javax.ws.rs.core.Response;
 
 @Path("/countries")
 @Slf4j
+@Stateless
 public class CountryResource extends UnionVMSResource {
 
     @EJB

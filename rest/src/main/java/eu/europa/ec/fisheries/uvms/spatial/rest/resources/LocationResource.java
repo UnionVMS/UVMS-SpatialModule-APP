@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.ejb.EJB;
+import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -37,6 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Path("/")
 @Slf4j
+@Stateless
 public class LocationResource extends UnionVMSResource {
     @EJB
     private ClosestLocationService closestLocationService;

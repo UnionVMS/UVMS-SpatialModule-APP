@@ -11,6 +11,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.EezDto;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.ejb.EJB;
+import javax.ejb.Stateless;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -20,6 +21,7 @@ import java.io.IOException;
 
 @Path("/eez")
 @Slf4j
+@Stateless
 public class EezResource {
 
     @EJB
