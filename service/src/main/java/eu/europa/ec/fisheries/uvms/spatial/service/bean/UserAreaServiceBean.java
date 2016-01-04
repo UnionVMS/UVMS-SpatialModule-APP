@@ -63,11 +63,22 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     private UserAreasEntity prepareUpdateEntity(UserAreasEntity persistentUserArea, UserAreaGeomDto userAreaDto, String userName, String scopeName) {
-        UserAreasEntity userAreasEntity = UserAreaMapper.INSTANCE.fromDtoToEntity(userAreaDto);
-        userAreasEntity.setUserName(userName);
-        userAreasEntity.setScopeName(scopeName);
-        userAreasEntity.setCreatedOn(persistentUserArea.getCreatedOn());
-        return userAreasEntity;
+        UserAreasEntity newUserAreasEntity = UserAreaMapper.INSTANCE.fromDtoToEntity(userAreaDto);
+        persistentUserArea.setUserName(userName);
+        persistentUserArea.setScopeName(scopeName);
+        if (newUserAreasEntity.getName() != null) {
+            persistentUserArea.setName(newUserAreasEntity.getName());
+        }
+        if (newUserAreasEntity.getAreaDesc() != null) {
+            persistentUserArea.setAreaDesc(newUserAreasEntity.getAreaDesc());
+        }
+        if (newUserAreasEntity.getGeom() != null) {
+            persistentUserArea.setGeom(newUserAreasEntity.getGeom());
+        }
+        if (newUserAreasEntity.getIsShared() != null) {
+            persistentUserArea.setIsShared(newUserAreasEntity.getIsShared());
+        }
+        return persistentUserArea;
     }
 
     private void validateGid(Long gid) {

@@ -48,9 +48,9 @@ public class UserAreaResource extends UnionVMSResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response updateReport(@Context HttpServletRequest request,
-                                 UserAreaGeomDto userAreaGeomDto,
-                                 @HeaderParam("scopeName") String scopeName) throws ServiceException {
+    public Response updateUserArea(@Context HttpServletRequest request,
+                                   UserAreaGeomDto userAreaGeomDto,
+                                   @HeaderParam("scopeName") String scopeName) throws ServiceException {
         String userName = request.getRemoteUser();
         log.info("{} is requesting updateUserArea(...), with a ID={}", userName, userAreaGeomDto.getGid());
         userAreaService.updateUserArea(userAreaGeomDto, request.getRemoteUser(), scopeName);
