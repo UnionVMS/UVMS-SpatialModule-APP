@@ -63,20 +63,19 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     private UserAreasEntity prepareUpdateEntity(UserAreasEntity persistentUserArea, UserAreaGeomDto userAreaDto, String userName, String scopeName) {
-        UserAreasEntity newUserAreasEntity = UserAreaMapper.INSTANCE.fromDtoToEntity(userAreaDto);
         persistentUserArea.setUserName(userName);
         persistentUserArea.setScopeName(scopeName);
-        if (newUserAreasEntity.getName() != null) {
-            persistentUserArea.setName(newUserAreasEntity.getName());
+        if (userAreaDto.getName() != null) {
+            persistentUserArea.setName(userAreaDto.getName());
         }
-        if (newUserAreasEntity.getAreaDesc() != null) {
-            persistentUserArea.setAreaDesc(newUserAreasEntity.getAreaDesc());
+        if (userAreaDto.getAreaDesc() != null) {
+            persistentUserArea.setAreaDesc(userAreaDto.getAreaDesc());
         }
-        if (newUserAreasEntity.getGeom() != null) {
-            persistentUserArea.setGeom(newUserAreasEntity.getGeom());
+        if (userAreaDto.getGeometry() != null) {
+            persistentUserArea.setGeom(userAreaDto.getGeometry());
         }
-        if (newUserAreasEntity.getIsShared() != null) {
-            persistentUserArea.setIsShared(newUserAreasEntity.getIsShared());
+        if (userAreaDto.isShared() != null) {
+            persistentUserArea.setIsShared(userAreaDto.isShared());
         }
         return persistentUserArea;
     }
