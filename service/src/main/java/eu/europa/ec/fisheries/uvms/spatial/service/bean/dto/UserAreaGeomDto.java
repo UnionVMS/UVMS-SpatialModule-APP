@@ -1,13 +1,14 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto;
 
+import static org.apache.commons.lang.StringUtils.isNumeric;
+
 public class UserAreaGeomDto extends GeoJsonDto {
 
     private static final String NAME = "name";
     private static final String DESCRIPTION = "description";
+    private static final String GID = "gid";
     private static final String IS_SHARED = "isShared";
     private static final boolean DEFAULT_IS_SHARED_VALUE = false;
-
-    private Long gid;
 
     public String getName() {
         return properties.get(NAME);
@@ -26,11 +27,11 @@ public class UserAreaGeomDto extends GeoJsonDto {
     }
 
     public Long getGid() {
-        return gid;
-    }
-
-    public void setGid(Long gid) {
-        this.gid = gid;
+        String gid = properties.get(GID);
+        if (gid != null && isNumeric(gid)) {
+            return Long.valueOf(gid);
+        }
+        return null;
     }
 
 }
