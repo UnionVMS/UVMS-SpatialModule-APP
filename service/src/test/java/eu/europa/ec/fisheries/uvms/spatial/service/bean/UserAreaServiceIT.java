@@ -49,7 +49,7 @@ public class UserAreaServiceIT extends AbstractArquillianIT {
 		//Test
 		assertNotNull(userAreas);
 		assertFalse(userAreas.isEmpty());
-		assertNotNull(userAreas.get(0).getGeomExtent());
+		assertNotNull(userAreas.get(0).getExtent());
 	}
 	
 	@Test

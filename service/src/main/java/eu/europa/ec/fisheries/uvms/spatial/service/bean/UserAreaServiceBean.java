@@ -68,8 +68,8 @@ public class UserAreaServiceBean implements UserAreaService {
         if (userAreaDto.getName() != null) {
             persistentUserArea.setName(userAreaDto.getName());
         }
-        if (userAreaDto.getAreaDesc() != null) {
-            persistentUserArea.setAreaDesc(userAreaDto.getAreaDesc());
+        if (userAreaDto.getDesc() != null) {
+            persistentUserArea.setAreaDesc(userAreaDto.getDesc());
         }
         if (userAreaDto.getGeometry() != null) {
             persistentUserArea.setGeom(userAreaDto.getGeometry());

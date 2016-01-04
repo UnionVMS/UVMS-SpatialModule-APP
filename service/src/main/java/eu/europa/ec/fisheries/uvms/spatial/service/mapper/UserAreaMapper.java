@@ -16,7 +16,7 @@ public interface UserAreaMapper {
             @Mapping(source = "geometry", target = "geom"),
             @Mapping(target = "isShared", expression = "java(userAreaDto.isShared())"),
             @Mapping(target = "name", expression = "java(userAreaDto.getName())"),
-            @Mapping(target = "areaDesc", expression = "java(userAreaDto.getAreaDesc())"),
+            @Mapping(target = "areaDesc", expression = "java(userAreaDto.getDesc())"),
             @Mapping(source = "gid", target = "gid")
     })
     UserAreasEntity fromDtoToEntity(UserAreaGeomDto userAreaDto);

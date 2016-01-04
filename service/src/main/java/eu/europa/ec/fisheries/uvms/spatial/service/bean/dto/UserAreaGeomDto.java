@@ -14,7 +14,7 @@ public class UserAreaGeomDto extends GeoJsonDto {
         return properties.get(NAME);
     }
 
-    public String getAreaDesc() {
+    public String getDesc() {
         return properties.get(DESCRIPTION);
     }
 

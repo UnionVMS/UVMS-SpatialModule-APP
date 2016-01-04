@@ -12,11 +12,11 @@ public class UserAreaDto implements Serializable {
 	
 	private Number gid;
 
-	private String areaName;
+	private String name;
 
-	private String areaDesc;
+	private String desc;
 
-	private String geomExtent;
+	private String extent;
 
 	private Geometry geometry;
 
@@ -44,27 +44,27 @@ public class UserAreaDto implements Serializable {
 		this.gid = gid;
 	}
 
-	public String getAreaName() {
-		return areaName;
+	public String getName() {
+		return name;
 	}
 
-	public void setAreaName(String areaName) {
-		this.areaName = areaName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public String getAreaDesc() {
-		return areaDesc;
+	public String getDesc() {
+		return desc;
 	}
 
-	public void setAreaDesc(String areaDesc) {
-		this.areaDesc = areaDesc;
+	public void setDesc(String desc) {
+		this.desc = desc;
 	}
 
-	public String getGeomExtent() {
-		return geomExtent;
+	public String getExtent() {
+		return extent;
 	}
 
-	public void setGeomExtent(String geomExtent) {
-		this.geomExtent = geomExtent;
+	public void setExtent(String extent) {
+		this.extent = extent;
 	}
 }
