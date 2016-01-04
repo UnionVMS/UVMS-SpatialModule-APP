@@ -12,10 +12,14 @@ public class SystemSettingsDto {
     @JsonProperty("geoserverUrl")
     private String geoserverUrl;
 
+    @JsonProperty("bingApiKey")
+    private String bingApiKey;
+
     public SystemSettingsDto() {}
 
-    public SystemSettingsDto(String geoserverUrl) {
+    public SystemSettingsDto(String geoserverUrl, String bingApiKey) {
         this.geoserverUrl = geoserverUrl;
+        this.bingApiKey = bingApiKey;
     }
 
     @JsonProperty("geoserverUrl")
@@ -26,6 +30,16 @@ public class SystemSettingsDto {
     @JsonProperty("geoserverUrl")
     public void setGeoserverUrl(String geoserverUrl) {
         this.geoserverUrl = geoserverUrl;
+    }
+
+    @JsonProperty("bingApiKey")
+    public String getBingApiKey() {
+        return bingApiKey;
+    }
+
+    @JsonProperty("bingApiKey")
+    public void setBingApiKey(String bingApiKey) {
+        this.bingApiKey = bingApiKey;
     }
 
     @Override

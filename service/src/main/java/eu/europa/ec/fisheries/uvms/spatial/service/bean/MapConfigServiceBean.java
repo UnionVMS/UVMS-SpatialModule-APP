@@ -45,6 +45,8 @@ public class MapConfigServiceBean implements MapConfigService {
 
     private static final String GEO_SERVER = "geo_server_url";
 
+    private static final String BING_API_KEY = "bing_api_key";
+
     private static final Integer DEFAULT_EPSG = 3857;
 
     @EJB
@@ -268,6 +270,11 @@ public class MapConfigServiceBean implements MapConfigService {
         return repository.findSystemConfigByName(parameters);
     }
 
+    private String getBingApiKey() throws ServiceException {
+        Map<String, String> parameters = ImmutableMap.<String, String>builder().put(NAME, BING_API_KEY).build();
+        return repository.findSystemConfigByName(parameters);
+    }
+
     private List<Integer> getServiceLayerIds(List<LayersDto> layers) {
         List<Integer> ids = new ArrayList<>();
         for (LayersDto layer : layers) {
@@ -365,15 +372,24 @@ public class MapConfigServiceBean implements MapConfigService {
     private SystemSettingsDto getConfigSystemSettings() throws ServiceException {
         SystemSettingsDto systemSettingsDto = new SystemSettingsDto();
         systemSettingsDto.setGeoserverUrl(getGeoServerUrl());
+        systemSettingsDto.setBingApiKey(getBingApiKey());
         return systemSettingsDto;
     }
 
     private void setConfigSystemSettings(SystemSettingsDto systemSettingsDto, SystemSettingsDto defaultSystemSettingsDto) throws ServiceException {
+        // Update Geo Server URL
         String geoServerUrl = systemSettingsDto.getGeoserverUrl();
         String defaultGeoServerUrl = defaultSystemSettingsDto.getGeoserverUrl();
         if (geoServerUrl != null && geoServerUrl != defaultGeoServerUrl) {
             Map<String, String> parameters = ImmutableMap.<String, String>builder().put(NAME, GEO_SERVER).build();
             repository.updateSystemConfig(parameters, geoServerUrl);
+        }
+
+        // Update Bing API Key
+        String bingApiKey = systemSettingsDto.getBingApiKey();
+        if (bingApiKey != null) {
+            Map<String, String> parameters = ImmutableMap.<String, String>builder().put(NAME, BING_API_KEY).build();
+            repository.updateSystemConfig(parameters, bingApiKey);
         }
     }
 }
