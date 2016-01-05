@@ -13,7 +13,8 @@ import com.fasterxml.jackson.annotation.*;
         "url",
         "serverType",
         "layerGeoName",
-        "styles"
+        "styles",
+        "apiKey"
 })
 public class LayerDto {
 
@@ -46,6 +47,9 @@ public class LayerDto {
 
     @JsonProperty("styles")
     private StylesDto styles;
+
+    @JsonProperty("apiKey")
+    private String apiKey;
 
     /**
      * No args constructor for use in serialization
@@ -150,5 +154,15 @@ public class LayerDto {
     @JsonProperty("styles")
     public void setStyles(StylesDto styles) {
         this.styles = styles;
+    }
+
+    @JsonProperty("apiKey")
+    public String getApiKey() {
+        return apiKey;
+    }
+
+    @JsonProperty("apiKey")
+    public void setApiKey(String apiKey) {
+        this.apiKey = apiKey;
     }
 }

@@ -47,6 +47,8 @@ public class MapConfigServiceBean implements MapConfigService {
 
     private static final String BING_API_KEY = "bing_api_key";
 
+    private static final String PROVIDER_FORMAT_BING = "BING";
+
     private static final Integer DEFAULT_EPSG = 3857;
 
     @EJB
@@ -211,16 +213,17 @@ public class MapConfigServiceBean implements MapConfigService {
     }
 
     private List<LayerDto> getServiceAreaLayer(int reportId, ConfigurationDto configurationDto, ProjectionDto projection) throws ServiceException {
-        List<ReportConnectServiceAreasEntity> reportConnectServiceAreas = getReportConnectServiceAreas(reportId, projection);
         String geoServerUrl = getGeoServerUrl();
+        String bingApiKey = getBingApiKey();
+        List<ReportConnectServiceAreasEntity> reportConnectServiceAreas = getReportConnectServiceAreas(reportId, projection, bingApiKey);
         if (reportConnectServiceAreas != null && !reportConnectServiceAreas.isEmpty()) { // If report is having service layer then return it
             List<LayerDto> layerDtos = new ArrayList<LayerDto>();
             for (ReportConnectServiceAreasEntity reportConnectServiceArea : reportConnectServiceAreas) {
-                layerDtos.add(reportConnectServiceArea.convertToServiceLayer(geoServerUrl));
+                layerDtos.add(reportConnectServiceArea.convertToServiceLayer(geoServerUrl, bingApiKey));
             }
             return layerDtos;
         } else { // otherwise get the default layer configuration from USM
-            return getServiceAreaLayersFromConfig(configurationDto, geoServerUrl, projection);
+            return getServiceAreaLayersFromConfig(configurationDto, geoServerUrl, bingApiKey, projection);
         }
     }
 
@@ -232,16 +235,16 @@ public class MapConfigServiceBean implements MapConfigService {
         return configurationDto.getVisibilitySettings();
     }
 
-    private List<LayerDto> getServiceAreaLayersFromConfig(ConfigurationDto configurationDto, String geoServerUrl, ProjectionDto projection) throws ServiceException {
+    private List<LayerDto> getServiceAreaLayersFromConfig(ConfigurationDto configurationDto, String geoServerUrl, String bingApiKey, ProjectionDto projection) throws ServiceException {
         List<LayersDto> overlayLayers = configurationDto.getLayerSettings().getOverlayLayers(); // Get Service Layers for Overlay layers
         List<Integer> overlayServiceLayerIds = getServiceLayerIds(overlayLayers);
-        List<ServiceLayerEntity> overlayServiceLayerEntities = sort(getServiceLayers(overlayServiceLayerIds, projection), overlayServiceLayerIds);
-        List<LayerDto> layerDtos = getLayerDtos(overlayServiceLayerEntities, geoServerUrl, false);
+        List<ServiceLayerEntity> overlayServiceLayerEntities = sort(getServiceLayers(overlayServiceLayerIds, projection, bingApiKey), overlayServiceLayerIds);
+        List<LayerDto> layerDtos = getLayerDtos(overlayServiceLayerEntities, geoServerUrl, bingApiKey, false);
 
         List<LayersDto> baseLayers = configurationDto.getLayerSettings().getBaseLayers(); // Get Service Layers for base layers
         List<Integer> baseServiceLayerIds = getServiceLayerIds(baseLayers);
-        List<ServiceLayerEntity> baseServiceLayerEntities = sort(getServiceLayers(baseServiceLayerIds, projection), baseServiceLayerIds);
-        layerDtos.addAll(getLayerDtos(baseServiceLayerEntities, geoServerUrl, true));
+        List<ServiceLayerEntity> baseServiceLayerEntities = sort(getServiceLayers(baseServiceLayerIds, projection, bingApiKey), baseServiceLayerIds);
+        layerDtos.addAll(getLayerDtos(baseServiceLayerEntities, geoServerUrl, bingApiKey, true));
         return layerDtos;
     }
 
@@ -257,10 +260,10 @@ public class MapConfigServiceBean implements MapConfigService {
         return tempList;
     }
 
-    private List<LayerDto> getLayerDtos(List<ServiceLayerEntity> serviceLayerEntities, String geoserverUrl, boolean isBaseLayer) {
+    private List<LayerDto> getLayerDtos(List<ServiceLayerEntity> serviceLayerEntities, String geoserverUrl, String bingApiKey, boolean isBaseLayer) {
         List<LayerDto> layerDtos = new ArrayList<LayerDto>();
         for (ServiceLayerEntity serviceLayerEntity : serviceLayerEntities) {
-            layerDtos.add(serviceLayerEntity.convertToServiceLayer(geoserverUrl, isBaseLayer));
+            layerDtos.add(serviceLayerEntity.convertToServiceLayer(geoserverUrl, bingApiKey, isBaseLayer));
         }
         return layerDtos;
     }
@@ -283,32 +286,41 @@ public class MapConfigServiceBean implements MapConfigService {
         return ids;
     }
 
-    private List<ReportConnectServiceAreasEntity> getReportConnectServiceAreas(int reportId, ProjectionDto projection) {
+    private List<ReportConnectServiceAreasEntity> getReportConnectServiceAreas(int reportId, ProjectionDto projection, String bingApiKey) {
         List<ReportConnectServiceAreasEntity> reportConnectServiceAreas = repository.findReportConnectServiceAreas(reportId);
         if (reportConnectServiceAreas != null) {
             Iterator<ReportConnectServiceAreasEntity> areaIterator = reportConnectServiceAreas.iterator();
             while (areaIterator.hasNext()) {
                 ReportConnectServiceAreasEntity reportConnectServiceArea = areaIterator.next();
-                if (!projection.getEpsgCode().equals(DEFAULT_EPSG) && !DEFAULT_EPSG.equals(reportConnectServiceArea.getServiceLayer().getSrsCode())) {
+                if (isRemoveLayer(projection, reportConnectServiceArea.getServiceLayer(), bingApiKey)) {
                     areaIterator.remove();
                 }
             }
             Collections.sort(reportConnectServiceAreas);
-
         }
         return reportConnectServiceAreas;
     }
 
-    private List<ServiceLayerEntity> getServiceLayers(List<Integer> ids, ProjectionDto projection) {
+    private List<ServiceLayerEntity> getServiceLayers(List<Integer> ids, ProjectionDto projection, String bingApiKey) {
         List<ServiceLayerEntity> serviceLayers = repository.findServiceLayerEntityByIds(ids);
         Iterator<ServiceLayerEntity> layerIterator = serviceLayers.iterator();
         while(layerIterator.hasNext()) {
             ServiceLayerEntity serviceLayer = layerIterator.next();
-            if(!projection.getEpsgCode().equals(DEFAULT_EPSG) && DEFAULT_EPSG.equals(serviceLayer.getSrsCode())) {
+            if (isRemoveLayer(projection, serviceLayer, bingApiKey)) {
                 layerIterator.remove();
             }
         }
         return serviceLayers;
+    }
+
+    private boolean isRemoveLayer(ProjectionDto projection, ServiceLayerEntity serviceLayer, String bingApiKey) {
+        if(!projection.getEpsgCode().equals(DEFAULT_EPSG) && DEFAULT_EPSG.equals(serviceLayer.getSrsCode())) {
+            return true;
+        }
+        if (serviceLayer.getProviderFormat().getServiceType().equalsIgnoreCase(PROVIDER_FORMAT_BING) && bingApiKey == null) {
+            return true;
+        }
+        return false;
     }
 
     private List<ControlDto> updateControls(List<ControlDto> controls, String scaleBarUnit, int epsgCode, String coordinateFormat) {

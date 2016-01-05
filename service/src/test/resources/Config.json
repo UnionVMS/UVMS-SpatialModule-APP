@@ -308,6 +308,18 @@
       {
         "serviceLayerId": 3,
         "type": "WMS"
+      },
+      {
+        "serviceLayerId": 8,
+        "type": "BING"
+      },
+      {
+        "serviceLayerId": 9,
+        "type": "BING"
+      },
+      {
+        "serviceLayerId": 10,
+        "type": "BING"
       }
     ]
   },

@@ -137,21 +137,8 @@ public class ReportConnectServiceAreasEntity implements Serializable, Comparable
 		return Integer.compare(this.getLayerOrder(), reportConnectServiceArea.getLayerOrder());
 	}
 
-	public LayerDto convertToServiceLayer(String geoServerUrl) {
-		LayerDto layerDto = new LayerDto();
-		layerDto.setType(serviceLayer.getProviderFormat().getServiceType());
-		layerDto.setGroupType(serviceLayer.getAreaType().getAreaGroupType());
-		layerDto.setTitle(serviceLayer.getName());
-		layerDto.setIsBaseLayer(getIsBackground());
-		layerDto.setShortCopyright(serviceLayer.getShortCopyright());
-		layerDto.setLongCopyright(serviceLayer.getLongCopyright());
-		if (!(serviceLayer.getName().equalsIgnoreCase("OSM") || serviceLayer.getName().equalsIgnoreCase("OSEA"))) {
-			layerDto.setUrl(geoServerUrl.concat(serviceLayer.getProviderFormat().getServiceType().toLowerCase()));
-		}
-		layerDto.setServerType(serviceLayer.getIsInternal() ? GEOSERVER : null);
-		layerDto.setLayerGeoName(serviceLayer.getGeoName());
-		setStyle(layerDto);
-		return layerDto;
+	public LayerDto convertToServiceLayer(String geoServerUrl, String bingApiKey) {
+		return serviceLayer.convertToServiceLayer(geoServerUrl, bingApiKey, getIsBackground());
 	}
 
 	private void setStyle(LayerDto layerDto) {

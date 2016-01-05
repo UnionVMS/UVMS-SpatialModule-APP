@@ -210,20 +210,26 @@ public class ServiceLayerEntity implements Serializable {
         return (StringUtils.isEmpty(styleGeom) && StringUtils.isEmpty(styleLabel) && StringUtils.isEmpty(styleLabelGeom));
     }
 
-    public LayerDto convertToServiceLayer(String geoServerUrl, boolean isBaseLayer) {
+    public LayerDto convertToServiceLayer(String geoServerUrl, String bingApiKey, boolean isBaseLayer) {
         LayerDto layerDto = new LayerDto();
-        layerDto.setType(getProviderFormat().getServiceType());
-        layerDto.setGroupType(getAreaType().getAreaGroupType());
+        String type = getProviderFormat().getServiceType();
+        layerDto.setType(type);
+        if (getAreaType() != null) {
+            layerDto.setGroupType(getAreaType().getAreaGroupType());
+        }
         layerDto.setTitle(getName());
         layerDto.setIsBaseLayer(isBaseLayer);
         layerDto.setShortCopyright(getShortCopyright());
         layerDto.setLongCopyright(getLongCopyright());
-        if(!(getName().equalsIgnoreCase("OSM") || getName().equalsIgnoreCase("OSEA"))) {
+        if(!(type.equalsIgnoreCase("OSM") || type.equalsIgnoreCase("OSEA") || type.equalsIgnoreCase("BING"))) {
             layerDto.setUrl(geoServerUrl.concat(getProviderFormat().getServiceType().toLowerCase()));
         }
         layerDto.setServerType(getIsInternal() ? GEOSERVER : null);
         layerDto.setLayerGeoName(getGeoName());
         setStyle(layerDto);
+        if (type.equalsIgnoreCase("BING")) {
+            layerDto.setApiKey(bingApiKey);
+        }
         return layerDto;
     }
 
