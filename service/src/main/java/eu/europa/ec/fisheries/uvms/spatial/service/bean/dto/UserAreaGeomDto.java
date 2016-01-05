@@ -14,8 +14,20 @@ public class UserAreaGeomDto extends GeoJsonDto {
         return properties.get(NAME);
     }
 
+    public void setName(String name) {
+        if (name != null) {
+            properties.put(NAME, name);
+        }
+    }
+
     public String getDesc() {
         return properties.get(DESCRIPTION);
+    }
+
+    public void setDesc(String desc) {
+        if (desc != null) {
+            properties.put(DESCRIPTION, desc);
+        }
     }
 
     public Boolean isShared() {
@@ -26,12 +38,22 @@ public class UserAreaGeomDto extends GeoJsonDto {
         return DEFAULT_IS_SHARED_VALUE;
     }
 
+    public void setShared(Boolean isShared) {
+        if (isShared != null) {
+            properties.put(IS_SHARED, String.valueOf(isShared));
+        }
+    }
+
     public Long getGid() {
         String gid = properties.get(GID);
         if (gid != null && isNumeric(gid)) {
             return Long.valueOf(gid);
         }
         return null;
+    }
+
+    public void setId(Long gid) {
+        properties.put(GID, String.valueOf(gid));
     }
 
 }

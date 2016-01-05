@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.spatial.rest.dto;
+package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -55,15 +55,12 @@ public class AreaDetailsDto extends GeoJsonDto {
 		this.allAreaProperties = allAreaProperties;
 	}
 	
-	public List<Map<String, String>> removeGeometryAllAreas() {
-		List<Map<String, String>> tempAllAreaProperties = new ArrayList<Map<String, String>>();
+	public void removeGeometryAllAreas() {
 		for (Map<String, String> props : allAreaProperties) {
 			if(props.containsKey(GEOMETRY)) {
         		props.put(EXTENT, getExtend(props.get(GEOMETRY)));
         		props.remove(GEOMETRY);
         	}
-			tempAllAreaProperties.add(props);
 		}
-		return tempAllAreaProperties;
 	}
 }

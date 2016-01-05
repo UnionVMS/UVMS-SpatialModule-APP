@@ -17,7 +17,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Coordinate;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationProperty;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationTypeEntry;
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaDetailsDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaDetailsDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaTypeDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.GeoCoordinateDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.LocationDetailsDto;
@@ -88,7 +88,7 @@ public abstract class AreaLocationDtoMapper {
 	}
 	
 	protected String extractType(AreaTypeDto areaDto) {
-		return String.valueOf(areaDto.getAreaType());
+		return areaDto.getAreaType();
 	}
 	
 	protected Map<String, String> extractProperties(LocationDetails locationDetails) {

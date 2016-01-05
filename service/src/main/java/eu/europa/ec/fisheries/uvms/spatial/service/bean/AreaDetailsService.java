@@ -8,10 +8,10 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 
 public interface AreaDetailsService {
 
-    AreaDetails getAreaDetails(AreaDetailsSpatialRequest request);
+    AreaDetails getAreaDetails(AreaDetailsSpatialRequest areaDetailsSpatialRequest);
     
-    AreaDetails getAreaDetailsById(AreaTypeEntry request);
+    AreaDetails getAreaDetailsById(AreaTypeEntry areaTypeEntry);
     
-    List<AreaDetails> getAreaDetailsByLocation(AreaTypeEntry request);
+    List<AreaDetails> getAreaDetailsByLocation(AreaTypeEntry areaTypeEntry);
 
 }

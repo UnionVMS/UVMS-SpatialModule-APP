@@ -20,7 +20,7 @@ import com.vividsolutions.jts.io.ParseException;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.service.interceptor.ValidationInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaDetailsDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaDetailsDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaFilterDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaTypeDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseCode;

@@ -1,15 +1,23 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources;
 
+import com.vividsolutions.jts.io.ParseException;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.service.interceptor.ValidationInterceptor;
+import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Coordinate;
+import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaTypeDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.FilterDto;
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.GeoCoordinateDto;
+import eu.europa.ec.fisheries.uvms.spatial.rest.dto.UserAreaTypeDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.AreaLocationDtoMapper;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.UserAreaService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaDetailsDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaGeomDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.mapper.UserAreaMapper;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.ejb.EJB;
@@ -20,6 +28,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
+import java.util.List;
 
 @Path("/")
 @Slf4j
@@ -85,9 +95,18 @@ public class UserAreaResource extends UnionVMSResource {
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/userareadetails")
     @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
-    public Response getUserAreaDetails(GeoCoordinateDto geoCoordinateDto, @Context HttpServletRequest request, @HeaderParam("scopeName") String scopeName) {
-        Coordinate coordinate = mapper.getCoordinateFromDto(geoCoordinateDto);
-        return createSuccessResponse(userAreaService.getUserAreaDetails(coordinate, request.getRemoteUser(), scopeName));
+    public Response getUserAreaDetails(UserAreaTypeDto userAreaTypeDto, @Context HttpServletRequest request, @HeaderParam("scopeName") String scopeName) throws IOException, ParseException {
+        Coordinate coordinate = mapper.getCoordinateFromDto(userAreaTypeDto);
+        if (!userAreaTypeDto.getIsGeom()) {
+            List<UserAreaDto> userAreaDetails = userAreaService.getUserAreaDetailsWithExtent(coordinate, request.getRemoteUser(), scopeName);
+            return createSuccessResponse(userAreaDetails);
+        } else {
+            AreaTypeEntry areaTypeEntry = AreaLocationDtoMapper.mapper().getAreaTypeEntry(userAreaTypeDto);
+            List<AreaDetails> userAreaDetails = userAreaService.getUserAreaDetailsWithGeom(areaTypeEntry, request.getRemoteUser(), scopeName);
+            //AreaDetailsDto areaDetailsDto = UserAreaMapper.mapper().getAreaDetailsDtoForAllAreaEntities(userAreaDetails);
+            AreaDetailsDto areaDetailsDto = mapper.getAreaDetailsDtoForAllAreas(userAreaDetails, userAreaTypeDto);
+            return createSuccessResponse(areaDetailsDto.convertAll());
+        }
     }
 
     @POST

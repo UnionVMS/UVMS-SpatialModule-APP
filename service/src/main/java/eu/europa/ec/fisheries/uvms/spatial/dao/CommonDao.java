@@ -48,12 +48,17 @@ public abstract class CommonDao {
 		query.setParameter(CRS, crs);
 		return query;
 	}
-	
-	protected <T> Query createNamedNativeQuery(String nativeQueryString, Map<String, Object> parameters, Class<T> dtoClass) {
+
+	protected <T> Query createNamedNativeQuery(String nativeQueryString, Map<String, Object> parameters) {
 		Query query = getSession().getNamedQuery(nativeQueryString);
 		for (Map.Entry<String, Object> entry : parameters.entrySet()) {
 			query.setParameter(entry.getKey(), entry.getValue());
 		}
+		return query;
+	}
+
+	protected <T> Query createNamedNativeQuery(String nativeQueryString, Map<String, Object> parameters, Class<T> dtoClass) {
+		Query query = createNamedNativeQuery(nativeQueryString, parameters);
 		query.setResultTransformer(Transformers.aliasToBean(dtoClass));
 		return query;
 	}

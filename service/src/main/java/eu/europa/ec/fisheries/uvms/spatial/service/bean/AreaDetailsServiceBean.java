@@ -10,6 +10,7 @@ import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.transaction.Transactional;
 
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.NotImplementedException;
 
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
@@ -53,11 +54,11 @@ public class AreaDetailsServiceBean extends SpatialServiceBean implements AreaDe
     	}
     }
     
-    private List<AreaDetails> getAllAreaDetails(List allAreas, AreaTypeEntry request) {
+    private List<AreaDetails> getAllAreaDetails(List allAreas, AreaTypeEntry areaTypeEntry) {
     	List<AreaDetails> areaDetailsList = new ArrayList<AreaDetails>();
 		for (int i = 0 ; i < allAreas.size() ; i ++) {
 			Map<String, String> properties = getFieldMap(allAreas.get(i));
-			areaDetailsList.add(createAreaDetailsSpatialResponse(properties, request));
+			areaDetailsList.add(createAreaDetailsSpatialResponse(properties, areaTypeEntry));
 		}
 		return areaDetailsList;
 	}
@@ -68,9 +69,9 @@ public class AreaDetailsServiceBean extends SpatialServiceBean implements AreaDe
     	return createAreaDetailsSpatialResponse(properties, request);
     }
 
-    private AreaDetails createAreaDetailsSpatialResponse(Map<String, String> properties, AreaTypeEntry areaType) {
-        List<AreaProperty> areaProperties = new ArrayList<AreaProperty>();
-        for (Map.Entry<String, String> entry : properties.entrySet()) {
+    private AreaDetails createAreaDetailsSpatialResponse(Map<String, String> properties, AreaTypeEntry areaTypeEntry) {
+        List<AreaProperty> areaProperties = Lists.newArrayList();
+		for (Map.Entry<String, String> entry : properties.entrySet()) {
             AreaProperty areaProperty = new AreaProperty();
             areaProperty.setPropertyName(entry.getKey());
             areaProperty.setPropertyValue(entry.getValue());
@@ -78,7 +79,7 @@ public class AreaDetailsServiceBean extends SpatialServiceBean implements AreaDe
         }
 
         AreaDetails areaDetails = new AreaDetails();
-        areaDetails.setAreaType(areaType);
+        areaDetails.setAreaType(areaTypeEntry);
         areaDetails.getAreaProperties().addAll(areaProperties);
         return areaDetails;
     }

@@ -8,16 +8,21 @@ import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
 
 @Mapper
-public interface UserAreaMapper {
+public abstract class UserAreaMapper {
 
-    UserAreaMapper INSTANCE = Mappers.getMapper(UserAreaMapper.class);
+    private static UserAreaMapper INSTANCE = Mappers.getMapper(UserAreaMapper.class);
+
+    public static UserAreaMapper mapper() {
+        return INSTANCE;
+    }
 
     @Mappings({
             @Mapping(source = "geometry", target = "geom"),
             @Mapping(target = "isShared", expression = "java(userAreaDto.isShared())"),
             @Mapping(target = "name", expression = "java(userAreaDto.getName())"),
             @Mapping(target = "areaDesc", expression = "java(userAreaDto.getDesc())"),
-            @Mapping(source = "gid", target = "gid")
+            @Mapping(target = "gid", expression = "java(userAreaDto.getGid())")
     })
-    UserAreasEntity fromDtoToEntity(UserAreaGeomDto userAreaDto);
+    public abstract UserAreasEntity fromDtoToEntity(UserAreaGeomDto userAreaDto);
+
 }

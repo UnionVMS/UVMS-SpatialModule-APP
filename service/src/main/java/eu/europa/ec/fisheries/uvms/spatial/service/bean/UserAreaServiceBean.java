@@ -1,10 +1,14 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Coordinate;
 import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaDto;
@@ -18,10 +22,12 @@ import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import static eu.europa.ec.fisheries.uvms.spatial.util.ColumnAliasNameHelper.getFieldMap;
 import static eu.europa.ec.fisheries.uvms.spatial.util.SpatialUtils.convertToPointInWGS84;
 
 @Stateless
@@ -31,6 +37,7 @@ public class UserAreaServiceBean implements UserAreaService {
 
     private static final String USER_NAME = "userName";
     private static final String SCOPE_NAME = "scopeName";
+
     @EJB
     private SpatialRepository repository;
 
@@ -42,7 +49,7 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     private UserAreasEntity prepareNewEntity(UserAreaGeomDto userAreaDto, String userName, String scopeName) {
-        UserAreasEntity userAreasEntity = UserAreaMapper.INSTANCE.fromDtoToEntity(userAreaDto);
+        UserAreasEntity userAreasEntity = UserAreaMapper.mapper().fromDtoToEntity(userAreaDto);
         userAreasEntity.setUserName(userName);
         userAreasEntity.setScopeName(scopeName);
         userAreasEntity.setCreatedOn(new Date());
@@ -107,10 +114,42 @@ public class UserAreaServiceBean implements UserAreaService {
         return userAreaLayerDto;
     }
 
-    public List<UserAreaDto> getUserAreaDetails(Coordinate coordinate, String userName, String scopeName) {
+    @Override
+    public List<UserAreaDto> getUserAreaDetailsWithExtent(Coordinate coordinate, String userName, String scopeName) {
         Point point = convertToPointInWGS84(coordinate.getLongitude(), coordinate.getLatitude(), coordinate.getCrs());
-        List<UserAreaDto> userAreaDetails = repository.findUserAreaDetails(userName, scopeName, point);
+        List<UserAreaDto> userAreaDetails = repository.findUserAreaDetailsWithExtent(userName, scopeName, point);
         return userAreaDetails;
+    }
+
+    @Override
+    public List<AreaDetails> getUserAreaDetailsWithGeom(AreaTypeEntry areaTypeEntry, String userName, String scopeName) {
+        Point point = convertToPointInWGS84(areaTypeEntry.getLongitude(), areaTypeEntry.getLatitude(), areaTypeEntry.getCrs());
+        List<UserAreasEntity> userAreaDetails = repository.findUserAreaDetailsWithGeom(userName, scopeName, point);
+        return getAllAreaDetails(userAreaDetails, areaTypeEntry);
+    }
+
+    private List<AreaDetails> getAllAreaDetails(List allAreas, AreaTypeEntry areaTypeEntry) {
+        List<AreaDetails> areaDetailsList = new ArrayList<AreaDetails>();
+        for (int i = 0 ; i < allAreas.size() ; i ++) {
+            Map<String, String> properties = getFieldMap(allAreas.get(i));
+            areaDetailsList.add(createAreaDetailsSpatialResponse(properties, areaTypeEntry));
+        }
+        return areaDetailsList;
+    }
+
+    private AreaDetails createAreaDetailsSpatialResponse(Map<String, String> properties, AreaTypeEntry areaTypeEntry) {
+        List<AreaProperty> areaProperties = Lists.newArrayList();
+        for (Map.Entry<String, String> entry : properties.entrySet()) {
+            AreaProperty areaProperty = new AreaProperty();
+            areaProperty.setPropertyName(entry.getKey());
+            areaProperty.setPropertyValue(entry.getValue());
+            areaProperties.add(areaProperty);
+        }
+
+        AreaDetails areaDetails = new AreaDetails();
+        areaDetails.setAreaType(areaTypeEntry);
+        areaDetails.getAreaProperties().addAll(areaProperties);
+        return areaDetails;
     }
 
     public List<UserAreaDto> searchUserAreasByCriteria(String userName, String scopeName, String searchCriteria) {

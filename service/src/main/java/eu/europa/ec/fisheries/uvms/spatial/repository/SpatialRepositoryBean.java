@@ -1,6 +1,5 @@
 package eu.europa.ec.fisheries.uvms.spatial.repository;
 
-import com.google.common.collect.ImmutableMap;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
@@ -92,10 +91,17 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
         return areaDao.findAreaByFilter(areaType, filter);
     }
 
-    public List<UserAreaDto> findUserAreaDetails(String userName, String scopeName, Point point) {
-        return userAreaDao.findUserAreaDetails(userName, scopeName, point);
+    @Override
+    public List<UserAreaDto> findUserAreaDetailsWithExtent(String userName, String scopeName, Point point) {
+        return userAreaDao.findUserAreaDetailsWithExtent(userName, scopeName, point);
     }
 
+    @Override
+    public List<UserAreasEntity> findUserAreaDetailsWithGeom(String userName, String scopeName, Point point) {
+        return userAreaDao.findUserAreaDetailsWithGeom(userName, scopeName, point);
+    }
+
+    @Override
     public List<UserAreaDto> findUserAreaDetailsBySearchCriteria(String userName, String scopeName, String searchCriteria) {
         return userAreaDao.findUserAreaDetailsBySearchCriteria(userName, scopeName, searchCriteria);
     }

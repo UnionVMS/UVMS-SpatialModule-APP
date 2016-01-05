@@ -5,6 +5,7 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import com.google.common.collect.ImmutableMap;
 import com.vividsolutions.jts.geom.Point;
+import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GeometryType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaDto;
@@ -30,7 +31,7 @@ public class UserAreaDao extends CommonDao {
     }
     
     @SuppressWarnings("unchecked")
-	public List<UserAreaDto> findUserAreaDetails(String userName, String scopeName, Point point) {
+	public List<UserAreaDto> findUserAreaDetailsWithExtent(String userName, String scopeName, Point point) {
         GeometryType geometryType = GeometryMapper.INSTANCE.geometryToWKT(point);
         int crs = point.getSRID();
     	Map<String, Object> parameters = ImmutableMap.<String, Object>builder().
@@ -39,9 +40,22 @@ public class UserAreaDao extends CommonDao {
     			put(WKT, geometryType.getGeometry()).
     			put(CRS, crs).
     			build();
-    	return createNamedNativeQuery(QueryNameConstants.USER_AREA_DETAILS, parameters, UserAreaDto.class).list();
+    	return createNamedNativeQuery(QueryNameConstants.USER_AREA_DETAILS_WITH_EXTENT, parameters, UserAreaDto.class).list();
     }
-    
+
+	@SuppressWarnings("unchecked")
+	public List<UserAreasEntity> findUserAreaDetailsWithGeom(String userName, String scopeName, Point point) {
+		GeometryType geometryType = GeometryMapper.INSTANCE.geometryToWKT(point);
+		int crs = point.getSRID();
+		Map<String, Object> parameters = ImmutableMap.<String, Object>builder().
+				put(USER_NAME, userName).
+				put(SCOPE_NAME, scopeName).
+				put(WKT, geometryType.getGeometry()).
+				put(CRS, crs).
+				build();
+		return createNamedNativeQuery(QueryNameConstants.USER_AREA_DETAILS_WITH_GEOM, parameters).list();
+	}
+
     @SuppressWarnings("unchecked")
     public List<UserAreaDto> findUserAreaDetailsBySearchCriteria(String userName, String scopeName, String searchCriteria) {
     	Map<String, Object> parameters = ImmutableMap.<String, Object>builder().

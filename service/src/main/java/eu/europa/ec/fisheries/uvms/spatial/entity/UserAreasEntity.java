@@ -3,6 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.entity;
 import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.spatial.entity.converter.CharBooleanConverter;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -11,7 +12,9 @@ import java.util.Date;
 import java.util.Set;
 
 @Entity
-@Table(name = "user_areas", schema = "spatial")
+@SqlResultSetMappings({
+        @SqlResultSetMapping(name = "implicit.userarea", entities = @EntityResult(entityClass = UserAreasEntity.class))
+})
 @NamedQueries({
         @NamedQuery(name = QueryNameConstants.FIND_GID_BY_USER,
                 query = "SELECT area.gid FROM UserAreasEntity area WHERE area.userName = :userName OR area.scopeName = :scopeName AND area.isShared = 'Y'"),
@@ -20,16 +23,22 @@ import java.util.Set;
 })
 @NamedNativeQueries({
         @NamedNativeQuery(
-                name = QueryNameConstants.USER_AREA_DETAILS,
+                name = QueryNameConstants.USER_AREA_DETAILS_WITH_EXTENT,
                 query = "select gid, name, area_desc as desc, CAST(st_astext(st_extent(geom))AS TEXT) as extent from spatial.user_areas"
                         + " WHERE (user_name=:userName OR (scope_name=:scopeName AND is_shared='Y'))"
                         + " AND st_intersects(geom, st_geomfromtext(CAST(:wktPoint as text), :crs)) group by gid"),
+        @NamedNativeQuery(
+                name = QueryNameConstants.USER_AREA_DETAILS_WITH_GEOM,
+                query = "select * from spatial.user_areas"
+                        + " WHERE (user_name=:userName OR (scope_name=:scopeName AND is_shared='Y'))"
+                        + " AND st_intersects(geom, st_geomfromtext(CAST(:wktPoint as text), :crs)) group by gid", resultSetMapping = "implicit.userarea"),
         @NamedNativeQuery(
                 name = QueryNameConstants.SEARCH_USER_AREA,
                 query = "select gid, name, area_desc as desc, CAST(st_astext(st_extent(geom))AS TEXT) as extent from spatial.user_areas"
                         + " WHERE (user_name=:userName OR (scope_name=:scopeName AND is_shared='Y'))"
                         + " AND (UPPER(name) LIKE(UPPER(:name)) OR UPPER(area_desc) LIKE(UPPER(:desc))) group by gid")
 })
+@Table(name = "user_areas", schema = "spatial")
 public class UserAreasEntity implements Serializable {
 
     private static final long serialVersionUID = 6797853213499502873L;
@@ -37,6 +46,7 @@ public class UserAreasEntity implements Serializable {
     @Id
     @Column(name = "gid")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @ColumnAliasName(aliasName ="gid")
     private long gid;
 
     @Column(name = "user_name", nullable = false, length = 255)
@@ -46,22 +56,27 @@ public class UserAreasEntity implements Serializable {
     private String scopeName;
 
     @Column(name = "name", nullable = false, length = 255)
+    @ColumnAliasName(aliasName ="name")
     private String name;
 
     @Column(columnDefinition = "text", name = "area_desc")
+    @ColumnAliasName(aliasName ="areaDesc")
     private String areaDesc;
 
     @Basic
     @Column(name = "geom", nullable = false)
     @Type(type = "org.hibernate.spatial.GeometryType")
+    @ColumnAliasName(aliasName ="geometry")
     private Geometry geom;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_on", nullable = false)
+    @ColumnAliasName(aliasName ="createdOn")
     private Date createdOn;
 
     @Convert(converter = CharBooleanConverter.class)
     @Column(name = "is_shared", nullable = false, length = 1)
+    @ColumnAliasName(aliasName ="isShared")
     private Boolean isShared;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAreas", cascade = CascadeType.ALL)
