@@ -4,11 +4,9 @@ import com.vividsolutions.jts.io.ParseException;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.service.interceptor.ValidationInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Coordinate;
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaTypeDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.FilterDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.UserAreaTypeDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.AreaLocationDtoMapper;
@@ -17,7 +15,6 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.UserAreaService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaDetailsDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaGeomDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.mapper.UserAreaMapper;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.ejb.EJB;
@@ -103,7 +100,6 @@ public class UserAreaResource extends UnionVMSResource {
         } else {
             AreaTypeEntry areaTypeEntry = AreaLocationDtoMapper.mapper().getAreaTypeEntry(userAreaTypeDto);
             List<AreaDetails> userAreaDetails = userAreaService.getUserAreaDetailsWithGeom(areaTypeEntry, request.getRemoteUser(), scopeName);
-            //AreaDetailsDto areaDetailsDto = UserAreaMapper.mapper().getAreaDetailsDtoForAllAreaEntities(userAreaDetails);
             AreaDetailsDto areaDetailsDto = mapper.getAreaDetailsDtoForAllAreas(userAreaDetails, userAreaTypeDto);
             return createSuccessResponse(areaDetailsDto.convertAll());
         }
