@@ -40,7 +40,7 @@ public class UserAreaDao extends CommonDao {
     			put(WKT, geometryType.getGeometry()).
     			put(CRS, crs).
     			build();
-    	return createNamedNativeQuery(QueryNameConstants.USER_AREA_DETAILS_WITH_EXTENT, parameters, UserAreaDto.class).list();
+    	return createNamedNativeQuery(QueryNameConstants.USER_AREA_DETAILS_WITH_EXTENT_BY_LOCATION, parameters, UserAreaDto.class).list();
     }
 
 	@SuppressWarnings("unchecked")
@@ -53,7 +53,7 @@ public class UserAreaDao extends CommonDao {
 				put(WKT, geometryType.getGeometry()).
 				put(CRS, crs).
 				build();
-		return createNamedNativeQuery(QueryNameConstants.USER_AREA_DETAILS_WITH_GEOM, parameters).list();
+		return createNamedNativeQuery(QueryNameConstants.USER_AREA_DETAILS_BY_LOCATION, parameters).list();
 	}
 
     @SuppressWarnings("unchecked")

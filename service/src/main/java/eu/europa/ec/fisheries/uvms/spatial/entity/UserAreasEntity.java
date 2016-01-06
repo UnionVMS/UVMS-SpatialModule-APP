@@ -23,12 +23,12 @@ import java.util.Set;
 })
 @NamedNativeQueries({
         @NamedNativeQuery(
-                name = QueryNameConstants.USER_AREA_DETAILS_WITH_EXTENT,
+                name = QueryNameConstants.USER_AREA_DETAILS_WITH_EXTENT_BY_LOCATION,
                 query = "select gid, name, area_desc as desc, CAST(st_astext(st_extent(geom))AS TEXT) as extent from spatial.user_areas"
                         + " WHERE (user_name=:userName OR (scope_name=:scopeName AND is_shared='Y'))"
                         + " AND st_intersects(geom, st_geomfromtext(CAST(:wktPoint as text), :crs)) group by gid"),
         @NamedNativeQuery(
-                name = QueryNameConstants.USER_AREA_DETAILS_WITH_GEOM,
+                name = QueryNameConstants.USER_AREA_DETAILS_BY_LOCATION,
                 query = "select * from spatial.user_areas"
                         + " WHERE (user_name=:userName OR (scope_name=:scopeName AND is_shared='Y'))"
                         + " AND st_intersects(geom, st_geomfromtext(CAST(:wktPoint as text), :crs)) group by gid", resultSetMapping = "implicit.userarea"),
