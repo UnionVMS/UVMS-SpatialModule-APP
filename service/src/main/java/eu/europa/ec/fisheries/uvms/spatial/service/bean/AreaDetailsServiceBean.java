@@ -32,10 +32,10 @@ public class AreaDetailsServiceBean extends SpatialServiceBean implements AreaDe
     }
     
     @Override
-    public AreaDetails getAreaDetailsById(AreaTypeEntry request) {
-    	AreaLocationTypesEntity areaType = getAreaLocationType(request.getAreaType());
+    public AreaDetails getAreaDetailsById(AreaTypeEntry areaTypeEntry) {
+    	AreaLocationTypesEntity areaType = getAreaLocationType(areaTypeEntry.getAreaType());
     	if (areaType.getIsSystemWide()) {
-    		return getSystemAreaDetails(request, areaType);
+    		return getSystemAreaDetails(areaTypeEntry, areaType);
     	} else {
     		// TODO Get area details for custom areas and User Areas
     		throw new NotImplementedException("Not implemented");
@@ -63,10 +63,10 @@ public class AreaDetailsServiceBean extends SpatialServiceBean implements AreaDe
 		return areaDetailsList;
 	}
 
-	private AreaDetails getSystemAreaDetails(AreaTypeEntry request, AreaLocationTypesEntity areaType) {
-		validateId(request.getId());
-    	Map<String, String> properties = getAreaLocationDetailsById(Integer.parseInt(request.getId()), areaType);
-    	return createAreaDetailsSpatialResponse(properties, request);
+	private AreaDetails getSystemAreaDetails(AreaTypeEntry areaTypeEntry, AreaLocationTypesEntity areaType) {
+		validateId(areaTypeEntry.getId());
+    	Map<String, String> properties = getAreaLocationDetailsById(Integer.parseInt(areaTypeEntry.getId()), areaType);
+    	return createAreaDetailsSpatialResponse(properties, areaTypeEntry);
     }
 
     private AreaDetails createAreaDetailsSpatialResponse(Map<String, String> properties, AreaTypeEntry areaTypeEntry) {

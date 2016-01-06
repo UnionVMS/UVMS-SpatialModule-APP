@@ -1,7 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
@@ -22,11 +21,9 @@ import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static eu.europa.ec.fisheries.uvms.spatial.util.ColumnAliasNameHelper.getFieldMap;
 import static eu.europa.ec.fisheries.uvms.spatial.util.SpatialUtils.convertToPointInWGS84;
 
@@ -115,22 +112,32 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     @Override
-    public List<UserAreaDto> getUserAreaDetailsWithExtent(Coordinate coordinate, String userName, String scopeName) {
+    public List<UserAreaDto> getUserAreaDetailsWithExtentByLocation(Coordinate coordinate, String userName, String scopeName) {
         Point point = convertToPointInWGS84(coordinate.getLongitude(), coordinate.getLatitude(), coordinate.getCrs());
-        List<UserAreaDto> userAreaDetails = repository.findUserAreaDetailsWithExtent(userName, scopeName, point);
+        List<UserAreaDto> userAreaDetails = repository.findUserAreaDetailsWithExtentByLocation(userName, scopeName, point);
         return userAreaDetails;
     }
 
     @Override
-    public List<AreaDetails> getUserAreaDetailsWithGeom(AreaTypeEntry areaTypeEntry, String userName, String scopeName) {
+    public List<AreaDetails> getUserAreaDetailsByLocation(AreaTypeEntry areaTypeEntry, String userName, String scopeName) {
         Point point = convertToPointInWGS84(areaTypeEntry.getLongitude(), areaTypeEntry.getLatitude(), areaTypeEntry.getCrs());
-        List<UserAreasEntity> userAreaDetails = repository.findUserAreaDetailsWithGeom(userName, scopeName, point);
+        List<UserAreasEntity> userAreaDetails = repository.findUserAreaDetailsByLocation(userName, scopeName, point);
         return getAllAreaDetails(userAreaDetails, areaTypeEntry);
+    }
+
+    @Override
+    public List<AreaDetails> getUserAreaDetailsById(AreaTypeEntry areaTypeEntry, String userName, String scopeName) throws ServiceException {
+        UserAreasEntity userAreaDetails = repository.findUserAreaById(Long.parseLong(areaTypeEntry.getId()), userName, scopeName);
+        if (userAreaDetails != null) {
+            return getAllAreaDetails(newArrayList(userAreaDetails), areaTypeEntry);
+        } else {
+            return Collections.emptyList();
+        }
     }
 
     private List<AreaDetails> getAllAreaDetails(List allAreas, AreaTypeEntry areaTypeEntry) {
         List<AreaDetails> areaDetailsList = new ArrayList<AreaDetails>();
-        for (int i = 0 ; i < allAreas.size() ; i ++) {
+        for (int i = 0; i < allAreas.size(); i++) {
             Map<String, String> properties = getFieldMap(allAreas.get(i));
             areaDetailsList.add(createAreaDetailsSpatialResponse(properties, areaTypeEntry));
         }
@@ -138,7 +145,7 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     private AreaDetails createAreaDetailsSpatialResponse(Map<String, String> properties, AreaTypeEntry areaTypeEntry) {
-        List<AreaProperty> areaProperties = Lists.newArrayList();
+        List<AreaProperty> areaProperties = newArrayList();
         for (Map.Entry<String, String> entry : properties.entrySet()) {
             AreaProperty areaProperty = new AreaProperty();
             areaProperty.setPropertyName(entry.getKey());
