@@ -83,12 +83,11 @@ public abstract class GeoJsonDto {
         return featureBuilder.buildFeature(null);
     }
 
-    public Map<String, String> removeGeometry() {
+    public void removeGeometry() {
         if (properties.containsKey(GEOMETRY)) {
             properties.put(EXTENT, getExtend(properties.get(GEOMETRY)));
             properties.remove(GEOMETRY);
         }
-        return properties;
     }
 
     protected String getExtend(String geometry) {

@@ -102,7 +102,11 @@ public class UserAreaResource extends UnionVMSResource {
 
     private Response getUserAreaDetailsById(UserAreaTypeDto userAreaTypeDto, String userName, String scopeName) throws ServiceException, IOException, ParseException {
         if (!userAreaTypeDto.getIsGeom()) {
-            return createSuccessResponse();
+            AreaTypeEntry areaTypeEntry = areaLocationMapper.getAreaTypeEntry(userAreaTypeDto);
+            AreaDetails areaDetails = userAreaService.getAreaDetailsWithExtentById(areaTypeEntry, userName, scopeName);
+            AreaDetailsDto areaDetailsDto = areaLocationMapper.getAreaDetailsDto(areaDetails);
+            areaDetailsDto.removeGeometry();
+            return createSuccessResponse(areaDetailsDto.getProperties());
         } else {
             AreaTypeEntry areaTypeEntry = AreaLocationDtoMapper.mapper().getAreaTypeEntry(userAreaTypeDto);
             List<AreaDetails> userAreaDetails = userAreaService.getUserAreaDetailsById(areaTypeEntry, userName, scopeName);

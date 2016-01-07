@@ -1,6 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
@@ -123,6 +124,18 @@ public class UserAreaServiceBean implements UserAreaService {
         Point point = convertToPointInWGS84(areaTypeEntry.getLongitude(), areaTypeEntry.getLatitude(), areaTypeEntry.getCrs());
         List<UserAreasEntity> userAreaDetails = repository.findUserAreaDetailsByLocation(userName, scopeName, point);
         return getAllAreaDetails(userAreaDetails, areaTypeEntry);
+    }
+
+    @Override
+    public AreaDetails getAreaDetailsWithExtentById(AreaTypeEntry areaTypeEntry, String userName, String scopeName) throws ServiceException {
+        UserAreasEntity userAreaDetails = repository.findUserAreaById(Long.parseLong(areaTypeEntry.getId()), userName, scopeName);
+        if (userAreaDetails != null) {
+            return getAllAreaDetails(Lists.newArrayList(userAreaDetails), areaTypeEntry).get(0);
+        } else {
+            AreaDetails areaDetails = new AreaDetails();
+            areaDetails.setAreaType(areaTypeEntry);
+            return areaDetails;
+        }
     }
 
     @Override
