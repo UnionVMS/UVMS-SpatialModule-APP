@@ -6,7 +6,7 @@ public class UserAreaGeomDto extends GeoJsonDto {
 
     private static final String NAME = "name";
     private static final String DESCRIPTION = "description";
-    private static final String GID = "gid";
+    private static final String ID = "id";
     private static final String IS_SHARED = "isShared";
     private static final boolean DEFAULT_IS_SHARED_VALUE = false;
 
@@ -44,8 +44,8 @@ public class UserAreaGeomDto extends GeoJsonDto {
         }
     }
 
-    public Long getGid() {
-        String gid = properties.get(GID);
+    public Long getId() {
+        String gid = properties.get(ID);
         if (gid != null && isNumeric(gid)) {
             return Long.valueOf(gid);
         }
@@ -53,7 +53,7 @@ public class UserAreaGeomDto extends GeoJsonDto {
     }
 
     public void setId(Long gid) {
-        properties.put(GID, String.valueOf(gid));
+        properties.put(ID, String.valueOf(gid));
     }
 
 }

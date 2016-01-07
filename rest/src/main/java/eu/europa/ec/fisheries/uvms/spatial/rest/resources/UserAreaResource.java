@@ -61,7 +61,7 @@ public class UserAreaResource extends UnionVMSResource {
                                    UserAreaGeomDto userAreaGeomDto,
                                    @HeaderParam("scopeName") String scopeName) throws ServiceException {
         String userName = request.getRemoteUser();
-        log.info("{} is requesting updateUserArea(...), with a ID={}", userName, userAreaGeomDto.getGid());
+        log.info("{} is requesting updateUserArea(...), with a ID={}", userName, userAreaGeomDto.getId());
         userAreaService.updateUserArea(userAreaGeomDto, request.getRemoteUser(), scopeName);
         return createSuccessResponse();
     }

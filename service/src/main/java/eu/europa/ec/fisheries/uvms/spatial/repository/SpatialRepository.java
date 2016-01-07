@@ -63,5 +63,5 @@ public interface SpatialRepository extends DAO {
 
     void deleteBy(List<Long> spatialConnectIds) throws ServiceException;
 
-    UserAreasEntity findUserAreaById(Long userAreaId, String userName, String scopeName) throws ServiceException;
+    List<UserAreasEntity> findUserAreaById(Long userAreaId, String userName, String scopeName) throws ServiceException;
 }

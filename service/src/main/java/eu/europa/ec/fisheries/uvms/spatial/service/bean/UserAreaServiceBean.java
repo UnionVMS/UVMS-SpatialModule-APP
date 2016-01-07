@@ -17,12 +17,15 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.UserAreaMapper;
+import org.apache.commons.collections.CollectionUtils;
 
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.transaction.Transactional;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static eu.europa.ec.fisheries.uvms.spatial.util.ColumnAliasNameHelper.getFieldMap;
@@ -56,13 +59,13 @@ public class UserAreaServiceBean implements UserAreaService {
 
     @Override
     public boolean updateUserArea(UserAreaGeomDto userAreaDto, String userName, String scopeName) throws ServiceException {
-        Long gid = userAreaDto.getGid();
-        validateGid(gid);
+        Long id = userAreaDto.getId();
+        validateGid(id);
 
-        UserAreasEntity persistentUserArea = repository.findUserAreaById(gid, userName, scopeName);
-        validateNotNull(gid, persistentUserArea);
+        List<UserAreasEntity> persistentUserAreas = repository.findUserAreaById(id, userName, scopeName);
+        validateNotNull(id, persistentUserAreas);
 
-        UserAreasEntity userAreasEntity = prepareUpdateEntity(persistentUserArea, userAreaDto, userName, scopeName);
+        UserAreasEntity userAreasEntity = prepareUpdateEntity(persistentUserAreas.get(0), userAreaDto, userName, scopeName);
         UserAreasEntity persistedEntity = (UserAreasEntity) repository.updateEntity(userAreasEntity);
         return persistedEntity != null;
     }
@@ -93,14 +96,14 @@ public class UserAreaServiceBean implements UserAreaService {
 
     @Override
     public void deleteUserArea(Long userAreaId, String userName, String scopeName) throws ServiceException {
-        UserAreasEntity persistentUserArea = repository.findUserAreaById(userAreaId, userName, scopeName);
-        validateNotNull(userAreaId, persistentUserArea);
+        List<UserAreasEntity> persistentUserAreas = repository.findUserAreaById(userAreaId, userName, scopeName);
+        validateNotNull(userAreaId, persistentUserAreas);
 
-        repository.deleteEntity(persistentUserArea);
+        repository.deleteEntity(persistentUserAreas.get(0));
     }
 
-    private void validateNotNull(Long userAreaId, UserAreasEntity persistentUserArea) {
-        if (persistentUserArea == null) {
+    private void validateNotNull(Long userAreaId, List<UserAreasEntity> persistentUserAreas) {
+        if (CollectionUtils.isEmpty(persistentUserAreas)) {
             throw new SpatialServiceException(SpatialServiceErrors.USER_AREA_DOES_NOT_EXIST, userAreaId);
         }
     }
@@ -128,9 +131,9 @@ public class UserAreaServiceBean implements UserAreaService {
 
     @Override
     public AreaDetails getAreaDetailsWithExtentById(AreaTypeEntry areaTypeEntry, String userName, String scopeName) throws ServiceException {
-        UserAreasEntity userAreaDetails = repository.findUserAreaById(Long.parseLong(areaTypeEntry.getId()), userName, scopeName);
-        if (userAreaDetails != null) {
-            return getAllAreaDetails(Lists.newArrayList(userAreaDetails), areaTypeEntry).get(0);
+        List<UserAreasEntity> userAreasDetails = repository.findUserAreaById(Long.parseLong(areaTypeEntry.getId()), userName, scopeName);
+        if (CollectionUtils.isNotEmpty(userAreasDetails)) {
+            return getAllAreaDetails(userAreasDetails, areaTypeEntry).get(0);
         } else {
             AreaDetails areaDetails = new AreaDetails();
             areaDetails.setAreaType(areaTypeEntry);
@@ -140,16 +143,12 @@ public class UserAreaServiceBean implements UserAreaService {
 
     @Override
     public List<AreaDetails> getUserAreaDetailsById(AreaTypeEntry areaTypeEntry, String userName, String scopeName) throws ServiceException {
-        UserAreasEntity userAreaDetails = repository.findUserAreaById(Long.parseLong(areaTypeEntry.getId()), userName, scopeName);
-        if (userAreaDetails != null) {
-            return getAllAreaDetails(newArrayList(userAreaDetails), areaTypeEntry);
-        } else {
-            return Collections.emptyList();
-        }
+        List<UserAreasEntity> userAreaDetails = repository.findUserAreaById(Long.parseLong(areaTypeEntry.getId()), userName, scopeName);
+        return getAllAreaDetails(userAreaDetails, areaTypeEntry);
     }
 
     private List<AreaDetails> getAllAreaDetails(List allAreas, AreaTypeEntry areaTypeEntry) {
-        List<AreaDetails> areaDetailsList = new ArrayList<AreaDetails>();
+        List<AreaDetails> areaDetailsList = Lists.newArrayList();
         for (int i = 0; i < allAreas.size(); i++) {
             Map<String, String> properties = getFieldMap(allAreas.get(i));
             areaDetailsList.add(createAreaDetailsSpatialResponse(properties, areaTypeEntry));
