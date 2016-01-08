@@ -48,7 +48,7 @@ public class EezDaoTest extends BaseSpatialDaoTest {
     @SneakyThrows
     public void shouldReturnEez() {
 
-        assertEquals(expected, dao.getEezById(1));
+        assertEquals(expected, dao.getEezById(1l));
 
     }
 }

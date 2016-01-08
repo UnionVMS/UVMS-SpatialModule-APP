@@ -237,20 +237,20 @@ public class MapConfigServiceBean implements MapConfigService {
 
     private List<LayerDto> getServiceAreaLayersFromConfig(ConfigurationDto configurationDto, String geoServerUrl, String bingApiKey, ProjectionDto projection) throws ServiceException {
         List<LayersDto> overlayLayers = configurationDto.getLayerSettings().getOverlayLayers(); // Get Service Layers for Overlay layers
-        List<Integer> overlayServiceLayerIds = getServiceLayerIds(overlayLayers);
+        List<Long> overlayServiceLayerIds = getServiceLayerIds(overlayLayers);
         List<ServiceLayerEntity> overlayServiceLayerEntities = sort(getServiceLayers(overlayServiceLayerIds, projection, bingApiKey), overlayServiceLayerIds);
         List<LayerDto> layerDtos = getLayerDtos(overlayServiceLayerEntities, geoServerUrl, bingApiKey, false);
 
         List<LayersDto> baseLayers = configurationDto.getLayerSettings().getBaseLayers(); // Get Service Layers for base layers
-        List<Integer> baseServiceLayerIds = getServiceLayerIds(baseLayers);
+        List<Long> baseServiceLayerIds = getServiceLayerIds(baseLayers);
         List<ServiceLayerEntity> baseServiceLayerEntities = sort(getServiceLayers(baseServiceLayerIds, projection, bingApiKey), baseServiceLayerIds);
         layerDtos.addAll(getLayerDtos(baseServiceLayerEntities, geoServerUrl, bingApiKey, true));
         return layerDtos;
     }
 
-    private List<ServiceLayerEntity> sort(List<ServiceLayerEntity> overlayServiceLayerEntities, List<Integer> ids) {
+    private List<ServiceLayerEntity> sort(List<ServiceLayerEntity> overlayServiceLayerEntities, List<Long> ids) {
         List<ServiceLayerEntity> tempList = new ArrayList<ServiceLayerEntity>();
-        for(Integer id : ids) {
+        for(Long id : ids) {
             for(ServiceLayerEntity serviceLayerEntity : overlayServiceLayerEntities) {
                 if (id.equals(serviceLayerEntity.getId())) {
                     tempList.add(serviceLayerEntity);
@@ -278,10 +278,10 @@ public class MapConfigServiceBean implements MapConfigService {
         return repository.findSystemConfigByName(parameters);
     }
 
-    private List<Integer> getServiceLayerIds(List<LayersDto> layers) {
-        List<Integer> ids = new ArrayList<>();
+    private List<Long> getServiceLayerIds(List<LayersDto> layers) {
+        List<Long> ids = new ArrayList<>();
         for (LayersDto layer : layers) {
-            ids.add(Integer.parseInt(layer.getServiceLayerId()));
+            ids.add(Long.parseLong(layer.getServiceLayerId()));
         }
         return ids;
     }
@@ -301,7 +301,7 @@ public class MapConfigServiceBean implements MapConfigService {
         return reportConnectServiceAreas;
     }
 
-    private List<ServiceLayerEntity> getServiceLayers(List<Integer> ids, ProjectionDto projection, String bingApiKey) {
+    private List<ServiceLayerEntity> getServiceLayers(List<Long> ids, ProjectionDto projection, String bingApiKey) {
         List<ServiceLayerEntity> serviceLayers = repository.findServiceLayerEntityByIds(ids);
         Iterator<ServiceLayerEntity> layerIterator = serviceLayers.iterator();
         while(layerIterator.hasNext()) {

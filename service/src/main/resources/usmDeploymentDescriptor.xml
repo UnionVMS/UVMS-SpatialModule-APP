@@ -14,6 +14,12 @@
         </feature>
 
         <feature>
+            <name>MANAGE_USER_DEFINED_AREAS</name>
+            <description>Allows you to create, view, update and delete user defined areas.</description>
+            <group>spatial</group>
+        </feature>
+
+        <feature>
             <name>USE_SPATIAL_CONFIGURATIONS</name>
             <description>Allows you to read spatial configurations while creating/running reports</description>
             <group>spatial</group>

@@ -46,8 +46,8 @@ public class MapConfigDao extends CommonDao {
         return createNamedQuery(QueryNameConstants.FIND_REPORT_SERVICE_AREAS, parameters).list();
     }
 
-    public List<ServiceLayerEntity> findServiceLayerEntityByIds(List<Integer> ids) {
-        Map<String, List<Integer>> parameters = ImmutableMap.<String, List<Integer>>builder().put(ID_LIST, ids).build();
+    public List<ServiceLayerEntity> findServiceLayerEntityByIds(List<Long> ids) {
+        Map<String, List<Long>> parameters = ImmutableMap.<String, List<Long>>builder().put(ID_LIST, ids).build();
         return createNamedQueryWithParameterList(QueryNameConstants.FIND_SERVICE_LAYERS_BY_ID, parameters).list();
     }
 }

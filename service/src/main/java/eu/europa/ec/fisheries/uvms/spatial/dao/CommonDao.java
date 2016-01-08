@@ -90,9 +90,9 @@ public abstract class CommonDao {
 		return query;
 	}
 
-	protected Query createNamedQueryWithParameterList(String nativeQuery, Map<String, List<Integer>> parameters) {
+	protected Query createNamedQueryWithParameterList(String nativeQuery, Map<String, List<Long>> parameters) {
 		Query query = getSession().getNamedQuery(nativeQuery);
-		for (Map.Entry<String, List<Integer>> entry : parameters.entrySet()) {
+		for (Map.Entry<String, List<Long>> entry : parameters.entrySet()) {
 			query.setParameterList(entry.getKey(), entry.getValue());
 		}
 		return query;

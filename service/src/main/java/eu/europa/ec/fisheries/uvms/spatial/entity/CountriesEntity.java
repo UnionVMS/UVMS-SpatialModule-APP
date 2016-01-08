@@ -42,7 +42,7 @@ public class CountriesEntity implements Serializable { // TODO rename to Country
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private long id;
 	
     @Basic
     @Column(name = "geom")
@@ -128,11 +128,11 @@ public class CountriesEntity implements Serializable { // TODO rename to Country
         this.regionWb = regionWb;
     }
 
-    public int getId() {
+    public long getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 

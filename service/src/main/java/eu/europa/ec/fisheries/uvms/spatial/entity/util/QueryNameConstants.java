@@ -51,6 +51,7 @@ public final class QueryNameConstants {
     public static final String RAC_BY_COORDINATE = "racEntity.ByCoordinate";
     public static final String STAT_RECT_BY_COORDINATE = "statRectEntity.ByCoordinate";
     public static final String PORT_BY_COORDINATE = "portEntity.ByCoordinate";
+    public static final String USERAREA_BY_COORDINATE = "userAreasEntity.ByCoordinate";
 
     /**
      * Native Queries
@@ -63,6 +64,7 @@ public final class QueryNameConstants {
     public static final String RAC_COLUMNS = "racEntity.findSelectedColumns";
     public static final String STAT_RECT_COLUMNS = "statRectEntity.findSelectedColumns";
     public static final String PORT_COLUMNS = "portEntity.findSelectedColumns";
+    public static final String USERAREA_COLUMNS = "userAreasEntity.findSelectedColumns";
 
     /**
      * MapDto Config queries

@@ -137,7 +137,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     }
 
     @Override
-    public List<ServiceLayerEntity> findServiceLayerEntityByIds(List<Integer> ids) {
+    public List<ServiceLayerEntity> findServiceLayerEntityByIds(List<Long> ids) {
         return mapConfigDao.findServiceLayerEntityByIds(ids);
     }
 
@@ -151,7 +151,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
             if (list.size() > 1) {
                 throw new IllegalStateException("More than one map configuration has been found for report with id = " + reportId);
             } else {
-                return list.get(0);
+                result = list.get(0);
             }
         }
 
@@ -172,7 +172,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     }
 
     @Override
-    public EezEntity getEezById(final Integer id) throws ServiceException {
+    public EezEntity getEezById(final Long id) throws ServiceException {
         return eezDao.getEezById(id);
     }
 
@@ -189,7 +189,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
             sysConfigEntity.setValue(value);
         } else {
             SysConfigEntity sysConfigEntity = new SysConfigEntity();
-            String name = new ArrayList<String>(parameters.keySet()).get(0);
+            String name = new ArrayList<>(parameters.keySet()).get(0);
             sysConfigEntity.setName(name);
             sysConfigEntity.setValue(value);
             saveOrUpdateEntity(sysConfigEntity);

@@ -1,13 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.util;
 
-import eu.europa.ec.fisheries.uvms.spatial.entity.CountriesEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.FaoEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.GfcmEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.PortsEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.RacEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.RfmoEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.StatRectEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.*;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 
 public enum SpatialTypeEnum {
@@ -19,7 +12,8 @@ public enum SpatialTypeEnum {
 	RAC("RAC", QueryNameConstants.RAC_BY_COORDINATE, RacEntity.class),
 	S_TAT_RECT("STatRect", QueryNameConstants.STAT_RECT_BY_COORDINATE, StatRectEntity.class),
 	FAO("FAO", QueryNameConstants.FAO_BY_COORDINATE, FaoEntity.class),
-	PORT("PORT", QueryNameConstants.PORT_BY_COORDINATE, PortsEntity.class);
+	PORT("PORT", QueryNameConstants.PORT_BY_COORDINATE, PortsEntity.class),
+	USERAREA("USERAREA", QueryNameConstants.USERAREA_BY_COORDINATE, QueryNameConstants.USERAREA_COLUMNS, UserAreasEntity.class);
 	
 	private String type;
 	private String nativeQuery;

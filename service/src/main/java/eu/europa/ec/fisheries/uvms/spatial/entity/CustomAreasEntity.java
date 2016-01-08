@@ -26,7 +26,7 @@ public class CustomAreasEntity implements Serializable {
 	@Column(name = "gid")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@ColumnAliasName(aliasName ="gid")
-	private int gid;
+	private long gid;
 
     @Basic
     @Column(name = "geom", nullable = false)
@@ -37,11 +37,11 @@ public class CustomAreasEntity implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "customAreas", cascade = CascadeType.ALL)
     private Set<CustomAreaPropertiesEntity> customAreaProperties;
 
-	public int getGid() {
+	public long getGid() {
 		return gid;
 	}
 
-	public void setGid(int gid) {
+	public void setGid(long gid) {
 		this.gid = gid;
 	}
 

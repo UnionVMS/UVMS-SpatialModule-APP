@@ -20,6 +20,7 @@ import java.util.Set;
                 query = "SELECT area.gid FROM UserAreasEntity area WHERE area.userName = :userName OR area.scopeName = :scopeName AND area.isShared = 'Y'"),
         @NamedQuery(name = QueryNameConstants.FIND_USER_AREA_BY_ID,
                 query = "SELECT area FROM UserAreasEntity area WHERE area.userName = :userName AND area.scopeName = :scopeName AND area.gid = :userAreaId"),
+        @NamedQuery(name = QueryNameConstants.USERAREA_COLUMNS, query = "select userArea.name as name, userArea.areaDesc as desc from UserAreasEntity as userArea where userArea.gid =:gid")
 })
 @NamedNativeQueries({
         @NamedNativeQuery(
@@ -36,7 +37,11 @@ import java.util.Set;
                 name = QueryNameConstants.SEARCH_USER_AREA,
                 query = "select gid, name, area_desc as desc, CAST(st_astext(st_extent(geom))AS TEXT) as extent from spatial.user_areas"
                         + " WHERE (user_name=:userName OR (scope_name=:scopeName AND is_shared='Y'))"
-                        + " AND (UPPER(name) LIKE(UPPER(:name)) OR UPPER(area_desc) LIKE(UPPER(:desc))) group by gid")
+                        + " AND (UPPER(name) LIKE(UPPER(:name)) OR UPPER(area_desc) LIKE(UPPER(:desc))) group by gid"),
+        @NamedNativeQuery(
+                name = QueryNameConstants.USERAREA_BY_COORDINATE,
+                query = "select * from user_areas where st_intersects(geom, st_geomfromtext(CAST(:wktPoint as text), :crs))", resultSetMapping = "implicit.userarea")
+
 })
 @Table(name = "user_areas", schema = "spatial")
 public class UserAreasEntity implements Serializable {

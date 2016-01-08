@@ -51,7 +51,7 @@ public class LocationResource extends UnionVMSResource {
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Path("/closestlocations")
-    public ResponseDto closestArea(
+    public ResponseDto closestLocation(
             @QueryParam(value = "lat") Double lat,
             @QueryParam(value = "lon") Double lon,
             @DefaultValue("4326") @QueryParam(value = "crs") int crs,

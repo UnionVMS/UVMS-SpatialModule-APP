@@ -17,7 +17,7 @@ public class EezDao extends AbstractDAO<EezEntity> {
         this.em = em;
     }
 
-    public EezEntity getEezById(final Integer id) throws ServiceException {
+    public EezEntity getEezById(final Long id) throws ServiceException {
         return findEntityById(EezEntity.class, id);
     }
 

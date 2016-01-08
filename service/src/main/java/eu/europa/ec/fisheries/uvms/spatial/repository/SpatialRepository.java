@@ -39,7 +39,7 @@ public interface SpatialRepository extends DAO {
 
     List<Map<String, String>> findAllCountriesDesc();
 
-    EezEntity getEezById(Integer id) throws ServiceException;
+    EezEntity getEezById(Long id) throws ServiceException;
 
     List<ProjectionDto> findProjectionByMap(long reportId);
 
@@ -47,7 +47,7 @@ public interface SpatialRepository extends DAO {
 
     List<ReportConnectServiceAreasEntity> findReportConnectServiceAreas(long reportId);
 
-    List<ServiceLayerEntity> findServiceLayerEntityByIds(List<Integer> ids);
+    List<ServiceLayerEntity> findServiceLayerEntityByIds(List<Long> ids);
 
     ReportConnectSpatialEntity findReportConnectSpatialBy(Long reportId) throws ServiceException;
 

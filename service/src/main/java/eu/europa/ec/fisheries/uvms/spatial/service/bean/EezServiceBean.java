@@ -28,7 +28,7 @@ public class EezServiceBean implements EezService {
     @Override
     @SneakyThrows
     public EezType getEezById(EezSpatialRQ getEezSpatialRQ) {
-        EezEntity eezById = repository.getEezById(Integer.parseInt(getEezSpatialRQ.getEezId()));
+        EezEntity eezById = repository.getEezById(Long.parseLong(getEezSpatialRQ.getEezId()));
         return mapper.eezEntityToEezType(eezById);
     }
 

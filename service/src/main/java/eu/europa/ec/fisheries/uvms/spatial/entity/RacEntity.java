@@ -33,16 +33,16 @@ public class RacEntity implements Serializable {
 	@Column(name = "gid")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@ColumnAliasName(aliasName="gid")
-	private int gid;
+	private long gid;
 
 	public RacEntity() {
 	}
 
-	public int getGid() {
+	public long getGid() {
 		return this.gid;
 	}
 
-	public void setGid(int gid) {
+	public void setGid(long gid) {
 		this.gid = gid;
 	}
 }

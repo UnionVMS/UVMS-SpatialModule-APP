@@ -58,7 +58,7 @@ public class SearchAreaServiceBean extends SpatialServiceBean implements SearchA
 	
 	private Map<String, String> getSelectedColumnMap(String areaType, String gid) {
 		String namedQuery = getNamedQueryByType(areaType);
-		Map<String, String> columnMap = getFirstMap(repository.findSelectedAreaColumns(namedQuery, Integer.parseInt(gid)));
+		Map<String, String> columnMap = getFirstMap(repository.findSelectedAreaColumns(namedQuery, Long.parseLong(gid)));
 		columnMap.put(GID, gid);
 		columnMap.put(AREA_TYPE, areaType.toUpperCase());
 		return columnMap;

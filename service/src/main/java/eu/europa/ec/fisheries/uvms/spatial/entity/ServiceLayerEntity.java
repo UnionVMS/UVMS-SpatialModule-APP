@@ -26,7 +26,7 @@ public class ServiceLayerEntity implements Serializable {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
     @ManyToOne
     @JoinColumn(name = "provider_format_id", nullable = false)
@@ -78,11 +78,11 @@ public class ServiceLayerEntity implements Serializable {
     public ServiceLayerEntity() {
     }
 
-    public int getId() {
+    public long getId() {
         return this.id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
