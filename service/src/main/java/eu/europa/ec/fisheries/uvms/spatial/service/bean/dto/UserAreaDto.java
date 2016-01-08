@@ -8,7 +8,7 @@ public class UserAreaDto implements Serializable {
 
 	private static final long serialVersionUID = 754300599619875100L;
 
-	private String areaType = "USERAREA";
+	private String areaType = "USER_AREA";
 	
 	private Number gid;
 

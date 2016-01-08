@@ -2,6 +2,7 @@ package eu.europa.ec.fisheries.uvms.spatial.util;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTWriter;
+import eu.europa.ec.fisheries.uvms.common.DateUtils;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
@@ -9,8 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
-import java.text.Format;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -48,8 +47,7 @@ public class ColumnAliasNameHelper {
             Geometry geometry = ((Geometry) field.get(object));
             return new WKTWriter().write(geometry);
         } else if ((field.get(object) instanceof Date)) {
-            Format formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            return formatter.format(field.get(object));
+            return DateUtils.dateToString((Date) field.get(object));
         } else if ((field.get(object) instanceof Boolean)) {
             return Boolean.toString((Boolean) field.get(object));
         } else {

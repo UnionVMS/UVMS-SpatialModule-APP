@@ -54,6 +54,20 @@ public class UserAreasEntity implements Serializable {
     @ColumnAliasName(aliasName ="gid")
     private long gid;
 
+    @Column(name = "type", length = 255)
+    @ColumnAliasName(aliasName ="type")
+    private String type;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "start_date")
+    @ColumnAliasName(aliasName ="startDate")
+    private Date startDate;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "end_date")
+    @ColumnAliasName(aliasName ="endDate")
+    private Date endDate;
+
     @Column(name = "user_name", nullable = false, length = 255)
     private String userName;
 
@@ -96,6 +110,30 @@ public class UserAreasEntity implements Serializable {
 
     public void setGid(long gid) {
         this.gid = gid;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 
     public String getName() {

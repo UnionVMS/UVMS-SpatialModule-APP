@@ -85,6 +85,15 @@ public class UserAreaServiceBean implements UserAreaService {
         if (userAreaDto.isShared() != null) {
             persistentUserArea.setIsShared(userAreaDto.isShared());
         }
+        if (userAreaDto.getType() != null) {
+            persistentUserArea.setType(userAreaDto.getSubType());
+        }
+        if (userAreaDto.getStartDate() != null) {
+            //persistentUserArea.setStartDate(userAreaDto.getStartDate());
+        }
+        if (userAreaDto.getEndDate() != null) {
+            //persistentUserArea.setEndDate(userAreaDto.getEndDate());
+        }
         return persistentUserArea;
     }
 
