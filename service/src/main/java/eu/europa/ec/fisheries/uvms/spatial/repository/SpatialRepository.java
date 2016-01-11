@@ -7,6 +7,8 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.*;
 import eu.europa.ec.fisheries.uvms.spatial.entity.config.SysConfigEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.ServiceLayerDto;
 
 import java.util.List;
 import java.util.Map;
@@ -63,5 +65,10 @@ public interface SpatialRepository extends DAO {
 
     void deleteBy(List<Long> spatialConnectIds) throws ServiceException;
 
+    List<ServiceLayerDto> findServiceLayerBySubType(List<String> subAreaTypes);
+
+    List<AreaDto> getAllUserAreas(String userName);
+
     List<UserAreasEntity> findUserAreaById(Long userAreaId, String userName, String scopeName) throws ServiceException;
+
 }
