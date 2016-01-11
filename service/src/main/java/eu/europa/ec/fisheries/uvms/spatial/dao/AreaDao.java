@@ -4,7 +4,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
+
+import com.google.common.collect.ImmutableMap;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GeometryType;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.ServiceLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.GeometryMapper;
 import org.hibernate.Query;
 import org.hibernate.transform.Transformers;
@@ -34,6 +38,7 @@ public class AreaDao extends CommonDao {
     private static final String USER_AREA_IDS = "userAreaIds";
     private static final String SCOPE_AREA_TABLES = "scopeAreaTypes";
     private static final String SCOPE_AREA_IDS = "scopeAreaIds";
+    private static final String SUB_TYPE = "subTypes";
 
     private SqlPropertyHolder propertyHolder;
 
@@ -101,6 +106,10 @@ public class AreaDao extends CommonDao {
                 .setResultTransformer(Transformers.aliasToBean(FilterAreasDto.class));
 
         return (FilterAreasDto) query.list().get(0);
+    }
+
+    public List<ServiceLayerDto> findServiceLayerBySubType(List<String> subAreaTypes) {
+        return createNamedQueryWithParameterList(QueryNameConstants.FIND_SERVICE_LAYER_BY_SUBTYPE, SUB_TYPE, subAreaTypes, ServiceLayerDto.class).list();
     }
 
     private void validateInput(List<String> userAreaTables, List<String> userAreaIds, List<String> scopeAreaTables, List<String> scopeAreaIds) {
