@@ -6,13 +6,9 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -29,13 +25,12 @@ import eu.europa.ec.fisheries.uvms.spatial.rest.error.ErrorHandler;
 import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.AreaLocationDtoMapper;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ValidationUtils;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaByLocationService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaDetailsService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.ClosestAreaService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.SearchAreaService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaExtendedIdentifierDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaServiceLayerDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.LayerTypeEnum;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.ServiceLayerDto;
 import lombok.extern.slf4j.Slf4j;
 
 @Path("/")
@@ -57,6 +52,9 @@ public class AreaResource extends UnionVMSResource {
     
 	@EJB
 	private SearchAreaService searchAreaService;
+
+    @EJB
+    private UserAreaService userAreaService;
     
     private AreaLocationDtoMapper mapper = AreaLocationDtoMapper.mapper();
 
@@ -151,10 +149,24 @@ public class AreaResource extends UnionVMSResource {
     	return createSuccessResponse(searchAreaService.getAreasByFilter(areaFilterDto.getAreaType(), areaFilterDto.getFilter()));
     }
 
+    @GET
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/servicelayers/{layerType}")
+    public Response getServiceLayersByType(@PathParam("layerType") String layerType, @Context HttpServletRequest request) {
+        LayerTypeEnum layerTypeEnum = LayerTypeEnum.value(layerType);
+        if (layerTypeEnum.equals(LayerTypeEnum.USERAREA)) {
+            List<AreaServiceLayerDto> areaServiceLayerDtos = areaTypeService.getAllAreasLayerDescription(layerTypeEnum, request.getRemoteUser());
+            return createSuccessResponse(areaServiceLayerDtos);
+        } else {
+            return createSuccessResponse(areaTypeService.getAreaLayerDescription(layerTypeEnum));
+        }
+    }
+
     public void validateInputParameters(Double lat, Double lon, List<String> areaTypes) {
         ValidationUtils.validateCoordinates(lat, lon);
         ValidationUtils.validateAreaTypes(areaTypes);
-    }    
+    }
     
     private Response getAreaDetailsById(AreaTypeDto areaDto) throws IOException, ParseException {
     	AreaDetails areaDetails = areaDetailsService.getAreaDetailsById(mapper.getAreaTypeEntry(areaDto));
