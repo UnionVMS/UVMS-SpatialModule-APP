@@ -3,6 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.Point;
+import eu.europa.ec.fisheries.uvms.common.DateUtils;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
@@ -88,14 +89,16 @@ public class UserAreaServiceBean implements UserAreaService {
         if (userAreaDto.isShared() != null) {
             persistentUserArea.setIsShared(userAreaDto.isShared());
         }
-        if (userAreaDto.getType() != null) {
+        if (userAreaDto.getSubType() != null) {
             persistentUserArea.setType(userAreaDto.getSubType());
         }
         if (userAreaDto.getStartDate() != null) {
-            //persistentUserArea.setStartDate(userAreaDto.getStartDate());
+            Date startDate = DateUtils.stringToDate(userAreaDto.getStartDate());
+            persistentUserArea.setStartDate(startDate);
         }
         if (userAreaDto.getEndDate() != null) {
-            //persistentUserArea.setEndDate(userAreaDto.getEndDate());
+            Date endDate = DateUtils.stringToDate(userAreaDto.getEndDate());
+            persistentUserArea.setEndDate(endDate);
         }
         return persistentUserArea;
     }

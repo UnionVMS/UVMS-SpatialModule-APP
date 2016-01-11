@@ -55,11 +55,11 @@ public class UserAreasEntity implements Serializable {
     @Id
     @Column(name = "gid")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @ColumnAliasName(aliasName ="gid")
+    @ColumnAliasName(aliasName ="id")
     private long gid;
 
     @Column(name = "type", length = 255)
-    @ColumnAliasName(aliasName ="type")
+    @ColumnAliasName(aliasName ="subType")
     private String type;
 
     @Temporal(TemporalType.TIMESTAMP)
