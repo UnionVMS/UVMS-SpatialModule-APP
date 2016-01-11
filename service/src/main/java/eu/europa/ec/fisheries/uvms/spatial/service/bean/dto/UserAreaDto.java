@@ -1,6 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto;
 
 import com.vividsolutions.jts.geom.Geometry;
+import eu.europa.ec.fisheries.uvms.spatial.util.SpatialTypeEnum;
 
 import java.io.Serializable;
 
@@ -8,7 +9,7 @@ public class UserAreaDto implements Serializable {
 
 	private static final long serialVersionUID = 754300599619875100L;
 
-	private String areaType = "USER_AREA";
+	private String areaType = SpatialTypeEnum.USERAREA.getType();
 	
 	private Number gid;
 
