@@ -42,6 +42,9 @@ public class UserAreaServiceBean implements UserAreaService {
     @EJB
     private SpatialRepository repository;
 
+    @EJB
+    private AreaTypeNamesService areaTypeNamesService;
+
     @Override
     public boolean storeUserArea(UserAreaGeomDto userAreaDto, String userName, String scopeName) throws ServiceException {
         UserAreasEntity userAreasEntity = prepareNewEntity(userAreaDto, userName, scopeName);
@@ -117,8 +120,9 @@ public class UserAreaServiceBean implements UserAreaService {
         }
     }
 
+    @Override
     public UserAreaLayerDto getUserAreaLayerDefination(String userName, String scopeName) {
-        List<UserAreaLayerDto> userAreaLayerDtoList = getUserAreaLayerMapping();
+        List<UserAreaLayerDto> userAreaLayerDtoList = areaTypeNamesService.listUserAreaLayerMapping();
         UserAreaLayerDto userAreaLayerDto = userAreaLayerDtoList.get(0);
         userAreaLayerDto.setIdList(getUserAreaGuid(userName, scopeName));
         return userAreaLayerDto;
@@ -183,10 +187,6 @@ public class UserAreaServiceBean implements UserAreaService {
     public List<UserAreaDto> searchUserAreasByCriteria(String userName, String scopeName, String searchCriteria) {
         List<UserAreaDto> userAreaDetails = repository.findUserAreaDetailsBySearchCriteria(userName, scopeName, searchCriteria);
         return userAreaDetails;
-    }
-
-    private List<UserAreaLayerDto> getUserAreaLayerMapping() {
-        return repository.findUserAreaLayerMapping();
     }
 
     @SuppressWarnings("unchecked")

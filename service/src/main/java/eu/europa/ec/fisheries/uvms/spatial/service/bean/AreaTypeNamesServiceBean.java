@@ -5,6 +5,7 @@ import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaLayerDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import lombok.SneakyThrows;
@@ -42,7 +43,14 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
         return systemAreaLayerMapping;
     }
 
-    private void addServiceUrlForInternalWMSLayers(List<AreaLayerDto> systemAreaLayerMapping) {
+    @Override
+    public List<UserAreaLayerDto> listUserAreaLayerMapping() {
+        List<UserAreaLayerDto> systemAreaLayerMapping = repository.findUserAreaLayerMapping();
+        addServiceUrlForInternalWMSLayers(systemAreaLayerMapping);
+        return systemAreaLayerMapping;
+    }
+
+    private void addServiceUrlForInternalWMSLayers(List<? extends AreaLayerDto> systemAreaLayerMapping) {
         String geoServerUrl = getGeoServerUrl();
 
         for (AreaLayerDto areaLayerDto : systemAreaLayerMapping) {
