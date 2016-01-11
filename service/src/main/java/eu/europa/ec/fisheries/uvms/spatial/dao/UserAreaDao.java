@@ -10,6 +10,7 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GeometryType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.GeometryMapper;
 
 public class UserAreaDao extends CommonDao {
@@ -66,5 +67,10 @@ public class UserAreaDao extends CommonDao {
     			build();
     	return createNamedNativeQuery(QueryNameConstants.SEARCH_USER_AREA, parameters, UserAreaDto.class).list();
     }
+
+	public List<AreaDto> getAllUserAreas(String userName) {
+		Map<String, Object> parameters = ImmutableMap.<String, Object>builder().put(USER_NAME, userName).build();
+		return createNamedNativeQuery(QueryNameConstants.FIND_ALL_USER_AREAS, parameters, AreaDto.class).list();
+	}
 
 }

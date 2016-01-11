@@ -98,6 +98,13 @@ public abstract class CommonDao {
 		return query;
 	}
 
+	protected <T> Query createNamedQueryWithParameterList(String nativeQuery, String parameterName, List<? extends Object> parameters, Class<T> dtoClass) {
+		Query query = getSession().getNamedQuery(nativeQuery);
+		query.setParameterList(parameterName, parameters);
+		query.setResultTransformer(Transformers.aliasToBean(dtoClass));
+		return query;
+	}
+
 	protected SQLQuery createSQLQueryForClosestArea(String queryString, String wktPoint, int crs) {
 		SQLQuery sqlQuery = getSession().createSQLQuery(queryString);
 		sqlQuery.setString(WKT, wktPoint);
