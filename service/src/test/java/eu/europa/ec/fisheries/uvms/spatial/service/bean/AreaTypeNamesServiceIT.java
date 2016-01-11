@@ -1,5 +1,8 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaServiceLayerDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.LayerTypeEnum;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.ServiceLayerDto;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,5 +42,30 @@ public class AreaTypeNamesServiceIT extends AbstractArquillianIT {
         //then
         assertNotNull(areaLayerMappings);
         assertFalse(areaLayerMappings.isEmpty());
+    }
+
+    @Test
+    public void shouldReturnAreaLayerDescription() {
+        List<ServiceLayerDto> serviceLayerDtos = areaTypeNamesService.getAreaLayerDescription(LayerTypeEnum.SYSAREA);
+        assertNotNull(serviceLayerDtos);
+
+        serviceLayerDtos = areaTypeNamesService.getAreaLayerDescription(LayerTypeEnum.BACKGROUND);
+        assertNotNull(serviceLayerDtos);
+
+        serviceLayerDtos = areaTypeNamesService.getAreaLayerDescription(LayerTypeEnum.ADDITIONAL);
+        assertNotNull(serviceLayerDtos);
+
+        serviceLayerDtos = areaTypeNamesService.getAreaLayerDescription(LayerTypeEnum.PORT);
+        assertNotNull(serviceLayerDtos);
+
+        serviceLayerDtos = areaTypeNamesService.getAreaLayerDescription(LayerTypeEnum.USERAREA);
+        assertNotNull(serviceLayerDtos);
+    }
+
+    @Test
+    public void shouldReturnAllAreaLayerDescription() {
+        List<AreaServiceLayerDto> areaServiceLayerDtos = areaTypeNamesService.getAllAreasLayerDescription(LayerTypeEnum.USERAREA, "rep_power");
+        assertNotNull(areaServiceLayerDtos);
+        assertFalse(areaServiceLayerDtos.isEmpty());
     }
 }
