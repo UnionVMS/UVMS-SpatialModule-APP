@@ -15,7 +15,10 @@ import org.apache.commons.lang3.StringUtils;
 @Table(name = "service_layer", schema = "spatial")
 @NamedQueries({
         @NamedQuery(name = QueryNameConstants.FIND_SERVICE_LAYERS_BY_ID,
-                query = "SELECT serviceLayer FROM ServiceLayerEntity serviceLayer WHERE serviceLayer.id in (:ids) order by serviceLayer.id")
+                query = "SELECT serviceLayer FROM ServiceLayerEntity serviceLayer WHERE serviceLayer.id in (:ids) order by serviceLayer.id"),
+        @NamedQuery(name = QueryNameConstants.FIND_SERVICE_LAYER_BY_SUBTYPE,
+                query = "SELECT serviceLayer.id AS id, serviceLayer.name AS name, serviceLayer.layerDesc AS layerDesc, serviceLayer.subType as subType " +
+                        "From ServiceLayerEntity serviceLayer WHERE serviceLayer.subType in (:subTypes) order by serviceLayer.id")
 })
 public class ServiceLayerEntity implements Serializable {
 
@@ -68,6 +71,9 @@ public class ServiceLayerEntity implements Serializable {
     
     @Column(name = "style_label_geom", length = 255)
     private String styleLabelGeom;
+
+    @Column(name = "subtype", length = 255)
+    private String subType;
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "serviceLayer", cascade = CascadeType.ALL)
     private AreaLocationTypesEntity areaType;
@@ -196,6 +202,14 @@ public class ServiceLayerEntity implements Serializable {
 
     public void setAreaType(AreaLocationTypesEntity areaType) {
         this.areaType = areaType;
+    }
+
+    public String getSubType() {
+        return subType;
+    }
+
+    public void setSubType(String subType) {
+        this.subType = subType;
     }
 
     public Set<ReportConnectServiceAreasEntity> getReportConnectServiceAreas() {
