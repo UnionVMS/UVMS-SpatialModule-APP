@@ -22,7 +22,8 @@ public class BaseSpatialDaoTest extends BaseDAOTest {
             deleteAllFrom("spatial.projection"),
             deleteAllFrom("spatial.report_connect_service_areas"),
             deleteAllFrom("spatial.report_connect_spatial"),
-            deleteAllFrom("spatial.system_configurations")
+            deleteAllFrom("spatial.system_configurations"),
+            deleteAllFrom("spatial.service_layer")
     );
 
     protected static final Operation INSERT_REFERENCE_DATA = sequenceOf(
