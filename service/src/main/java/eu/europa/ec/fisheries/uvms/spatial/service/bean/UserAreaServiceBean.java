@@ -47,36 +47,34 @@ public class UserAreaServiceBean implements UserAreaService {
     private AreaTypeNamesService areaTypeNamesService;
 
     @Override
-    public boolean storeUserArea(UserAreaGeomDto userAreaDto, String userName, String scopeName) throws ServiceException {
-        UserAreasEntity userAreasEntity = prepareNewEntity(userAreaDto, userName, scopeName);
+    public boolean storeUserArea(UserAreaGeomDto userAreaDto, String userName) throws ServiceException {
+        UserAreasEntity userAreasEntity = prepareNewEntity(userAreaDto, userName);
         UserAreasEntity persistedEntity = (UserAreasEntity) repository.createEntity(userAreasEntity);
         return persistedEntity != null;
     }
 
-    private UserAreasEntity prepareNewEntity(UserAreaGeomDto userAreaDto, String userName, String scopeName) {
+    private UserAreasEntity prepareNewEntity(UserAreaGeomDto userAreaDto, String userName) {
         UserAreasEntity userAreasEntity = UserAreaMapper.mapper().fromDtoToEntity(userAreaDto);
         userAreasEntity.setUserName(userName);
-        userAreasEntity.setScopeName(scopeName);
         userAreasEntity.setCreatedOn(new Date());
         return userAreasEntity;
     }
 
     @Override
-    public boolean updateUserArea(UserAreaGeomDto userAreaDto, String userName, String scopeName) throws ServiceException {
+    public boolean updateUserArea(UserAreaGeomDto userAreaDto, String userName) throws ServiceException {
         Long id = userAreaDto.getId();
         validateGid(id);
 
-        List<UserAreasEntity> persistentUserAreas = repository.findUserAreaById(id, userName, scopeName);
+        List<UserAreasEntity> persistentUserAreas = repository.findUserAreaById(id, userName);
         validateNotNull(id, persistentUserAreas);
 
-        UserAreasEntity userAreasEntity = prepareUpdateEntity(persistentUserAreas.get(0), userAreaDto, userName, scopeName);
+        UserAreasEntity userAreasEntity = prepareUpdateEntity(persistentUserAreas.get(0), userAreaDto, userName);
         UserAreasEntity persistedEntity = (UserAreasEntity) repository.updateEntity(userAreasEntity);
         return persistedEntity != null;
     }
 
-    private UserAreasEntity prepareUpdateEntity(UserAreasEntity persistentUserArea, UserAreaGeomDto userAreaDto, String userName, String scopeName) {
+    private UserAreasEntity prepareUpdateEntity(UserAreasEntity persistentUserArea, UserAreaGeomDto userAreaDto, String userName) {
         persistentUserArea.setUserName(userName);
-        persistentUserArea.setScopeName(scopeName);
         if (userAreaDto.getName() != null) {
             persistentUserArea.setName(userAreaDto.getName());
         }
@@ -110,8 +108,8 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     @Override
-    public void deleteUserArea(Long userAreaId, String userName, String scopeName) throws ServiceException {
-        List<UserAreasEntity> persistentUserAreas = repository.findUserAreaById(userAreaId, userName, scopeName);
+    public void deleteUserArea(Long userAreaId, String userName) throws ServiceException {
+        List<UserAreasEntity> persistentUserAreas = repository.findUserAreaById(userAreaId, userName);
         validateNotNull(userAreaId, persistentUserAreas);
 
         repository.deleteEntity(persistentUserAreas.get(0));
@@ -146,8 +144,8 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     @Override
-    public AreaDetails getAreaDetailsWithExtentById(AreaTypeEntry areaTypeEntry, String userName, String scopeName) throws ServiceException {
-        List<UserAreasEntity> userAreasDetails = repository.findUserAreaById(Long.parseLong(areaTypeEntry.getId()), userName, scopeName);
+    public AreaDetails getUserAreaDetailsWithExtentById(AreaTypeEntry areaTypeEntry, String userName) throws ServiceException {
+        List<UserAreasEntity> userAreasDetails = repository.findUserAreaById(Long.parseLong(areaTypeEntry.getId()), userName);
         if (CollectionUtils.isNotEmpty(userAreasDetails)) {
             return getAllAreaDetails(userAreasDetails, areaTypeEntry).get(0);
         } else {
@@ -158,8 +156,8 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     @Override
-    public List<AreaDetails> getUserAreaDetailsById(AreaTypeEntry areaTypeEntry, String userName, String scopeName) throws ServiceException {
-        List<UserAreasEntity> userAreaDetails = repository.findUserAreaById(Long.parseLong(areaTypeEntry.getId()), userName, scopeName);
+    public List<AreaDetails> getUserAreaDetailsById(AreaTypeEntry areaTypeEntry, String userName) throws ServiceException {
+        List<UserAreasEntity> userAreaDetails = repository.findUserAreaById(Long.parseLong(areaTypeEntry.getId()), userName);
         return getAllAreaDetails(userAreaDetails, areaTypeEntry);
     }
 

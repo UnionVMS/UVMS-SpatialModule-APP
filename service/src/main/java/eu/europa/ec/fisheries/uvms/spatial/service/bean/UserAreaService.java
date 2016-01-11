@@ -19,15 +19,15 @@ public interface UserAreaService {
 
 	List<AreaDetails> getUserAreaDetailsByLocation(AreaTypeEntry areaTypeEntry, String userName, String scopeName);
 
-	AreaDetails getAreaDetailsWithExtentById(AreaTypeEntry areaTypeEntry, String userName, String scopeName) throws ServiceException;
+	AreaDetails getUserAreaDetailsWithExtentById(AreaTypeEntry areaTypeEntry, String userName) throws ServiceException;
 
-	List<AreaDetails> getUserAreaDetailsById(AreaTypeEntry areaTypeEntry, String userName, String scopeName) throws ServiceException;
+	List<AreaDetails> getUserAreaDetailsById(AreaTypeEntry areaTypeEntry, String userName) throws ServiceException;
 
 	List<UserAreaDto> searchUserAreasByCriteria(String userName, String scopeName, String searchCriteria);
 
-	boolean storeUserArea(UserAreaGeomDto userAreaDto, String remoteUser, String scopeName) throws ServiceException;
+	boolean storeUserArea(UserAreaGeomDto userAreaDto, String remoteUser) throws ServiceException;
 
-	boolean updateUserArea(UserAreaGeomDto userAreaDto, String userName, String scopeName) throws ServiceException;
+	boolean updateUserArea(UserAreaGeomDto userAreaDto, String userName) throws ServiceException;
 
-	void deleteUserArea(Long userAreaId, String userName, String scopeName) throws ServiceException;
+	void deleteUserArea(Long userAreaId, String userName) throws ServiceException;
 }

@@ -19,7 +19,7 @@ import java.util.Set;
         @NamedQuery(name = QueryNameConstants.FIND_GID_BY_USER,
                 query = "SELECT area.gid FROM UserAreasEntity area WHERE area.userName = :userName OR area.scopeName = :scopeName AND area.isShared = 'Y'"),
         @NamedQuery(name = QueryNameConstants.FIND_USER_AREA_BY_ID,
-                query = "SELECT area FROM UserAreasEntity area WHERE area.userName = :userName AND area.scopeName = :scopeName AND area.gid = :userAreaId"),
+                query = "SELECT area FROM UserAreasEntity area WHERE area.userName = :userName AND area.gid = :userAreaId"),
         @NamedQuery(name = QueryNameConstants.USERAREA_COLUMNS,
 				query = "select userArea.name as name, userArea.areaDesc as desc from UserAreasEntity as userArea where userArea.gid =:gid"),
 		@NamedQuery(name = QueryNameConstants.FIND_ALL_USER_AREAS,

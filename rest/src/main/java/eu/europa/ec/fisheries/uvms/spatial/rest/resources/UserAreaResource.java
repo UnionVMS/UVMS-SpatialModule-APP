@@ -3,7 +3,6 @@ package eu.europa.ec.fisheries.uvms.spatial.rest.resources;
 import com.vividsolutions.jts.io.ParseException;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
-import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.service.interceptor.ValidationInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
@@ -26,7 +25,6 @@ import javax.interceptor.Interceptors;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
@@ -52,7 +50,7 @@ public class UserAreaResource extends UnionVMSResource {
                                   @HeaderParam("scopeName") String scopeName) throws ServiceException {
         String userName = request.getRemoteUser();
         log.info("{} is requesting storeUserArea(...)", userName);
-        userAreaService.storeUserArea(userAreaGeomDto, userName, scopeName);
+        userAreaService.storeUserArea(userAreaGeomDto, userName);
         return createSuccessResponse();
     }
 
@@ -66,7 +64,7 @@ public class UserAreaResource extends UnionVMSResource {
                                    @HeaderParam("scopeName") String scopeName) throws ServiceException {
         String userName = request.getRemoteUser();
         log.info("{} is requesting updateUserArea(...), with a ID={}", userName, userAreaGeomDto.getId());
-        userAreaService.updateUserArea(userAreaGeomDto, request.getRemoteUser(), scopeName);
+        userAreaService.updateUserArea(userAreaGeomDto, request.getRemoteUser());
         return createSuccessResponse();
     }
 
@@ -79,7 +77,7 @@ public class UserAreaResource extends UnionVMSResource {
                                    @HeaderParam("scopeName") String scopeName) throws ServiceException {
         String userName = request.getRemoteUser();
         log.info("{} is requesting deleteUserArea(...), with a ID={} and scopeName={}", userName, userAreaId, scopeName);
-        userAreaService.deleteUserArea(userAreaId, userName, scopeName);
+        userAreaService.deleteUserArea(userAreaId, userName);
         return createSuccessResponse();
     }
 
@@ -107,13 +105,13 @@ public class UserAreaResource extends UnionVMSResource {
     private Response getUserAreaDetailsById(UserAreaTypeDto userAreaTypeDto, String userName, String scopeName) throws ServiceException, IOException, ParseException {
         if (!userAreaTypeDto.getIsGeom()) {
             AreaTypeEntry areaTypeEntry = areaLocationMapper.getAreaTypeEntry(userAreaTypeDto);
-            AreaDetails areaDetails = userAreaService.getAreaDetailsWithExtentById(areaTypeEntry, userName, scopeName);
+            AreaDetails areaDetails = userAreaService.getUserAreaDetailsWithExtentById(areaTypeEntry, userName);
             AreaDetailsDto areaDetailsDto = areaLocationMapper.getAreaDetailsDto(areaDetails);
             areaDetailsDto.removeGeometry();
             return createSuccessResponse(areaDetailsDto.getProperties());
         } else {
             AreaTypeEntry areaTypeEntry = AreaLocationDtoMapper.mapper().getAreaTypeEntry(userAreaTypeDto);
-            List<AreaDetails> userAreaDetails = userAreaService.getUserAreaDetailsById(areaTypeEntry, userName, scopeName);
+            List<AreaDetails> userAreaDetails = userAreaService.getUserAreaDetailsById(areaTypeEntry, userName);
             AreaDetailsDto areaDetailsDto = areaLocationMapper.getAreaDetailsDtoForAllAreas(userAreaDetails, userAreaTypeDto);
             return createSuccessResponse(areaDetailsDto.convertAll());
         }
