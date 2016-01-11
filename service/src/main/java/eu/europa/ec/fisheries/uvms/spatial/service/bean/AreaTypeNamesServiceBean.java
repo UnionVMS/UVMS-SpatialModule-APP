@@ -5,15 +5,16 @@ import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaLayerDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import lombok.SneakyThrows;
-
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -43,6 +44,51 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
         return systemAreaLayerMapping;
     }
 
+
+    @Override
+    public List<ServiceLayerDto> getAreaLayerDescription(LayerTypeEnum layerTypeEnum) {
+        return repository.findServiceLayerBySubType(constructInParameters(layerTypeEnum));
+    }
+
+    public List<AreaServiceLayerDto> getAllAreasLayerDescription(LayerTypeEnum layerTypeEnum, String userName) {
+        List<AreaServiceLayerDto> areaServiceLayerDtos = new ArrayList<AreaServiceLayerDto>();
+        switch(layerTypeEnum) {
+            case USERAREA:
+                List<ServiceLayerDto> serviceLayerDtos = getAreaLayerDescription(layerTypeEnum);
+                List<AreaDto> allAreas = repository.getAllUserAreas(userName);
+                for (ServiceLayerDto serviceLayerDto : serviceLayerDtos) {
+                    AreaServiceLayerDto areaServiceLayerDto = new AreaServiceLayerDto(serviceLayerDto, allAreas);
+                    areaServiceLayerDtos.add(areaServiceLayerDto);
+                }
+                break;
+        }
+        return areaServiceLayerDtos;
+    }
+
+    private List<String> constructInParameters(LayerTypeEnum layerTypeEnum) {
+        List<String> inClause = new ArrayList<String>();
+        switch(layerTypeEnum) {
+            case BACKGROUND:
+                inClause.add(AreaSubTypeEnum.BACKGROUND.getAreaSubType());
+                inClause.add(AreaSubTypeEnum.OTHERS.getAreaSubType());
+                break;
+            case ADDITIONAL:
+                inClause.add(AreaSubTypeEnum.ADDITIONAL.getAreaSubType());
+                inClause.add(AreaSubTypeEnum.OTHERS.getAreaSubType());
+                break;
+            case PORT:
+                inClause.add(AreaSubTypeEnum.PORT.getAreaSubType());
+                break;
+            case SYSAREA:
+                inClause.add(AreaSubTypeEnum.SYSAREA.getAreaSubType());
+                break;
+            case USERAREA:
+                inClause.add(AreaSubTypeEnum.USERAREA.getAreaSubType());
+                break;
+        }
+        return inClause;
+    }
+
     @Override
     public List<UserAreaLayerDto> listUserAreaLayerMapping() {
         List<UserAreaLayerDto> systemAreaLayerMapping = repository.findUserAreaLayerMapping();
@@ -52,7 +98,6 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
 
     private void addServiceUrlForInternalWMSLayers(List<? extends AreaLayerDto> systemAreaLayerMapping) {
         String geoServerUrl = getGeoServerUrl();
-
         for (AreaLayerDto areaLayerDto : systemAreaLayerMapping) {
             if (WMS_SERVICE_TYPE.equalsIgnoreCase(areaLayerDto.getServiceType()) && areaLayerDto.getIsInternal()) {
                 areaLayerDto.setServiceUrl(geoServerUrl + WMS_SERVICE_TYPE);
