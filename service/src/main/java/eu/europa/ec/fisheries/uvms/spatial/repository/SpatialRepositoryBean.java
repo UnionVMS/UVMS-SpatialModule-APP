@@ -231,6 +231,11 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     }
 
     @Override
+    public List<AreaDto> findAllUserAreasByGids(List<Long> gids) {
+        return userAreaDao.findAllUserAreasByGids(gids);
+    }
+
+    @Override
     public EntityManager getEntityManager() {
         return em;
     }

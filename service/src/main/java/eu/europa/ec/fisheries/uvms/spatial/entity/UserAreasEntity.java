@@ -23,7 +23,9 @@ import java.util.Set;
         @NamedQuery(name = QueryNameConstants.USERAREA_COLUMNS,
 				query = "select userArea.name as name, userArea.areaDesc as desc from UserAreasEntity as userArea where userArea.gid =:gid"),
 		@NamedQuery(name = QueryNameConstants.FIND_ALL_USER_AREAS,
-				query = "SELECT area.gid as gid, area.name as name, area.areaDesc as desc FROM UserAreasEntity area WHERE area.userName = :userName")
+				query = "SELECT area.gid as gid, area.name as name, area.areaDesc as desc FROM UserAreasEntity area WHERE area.userName = :userName"),
+        @NamedQuery(name = QueryNameConstants.FIND_ALL_USER_AREAS_BY_GIDS,
+                query = "SELECT area.gid as gid, area.name as name, area.areaDesc as desc FROM UserAreasEntity area WHERE area.gid in (:gids)")
 })
 
 @NamedNativeQueries({

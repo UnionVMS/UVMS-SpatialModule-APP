@@ -5,6 +5,7 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import com.google.common.collect.ImmutableMap;
 import com.vividsolutions.jts.geom.Point;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GeometryType;
@@ -21,6 +22,7 @@ public class UserAreaDao extends CommonDao {
 	private static final String DESC = "desc";
 	private static final String CRS = "crs";
 	private static final String WKT = "wktPoint";
+	private static final String GID_LIST = "gids";
 	
 	public UserAreaDao(EntityManager em) {
 		super(em);
@@ -60,8 +62,8 @@ public class UserAreaDao extends CommonDao {
     	Map<String, Object> parameters = ImmutableMap.<String, Object>builder().
     			put(USER_NAME, userName).
     			put(SCOPE_NAME, scopeName).
-    			put(NAME, "%"+searchCriteria+"%").
-    			put(DESC, "%"+searchCriteria+"%").
+    			put(NAME, "%" + searchCriteria + "%").
+    			put(DESC, "%" + searchCriteria + "%").
     			build();
     	return createNamedNativeQuery(QueryNameConstants.SEARCH_USER_AREA, parameters, UserAreaDto.class).list();
     }
@@ -69,6 +71,10 @@ public class UserAreaDao extends CommonDao {
 	public List<AreaDto> getAllUserAreas(String userName) {
 		Map<String, Object> parameters = ImmutableMap.<String, Object>builder().put(USER_NAME, userName).build();
 		return createNamedNativeQuery(QueryNameConstants.FIND_ALL_USER_AREAS, parameters, AreaDto.class).list();
+	}
+
+	public List<AreaDto> findAllUserAreasByGids(List<Long> gids) {
+		return createNamedQueryWithParameterList(QueryNameConstants.FIND_ALL_USER_AREAS_BY_GIDS, GID_LIST, gids, AreaDto.class).list();
 	}
 
 }
