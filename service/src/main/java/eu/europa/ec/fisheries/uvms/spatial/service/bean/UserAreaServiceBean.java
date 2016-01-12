@@ -130,16 +130,16 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     @Override
-    public List<UserAreaDto> getUserAreaDetailsWithExtentByLocation(Coordinate coordinate, String userName, String scopeName) {
+    public List<UserAreaDto> getUserAreaDetailsWithExtentByLocation(Coordinate coordinate, String userName) {
         Point point = convertToPointInWGS84(coordinate.getLongitude(), coordinate.getLatitude(), coordinate.getCrs());
-        List<UserAreaDto> userAreaDetails = repository.findUserAreaDetailsWithExtentByLocation(userName, scopeName, point);
+        List<UserAreaDto> userAreaDetails = repository.findUserAreaDetailsWithExtentByLocation(userName, point);
         return userAreaDetails;
     }
 
     @Override
-    public List<AreaDetails> getUserAreaDetailsByLocation(AreaTypeEntry areaTypeEntry, String userName, String scopeName) {
+    public List<AreaDetails> getUserAreaDetailsByLocation(AreaTypeEntry areaTypeEntry, String userName) {
         Point point = convertToPointInWGS84(areaTypeEntry.getLongitude(), areaTypeEntry.getLatitude(), areaTypeEntry.getCrs());
-        List<UserAreasEntity> userAreaDetails = repository.findUserAreaDetailsByLocation(userName, scopeName, point);
+        List<UserAreasEntity> userAreaDetails = repository.findUserAreaDetailsByLocation(userName, point);
         return getAllAreaDetails(userAreaDetails, areaTypeEntry);
     }
 

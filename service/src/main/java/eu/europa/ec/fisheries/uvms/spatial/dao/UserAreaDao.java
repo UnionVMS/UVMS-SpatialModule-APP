@@ -32,12 +32,11 @@ public class UserAreaDao extends CommonDao {
     }
     
     @SuppressWarnings("unchecked")
-	public List<UserAreaDto> findUserAreaDetailsWithExtent(String userName, String scopeName, Point point) {
+	public List<UserAreaDto> findUserAreaDetailsWithExtent(String userName, Point point) {
         GeometryType geometryType = GeometryMapper.INSTANCE.geometryToWKT(point);
         int crs = point.getSRID();
     	Map<String, Object> parameters = ImmutableMap.<String, Object>builder().
     			put(USER_NAME, userName).
-    			put(SCOPE_NAME, scopeName).
     			put(WKT, geometryType.getGeometry()).
     			put(CRS, crs).
     			build();
@@ -45,12 +44,11 @@ public class UserAreaDao extends CommonDao {
     }
 
 	@SuppressWarnings("unchecked")
-	public List<UserAreasEntity> findUserAreaDetailsWithGeom(String userName, String scopeName, Point point) {
+	public List<UserAreasEntity> findUserAreaDetailsWithGeom(String userName, Point point) {
 		GeometryType geometryType = GeometryMapper.INSTANCE.geometryToWKT(point);
 		int crs = point.getSRID();
 		Map<String, Object> parameters = ImmutableMap.<String, Object>builder().
 				put(USER_NAME, userName).
-				put(SCOPE_NAME, scopeName).
 				put(WKT, geometryType.getGeometry()).
 				put(CRS, crs).
 				build();

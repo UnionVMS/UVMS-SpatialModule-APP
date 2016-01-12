@@ -95,13 +95,13 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     }
 
     @Override
-    public List<UserAreaDto> findUserAreaDetailsWithExtentByLocation(String userName, String scopeName, Point point) {
-        return userAreaDao.findUserAreaDetailsWithExtent(userName, scopeName, point);
+    public List<UserAreaDto> findUserAreaDetailsWithExtentByLocation(String userName, Point point) {
+        return userAreaDao.findUserAreaDetailsWithExtent(userName, point);
     }
 
     @Override
-    public List<UserAreasEntity> findUserAreaDetailsByLocation(String userName, String scopeName, Point point) {
-        return userAreaDao.findUserAreaDetailsWithGeom(userName, scopeName, point);
+    public List<UserAreasEntity> findUserAreaDetailsByLocation(String userName, Point point) {
+        return userAreaDao.findUserAreaDetailsWithGeom(userName, point);
     }
 
     @Override

@@ -15,9 +15,9 @@ public interface UserAreaService {
 
 	UserAreaLayerDto getUserAreaLayerDefination(String userName, String scopeName);
 
-	List<UserAreaDto> getUserAreaDetailsWithExtentByLocation(Coordinate coordinate, String userName, String scopeName);
+	List<UserAreaDto> getUserAreaDetailsWithExtentByLocation(Coordinate coordinate, String userName);
 
-	List<AreaDetails> getUserAreaDetailsByLocation(AreaTypeEntry areaTypeEntry, String userName, String scopeName);
+	List<AreaDetails> getUserAreaDetailsByLocation(AreaTypeEntry areaTypeEntry, String userName);
 
 	AreaDetails getUserAreaDetailsWithExtentById(AreaTypeEntry areaTypeEntry, String userName) throws ServiceException;
 

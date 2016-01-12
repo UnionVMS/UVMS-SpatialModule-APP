@@ -96,13 +96,13 @@ public class UserAreaResource extends UnionVMSResource {
     @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
     public Response getUserAreaDetails(UserAreaTypeDto userAreaTypeDto, @Context HttpServletRequest request, @HeaderParam("scopeName") String scopeName) throws IOException, ParseException, ServiceException {
         if (userAreaTypeDto.getId() != null) {
-            return getUserAreaDetailsById(userAreaTypeDto, request.getRemoteUser(), scopeName);
+            return getUserAreaDetailsById(userAreaTypeDto, request.getRemoteUser());
         } else {
-            return getUserAreaDetailsByLocation(userAreaTypeDto, request.getRemoteUser(), scopeName);
+            return getUserAreaDetailsByLocation(userAreaTypeDto, request.getRemoteUser());
         }
     }
 
-    private Response getUserAreaDetailsById(UserAreaTypeDto userAreaTypeDto, String userName, String scopeName) throws ServiceException, IOException, ParseException {
+    private Response getUserAreaDetailsById(UserAreaTypeDto userAreaTypeDto, String userName) throws ServiceException, IOException, ParseException {
         if (!userAreaTypeDto.getIsGeom()) {
             AreaTypeEntry areaTypeEntry = areaLocationMapper.getAreaTypeEntry(userAreaTypeDto);
             AreaDetails areaDetails = userAreaService.getUserAreaDetailsWithExtentById(areaTypeEntry, userName);
@@ -117,14 +117,14 @@ public class UserAreaResource extends UnionVMSResource {
         }
     }
 
-    private Response getUserAreaDetailsByLocation(UserAreaTypeDto userAreaTypeDto, String userName, String scopeName) throws IOException, ParseException {
+    private Response getUserAreaDetailsByLocation(UserAreaTypeDto userAreaTypeDto, String userName) throws IOException, ParseException {
         if (!userAreaTypeDto.getIsGeom()) {
             Coordinate coordinate = areaLocationMapper.getCoordinateFromDto(userAreaTypeDto);
-            List<UserAreaDto> userAreaDetails = userAreaService.getUserAreaDetailsWithExtentByLocation(coordinate, userName, scopeName);
+            List<UserAreaDto> userAreaDetails = userAreaService.getUserAreaDetailsWithExtentByLocation(coordinate, userName);
             return createSuccessResponse(userAreaDetails);
         } else {
             AreaTypeEntry areaTypeEntry = AreaLocationDtoMapper.mapper().getAreaTypeEntry(userAreaTypeDto);
-            List<AreaDetails> userAreaDetails = userAreaService.getUserAreaDetailsByLocation(areaTypeEntry, userName, scopeName);
+            List<AreaDetails> userAreaDetails = userAreaService.getUserAreaDetailsByLocation(areaTypeEntry, userName);
             AreaDetailsDto areaDetailsDto = areaLocationMapper.getAreaDetailsDtoForAllAreas(userAreaDetails, userAreaTypeDto);
             return createSuccessResponse(areaDetailsDto.convertAll());
         }
