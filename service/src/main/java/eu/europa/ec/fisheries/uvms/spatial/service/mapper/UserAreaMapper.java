@@ -23,7 +23,7 @@ public abstract class UserAreaMapper {
             @Mapping(source = "geometry", target = "geom"),
             @Mapping(target = "startDate", expression = "java(eu.europa.ec.fisheries.uvms.common.DateUtils.stringToDate(userAreaDto.getStartDate()))"),
             @Mapping(target = "endDate", expression = "java(eu.europa.ec.fisheries.uvms.common.DateUtils.stringToDate(userAreaDto.getEndDate()))"),
-            @Mapping(target = "isShared", expression = "java(userAreaDto.isShared())"),
+            @Mapping(target = "isShared", expression = "java(userAreaDto.isShared())")
     })
     public abstract UserAreasEntity fromDtoToEntity(UserAreaGeomDto userAreaDto);
 

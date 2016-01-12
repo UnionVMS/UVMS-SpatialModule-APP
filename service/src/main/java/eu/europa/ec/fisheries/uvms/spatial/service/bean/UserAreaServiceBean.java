@@ -68,37 +68,14 @@ public class UserAreaServiceBean implements UserAreaService {
         List<UserAreasEntity> persistentUserAreas = repository.findUserAreaById(id, userName);
         validateNotNull(id, persistentUserAreas);
 
-        UserAreasEntity userAreasEntity = prepareUpdateEntity(persistentUserAreas.get(0), userAreaDto, userName);
-        UserAreasEntity persistedEntity = (UserAreasEntity) repository.updateEntity(userAreasEntity);
-        return persistedEntity != null;
-    }
+        UserAreasEntity persistentUserArea = persistentUserAreas.get(0);
 
-    private UserAreasEntity prepareUpdateEntity(UserAreasEntity persistentUserArea, UserAreaGeomDto userAreaDto, String userName) {
-        persistentUserArea.setUserName(userName);
-        if (userAreaDto.getName() != null) {
-            persistentUserArea.setName(userAreaDto.getName());
-        }
-        if (userAreaDto.getDesc() != null) {
-            persistentUserArea.setAreaDesc(userAreaDto.getDesc());
-        }
-        if (userAreaDto.getGeometry() != null) {
-            persistentUserArea.setGeom(userAreaDto.getGeometry());
-        }
-        if (userAreaDto.isShared() != null) {
-            persistentUserArea.setIsShared(userAreaDto.isShared());
-        }
-        if (userAreaDto.getSubType() != null) {
-            persistentUserArea.setType(userAreaDto.getSubType());
-        }
-        if (userAreaDto.getStartDate() != null) {
-            Date startDate = DateUtils.stringToDate(userAreaDto.getStartDate());
-            persistentUserArea.setStartDate(startDate);
-        }
-        if (userAreaDto.getEndDate() != null) {
-            Date endDate = DateUtils.stringToDate(userAreaDto.getEndDate());
-            persistentUserArea.setEndDate(endDate);
-        }
-        return persistentUserArea;
+        UserAreasEntity userAreasEntityToUpdate = prepareNewEntity(userAreaDto, userName);
+        userAreasEntityToUpdate.setCreatedOn(persistentUserArea.getCreatedOn());
+        userAreasEntityToUpdate.setGid(persistentUserArea.getGid());
+
+        UserAreasEntity persistedUpdatedEntity = (UserAreasEntity) repository.updateEntity(userAreasEntityToUpdate);
+        return persistedUpdatedEntity != null;
     }
 
     private void validateGid(Long gid) {
