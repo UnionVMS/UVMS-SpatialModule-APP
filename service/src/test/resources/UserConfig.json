@@ -277,35 +277,5 @@
         "6-8": "#fdae61"
       }
     }
-  },
-  "layerSettings": {
-    "overlayLayers": [
-      {
-        "serviceLayerId": 4,
-        "type": "WMS"
-      },
-      {
-        "serviceLayerId": 1,
-        "type": "WMS"
-      },
-      {
-        "serviceLayerId": 2,
-        "type": "WMS"
-      },
-      {
-        "serviceLayerId": 7,
-        "type": "OSEA"
-      }
-    ],
-    "baseLayers": [
-      {
-        "serviceLayerId": 6,
-        "type": "OSM"
-      },
-      {
-        "serviceLayerId": 3,
-        "type": "WMS"
-      }
-    ]
   }
 }

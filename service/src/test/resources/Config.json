@@ -1,7 +1,4 @@
 {
-  "systemSettings": {
-    "geoserverUrl": "http://localhost:8080/geoserver/"
-  },
   "mapSettings": {
     "mapProjectionId": 1,
     "displayProjectionId": 2,
@@ -274,52 +271,54 @@
     "segments": {
       "attribute": "speedOverGround",
       "style": {
-        "9": "#d7191c",
         "0-2": "#1a9641",
-        "3-5": "#a6d96a",
-        "6-8": "#fdae61"
+        "2-5": "#a6d96a",
+        "5-8": "#fdae61",
+        "default": "#d7191c"
       }
     }
   },
   "layerSettings": {
-    "overlayLayers": [
+    "portLayers": [
       {
-        "serviceLayerId": 4,
-        "type": "WMS"
-      },
+        "serviceLayerId": 4
+      }
+    ],
+    "areaLayers": {
+      "sysAreas": [
+        {
+          "serviceLayerId": 1
+        },
+        {
+          "serviceLayerId": 2
+        }
+      ],
+      "userAreas": {
+        "serviceLayerId": 5,
+        "areas": [
+          {
+            "gid": 1
+          }
+        ]
+      }
+    },
+    "additionalLayers": [
       {
-        "serviceLayerId": 1,
-        "type": "WMS"
-      },
-      {
-        "serviceLayerId": 2,
-        "type": "WMS"
-      },
-      {
-        "serviceLayerId": 7,
-        "type": "OSEA"
+        "serviceLayerId": 3
       }
     ],
     "baseLayers": [
       {
-        "serviceLayerId": 6,
-        "type": "OSM"
+        "serviceLayerId": 6
       },
       {
-        "serviceLayerId": 3,
-        "type": "WMS"
+        "serviceLayerId": 8
       },
       {
-        "serviceLayerId": 8,
-        "type": "BING"
+        "serviceLayerId": 9
       },
       {
-        "serviceLayerId": 9,
-        "type": "BING"
-      },
-      {
-        "serviceLayerId": 10,
-        "type": "BING"
+        "serviceLayerId": 10
       }
     ]
   },
@@ -339,9 +338,6 @@
       },
       {
         "type": "history"
-      },
-      {
-        "type": "measure"
       }
     ],
     "tbControl": [
@@ -372,7 +368,8 @@
         "lon",
         "msg_tp",
         "act_tp",
-        "source"
+        "source",
+        "name"
       ],
       "labels": [
         "fs",
@@ -388,7 +385,25 @@
         "crs",
         "msg_tp",
         "act_tp",
-        "source"
+        "source",
+        "name"
+      ],
+      "table": [
+        "fs",
+        "extMark",
+        "ircs",
+        "cfr",
+        "posTime",
+        "lon",
+        "lat",
+        "stat",
+        "m_spd",
+        "c_spd",
+        "crs",
+        "msg_tp",
+        "act_tp",
+        "source",
+        "name"
       ]
     },
     "segments": {
@@ -401,7 +416,8 @@
         "dur",
         "spd",
         "crs",
-        "cat"
+        "cat",
+        "name"
       ],
       "labels": [
         "extMark",
@@ -412,7 +428,32 @@
         "crs",
         "spd",
         "dur",
-        "fs"
+        "fs",
+        "name"
+      ],
+      "table": [
+        "extMark",
+        "ircs",
+        "cfr",
+        "dist",
+        "cat",
+        "crs",
+        "spd",
+        "dur",
+        "fs",
+        "name"
+      ]
+    },
+    "tracks": {
+      "table": [
+        "fs",
+        "extMark",
+        "ircs",
+        "cfr",
+        "name",
+        "dist",
+        "dur",
+        "timeSea"
       ]
     }
   }

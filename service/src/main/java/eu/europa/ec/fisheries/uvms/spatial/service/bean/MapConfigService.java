@@ -32,7 +32,7 @@ public interface MapConfigService {
 
     String saveAdminJson(ConfigurationDto configurationDto, String defaultConfig);
 
-    ConfigurationDto retrieveUserConfiguration(String config, String defaultConfig);
+    ConfigurationDto retrieveUserConfiguration(String config, String defaultConfig, String userName);
 
     String saveUserJson(ConfigurationDto configurationDto, String userPref);
 

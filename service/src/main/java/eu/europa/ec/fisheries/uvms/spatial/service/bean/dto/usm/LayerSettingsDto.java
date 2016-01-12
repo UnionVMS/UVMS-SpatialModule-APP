@@ -11,27 +11,45 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class LayerSettingsDto {
 
-    @JsonProperty("overlayLayers")
-    private List<LayersDto> overlayLayers;
-
     @JsonProperty("baseLayers")
     private List<LayersDto> baseLayers;
 
+    @JsonProperty("portLayers")
+    private List<LayersDto> portLayers;
+
+    @JsonProperty("additionalLayers")
+    private List<LayersDto> additionalLayers;
+
+    @JsonProperty("areaLayers")
+    private AreaLayersDto areaLayers;
+
     public LayerSettingsDto() {}
 
-    public LayerSettingsDto(List<LayersDto> overlayLayers, List<LayersDto> baseLayers) {
-        this.overlayLayers = overlayLayers;
+    public LayerSettingsDto(List<LayersDto> baseLayers, List<LayersDto> portLayers, List<LayersDto> additionalLayers, AreaLayersDto areaLayers) {
         this.baseLayers = baseLayers;
+        this.portLayers = portLayers;
+        this.additionalLayers = additionalLayers;
+        this.areaLayers = areaLayers;
     }
 
-    @JsonProperty("overlayLayers")
-    public List<LayersDto> getOverlayLayers() {
-        return overlayLayers;
+    @JsonProperty("areaLayers")
+    public AreaLayersDto getAreaLayers() {
+        return areaLayers;
     }
 
-    @JsonProperty("overlayLayers")
-    public void setOverlayLayers(List<LayersDto> overlayLayers) {
-        this.overlayLayers = overlayLayers;
+    @JsonProperty("areaLayers")
+    public void setAreaLayers(AreaLayersDto areaLayers) {
+        this.areaLayers = areaLayers;
+    }
+
+    @JsonProperty("additionalLayers")
+    public List<LayersDto> getAdditionalLayers() {
+        return additionalLayers;
+    }
+
+    @JsonProperty("additionalLayers")
+    public void setAdditionalLayers(List<LayersDto> additionalLayers) {
+        this.additionalLayers = additionalLayers;
     }
 
     @JsonProperty("baseLayers")
@@ -44,9 +62,14 @@ public class LayerSettingsDto {
         this.baseLayers = baseLayers;
     }
 
-    @Override
-    public String toString() {
-        return "ClassPojo [overlayLayers = " + overlayLayers + ", baseLayers = " + baseLayers + "]";
+    @JsonProperty("portLayers")
+    public List<LayersDto> getPortLayers() {
+        return portLayers;
+    }
+
+    @JsonProperty("portLayers")
+    public void setPortLayers(List<LayersDto> portLayers) {
+        this.portLayers = portLayers;
     }
 }
 

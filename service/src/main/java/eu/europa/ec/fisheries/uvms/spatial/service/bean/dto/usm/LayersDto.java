@@ -9,27 +9,27 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class LayersDto {
 
-    @JsonProperty("type")
-    private String type;
+    @JsonProperty("name")
+    private String name;
 
     @JsonProperty("serviceLayerId")
     private String serviceLayerId;
 
     public LayersDto() {}
 
-    public LayersDto(String type, String serviceLayerId) {
-        this.type = type;
+    public LayersDto(String name, String serviceLayerId) {
+        this.name = name;
         this.serviceLayerId = serviceLayerId;
     }
 
-    @JsonProperty("type")
-    public String getType() {
-        return type;
+    @JsonProperty("name")
+    public String getName() {
+        return name;
     }
 
-    @JsonProperty("type")
-    public void setType(String type) {
-        this.type = type;
+    @JsonProperty("name")
+    public void setName(String name) {
+        this.name = name;
     }
 
     @JsonProperty("serviceLayerId")
@@ -44,7 +44,7 @@ public class LayersDto {
 
     @Override
     public String toString() {
-        return "ClassPojo [type = " + type + ", serviceLayerId = " + serviceLayerId + "]";
+        return "ClassPojo [type = " + name + ", serviceLayerId = " + serviceLayerId + "]";
     }
 }
 

@@ -39,6 +39,7 @@ public class ConfigurationMapper {
         target.setStylesSettings(target.getStylesSettings() == null ? source.getStylesSettings() : target.getStylesSettings());
         target.setVisibilitySettings(target.getVisibilitySettings() == null ? source.getVisibilitySettings() : target.getVisibilitySettings());
         target.setMapSettings(target.getMapSettings() == null ? source.getMapSettings() : target.getMapSettings());
+        target.setLayerSettings(target.getLayerSettings() == null ? source.getLayerSettings() : target.getLayerSettings());
         return target;
     }
 
@@ -49,6 +50,7 @@ public class ConfigurationMapper {
         target.setStylesSettings(source.getStylesSettings() != null ? null : target.getStylesSettings());
         target.setVisibilitySettings(source.getVisibilitySettings() != null ? null : target.getVisibilitySettings());
         target.setMapSettings(source.getMapSettings() != null ? null : target.getMapSettings());
+        target.setLayerSettings(source.getLayerSettings() != null ? null : target.getLayerSettings());
         return target;
     }
 
@@ -57,6 +59,7 @@ public class ConfigurationMapper {
         defaultNodeConfigurationDto.setStylesSettings(configurationDto.getStylesSettings() != null ? adminConfigurationDto.getStylesSettings() : null);
         defaultNodeConfigurationDto.setVisibilitySettings(configurationDto.getVisibilitySettings() != null ? adminConfigurationDto.getVisibilitySettings() : null);
         defaultNodeConfigurationDto.setMapSettings(configurationDto.getMapSettings() != null ? adminConfigurationDto.getMapSettings() : null);
+        defaultNodeConfigurationDto.setLayerSettings(configurationDto.getLayerSettings() != null ? adminConfigurationDto.getLayerSettings() : null);
         return defaultNodeConfigurationDto;
     }
 }
