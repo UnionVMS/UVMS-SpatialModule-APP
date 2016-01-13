@@ -286,8 +286,8 @@ public class MapConfigServiceBean implements MapConfigService {
             }
             return layerDtos;
         } else { // otherwise get the default layer configuration from USM
-           // return getServiceAreaLayersFromConfig(configurationDto, geoServerUrl, bingApiKey, projection);
-            return Collections.emptyList(); // FIXME
+           return getServiceAreaLayersFromConfig(configurationDto, geoServerUrl, bingApiKey, projection);
+
         }
     }
 
@@ -303,18 +303,41 @@ public class MapConfigServiceBean implements MapConfigService {
         return new RefreshDto(configurationDto.getMapSettings().getRefreshStatus(), configurationDto.getMapSettings().getRefreshRate());
     }
 
-/*    private List<LayerDto> getServiceAreaLayersFromConfig(ConfigurationDto configurationDto, String geoServerUrl, String bingApiKey, ProjectionDto projection) throws ServiceException {
-        List<LayersDto> overlayLayers = configurationDto.getLayerSettings().getOverlayLayers(); // Get Service Layers for Overlay layers
-        List<Long> overlayServiceLayerIds = getServiceLayerIds(overlayLayers);
-        List<ServiceLayerEntity> overlayServiceLayerEntities = sort(getServiceLayers(overlayServiceLayerIds, projection, bingApiKey), overlayServiceLayerIds);
-        List<LayerDto> layerDtos = getLayerDtos(overlayServiceLayerEntities, geoServerUrl, bingApiKey, false);
+    private List<LayerDto> getServiceAreaLayersFromConfig(ConfigurationDto configurationDto, String geoServerUrl, String bingApiKey, ProjectionDto projection) throws ServiceException {
+
+        List<LayerDto> layerDtos = new ArrayList<LayerDto>();
+
+        List<LayersDto> portLayers = configurationDto.getLayerSettings().getPortLayers(); // Get Service Layers for Port layers
+        if (portLayers != null && !portLayers.isEmpty()) {
+            List<Long> portServiceLayerIds = getServiceLayerIds(portLayers);
+            List<ServiceLayerEntity> portServiceLayerEntities = sort(getServiceLayers(portServiceLayerIds, projection, bingApiKey), portServiceLayerIds);
+            layerDtos.addAll(getLayerDtos(portServiceLayerEntities, geoServerUrl, bingApiKey, false));
+        }
+
+        if (configurationDto.getLayerSettings().getAreaLayers() != null) {
+            List<LayerAreaDto> systemLayers = configurationDto.getLayerSettings().getAreaLayers().getSysAreas(); // Get Service Layers for system layers
+            if (systemLayers != null && !systemLayers.isEmpty()) {
+                List<Long> systemServiceLayerIds = getServiceLayerIds(systemLayers);
+                List<ServiceLayerEntity> systemServiceLayerEntities = sort(getServiceLayers(systemServiceLayerIds, projection, bingApiKey), systemServiceLayerIds);
+                layerDtos.addAll(getLayerDtos(systemServiceLayerEntities, geoServerUrl, bingApiKey, false));
+            }
+        }
+
+        List<LayersDto> additionalLayers = configurationDto.getLayerSettings().getAdditionalLayers(); // Get Service Layers for Additional layers
+        if(additionalLayers != null && !additionalLayers.isEmpty()) {
+            List<Long> additionalServiceLayerIds = getServiceLayerIds(additionalLayers);
+            List<ServiceLayerEntity> additionalServiceLayerEntities = sort(getServiceLayers(additionalServiceLayerIds, projection, bingApiKey), additionalServiceLayerIds);
+            layerDtos.addAll(getLayerDtos(additionalServiceLayerEntities, geoServerUrl, bingApiKey, false));
+        }
 
         List<LayersDto> baseLayers = configurationDto.getLayerSettings().getBaseLayers(); // Get Service Layers for base layers
-        List<Long> baseServiceLayerIds = getServiceLayerIds(baseLayers);
-        List<ServiceLayerEntity> baseServiceLayerEntities = sort(getServiceLayers(baseServiceLayerIds, projection, bingApiKey), baseServiceLayerIds);
-        layerDtos.addAll(getLayerDtos(baseServiceLayerEntities, geoServerUrl, bingApiKey, true));
+        if (baseLayers != null && !baseLayers.isEmpty()) {
+            List<Long> baseServiceLayerIds = getServiceLayerIds(baseLayers);
+            List<ServiceLayerEntity> baseServiceLayerEntities = sort(getServiceLayers(baseServiceLayerIds, projection, bingApiKey), baseServiceLayerIds);
+            layerDtos.addAll(getLayerDtos(baseServiceLayerEntities, geoServerUrl, bingApiKey, true));
+        }
         return layerDtos;
-    }*/
+    }
 
     private List<ServiceLayerEntity> sort(List<ServiceLayerEntity> overlayServiceLayerEntities, List<Long> ids) {
         List<ServiceLayerEntity> tempList = new ArrayList<ServiceLayerEntity>();
