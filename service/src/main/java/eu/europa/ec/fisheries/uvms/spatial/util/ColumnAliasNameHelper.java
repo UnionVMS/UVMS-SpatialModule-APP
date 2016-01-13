@@ -6,6 +6,7 @@ import eu.europa.ec.fisheries.uvms.common.DateUtils;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +48,7 @@ public class ColumnAliasNameHelper {
             Geometry geometry = ((Geometry) field.get(object));
             return new WKTWriter().write(geometry);
         } else if ((field.get(object) instanceof Date)) {
-            return DateUtils.dateToString((Date) field.get(object));
+            return DateUtils.UI_FORMATTER.print(new DateTime((Date) field.get(object)));
         } else if ((field.get(object) instanceof Boolean)) {
             return Boolean.toString((Boolean) field.get(object));
         } else {
