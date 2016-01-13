@@ -25,6 +25,8 @@ public class MapDto {
     private List<TbControlDto> tbControlDtos = new ArrayList<TbControlDto>();
     @JsonProperty("layers")
     private List<LayerDto> layers = new ArrayList<LayerDto>();
+    @JsonProperty("refresh")
+    private RefreshDto refreshDto;
 
     /**
      * No args constructor for use in serialization
@@ -32,11 +34,12 @@ public class MapDto {
      */
     public MapDto() {}
 
-    public MapDto(ProjectionDto projectionDto, List<ControlDto> controlDtos, List<TbControlDto> tbControlDtos, List<LayerDto> layers) {
+    public MapDto(ProjectionDto projectionDto, List<ControlDto> controlDtos, List<TbControlDto> tbControlDtos, List<LayerDto> layers, RefreshDto refreshDto) {
         this.projectionDto = projectionDto;
         this.controlDtos = controlDtos;
         this.tbControlDtos = tbControlDtos;
         this.layers = layers;
+        this.refreshDto = refreshDto;
     }
 
     @JsonProperty("projection")
@@ -77,5 +80,15 @@ public class MapDto {
     @JsonProperty("layers")
     public void setLayers(List<LayerDto> layers) {
         this.layers = layers;
+    }
+
+    @JsonProperty("refresh")
+    public RefreshDto getRefreshDto() {
+        return refreshDto;
+    }
+
+    @JsonProperty("refresh")
+    public void setRefreshDto(RefreshDto refreshDto) {
+        this.refreshDto = refreshDto;
     }
 }

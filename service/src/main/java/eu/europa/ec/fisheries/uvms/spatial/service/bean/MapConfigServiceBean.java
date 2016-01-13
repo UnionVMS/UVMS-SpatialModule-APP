@@ -245,7 +245,8 @@ public class MapConfigServiceBean implements MapConfigService {
         List<ControlDto> controls = getControls(reportId, configurationDto);
         List<TbControlDto> tbControls = getTbControls(configurationDto);
         List<LayerDto> layers = getServiceAreaLayer(reportId, configurationDto, projection);
-        return new MapDto(projection, controls, tbControls, layers);
+        RefreshDto refreshDto = getRefreshDto(configurationDto);
+        return new MapDto(projection, controls, tbControls, layers, refreshDto);
     }
 
     private ProjectionDto getMapProjection(int reportId, ConfigurationDto configurationDto) {
@@ -296,6 +297,10 @@ public class MapConfigServiceBean implements MapConfigService {
 
     private VisibilitySettingsDto getVisibilitySettings(ConfigurationDto configurationDto) {
         return configurationDto.getVisibilitySettings();
+    }
+
+    private RefreshDto getRefreshDto(ConfigurationDto configurationDto) {
+        return new RefreshDto(configurationDto.getMapSettings().getRefreshStatus(), configurationDto.getMapSettings().getRefreshRate());
     }
 
 /*    private List<LayerDto> getServiceAreaLayersFromConfig(ConfigurationDto configurationDto, String geoServerUrl, String bingApiKey, ProjectionDto projection) throws ServiceException {
