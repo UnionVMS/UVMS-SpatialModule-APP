@@ -89,7 +89,7 @@ public class UserAreaServiceBean implements UserAreaService {
         List<UserAreasEntity> persistentUserAreas = repository.findUserAreaById(userAreaId, userName);
         validateNotNull(userAreaId, persistentUserAreas);
 
-        //repository.deleteEntity(persistentUserAreas.get(0));
+        repository.deleteEntity(persistentUserAreas.get(0));
     }
 
     private void validateNotNull(Long userAreaId, List<UserAreasEntity> persistentUserAreas) {
