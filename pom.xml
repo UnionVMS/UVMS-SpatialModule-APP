@@ -25,7 +25,7 @@
         <mapstruct.version>1.0.0.Final</mapstruct.version>
         <jackson.version>2.6.0</jackson.version>
         <logback.core.version>1.1.2</logback.core.version>
-        <vessel.module.version>1.0.10-SNAPSHOT</vessel.module.version>
+        <asset.module.version>1.0.10-SNAPSHOT</asset.module.version>
         <movement.model.version>1.0.6-SNAPSHOT</movement.model.version>
         <application.name>${project.parent.artifactId}</application.name>
         <application.version>${project.parent.version}</application.version>
@@ -35,7 +35,7 @@
         <hibernate.version>4.3.5.Final</hibernate.version>
         <hibernate-spatial.version>4.3</hibernate-spatial.version>
         <geotools.version>14-M1</geotools.version>
-        <uvms.commons.version>1.4-SNAPSHOT</uvms.commons.version>
+        <uvms.commons.version>1.5-SNAPSHOT</uvms.commons.version>
         <hibernate.validator.version>5.2.1.Final</hibernate.validator.version>
         <usm4uvms.version>0.0.13-SNAPSHOT</usm4uvms.version>
     </properties>
@@ -87,9 +87,9 @@
             </dependency>
 
             <dependency>
-                <groupId>eu.europa.ec.fisheries.uvms.vessel</groupId>
-                <artifactId>vessel-model</artifactId>
-                <version>${vessel.module.version}</version>
+                <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
+                <artifactId>asset-model</artifactId>
+                <version>${asset.module.version}</version>
             </dependency>
             
 	        <dependency>
