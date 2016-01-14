@@ -17,8 +17,8 @@ public class LayerAreaDto extends LayersDto {
 
     public LayerAreaDto() {}
 
-    public LayerAreaDto(List<AreaDto> areaDtos, String name, String serviceLayerId) {
-        super(name, serviceLayerId);
+    public LayerAreaDto(List<AreaDto> areaDtos, String name, String serviceLayerId, String subType) {
+        super(name, serviceLayerId, subType);
         this.areaDtos = areaDtos;
     }
 

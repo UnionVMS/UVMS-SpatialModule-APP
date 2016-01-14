@@ -2,6 +2,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.LayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.MapConfigDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ServiceLayersDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.ConfigurationDto;
 import org.apache.commons.io.IOUtils;
 import org.jboss.arquillian.junit.Arquillian;
@@ -52,24 +53,23 @@ public class MapConfigServiceIT extends AbstractArquillianIT {
     @Test
     public void testGetMapConfig() throws IOException {
         //given
-        MapConfigDto mapConfigDto = mapConfigService.getReportConfig(1, getConfig("/UserConfig.json"), getConfig("/Config.json"));
+        MapConfigDto mapConfigDto = mapConfigService.getReportConfig(1, getConfig("/UserConfig.json"), getConfig("/Config.json"), "rep_power");
 
         //test
         assertNotNull(mapConfigDto.getMap().getProjectionDto());
-        List<LayerDto> layers =  mapConfigDto.getMap().getLayers();
-        assertNotNull(layers);
-        assertFalse(layers.isEmpty());
+        ServiceLayersDto serviceLayersDto =  mapConfigDto.getMap().getServiceLayers();
+        assertNotNull(serviceLayersDto);
     }
 
     @Test
     public void testInvalidMapConfig() throws IOException {
         //given
-        MapConfigDto mapConfigDto = mapConfigService.getReportConfig(1000000, getConfig("/UserConfig.json"), getConfig("/Config.json"));
+        MapConfigDto mapConfigDto = mapConfigService.getReportConfig(1000000, getConfig("/UserConfig.json"), getConfig("/Config.json"), "rep_power");
 
         //test
         assertNull(mapConfigDto.getMap().getProjectionDto());
-        List<LayerDto> layers =  mapConfigDto.getMap().getLayers();
-        assertNull(layers);
+        ServiceLayersDto serviceLayersDto =  mapConfigDto.getMap().getServiceLayers();
+        assertNull(serviceLayersDto);
     }
 
     private String getConfig(String file) throws IOException {

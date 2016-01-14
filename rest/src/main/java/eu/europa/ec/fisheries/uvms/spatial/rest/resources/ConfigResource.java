@@ -52,7 +52,7 @@ public class ConfigResource extends UnionVMSResource {
         String adminPref = usmService.getOptionDefaultValue(DEFAULT_CONFIG, applicationName);
         String userPref = usmService.getUserPreference(USER_CONFIG, username, applicationName, roleName, scopeName);
         log.info("Getting map configuration for report with id = {}", id);
-        MapConfigDto mapConfig = mapConfigService.getReportConfig(id, userPref, adminPref);
+        MapConfigDto mapConfig = mapConfigService.getReportConfig(id, userPref, adminPref, username);
         return createSuccessResponse(mapConfig);
     }
 
@@ -148,7 +148,7 @@ public class ConfigResource extends UnionVMSResource {
         usmService.putUserPreference(USER_CONFIG, json, applicationName, scopeName, roleName, username);
 
         String adminConfig = usmService.getOptionDefaultValue(DEFAULT_CONFIG, applicationName);
-        ConfigurationDto defaultConfigurationDto = mapConfigService.getNodeDefaultValue(configurationDto, adminConfig);
+        ConfigurationDto defaultConfigurationDto = mapConfigService.getNodeDefaultValue(configurationDto, adminConfig, username);
         return createSuccessResponse(defaultConfigurationDto);
     }
 

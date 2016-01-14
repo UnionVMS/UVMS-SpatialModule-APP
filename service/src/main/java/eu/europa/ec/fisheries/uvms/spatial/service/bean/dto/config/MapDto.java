@@ -7,13 +7,15 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.ServiceLayerDto;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
     "projection",
     "control",
     "tbControl",
-    "layers"
+    "layers",
+    "refresh"
 })
 public class MapDto {
 
@@ -24,7 +26,7 @@ public class MapDto {
     @JsonProperty("tbControl")
     private List<TbControlDto> tbControlDtos = new ArrayList<TbControlDto>();
     @JsonProperty("layers")
-    private List<LayerDto> layers = new ArrayList<LayerDto>();
+    private ServiceLayersDto serviceLayersDto;
     @JsonProperty("refresh")
     private RefreshDto refreshDto;
 
@@ -34,11 +36,11 @@ public class MapDto {
      */
     public MapDto() {}
 
-    public MapDto(ProjectionDto projectionDto, List<ControlDto> controlDtos, List<TbControlDto> tbControlDtos, List<LayerDto> layers, RefreshDto refreshDto) {
+    public MapDto(ProjectionDto projectionDto, List<ControlDto> controlDtos, List<TbControlDto> tbControlDtos, ServiceLayersDto serviceLayersDto, RefreshDto refreshDto) {
         this.projectionDto = projectionDto;
         this.controlDtos = controlDtos;
         this.tbControlDtos = tbControlDtos;
-        this.layers = layers;
+        this.serviceLayersDto = serviceLayersDto;
         this.refreshDto = refreshDto;
     }
 
@@ -73,13 +75,13 @@ public class MapDto {
     }
 
     @JsonProperty("layers")
-    public List<LayerDto> getLayers() {
-        return layers;
+    public ServiceLayersDto getServiceLayers() {
+        return serviceLayersDto;
     }
 
     @JsonProperty("layers")
-    public void setLayers(List<LayerDto> layers) {
-        this.layers = layers;
+    public void setServiceLayers(ServiceLayersDto serviceLayersDto) {
+        this.serviceLayersDto = serviceLayersDto;
     }
 
     @JsonProperty("refresh")

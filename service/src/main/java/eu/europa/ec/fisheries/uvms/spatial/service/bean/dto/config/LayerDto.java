@@ -1,6 +1,9 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config;
 
 import com.fasterxml.jackson.annotation.*;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaDto;
+
+import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
@@ -14,6 +17,7 @@ import com.fasterxml.jackson.annotation.*;
         "serverType",
         "layerGeoName",
         "styles",
+        "areas",
         "apiKey"
 })
 public class LayerDto {
@@ -47,6 +51,9 @@ public class LayerDto {
 
     @JsonProperty("styles")
     private StylesDto styles;
+
+    @JsonProperty("areas")
+    private List<AreaDto> areaDto;
 
     @JsonProperty("apiKey")
     private String apiKey;
@@ -164,5 +171,15 @@ public class LayerDto {
     @JsonProperty("apiKey")
     public void setApiKey(String apiKey) {
         this.apiKey = apiKey;
+    }
+
+    @JsonProperty("areas")
+    public List<AreaDto> getAreaDto() {
+        return areaDto;
+    }
+
+    @JsonProperty("areas")
+    public void setAreaDto(List<AreaDto> areaDto) {
+        this.areaDto = areaDto;
     }
 }

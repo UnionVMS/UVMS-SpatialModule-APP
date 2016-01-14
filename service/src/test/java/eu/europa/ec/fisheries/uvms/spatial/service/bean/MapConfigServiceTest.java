@@ -87,13 +87,12 @@ public class MapConfigServiceTest {
         mockGenMapProjectionWithDefaultConfig();
 
         //Given
-        MapConfigDto mapConfigDto = mapConfigServiceBean.getReportConfig(1, getConfig("src/test/resources/UserConfig.json"), getConfig("src/test/resources/Config.json"));
+        MapConfigDto mapConfigDto = mapConfigServiceBean.getReportConfig(1, getConfig("src/test/resources/UserConfig.json"), getConfig("src/test/resources/Config.json"), "rep_power");
         MapDto mapDto = mapConfigDto.getMap();
-        List<LayerDto> layers = mapDto.getLayers();
+        ServiceLayersDto layers = mapDto.getServiceLayers();
 
         //Test
         assertNotNull(layers);
-        assertFalse(layers.isEmpty());
         assertNotNull(mapConfigDto.getVectorStyles());
         assertNotNull(mapConfigDto.getVisibilitySettings());
         assertNotNull(mapDto.getControlDtos());
@@ -108,13 +107,12 @@ public class MapConfigServiceTest {
         mockGenMapProjectionWithoutDefaultConfig();
 
         //Given
-        MapConfigDto mapConfigDto = mapConfigServiceBean.getReportConfig(1, getConfig("src/test/resources/UserConfig.json"), getConfig("src/test/resources/Config.json"));
+        MapConfigDto mapConfigDto = mapConfigServiceBean.getReportConfig(1, getConfig("src/test/resources/UserConfig.json"), getConfig("src/test/resources/Config.json"), "rep_power");
         MapDto mapDto = mapConfigDto.getMap();
-        List<LayerDto> layers = mapDto.getLayers();
+        ServiceLayersDto layers = mapDto.getServiceLayers();
 
         //Test
         assertNotNull(layers);
-        assertFalse(layers.isEmpty());
         assertNotNull(mapConfigDto.getVectorStyles());
         assertNotNull(mapConfigDto.getVisibilitySettings());
         assertNotNull(mapDto.getControlDtos());

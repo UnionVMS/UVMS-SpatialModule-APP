@@ -16,7 +16,7 @@ import java.util.List;
 
 public interface MapConfigService {
 
-    MapConfigDto getReportConfig(int reportId, String userPreferences, String adminPreferences);
+    MapConfigDto getReportConfig(int reportId, String userPreferences, String adminPreferences, String userName);
 
     MapConfigurationType getMapConfigurationType(final Long reportId) throws ServiceException;
 
@@ -38,7 +38,7 @@ public interface MapConfigService {
 
     String resetUserJson(ConfigurationDto configurationDto, String userPref);
 
-    ConfigurationDto getNodeDefaultValue(ConfigurationDto configurationDto, String adminConfig);
+    ConfigurationDto getNodeDefaultValue(ConfigurationDto configurationDto, String adminConfig, String userName);
 
     ConfigDto getReportConfigWithoutMap(String userPref, String adminPref);
 }

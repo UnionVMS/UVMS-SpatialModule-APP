@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class ServiceLayerDto {
 
-    @JsonProperty("id")
+    @JsonProperty("serviceLayerId")
     private Long id;
 
     @JsonProperty("name")
@@ -30,12 +30,12 @@ public class ServiceLayerDto {
         this.subType = subType;
     }
 
-    @JsonProperty("id")
+    @JsonProperty("serviceLayerId")
     public Long getId() {
         return id;
     }
 
-    @JsonProperty("id")
+    @JsonProperty("serviceLayerId")
     public void setId(Long id) {
         this.id = id;
     }

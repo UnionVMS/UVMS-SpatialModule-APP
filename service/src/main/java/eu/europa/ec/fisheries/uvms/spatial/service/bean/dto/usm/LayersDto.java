@@ -15,11 +15,15 @@ public class LayersDto {
     @JsonProperty("serviceLayerId")
     private String serviceLayerId;
 
+    @JsonProperty("subType")
+    private String subType;
+
     public LayersDto() {}
 
-    public LayersDto(String name, String serviceLayerId) {
+    public LayersDto(String name, String serviceLayerId, String subType) {
         this.name = name;
         this.serviceLayerId = serviceLayerId;
+        this.subType = subType;
     }
 
     @JsonProperty("name")
@@ -45,6 +49,16 @@ public class LayersDto {
     @Override
     public String toString() {
         return "ClassPojo [type = " + name + ", serviceLayerId = " + serviceLayerId + "]";
+    }
+
+    @JsonProperty("subType")
+    public String getSubType() {
+        return subType;
+    }
+
+    @JsonProperty("subType")
+    public void setSubType(String subType) {
+        this.subType = subType;
     }
 }
 
