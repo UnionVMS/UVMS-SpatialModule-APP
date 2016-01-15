@@ -51,7 +51,6 @@ public class MapConfigServiceTest {
     }
 
     @Test
-    @Ignore
     public void TestDefaultAdminConfig() throws IOException {
         //Given
         //Read JSON from resources
@@ -66,7 +65,6 @@ public class MapConfigServiceTest {
     }
 
     @Test
-    @Ignore
     public void TestUserConfig() throws IOException {
         //Given
         //Read JSON from resources
@@ -81,7 +79,6 @@ public class MapConfigServiceTest {
     }
 
     @Test
-    @Ignore
     public void testGetMapConfigWithDefaultConfig() throws IOException, ServiceException {
         //mock
         mockGenMapProjectionWithDefaultConfig();
