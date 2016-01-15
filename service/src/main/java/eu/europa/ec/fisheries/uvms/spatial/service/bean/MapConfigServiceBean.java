@@ -183,8 +183,6 @@ public class MapConfigServiceBean implements MapConfigService {
 
     private void updateLayerSettings(LayerSettingsDto layerSettingsDto, String userName, boolean includeUserArea) throws ServiceException {
         String bingApiKey = getBingApiKey();
-        // TODO remove bing layers
-
         List<Long> ids =  new ArrayList<Long>(); // Get All the Ids to query for Service layer all together
         ids.addAll(getServiceLayerIds(layerSettingsDto.getAdditionalLayers()));
         ids.addAll(getServiceLayerIds(layerSettingsDto.getBaseLayers()));
@@ -198,13 +196,13 @@ public class MapConfigServiceBean implements MapConfigService {
         List<ServiceLayerEntity> serviceLayers = repository.findServiceLayerEntityByIds(ids); // Get Service layers by all the ids
 
         //Update the layers
-        updateLayer(layerSettingsDto.getAdditionalLayers(), serviceLayers);
-        updateLayer(layerSettingsDto.getBaseLayers(), serviceLayers);
-        updateLayer(layerSettingsDto.getPortLayers(), serviceLayers);
+        updateLayer(layerSettingsDto.getAdditionalLayers(), serviceLayers, bingApiKey);
+        updateLayer(layerSettingsDto.getBaseLayers(), serviceLayers, bingApiKey);
+        updateLayer(layerSettingsDto.getPortLayers(), serviceLayers, bingApiKey);
 
         if (layerSettingsDto.getAreaLayers() != null) { // Extra null check for AreaLayers before updating system area and user area
-            updateLayer(layerSettingsDto.getAreaLayers().getSysAreas(), serviceLayers);
-            updateLayer(layerSettingsDto.getAreaLayers().getUserAreas() != null ? Arrays.asList(layerSettingsDto.getAreaLayers().getUserAreas()) : null, serviceLayers);
+            updateLayer(layerSettingsDto.getAreaLayers().getSysAreas(), serviceLayers, bingApiKey);
+            updateLayer(layerSettingsDto.getAreaLayers().getUserAreas() != null ? Arrays.asList(layerSettingsDto.getAreaLayers().getUserAreas()) : null, serviceLayers, bingApiKey);
 
             if (userName != null && layerSettingsDto.getAreaLayers().getUserAreas() != null && includeUserArea) {
                 updateAreas(layerSettingsDto.getAreaLayers().getUserAreas(), SpatialTypeEnum.USERAREA, userName);
@@ -214,17 +212,23 @@ public class MapConfigServiceBean implements MapConfigService {
         }
     }
 
-    private void updateLayer(List<? extends LayersDto> layers, List<ServiceLayerEntity> serviceLayers) {
+    private void updateLayer(List<? extends LayersDto> layers, List<ServiceLayerEntity> serviceLayers, String bingApiKey) {
         if (layers != null) {
+            List<LayersDto> layersToExclude = new ArrayList<>();
             for (LayersDto layersDto : layers) {
                 for (ServiceLayerEntity serviceLayerEntity : serviceLayers) {
                     if (Long.parseLong(layersDto.getServiceLayerId()) == serviceLayerEntity.getId()) {
-                        layersDto.setName(serviceLayerEntity.getName());
-                        layersDto.setSubType(serviceLayerEntity.getSubType());
+                        if (serviceLayerEntity.getProviderFormat().getServiceType().equalsIgnoreCase(PROVIDER_FORMAT_BING) && bingApiKey == null) {
+                            layersToExclude.add(layersDto);
+                        } else {
+                            layersDto.setName(serviceLayerEntity.getName());
+                            layersDto.setSubType(serviceLayerEntity.getSubType());
+                        }
                         break;
                     }
                 }
             }
+            layers.removeAll(layersToExclude);
         }
     }
 
@@ -297,9 +301,8 @@ public class MapConfigServiceBean implements MapConfigService {
             for (ReportConnectServiceAreasEntity reportConnectServiceArea : reportConnectServiceAreas) {
                 layerDtos.add(reportConnectServiceArea.convertToServiceLayer(geoServerUrl, bingApiKey));
             }
-            // TODO fix ServiceLayer Dto return type
+            // TODO fix ServiceLayer Dto return type if the report is configured with service layers
             return null;
-            //return layerDtos;
         } else { // otherwise get the default layer configuration from USM
            return getServiceAreaLayersFromConfig(configurationDto, geoServerUrl, bingApiKey, projection, userName);
 

@@ -25,9 +25,6 @@ public class LayerDto {
     @JsonProperty("type")
     private String type;
 
-    @JsonProperty("groupType")
-    private String groupType;
-
     @JsonProperty("title")
     private String title;
 
@@ -71,16 +68,6 @@ public class LayerDto {
     @JsonProperty("type")
     public void setType(String type) {
         this.type = type;
-    }
-
-    @JsonProperty("groupType")
-    public String getGroupType() {
-        return groupType;
-    }
-
-    @JsonProperty("groupType")
-    public void setGroupType(String groupType) {
-        this.groupType = groupType;
     }
 
     @JsonProperty("title")

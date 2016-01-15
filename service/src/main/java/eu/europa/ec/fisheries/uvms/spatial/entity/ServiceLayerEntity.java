@@ -228,9 +228,6 @@ public class ServiceLayerEntity implements Serializable {
         LayerDto layerDto = new LayerDto();
         String type = getProviderFormat().getServiceType();
         layerDto.setType(type);
-        if (getAreaType() != null) {
-            layerDto.setGroupType(getAreaType().getAreaGroupType());
-        }
         layerDto.setTitle(getName());
         layerDto.setIsBaseLayer(isBaseLayer);
         layerDto.setShortCopyright(getShortCopyright());
