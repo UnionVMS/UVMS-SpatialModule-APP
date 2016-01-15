@@ -56,6 +56,7 @@ public final class QueryNameConstants {
     public static final String RAC_BY_COORDINATE = "racEntity.ByCoordinate";
     public static final String STAT_RECT_BY_COORDINATE = "statRectEntity.ByCoordinate";
     public static final String PORT_BY_COORDINATE = "portEntity.ByCoordinate";
+    public static final String PORTAREA_BY_COORDINATE = "portEntity.PortAreaByCoordinate";
     public static final String USERAREA_BY_COORDINATE = "userAreasEntity.ByCoordinate";
 
     /**

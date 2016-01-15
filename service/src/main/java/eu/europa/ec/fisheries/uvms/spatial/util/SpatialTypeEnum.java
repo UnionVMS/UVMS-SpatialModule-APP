@@ -13,6 +13,7 @@ public enum SpatialTypeEnum {
 	S_TAT_RECT("STatRect", QueryNameConstants.STAT_RECT_BY_COORDINATE, StatRectEntity.class),
 	FAO("FAO", QueryNameConstants.FAO_BY_COORDINATE, FaoEntity.class),
 	PORT("PORT", QueryNameConstants.PORT_BY_COORDINATE, PortsEntity.class),
+	PORTAREA("PORTAREA", QueryNameConstants.PORTAREA_BY_COORDINATE, PortsEntity.class),
 	USERAREA("USERAREA", QueryNameConstants.USERAREA_BY_COORDINATE, QueryNameConstants.USERAREA_COLUMNS, UserAreasEntity.class);
 	
 	private String type;

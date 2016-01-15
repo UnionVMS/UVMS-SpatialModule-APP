@@ -5,7 +5,6 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
 import com.vividsolutions.jts.io.WKTWriter;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.GeometryDeserializer;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -18,10 +17,10 @@ import java.util.Map.Entry;
 
 public abstract class GeoJsonDto {
 
-    private static final String GEOMETRY = "geometry";
-
+    public static final String GEOMETRY = "geometry";
+    public static final String AREA_GEOMETRY = "areageometry";
     private static final String EXTENT = "extent";
-
+    private static final String PORTAREA = "PORTAREA";
     protected String type;
 
     @JsonDeserialize(using = GeometryDeserializer.class)
@@ -57,12 +56,12 @@ public abstract class GeoJsonDto {
         properties.put(key, value);
     }
 
-    protected SimpleFeatureType build(Class geometryType, Map<String, String> properties) {
+    protected SimpleFeatureType build(Class geometryType, Map<String, String> properties, String geometryFieldName) {
         SimpleFeatureTypeBuilder sb = new SimpleFeatureTypeBuilder();
         sb.setCRS(DefaultGeographicCRS.WGS84);
         sb.setName(type.toUpperCase());
         for (String key : properties.keySet()) {
-            if (key.equalsIgnoreCase(GEOMETRY)) {
+            if (key.equalsIgnoreCase(geometryFieldName)) {
                 sb.add(key, geometryType);
             } else {
                 sb.add(key, String.class);
@@ -76,7 +75,13 @@ public abstract class GeoJsonDto {
     }
 
     public SimpleFeature toFeature(Class geometryType, Map<String, String> properties) throws ParseException {
-        SimpleFeatureBuilder featureBuilder = new SimpleFeatureBuilder(build(geometryType, properties));
+        SimpleFeatureBuilder featureBuilder;
+        if (PORTAREA.equalsIgnoreCase(type)) {
+            featureBuilder = new SimpleFeatureBuilder(build(geometryType, properties, AREA_GEOMETRY));
+        } else {
+            featureBuilder = new SimpleFeatureBuilder(build(geometryType, properties, GEOMETRY));
+        }
+
         for (Entry<String, String> entrySet : properties.entrySet()) {
             featureBuilder.set(entrySet.getKey(), entrySet.getValue());
         }
@@ -84,6 +89,12 @@ public abstract class GeoJsonDto {
     }
 
     public void removeGeometry() {
+        if (PORTAREA.equalsIgnoreCase(type)) {
+            if (properties.containsKey(AREA_GEOMETRY)) {
+                properties.put(EXTENT, getExtend(properties.get(AREA_GEOMETRY)));
+                properties.remove(AREA_GEOMETRY);
+            }
+        }
         if (properties.containsKey(GEOMETRY)) {
             properties.put(EXTENT, getExtend(properties.get(GEOMETRY)));
             properties.remove(GEOMETRY);
@@ -91,9 +102,13 @@ public abstract class GeoJsonDto {
     }
 
     protected String getExtend(String geometry) {
+        String extent = null;
         try {
-            Geometry geom = new WKTReader().read(geometry);
-            return new WKTWriter().write(geom.getEnvelope());
+            if (geometry != null) {
+                Geometry geom = new WKTReader().read(geometry);
+                extent = new WKTWriter().write(geom.getEnvelope());
+            }
+            return extent;
         } catch (ParseException e) {
             return geometry;
         }

@@ -1,138 +1,145 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
-import java.io.Serializable;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EntityResult;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.NamedNativeQuery;
-import javax.persistence.SqlResultSetMapping;
-import javax.persistence.SqlResultSetMappings;
-import javax.persistence.Table;
-
-import org.hibernate.annotations.Type;
-
 import com.vividsolutions.jts.geom.Geometry;
-
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.GeoJsonDto;
+import org.hibernate.annotations.Type;
+
+import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @SqlResultSetMappings({
-	@SqlResultSetMapping(name = "implicit.port", entities = @EntityResult(entityClass = PortsEntity.class))
+        @SqlResultSetMapping(name = "implicit.port", entities = @EntityResult(entityClass = PortsEntity.class))
 })
-@NamedNativeQuery(
-		name = QueryNameConstants.PORT_BY_COORDINATE, 
-		query = "select * from port order by ST_Distance_Spheroid(geom, st_geomfromtext(CAST(:wktPoint as text), :crs), 'SPHEROID[\"WGS 84\",6378137,298.257223563]') limit 1"
-				, resultSetMapping = "implicit.port")
-
+@NamedNativeQueries({
+        @NamedNativeQuery(
+                name = QueryNameConstants.PORT_BY_COORDINATE,
+                query = "select * from port order by ST_Distance_Spheroid(geom, st_geomfromtext(CAST(:wktPoint as text), :crs), 'SPHEROID[\"WGS 84\",6378137,298.257223563]') limit 1"
+                , resultSetMapping = "implicit.port"),
+        @NamedNativeQuery(
+                name = QueryNameConstants.PORTAREA_BY_COORDINATE,
+                query = "select * from port where st_intersects(area_geom, st_geomfromtext(CAST(:wktPoint as text), :crs))"
+                , resultSetMapping = "implicit.port")
+})
 @Table(name = "port", schema = "spatial")
 public class PortsEntity implements Serializable {
 
-	private static final long serialVersionUID = -2233177907262739920L;
+    private static final long serialVersionUID = -2233177907262739920L;
 
-	@Id
-	@Column(name = "gid")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@ColumnAliasName(aliasName="gid")
-	private long gid;
-	
-	@Column(name = "geom", nullable = false)
-	@Type(type = "org.hibernate.spatial.GeometryType")
-	@ColumnAliasName(aliasName="geometry")
-	private Geometry geom;
+    @Id
+    @Column(name = "gid")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @ColumnAliasName(aliasName = "gid")
+    private long gid;
 
-	@Column(name = "country_code", length = 3)
-	@ColumnAliasName(aliasName="countrycode")
-	private String countryCode;
+    @Column(name = "geom", nullable = false)
+    @Type(type = "org.hibernate.spatial.GeometryType")
+    @ColumnAliasName(aliasName = GeoJsonDto.GEOMETRY)
+    private Geometry geom;
 
-	@Column(name = "code", length = 10)
-	@ColumnAliasName(aliasName="code")
-	private String code;
+    @Column(name = "area_geom", nullable = true)
+    @Type(type = "org.hibernate.spatial.GeometryType")
+    @ColumnAliasName(aliasName = GeoJsonDto.AREA_GEOMETRY)
+    private Geometry areaGeom;
 
-	@Column(name = "name", length = 100)
-	@ColumnAliasName(aliasName="name")
-	private String name;
+    @Column(name = "country_code", length = 3)
+    @ColumnAliasName(aliasName = "countrycode")
+    private String countryCode;
 
-	@Column(name = "fishing_port", length = 1)
-	@ColumnAliasName(aliasName="fishingport")
-	private String fishingPort;
+    @Column(name = "code", length = 10)
+    @ColumnAliasName(aliasName = "code")
+    private String code;
 
-	@Column(name = "landing_place")
-	@ColumnAliasName(aliasName="landingplace")
-	private String landingPlace;
+    @Column(name = "name", length = 100)
+    @ColumnAliasName(aliasName = "name")
+    private String name;
 
-	@Column(name = "commercial_port")
-	@ColumnAliasName(aliasName="commercialport")
-	private String commercialPort;
+    @Column(name = "fishing_port", length = 1)
+    @ColumnAliasName(aliasName = "fishingport")
+    private String fishingPort;
 
-	public PortsEntity() {
-	}
+    @Column(name = "landing_place")
+    @ColumnAliasName(aliasName = "landingplace")
+    private String landingPlace;
 
-	public long getGid() {
-		return this.gid;
-	}
+    @Column(name = "commercial_port")
+    @ColumnAliasName(aliasName = "commercialport")
+    private String commercialPort;
 
-	public void setGid(long gid) {
-		this.gid = gid;
-	}
+    public PortsEntity() {
+    }
 
-	public Geometry getGeom() {
-		return geom;
-	}
+    public long getGid() {
+        return this.gid;
+    }
 
-	public void setGeom(Geometry geom) {
-		this.geom = geom;
-	}
+    public void setGid(long gid) {
+        this.gid = gid;
+    }
 
-	public String getCode() {
-		return code;
-	}
+    public Geometry getGeom() {
+        return geom;
+    }
 
-	public void setCode(String code) {
-		this.code = code;
-	}
+    public void setGeom(Geometry geom) {
+        this.geom = geom;
+    }
 
-	public String getCountryCode() {
-		return countryCode;
-	}
+    public Geometry getAreaGeom() {
+        return areaGeom;
+    }
 
-	public void setCountryCode(String countryCode) {
-		this.countryCode = countryCode;
-	}
+    public void setAreaGeom(Geometry areaGeom) {
+        this.areaGeom = areaGeom;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getCode() {
+        return code;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setCode(String code) {
+        this.code = code;
+    }
 
-	public String getFishingPort() {
-		return fishingPort;
-	}
+    public String getCountryCode() {
+        return countryCode;
+    }
 
-	public void setFishingPort(String fishingPort) {
-		this.fishingPort = fishingPort;
-	}
+    public void setCountryCode(String countryCode) {
+        this.countryCode = countryCode;
+    }
 
-	public String getLandingPlace() {
-		return landingPlace;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setLandingPlace(String landingPlace) {
-		this.landingPlace = landingPlace;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getCommercialPort() {
-		return commercialPort;
-	}
+    public String getFishingPort() {
+        return fishingPort;
+    }
 
-	public void setCommercialPort(String commercialPort) {
-		this.commercialPort = commercialPort;
-	}
+    public void setFishingPort(String fishingPort) {
+        this.fishingPort = fishingPort;
+    }
+
+    public String getLandingPlace() {
+        return landingPlace;
+    }
+
+    public void setLandingPlace(String landingPlace) {
+        this.landingPlace = landingPlace;
+    }
+
+    public String getCommercialPort() {
+        return commercialPort;
+    }
+
+    public void setCommercialPort(String commercialPort) {
+        this.commercialPort = commercialPort;
+    }
 }
