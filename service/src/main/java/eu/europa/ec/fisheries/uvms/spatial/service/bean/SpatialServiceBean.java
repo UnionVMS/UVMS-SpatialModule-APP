@@ -56,7 +56,7 @@ public abstract class SpatialServiceBean {
     @SuppressWarnings("unchecked")
     @SneakyThrows
 	protected Map<String, String> getAreaLocationDetailsById(Number id, AreaLocationTypesEntity areaLocationTypeEntity) {
-		Object object = repository.findEntityById(getEntityClassByType(areaLocationTypeEntity.getTypeName()), id);
+		Object object = repository.findEntityById(getEntityClassByType(areaLocationTypeEntity.getTypeName()), new Long(id.longValue()));
 		if (object == null) {
 			throw new SpatialServiceException(SpatialServiceErrors.ENTITY_NOT_FOUND, areaLocationTypeEntity.getTypeName());
 		}
