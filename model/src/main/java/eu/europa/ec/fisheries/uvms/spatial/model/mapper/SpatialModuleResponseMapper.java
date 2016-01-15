@@ -34,14 +34,17 @@ public final class SpatialModuleResponseMapper {
                 throw new SpatialModelValidationException("Wrong correlationId in response. Expected was: " + correlationId + " But actual was: " + response.getJMSCorrelationID());
             }
 
-            SpatialFault fault = JAXBMarshaller.unmarshall(response, SpatialFault.class);
-            throw new SpatialModelValidationException(fault.getCode() + " : " + fault.getFault());
+            //the following code is catching the exception in purpose. DO NOT MODIFY it!
+            try{
+                SpatialFault fault = JAXBMarshaller.unmarshall(response, SpatialFault.class);
+                throw new SpatialModelValidationException(fault.getCode() + " : " + fault.getFault());
+            } catch (SpatialModelMarshallException e) {
+                LOG.info("Expected Exception"); // Exception received in case if the validation is success
+            }
 
         } catch (JMSException e) {
             LOG.error("JMS exception during validation ", e);
             throw new SpatialModelValidationException("JMS exception during validation " + e.getMessage());
-        } catch (SpatialModelMarshallException e) {
-            LOG.info("Expected Exception"); // Exception received in case if the validation is success
         }
     }
 
