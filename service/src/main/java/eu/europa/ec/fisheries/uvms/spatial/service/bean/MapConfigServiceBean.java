@@ -240,7 +240,7 @@ public class MapConfigServiceBean implements MapConfigService {
         List<AreaDto> areas = layerAreaDto.getAreaDtos();
         switch (spatialTypeEnum) {
             case USERAREA:
-                layerAreaDto.setAreaDtos(getUserAreaDtos(areas, userName));
+                layerAreaDto.setAreaDtos(sortAreas(getUserAreaDtos(areas, userName), areas));
                 break;
         }
     }
@@ -344,7 +344,7 @@ public class MapConfigServiceBean implements MapConfigService {
             List<LayerDto> userLayerDtos = getLayerDtoList(Arrays.asList(userArea), geoServerUrl, bingApiKey, projection, false);
             if (userLayerDtos != null && !userLayerDtos.isEmpty()) {
                 userLayer = userLayerDtos.get(0);
-                List<AreaDto> areaDtos = getUserAreaDtos(configurationDto.getLayerSettings().getAreaLayers().getUserAreas().getAreaDtos(), userName);
+                List<AreaDto> areaDtos = sortAreas(getUserAreaDtos(configurationDto.getLayerSettings().getAreaLayers().getUserAreas().getAreaDtos(), userName), userArea.getAreaDtos());
                 for(AreaDto areaDto : areaDtos) {
                     areaDto.setDesc(null);
                 }
@@ -352,6 +352,21 @@ public class MapConfigServiceBean implements MapConfigService {
             }
         }
         return userLayer;
+    }
+
+    private List<AreaDto> sortAreas(List<AreaDto> toSort, List<AreaDto> order) {
+        if(toSort == null || toSort.isEmpty()) {
+            return Collections.emptyList();
+        }
+        List<AreaDto> tempAreDtos = new ArrayList<>();
+        for (AreaDto areaOrder : order) {
+            for (AreaDto areaToSort : toSort) {
+                if (areaOrder.getGid() == areaToSort.getGid()) {
+                    tempAreDtos.add(areaToSort);
+                }
+            }
+        }
+        return tempAreDtos;
     }
 
     private List<LayerDto> getLayerDtoList(List<? extends LayersDto> layersDtos, String geoServerUrl, String bingApiKey, ProjectionDto projection, boolean isBackground) {
