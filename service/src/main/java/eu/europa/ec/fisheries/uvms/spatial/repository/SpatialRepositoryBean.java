@@ -216,8 +216,8 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
         reportConnectSpatialDao.deleteById(spatialConnectIds);
     }
 
-    public List<ServiceLayerDto> findServiceLayerBySubType(List<String> subAreaTypes) {
-        return areaDao.findServiceLayerBySubType(subAreaTypes);
+    public List<ServiceLayerDto> findServiceLayerBySubType(List<String> subAreaTypes, boolean isWithBing) {
+        return areaDao.findServiceLayerBySubType(subAreaTypes, isWithBing);
     }
 
     @Override

@@ -13,6 +13,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.vividsolutions.jts.io.ParseException;
+import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.service.interceptor.ValidationInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
@@ -153,7 +154,7 @@ public class AreaResource extends UnionVMSResource {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/servicelayers/{layerType}")
-    public Response getServiceLayersByType(@PathParam("layerType") String layerType, @Context HttpServletRequest request) {
+    public Response getServiceLayersByType(@PathParam("layerType") String layerType, @Context HttpServletRequest request) throws ServiceException {
         LayerTypeEnum layerTypeEnum = LayerTypeEnum.value(layerType);
         if (layerTypeEnum.equals(LayerTypeEnum.USERAREA)) {
             List<AreaServiceLayerDto> areaServiceLayerDtos = areaTypeService.getAllAreasLayerDescription(layerTypeEnum, request.getRemoteUser());

@@ -84,4 +84,5 @@ public final class QueryNameConstants {
     public static final String FIND_CONFIG = "SysConfig.findConfig";
 
     public static final String FIND_SERVICE_LAYER_BY_SUBTYPE = "ServiceLayer.findServiceLayerBySubType";
+    public static final String FIND_SERVICE_LAYER_BY_SUBTYPE_WITHOUT_BING = "ServiceLayer.findServiceLayerBySubTypeWithoutBing";
 }

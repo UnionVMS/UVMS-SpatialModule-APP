@@ -65,7 +65,7 @@ public interface SpatialRepository extends DAO {
 
     void deleteBy(List<Long> spatialConnectIds) throws ServiceException;
 
-    List<ServiceLayerDto> findServiceLayerBySubType(List<String> subAreaTypes);
+    List<ServiceLayerDto> findServiceLayerBySubType(List<String> subAreaTypes, boolean isWithBing);
 
     List<AreaDto> getAllUserAreas(String userName);
 

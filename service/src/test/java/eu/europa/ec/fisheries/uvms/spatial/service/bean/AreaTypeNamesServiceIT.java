@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
+import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaServiceLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.LayerTypeEnum;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.ServiceLayerDto;
@@ -45,7 +46,7 @@ public class AreaTypeNamesServiceIT extends AbstractArquillianIT {
     }
 
     @Test
-    public void shouldReturnAreaLayerDescription() {
+    public void shouldReturnAreaLayerDescription() throws ServiceException {
         List<ServiceLayerDto> serviceLayerDtos = areaTypeNamesService.getAreaLayerDescription(LayerTypeEnum.SYSAREA);
         assertNotNull(serviceLayerDtos);
 
@@ -63,7 +64,7 @@ public class AreaTypeNamesServiceIT extends AbstractArquillianIT {
     }
 
     @Test
-    public void shouldReturnAllAreaLayerDescription() {
+    public void shouldReturnAllAreaLayerDescription() throws ServiceException {
         List<AreaServiceLayerDto> areaServiceLayerDtos = areaTypeNamesService.getAllAreasLayerDescription(LayerTypeEnum.USERAREA, "rep_power");
         assertNotNull(areaServiceLayerDtos);
         assertFalse(areaServiceLayerDtos.isEmpty());

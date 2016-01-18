@@ -26,6 +26,7 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
     private static final String WMS_SERVICE_TYPE = "wms";
     private static final String NAME = "name";
     private static final String GEO_SERVER = "geo_server_url";
+    private static final String BING_API_KEY = "bing_api_key";
 
     @EJB
     private SpatialRepository repository;
@@ -46,11 +47,16 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
 
 
     @Override
-    public List<ServiceLayerDto> getAreaLayerDescription(LayerTypeEnum layerTypeEnum) {
-        return repository.findServiceLayerBySubType(constructInParameters(layerTypeEnum));
+    public List<ServiceLayerDto> getAreaLayerDescription(LayerTypeEnum layerTypeEnum) throws ServiceException {
+        String apiKey = getBingApiKey();
+        if (apiKey != null) {
+            return repository.findServiceLayerBySubType(constructInParameters(layerTypeEnum), true);
+        } else {
+            return repository.findServiceLayerBySubType(constructInParameters(layerTypeEnum), false);
+        }
     }
 
-    public List<AreaServiceLayerDto> getAllAreasLayerDescription(LayerTypeEnum layerTypeEnum, String userName) {
+    public List<AreaServiceLayerDto> getAllAreasLayerDescription(LayerTypeEnum layerTypeEnum, String userName) throws ServiceException {
         List<AreaServiceLayerDto> areaServiceLayerDtos = new ArrayList<AreaServiceLayerDto>();
         switch(layerTypeEnum) {
             case USERAREA:
@@ -63,6 +69,11 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
                 break;
         }
         return areaServiceLayerDtos;
+    }
+
+    private String getBingApiKey() throws ServiceException {
+        Map<String, String> parameters = ImmutableMap.<String, String>builder().put(NAME, BING_API_KEY).build();
+        return repository.findSystemConfigByName(parameters);
     }
 
     private List<String> constructInParameters(LayerTypeEnum layerTypeEnum) {
