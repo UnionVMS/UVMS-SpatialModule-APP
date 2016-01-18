@@ -340,7 +340,7 @@ public class MapConfigServiceBean implements MapConfigService {
 
     private LayerDto getUserLayer(LayerAreaDto userArea, ConfigurationDto configurationDto, String geoServerUrl, String bingApiKey, ProjectionDto projection, String userName) {
         LayerDto userLayer = null;
-        if (userArea != null) {
+        if (userArea != null && userArea.getAreaDtos() != null && !userArea.getAreaDtos().isEmpty()) {
             List<LayerDto> userLayerDtos = getLayerDtoList(Arrays.asList(userArea), geoServerUrl, bingApiKey, projection, false);
             if (userLayerDtos != null && !userLayerDtos.isEmpty()) {
                 userLayer = userLayerDtos.get(0);
