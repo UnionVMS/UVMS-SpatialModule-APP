@@ -193,6 +193,10 @@ public class MapConfigServiceBean implements MapConfigService {
             ids.addAll(getServiceLayerIds(layerSettingsDto.getAreaLayers().getUserAreas() != null ? Arrays.asList(layerSettingsDto.getAreaLayers().getUserAreas()) : null));
         }
 
+        if (ids.isEmpty()) {
+            return; // There is no Areas in the LayersSettings. Returning the call
+        }
+
         List<ServiceLayerEntity> serviceLayers = repository.findServiceLayerEntityByIds(ids); // Get Service layers by all the ids
 
         //Update the layers
