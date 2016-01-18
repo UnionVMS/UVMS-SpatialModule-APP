@@ -313,6 +313,9 @@
         "portLayers": [
             {
                 "serviceLayerId": 4
+            },
+            {
+                "serviceLayerId": 11
             }
         ],
         "areaLayers": {

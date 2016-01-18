@@ -89,6 +89,7 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
                 break;
             case PORT:
                 inClause.add(AreaSubTypeEnum.PORT.getAreaSubType());
+                inClause.add(AreaSubTypeEnum.PORTAREA.getAreaSubType());
                 break;
             case SYSAREA:
                 inClause.add(AreaSubTypeEnum.SYSAREA.getAreaSubType());

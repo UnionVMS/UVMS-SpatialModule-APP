@@ -10,7 +10,8 @@ public enum AreaSubTypeEnum {
     BACKGROUND("background"),
     ADDITIONAL("additional"),
     OTHERS("others"),
-    USERAREA("userarea");
+    USERAREA("userarea"),
+    PORTAREA("portarea");
 
     private String areaSubType;
 
