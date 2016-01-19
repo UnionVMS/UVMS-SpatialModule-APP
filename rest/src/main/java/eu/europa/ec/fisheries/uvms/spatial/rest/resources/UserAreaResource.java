@@ -2,6 +2,7 @@ package eu.europa.ec.fisheries.uvms.spatial.rest.resources;
 
 import com.vividsolutions.jts.io.ParseException;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.rest.constants.ErrorCodes;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.service.interceptor.ValidationInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
@@ -148,7 +149,7 @@ public class UserAreaResource extends UnionVMSResource {
         if (request.isUserInRole(SpatialFeaturesEnum.MANAGE_USER_DEFINED_AREAS.toString())) {
             response = createSuccessResponse(userAreaService.searchUserAreasByCriteria(request.getRemoteUser(), scopeName, StringUtils.EMPTY));
         } else {
-            response = createAccessForbiddenResponse();
+            response = createErrorResponse(ErrorCodes.NOT_AUTHORIZED);
         }
         return response;
     }
