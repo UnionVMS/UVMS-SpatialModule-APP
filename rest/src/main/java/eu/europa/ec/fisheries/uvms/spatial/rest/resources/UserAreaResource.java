@@ -4,6 +4,7 @@ import com.vividsolutions.jts.io.ParseException;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.service.interceptor.ValidationInterceptor;
+import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Coordinate;
@@ -50,8 +51,8 @@ public class UserAreaResource extends UnionVMSResource {
                                   @HeaderParam("scopeName") String scopeName) throws ServiceException {
         String userName = request.getRemoteUser();
         log.info("{} is requesting storeUserArea(...)", userName);
-        userAreaService.storeUserArea(userAreaGeomDto, userName);
-        return createSuccessResponse();
+        long gid = userAreaService.storeUserArea(userAreaGeomDto, userName);
+        return createSuccessResponse(gid);
     }
 
     @PUT
@@ -64,8 +65,8 @@ public class UserAreaResource extends UnionVMSResource {
                                    @HeaderParam("scopeName") String scopeName) throws ServiceException {
         String userName = request.getRemoteUser();
         log.info("{} is requesting updateUserArea(...), with a ID={}", userName, userAreaGeomDto.getId());
-        userAreaService.updateUserArea(userAreaGeomDto, request.getRemoteUser());
-        return createSuccessResponse();
+        long gid = userAreaService.updateUserArea(userAreaGeomDto, request.getRemoteUser());
+        return createSuccessResponse(gid);
     }
 
     @DELETE

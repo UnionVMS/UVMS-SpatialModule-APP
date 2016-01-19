@@ -3,7 +3,6 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.Point;
-import eu.europa.ec.fisheries.uvms.common.DateUtils;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
@@ -47,10 +46,10 @@ public class UserAreaServiceBean implements UserAreaService {
     private AreaTypeNamesService areaTypeNamesService;
 
     @Override
-    public boolean storeUserArea(UserAreaGeomDto userAreaDto, String userName) throws ServiceException {
+    public long storeUserArea(UserAreaGeomDto userAreaDto, String userName) throws ServiceException {
         UserAreasEntity userAreasEntity = prepareNewEntity(userAreaDto, userName);
         UserAreasEntity persistedEntity = (UserAreasEntity) repository.createEntity(userAreasEntity);
-        return persistedEntity != null;
+        return persistedEntity.getGid();
     }
 
     private UserAreasEntity prepareNewEntity(UserAreaGeomDto userAreaDto, String userName) {
@@ -61,7 +60,7 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     @Override
-    public boolean updateUserArea(UserAreaGeomDto userAreaDto, String userName) throws ServiceException {
+    public long updateUserArea(UserAreaGeomDto userAreaDto, String userName) throws ServiceException {
         Long id = userAreaDto.getId();
         validateGid(id);
 
@@ -75,7 +74,7 @@ public class UserAreaServiceBean implements UserAreaService {
         userAreasEntityToUpdate.setGid(persistentUserArea.getGid());
 
         UserAreasEntity persistedUpdatedEntity = (UserAreasEntity) repository.updateEntity(userAreasEntityToUpdate);
-        return persistedUpdatedEntity != null;
+        return persistedUpdatedEntity.getGid();
     }
 
     private void validateGid(Long gid) {

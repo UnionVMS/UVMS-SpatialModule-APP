@@ -25,9 +25,9 @@ public interface UserAreaService {
 
 	List<UserAreaDto> searchUserAreasByCriteria(String userName, String scopeName, String searchCriteria);
 
-	boolean storeUserArea(UserAreaGeomDto userAreaDto, String remoteUser) throws ServiceException;
+	long storeUserArea(UserAreaGeomDto userAreaDto, String remoteUser) throws ServiceException;
 
-	boolean updateUserArea(UserAreaGeomDto userAreaDto, String userName) throws ServiceException;
+	long updateUserArea(UserAreaGeomDto userAreaDto, String userName) throws ServiceException;
 
 	void deleteUserArea(Long userAreaId, String userName) throws ServiceException;
 }
