@@ -13,7 +13,9 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.ConfigurationDto;
 
 import java.util.List;
+import javax.ejb.Local;
 
+@Local
 public interface MapConfigService {
 
     MapConfigDto getReportConfig(int reportId, String userPreferences, String adminPreferences, String userName);

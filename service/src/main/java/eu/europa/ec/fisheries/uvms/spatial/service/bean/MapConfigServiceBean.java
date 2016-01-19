@@ -19,7 +19,6 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.ejb.EJB;
-import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.transaction.Transactional;
 import java.io.IOException;
@@ -28,7 +27,6 @@ import java.util.*;
 import static eu.europa.ec.fisheries.uvms.spatial.service.mapper.ConfigurationMapper.*;
 
 @Stateless
-@Local(MapConfigService.class)
 @Transactional
 @Slf4j
 public class MapConfigServiceBean implements MapConfigService {
