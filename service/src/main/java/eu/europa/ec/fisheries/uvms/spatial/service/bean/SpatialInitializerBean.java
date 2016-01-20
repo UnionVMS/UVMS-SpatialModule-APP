@@ -10,13 +10,14 @@ import javax.ejb.Startup;
 
 import eu.europa.ec.fisheries.uvms.init.AbstractModuleInitializerBean;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 @Singleton
 @Slf4j
 public class SpatialInitializerBean extends AbstractModuleInitializerBean {
 
     public static final String PROP_FILE_NAME = "config.properties";
-    public static final String PROP_USM_DESCRIPTOR_FORCE_UPDATE = "usm.deployment.descriptor.force-update";
+    public static final String PROP_USM_DESCRIPTOR_FORCE_UPDATE = "usm_deplyment_descriptor_force_update";
 
     @Override
     protected InputStream getDeploymentDescriptorRequest() {
@@ -26,13 +27,20 @@ public class SpatialInitializerBean extends AbstractModuleInitializerBean {
     @Override
     protected boolean mustRedeploy() {
         boolean isMustRedploy = false;
-        try {
-            Properties moduleConfigs = retrieveModuleConfigs();
-            isMustRedploy = Boolean.valueOf(moduleConfigs.getProperty(PROP_USM_DESCRIPTOR_FORCE_UPDATE));
-            log.info("{} file contains a configuration {}, with the following value {}", PROP_FILE_NAME, PROP_USM_DESCRIPTOR_FORCE_UPDATE, isMustRedploy);
-        } catch (IOException e) {
-            log.info("No {} file with property {} was configured. The default behavior is to skip USM deployment if application has already been deployed.", PROP_FILE_NAME, PROP_USM_DESCRIPTOR_FORCE_UPDATE);
-            //in case we can't retrieve a configuration, the default behavior is skipping redeployment
+        String envVariable = System.getenv().get(PROP_USM_DESCRIPTOR_FORCE_UPDATE);
+
+        if (StringUtils.isNotBlank(envVariable)) {
+            log.info("You have environment variable {}, which overrides the same configuration in {} of Spatial.ear. The value is {}.", PROP_USM_DESCRIPTOR_FORCE_UPDATE, PROP_FILE_NAME, envVariable);
+            isMustRedploy = Boolean.valueOf(envVariable);
+        } else {
+            try {
+                Properties moduleConfigs = retrieveModuleConfigs();
+                isMustRedploy = Boolean.valueOf(moduleConfigs.getProperty(PROP_USM_DESCRIPTOR_FORCE_UPDATE));
+                log.info("{} file contains a configuration {}, with the following value {}", PROP_FILE_NAME, PROP_USM_DESCRIPTOR_FORCE_UPDATE, isMustRedploy);
+            } catch (IOException e) {
+                log.info("No {} file with property {} was configured. The default behavior is to skip USM deployment if application has already been deployed.", PROP_FILE_NAME, PROP_USM_DESCRIPTOR_FORCE_UPDATE);
+                //in case we can't retrieve a configuration, the default behavior is skipping redeployment
+            }
         }
         return isMustRedploy;
     }
