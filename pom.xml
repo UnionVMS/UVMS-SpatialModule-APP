@@ -38,6 +38,7 @@
         <uvms.commons.version>1.5-SNAPSHOT</uvms.commons.version>
         <hibernate.validator.version>5.2.1.Final</hibernate.validator.version>
         <usm4uvms.version>0.0.13-SNAPSHOT</usm4uvms.version>
+        <usm_deployment_descriptor_force_update>false</usm_deployment_descriptor_force_update>
     </properties>
 
     <dependencyManagement>

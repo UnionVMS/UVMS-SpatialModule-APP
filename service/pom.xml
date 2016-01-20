@@ -209,6 +209,15 @@
 
     </dependencies>
 
+    <profiles>
+        <profile>
+            <id>dev</id>
+           <properties>
+               <usm_deployment_descriptor_force_update>true</usm_deployment_descriptor_force_update>
+            </properties>
+        </profile>
+    </profiles>
+
     <build>
     
         <finalName>${project.name}-${project.version}</finalName>
@@ -219,18 +228,7 @@
                 <filtering>true</filtering>
                 <includes>
                     <include>**/usmDeploymentDescriptor.xml</include>
-                </includes>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-                <excludes>
-                    <exclude>**/usmDeploymentDescriptor.xml</exclude>
-                </excludes>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-                <includes>
+                    <include>**/config.properties</include>
                     <include>**/logback.xml</include>
                 </includes>
             </resource>

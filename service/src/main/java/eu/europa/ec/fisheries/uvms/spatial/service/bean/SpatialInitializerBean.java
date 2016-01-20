@@ -17,7 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 public class SpatialInitializerBean extends AbstractModuleInitializerBean {
 
     public static final String PROP_FILE_NAME = "config.properties";
-    public static final String PROP_USM_DESCRIPTOR_FORCE_UPDATE = "usm_deplyment_descriptor_force_update";
+    public static final String PROP_USM_DESCRIPTOR_FORCE_UPDATE = "usm_deployment_descriptor_force_update";
 
     @Override
     protected InputStream getDeploymentDescriptorRequest() {
