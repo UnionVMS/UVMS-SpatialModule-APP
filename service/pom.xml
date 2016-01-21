@@ -226,11 +226,6 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
-                <includes>
-                    <include>**/usmDeploymentDescriptor.xml</include>
-                    <include>**/config.properties</include>
-                    <include>**/logback.xml</include>
-                </includes>
             </resource>
         </resources>
         <plugins>
