@@ -21,6 +21,7 @@
     </developers>
 
     <properties>
+        <spatial.model>1.0.2</spatial.model>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <javaee.version>7.0</javaee.version>
@@ -43,11 +44,17 @@
         <hibernate.validator.version>5.2.1.Final</hibernate.validator.version>
         <usm4uvms.version>1.0.0</usm4uvms.version>
         <usm_deployment_descriptor_force_update>false</usm_deployment_descriptor_force_update>
+        <release.branch.name>uvms-1.0.0</release.branch.name>
     </properties>
 
     <dependencyManagement>
 
         <dependencies>
+            <dependency>
+                <groupId>eu.europa.ec.fisheries.uvms.spatial</groupId>
+                <artifactId>spatial-model</artifactId>
+                <version>${spatial.model}</version>
+            </dependency>
         
         	<dependency>
                 <groupId>eu.europa.ec.mare.usm</groupId>
@@ -419,8 +426,11 @@
     </distributionManagement>
 
     <scm>
-        <connection>scm:svn:https://webgate.ec.europa.eu/CITnet/svn/UNIONVMS/branches/dev/Modules/Spatial/APP</connection>
+        <connection>
+            scm:svn:https://webgate.ec.europa.eu/CITnet/svn/UNIONVMS/branches/releases/${release.branch.name}/Modules/TheModuleUrl
+        </connection>
     </scm>
+
 
     <build>
         <pluginManagement>
@@ -483,7 +493,7 @@
         <module>rest</module>
         <module>service</module>
         <module>message</module>
-        <module>model</module>
+
         <module>deploy</module>
     </modules>
 </project>
