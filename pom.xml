@@ -426,9 +426,9 @@
 
     <scm>
 
-		<connection>scm:svn:https://webgate.ec.europa.eu/CITnet/svn/UNIONVMS/tags/spatial-1.0.0.final</connection>
-		<developerConnection>scm:svn:https://webgate.ec.europa.eu/CITnet/svn/UNIONVMS/tags/spatial-1.0.0.final</developerConnection>
-		<url>https://webgate.ec.europa.eu/CITnet/svn/UNIONVMS/tags/spatial-1.0.0.final</url>
+		<!--connection>scm:svn:https://webgate.ec.europa.eu/CITnet/svn/UNIONVMS/tags/spatial-1.0.0.final</connection-->
+		<developerConnection>scm:svn:https://webgate.ec.europa.eu/CITnet/svn/UNIONVMS/trunk/Modules/Spatial/APP</developerConnection>
+		<!--url>https://webgate.ec.europa.eu/CITnet/svn/UNIONVMS/tags/spatial-1.0.0.final</url-->
        
     </scm>
 
