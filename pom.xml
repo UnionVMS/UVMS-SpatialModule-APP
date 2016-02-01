@@ -14,6 +14,10 @@
             <name>Gregory Rinaldi</name>
             <email>gregory.rinaldi@ordina.be</email>
         </developer>
+		<developer>
+            <name>Georgi Georgiev</name>
+            <email>georgi.georgiev@ordina.be</email>
+        </developer>
     </developers>
 
     <properties>
@@ -25,8 +29,8 @@
         <mapstruct.version>1.0.0.Final</mapstruct.version>
         <jackson.version>2.6.0</jackson.version>
         <logback.core.version>1.1.2</logback.core.version>
-        <asset.module.version>1.0.10-SNAPSHOT</asset.module.version>
-        <movement.model.version>1.0.6-SNAPSHOT</movement.model.version>
+        <asset.module.version>1.0.0</asset.module.version>
+        <movement.model.version>1.0.0</movement.model.version>
         <application.name>${project.parent.artifactId}</application.name>
         <application.version>${project.parent.version}</application.version>
         <application.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}-app.log</application.logfile>
@@ -35,9 +39,9 @@
         <hibernate.version>4.3.5.Final</hibernate.version>
         <hibernate-spatial.version>4.3</hibernate-spatial.version>
         <geotools.version>14-M1</geotools.version>
-        <uvms.commons.version>1.5-SNAPSHOT</uvms.commons.version>
+        <uvms.commons.version>1.5</uvms.commons.version>
         <hibernate.validator.version>5.2.1.Final</hibernate.validator.version>
-        <usm4uvms.version>0.0.13-SNAPSHOT</usm4uvms.version>
+        <usm4uvms.version>1.0.0</usm4uvms.version>
         <usm_deployment_descriptor_force_update>false</usm_deployment_descriptor_force_update>
     </properties>
 
@@ -184,6 +188,12 @@
 
             <dependency>
                 <groupId>org.geotools</groupId>
+                <artifactId>gt-shapefile</artifactId>
+                <version>${geotools.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.geotools</groupId>
                 <artifactId>gt-epsg-hsql</artifactId>
                 <version>${geotools.version}</version>
             </dependency>
@@ -300,7 +310,13 @@
 			    <artifactId>resteasy-jaxb-provider</artifactId>
 			  	<version>3.0.11.Final</version>
 			</dependency>
-			
+
+            <dependency>
+                <groupId>org.jboss.resteasy</groupId>
+                <artifactId>resteasy-multipart-provider</artifactId>
+                <version>3.0.11.Final</version>
+            </dependency>
+
 			<dependency>
 			    <groupId>org.jboss.resteasy</groupId>
 			    <artifactId>jaxrs-api</artifactId>
