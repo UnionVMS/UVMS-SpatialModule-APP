@@ -63,7 +63,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>spatial-model</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${spatial.model}</version>
             <type>ejb</type>
         </dependency>
         <dependency>
