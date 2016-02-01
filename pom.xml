@@ -427,7 +427,7 @@
 
     <scm>
         <connection>
-            scm:svn:https://webgate.ec.europa.eu/CITnet/svn/UNIONVMS/branches/releases/${release.branch.name}/Modules/TheModuleUrl
+            scm:svn:https://webgate.ec.europa.eu/CITnet/svn/UNIONVMS/branches/releases/${release.branch.name}/Modules/Spatial/APP
         </connection>
     </scm>
 
