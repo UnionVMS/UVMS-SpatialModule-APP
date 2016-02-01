@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <changeSet author="georgige (generated)" id="1438082782383-1">
+        <createSequence sequenceName="area_group_id_seq"/>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-2">
+        <createSequence sequenceName="area_group_mapping_area_id_seq"/>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-3">
+        <createSequence sequenceName="area_status_id_seq"/>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-4">
+        <createSequence sequenceName="area_types_id_seq"/>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-5">
+        <createSequence sequenceName="countries_id_seq"/>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-6">
+        <createSequence sequenceName="eez_gid_seq"/>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-7">
+        <createSequence sequenceName="fao_id_seq"/>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-8">
+        <createSequence sequenceName="gfcm_id_seq"/>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-9">
+        <createSequence sequenceName="layer_group_id_seq"/>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-10">
+        <createSequence sequenceName="layer_id_seq"/>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-11">
+        <createSequence sequenceName="rac_id_seq"/>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-12">
+        <createSequence sequenceName="report_execution_log_id_seq"/>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-13">
+        <createSequence sequenceName="report_id_seq"/>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-14">
+        <createSequence sequenceName="report_layer_mapping_id_seq"/>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-15">
+        <createSequence sequenceName="rfmo_id_seq"/>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-16">
+        <createSequence sequenceName="spatial_configuration_id_seq"/>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-17">
+        <createSequence sequenceName="stat_rect_id_seq"/>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-18">
+        <createSequence sequenceName="user_areas_id_seq"/>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-19">
+        <createTable tableName="area_group">
+            <column autoIncrement="true" name="id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="area_group_pkey"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="group_desc" type="TEXT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-20">
+        <createTable tableName="area_group_mapping">
+            <column autoIncrement="true" name="area_id" remarks="It is not nullable because we are not sure that selection within the predefine areas will be supported (for instance EEZ feature 1)" type="BIGSERIAL">
+                <constraints nullable="false"/>
+            </column>
+            <column name="area_type_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="area_group_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-21">
+        <createTable tableName="area_status">
+            <column autoIncrement="true" name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" primaryKeyName="area_status_pkey"/>
+            </column>
+            <column name="start_date" remarks="Starting date/time of the active/inactive status." type="TIMESTAMP(29) WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="end_date" remarks="End date/time of the active/inactive status." type="TIMESTAMP(29) WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueBoolean="true" name="is_visible" remarks="If the table is visible to other users or not (true for visible)" type="BOOL">
+                <constraints nullable="false"/>
+            </column>
+            <column name="area_id" remarks="Unique primary key of the user defined areas" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-22">
+        <createTable tableName="area_types">
+            <column autoIncrement="true" name="id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="area_types_pkey"/>
+            </column>
+            <column name="type_name" remarks="Area type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="area_type_desc" type="TEXT"/>
+            <column name="area_db_table" remarks="This will keep the name of the table of the particular area type. For instance, user defined maps are stored in USER_AREA." type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="geo_name" remarks="Geo server layer name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="srs_code" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-23">
+        <createTable tableName="bookmark">
+            <column name="srs_code" type="INT"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="extent" type="TEXT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-24">
+        <createTable tableName="countries">
+            <column autoIncrement="true" name="id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="countries_pkey"/>
+            </column>
+            <column name="geom" type="GEOMETRY(2147483647)"/>
+            <column name="sovereignt" type="VARCHAR(32)"/>
+            <column name="sov_a3" type="VARCHAR(3)"/>
+            <column name="type" type="VARCHAR(17)"/>
+            <column name="admin" type="VARCHAR(40)"/>
+            <column name="adm0_a3" type="VARCHAR(3)"/>
+            <column name="name" type="VARCHAR(36)"/>
+            <column name="name_long" type="VARCHAR(40)"/>
+            <column name="pop_est" type="FLOAT8"/>
+            <column name="gdp_md_est" type="FLOAT8"/>
+            <column name="income_grp" type="VARCHAR(23)"/>
+            <column name="continent" type="VARCHAR(23)"/>
+            <column name="region_un" type="VARCHAR(23)"/>
+            <column name="subregion" type="VARCHAR(25)"/>
+            <column name="region_wb" type="VARCHAR(26)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-25">
+        <createTable tableName="eez">
+            <column autoIncrement="true" name="gid" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="eez_pkey"/>
+            </column>
+            <column name="geom" type="GEOMETRY(2147483647)"/>
+            <column name="eez" type="VARCHAR(200)"/>
+            <column name="country" type="VARCHAR(100)"/>
+            <column name="sovereign" type="VARCHAR(100)"/>
+            <column name="remarks" type="VARCHAR(150)"/>
+            <column name="sov_id" type="INT"/>
+            <column name="eez_id" type="INT"/>
+            <column name="iso_3digit" type="VARCHAR(5)"/>
+            <column name="mrgid" type="numeric"/>
+            <column name="date_chang" type="VARCHAR(50)"/>
+            <column name="area_m2" type="FLOAT8"/>
+            <column name="longitude" type="FLOAT8"/>
+            <column name="latitude" type="FLOAT8"/>
+            <column name="mrgid_eez" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-26">
+        <createTable tableName="fao">
+            <column autoIncrement="true" name="id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="fao_pkey"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-27">
+        <createTable tableName="filter">
+            <column name="flt_expression" remarks="Filter expression" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rep_id" remarks="Unique primary key of the user defined areas" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ds_scope" remarks="CREATE TYPE DATASOURCE as ENUM {'GLOBAL','VMS'}" type="DATASOURCE(2147483647)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="flt_style" remarks="This should contain JSON array of style objects. Something like:&#10;[{type:position;style:[{strokewith:2},{color:black}]}]" type="TEXT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-28">
+        <createTable tableName="gfcm">
+            <column autoIncrement="true" name="id" remarks="ID" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="gfcm_pkey"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-29">
+        <createTable tableName="layer">
+            <column autoIncrement="true" name="id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="layer_pkey"/>
+            </column>
+            <column defaultValueBoolean="false" name="is_background" remarks="false if it is thematic layer, true for background" type="BOOL">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" remarks="Name of the layer to be displayed at the front-end" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="layer_desc" remarks="Description of the layer" type="TEXT"/>
+            <column name="service_type" remarks="The type should be PROVIDER_FORMAT&#10;&#10;to create it:&#10;CREATE TYPE PROVIDER_FORMAT AS ENUM ('OSM', 'WMS', 'OSEA','TMS')" type="PROVIDER_FORMAT(2147483647)"/>
+            <column name="geo_name" remarks="GeoServer layer name" type="VARCHAR(255)"/>
+            <column name="srs_code" remarks="Spatial reference system which might be prefixed with EPSG or SRID for the front-end." type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-30">
+        <createTable tableName="layer_group">
+            <column autoIncrement="true" name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" primaryKeyName="layer_group_pkey"/>
+            </column>
+            <column name="group_order" remarks="The goup order to be displayed at the front=end" type="INT"/>
+            <column name="group_name" remarks="Group name of the selected by the user layers" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-31">
+        <createTable tableName="rac">
+            <column autoIncrement="true" name="id" remarks="ID" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="rac_pkey"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-32">
+        <createTable tableName="report">
+            <column autoIncrement="true" name="id" remarks="Unique primary key of the user defined areas" type="BIGSERIAL">
+                <constraints primaryKey="true" primaryKeyName="report_pkey"/>
+            </column>
+            <column name="name" remarks="Name of the report specified by the User" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_on" remarks="Creation date/time of the report" type="TIMESTAMP(29) WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(2147483647)"/>
+            <column name="created_by" remarks="The username of the user who has created the report" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-33">
+        <createTable tableName="report_execution_log">
+            <column autoIncrement="true" name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" primaryKeyName="id"/>
+            </column>
+            <column name="executed_by" remarks="username of the user who has executed the report" type="_VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="executed_on" type="TIMESTAMP(29) WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="report_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-34">
+        <createTable tableName="report_layer_mapping">
+            <column autoIncrement="true" name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" primaryKeyName="report_layer_mapping_pkey"/>
+            </column>
+            <column name="report_id" remarks="the foreign key to the Reports table" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="layer_id" remarks="soft link to the Layers table" type="INT"/>
+            <column defaultValueNumeric="0" name="layer_order" remarks="The order of the layer group" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="area_type_id" type="INT"/>
+            <column name="sql_filter" remarks="this will contain the actual area ID in a particular area table" type="TEXT"/>
+            <column name="layer_group_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sld" remarks="Style layer descriptor" type="XML"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-35">
+        <createTable tableName="rfmo">
+            <column autoIncrement="true" name="id" remarks="ID" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="rfmo_pkey"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-36">
+        <createTable remarks="We need to insert the following default properties:&#10;&#10;dateFormat=&quot;dd/mm/yy&quot;      //verify if the upper/lower case is correct&#10;timeFormat=&quot;HH:MM:ss&quot;      //verify if the upper/lower case is correct&#10;timezone=&quot;GMT (+1:00)&quot;&#10;displayCRS=&quot;4326&quot;&#10;defaultCRSFormat=&quot;d.dd|dd mm.mm|dd mm ss.ss&quot;     //we need to specify java validator since it depends on the dsiplayCRS property&#10;scalebarUnits=&quot;meter|km|mile| nautical mile&quot;      //maybe this could be a Java enum and we can add validator as well???&#10;measurementUnit=&quot;meter|km|mile| nautical mile&quot;      //maybe this could be a Java enum and we can add validator as well???&#10;autoRefreshStatus=&quot;on|off&quot;     //or maybe true and false?&#10;autorefreshRate=&quot;10000&quot;        //this is in miliseconds&#10;vmsStyle=&quot;&quot;                              // once generated by the front-end, we can add it as a default system value" tableName="spatial_configuration">
+            <column autoIncrement="true" name="id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="spatial_configuration_pkey"/>
+            </column>
+            <column name="property_name" type="VARCHAR(255)"/>
+            <column name="prop_value" type="TEXT"/>
+            <column name="prop_validator" type="VARCHAR(255)"/>
+            <column name="comments" type="TEXT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-37">
+        <createTable tableName="stat_rect">
+            <column autoIncrement="true" name="id" remarks="ID" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="stat_rect_pkey"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-38">
+        <createTable tableName="user_areas">
+            <column autoIncrement="true" name="id" remarks="Unique primary key of the user defined areas" type="BIGSERIAL">
+                <constraints primaryKey="true" primaryKeyName="user_areas_pkey"/>
+            </column>
+            <column name="name" remarks="Area name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="subtype" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="area_desc" remarks="Description of the area" type="TEXT"/>
+            <column name="geom" remarks="Geometry of the area" type="GEOMETRY(2147483647)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-39">
+        <addUniqueConstraint columnNames="type_name" constraintName="area_types_type_name_key" tableName="area_types"/>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-40">
+        <createIndex indexName="sidx_countries_geom" tableName="countries">
+            <column name="geom"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-41">
+        <addForeignKeyConstraint baseColumnNames="area_group_id" baseTableName="area_group_mapping" constraintName="area_group_mapping_area_group_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="area_group"/>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-42">
+        <addForeignKeyConstraint baseColumnNames="area_type_id" baseTableName="area_group_mapping" constraintName="area_group_mapping_area_type_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="area_types"/>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-43">
+        <addForeignKeyConstraint baseColumnNames="area_id" baseTableName="area_status" constraintName="area_status_area_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="user_areas"/>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-44">
+        <addForeignKeyConstraint baseColumnNames="rep_id" baseTableName="filter" constraintName="filter_rep_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="report"/>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-45">
+        <addForeignKeyConstraint baseColumnNames="report_id" baseTableName="report_execution_log" constraintName="report_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="report"/>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-46">
+        <addForeignKeyConstraint baseColumnNames="area_type_id" baseTableName="report_layer_mapping" constraintName="report_layer_mapping_area_type_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="area_types"/>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-47">
+        <addForeignKeyConstraint baseColumnNames="layer_group_id" baseTableName="report_layer_mapping" constraintName="report_layer_mapping_layer_group_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="layer_group"/>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-48">
+        <addForeignKeyConstraint baseColumnNames="layer_id" baseTableName="report_layer_mapping" constraintName="report_layer_mapping_layer_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="layer"/>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-49">
+        <addForeignKeyConstraint baseColumnNames="report_id" baseTableName="report_layer_mapping" constraintName="report_layer_mapping_report_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="report"/>
+    </changeSet>
+    <changeSet author="georgige (generated)" id="1438082782383-50">
+        <createView fullDefinition="false" viewName="all_area_v"> SELECT 1;</createView>
+    </changeSet>
+</databaseChangeLog>

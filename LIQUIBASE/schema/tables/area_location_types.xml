@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet author="padhyad" id="1439890745706-33">
+        <createTable tableName="area_location_types">
+            <column autoIncrement="true" name="id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="area_types_pkey"/>
+            </column>
+            <column name="service_layer_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type_name" remarks="Area type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="area_type_desc" type="VARCHAR(255)"/>
+            <column name="area_db_table" remarks="This will keep the name of the table of the particular area type. For instance, user defined maps are stored in USER_AREA." type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_system_wide" type="BPCHAR(1)">
+                <constraints nullable="false"/>
+            </column>
+			<column name="is_location" type="BPCHAR(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="area_group_type" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    
+    <changeSet author="padhyad" id="1439890745706-50">
+        <addUniqueConstraint columnNames="type_name" constraintName="area_location_types_type_name_key" tableName="area_location_types"/>
+    </changeSet>
+    
+     <changeSet author="padhyad" id="1439890745706-54">
+        <addForeignKeyConstraint baseColumnNames="area_type_id" baseTableName="area_connect_group" constraintName="area_connect_group_area_type_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="area_location_types"/>
+    </changeSet>
+
+</databaseChangeLog>

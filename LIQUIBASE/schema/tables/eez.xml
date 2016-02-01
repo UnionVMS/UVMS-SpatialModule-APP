@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:spatial="http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-spatial"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd   http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-spatial
+      http://lonnyj.github.com/liquibase-spatial/liquibase-spatial.xsd">
+
+    <changeSet author="padhyad" id="1439890745706-35">
+        <preConditions>
+            <spatial:spatialSupported/>
+        </preConditions>
+        <createTable tableName="eez">
+            <column autoIncrement="true" name="gid" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="eez_pkey"/>
+            </column>
+            <column name="geom" type="geometry(Multipolygon, 4326)"/>
+            <column name="name" type="VARCHAR(200)"/>
+            <column name="country" type="VARCHAR(100)"/>
+            <column name="sovereign" type="VARCHAR(100)"/>
+            <column name="remarks" type="VARCHAR(150)"/>
+            <column name="sov_id" type="INT"/>
+            <column name="eez_id" type="INT"/>
+            <column name="code" type="VARCHAR(5)"/>
+            <column name="mrgid" type="numeric"/>
+            <column name="date_chang" type="VARCHAR(50)"/>
+            <column name="area_m2" type="FLOAT8"/>
+            <column name="longitude" type="FLOAT8"/>
+            <column name="latitude" type="FLOAT8"/>
+            <column name="mrgid_eez" type="INT"/>
+        </createTable>
+         <sql>create index eez_geom_index on spatial.eez using gist(geom)</sql>
+    </changeSet>
+    
+    
+<!--     <changeSet author="padhyad" id="1439890745706-66">
+      <preConditions>
+         <tableExists tableName="eez" />
+         <not>
+            <spatial:spatialIndexExists tableName="eez" columnNames="geom"/>
+         </not>
+      </preConditions>
+      <spatial:createSpatialIndex tableName="eez"  schemaName="spatial" indexName="eez_geom_index" geometryType="Multipolygon" srid="4326">
+         <column name="geom" />
+      </spatial:createSpatialIndex> 
+   </changeSet> -->
+
+</databaseChangeLog>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:spatial="http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-spatial"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd   http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-spatial
+      http://lonnyj.github.com/liquibase-spatial/liquibase-spatial.xsd">
+
+    <changeSet author="padhyad" id="1439890745706-48">
+         <preConditions>
+            <spatial:spatialSupported/>
+        </preConditions>
+        <createTable tableName="user_areas">
+            <column autoIncrement="true" name="gid" remarks="Unique primary key of the user defined areas" type="BIGSERIAL">
+                <constraints primaryKey="true" primaryKeyName="user_areas_pkey"/>
+            </column>
+            <column name="user_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="scope_name" type="VARCHAR(255)" />
+            <column name="name" remarks="Area name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+			<column name="type" type="VARCHAR(255)" />
+            <column name="area_desc" remarks="Description of the area" type="TEXT"/>
+            <column name="geom" remarks="Geometry of the area" type="geometry(Multipolygon, 4326)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_on" type="TIMESTAMP(29) WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+			<column name="start_date" type="TIMESTAMP(29) WITHOUT TIME ZONE" />
+			<column name="end_date" type="TIMESTAMP(29) WITHOUT TIME ZONE" />
+            <column name="is_shared" type="BPCHAR(1)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <sql>create index user_areas_geom_index on spatial.user_areas using gist(geom)</sql>
+    </changeSet>
+    
+   <!-- <changeSet author="padhyad" id="1439890745706-68">
+      <preConditions>
+         <tableExists tableName="user_areas" />
+         <not>
+            <spatial:spatialIndexExists tableName="user_areas" columnNames="geom" />
+         </not>
+      </preConditions>
+      <spatial:createSpatialIndex tableName="user_areas" indexName="user_areas_geom_index" geometryType="Multipolygon" srid="4326">
+         <column name="geom" />
+      </spatial:createSpatialIndex>
+   </changeSet> -->
+    
+    <changeSet author="padhyad" id="1439890745706-55">
+        <addForeignKeyConstraint baseColumnNames="user_area_id" baseTableName="area_status" constraintName="area_status_user_area_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="gid" referencedTableName="user_areas"/>
+    </changeSet>
+
+</databaseChangeLog>

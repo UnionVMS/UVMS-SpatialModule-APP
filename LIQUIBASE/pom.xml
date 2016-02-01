@@ -1,0 +1,120 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>liquibase</groupId>
+    <artifactId>liquibase</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <name>liquibase</name>
+
+    <properties>
+        <liquibase.contexts>default</liquibase.contexts>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <citnetpath>webgate.ec.europa.eu/CITnet/</citnetpath>
+        <svn.projectname>UNIONVMS</svn.projectname>
+    </properties>
+
+    <profiles>
+        
+        <profile>
+            <id>postgres-local</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <db.driver>org.postgresql.Driver</db.driver>
+                <db.url>jdbc:postgresql://localhost:5432/uvms</db.url>
+                <db.user>spatial</db.user>
+                <db.passwd>postgres</db.passwd>
+                <db.defaultSchema>spatial</db.defaultSchema>
+                <db.changeLogFile>changelog/db-changelog-master.xml</db.changeLogFile>
+                <db.outputFile>changelog/generatedChangelog.xml</db.outputFile>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>postgres-dev</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <db.driver>org.postgresql.Driver</db.driver>
+                <db.url>jdbc:postgresql://localhost:5432/uvms</db.url>
+                <db.user>spatial</db.user>
+                <db.passwd>postgres</db.passwd>
+                <db.defaultSchema>spatial</db.defaultSchema>
+                <db.changeLogFile>changelog/db-changelog-master.xml</db.changeLogFile>
+            </properties>
+        </profile>
+        
+        <profile>
+            <id>postgres-test</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <db.driver>org.postgresql.Driver</db.driver>
+                <db.url>jdbc:postgresql://localhost:5432/uvms</db.url>
+                <db.user>spatial</db.user>
+                <db.passwd>postgres</db.passwd>
+                <db.defaultSchema>spatial</db.defaultSchema>
+                <db.changeLogFile>changelog/db-changelog-master.xml</db.changeLogFile>
+            </properties>
+        </profile>
+        
+    </profiles>
+        
+    <dependencies>
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <version>3.4.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>9.4-1201-jdbc41</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.lonnyj</groupId>
+            <artifactId>liquibase-spatial</artifactId>
+            <version>1.2.1</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.liquibase</groupId>
+                    <artifactId>liquibase-maven-plugin</artifactId>
+                    <version>3.3.2</version>
+                    <configuration>
+                        <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
+                        <changeLogFile>${db.changeLogFile}</changeLogFile>
+                        <driver>${db.driver}</driver>
+                        <url>${db.url}</url>
+                        <username>${db.user}</username>
+                        <password>${db.passwd}</password>
+                        <defaultSchemaName>${db.defaultSchema}</defaultSchemaName>
+                        <outputChangeLogFile>${db.outputFile}</outputChangeLogFile>
+                        <!--<diffTypes>data</diffTypes>-->
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>update-schema</id>
+                            <phase>process-resources</phase>
+                            <goals>
+                                <goal>update</goal>
+                                <goal>tag</goal>							
+                            </goals>
+                        </execution>
+                    </executions> 
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+        
+</project>

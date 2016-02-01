@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:spatial="http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-spatial"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-spatial 
+      http://lonnyj.github.com/liquibase-spatial/liquibase-spatial.xsd">
+
+	<changeSet author="mkopyczok" id="1439890745806-77">
+		<insert tableName="service_layer">
+			<column name="id" valueNumeric="1" />
+			<column name="name" value="EEZ" />
+			<column name="layer_desc" value="Exclusive Economic Zone" />
+			<column name="provider_format_id" valueNumeric="2" />
+			<column name="geo_name" value="uvms:eez" />
+			<column name="srs_code" valueNumeric="4326" />
+			<column name="short_copyright" value="Powered by EEZ Master" />
+			<column name="long_copyright" value="Powered by EEZ Master" />
+			<column name="is_internal" value="Y" />			
+			<column name="style_geom" value="eez" />
+            <column name="style_label" value="eez_label" />
+            <column name="style_label_geom" value="eez_label_geom" />
+			<column name="subtype" value="sysarea"/>
+		</insert>
+		<insert tableName="service_layer">
+			<column name="id" valueNumeric="2" />
+			<column name="name" value="RFMO" />
+			<column name="layer_desc" value="Regional Fisheries Management Organisation" />
+			<column name="provider_format_id" valueNumeric="2" />
+			<column name="geo_name" value="uvms:rfmo" />
+			<column name="srs_code" valueNumeric="4326" />
+			<column name="short_copyright" value="Powered by RFMO Master" />
+			<column name="long_copyright" value="Powered by RFMO Master" />
+			<column name="is_internal" value="Y" />
+			<column name="style_geom" value="rfmo" />
+            <column name="style_label" value="rfmo_label" />
+            <column name="style_label_geom" value="rfmo_label_geom" />
+			<column name="subtype" value="sysarea"/>
+		</insert>
+		<insert tableName="service_layer">
+			<column name="id" valueNumeric="3" />
+			<column name="name" value="Countries" />
+			<column name="layer_desc" value="Countries" />
+			<column name="provider_format_id" valueNumeric="2" />
+			<column name="geo_name" value="uvms:countries" />
+			<column name="srs_code" valueNumeric="4326" />
+			<column name="short_copyright" value="Powered by COUNTRY Master" />
+			<column name="long_copyright" value="Powered by COUNTRY Master" />
+			<column name="is_internal" value="Y" />
+			<column name="subtype" value="others"/>
+		</insert>
+		<insert tableName="service_layer">
+			<column name="id" valueNumeric="4" />
+			<column name="name" value="Ports" />
+			<column name="layer_desc" value="Ports" />
+			<column name="provider_format_id" valueNumeric="2" />
+			<column name="geo_name" value="uvms:port" />
+			<column name="srs_code" valueNumeric="4326" />
+			<column name="short_copyright" value="Powered by PORT Master" />
+			<column name="long_copyright" value="Powered by PORT Master" />
+			<column name="is_internal" value="Y" />
+			<column name="style_geom" value="port"/>
+            <column name="style_label" value="port_label"/>
+            <column name="style_label_geom" value="port_label_geom"/>
+			<column name="subtype" value="port"/>
+		</insert>
+		<insert tableName="service_layer">
+			<column name="id" valueNumeric="5" />
+			<column name="name" value="USERAREA" />
+			<column name="layer_desc" value="User Areas" />
+			<column name="provider_format_id" valueNumeric="2" />
+			<column name="geo_name" value="uvms:userareas" />
+			<column name="srs_code" valueNumeric="4326" />
+			<column name="short_copyright" value="Powered by User Areas" />
+			<column name="long_copyright" value="Powered by User Areas" />
+			<column name="is_internal" value="Y" />
+			<column name="style_geom" value="userareas"/>
+            <column name="style_label_geom" value="userareas_label_geom"/>
+			<column name="subtype" value="userarea"/>
+		</insert>
+		<insert tableName="service_layer">
+			<column name="id" valueNumeric="6" />
+			<column name="name" value="OpenStreetMap" />
+			<column name="layer_desc" value="OpenStreetMap" />
+			<column name="provider_format_id" valueNumeric="1" />
+			<column name="srs_code" valueNumeric="3857" />
+			<column name="is_internal" value="N" />
+			<column name="subtype" value="background"/>
+		</insert>
+		<insert tableName="service_layer">
+			<column name="id" valueNumeric="7" />
+			<column name="name" value="OpenSeaMap" />
+			<column name="layer_desc" value="OpenSeaMap" />
+			<column name="srs_code" valueNumeric="3857" />
+			<column name="provider_format_id" valueNumeric="3" />
+			<column name="is_internal" value="N" />
+			<column name="subtype" value="additional"/>
+		</insert>
+		<insert tableName="service_layer">
+			<column name="id" valueNumeric="8" />
+			<column name="name" value="bing_roads" />
+			<column name="geo_name" value="Road" />
+			<column name="srs_code" valueNumeric="3857" />
+			<column name="provider_format_id" valueNumeric="5" />
+			<column name="is_internal" value="N" />
+			<column name="subtype" value="background"/>
+		</insert>
+		<insert tableName="service_layer">
+			<column name="id" valueNumeric="9" />
+			<column name="name" value="bing_aerial" />
+			<column name="geo_name" value="Aerial" />
+			<column name="srs_code" valueNumeric="3857" />
+			<column name="provider_format_id" valueNumeric="5" />
+			<column name="is_internal" value="N" />
+			<column name="subtype" value="background"/>
+		</insert>
+		<insert tableName="service_layer">
+			<column name="id" valueNumeric="10" />
+			<column name="name" value="bing_aerial_labels" />
+			<column name="geo_name" value="AerialWithLabels" />
+			<column name="srs_code" valueNumeric="3857" />
+			<column name="provider_format_id" valueNumeric="5" />
+			<column name="is_internal" value="N" />
+			<column name="subtype" value="background"/>
+		</insert>
+		<insert tableName="service_layer">
+			<column name="id" valueNumeric="11" />
+			<column name="name" value="PortAreas" />
+			<column name="layer_desc" value="Port Areas" />
+			<column name="provider_format_id" valueNumeric="2" />
+			<column name="geo_name" value="uvms:port" />
+			<column name="srs_code" valueNumeric="4326" />
+			<column name="short_copyright" value="Powered by PORT Master" />
+			<column name="long_copyright" value="Powered by PORT Master" />
+			<column name="is_internal" value="Y" />
+			<column name="style_geom" value="port_area"/>
+            <column name="style_label_geom" value="port_area_label_geom"/>
+			<column name="subtype" value="portarea"/>
+		</insert>
+	</changeSet>
+</databaseChangeLog>
