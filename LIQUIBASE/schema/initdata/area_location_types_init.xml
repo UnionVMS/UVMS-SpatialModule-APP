@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:spatial="http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-spatial"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-spatial 
+      http://lonnyj.github.com/liquibase-spatial/liquibase-spatial.xsd">
+
+	<changeSet author="mkopyczok" id="1439890745706-88">
+		<insert tableName="area_location_types">
+			<column name="id" valueNumeric="1" />
+			<column name="service_layer_id" valueNumeric="1" />
+			<column name="type_name" value="EEZ" />
+			<column name="area_db_table" value="eez" />
+			<column name="is_system_wide" value="Y" />
+			<column name="area_type_desc" value="Exclusive Economic Zone" />
+			<column name="is_location" value="N" />
+			<column name="area_group_type" value="sysarea" />
+		</insert>
+		<insert tableName="area_location_types">
+			<column name="id" valueNumeric="2" />
+			<column name="service_layer_id" valueNumeric="2" />
+			<column name="type_name" value="RFMO" />
+			<column name="area_db_table" value="rfmo" />
+			<column name="is_system_wide" value="Y" />
+			<column name="area_type_desc" value="Regional Fisheries Management Organisation" />
+			<column name="is_location" value="N" />
+			<column name="area_group_type" value="sysarea" />
+		</insert>
+		<insert tableName="area_location_types">
+			<column name="id" valueNumeric="3" />
+			<column name="service_layer_id" valueNumeric="3" />
+			<column name="type_name" value="COUNTRY" />
+			<column name="area_db_table" value="countries" />
+			<column name="is_system_wide" value="N" />
+			<column name="area_type_desc" value="Country" />
+			<column name="is_location" value="N" />
+			<column name="area_group_type" value="others" />
+		</insert>
+		<insert tableName="area_location_types">
+			<column name="id" valueNumeric="4" />
+			<column name="service_layer_id" valueNumeric="4" />
+			<column name="type_name" value="PORT" />
+			<column name="area_db_table" value="port" />
+			<column name="is_system_wide" value="Y" />
+			<column name="area_type_desc" value="Port" />
+			<column name="is_location" value="Y" />
+			<column name="area_group_type" value="port" />
+		</insert>
+		<insert tableName="area_location_types">
+			<column name="id" valueNumeric="5" />
+			<column name="service_layer_id" valueNumeric="5" />
+			<column name="type_name" value="USERAREA" />
+			<column name="area_db_table" value="user_areas" />
+			<column name="is_system_wide" value="N" />
+			<column name="area_type_desc" value="User Areas" />
+			<column name="is_location" value="N" />
+			<column name="area_group_type" value="userarea" />
+		</insert>
+		<insert tableName="area_location_types">
+			<column name="id" valueNumeric="6" />
+			<column name="service_layer_id" valueNumeric="6" />
+			<column name="type_name" value="OSM" />
+			<column name="area_db_table" value="osm" />
+			<column name="is_system_wide" value="N" />
+			<column name="area_type_desc" value="Open street Map" />
+			<column name="is_location" value="N" />
+		</insert>
+		<insert tableName="area_location_types">
+			<column name="id" valueNumeric="7" />
+			<column name="service_layer_id" valueNumeric="7" />
+			<column name="type_name" value="OSEA" />
+			<column name="area_db_table" value="osea" />
+			<column name="is_system_wide" value="N" />
+			<column name="area_type_desc" value="Open sea Map" />
+			<column name="is_location" value="N" />
+		</insert>
+		<insert tableName="area_location_types">
+			<column name="id" valueNumeric="8" />
+			<column name="service_layer_id" valueNumeric="11" />
+			<column name="type_name" value="PORTAREA" />
+			<column name="area_db_table" value="port" />
+			<column name="is_system_wide" value="Y" />
+			<column name="area_type_desc" value="Port area" />
+			<column name="is_location" value="N" />
+			<column name="area_group_type" value="port" />
+		</insert>
+	</changeSet>
+</databaseChangeLog>

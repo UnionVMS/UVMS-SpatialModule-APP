@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet author="padhyad" id="1439890745706-43">
+        <createTable tableName="report_connect_spatial">
+            <column autoIncrement="true" name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" primaryKeyName="report_connect_spatial_pkey"/>
+            </column>
+            <column name="report_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="map_center" type="VARCHAR(255)"/>
+            <column name="map_zoom" type="INT"/>
+            <column name="map_extent" remarks="it might become not nullable field" type="TEXT"/>
+            <column name="map_proj_id" type="BIGINT"/>
+            <column name="display_proj_id" type="BIGINT"/>
+            <column name="display_format" type="VARCHAR(255)"/>
+            <column name="measurement_units" type="VARCHAR(255)"/>
+            <column name="scalebar_units" type="VARCHAR(255)"/>
+            <column name="vector_styles" type="TEXT"/>
+            <column name="app_version" type="VARCHAR(255)">
+                <constraints/>
+            </column>
+        </createTable>
+    </changeSet>
+    
+    <changeSet author="padhyad" id="1439890745706-58">
+        <addForeignKeyConstraint baseColumnNames="report_connect_spatial_id" baseTableName="report_connect_service_areas" constraintName="report_connect_service_areas_report_connect_spatial_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="report_connect_spatial"/>
+    </changeSet>
+
+</databaseChangeLog>

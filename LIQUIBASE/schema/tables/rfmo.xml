@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:spatial="http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-spatial"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd   http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-spatial
+      http://lonnyj.github.com/liquibase-spatial/liquibase-spatial.xsd">
+
+    <changeSet author="padhyad" id="1439890745706-45">
+        <preConditions>
+            <spatial:spatialSupported/>
+        </preConditions>    
+        <createTable tableName="rfmo">
+            <column autoIncrement="true" name="gid" remarks="ID" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="rfmo_pkey"/>
+            </column>
+            <column name="geom" type="geometry(Multipolygon, 4326)"/>
+            <column name="code" type="VARCHAR(10)"/>
+            <column name="name" type="VARCHAR(125)"/>
+            <column name="tuna" type="VARCHAR(10)"/>
+        </createTable>
+        <sql>create index rfmo_geom_index on spatial.rfmo using gist(geom)</sql>
+    </changeSet>
+    
+   <!--<changeSet author="padhyad" id="1439890745706-67">
+      <preConditions>
+         <tableExists tableName="rfmo" />
+         <not>
+            <spatial:spatialIndexExists tableName="rfmo" columnNames="geom" />
+         </not>
+      </preConditions>
+      <spatial:createSpatialIndex tableName="rfmo" indexName="rfmo_geom_index" geometryType="Multipolygon" srid="4326">
+         <column name="geom" />
+      </spatial:createSpatialIndex>
+   </changeSet> -->
+
+</databaseChangeLog>

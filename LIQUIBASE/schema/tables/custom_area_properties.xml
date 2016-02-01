@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+ 
+    <changeSet author="padhyad" id="1443103928545-28">
+        <createTable tableName="custom_area_properties">
+            <column autoIncrement="true" name="id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="custom_area_properties_pkey"/>
+            </column>
+            <column name="prop_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="prop_value" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="custom_areas_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="view_ref" type="VARCHAR(255)">
+            	<constraints nullable="false"/>
+            </column>	
+        </createTable>
+    </changeSet>
+    
+    <changeSet author="padhyad" id="1443103928545-58">
+        <addForeignKeyConstraint baseColumnNames="custom_areas_id" baseTableName="custom_area_properties" constraintName="custom_area_properties_custom_areas_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="gid" referencedTableName="custom_areas"/>
+    </changeSet>
+    
+</databaseChangeLog>
