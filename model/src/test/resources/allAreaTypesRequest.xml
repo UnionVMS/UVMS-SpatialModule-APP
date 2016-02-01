@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:AllAreaTypesRequest xmlns:ns2="http://europa.eu/ec/fisheries/uvms/spatial/model/schemas">
+    <ns2:method>GET_AREA_TYPES</ns2:method>
+</ns2:AllAreaTypesRequest>
