@@ -91,6 +91,11 @@ public class UserAreaServiceBean implements UserAreaService {
         repository.deleteEntity(persistentUserAreas.get(0));
     }
 
+    @Override
+    public List<String> getUserAreaTypes(String userName) throws ServiceException {
+        return repository.getUserAreaTypes(userName);
+    }
+
     private void validateNotNull(Long userAreaId, List<UserAreasEntity> persistentUserAreas) {
         if (CollectionUtils.isEmpty(persistentUserAreas)) {
             throw new SpatialServiceException(SpatialServiceErrors.USER_AREA_DOES_NOT_EXIST, userAreaId);

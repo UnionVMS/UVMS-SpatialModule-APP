@@ -104,6 +104,15 @@ public class UserAreaResource extends UnionVMSResource {
         }
     }
 
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/userareatypes")
+    @Interceptors(value = {ExceptionInterceptor.class})
+    public Response getUserAreaTypes(@Context HttpServletRequest request, @HeaderParam("scopeName") String scopeName) throws ServiceException {
+        log.debug("UserName from security : " + request.getRemoteUser());
+        return createSuccessResponse(userAreaService.getUserAreaTypes(request.getRemoteUser()));
+    }
+
     private Response getUserAreaDetailsById(UserAreaTypeDto userAreaTypeDto, String userName) throws ServiceException, IOException, ParseException {
         if (!userAreaTypeDto.getIsGeom()) {
             AreaTypeEntry areaTypeEntry = areaLocationMapper.getAreaTypeEntry(userAreaTypeDto);

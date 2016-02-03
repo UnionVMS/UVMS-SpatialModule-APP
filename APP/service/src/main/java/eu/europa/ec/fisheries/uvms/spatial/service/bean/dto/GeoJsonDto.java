@@ -19,13 +19,12 @@ public abstract class GeoJsonDto {
 
     public static final String GEOMETRY = "geometry";
     public static final String AREA_GEOMETRY = "areageometry";
+    protected static final String ID = "id";
+    protected static final String PORTAREA = "PORTAREA";
     private static final String EXTENT = "extent";
-    private static final String PORTAREA = "PORTAREA";
     protected String type;
-
     @JsonDeserialize(using = GeometryDeserializer.class)
     protected Geometry geometry;
-
     protected Map<String, String> properties = new HashMap<String, String>();
 
     public String getType() {
@@ -75,12 +74,7 @@ public abstract class GeoJsonDto {
     }
 
     public SimpleFeature toFeature(Class geometryType, Map<String, String> properties) throws ParseException {
-        SimpleFeatureBuilder featureBuilder;
-        if (PORTAREA.equalsIgnoreCase(type)) {
-            featureBuilder = new SimpleFeatureBuilder(build(geometryType, properties, AREA_GEOMETRY));
-        } else {
-            featureBuilder = new SimpleFeatureBuilder(build(geometryType, properties, GEOMETRY));
-        }
+        SimpleFeatureBuilder featureBuilder = new SimpleFeatureBuilder(build(geometryType, properties, GEOMETRY));
 
         for (Entry<String, String> entrySet : properties.entrySet()) {
             featureBuilder.set(entrySet.getKey(), entrySet.getValue());
@@ -89,13 +83,13 @@ public abstract class GeoJsonDto {
     }
 
     public void removeGeometry() {
-        if (PORTAREA.equalsIgnoreCase(type)) {
-            if (properties.containsKey(AREA_GEOMETRY)) {
-                properties.put(EXTENT, getExtend(properties.get(AREA_GEOMETRY)));
-                properties.remove(AREA_GEOMETRY);
+        if (PORTAREA.equalsIgnoreCase(type) && properties.containsKey(AREA_GEOMETRY)) {
+            properties.put(EXTENT, getExtend(properties.get(AREA_GEOMETRY)));
+            properties.remove(AREA_GEOMETRY);
+            if (properties.containsKey(GEOMETRY)) {
+                properties.remove(GEOMETRY);
             }
-        }
-        if (properties.containsKey(GEOMETRY)) {
+        } else if (properties.containsKey(GEOMETRY)) {
             properties.put(EXTENT, getExtend(properties.get(GEOMETRY)));
             properties.remove(GEOMETRY);
         }
@@ -113,4 +107,6 @@ public abstract class GeoJsonDto {
             return geometry;
         }
     }
+
+
 }

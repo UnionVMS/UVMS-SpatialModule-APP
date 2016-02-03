@@ -13,50 +13,50 @@ import java.util.List;
 public class VisibilitySegmentDto {
 
     @JsonProperty("popup")
-    private List<String> popup;
+    private VisibilityAttributesDto popup;
 
     @JsonProperty("labels")
-    private List<String> labels;
+    private VisibilityAttributesDto labels;
 
     @NotNull
     @JsonProperty("table")
-    private List<String> table;
+    private VisibilityAttributesDto table;
 
     public VisibilitySegmentDto() {}
 
-    public VisibilitySegmentDto(List<String> popup, List<String> labels, List<String> table) {
+    public VisibilitySegmentDto(VisibilityAttributesDto popup, VisibilityAttributesDto labels, VisibilityAttributesDto table) {
         this.popup = popup;
         this.labels = labels;
         this.table = table;
     }
 
     @JsonProperty("popup")
-    public List<String> getPopup() {
+    public VisibilityAttributesDto getPopup() {
         return popup;
     }
 
     @JsonProperty("popup")
-    public void setPopup(List<String> popup) {
+    public void setPopup(VisibilityAttributesDto popup) {
         this.popup = popup;
     }
 
     @JsonProperty("labels")
-    public List<String> getLabels() {
+    public VisibilityAttributesDto getLabels() {
         return labels;
     }
 
     @JsonProperty("labels")
-    public void setLabels(List<String> labels) {
+    public void setLabels(VisibilityAttributesDto labels) {
         this.labels = labels;
     }
 
     @JsonProperty("table")
-    public List<String> getTable() {
+    public VisibilityAttributesDto getTable() {
         return table;
     }
 
     @JsonProperty("table")
-    public void setTable(List<String> table) {
+    public void setTable(VisibilityAttributesDto table) {
         this.table = table;
     }
 }
