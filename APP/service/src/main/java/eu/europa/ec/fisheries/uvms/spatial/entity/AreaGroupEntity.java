@@ -1,24 +1,21 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
+import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "area_group", schema = "spatial")
+@NamedQueries({
+		@NamedQuery(name = QueryNameConstants.FIND_ALL_AREA_GROUP_BY_NAME,
+				query = "FROM AreaGroupEntity areaGroup WHERE areaGroup.userId = :userId"),
+		@NamedQuery(name = QueryNameConstants.FIND_AREA_GROUP_BY_ID,
+				query = "FROM AreaGroupEntity areaGroup WHERE areaGroup.id = :id")
+})
 public class AreaGroupEntity implements Serializable {
 	
 	private static final long serialVersionUID = 6797853213499502856L;
@@ -26,20 +23,21 @@ public class AreaGroupEntity implements Serializable {
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private Long id;
 	
 	@Column(name = "user_id", nullable = false)
-	private long userId;
+	private String userId;
 	
 	@Column(name = "scope_id", nullable = false)
-	private long scopeId;
-	
-	@Lob
-	@Column(name = "bookmark_definition", nullable = false)
+	private String scopeId;
+
+	@Column(name = "group_name", nullable = false)
+	private String groupName;
+
+	@Column(columnDefinition = "text", name = "bookmark_definition")
 	private String bookmarkDefinition;
-	
-	@Lob
-	@Column(name = "description")
+
+	@Column(columnDefinition = "text", name = "description")
 	private String description;
 	
 	@Temporal(TemporalType.TIMESTAMP)
@@ -55,27 +53,27 @@ public class AreaGroupEntity implements Serializable {
 	public AreaGroupEntity() {
 	}
 
-	public int getId() {
-		return this.id;
+	public Long getId() {
+		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public long getUserId() {
-		return this.userId;
+	public String getUserId() {
+		return userId;
 	}
 
-	public void setUserId(long userId) {
+	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 
-	public long getScopeId() {
-		return this.scopeId;
+	public String getScopeId() {
+		return scopeId;
 	}
 
-	public void setScopeId(long scopeId) {
+	public void setScopeId(String scopeId) {
 		this.scopeId = scopeId;
 	}
 
@@ -105,6 +103,14 @@ public class AreaGroupEntity implements Serializable {
 
 	public Set<ReportConnectServiceAreasEntity> getReportConnectServiceAreases() {
 		return this.reportConnectServiceAreases;
+	}
+
+	public String getGroupName() {
+		return groupName;
+	}
+
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
 	}
 
 	public void setReportConnectServiceAreases(Set<ReportConnectServiceAreasEntity> reportConnectServiceAreases) {

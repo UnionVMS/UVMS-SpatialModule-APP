@@ -30,4 +30,6 @@ public interface UserAreaService {
 	long updateUserArea(UserAreaGeomDto userAreaDto, String userName) throws ServiceException;
 
 	void deleteUserArea(Long userAreaId, String userName) throws ServiceException;
+
+	List<String> getUserAreaTypes(String userName) throws ServiceException;
 }

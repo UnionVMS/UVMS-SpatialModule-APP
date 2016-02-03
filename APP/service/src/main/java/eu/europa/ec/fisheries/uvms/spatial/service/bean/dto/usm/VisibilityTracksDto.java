@@ -14,21 +14,21 @@ public class VisibilityTracksDto {
 
     @NotNull
     @JsonProperty("table")
-    private List<String> table;
+    private VisibilityAttributesDto table;
 
     public VisibilityTracksDto(){}
 
-    public VisibilityTracksDto(List<String> table) {
+    public VisibilityTracksDto(VisibilityAttributesDto table) {
         this.table = table;
     }
 
     @JsonProperty("table")
-    public List<String> getTable() {
+    public VisibilityAttributesDto getTable() {
         return table;
     }
 
     @JsonProperty("table")
-    public void setTable(List<String> table) {
+    public void setTable(VisibilityAttributesDto table) {
         this.table = table;
     }
 }

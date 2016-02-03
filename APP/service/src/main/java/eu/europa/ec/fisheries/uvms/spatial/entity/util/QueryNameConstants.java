@@ -38,6 +38,12 @@ public final class QueryNameConstants {
 
     public static final String SEARCH_USER_AREA = "UserArea.searchUserAreaByNameAndDesc";
     public static final String FIND_USER_AREA_BY_ID = "UserArea.findUserAreaById";
+    public static final String FIND_USER_AREA_TYPES = "UserArea.findUserAreaTypes";
+
+    /**
+     * Find Ports Area
+     */
+    public static final String FIND_PORT_AREA_BY_ID = "PortArea.findPortAreaById";
 
     /**
      * Find Area By Name
@@ -85,4 +91,10 @@ public final class QueryNameConstants {
 
     public static final String FIND_SERVICE_LAYER_BY_SUBTYPE = "ServiceLayer.findServiceLayerBySubType";
     public static final String FIND_SERVICE_LAYER_BY_SUBTYPE_WITHOUT_BING = "ServiceLayer.findServiceLayerBySubTypeWithoutBing";
+
+    /**
+     * Area Group
+     */
+    public static final String FIND_ALL_AREA_GROUP_BY_NAME = "AreaGroup.findAllAreaGroupByName";
+    public static final String FIND_AREA_GROUP_BY_ID = "AreaGroup.findAreaGroupById";
 }

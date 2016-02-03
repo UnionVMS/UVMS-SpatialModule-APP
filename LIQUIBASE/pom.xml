@@ -56,6 +56,21 @@
                 <db.driver>org.postgresql.Driver</db.driver>
                 <db.url>jdbc:postgresql://localhost:5432/uvms</db.url>
                 <db.user>spatial</db.user>
+                <db.passwd>postgres</db.passwd>
+                <db.defaultSchema>spatial</db.defaultSchema>
+                <db.changeLogFile>changelog/db-changelog-master.xml</db.changeLogFile>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>postgres-prod</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <db.driver>org.postgresql.Driver</db.driver>
+                <db.url>jdbc:postgresql://livmdb71p.havochvatten.se:5432/db71p</db.url>
+                <db.user>spatial</db.user>
                 <db.passwd>spatial</db.passwd>
                 <db.defaultSchema>spatial</db.defaultSchema>
                 <db.changeLogFile>changelog/db-changelog-master.xml</db.changeLogFile>

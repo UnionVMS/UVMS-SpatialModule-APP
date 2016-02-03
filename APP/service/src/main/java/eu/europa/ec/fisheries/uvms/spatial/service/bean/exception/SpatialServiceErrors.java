@@ -20,7 +20,9 @@ public enum SpatialServiceErrors {
     INVALID_ID_TYPE("INVALID_ID_TYPE", 5012, "Invalid id in the request : {0}"),
     INVALID_AREA_TYPE("INVALID_AREA_TYPE", 5013, "Invalid area type: {0}", "Wrong argument."),
     USER_AREA_DOES_NOT_EXIST("USER_AREA_DOES_NOT_EXIST_FOR_USER_AND_SCOPE", 5014, "User area with id: {0} does not exist for that user and scope.", "Wrong argument."),
-    MISSING_USER_AREA_ID("MISSING_USER_AREA_ID", 5015, "Please specify user area id.", "Wrong argument.");
+    MISSING_USER_AREA_ID("MISSING_USER_AREA_ID", 5015, "Please specify user area id.", "Wrong argument."),
+    PORT_AREA_DOES_NOT_EXIST("PORT_AREA_DOES_NOT_EXIST", 5016, "Port area with id: {0} does not exist.", "Wrong argument."),
+    MISSING_PORT_AREA_ID("MISSING_PORT_AREA_ID", 5017, "Please specify port area id.", "Wrong argument.");
     //@formatter:on
 
     private final Integer errorCode;

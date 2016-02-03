@@ -13,6 +13,10 @@ import java.io.Serializable;
 @SqlResultSetMappings({
         @SqlResultSetMapping(name = "implicit.port", entities = @EntityResult(entityClass = PortsEntity.class))
 })
+@NamedQueries({
+        @NamedQuery(name = QueryNameConstants.FIND_PORT_AREA_BY_ID,
+                query = "SELECT port FROM PortsEntity port WHERE port.gid = :portAreaId")
+})
 @NamedNativeQueries({
         @NamedNativeQuery(
                 name = QueryNameConstants.PORT_BY_COORDINATE,

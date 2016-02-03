@@ -282,6 +282,9 @@
     "portLayers": [
       {
         "serviceLayerId": 4
+      },
+      {
+        "serviceLayerId": 11
       }
     ],
     "areaLayers": {
@@ -295,16 +298,12 @@
       ],
       "userAreas": {
         "serviceLayerId": 5,
-        "areas": [
-          {
-            "gid": 1
-          }
-        ]
+        "areas": []
       }
     },
     "additionalLayers": [
       {
-        "serviceLayerId": 3
+        "serviceLayerId": 7
       }
     ],
     "baseLayers": [
@@ -354,107 +353,218 @@
   },
   "visibilitySettings": {
     "positions": {
-      "popup": [
-        "fs",
-        "extMark",
-        "ircs",
-        "cfr",
-        "posTime",
-        "crs",
-        "c_spd",
-        "m_spd",
-        "stat",
-        "lat",
-        "lon",
-        "msg_tp",
-        "act_tp",
-        "source",
-        "name"
-      ],
-      "labels": [
-        "fs",
-        "extMark",
-        "ircs",
-        "cfr",
-        "posTime",
-        "lon",
-        "lat",
-        "stat",
-        "m_spd",
-        "c_spd",
-        "crs",
-        "msg_tp",
-        "act_tp",
-        "source",
-        "name"
-      ],
-      "table": [
-        "fs",
-        "extMark",
-        "ircs",
-        "cfr",
-        "posTime",
-        "lon",
-        "lat",
-        "stat",
-        "m_spd",
-        "c_spd",
-        "crs",
-        "msg_tp",
-        "act_tp",
-        "source",
-        "name"
-      ]
+      "popup": {
+        "values": [
+          "fs",
+          "extMark",
+          "ircs",
+          "cfr",
+          "posTime",
+          "crs",
+          "c_spd",
+          "m_spd",
+          "stat",
+          "lat",
+          "lon",
+          "msg_tp",
+          "act_tp",
+          "source",
+          "name"
+        ],
+        "order": [
+          "fs",
+          "extMark",
+          "ircs",
+          "cfr",
+          "posTime",
+          "crs",
+          "c_spd",
+          "m_spd",
+          "stat",
+          "lat",
+          "lon",
+          "msg_tp",
+          "act_tp",
+          "source",
+          "name"
+        ]
+      },
+      "labels": {
+        "values": [
+          "fs",
+          "extMark",
+          "ircs",
+          "cfr",
+          "posTime",
+          "lon",
+          "lat",
+          "stat",
+          "m_spd",
+          "c_spd",
+          "crs",
+          "msg_tp",
+          "act_tp",
+          "source",
+          "name"
+        ],
+        "order": [
+          "fs",
+          "extMark",
+          "ircs",
+          "cfr",
+          "posTime",
+          "lon",
+          "lat",
+          "stat",
+          "m_spd",
+          "c_spd",
+          "crs",
+          "msg_tp",
+          "act_tp",
+          "source",
+          "name"
+        ]
+      },
+      "table": {
+        "values": [
+          "fs",
+          "extMark",
+          "ircs",
+          "cfr",
+          "posTime",
+          "lon",
+          "lat",
+          "stat",
+          "m_spd",
+          "c_spd",
+          "crs",
+          "msg_tp",
+          "act_tp",
+          "source",
+          "name"
+        ],
+        "order": [
+          "fs",
+          "extMark",
+          "ircs",
+          "cfr",
+          "posTime",
+          "lon",
+          "lat",
+          "stat",
+          "m_spd",
+          "c_spd",
+          "crs",
+          "msg_tp",
+          "act_tp",
+          "source",
+          "name"
+        ]
+      }
     },
     "segments": {
-      "popup": [
-        "fs",
-        "extMark",
-        "ircs",
-        "cfr",
-        "dist",
-        "dur",
-        "spd",
-        "crs",
-        "cat",
-        "name"
-      ],
-      "labels": [
-        "extMark",
-        "ircs",
-        "cfr",
-        "dist",
-        "cat",
-        "crs",
-        "spd",
-        "dur",
-        "fs",
-        "name"
-      ],
-      "table": [
-        "extMark",
-        "ircs",
-        "cfr",
-        "dist",
-        "cat",
-        "crs",
-        "spd",
-        "dur",
-        "fs",
-        "name"
-      ]
+      "popup": {
+        "values": [
+          "fs",
+          "extMark",
+          "ircs",
+          "cfr",
+          "dist",
+          "dur",
+          "spd",
+          "crs",
+          "cat",
+          "name"
+        ],
+        "order": [
+          "fs",
+          "extMark",
+          "ircs",
+          "cfr",
+          "dist",
+          "dur",
+          "spd",
+          "crs",
+          "cat",
+          "name"
+        ]
+      },
+      "labels": {
+        "values": [
+          "extMark",
+          "ircs",
+          "cfr",
+          "dist",
+          "cat",
+          "crs",
+          "spd",
+          "dur",
+          "fs",
+          "name"
+        ],
+        "order": [
+          "extMark",
+          "ircs",
+          "cfr",
+          "dist",
+          "cat",
+          "crs",
+          "spd",
+          "dur",
+          "fs",
+          "name"
+        ]
+      },
+      "table": {
+        "values": [
+          "extMark",
+          "ircs",
+          "cfr",
+          "dist",
+          "cat",
+          "crs",
+          "spd",
+          "dur",
+          "fs",
+          "name"
+        ],
+        "order": [
+          "extMark",
+          "ircs",
+          "cfr",
+          "dist",
+          "cat",
+          "crs",
+          "spd",
+          "dur",
+          "fs",
+          "name"
+        ]
+      }
     },
     "tracks": {
-      "table": [
-        "fs",
-        "extMark",
-        "ircs",
-        "cfr",
-        "name",
-        "dist",
-        "dur",
-        "timeSea"
-      ]
+      "table": {
+        "values": [
+          "fs",
+          "extMark",
+          "ircs",
+          "cfr",
+          "name",
+          "dist",
+          "dur",
+          "timeSea"
+        ],
+        "order": [
+          "fs",
+          "extMark",
+          "ircs",
+          "cfr",
+          "name",
+          "dist",
+          "dur",
+          "timeSea"
+        ]
+      }
     }
   }
 }
