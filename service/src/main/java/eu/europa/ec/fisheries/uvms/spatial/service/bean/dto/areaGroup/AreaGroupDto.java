@@ -2,7 +2,6 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaGroup;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 
 import java.util.List;
 
@@ -22,7 +21,16 @@ public class AreaGroupDto {
     private String groupDesc;
 
     @JsonProperty("areas")
-    private List<AreaDetailsDto> areaDetailsDtos;
+    private List<AreaGroupTypeDto> areaDetailsDtos;
+
+    public AreaGroupDto(){}
+
+    public AreaGroupDto(Long groupId, String groupName, String groupDesc, List<AreaGroupTypeDto> areaDetailsDtos) {
+        this.groupDesc = groupDesc;
+        this.groupId = groupId;
+        this.groupName = groupName;
+        this.areaDetailsDtos = areaDetailsDtos;
+    }
 
     @JsonProperty("groupId")
     public Long getGroupId() {
@@ -55,12 +63,12 @@ public class AreaGroupDto {
     }
 
     @JsonProperty("areas")
-    public List<AreaDetailsDto> getAreaDetailsDtos() {
+    public List<AreaGroupTypeDto> getAreaDetailsDtos() {
         return areaDetailsDtos;
     }
 
     @JsonProperty("areas")
-    public void setAreaDetailsDtos(List<AreaDetailsDto> areaDetailsDtos) {
+    public void setAreaDetailsDtos(List<AreaGroupTypeDto> areaDetailsDtos) {
         this.areaDetailsDtos = areaDetailsDtos;
     }
 }

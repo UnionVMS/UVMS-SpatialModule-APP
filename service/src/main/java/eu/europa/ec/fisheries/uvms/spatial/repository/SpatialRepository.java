@@ -6,6 +6,7 @@ import eu.europa.ec.fisheries.uvms.service.DAO;
 import eu.europa.ec.fisheries.uvms.spatial.entity.*;
 import eu.europa.ec.fisheries.uvms.spatial.entity.config.SysConfigEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.*;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaGroup.AreaGroupTypeDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.ServiceLayerDto;
@@ -73,4 +74,13 @@ public interface SpatialRepository extends DAO {
 
     List<UserAreasEntity> findUserAreaById(Long userAreaId, String userName) throws ServiceException;
 
+    List<AreaGroupEntity> getAreaGroups(String userName);
+
+    List<AreaGroupTypeDto> getAreasByGid(String sqlQuery);
+
+    AreaGroupEntity getAreaGroup(Long groupId);
+
+    List<PortsEntity> findPortAreaById(Long id) throws ServiceException;
+
+    List<String> getUserAreaTypes(String userName) throws ServiceException;
 }

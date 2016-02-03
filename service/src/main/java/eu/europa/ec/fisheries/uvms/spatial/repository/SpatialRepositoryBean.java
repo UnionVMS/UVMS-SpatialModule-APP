@@ -8,6 +8,7 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.*;
 import eu.europa.ec.fisheries.uvms.spatial.entity.config.SysConfigEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.*;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaGroup.AreaGroupTypeDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.ServiceLayerDto;
@@ -19,10 +20,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import static eu.europa.ec.fisheries.uvms.service.QueryParameter.with;
+import static org.apache.commons.collections.CollectionUtils.isEmpty;
 import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 
 @Stateless
@@ -30,12 +33,11 @@ import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class SpatialRepositoryBean extends AbstractDAO implements SpatialRepository {
 
+    private static final String USER_NAME = "userName";
     @PersistenceContext(unitName = "spatialPU")
     private EntityManager em;
-
     @EJB
     private SqlPropertyHolder sql;
-
     private AreaDao areaDao;
     private UserAreaDao userAreaDao;
     private CountryDao countryDao;
@@ -44,8 +46,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     private EezDao eezDao;
     private SysConfigDao sysConfigDao;
     private ReportConnectSpatialDao reportConnectSpatialDao;
-
-    private static final String USER_NAME = "userName";
+    private AreaGroupDao areaGroupDao;
 
     @PostConstruct
     public void init() {
@@ -57,6 +58,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
         eezDao = new EezDao(em);
         sysConfigDao = new SysConfigDao(em);
         reportConnectSpatialDao = new ReportConnectSpatialDao(em);
+        areaGroupDao = new AreaGroupDao(em, sql);
     }
 
     @Override
@@ -231,6 +233,20 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     }
 
     @Override
+    public List<String> getUserAreaTypes(String userName) throws ServiceException {
+        List<String> userAreaTypes = findEntityByNamedQuery(String.class, QueryNameConstants.FIND_USER_AREA_TYPES, with("userName", userName).parameters());
+        if (isEmpty(userAreaTypes) || userAreaTypes.get(0) == null) {
+            return Collections.emptyList();
+        }
+        return userAreaTypes;
+    }
+
+    @Override
+    public List<PortsEntity> findPortAreaById(Long portAreaId) throws ServiceException {
+        return findEntityByNamedQuery(PortsEntity.class, QueryNameConstants.FIND_PORT_AREA_BY_ID, with("portAreaId", portAreaId).parameters(), 1);
+    }
+
+    @Override
     public List<AreaDto> findAllUserAreasByGids(List<Long> gids) {
         return userAreaDao.findAllUserAreasByGids(gids);
     }
@@ -238,5 +254,17 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     @Override
     public EntityManager getEntityManager() {
         return em;
+    }
+
+    public List<AreaGroupEntity> getAreaGroups(String userName) {
+        return areaGroupDao.getAreaGroups(userName);
+    }
+
+    public List<AreaGroupTypeDto> getAreasByGid(String sqlQuery) {
+        return areaGroupDao.getAreasByGid(sqlQuery);
+    }
+
+    public AreaGroupEntity getAreaGroup(Long groupId) {
+        return areaGroupDao.getAreaGroup(groupId);
     }
 }
