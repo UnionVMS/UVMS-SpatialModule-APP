@@ -119,8 +119,10 @@ CREATE TABLE spatial.area_types
 CREATE TABLE spatial.bookmark
 (
 	id bigserial NOT NULL,
-	user_id bigint NOT NULL,
-	bookmark_definition text NOT NULL,
+	name varchar(255) NOT NULL,
+	srs int NOT NULL,
+	extent varchar(255) NOT NULL,
+	created_by varchar(255) NOT NULL
 	PRIMARY KEY (id)
 ) WITHOUT OIDS;
 
