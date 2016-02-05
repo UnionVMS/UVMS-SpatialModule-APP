@@ -8,10 +8,16 @@
             <column autoIncrement="true" name="id" type="BIGSERIAL">
                 <constraints primaryKey="true" primaryKeyName="bookmark_pkey"/>
             </column>
-            <column name="user_id" type="BIGINT">
+             <column name="srs" type="INT">
                 <constraints nullable="false"/>
             </column>
-            <column name="bookmark_definition" type="TEXT">
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="extent" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
