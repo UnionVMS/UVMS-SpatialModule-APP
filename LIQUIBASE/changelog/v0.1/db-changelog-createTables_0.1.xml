@@ -28,4 +28,5 @@
     <include file="\schema\tables\custom_area_properties.xml"/>
     <include file="\schema\tables\system_configurations.xml"/>
 
+
 </databaseChangeLog>
