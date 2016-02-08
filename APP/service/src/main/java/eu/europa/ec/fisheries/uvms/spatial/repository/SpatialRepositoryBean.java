@@ -4,8 +4,25 @@ import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.reporting.model.bookmark.Bookmark;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
-import eu.europa.ec.fisheries.uvms.spatial.dao.*;
-import eu.europa.ec.fisheries.uvms.spatial.entity.*;
+import eu.europa.ec.fisheries.uvms.spatial.dao.AreaDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.AreaGroupDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.BookmarkDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.CountryDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.EezDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.MapConfigDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.ProjectionDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.ReportConnectSpatialDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.SysConfigDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.UserAreaDao;
+import eu.europa.ec.fisheries.uvms.spatial.entity.AreaGroupEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.BookmarkEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.PortsEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ProjectionEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.config.SysConfigEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.*;
@@ -51,6 +68,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     private ReportConnectSpatialDao reportConnectSpatialDao;
     private AreaGroupDao areaGroupDao;
     private BookmarkDao bookmarkDao;
+    private ProjectionDao projectionDao;
 
     @Override
     public EntityManager getEntityManager() {
@@ -68,6 +86,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
         reportConnectSpatialDao = new ReportConnectSpatialDao(em);
         areaGroupDao = new AreaGroupDao(em, sql);
         bookmarkDao = new BookmarkDao(em);
+        projectionDao = new ProjectionDao(em);
     }
 
     @Override
@@ -287,6 +306,12 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
 
     }
 
+    @Override
+    public ProjectionEntity findProjection(Integer srsCode) throws ServiceException {
+
+        return projectionDao.findBySrsCode(srsCode);
+    }
+
     public List<AreaGroupEntity> getAreaGroups(String userName) {
         return areaGroupDao.getAreaGroups(userName);
     }
@@ -298,6 +323,5 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     public AreaGroupEntity getAreaGroup(Long groupId) {
         return areaGroupDao.getAreaGroup(groupId);
     }
-
 
 }
