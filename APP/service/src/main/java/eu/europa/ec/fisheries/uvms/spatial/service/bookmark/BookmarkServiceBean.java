@@ -50,6 +50,8 @@ public class BookmarkServiceBean implements BookmarkService {
             Set<String> features  = usmService.getUserFeatures(userName, applicationName, roleName, scopeName);
 
             if (features.contains("MANAGE_BOOKMARKS")){
+
+                repository.findProjection(bookmark.getSrs());
                 bookmark.setCreatedBy(userName);
                 BookmarkEntity entity = repository.create(BookmarkMapper.INSTANCE.bookmarkToBookmarkEntity(bookmark));
                 return BookmarkMapper.INSTANCE.bookmarkEntityToBookmark(entity);
@@ -59,7 +61,7 @@ public class BookmarkServiceBean implements BookmarkService {
             }
 
         } catch (ServiceException e) {
-            throw new ServiceException("User doesn't have the right to create bookmarks");
+            throw new ServiceException(e.getMessage());
         }
     }
 

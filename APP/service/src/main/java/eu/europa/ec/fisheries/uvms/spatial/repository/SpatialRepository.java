@@ -8,6 +8,7 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.AreaGroupEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.BookmarkEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.PortsEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ProjectionEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity;
@@ -99,4 +100,6 @@ public interface SpatialRepository extends DAO {
     void delete(Long id) throws ServiceException;
 
     void update(Bookmark bookmark) throws ServiceException;
+
+    ProjectionEntity findProjection(Integer srsCode) throws ServiceException;
 }
