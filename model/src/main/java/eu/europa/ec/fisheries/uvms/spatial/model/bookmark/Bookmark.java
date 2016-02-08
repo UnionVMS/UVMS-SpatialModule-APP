@@ -1,5 +1,4 @@
-
-package eu.europa.ec.fisheries.uvms.reporting.model.bookmark;
+package eu.europa.ec.fisheries.uvms.spatial.model.bookmark;
 
 import java.util.HashMap;
 import java.util.Map;
