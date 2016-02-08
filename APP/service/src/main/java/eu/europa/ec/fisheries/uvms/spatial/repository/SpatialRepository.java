@@ -2,17 +2,25 @@ package eu.europa.ec.fisheries.uvms.spatial.repository;
 
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.reporting.model.bookmark.Bookmark;
 import eu.europa.ec.fisheries.uvms.service.DAO;
-import eu.europa.ec.fisheries.uvms.spatial.entity.*;
+import eu.europa.ec.fisheries.uvms.spatial.entity.AreaGroupEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.BookmarkEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.PortsEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.config.SysConfigEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaGroup.AreaGroupTypeDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.ServiceLayerDto;
-
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface SpatialRepository extends DAO {
 
@@ -83,4 +91,12 @@ public interface SpatialRepository extends DAO {
     List<PortsEntity> findPortAreaById(Long id) throws ServiceException;
 
     List<String> getUserAreaTypes(String userName) throws ServiceException;
+
+    BookmarkEntity create(BookmarkEntity bookmark) throws ServiceException;
+
+    Set<Bookmark> listBookmarksBy(String userName) throws ServiceException;
+
+    void delete(Long id) throws ServiceException;
+
+    void update(Bookmark bookmark) throws ServiceException;
 }
