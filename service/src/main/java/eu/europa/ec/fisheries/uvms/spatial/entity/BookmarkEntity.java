@@ -1,58 +1,67 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "bookmark", schema = "spatial")
-public class BookmarkEntity implements Serializable {
+@NamedQuery(name = BookmarkEntity.LIST_BY_USERNAME, query = "FROM BookmarkEntity b WHERE b.createdBy = :createdBy")
+public class BookmarkEntity extends BaseEntity {
+
+    public static final String LIST_BY_USERNAME = "Bookmark.listByUsername";
+
+    @Column(name = "srs", nullable = false)
+	private Integer srs;
 	
-	private static final long serialVersionUID = 6797853213499502860L;
+	@Column(name = "name", nullable = false)
+	private String name;
 
-	@Id
-	@Column(name = "id")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
-	
-	@Column(name = "user_id", nullable = false)
-	private long userId;
-	
-	@Lob
-	@Column(name = "bookmark_definition", nullable = false)
-	private String bookmarkDefinition;
+    @Column(name = "created_by", nullable = false)
+    private String createdBy;
 
-	public BookmarkEntity() {
-	}
+    @Column(name = "extent", nullable = false)
+    private String extent;
 
-	public long getId() {
-		return this.id;
-	}
+    public Integer getSrs() {
 
-	public void setId(long id) {
-		this.id = id;
-	}
+        return srs;
+    }
 
-	public long getUserId() {
-		return this.userId;
-	}
+    public void setSrs(Integer srs) {
 
-	public void setUserId(long userId) {
-		this.userId = userId;
-	}
+        this.srs = srs;
+    }
 
-	public String getBookmarkDefinition() {
-		return this.bookmarkDefinition;
-	}
+    public String getName() {
 
-	public void setBookmarkDefinition(String bookmarkDefinition) {
-		this.bookmarkDefinition = bookmarkDefinition;
-	}
+        return name;
+    }
+
+    public void setName(String name) {
+
+        this.name = name;
+    }
+
+    public String getCreatedBy() {
+
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+
+        this.createdBy = createdBy;
+    }
+
+    public String getExtent() {
+
+        return extent;
+    }
+
+    public void setExtent(String extent) {
+
+        this.extent = extent;
+    }
 
 }

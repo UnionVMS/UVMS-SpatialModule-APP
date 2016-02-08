@@ -2,6 +2,7 @@ package eu.europa.ec.fisheries.uvms.spatial.repository;
 
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.reporting.model.bookmark.Bookmark;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.spatial.dao.*;
 import eu.europa.ec.fisheries.uvms.spatial.entity.*;
@@ -12,10 +13,14 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaGroup.AreaGroupT
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.ServiceLayerDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.mapper.BookmarkMapper;
 import eu.europa.ec.fisheries.uvms.spatial.util.SqlPropertyHolder;
-
 import javax.annotation.PostConstruct;
-import javax.ejb.*;
+import javax.ejb.EJB;
+import javax.ejb.Local;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
@@ -23,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static eu.europa.ec.fisheries.uvms.service.QueryParameter.with;
 import static org.apache.commons.collections.CollectionUtils.isEmpty;
@@ -30,23 +36,26 @@ import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 
 @Stateless
 @Local(value = SpatialRepository.class)
-@TransactionAttribute(TransactionAttributeType.REQUIRED)
+@TransactionAttribute(TransactionAttributeType.REQUIRED) // TODO why class level?
 public class SpatialRepositoryBean extends AbstractDAO implements SpatialRepository {
 
-    private static final String USER_NAME = "userName";
-    @PersistenceContext(unitName = "spatialPU")
-    private EntityManager em;
-    @EJB
-    private SqlPropertyHolder sql;
+    private @PersistenceContext(unitName = "spatialPU") EntityManager em;
+    private @EJB SqlPropertyHolder sql;
+
     private AreaDao areaDao;
     private UserAreaDao userAreaDao;
     private CountryDao countryDao;
     private MapConfigDao mapConfigDao;
-    private ProjectionDao projectionDao;
     private EezDao eezDao;
     private SysConfigDao sysConfigDao;
     private ReportConnectSpatialDao reportConnectSpatialDao;
     private AreaGroupDao areaGroupDao;
+    private BookmarkDao bookmarkDao;
+
+    @Override
+    public EntityManager getEntityManager() {
+        return em;
+    }
 
     @PostConstruct
     public void init() {
@@ -54,11 +63,11 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
         userAreaDao = new UserAreaDao(em);
         countryDao = new CountryDao(em);
         mapConfigDao = new MapConfigDao(em);
-        projectionDao = new ProjectionDao(em);
         eezDao = new EezDao(em);
         sysConfigDao = new SysConfigDao(em);
         reportConnectSpatialDao = new ReportConnectSpatialDao(em);
         areaGroupDao = new AreaGroupDao(em, sql);
+        bookmarkDao = new BookmarkDao(em);
     }
 
     @Override
@@ -251,9 +260,31 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
         return userAreaDao.findAllUserAreasByGids(gids);
     }
 
+
     @Override
-    public EntityManager getEntityManager() {
-        return em;
+    public BookmarkEntity create(BookmarkEntity bookmark) throws ServiceException {
+        return bookmarkDao.createEntity(bookmark);
+    }
+
+    @Override
+    public Set<Bookmark> listBookmarksBy(String userName) throws ServiceException {
+        return BookmarkMapper.INSTANCE.bookmarkEntityListToBookmarkSet(bookmarkDao.findAllByUser(userName));
+    }
+
+    @Override
+    public void delete(Long id) throws ServiceException {
+
+        BookmarkEntity entityById = bookmarkDao.findEntityById(BookmarkEntity.class, id);
+        if (entityById != null) {
+            bookmarkDao.deleteEntity(entityById);
+        }
+    }
+
+    @Override
+    public void update(Bookmark bookmark) throws ServiceException {
+        BookmarkEntity entityById = bookmarkDao.findEntityById(BookmarkEntity.class, bookmark.getId());
+        BookmarkMapper.INSTANCE.merge(bookmark, entityById);
+
     }
 
     public List<AreaGroupEntity> getAreaGroups(String userName) {
@@ -267,4 +298,6 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     public AreaGroupEntity getAreaGroup(Long groupId) {
         return areaGroupDao.getAreaGroup(groupId);
     }
+
+
 }
