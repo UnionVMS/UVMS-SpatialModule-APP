@@ -195,7 +195,7 @@ public class AreaDetailsServiceTest {
         eezEntity.setCountry("Belgium");
         eezEntity.setDateChang(String.valueOf(new Date().getTime()));
         eezEntity.setName("EEZ");
-        eezEntity.setEezId(123);
+        eezEntity.setEezId(new Long(123));
         eezEntity.setGeom(new GeometryBuilder().point());
         eezEntity.setGid(1);
         eezEntity.setCode("iso3digit");

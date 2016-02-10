@@ -71,7 +71,7 @@ public class EezEntity implements Serializable {
 
     @Column(name = "eez_id")
     @ColumnAliasName(aliasName ="eezId")
-	private Integer eezId;
+	private Long eezId;
 
     @Column(name = "code", length = 5)
     @ColumnAliasName(aliasName ="code")
@@ -103,7 +103,7 @@ public class EezEntity implements Serializable {
 
     @Builder
     public EezEntity(Geometry geom, String name, String country, String sovereign, String remarks, Integer sovId,
-                     Integer eezId, String code, BigDecimal mrgid, String dateChang, Double areaM2, Double longitude,
+                     Long eezId, String code, BigDecimal mrgid, String dateChang, Double areaM2, Double longitude,
                      Double latitude, Integer mrgidEez) {
         this.geom = geom;
         this.name = name;
@@ -180,11 +180,11 @@ public class EezEntity implements Serializable {
 		this.sovId = sovId;
 	}
 
-	public Integer getEezId() {
+	public Long getEezId() {
 		return this.eezId;
 	}
 
-	public void setEezId(Integer eezId) {
+	public void setEezId(Long eezId) {
 		this.eezId = eezId;
 	}
 
