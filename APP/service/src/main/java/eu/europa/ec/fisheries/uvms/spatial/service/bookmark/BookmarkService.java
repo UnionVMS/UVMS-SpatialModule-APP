@@ -1,7 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bookmark;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.reporting.model.bookmark.Bookmark;
+import eu.europa.ec.fisheries.uvms.spatial.model.bookmark.Bookmark;
 import java.util.Set;
 
 public interface BookmarkService {
