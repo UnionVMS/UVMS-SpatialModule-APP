@@ -35,6 +35,7 @@ public class RestActivator extends Application {
         set.add(FileUploadResource.class);
         set.add(AreaGroupResource.class);
         set.add(BookmarkResource.class);
+        set.add(MapFishResource.class);
         LOG.info(RestConstants.MODULE_NAME + " module starting up");
     }
 
