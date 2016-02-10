@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources;
 
+import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.service.interceptor.ValidationInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
@@ -27,7 +28,7 @@ public class FileUploadResource extends UnionVMSResource {
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Path("/upload")
     @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
-    public Response uploadAreaFile(@MultipartForm FileUploadForm form) throws IOException {
+    public Response uploadAreaFile(@MultipartForm FileUploadForm form) throws IOException, ServiceException {
 
         areaUploadService.uploadArea(form.getData(), form.getAreaType(), form.getCrsCode());
 

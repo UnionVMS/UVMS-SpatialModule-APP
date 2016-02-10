@@ -19,6 +19,11 @@ public interface EezMapper {
     EezDto eezEntityToEezDto(EezEntity eezEntity);
 
     @Mappings({
+            @Mapping(source = "geometry", target = "geom"),
+    })
+    EezEntity eezDtoToEezEntity(EezDto eezDto);
+
+    @Mappings({
             @Mapping(source = "geom", target = "geometry"),
     })
     EezType eezEntityToEezType(EezEntity eezEntity);

@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
+import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezType;
@@ -38,5 +39,12 @@ public class EezServiceBean implements EezService {
     public EezDto getEezById(int id) {
         EezEntity eez = (EezEntity) repository.findEntityById(EezEntity.class, id);
         return mapper.eezEntityToEezDto(eez);
+    }
+
+    @Override
+    public long createEzz(EezDto eezDto) throws ServiceException {
+        EezEntity eezEntity = mapper.eezDtoToEezEntity(eezDto);
+        eezEntity = (EezEntity) repository.saveOrUpdateEntity(eezEntity);
+        return eezEntity.getGid();
     }
 }

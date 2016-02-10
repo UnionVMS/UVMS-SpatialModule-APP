@@ -27,7 +27,7 @@ public class EezDaoTest extends BaseSpatialDaoTest {
                 .sovereign("Australia")
                 .sovId(16)
                 .code("CCK")
-                .eezId(1)
+                .eezId(new Long(1))
                 .mrgid(BigDecimal.valueOf(8398))
                 .areaM2(469065102500D)
                 .longitude(96.853338250294)

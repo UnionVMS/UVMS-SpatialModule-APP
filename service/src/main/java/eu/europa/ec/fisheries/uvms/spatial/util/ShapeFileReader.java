@@ -1,10 +1,13 @@
 package eu.europa.ec.fisheries.uvms.spatial.util;
 
+import com.google.common.collect.Maps;
+import com.vividsolutions.jts.geom.Geometry;
 import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFinder;
 import org.geotools.data.FeatureSource;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
+import org.opengis.feature.Property;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.filter.Filter;
@@ -12,12 +15,19 @@ import org.opengis.filter.Filter;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import static com.google.common.collect.Lists.newArrayList;
 
 public class ShapeFileReader {
 
-    public void readShapeFile(String absolutePath) throws IOException {
-        File file = new File(absolutePath + "eez.shp");
+    public Map<String, List<Property>> readShapeFile(String absolutePath, String fileName) throws IOException {
+        Map<String, List<Property>> geometries = Maps.newHashMap();
+
+        //CoordinateReferenceSystem crs = CRS.parseWKT(wkt);
+
+        File file = new File(absolutePath + fileName);
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("url", file.toURI().toURL());
 
@@ -32,10 +42,18 @@ public class ShapeFileReader {
         try (FeatureIterator<SimpleFeature> features = collection.features()) {
             while (features.hasNext()) {
                 SimpleFeature feature = features.next();
-                System.out.print(feature.getID());
-                System.out.print(": ");
-                System.out.println(feature.getDefaultGeometryProperty().getValue());
+                geometries.put(feature.getID(), newArrayList(feature.getProperties()));
+
+                setCRSIfNotPresent(feature);
             }
+        }
+        return geometries;
+    }
+
+    private void setCRSIfNotPresent(SimpleFeature feature) {
+        Geometry geom = (Geometry) feature.getDefaultGeometryProperty().getValue();
+        if (geom.getSRID() == 0) {
+            geom.setSRID(4326);
         }
     }
 
