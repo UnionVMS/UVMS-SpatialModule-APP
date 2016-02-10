@@ -6,7 +6,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 public class ZipExtractorTest {
@@ -26,7 +28,12 @@ public class ZipExtractorTest {
 
         // when
         try {
-            zipExtractor.unZipFile(zipFilePath, outputFolderPath);
+            Map<SupportedExtensions, String> filesNames = zipExtractor.unZipFile(zipFilePath, outputFolderPath);
+            assertEquals(4, filesNames.size());
+            assertEquals("eez.shp", filesNames.get(SupportedExtensions.SHP));
+            assertEquals("eez.dbf", filesNames.get(SupportedExtensions.DBF));
+            assertEquals("eez.prj", filesNames.get(SupportedExtensions.PRJ));
+            assertEquals("eez.shx", filesNames.get(SupportedExtensions.SHX));
         } catch (Exception ex) {
             fail("Should not throw exception");
         }

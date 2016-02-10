@@ -36,9 +36,9 @@ public class EezDto {
     private String remarks;
     private String code;
     private String dateChange;
-    private Integer sovId;
-    private Integer eezId;
-    private Integer mrgidEez;
+    private Long sovId;
+    private Long eezId;
+    private Long mrgidEez;
     private BigInteger mrgid;
     private BigInteger gid;
     private Double areaM2;
@@ -133,19 +133,19 @@ public class EezDto {
         this.remarks = remarks;
     }
 
-    public Integer getSovId() {
+    public Long getSovId() {
         return sovId;
     }
 
-    public void setSovId(int sovId) {
+    public void setSovId(long sovId) {
         this.sovId = sovId;
     }
 
-    public Integer getEezId() {
+    public Long getEezId() {
         return eezId;
     }
 
-    public void setEezId(int eezId) {
+    public void setEezId(long eezId) {
         this.eezId = eezId;
     }
 
@@ -197,11 +197,11 @@ public class EezDto {
         this.latitude = latitude;
     }
 
-    public Integer getMrgidEez() {
+    public Long getMrgidEez() {
         return mrgidEez;
     }
 
-    public void setMrgidEez(int mrgidEez) {
+    public void setMrgidEez(long mrgidEez) {
         this.mrgidEez = mrgidEez;
     }
 
