@@ -1,7 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.mapper;
 
-import eu.europa.ec.fisheries.uvms.reporting.model.bookmark.Bookmark;
 import eu.europa.ec.fisheries.uvms.spatial.entity.BookmarkEntity;
+import eu.europa.ec.fisheries.uvms.spatial.model.bookmark.Bookmark;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
