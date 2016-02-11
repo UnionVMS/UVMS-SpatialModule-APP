@@ -1,6 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.mapper;
 
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.UserScopeEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaGeomDto;
 import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.Mapper;
@@ -9,6 +10,9 @@ import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static eu.europa.ec.fisheries.uvms.common.DateUtils.*;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
@@ -29,7 +33,7 @@ public abstract class UserAreaMapper {
             @Mapping(source = "geometry", target = "geom"),
             @Mapping(target = "startDate", expression = "java(stringToDate(userAreaDto.getStartDate()))"),
             @Mapping(target = "endDate", expression = "java(stringToDate(userAreaDto.getEndDate()))"),
-            @Mapping(target = "isShared", expression = "java(userAreaDto.isShared())")
+            @Mapping(target = "scopeSelection", expression = "java(fromScopeArrayToEntity(userAreaDto.getScopeSelection()))")
     })
     public abstract UserAreasEntity fromDtoToEntity(UserAreaGeomDto userAreaDto);
 
@@ -38,6 +42,21 @@ public abstract class UserAreaMapper {
             return null;
         }
         return UI_FORMATTER.parseDateTime(date).toDate();
+    }
+
+    protected Set<UserScopeEntity> fromScopeArrayToEntity(List<String> scopeSelection) {
+        Set<UserScopeEntity> userScopeEntities = null;
+
+        if (scopeSelection != null) {
+            userScopeEntities = new HashSet<>(scopeSelection.size());
+            for (String scope : scopeSelection) {
+                UserScopeEntity userScopeEntity = new UserScopeEntity();
+                userScopeEntity.setName(scope);
+                userScopeEntities.add(userScopeEntity);
+            }
+        }
+
+        return userScopeEntities;
     }
 
 }

@@ -25,7 +25,7 @@ public abstract class GeoJsonDto {
     protected String type;
     @JsonDeserialize(using = GeometryDeserializer.class)
     protected Geometry geometry;
-    protected Map<String, String> properties = new HashMap<String, String>();
+    protected Map<String, Object> properties = new HashMap<String, Object>();
 
     public String getType() {
         return type;
@@ -43,11 +43,11 @@ public abstract class GeoJsonDto {
         this.geometry = geometry;
     }
 
-    public Map<String, String> getProperties() {
+    public Map<String, Object> getProperties() {
         return properties;
     }
 
-    public void setProperties(Map<String, String> properties) {
+    public void setProperties(Map<String, Object> properties) {
         this.properties = properties;
     }
 
@@ -55,7 +55,7 @@ public abstract class GeoJsonDto {
         properties.put(key, value);
     }
 
-    protected SimpleFeatureType build(Class geometryType, Map<String, String> properties, String geometryFieldName) {
+    protected SimpleFeatureType build(Class geometryType, Map<String, Object> properties, String geometryFieldName) {
         SimpleFeatureTypeBuilder sb = new SimpleFeatureTypeBuilder();
         sb.setCRS(DefaultGeographicCRS.WGS84);
         sb.setName(type.toUpperCase());
@@ -63,7 +63,13 @@ public abstract class GeoJsonDto {
             if (key.equalsIgnoreCase(geometryFieldName)) {
                 sb.add(key, geometryType);
             } else {
-                sb.add(key, String.class);
+                Class propClass = String.class;
+                Object propValue = properties.get(key);
+
+                if (propValue != null) {
+                    propClass = propValue.getClass();
+                }
+                sb.add(key, propClass);
             }
         }
         return sb.buildFeatureType();
@@ -73,10 +79,10 @@ public abstract class GeoJsonDto {
         return toFeature(geometryType, properties);
     }
 
-    public SimpleFeature toFeature(Class geometryType, Map<String, String> properties) throws ParseException {
+    public SimpleFeature toFeature(Class geometryType, Map<String, Object> properties) throws ParseException {
         SimpleFeatureBuilder featureBuilder = new SimpleFeatureBuilder(build(geometryType, properties, GEOMETRY));
 
-        for (Entry<String, String> entrySet : properties.entrySet()) {
+        for (Entry<String, Object> entrySet : properties.entrySet()) {
             featureBuilder.set(entrySet.getKey(), entrySet.getValue());
         }
         return featureBuilder.buildFeature(null);
@@ -95,16 +101,16 @@ public abstract class GeoJsonDto {
         }
     }
 
-    protected String getExtend(String geometry) {
+    protected String getExtend(Object geometry) {
         String extent = null;
         try {
             if (geometry != null) {
-                Geometry geom = new WKTReader().read(geometry);
+                Geometry geom = new WKTReader().read(geometry.toString());
                 extent = new WKTWriter().write(geom.getEnvelope());
             }
             return extent;
         } catch (ParseException e) {
-            return geometry;
+            return geometry==null?null:geometry.toString();
         }
     }
 

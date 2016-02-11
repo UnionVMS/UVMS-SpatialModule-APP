@@ -16,21 +16,21 @@ public class AreaDetailsDto extends GeoJsonDto {
 
     private static final String EXTENT = "extent";
 
-    private List<Map<String, String>> allAreaProperties = new ArrayList<Map<String, String>>();
+    private List<Map<String, Object>> allAreaProperties = new ArrayList<>();
 
     public SimpleFeature toFeature() throws ParseException {
         return super.toFeature(MultiPolygon.class);
     }
 
-    public SimpleFeature toFeature(Map<String, String> properties) throws ParseException {
+    public SimpleFeature toFeature(Map<String, Object> properties) throws ParseException {
         return super.toFeature(MultiPolygon.class, properties);
     }
 
-    public List<Map<String, String>> getAllAreaProperties() {
+    public List<Map<String, Object>> getAllAreaProperties() {
         return allAreaProperties;
     }
 
-    public void setAllAreaProperties(List<Map<String, String>> allAreaProperties) {
+    public void setAllAreaProperties(List<Map<String, Object>> allAreaProperties) {
         this.allAreaProperties = allAreaProperties;
     }
 
@@ -40,14 +40,14 @@ public class AreaDetailsDto extends GeoJsonDto {
         return new ObjectMapper().readTree(convert);
     }
 
-    public JsonNode convert(Map<String, String> properties) throws ParseException, IOException {
+    public JsonNode convert(Map<String, Object> properties) throws ParseException, IOException {
         replaceGeometryToAreaGeometryForPortArea(properties);
         return new ObjectMapper().readTree(new FeatureToGeoJsonMapper().convert(toFeature(properties)));
     }
 
-    private void replaceGeometryToAreaGeometryForPortArea(Map<String, String> properties) {
+    private void replaceGeometryToAreaGeometryForPortArea(Map<String, Object> properties) {
         if (PORTAREA.equalsIgnoreCase(type)) {
-            String areaGeom = properties.get(AREA_GEOMETRY);
+            Object areaGeom = properties.get(AREA_GEOMETRY);
             properties.put(GEOMETRY, areaGeom);
             properties.remove(AREA_GEOMETRY);
         }
@@ -55,14 +55,14 @@ public class AreaDetailsDto extends GeoJsonDto {
 
     public List<JsonNode> convertAll() throws IOException, ParseException {
         List<JsonNode> nodeList = new ArrayList<JsonNode>();
-        for (Map<String, String> featureMap : allAreaProperties) {
+        for (Map<String, Object> featureMap : allAreaProperties) {
             nodeList.add(convert(featureMap));
         }
         return nodeList;
     }
 
     public void removeGeometryAllAreas() {
-        for (Map<String, String> props : allAreaProperties) {
+        for (Map<String, Object> props : allAreaProperties) {
             if (props.containsKey(GEOMETRY)) {
                 props.put(EXTENT, getExtend(props.get(GEOMETRY)));
                 props.remove(GEOMETRY);
