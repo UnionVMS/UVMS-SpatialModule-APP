@@ -2,19 +2,27 @@ package eu.europa.ec.fisheries.uvms.spatial.util;
 
 import com.google.common.collect.Maps;
 import com.vividsolutions.jts.geom.Geometry;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFinder;
 import org.geotools.data.FeatureSource;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
+import org.geotools.geometry.jts.JTS;
+import org.geotools.referencing.CRS;
 import org.opengis.feature.Property;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.filter.Filter;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.opengis.referencing.operation.MathTransform;
+import org.opengis.referencing.operation.TransformException;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
@@ -22,38 +30,52 @@ import static com.google.common.collect.Lists.newArrayList;
 
 public class ShapeFileReader {
 
-    public Map<String, List<Property>> readShapeFile(String absolutePath, String fileName) throws IOException {
-        Map<String, List<Property>> geometries = Maps.newHashMap();
+    public static final String EPSG = "EPSG:";
+    private static final int DEFAULT_CRS_NUMBER = 4326;
+    private static final String DEFAULT_CRS = EPSG + DEFAULT_CRS_NUMBER;
 
-        //CoordinateReferenceSystem crs = CRS.parseWKT(wkt);
+    public Map<String, List<Property>> readShapeFile(Path absolutePath, String shapeFileName, CoordinateReferenceSystem sourceCRS) throws IOException {
+        try {
+            Map<String, List<Property>> geometries = Maps.newHashMap();
 
-        File file = new File(absolutePath + fileName);
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("url", file.toURI().toURL());
+            CoordinateReferenceSystem targetCRS = CRS.decode(DEFAULT_CRS);
+            MathTransform transform = CRS.findMathTransform(sourceCRS, targetCRS);
 
-        DataStore dataStore = DataStoreFinder.getDataStore(map);
-        String typeName = dataStore.getTypeNames()[0];
+            //TODO remove separator
+            String absolutePathString = absolutePath.toString() + File.separator;
+            File shpFile = new File(absolutePathString + shapeFileName);
+            Map<String, Object> map = Maps.newHashMap();
+            map.put("url", shpFile.toURI().toURL());
 
-        FeatureSource<SimpleFeatureType, SimpleFeature> source = dataStore
-                .getFeatureSource(typeName);
-        Filter filter = Filter.INCLUDE; // ECQL.toFilter("BBOX(THE_GEOM, 10,20,30,40)")
+            DataStore dataStore = DataStoreFinder.getDataStore(map);
+            String typeName = dataStore.getTypeNames()[0];
 
-        FeatureCollection<SimpleFeatureType, SimpleFeature> collection = source.getFeatures(filter);
-        try (FeatureIterator<SimpleFeature> features = collection.features()) {
-            while (features.hasNext()) {
-                SimpleFeature feature = features.next();
-                geometries.put(feature.getID(), newArrayList(feature.getProperties()));
+            FeatureSource<SimpleFeatureType, SimpleFeature> source = dataStore
+                    .getFeatureSource(typeName);
+            Filter filter = Filter.INCLUDE;
 
-                setCRSIfNotPresent(feature);
+            FeatureCollection<SimpleFeatureType, SimpleFeature> collection = source.getFeatures(filter);
+            try (FeatureIterator<SimpleFeature> features = collection.features()) {
+                while (features.hasNext()) {
+                    SimpleFeature feature = features.next();
+                    geometries.put(feature.getID(), newArrayList(feature.getProperties()));
+
+                    transformCRSToDefault(feature, sourceCRS, targetCRS, transform);
+                }
             }
+            return geometries;
+        } catch (FactoryException | TransformException e) {
+            throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
         }
-        return geometries;
     }
 
-    private void setCRSIfNotPresent(SimpleFeature feature) {
-        Geometry geom = (Geometry) feature.getDefaultGeometryProperty().getValue();
-        if (geom.getSRID() == 0) {
-            geom.setSRID(4326);
+    private void transformCRSToDefault(SimpleFeature feature, CoordinateReferenceSystem sourceCRS, CoordinateReferenceSystem targetCRS, MathTransform transform) throws FactoryException, TransformException {
+        Geometry sourceGeometry = (Geometry) feature.getDefaultGeometryProperty().getValue();
+        if (sourceCRS != targetCRS) {
+            Geometry targetGeometry = JTS.transform(sourceGeometry, transform);
+            feature.setDefaultGeometry(targetGeometry);
+        } else {
+            sourceGeometry.setSRID(DEFAULT_CRS_NUMBER);
         }
     }
 

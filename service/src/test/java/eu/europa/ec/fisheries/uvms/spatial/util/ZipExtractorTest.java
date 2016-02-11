@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -24,16 +25,15 @@ public class ZipExtractorTest {
         // given
         String absoluteZipPath = getAbsoluteZipPath();
         String zipFilePath = absoluteZipPath + EEZ_ZIP_FILE;
-        String outputFolderPath = getTempPath();
+        Path outputFolderPath = Paths.get(getTempPath());
 
         // when
         try {
-            Map<SupportedExtensions, String> filesNames = zipExtractor.unZipFile(zipFilePath, outputFolderPath);
-            assertEquals(4, filesNames.size());
-            assertEquals("eez.shp", filesNames.get(SupportedExtensions.SHP));
-            assertEquals("eez.dbf", filesNames.get(SupportedExtensions.DBF));
-            assertEquals("eez.prj", filesNames.get(SupportedExtensions.PRJ));
-            assertEquals("eez.shx", filesNames.get(SupportedExtensions.SHX));
+            Map<SupportedFileExtensions, String> filesNames = zipExtractor.unZipFile(zipFilePath, outputFolderPath);
+            assertEquals(3, filesNames.size());
+            assertEquals("eez.shp", filesNames.get(SupportedFileExtensions.SHP));
+            assertEquals("eez.dbf", filesNames.get(SupportedFileExtensions.DBF));
+            assertEquals("eez.shx", filesNames.get(SupportedFileExtensions.SHX));
         } catch (Exception ex) {
             fail("Should not throw exception");
         }
