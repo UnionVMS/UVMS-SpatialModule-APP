@@ -7,18 +7,19 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 public class ZipExtractor {
 
-    public Map<SupportedExtensions, String> unZipFile(String zipFilePath, String outputFolderPath) throws IOException {
-        Map<SupportedExtensions, String> fileNames = Maps.newHashMap();
+    public Map<SupportedFileExtensions, String> unZipFile(String zipFilePath, Path outputFolderPath) throws IOException {
+        Map<SupportedFileExtensions, String> fileNames = Maps.newHashMap();
 
         byte[] buffer = new byte[2048];
 
-        File folder = new File(outputFolderPath);
+        File folder = new File(outputFolderPath.toString() + File.separator);
         if (!folder.exists()) {
             folder.mkdir();
         }
@@ -54,25 +55,23 @@ public class ZipExtractor {
         return fileNames;
     }
 
-    private void addFileNameToResultMap(Map<SupportedExtensions, String> fileNames, String fileName) {
+    private void addFileNameToResultMap(Map<SupportedFileExtensions, String> fileNames, String fileName) {
         String extension = FilenameUtils.getExtension(fileName);
-        SupportedExtensions supportedExtension = SupportedExtensions.fromValue(extension);
+        SupportedFileExtensions supportedExtension = SupportedFileExtensions.fromValue(extension);
 
-        switch (supportedExtension) {
-            case SHP:
-                fileNames.put(SupportedExtensions.SHP, fileName);
-                break;
-            case DBF:
-                fileNames.put(SupportedExtensions.DBF, fileName);
-                break;
-            case PRJ:
-                fileNames.put(SupportedExtensions.PRJ, fileName);
-                break;
-            case SHX:
-                fileNames.put(SupportedExtensions.SHX, fileName);
-                break;
+        if (supportedExtension != null) {
+            switch (supportedExtension) {
+                case SHP:
+                    fileNames.put(SupportedFileExtensions.SHP, fileName);
+                    break;
+                case DBF:
+                    fileNames.put(SupportedFileExtensions.DBF, fileName);
+                    break;
+                case SHX:
+                    fileNames.put(SupportedFileExtensions.SHX, fileName);
+                    break;
+            }
         }
-
     }
 
 
