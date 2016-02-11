@@ -3,6 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.util;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTWriter;
 import eu.europa.ec.fisheries.uvms.common.DateUtils;
+import eu.europa.ec.fisheries.uvms.spatial.entity.UserScopeEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
@@ -10,25 +11,25 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.persistence.OneToMany;
 import java.lang.reflect.Field;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class ColumnAliasNameHelper {
 
     private static Logger LOG = LoggerFactory.getLogger(ColumnAliasNameHelper.class.getName());
 
-    public static Map<String, String> getFieldMap(Object object) {
-        Map<String, String> map = new HashMap<String, String>();
+    public static Map<String, Object> getFieldMap(Object object) {
+        Map<String, Object> map = new HashMap<>();
         Class objClass = object.getClass();
         try {
             for (Field field : objClass.getDeclaredFields()) {
                 field.setAccessible(true);
                 if (field.isAnnotationPresent(ColumnAliasName.class)) {
                     String aliasName = field.getAnnotation(ColumnAliasName.class).aliasName();
+
                     LOG.info("Alias Name : " + aliasName);
-                    String value = getFieldValue(field, object);
+                    Object value = getFieldValue(field, object);
                     map.put(aliasName, value);
                     LOG.info("Value is : " + value);
                 }
@@ -40,7 +41,7 @@ public class ColumnAliasNameHelper {
         return map;
     }
 
-    private static String getFieldValue(Field field, Object object) throws IllegalAccessException {
+    private static Object getFieldValue(Field field, Object object) throws IllegalAccessException {
         if ((field.get(object) instanceof Number)) {
             Number numberVal = (Number) field.get(object);
             return String.valueOf(numberVal);
@@ -52,7 +53,7 @@ public class ColumnAliasNameHelper {
         } else if ((field.get(object) instanceof Boolean)) {
             return Boolean.toString((Boolean) field.get(object));
         } else {
-            return (String) field.get(object);
+            return field.get(object);
         }
     }
 

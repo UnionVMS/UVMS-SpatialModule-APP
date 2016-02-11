@@ -3,6 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto;
 import eu.europa.ec.fisheries.uvms.common.DateUtils;
 
 import java.util.Date;
+import java.util.List;
 
 import static org.apache.commons.lang.StringUtils.isNumeric;
 
@@ -11,14 +12,14 @@ public class UserAreaGeomDto extends GeoJsonDto {
     private static final String NAME = "name";
     private static final String DESCRIPTION = "description";
     private static final String ID = "id";
-    private static final String IS_SHARED = "isShared";
+    private static final String SCOPE_SELECTION = "scopeSelection";
     private static final String START_DATE = "startDate";
     private static final String END_DATE = "endDate";
     private static final String SUB_TYPE = "subType";
-    private static final boolean DEFAULT_IS_SHARED_VALUE = false;
+
 
     public String getName() {
-        return properties.get(NAME);
+        return String.valueOf(properties.get(NAME));
     }
 
     public void setName(String name) {
@@ -28,7 +29,7 @@ public class UserAreaGeomDto extends GeoJsonDto {
     }
 
     public String getDesc() {
-        return properties.get(DESCRIPTION);
+        return String.valueOf(properties.get(DESCRIPTION));
     }
 
     public void setDesc(String desc) {
@@ -38,7 +39,7 @@ public class UserAreaGeomDto extends GeoJsonDto {
     }
 
     public String getStartDate() {
-        return properties.get(START_DATE);
+        return String.valueOf(properties.get(START_DATE));
     }
 
     public void setStartDate(Date startDate) {
@@ -48,7 +49,7 @@ public class UserAreaGeomDto extends GeoJsonDto {
     }
 
     public String getEndDate() {
-        return properties.get(END_DATE);
+        return String.valueOf( properties.get(END_DATE));
     }
 
     public void setEndDate(Date startDate) {
@@ -58,7 +59,7 @@ public class UserAreaGeomDto extends GeoJsonDto {
     }
 
     public String getSubType() {
-        return properties.get(SUB_TYPE);
+        return String.valueOf(properties.get(SUB_TYPE));
     }
 
     public void setSubType(String subType) {
@@ -67,30 +68,38 @@ public class UserAreaGeomDto extends GeoJsonDto {
         }
     }
 
-    public Boolean isShared() {
-        String isShared = properties.get(IS_SHARED);
-        if (isShared != null) {
-            return Boolean.valueOf(isShared);
-        }
-        return DEFAULT_IS_SHARED_VALUE;
-    }
 
-    public void setShared(Boolean isShared) {
-        if (isShared != null) {
-            properties.put(IS_SHARED, String.valueOf(isShared));
-        }
-    }
 
     public Long getId() {
-        String gid = properties.get(ID);
-        if (gid != null && isNumeric(gid)) {
-            return Long.valueOf(gid);
+        Object gid = properties.get(ID);
+        if (gid != null) {
+            try {
+                return Long.valueOf((String)gid);
+            } catch (NumberFormatException nfe ) {
+                //do nothing, later we return null anyway
+            }
         }
+
         return null;
     }
 
     public void setId(Long gid) {
         properties.put(ID, String.valueOf(gid));
+    }
+
+    public List<String> getScopeSelection() {
+        Object scopeSelectionObj = properties.get(SCOPE_SELECTION);
+        List<String> returnList = null;
+
+        if (scopeSelectionObj != null) {
+            returnList = (List<String>) scopeSelectionObj;
+        }
+
+        return returnList;
+    }
+
+    public void setScopeSelection(List<String> scopeSelection){
+        properties.put(SCOPE_SELECTION, scopeSelection);
     }
 
 }

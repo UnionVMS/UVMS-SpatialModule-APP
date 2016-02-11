@@ -101,7 +101,7 @@
     <xs:complexType name="AreaProperty">
         <xs:sequence>
             <xs:element name="propertyName" type="xs:string" nillable="false"/>
-            <xs:element name="propertyValue" type="xs:string" nillable="false"/>
+            <xs:element name="propertyValue" type="xs:anyType" nillable="false"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="LocationDetails">

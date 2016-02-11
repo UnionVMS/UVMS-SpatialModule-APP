@@ -23,7 +23,7 @@ public class LocationDetailsServiceBean extends SpatialServiceBean implements Lo
     @Override
     public LocationDetails getLocationDetails(LocationTypeEntry locationTypeEntry) {
     	AreaLocationTypesEntity locationType = getAreaLocationType(locationTypeEntry.getLocationType());
-    	Map<String, String> properties;
+    	Map<String, Object> properties;
     	if (locationTypeEntry.getId() != null) {
     		validateId(locationTypeEntry.getId());
     		properties = getAreaLocationDetailsById(Long.parseLong(locationTypeEntry.getId()), locationType);
@@ -33,12 +33,12 @@ public class LocationDetailsServiceBean extends SpatialServiceBean implements Lo
         return createLocationDetailsResponse(properties, locationTypeEntry);
     }
 
-    private LocationDetails createLocationDetailsResponse(Map<String, String> properties, LocationTypeEntry locationType) {
+    private LocationDetails createLocationDetailsResponse(Map<String, Object> properties, LocationTypeEntry locationType) {
         List<LocationProperty> locationProperties = new ArrayList<LocationProperty>();
-        for (Map.Entry<String, String> entry : properties.entrySet()) {
+        for (Map.Entry<String, Object> entry : properties.entrySet()) {
             LocationProperty locationProperty = new LocationProperty();
             locationProperty.setPropertyName(entry.getKey());
-            locationProperty.setPropertyValue(entry.getValue());
+            locationProperty.setPropertyValue(entry.getValue()!=null?entry.getValue().toString():null);
             locationProperties.add(locationProperty);
         }
         LocationDetails locationDetails = new LocationDetails();
