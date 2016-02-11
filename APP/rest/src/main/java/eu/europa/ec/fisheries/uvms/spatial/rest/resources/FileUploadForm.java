@@ -8,7 +8,7 @@ import javax.ws.rs.FormParam;
 
 public class FileUploadForm {
 
-    private String crsCode;
+    private int crsCode;
     @NotEmpty
     private String areaType;
     @NotEmpty
@@ -17,12 +17,12 @@ public class FileUploadForm {
     public FileUploadForm() {
     }
 
-    public String getCrsCode() {
+    public int getCrsCode() {
         return crsCode;
     }
 
     @FormParam("crs")
-    public void setCrsCode(String crsCode) {
+    public void setCrsCode(int crsCode) {
         this.crsCode = crsCode;
     }
 
