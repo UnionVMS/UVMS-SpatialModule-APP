@@ -23,6 +23,7 @@
         <class>eu.europa.ec.fisheries.uvms.spatial.entity.GfcmEntity</class>
         <class>eu.europa.ec.fisheries.uvms.spatial.entity.StatRectEntity</class>
         <class>eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity</class>
+        <class>eu.europa.ec.fisheries.uvms.spatial.entity.UserScopeEntity</class>
         <class>eu.europa.ec.fisheries.uvms.spatial.entity.ReportLayerConfigEntity</class>
         <class> eu.europa.ec.fisheries.uvms.spatial.entity.config.SysConfigEntity</class>
         <properties>

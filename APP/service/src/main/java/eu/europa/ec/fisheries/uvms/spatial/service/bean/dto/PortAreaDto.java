@@ -1,14 +1,17 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto;
 
-import static org.apache.commons.lang.StringUtils.isNumeric;
-
 public class PortAreaDto extends GeoJsonDto {
 
     public Long getId() {
-        String gid = properties.get(ID);
-        if (gid != null && isNumeric(gid)) {
-            return Long.valueOf(gid);
+        Object gid = properties.get(ID);
+        if (gid != null) {
+            try {
+                return Long.valueOf((String)gid);
+            } catch (NumberFormatException nfe ) {
+                //do nothing, later we return null anyway
+            }
         }
+
         return null;
     }
 

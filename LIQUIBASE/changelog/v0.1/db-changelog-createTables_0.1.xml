@@ -27,6 +27,7 @@
     <include file="\schema\tables\custom_areas.xml"/>
     <include file="\schema\tables\custom_area_properties.xml"/>
     <include file="\schema\tables\system_configurations.xml"/>
+	<include file="\schema\tables\user_scope.xml"/>
 
 
 </databaseChangeLog>

@@ -20,7 +20,7 @@
     </developers>
 
     <properties>
-        <spatial.model>1.6-SNAPSHOT</spatial.model>
+        <spatial.model>1.0.3-SNAPSHOT</spatial.model>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <javaee.version>7.0</javaee.version>
@@ -113,12 +113,6 @@
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
                 <version>${jackson.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-annotations</artifactId>
-                <version>2.7.1</version>
             </dependency>
 
             <dependency>
@@ -500,6 +494,7 @@
         <module>rest</module>
         <module>service</module>
         <module>message</module>
+
         <module>deploy</module>
     </modules>
 </project>

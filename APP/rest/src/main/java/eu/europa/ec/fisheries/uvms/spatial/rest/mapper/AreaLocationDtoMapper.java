@@ -63,8 +63,8 @@ public abstract class AreaLocationDtoMapper {
 	
 	public abstract Coordinate getCoordinateFromDto(GeoCoordinateDto geoCoordinateDto);
 	
-	protected Map<String, String> extractProperties(AreaDetails areaDetails) {
-		Map<String, String> propertyMap = new HashMap<String, String>();
+	protected Map<String, Object> extractProperties(AreaDetails areaDetails) {
+		Map<String, Object> propertyMap = new HashMap<>();
 		for (AreaProperty property : areaDetails.getAreaProperties()) {
 			propertyMap.put(property.getPropertyName(), property.getPropertyValue());
 		}
@@ -74,10 +74,10 @@ public abstract class AreaLocationDtoMapper {
 		return propertyMap;
 	}
 	
-	protected List<Map<String, String>> extractProperties(List<AreaDetails> areaDetailsList) {
-		List<Map<String, String>> allPropertyMap = new ArrayList<Map<String, String>>();
+	protected List<Map<String, Object>> extractProperties(List<AreaDetails> areaDetailsList) {
+		List<Map<String, Object>> allPropertyMap = new ArrayList<Map<String, Object>>();
 		for (AreaDetails areaDetails : areaDetailsList) {
-			Map<String, String> propertyMap = extractProperties(areaDetails);
+			Map<String, Object> propertyMap = extractProperties(areaDetails);
 			allPropertyMap.add(propertyMap);
 		}
 		return allPropertyMap;
@@ -91,8 +91,8 @@ public abstract class AreaLocationDtoMapper {
 		return areaDto.getAreaType();
 	}
 	
-	protected Map<String, String> extractProperties(LocationDetails locationDetails) {
-		Map<String, String> propertyMap = new HashMap<String, String>();
+	protected Map<String, Object> extractProperties(LocationDetails locationDetails) {
+		Map<String, Object> propertyMap = new HashMap<>();
 		for (LocationProperty property : locationDetails.getLocationProperties()) {
 			propertyMap.put(property.getPropertyName(), property.getPropertyValue());
 		}

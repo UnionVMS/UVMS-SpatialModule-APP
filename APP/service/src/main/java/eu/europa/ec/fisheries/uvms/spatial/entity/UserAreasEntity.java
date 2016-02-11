@@ -17,7 +17,7 @@ import java.util.Set;
 })
 @NamedQueries({
         @NamedQuery(name = QueryNameConstants.FIND_GID_BY_USER,
-                query = "SELECT area.gid FROM UserAreasEntity area WHERE area.userName = :userName OR area.scopeName = :scopeName AND area.isShared = 'Y'"),
+                query = "SELECT area.gid FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection WHERE area.userName = :userName OR scopeSelection.name = :scopeName"),
         @NamedQuery(name = QueryNameConstants.FIND_USER_AREA_BY_ID,
                 query = "SELECT area FROM UserAreasEntity area WHERE area.userName = :userName AND area.gid = :userAreaId"),
         @NamedQuery(name = QueryNameConstants.USERAREA_COLUMNS,
@@ -43,9 +43,10 @@ import java.util.Set;
                         + " AND st_intersects(geom, st_geomfromtext(CAST(:wktPoint as text), :crs)) group by gid", resultSetMapping = "implicit.userarea"),
         @NamedNativeQuery(
                 name = QueryNameConstants.SEARCH_USER_AREA,
-                query = "select gid, name, area_desc as desc, CAST(st_astext(st_extent(geom))AS TEXT) as extent from spatial.user_areas"
-                        + " WHERE (user_name=:userName OR (scope_name=:scopeName AND is_shared='Y'))"
-                        + " AND (UPPER(name) LIKE(UPPER(:name)) OR UPPER(area_desc) LIKE(UPPER(:desc))) group by gid"),
+                query = "select gid, name, area_desc as desc, CAST(st_astext(st_extent(geom))AS TEXT) as extent FROM spatial.user_areas area LEFT JOIN spatial.user_scope scopeSelection"
+                        + " ON area.gid = scopeSelection.user_area_id"
+                        + " WHERE (area.user_name=:userName OR scopeSelection.scope_name=:scopeName)"
+                        + " AND (UPPER(area.name) LIKE(UPPER(:name)) OR UPPER(area.area_desc) LIKE(UPPER(:desc))) group by area.gid"),
         @NamedNativeQuery(
                 name = QueryNameConstants.USERAREA_BY_COORDINATE,
                 query = "select * from user_areas where st_intersects(geom, st_geomfromtext(CAST(:wktPoint as text), :crs))", resultSetMapping = "implicit.userarea")
@@ -79,9 +80,6 @@ public class UserAreasEntity implements Serializable {
     @Column(name = "user_name", nullable = false, length = 255)
     private String userName;
 
-    @Column(name = "scope_name", length = 255)
-    private String scopeName;
-
     @Column(name = "name", nullable = false, length = 255)
     @ColumnAliasName(aliasName ="name")
     private String name;
@@ -101,13 +99,12 @@ public class UserAreasEntity implements Serializable {
     @ColumnAliasName(aliasName ="createdOn")
     private Date createdOn;
 
-    @Convert(converter = CharBooleanConverter.class)
-    @Column(name = "is_shared", nullable = false, length = 1)
-    @ColumnAliasName(aliasName ="isShared")
-    private Boolean isShared;
-
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAreas", cascade = CascadeType.ALL)
     private Set<AreaStatusEntity> areaStatuses;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAreas", cascade = CascadeType.ALL)
+    @ColumnAliasName(aliasName ="scopeSelection")
+    private Set<UserScopeEntity> scopeSelection;
 
     public UserAreasEntity() {
     }
@@ -192,19 +189,17 @@ public class UserAreasEntity implements Serializable {
         this.userName = userName;
     }
 
-    public String getScopeName() {
-        return scopeName;
+
+    public Set<UserScopeEntity> getScopeSelection() {
+        return scopeSelection;
     }
 
-    public void setScopeName(String scopeName) {
-        this.scopeName = scopeName;
-    }
-
-    public Boolean getIsShared() {
-        return isShared;
-    }
-
-    public void setIsShared(Boolean isShared) {
-        this.isShared = isShared;
+    public void setScopeSelection(Set<UserScopeEntity> scopeSelection) {
+        if (scopeSelection != null) {
+            for (UserScopeEntity userScopeEntity : scopeSelection) {
+                userScopeEntity.setUserAreas(this);
+            }
+            this.scopeSelection = scopeSelection;
+        }
     }
 }

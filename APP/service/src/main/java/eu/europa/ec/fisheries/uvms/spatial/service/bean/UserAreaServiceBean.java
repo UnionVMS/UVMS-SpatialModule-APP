@@ -145,15 +145,15 @@ public class UserAreaServiceBean implements UserAreaService {
     private List<AreaDetails> getAllAreaDetails(List allAreas, AreaTypeEntry areaTypeEntry) {
         List<AreaDetails> areaDetailsList = Lists.newArrayList();
         for (int i = 0; i < allAreas.size(); i++) {
-            Map<String, String> properties = getFieldMap(allAreas.get(i));
+            Map<String, Object> properties = getFieldMap(allAreas.get(i));
             areaDetailsList.add(createAreaDetailsSpatialResponse(properties, areaTypeEntry));
         }
         return areaDetailsList;
     }
 
-    private AreaDetails createAreaDetailsSpatialResponse(Map<String, String> properties, AreaTypeEntry areaTypeEntry) {
+    private AreaDetails createAreaDetailsSpatialResponse(Map<String, Object> properties, AreaTypeEntry areaTypeEntry) {
         List<AreaProperty> areaProperties = newArrayList();
-        for (Map.Entry<String, String> entry : properties.entrySet()) {
+        for (Map.Entry<String, Object> entry : properties.entrySet()) {
             AreaProperty areaProperty = new AreaProperty();
             areaProperty.setPropertyName(entry.getKey());
             areaProperty.setPropertyValue(entry.getValue());
