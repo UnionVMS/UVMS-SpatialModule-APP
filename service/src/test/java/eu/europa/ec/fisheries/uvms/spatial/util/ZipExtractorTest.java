@@ -4,7 +4,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -15,8 +14,7 @@ import static org.junit.Assert.fail;
 
 public class ZipExtractorTest {
 
-    private static final String ZIP_DIR = "zip/";
-    private static final String EEZ_ZIP_FILE = "eez.zip";
+    private static final String EEZ_ZIP_FILE = "zip/eez.zip";
     private static final String PREFIX = "temp";
 
     private ZipExtractor zipExtractor = new ZipExtractor();
@@ -25,17 +23,16 @@ public class ZipExtractorTest {
     @Ignore
     public void shouldUnzipFile() throws Exception {
         // given
-        String absoluteZipPath = getAbsoluteZipPath();
-        String zipFilePath = absoluteZipPath + EEZ_ZIP_FILE;
-        Path outputFolderPath = Paths.get(getTempPath());
+        Path zipFilePath = getAbsoluteZipPath();
+        Path outputFolderPath = Files.createTempDirectory(PREFIX);
 
         // when
         try {
-            Map<SupportedFileExtensions, String> filesNames = zipExtractor.unZipFile(zipFilePath, outputFolderPath);
+            Map<SupportedFileExtensions, Path> filesNames = zipExtractor.unZipFile(zipFilePath, outputFolderPath);
             assertEquals(3, filesNames.size());
-            assertEquals("eez.shp", filesNames.get(SupportedFileExtensions.SHP));
-            assertEquals("eez.dbf", filesNames.get(SupportedFileExtensions.DBF));
-            assertEquals("eez.shx", filesNames.get(SupportedFileExtensions.SHX));
+            assertEquals(Paths.get("eez.shp"), filesNames.get(SupportedFileExtensions.SHP).getFileName());
+            assertEquals(Paths.get("eez.dbf"), filesNames.get(SupportedFileExtensions.DBF).getFileName());
+            assertEquals(Paths.get("eez.shx"), filesNames.get(SupportedFileExtensions.SHX).getFileName());
         } catch (Exception ex) {
             fail("Should not throw exception");
         }
@@ -44,14 +41,9 @@ public class ZipExtractorTest {
         System.out.println("Pass. OK");
     }
 
-    private String getTempPath() throws IOException {
-        Path temp = Files.createTempDirectory(PREFIX);
-        return temp.toString() + File.separator;
-    }
-
-    private String getAbsoluteZipPath() {
+    private Path getAbsoluteZipPath() {
         ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource(ZIP_DIR + EEZ_ZIP_FILE).getFile());
-        return file.getParent() + File.separator;
+        File file = new File(classLoader.getResource(EEZ_ZIP_FILE).getPath());
+        return file.toPath();
     }
 }
