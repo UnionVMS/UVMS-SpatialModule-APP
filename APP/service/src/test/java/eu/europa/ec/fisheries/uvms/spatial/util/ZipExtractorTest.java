@@ -21,6 +21,8 @@ public class ZipExtractorTest {
 
     private ZipExtractor zipExtractor = new ZipExtractor();
 
+    @Test
+    @Ignore
     public void shouldUnzipFile() throws Exception {
         // given
         String absoluteZipPath = getAbsoluteZipPath();
