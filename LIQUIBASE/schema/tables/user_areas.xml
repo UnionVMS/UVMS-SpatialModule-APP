@@ -21,7 +21,7 @@
             </column>
             <column name="type" type="VARCHAR(255)"/>
             <column name="area_desc" remarks="Description of the area" type="TEXT"/>
-            <column name="geom" remarks="Geometry of the area" type="geometry(Multipolygon, 4326">
+            <column name="geom" remarks="Geometry of the area" type="geometry(Multipolygon, 4326)">
                 <constraints nullable="false"/>
             </column>
             <column name="created_on" type="TIMESTAMP(29) WITHOUT TIME ZONE">
