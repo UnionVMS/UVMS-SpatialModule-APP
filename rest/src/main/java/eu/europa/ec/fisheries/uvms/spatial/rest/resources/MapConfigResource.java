@@ -1,6 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.rest.constants.ErrorCodes;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.MapConfigurationType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.MapSettingsDto;
@@ -34,7 +35,7 @@ public class MapConfigResource extends UnionVMSResource {
 
         try {
 
-            MapConfigurationType mapConfigurationType = mapConfigService.getMapConfigurationType((long) reportId);
+            MapConfigurationType mapConfigurationType = mapConfigService.getMapConfigurationType(Long.valueOf(reportId));
 
             response = createSuccessResponse(new MapSettingsDto(mapConfigurationType));
 
@@ -42,7 +43,7 @@ public class MapConfigResource extends UnionVMSResource {
 
             log.error("[ Error when getting map settings. ] ", ex);
 
-            response = createErrorResponse(ex.getMessage());//FIXME this won't be translated properly
+            response = createErrorResponse(ErrorCodes.INTERNAL_SERVER_ERROR);
 
         }
 

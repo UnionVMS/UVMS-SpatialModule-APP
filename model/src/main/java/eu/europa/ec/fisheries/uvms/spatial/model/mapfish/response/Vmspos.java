@@ -1,5 +1,5 @@
 
-package eu.europa.ec.fisheries.uvms.spatial.model.mapfish;
+package eu.europa.ec.fisheries.uvms.spatial.model.mapfish.response;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,17 +12,24 @@ import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Generated("org.jsonschema2pojo")
-public class Color {
+@JsonPropertyOrder({
+    "base",
+    "colors"
+})
+public class Vmspos {
 
-    @JsonProperty("vessel")
+    @JsonProperty("base")
+    private String base;
+    @JsonProperty("colors")
     @Valid
-    private List<String> vessel = new ArrayList<String>();
+    private List<String> colors = new ArrayList<String>();
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -30,39 +37,66 @@ public class Color {
      * No args constructor for use in serialization
      * 
      */
-    public Color() {
+    public Vmspos() {
     }
 
     /**
      * 
-     * @param vessel
+     * @param colors
+     * @param base
      */
-    public Color(List<String> vessel) {
-        this.vessel = vessel;
+    public Vmspos(String base, List<String> colors) {
+        this.base = base;
+        this.colors = colors;
     }
 
     /**
      * 
      * @return
-     *     The vessel
+     *     The base
      */
-    @JsonProperty("vessel")
-    public List<String> getVessel() {
-        return vessel;
+    @JsonProperty("base")
+    public String getBase() {
+        return base;
     }
 
     /**
      * 
-     * @param vessel
-     *     The vessel
+     * @param base
+     *     The base
      */
-    @JsonProperty("vessel")
-    public void setVessel(List<String> vessel) {
-        this.vessel = vessel;
+    @JsonProperty("base")
+    public void setBase(String base) {
+        this.base = base;
     }
 
-    public Color withVessel(List<String> vessel) {
-        this.vessel = vessel;
+    public Vmspos withBase(String base) {
+        this.base = base;
+        return this;
+    }
+
+    /**
+     * 
+     * @return
+     *     The colors
+     */
+    @JsonProperty("colors")
+    public List<String> getColors() {
+        return colors;
+    }
+
+    /**
+     * 
+     * @param colors
+     *     The colors
+     */
+    @JsonProperty("colors")
+    public void setColors(List<String> colors) {
+        this.colors = colors;
+    }
+
+    public Vmspos withColors(List<String> colors) {
+        this.colors = colors;
         return this;
     }
 
@@ -81,14 +115,14 @@ public class Color {
         this.additionalProperties.put(name, value);
     }
 
-    public Color withAdditionalProperty(String name, Object value) {
+    public Vmspos withAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
         return this;
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(vessel).append(additionalProperties).toHashCode();
+        return new HashCodeBuilder().append(base).append(colors).append(additionalProperties).toHashCode();
     }
 
     @Override
@@ -96,11 +130,11 @@ public class Color {
         if (other == this) {
             return true;
         }
-        if ((other instanceof Color) == false) {
+        if ((other instanceof Vmspos) == false) {
             return false;
         }
-        Color rhs = ((Color) other);
-        return new EqualsBuilder().append(vessel, rhs.vessel).append(additionalProperties, rhs.additionalProperties).isEquals();
+        Vmspos rhs = ((Vmspos) other);
+        return new EqualsBuilder().append(base, rhs.base).append(colors, rhs.colors).append(additionalProperties, rhs.additionalProperties).isEquals();
     }
 
 }
