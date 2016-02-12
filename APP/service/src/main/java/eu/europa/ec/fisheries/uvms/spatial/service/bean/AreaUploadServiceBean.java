@@ -1,6 +1,8 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.handler.EezSaverHandler;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.handler.RfmoSaverHandler;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.handler.SaverHandler;
@@ -9,6 +11,7 @@ import eu.europa.ec.fisheries.uvms.spatial.util.ShapeFileReader;
 import eu.europa.ec.fisheries.uvms.spatial.util.SupportedFileExtensions;
 import eu.europa.ec.fisheries.uvms.spatial.util.ZipExtractor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.geotools.referencing.CRS;
 import org.opengis.feature.Property;
 import org.opengis.referencing.FactoryException;
@@ -18,9 +21,11 @@ import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.transaction.Transactional;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
@@ -43,27 +48,32 @@ public class AreaUploadServiceBean implements AreaUploadService {
     private RfmoSaverHandler rmfoSaverHandler;
 
     @Override
-    public void uploadArea(byte[] content, String areaTypeString, int crsCode) throws IOException, ServiceException {
-        AreaType areaType = AreaType.fromValue(areaTypeString);
-        CoordinateReferenceSystem sourceCRS = validate(content, areaTypeString, crsCode);
+    public void uploadArea(byte[] content, String areaTypeString, int crsCode) throws ServiceException {
+        try {
+            AreaType areaType = AreaType.fromValue(areaTypeString);
+            CoordinateReferenceSystem sourceCRS = validate(content, areaTypeString, crsCode);
 
-        Path absolutePath = getTempPath();
-        String zipFilePath = absolutePath + AREA_ZIP_FILE;
+            Path absolutePath = getTempPath();
+            Path zipFilePath = Paths.get(absolutePath + AREA_ZIP_FILE);
 
-        FileSaver fileSaver = new FileSaver();
-        fileSaver.saveContentToFile(content, zipFilePath);
+            FileSaver fileSaver = new FileSaver();
+            fileSaver.saveContentToFile(content, zipFilePath);
 
-        ZipExtractor zipExtractor = new ZipExtractor();
-        Map<SupportedFileExtensions, String> fileNames = zipExtractor.unZipFile(zipFilePath, absolutePath);
+            ZipExtractor zipExtractor = new ZipExtractor();
+            Map<SupportedFileExtensions, Path> fileNames = zipExtractor.unZipFile(zipFilePath, absolutePath);
 
-        ShapeFileReader shapeFileReader = new ShapeFileReader();
-        Map<String, List<Property>> features = shapeFileReader.readShapeFile(absolutePath, fileNames.get(SupportedFileExtensions.SHP), sourceCRS);
+            Path shapeFilePath = Paths.get(absolutePath + File.separator + fileNames.get(SupportedFileExtensions.SHP));
+            ShapeFileReader shapeFileReader = new ShapeFileReader();
+            Map<String, List<Property>> features = shapeFileReader.readShapeFile(shapeFilePath, sourceCRS);
 
-        saveAreas(areaType, features);
+            saveAreas(areaType, features);
 
-        Files.delete(absolutePath);
+            FileUtils.deleteDirectory(new File(absolutePath.toString()));
 
-        log.debug("Finished upload areas.");
+            log.debug("Finished upload areas.");
+        } catch (IOException ex) {
+            throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
+        }
     }
 
     private void saveAreas(AreaType areaType, Map<String, List<Property>> features) throws ServiceException {
@@ -100,8 +110,7 @@ public class AreaUploadServiceBean implements AreaUploadService {
     }
 
     private Path getTempPath() throws IOException {
-        Path tempPath = Files.createTempDirectory(PREFIX);
-        return tempPath;
+        return Paths.get(Files.createTempDirectory(PREFIX) + File.separator);
     }
 
     private enum AreaType {

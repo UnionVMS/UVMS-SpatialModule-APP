@@ -8,32 +8,31 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 public class ZipExtractor {
 
-    public Map<SupportedFileExtensions, String> unZipFile(String zipFilePath, Path outputFolderPath) throws IOException {
-        Map<SupportedFileExtensions, String> fileNames = Maps.newHashMap();
+    public Map<SupportedFileExtensions, Path> unZipFile(Path zipFilePath, Path outputFolderPath) throws IOException {
+        Map<SupportedFileExtensions, Path> fileNames = Maps.newHashMap();
 
         byte[] buffer = new byte[2048];
 
-        File folder = new File(outputFolderPath.toString() + File.separator);
+        File folder = outputFolderPath.toFile();
         if (!folder.exists()) {
             folder.mkdir();
         }
 
-        ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFilePath));
+        ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFilePath.toFile()));
         ZipEntry entry = zis.getNextEntry();
 
         while (entry != null) {
-            String fileName = entry.getName();
-            addFileNameToResultMap(fileNames, fileName);
+            Path outputFilePath = Paths.get(outputFolderPath + File.separator + entry.getName());
+            addFileNameToResultMap(fileNames, outputFilePath);
 
-            File newFile = new File(outputFolderPath + File.separator + fileName);
-
-            System.out.println("file unzip : " + newFile.getAbsoluteFile());
+            File newFile = outputFilePath.toFile();
 
             //create all non exists folders else you will hit FileNotFoundException for compressed folder
             new File(newFile.getParent()).mkdirs();
@@ -55,20 +54,20 @@ public class ZipExtractor {
         return fileNames;
     }
 
-    private void addFileNameToResultMap(Map<SupportedFileExtensions, String> fileNames, String fileName) {
-        String extension = FilenameUtils.getExtension(fileName);
+    private void addFileNameToResultMap(Map<SupportedFileExtensions, Path> fileNames, Path outputFilePath) {
+        String extension = FilenameUtils.getExtension(outputFilePath.toString());
         SupportedFileExtensions supportedExtension = SupportedFileExtensions.fromValue(extension);
 
         if (supportedExtension != null) {
             switch (supportedExtension) {
                 case SHP:
-                    fileNames.put(SupportedFileExtensions.SHP, fileName);
+                    fileNames.put(SupportedFileExtensions.SHP, outputFilePath);
                     break;
                 case DBF:
-                    fileNames.put(SupportedFileExtensions.DBF, fileName);
+                    fileNames.put(SupportedFileExtensions.DBF, outputFilePath);
                     break;
                 case SHX:
-                    fileNames.put(SupportedFileExtensions.SHX, fileName);
+                    fileNames.put(SupportedFileExtensions.SHX, outputFilePath);
                     break;
             }
         }
