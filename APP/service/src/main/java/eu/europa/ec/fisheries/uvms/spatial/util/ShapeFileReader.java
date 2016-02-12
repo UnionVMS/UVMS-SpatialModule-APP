@@ -20,7 +20,6 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
@@ -34,18 +33,15 @@ public class ShapeFileReader {
     private static final int DEFAULT_CRS_NUMBER = 4326;
     private static final String DEFAULT_CRS = EPSG + DEFAULT_CRS_NUMBER;
 
-    public Map<String, List<Property>> readShapeFile(Path absolutePath, String shapeFileName, CoordinateReferenceSystem sourceCRS) throws IOException {
+    public Map<String, List<Property>> readShapeFile(Path shapeFilePath, CoordinateReferenceSystem sourceCRS) throws IOException {
         try {
             Map<String, List<Property>> geometries = Maps.newHashMap();
 
             CoordinateReferenceSystem targetCRS = CRS.decode(DEFAULT_CRS);
             MathTransform transform = CRS.findMathTransform(sourceCRS, targetCRS);
 
-            //TODO remove separator
-            String absolutePathString = absolutePath.toString() + File.separator;
-            File shpFile = new File(absolutePathString + shapeFileName);
             Map<String, Object> map = Maps.newHashMap();
-            map.put("url", shpFile.toURI().toURL());
+            map.put("url", shapeFilePath.toUri().toURL());
 
             DataStore dataStore = DataStoreFinder.getDataStore(map);
             String typeName = dataStore.getTypeNames()[0];
