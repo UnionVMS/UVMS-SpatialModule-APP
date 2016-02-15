@@ -34,7 +34,7 @@ public class ImageEncoderFactory {
     private static final String LINE = "line";
     private static final int LINE_HEIGHT = 12;
     private static final String POSITION_SVG = "/position.svg";
-    private static final String LINE_SVG = "/line.svg";
+    private static final String SEGMENT_SVG = "/line.svg";
     public static final String TRANSFORM = "transform";
     public static final String FILL = "fill:";
     private static Font FONT_BOLD = new Font("Arial", Font.BOLD, LINE_HEIGHT);
@@ -46,7 +46,7 @@ public class ImageEncoderFactory {
     public static BufferedImage renderSegment(String hexColor, String strokeDashArray) throws TranscoderException, IOException {
 
         log.debug("Rendering segment");
-        Document line = createDocument(LINE_SVG);
+        Document line = createDocument(SEGMENT_SVG);
         NamedNodeMap attributes = line.getElementById(LINE).getAttributes();
         attributes.getNamedItem(STROKE).getFirstChild().setNodeValue(hexColor);
         attributes.getNamedItem(STROKE_DASH_ARRAY).getFirstChild().setNodeValue(strokeDashArray);
@@ -56,7 +56,7 @@ public class ImageEncoderFactory {
     public static BufferedImage renderSegment(String hexColor, String strokeDashArray, String scale) throws TranscoderException, IOException {
 
         log.debug("Rendering segment");
-        Document line = createDocument(LINE_SVG);
+        Document line = createDocument(SEGMENT_SVG);
         NamedNodeMap attributes = line.getElementById(LINE).getAttributes();
         attributes.getNamedItem(TRANSFORM).getFirstChild().setNodeValue(scale);
         attributes.getNamedItem(STROKE).getFirstChild().setNodeValue(hexColor);
