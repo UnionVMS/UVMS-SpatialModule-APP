@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.spatial.rest.resources;
+package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import eu.europa.ec.fisheries.uvms.constants.AuthConstants;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
