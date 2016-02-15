@@ -11,4 +11,6 @@ public interface EezService {
     EezDto getEezById(int id);
 
     long createEzz(EezDto eezDto) throws ServiceException;
+
+    int disableAllAreas() throws ServiceException;
 }

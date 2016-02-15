@@ -78,6 +78,8 @@ public final class QueryNameConstants {
     public static final String PORT_COLUMNS = "portEntity.findSelectedColumns";
     public static final String USERAREA_COLUMNS = "userAreasEntity.findSelectedColumns";
 
+    public static final String DISABLE_EEZ_AREAS = "eezEntity.disableEezAreas";
+
     /**
      * MapDto Config queries
      */
