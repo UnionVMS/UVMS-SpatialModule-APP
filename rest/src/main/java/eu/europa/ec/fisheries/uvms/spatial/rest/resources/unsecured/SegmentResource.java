@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.spatial.rest.resources;
+package eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured;
 
 import lombok.extern.slf4j.Slf4j;
 import javax.imageio.ImageIO;
@@ -13,30 +13,28 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-@Path("/legend")
-@Slf4j
+@Path("/segment")
 @SuppressWarnings("unchecked")
-public class LegendResource {
+@Slf4j
+public class SegmentResource {
 
-    public static Map<String, BufferedImage> legendEntries = Collections.synchronizedMap(new LinkedHashMap() {
+    public static Map<String, BufferedImage> segmentEntries = Collections.synchronizedMap(new LinkedHashMap() {
 
-        private static final int MAX_ENTRIES = 100;
+        private static final int MAX_ENTRIES = 1000;
 
         @Override
         protected boolean removeEldestEntry(Map.Entry eldest) {
-
             return size() > MAX_ENTRIES;
         }
-
     });
 
-
     @Path("/{key}")
-    public void getLegendIcons(@PathParam("key") String key,
-                            @Context HttpServletResponse response) throws IOException {
-        BufferedImage bi = legendEntries.get(key);
+    public void getSegmentEntry(@PathParam("key") String key,
+                             @Context HttpServletResponse response) throws IOException {
+        BufferedImage bi = segmentEntries.get(key);
         OutputStream out = response.getOutputStream();
         ImageIO.write(bi, "png", out);
         out.close();
     }
+
 }

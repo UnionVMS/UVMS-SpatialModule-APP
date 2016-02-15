@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.batik.anim.dom.SAXSVGDocumentFactory;
 import org.apache.batik.transcoder.SVGAbstractTranscoder;
 import org.apache.batik.transcoder.TranscoderException;
@@ -8,6 +9,7 @@ import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.batik.transcoder.image.PNGTranscoder;
 import org.apache.batik.util.XMLResourceDescriptor;
 import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -21,30 +23,36 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
-public class ImageFactory {
+@Slf4j
+public class ImageEncoderFactory {
 
-    static Font font = new Font("TimesRoman", Font.BOLD, 20);
-    static int hOffset = 100;
+    private ImageEncoderFactory(){}
 
-    public static BufferedImage renderLine(String color, String strokeDashArray) throws TranscoderException, IOException {
+    private static final int LINE_HEIGHT = 22;
+    private static Font font = new Font("TimesRoman", Font.BOLD, LINE_HEIGHT);
+    private static int hOffset = 0;
 
+    public static BufferedImage renderSegment(String hexColor, String strokeDashArray) throws TranscoderException, IOException {
+
+        log.debug("Rendering segment");
         Document line = createDocument("/line.svg");
-        line.getElementById("line").getAttributes().getNamedItem("stroke").getFirstChild().setNodeValue("#" + color);
-        line.getElementById("line").getAttributes().getNamedItem("stroke-dasharray").getFirstChild().setNodeValue(strokeDashArray);
+        NamedNodeMap attributes = line.getElementById("line").getAttributes();
+        attributes.getNamedItem("stroke").getFirstChild().setNodeValue(hexColor);
+        attributes.getNamedItem("stroke-dasharray").getFirstChild().setNodeValue(strokeDashArray);
         return getBufferedImage(line);
     }
 
-    public static BufferedImage renderPosition(String color) throws Exception {
+    public static BufferedImage renderPosition(String hexColor) throws Exception {
 
         Document position = createDocument("/position.svg");
-        position.getElementById("position").getAttributes().getNamedItem("style").getFirstChild().setNodeValue("fill:#" + color);
+        position.getElementById("position").getAttributes().getNamedItem("style").getFirstChild().setNodeValue("fill:" + hexColor);
         return getBufferedImage(position);
     }
 
-    private static BufferedImage getBufferedImage(Document line) throws TranscoderException, IOException {
+    public static BufferedImage getBufferedImage(Document document) throws TranscoderException, IOException {
 
         ByteArrayOutputStream resultByteStream = new ByteArrayOutputStream();
-        TranscoderInput transcoderInput = new TranscoderInput(line);
+        TranscoderInput transcoderInput = new TranscoderInput(document);
         TranscoderOutput transcoderOutput = new TranscoderOutput(resultByteStream);
         PNGTranscoder pngTranscoder = new PNGTranscoder();
         pngTranscoder.addTranscodingHint(SVGAbstractTranscoder.KEY_HEIGHT, 256f);
@@ -58,16 +66,16 @@ public class ImageFactory {
         for (int i=0;i<icon.getWidth();i=i+reductionScale){
             for (int j=0;j<icon.getHeight();j=j+reductionScale){
                 int localRGB = icon.getRGB(i, j);
-                mainImage.setRGB(imageX+i/reductionScale,  imageY+j/reductionScale-20, localRGB);
+                mainImage.setRGB(imageX+i,  imageY+j, localRGB);
             }
         }
     }
 
-    private static Document createDocument(String pathToSvg) {
+    public static Document createDocument(String pathToSvg) {
 
         try {
 
-            InputStream is = ImageFactory.class.getResourceAsStream(pathToSvg);
+            InputStream is = ImageEncoderFactory.class.getResourceAsStream(pathToSvg);
             String parser = XMLResourceDescriptor.getXMLParserClassName();
             SAXSVGDocumentFactory f = new SAXSVGDocumentFactory(parser);
             return f.createDocument("http://www.w3.org/2000/svg", is);
@@ -88,7 +96,7 @@ public class ImageFactory {
 
         ig2.setFont(font);
 
-        int increment = 150;
+        int increment = 50;
 
         ig2.setPaint(Color.black);
         ig2.drawString(title, hOffset, 25);
@@ -97,10 +105,10 @@ public class ImageFactory {
             FontMetrics fontMetrics = ig2.getFontMetrics();
             int stringWidth = fontMetrics.stringWidth(entry.msg);
             int stringHeight = fontMetrics.getAscent();
-            ig2.drawString(entry.msg, hOffset+30, increment+stringHeight);
+            ig2.drawString(entry.msg, hOffset+50, increment+stringHeight);
 
             if(entry.icon!=null)
-                embedIcon(mainImage,entry.icon, 0,increment+stringHeight, 10);
+                embedIcon(mainImage,entry.icon, 0,increment+stringHeight, 1);
 
             increment = increment+ stringHeight+10;
         }

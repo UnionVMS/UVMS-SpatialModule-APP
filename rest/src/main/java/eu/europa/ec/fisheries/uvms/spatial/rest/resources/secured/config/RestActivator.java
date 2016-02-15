@@ -1,15 +1,12 @@
-package eu.europa.ec.fisheries.uvms.spatial.rest;
+package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured.config;
 
 import eu.europa.ec.fisheries.uvms.spatial.rest.constants.RestConstants;
 import eu.europa.ec.fisheries.uvms.spatial.rest.resources.*;
-import eu.europa.ec.fisheries.uvms.spatial.rest.resources.ConfigResource;
+import eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured.ImageResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.Application;
 import java.util.HashSet;
 import java.util.Set;
@@ -35,8 +32,7 @@ public class RestActivator extends Application {
         set.add(FileUploadResource.class);
         set.add(AreaGroupResource.class);
         set.add(BookmarkResource.class);
-        set.add(IconResource.class);
-        set.add(LegendResource.class);
+        set.add(ImageResource.class);
         LOG.info(RestConstants.MODULE_NAME + " module starting up");
     }
 
@@ -48,13 +44,6 @@ public class RestActivator extends Application {
     @Override
     public Set<Object> getSingletons() {
         return singletons;
-    }
-
-    @GET
-    @Produces("text/html")
-    @Path("test")
-    public String getHtml() {
-        return "<html lang=\"en\"><body><h1>Hello, World!!</body></h1></html>";
     }
 
 }
