@@ -54,8 +54,8 @@ public class ImageEncoderFactory {
         TranscoderInput transcoderInput = new TranscoderInput(document);
         TranscoderOutput transcoderOutput = new TranscoderOutput(resultByteStream);
         PNGTranscoder pngTranscoder = new PNGTranscoder();
-        pngTranscoder.addTranscodingHint(SVGAbstractTranscoder.KEY_HEIGHT, 256f);
-        pngTranscoder.addTranscodingHint(SVGAbstractTranscoder.KEY_WIDTH, 256f);
+        pngTranscoder.addTranscodingHint(SVGAbstractTranscoder.KEY_HEIGHT, 55f);
+        pngTranscoder.addTranscodingHint(SVGAbstractTranscoder.KEY_WIDTH, 35f);
         pngTranscoder.transcode(transcoderInput, transcoderOutput);
         resultByteStream.flush();
         return ImageIO.read(new ByteArrayInputStream(resultByteStream.toByteArray()));
