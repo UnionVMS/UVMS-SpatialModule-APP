@@ -44,6 +44,16 @@ public class ImageEncoderFactoryTest {
 
     }
 
+
+    @Test
+    @SneakyThrows
+    public void test3() {
+
+        BufferedImage position = getPosition();
+        File outputfile = new File("test3.png");
+        ImageIO.write(position, "PNG", outputfile);
+    }
+
     private BufferedImage getPosition() throws IOException, TranscoderException {
         Document document = ImageEncoderFactory.createDocument("/position.svg");
         return ImageEncoderFactory.getBufferedImage(document);
