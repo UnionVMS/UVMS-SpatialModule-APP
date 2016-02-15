@@ -54,7 +54,7 @@ public class AreaUploadServiceBean implements AreaUploadService {
             CoordinateReferenceSystem sourceCRS = validate(content, areaTypeString, crsCode);
 
             Path absolutePath = getTempPath();
-            Path zipFilePath = Paths.get(absolutePath + AREA_ZIP_FILE);
+            Path zipFilePath = Paths.get(absolutePath + File.separator + AREA_ZIP_FILE);
 
             FileSaver fileSaver = new FileSaver();
             fileSaver.saveContentToFile(content, zipFilePath);
@@ -62,9 +62,8 @@ public class AreaUploadServiceBean implements AreaUploadService {
             ZipExtractor zipExtractor = new ZipExtractor();
             Map<SupportedFileExtensions, Path> fileNames = zipExtractor.unZipFile(zipFilePath, absolutePath);
 
-            Path shapeFilePath = Paths.get(absolutePath + File.separator + fileNames.get(SupportedFileExtensions.SHP));
             ShapeFileReader shapeFileReader = new ShapeFileReader();
-            Map<String, List<Property>> features = shapeFileReader.readShapeFile(shapeFilePath, sourceCRS);
+            Map<String, List<Property>> features = shapeFileReader.readShapeFile(fileNames.get(SupportedFileExtensions.SHP), sourceCRS);
 
             saveAreas(areaType, features);
 
@@ -110,7 +109,7 @@ public class AreaUploadServiceBean implements AreaUploadService {
     }
 
     private Path getTempPath() throws IOException {
-        return Paths.get(Files.createTempDirectory(PREFIX) + File.separator);
+        return Files.createTempDirectory(PREFIX);
     }
 
     private enum AreaType {
