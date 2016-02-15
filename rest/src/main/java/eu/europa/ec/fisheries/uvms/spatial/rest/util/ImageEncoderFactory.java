@@ -10,10 +10,7 @@ import org.apache.batik.transcoder.image.PNGTranscoder;
 import org.apache.batik.util.XMLResourceDescriptor;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -29,7 +26,9 @@ public class ImageEncoderFactory {
     private ImageEncoderFactory(){}
 
     private static final int LINE_HEIGHT = 22;
-    private static Font font = new Font("TimesRoman", Font.BOLD, LINE_HEIGHT);
+    private static Font FONT_BOLD = new Font("Arial", Font.BOLD, LINE_HEIGHT);
+    private static Font FONT_NORMAL = new Font("Arial", Font.PLAIN, LINE_HEIGHT);
+
     private static int hOffset = 0;
 
     public static BufferedImage renderSegment(String hexColor, String strokeDashArray) throws TranscoderException, IOException {
@@ -86,15 +85,15 @@ public class ImageEncoderFactory {
         return null;
     }
 
-    static public BufferedImage renderLegend(List<LegendEntry> legendEntries, String title) throws Exception {
+    static public BufferedImage renderLegend(List<LegendEntry> legendEntries, String title, int offset) throws Exception {
         int width = 500, height = (500 + 50*legendEntries.size());
         // TYPE_INT_ARGB specifies the image format: 8-bit RGBA packed
         // into integer pixels
         BufferedImage mainImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
         Graphics2D ig2 = mainImage.createGraphics();
-
-        ig2.setFont(font);
+        ig2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        ig2.setFont(FONT_BOLD);
 
         int increment = 40;
 
@@ -109,10 +108,11 @@ public class ImageEncoderFactory {
             if(entry.icon!=null)
                 embedIcon(mainImage,entry.icon, 0,increment+stringHeight-10, 1);
 
+            ig2.setFont(FONT_NORMAL);
 
-            ig2.drawString(entry.msg, hOffset+30, increment+2*stringHeight-10);
+            ig2.drawString(entry.msg, hOffset+offset, increment+2*stringHeight-10);
 
-            increment = increment+ stringHeight+10;
+            increment = increment+ stringHeight+20;
         }
 
         return mainImage;

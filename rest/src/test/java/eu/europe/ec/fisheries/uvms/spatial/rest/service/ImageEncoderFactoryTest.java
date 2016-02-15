@@ -19,6 +19,7 @@ public class ImageEncoderFactoryTest {
     public void test() {
 
         BufferedImage position = getPosition();
+        BufferedImage line = getLine();
 
         List<ImageEncoderFactory.LegendEntry> entries = new ArrayList<>();
         ImageEncoderFactory.LegendEntry legendEntry = new ImageEncoderFactory.LegendEntry();
@@ -33,18 +34,23 @@ public class ImageEncoderFactoryTest {
 
         legendEntry = new ImageEncoderFactory.LegendEntry();
         legendEntry.setMsg("Speedy Gonzales");
-        legendEntry.setIcon(position);
+        legendEntry.setIcon(line);
         entries.add(legendEntry);
 
-        BufferedImage image = ImageEncoderFactory.renderLegend(entries, "TITLE");
+        BufferedImage image = ImageEncoderFactory.renderLegend(entries, "TITLE", 55);
 
-        File outputfile = new File("test.png");
+        File outputfile = new File("test2.png");
         ImageIO.write(image, "PNG", outputfile);
 
     }
 
     private BufferedImage getPosition() throws IOException, TranscoderException {
         Document document = ImageEncoderFactory.createDocument("/position.svg");
+        return ImageEncoderFactory.getBufferedImage(document);
+    }
+
+    private BufferedImage getLine() throws IOException, TranscoderException {
+        Document document = ImageEncoderFactory.createDocument("/line.svg");
         return ImageEncoderFactory.getBufferedImage(document);
     }
 }

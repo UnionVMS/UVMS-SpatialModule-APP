@@ -37,7 +37,7 @@ public class ImageResource extends UnionVMSResource {
     public Response renderImages(@Context HttpServletRequest request, Icons icons) throws Exception {
 
         ImageResponse response = new ImageResponse();
-        response.getLegend().withBase("/image/legend/");
+        response.getLegend().withBase("/spatial/image/legend/");
 
         handlePositions(icons, response);
 
@@ -49,7 +49,7 @@ public class ImageResource extends UnionVMSResource {
 
     private void handlePositions(Icons icons, ImageResponse response) throws Exception {
 
-        response.getMap().getVmspos().withBase("/image/position/");
+        response.getMap().getVmspos().withBase("/spatial/image/position/");
         List<ImageEncoderFactory.LegendEntry> temp = new ArrayList<>();
 
         for (Class clazz : icons.getPositions().getClasses()) { // TODO check hex value
@@ -72,7 +72,7 @@ public class ImageResource extends UnionVMSResource {
 
         String guid = UUID.randomUUID().toString();
         response.getLegend().withPositions(guid);
-        LegendResource.legendEntries.put(guid, ImageEncoderFactory.renderLegend(temp, icons.getPositions().getTitle()));
+        LegendResource.legendEntries.put(guid, ImageEncoderFactory.renderLegend(temp, icons.getPositions().getTitle(), 45));
     }
 
     private void handleSegments(Icons icons, ImageResponse response) throws Exception {
@@ -99,7 +99,7 @@ public class ImageResource extends UnionVMSResource {
 
         String guid = UUID.randomUUID().toString();
         response.getLegend().withSegments(guid);
-        LegendResource.legendEntries.put(guid, ImageEncoderFactory.renderLegend(temp, icons.getSegments().getTitle()));
+        LegendResource.legendEntries.put(guid, ImageEncoderFactory.renderLegend(temp, icons.getSegments().getTitle(), 55));
     }
 
 }
