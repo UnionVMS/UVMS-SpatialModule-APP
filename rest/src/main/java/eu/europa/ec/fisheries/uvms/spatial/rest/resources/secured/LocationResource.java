@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.spatial.rest.resources;
+package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import java.io.IOException;
 import java.util.List;

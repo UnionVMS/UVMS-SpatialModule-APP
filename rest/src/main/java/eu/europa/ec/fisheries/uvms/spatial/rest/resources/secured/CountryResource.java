@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.spatial.rest.resources;
+package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
