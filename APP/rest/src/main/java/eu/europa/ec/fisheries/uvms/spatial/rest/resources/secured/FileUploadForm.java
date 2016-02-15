@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.spatial.rest.resources;
+package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.resteasy.annotations.providers.multipart.PartType;

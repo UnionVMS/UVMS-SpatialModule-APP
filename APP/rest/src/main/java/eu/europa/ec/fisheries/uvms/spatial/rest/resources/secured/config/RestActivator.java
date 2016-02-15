@@ -1,8 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured.config;
 
 import eu.europa.ec.fisheries.uvms.spatial.rest.constants.RestConstants;
-import eu.europa.ec.fisheries.uvms.spatial.rest.resources.*;
-import eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured.ImageResource;
+import eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

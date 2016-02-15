@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.spatial.rest.resources;
+package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
