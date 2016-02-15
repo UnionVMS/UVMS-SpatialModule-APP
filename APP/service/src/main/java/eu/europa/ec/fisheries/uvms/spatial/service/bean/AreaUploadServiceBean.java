@@ -48,7 +48,7 @@ public class AreaUploadServiceBean implements AreaUploadService {
     private RfmoSaverHandler rmfoSaverHandler;
 
     @Override
-    public void uploadArea(byte[] content, String areaTypeString, int crsCode) throws ServiceException {
+    public void uploadArea(byte[] content, String areaTypeString, int crsCode) {
         try {
             AreaType areaType = AreaType.fromValue(areaTypeString);
             CoordinateReferenceSystem sourceCRS = validate(content, areaTypeString, crsCode);
@@ -65,19 +65,19 @@ public class AreaUploadServiceBean implements AreaUploadService {
             ShapeFileReader shapeFileReader = new ShapeFileReader();
             Map<String, List<Property>> features = shapeFileReader.readShapeFile(fileNames.get(SupportedFileExtensions.SHP), sourceCRS);
 
-            saveAreas(areaType, features);
+            reaplaceAreas(areaType, features);
 
             FileUtils.deleteDirectory(new File(absolutePath.toString()));
 
             log.debug("Finished upload areas.");
-        } catch (IOException ex) {
+        } catch (IOException | ServiceException ex) {
             throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
         }
     }
 
-    private void saveAreas(AreaType areaType, Map<String, List<Property>> features) throws ServiceException {
+    private void reaplaceAreas(AreaType areaType, Map<String, List<Property>> features) throws ServiceException {
         SaverHandler saverHandler = getHandler(areaType);
-        saverHandler.save(features);
+        saverHandler.replaceAreas(features);
     }
 
     private SaverHandler getHandler(AreaType areaType) {

@@ -7,5 +7,5 @@ import java.util.List;
 import java.util.Map;
 
 public interface SaverHandler {
-    void save(Map<String, List<Property>> features) throws ServiceException;
+    void replaceAreas(Map<String, List<Property>> features) throws ServiceException;
 }

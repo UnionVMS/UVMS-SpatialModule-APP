@@ -47,4 +47,10 @@ public class EezServiceBean implements EezService {
         eezEntity = (EezEntity) repository.saveOrUpdateEntity(eezEntity);
         return eezEntity.getGid();
     }
+
+    @Override
+    public int disableAllAreas() throws ServiceException {
+        int count = repository.disableEez();
+        return count;
+    }
 }

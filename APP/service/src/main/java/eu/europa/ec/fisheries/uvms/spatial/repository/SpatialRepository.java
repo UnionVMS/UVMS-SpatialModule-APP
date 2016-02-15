@@ -91,6 +91,8 @@ public interface SpatialRepository extends DAO {
 
     List<PortsEntity> findPortAreaById(Long id) throws ServiceException;
 
+    int disableEez() throws ServiceException;
+
     List<String> getUserAreaTypes(String userName) throws ServiceException;
 
     BookmarkEntity create(BookmarkEntity bookmark) throws ServiceException;
