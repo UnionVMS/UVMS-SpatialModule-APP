@@ -10,7 +10,11 @@ import org.apache.batik.transcoder.image.PNGTranscoder;
 import org.apache.batik.util.XMLResourceDescriptor;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -23,28 +27,57 @@ import javax.imageio.ImageIO;
 @Slf4j
 public class ImageEncoderFactory {
 
-    private ImageEncoderFactory(){}
-
-    private static final int LINE_HEIGHT = 22;
+    private static final String STROKE_DASH_ARRAY = "stroke-dasharray";
+    private static final String STROKE = "stroke";
+    private static final String POSITION = "position";
+    private static final String STYLE = "style";
+    private static final String LINE = "line";
+    private static final int LINE_HEIGHT = 12;
+    private static final String POSITION_SVG = "/position.svg";
+    private static final String LINE_SVG = "/line.svg";
+    public static final String TRANSFORM = "transform";
+    public static final String FILL = "fill:";
     private static Font FONT_BOLD = new Font("Arial", Font.BOLD, LINE_HEIGHT);
     private static Font FONT_NORMAL = new Font("Arial", Font.PLAIN, LINE_HEIGHT);
-
     private static int hOffset = 0;
+
+    private ImageEncoderFactory(){}
 
     public static BufferedImage renderSegment(String hexColor, String strokeDashArray) throws TranscoderException, IOException {
 
         log.debug("Rendering segment");
-        Document line = createDocument("/line.svg");
-        NamedNodeMap attributes = line.getElementById("line").getAttributes();
-        attributes.getNamedItem("stroke").getFirstChild().setNodeValue(hexColor);
-        attributes.getNamedItem("stroke-dasharray").getFirstChild().setNodeValue(strokeDashArray);
+        Document line = createDocument(LINE_SVG);
+        NamedNodeMap attributes = line.getElementById(LINE).getAttributes();
+        attributes.getNamedItem(STROKE).getFirstChild().setNodeValue(hexColor);
+        attributes.getNamedItem(STROKE_DASH_ARRAY).getFirstChild().setNodeValue(strokeDashArray);
         return getBufferedImage(line);
+    }
+
+    public static BufferedImage renderSegment(String hexColor, String strokeDashArray, String scale) throws TranscoderException, IOException {
+
+        log.debug("Rendering segment");
+        Document line = createDocument(LINE_SVG);
+        NamedNodeMap attributes = line.getElementById(LINE).getAttributes();
+        attributes.getNamedItem(TRANSFORM).getFirstChild().setNodeValue(scale);
+        attributes.getNamedItem(STROKE).getFirstChild().setNodeValue(hexColor);
+        attributes.getNamedItem(STROKE_DASH_ARRAY).getFirstChild().setNodeValue(strokeDashArray);
+        return getBufferedImage(line);
+    }
+
+    public static BufferedImage renderPosition(String hexColor, String scale) throws Exception {
+
+        log.debug("Rendering position");
+        Document position = createDocument(POSITION_SVG);
+        position.getElementById("scale").getAttributes().getNamedItem(TRANSFORM).getFirstChild().setNodeValue(scale);
+        position.getElementById(POSITION).getAttributes().getNamedItem(STYLE).getFirstChild().setNodeValue(FILL + hexColor);
+        return getBufferedImage(position);
     }
 
     public static BufferedImage renderPosition(String hexColor) throws Exception {
 
-        Document position = createDocument("/position.svg");
-        position.getElementById("position").getAttributes().getNamedItem("style").getFirstChild().setNodeValue("fill:" + hexColor);
+        log.debug("Rendering position");
+        Document position = createDocument(POSITION_SVG);
+        position.getElementById(POSITION).getAttributes().getNamedItem(STYLE).getFirstChild().setNodeValue(FILL + hexColor);
         return getBufferedImage(position);
     }
 
@@ -54,7 +87,7 @@ public class ImageEncoderFactory {
         TranscoderInput transcoderInput = new TranscoderInput(document);
         TranscoderOutput transcoderOutput = new TranscoderOutput(resultByteStream);
         PNGTranscoder pngTranscoder = new PNGTranscoder();
-        pngTranscoder.addTranscodingHint(SVGAbstractTranscoder.KEY_HEIGHT, 55f);
+        pngTranscoder.addTranscodingHint(SVGAbstractTranscoder.KEY_HEIGHT, 56f);
         pngTranscoder.addTranscodingHint(SVGAbstractTranscoder.KEY_WIDTH, 35f);
         pngTranscoder.transcode(transcoderInput, transcoderOutput);
         resultByteStream.flush();
@@ -85,7 +118,7 @@ public class ImageEncoderFactory {
         return null;
     }
 
-    static public BufferedImage renderLegend(List<LegendEntry> legendEntries, String title, int offset) throws Exception {
+    static public BufferedImage renderLegend(List<LegendEntry> legendEntries, String title, int iconAndTextOffset) throws Exception {
         int width = 500, height = (500 + 50*legendEntries.size());
         // TYPE_INT_ARGB specifies the image format: 8-bit RGBA packed
         // into integer pixels
@@ -102,7 +135,6 @@ public class ImageEncoderFactory {
 
         for (LegendEntry entry:legendEntries){
             FontMetrics fontMetrics = ig2.getFontMetrics();
-            int stringWidth = fontMetrics.stringWidth(entry.msg);
             int stringHeight = fontMetrics.getAscent();
 
             if(entry.icon!=null)
@@ -110,7 +142,7 @@ public class ImageEncoderFactory {
 
             ig2.setFont(FONT_NORMAL);
 
-            ig2.drawString(entry.msg, hOffset+offset, increment+2*stringHeight-10);
+            ig2.drawString(entry.msg, hOffset + iconAndTextOffset, increment+2*stringHeight-10);
 
             increment = increment+ stringHeight+20;
         }

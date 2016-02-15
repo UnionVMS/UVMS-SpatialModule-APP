@@ -18,8 +18,8 @@ public class ImageEncoderFactoryTest {
     @SneakyThrows
     public void test() {
 
-        BufferedImage position = getPosition();
-        BufferedImage line = getLine();
+        BufferedImage position = getPosition("scale(0.3)");
+        BufferedImage line = getLine("scale(1.3)");
 
         List<ImageEncoderFactory.LegendEntry> entries = new ArrayList<>();
         ImageEncoderFactory.LegendEntry legendEntry = new ImageEncoderFactory.LegendEntry();
@@ -37,30 +37,32 @@ public class ImageEncoderFactoryTest {
         legendEntry.setIcon(line);
         entries.add(legendEntry);
 
-        BufferedImage image = ImageEncoderFactory.renderLegend(entries, "TITLE", 55);
+        BufferedImage image = ImageEncoderFactory.renderLegend(entries, "TITLE", 40);
 
         File outputfile = new File("test2.png");
         ImageIO.write(image, "PNG", outputfile);
 
     }
 
-
     @Test
     @SneakyThrows
     public void test3() {
 
-        BufferedImage position = getPosition();
+        BufferedImage position = getPosition("scale(1)");
         File outputfile = new File("test3.png");
         ImageIO.write(position, "PNG", outputfile);
     }
 
-    private BufferedImage getPosition() throws IOException, TranscoderException {
-        Document document = ImageEncoderFactory.createDocument("/position.svg");
-        return ImageEncoderFactory.getBufferedImage(document);
+    private BufferedImage getPosition(String scale) throws Exception {
+        Document position = ImageEncoderFactory.createDocument("/position.svg");
+        position.getElementById("scale").getAttributes().getNamedItem("transform").getFirstChild().setNodeValue(scale);
+        position.getElementById("position").getAttributes().getNamedItem("style").getFirstChild().setNodeValue("fill:" + "#DFSFQS");
+        return ImageEncoderFactory.getBufferedImage(position);
     }
 
-    private BufferedImage getLine() throws IOException, TranscoderException {
-        Document document = ImageEncoderFactory.createDocument("/line.svg");
-        return ImageEncoderFactory.getBufferedImage(document);
+    private BufferedImage getLine(String scale) throws IOException, TranscoderException {
+        Document segment = ImageEncoderFactory.createDocument("/line.svg");
+        segment.getElementById("line").getAttributes().getNamedItem("transform").getFirstChild().setNodeValue(scale);
+        return ImageEncoderFactory.getBufferedImage(segment);
     }
 }
