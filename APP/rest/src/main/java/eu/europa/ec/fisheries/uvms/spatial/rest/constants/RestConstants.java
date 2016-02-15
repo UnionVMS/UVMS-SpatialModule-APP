@@ -5,6 +5,7 @@ public final class RestConstants {
     private RestConstants(){}
 
     public static final String REST_URL = "/rest";
+    public static final String IMAGE_URL = "/image";
     public static final String MODULE_NAME = "spatial";
 
     public static final String ACCESS_CONTROL_ALLOW_ORIGIN = "Access-ControlDto-Allow-Origin";
