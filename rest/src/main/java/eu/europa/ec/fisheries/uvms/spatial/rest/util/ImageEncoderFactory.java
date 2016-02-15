@@ -96,19 +96,21 @@ public class ImageEncoderFactory {
 
         ig2.setFont(font);
 
-        int increment = 50;
+        int increment = 40;
 
         ig2.setPaint(Color.black);
-        ig2.drawString(title, hOffset, 25);
+        ig2.drawString(title, hOffset, 20);
 
         for (LegendEntry entry:legendEntries){
             FontMetrics fontMetrics = ig2.getFontMetrics();
             int stringWidth = fontMetrics.stringWidth(entry.msg);
             int stringHeight = fontMetrics.getAscent();
-            ig2.drawString(entry.msg, hOffset+50, increment+stringHeight);
 
             if(entry.icon!=null)
-                embedIcon(mainImage,entry.icon, 0,increment+stringHeight, 1);
+                embedIcon(mainImage,entry.icon, 0,increment+stringHeight-10, 1);
+
+
+            ig2.drawString(entry.msg, hOffset+30, increment+2*stringHeight-10);
 
             increment = increment+ stringHeight+10;
         }
