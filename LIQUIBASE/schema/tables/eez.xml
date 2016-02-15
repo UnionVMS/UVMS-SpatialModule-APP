@@ -27,6 +27,9 @@
             <column name="longitude" type="FLOAT8"/>
             <column name="latitude" type="FLOAT8"/>
             <column name="mrgid_eez" type="INT"/>
+			<column name="enabled" type="BPCHAR(1)">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
          <sql>create index eez_geom_index on spatial.eez using gist(geom)</sql>
     </changeSet>

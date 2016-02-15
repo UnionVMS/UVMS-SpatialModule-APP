@@ -18,7 +18,7 @@ import java.util.Map;
 public class RfmoSaverHandler implements SaverHandler {
 
     @Override
-    public void save(Map<String, List<Property>> features) throws ServiceException {
+    public void replaceAreas(Map<String, List<Property>> features) throws ServiceException {
         throw new NotImplementedException("Not yet implemented");
     }
 

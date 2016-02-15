@@ -12,8 +12,6 @@ import java.math.BigInteger;
 
 public class EezDto {
 
-    private static final SimpleFeatureType EEZ_FEATURE = build();
-
     private static final String GID = "gid";
     private static final String GEOMETRY = "geometry";
     private static final String NAME = "name";
@@ -28,7 +26,7 @@ public class EezDto {
     private static final String MRGID_EEZ = "mrgidEez";
     private static final String SOVEREIGN = "sovereign";
     private static final String REMARKS = "remarks";
-
+    private static final SimpleFeatureType EEZ_FEATURE = build();
     private Geometry geometry;
     private String name;
     private String country;
@@ -44,6 +42,7 @@ public class EezDto {
     private Double areaM2;
     private Double longitude;
     private Double latitude;
+    private Boolean enabled;
 
     private static SimpleFeatureType build() {
         SimpleFeatureTypeBuilder sb = new SimpleFeatureTypeBuilder();
@@ -203,6 +202,14 @@ public class EezDto {
 
     public void setMrgidEez(long mrgidEez) {
         this.mrgidEez = mrgidEez;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 
 }

@@ -26,7 +26,12 @@ public class EezSaverHandler implements SaverHandler {
     private EezService eezService;
 
     @Override
-    public void save(Map<String, List<Property>> features) throws ServiceException {
+    public void replaceAreas(Map<String, List<Property>> features) throws ServiceException {
+        eezService.disableAllAreas();
+        saveNewAreas(features);
+    }
+
+    private void saveNewAreas(Map<String, List<Property>> features) throws ServiceException {
         for (List<Property> properties : features.values()) {
             Map<String, Object> values = createAttributesMap(properties);
 
@@ -45,6 +50,7 @@ public class EezSaverHandler implements SaverHandler {
             eezDto.setLatitude((Double) values.get("latitude"));
             eezDto.setMrgidEez((Long) values.get("mrgid_eez"));
             eezDto.setGeometry((Geometry) values.get("the_geom"));
+            eezDto.setEnabled(true);
 
             eezService.createEzz(eezDto);
         }

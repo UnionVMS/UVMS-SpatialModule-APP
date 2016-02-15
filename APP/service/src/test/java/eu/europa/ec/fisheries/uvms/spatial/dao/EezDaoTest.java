@@ -34,6 +34,7 @@ public class EezDaoTest extends BaseSpatialDaoTest {
                 .latitude(-12.031984528968)
                 .mrgidEez(8308)
                 .geom(geometry)
+                .enabled(true)
                 .build();
 
         EntityTransaction t = em.getTransaction();
