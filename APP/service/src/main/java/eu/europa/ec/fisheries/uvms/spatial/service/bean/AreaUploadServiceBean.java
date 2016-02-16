@@ -69,7 +69,7 @@ public class AreaUploadServiceBean implements AreaUploadService {
 
             FileUtils.deleteDirectory(new File(absolutePath.toString()));
 
-            log.debug("Finished upload areas.");
+            log.debug("Finished areas upload.");
         } catch (IOException | ServiceException ex) {
             throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
         }
@@ -85,7 +85,7 @@ public class AreaUploadServiceBean implements AreaUploadService {
             case EEZ:
                 return eezSaverHandler;
             case RFMO:
-                return eezSaverHandler;
+                return rmfoSaverHandler;
             default:
                 throw new IllegalArgumentException("Unsupported area type.");
         }
