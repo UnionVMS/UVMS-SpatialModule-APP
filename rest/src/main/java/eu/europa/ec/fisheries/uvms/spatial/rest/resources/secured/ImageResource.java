@@ -7,7 +7,6 @@ import eu.europa.ec.fisheries.uvms.spatial.model.mapfish.request.Class;
 import eu.europa.ec.fisheries.uvms.spatial.model.mapfish.request.Icons;
 import eu.europa.ec.fisheries.uvms.spatial.model.mapfish.response.ImageResponse;
 import eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured.LegendResource;
-import eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured.SegmentResource;
 import eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured.PositionResource;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ImageEncoderFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -62,9 +61,9 @@ public class ImageResource extends UnionVMSResource {
             ImageEncoderFactory.LegendEntry legendEntry = new ImageEncoderFactory.LegendEntry();
             legendEntry.setMsg(clazz.getText());
 
-            if (PositionResource.positionEntries.get(clazz.getColor()) == null){
+            if (PositionResource.positionEntries.get(clazz.getColor().replace("#", EMPTY)) == null){
                 BufferedImage positionForMapIcon = ImageEncoderFactory.renderPosition(clazz.getColor());
-                PositionResource.positionEntries.put(clazz.getColor().replace("#", ""), positionForMapIcon);
+                PositionResource.positionEntries.put(clazz.getColor().replace("#", EMPTY), positionForMapIcon);
             }
 
             BufferedImage iconForLegend = ImageEncoderFactory.renderPosition(clazz.getColor(), SCALE_0_3);
@@ -88,12 +87,6 @@ public class ImageResource extends UnionVMSResource {
 
             ImageEncoderFactory.LegendEntry legendEntry = new ImageEncoderFactory.LegendEntry();
             legendEntry.setMsg(clazz.getText());
-
-            if (SegmentResource.segmentEntries.get(clazz.getColor()) == null){
-                BufferedImage segmentIconForMap = ImageEncoderFactory.renderSegment(clazz.getColor(), lineStyle);
-                SegmentResource.segmentEntries.put(clazz.getColor().replace("#", EMPTY), segmentIconForMap);
-            }
-
             BufferedImage segmentIconForLegend = ImageEncoderFactory.renderSegment(clazz.getColor(), lineStyle, SCALE_1_3);
             legendEntry.setIcon(segmentIconForLegend);
             temp.add(legendEntry);
