@@ -12,6 +12,7 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+@Ignore
 public class ZipExtractorTest {
 
     private static final String EEZ_ZIP_FILE = "zip/eez.zip";
