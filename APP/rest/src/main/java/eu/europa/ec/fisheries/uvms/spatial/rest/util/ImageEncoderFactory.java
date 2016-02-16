@@ -32,26 +32,19 @@ public class ImageEncoderFactory {
     private static final String POSITION = "position";
     private static final String STYLE = "style";
     private static final String LINE = "line";
-    private static final int LINE_HEIGHT = 12;
     private static final String POSITION_SVG = "/position.svg";
     private static final String SEGMENT_SVG = "/line.svg";
-    public static final String TRANSFORM = "transform";
-    public static final String FILL = "fill:";
+    private static final String TRANSFORM = "transform";
+    private static final String FILL = "fill:";
+    private static final int LINE_HEIGHT = 12;
     private static Font FONT_BOLD = new Font("Arial", Font.BOLD, LINE_HEIGHT);
     private static Font FONT_NORMAL = new Font("Arial", Font.PLAIN, LINE_HEIGHT);
-    private static int hOffset = 0;
+    private static int OFFSET = 0;
+    private static final int LINE_SPACING = 13;
+    private static final int TITLE_OFFSET = 10;
+    private static final int WIDTH = 180;
 
     private ImageEncoderFactory(){}
-
-    public static BufferedImage renderSegment(String hexColor, String strokeDashArray) throws TranscoderException, IOException {
-
-        log.debug("Rendering segment");
-        Document line = createDocument(SEGMENT_SVG);
-        NamedNodeMap attributes = line.getElementById(LINE).getAttributes();
-        attributes.getNamedItem(STROKE).getFirstChild().setNodeValue(hexColor);
-        attributes.getNamedItem(STROKE_DASH_ARRAY).getFirstChild().setNodeValue(strokeDashArray);
-        return getBufferedImage(line);
-    }
 
     public static BufferedImage renderSegment(String hexColor, String strokeDashArray, String scale) throws TranscoderException, IOException {
 
@@ -98,7 +91,8 @@ public class ImageEncoderFactory {
         for (int i=0;i<icon.getWidth();i=i+reductionScale){
             for (int j=0;j<icon.getHeight();j=j+reductionScale){
                 int localRGB = icon.getRGB(i, j);
-                mainImage.setRGB(imageX+i,  imageY+j, localRGB);
+                if(imageX + i < mainImage.getWidth() && imageY + j < mainImage.getHeight())
+                    mainImage.setRGB(imageX+i,  imageY+j, localRGB);
             }
         }
     }
@@ -119,32 +113,33 @@ public class ImageEncoderFactory {
     }
 
     static public BufferedImage renderLegend(List<LegendEntry> legendEntries, String title, int iconAndTextOffset) throws Exception {
-        int width = 500, height = (500 + 50*legendEntries.size());
+
+        int height = 20 + (LINE_HEIGHT+ LINE_SPACING) * legendEntries.size();
+
         // TYPE_INT_ARGB specifies the image format: 8-bit RGBA packed
         // into integer pixels
-        BufferedImage mainImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage mainImage = new BufferedImage(WIDTH, height, BufferedImage.TYPE_INT_ARGB);
 
         Graphics2D ig2 = mainImage.createGraphics();
         ig2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-        ig2.setFont(FONT_BOLD);
+        ig2.setFont(FONT_NORMAL);
 
-        int increment = 40;
+        int increment = TITLE_OFFSET + 2 * LINE_SPACING;
 
         ig2.setPaint(Color.black);
-        ig2.drawString(title, hOffset, 20);
+        ig2.drawString(title, OFFSET, TITLE_OFFSET);
 
         for (LegendEntry entry:legendEntries){
             FontMetrics fontMetrics = ig2.getFontMetrics();
             int stringHeight = fontMetrics.getAscent();
 
-            if(entry.icon!=null)
-                embedIcon(mainImage,entry.icon, 0,increment+stringHeight-10, 1);
+            if(entry.icon != null) // must be placed higher then the image by font height
+                embedIcon(mainImage,entry.icon, OFFSET, increment-stringHeight, 1);
 
             ig2.setFont(FONT_NORMAL);
+            ig2.drawString(entry.msg, OFFSET + iconAndTextOffset, increment);
 
-            ig2.drawString(entry.msg, hOffset + iconAndTextOffset, increment+2*stringHeight-10);
-
-            increment = increment+ stringHeight+20;
+            increment += stringHeight + LINE_SPACING;
         }
 
         return mainImage;
