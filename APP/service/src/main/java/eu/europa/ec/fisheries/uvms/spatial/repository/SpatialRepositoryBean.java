@@ -261,8 +261,13 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     }
 
     @Override
-    public int disableEez() throws ServiceException {
+    public int disableAllEezAreas() throws ServiceException {
         return updateEntityByNamedQuery(QueryNameConstants.DISABLE_EEZ_AREAS);
+    }
+
+    @Override
+    public int disableAllRfmoAreas() throws ServiceException {
+        return updateEntityByNamedQuery(QueryNameConstants.DISABLE_RFMO_AREAS);
     }
 
     @Override

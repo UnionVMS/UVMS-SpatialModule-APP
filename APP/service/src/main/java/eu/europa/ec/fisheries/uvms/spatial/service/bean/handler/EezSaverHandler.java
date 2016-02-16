@@ -1,6 +1,5 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.handler;
 
-import com.google.common.collect.Maps;
 import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.EezService;
@@ -20,14 +19,14 @@ import java.util.Map;
 @LocalBean
 @Transactional
 @Slf4j
-public class EezSaverHandler implements SaverHandler {
+public class EezSaverHandler extends AbstractSaverHandler implements SaverHandler {
 
     @EJB
     private EezService eezService;
 
     @Override
     public void replaceAreas(Map<String, List<Property>> features) throws ServiceException {
-        eezService.disableAllAreas();
+        eezService.disableAllEezAreas();
         saveNewAreas(features);
     }
 
@@ -54,16 +53,6 @@ public class EezSaverHandler implements SaverHandler {
 
             eezService.createEzz(eezDto);
         }
-    }
-
-    private Map<String, Object> createAttributesMap(List<Property> properties) {
-        Map<String, Object> resultMap = Maps.newHashMap();
-        for (Property property : properties) {
-            String name = property.getName().toString();
-            Object value = property.getValue();
-            resultMap.put(name, value);
-        }
-        return resultMap;
     }
 
 }
