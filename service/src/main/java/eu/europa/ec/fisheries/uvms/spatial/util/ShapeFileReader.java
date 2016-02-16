@@ -69,6 +69,7 @@ public class ShapeFileReader {
         Geometry sourceGeometry = (Geometry) feature.getDefaultGeometryProperty().getValue();
         if (sourceCRS != targetCRS) {
             Geometry targetGeometry = JTS.transform(sourceGeometry, transform);
+            targetGeometry.setSRID(DEFAULT_CRS_NUMBER);
             feature.setDefaultGeometry(targetGeometry);
         } else {
             sourceGeometry.setSRID(DEFAULT_CRS_NUMBER);

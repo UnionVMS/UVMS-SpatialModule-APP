@@ -79,6 +79,7 @@ public final class QueryNameConstants {
     public static final String USERAREA_COLUMNS = "userAreasEntity.findSelectedColumns";
 
     public static final String DISABLE_EEZ_AREAS = "eezEntity.disableEezAreas";
+    public static final String DISABLE_RFMO_AREAS = "rfmoEntity.disableRfmoAreas";
 
     /**
      * MapDto Config queries

@@ -18,9 +18,9 @@ import java.math.BigDecimal;
 })
 @NamedNativeQuery(
         name = QueryNameConstants.EEZ_BY_COORDINATE,
-        query = "select * from eez where st_intersects(geom, st_geomfromtext(CAST(:wktPoint as text), :crs))", resultSetMapping = "implicit.eez")
+        query = "select * from eez where st_intersects(geom, st_geomfromtext(CAST(:wktPoint as text), :crs)) and enabled = 'Y'", resultSetMapping = "implicit.eez")
 @NamedQueries({
-        @NamedQuery(name = QueryNameConstants.EEZ_COLUMNS, query = "select eez.name as name, eez.code as code from EezEntity as eez where eez.gid =:gid"),
+        @NamedQuery(name = QueryNameConstants.EEZ_COLUMNS, query = "select eez.name as name, eez.code as code from EezEntity as eez where eez.gid =:gid and eez.enabled = 'Y'"),
         @NamedQuery(name = QueryNameConstants.DISABLE_EEZ_AREAS, query = "update EezEntity set enabled = 'N'")
 })
 @Table(name = "eez", schema = "spatial")
