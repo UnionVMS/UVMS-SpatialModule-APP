@@ -9,6 +9,7 @@ import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 
 import java.math.BigInteger;
+import java.util.Date;
 
 public class EezDto {
 
@@ -43,6 +44,7 @@ public class EezDto {
     private Double longitude;
     private Double latitude;
     private Boolean enabled;
+    private Date enabledOn;
 
     private static SimpleFeatureType build() {
         SimpleFeatureTypeBuilder sb = new SimpleFeatureTypeBuilder();
@@ -210,6 +212,14 @@ public class EezDto {
 
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public Date getEnabledOn() {
+        return enabledOn;
+    }
+
+    public void setEnabledOn(Date enabledOn) {
+        this.enabledOn = enabledOn;
     }
 
 }

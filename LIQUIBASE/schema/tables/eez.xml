@@ -30,6 +30,7 @@
 			<column name="enabled" type="BPCHAR(1)">
                 <constraints nullable="false"/>
             </column>
+			<column name="enabled_on" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
         </createTable>
          <sql>create index eez_geom_index on spatial.eez using gist(geom)</sql>
     </changeSet>
