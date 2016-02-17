@@ -4,6 +4,7 @@ import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.handler.EezSaverHandler;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.handler.PortSaverHandler;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.handler.RfmoSaverHandler;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.handler.SaverHandler;
 import eu.europa.ec.fisheries.uvms.spatial.util.FileSaver;
@@ -47,6 +48,9 @@ public class AreaUploadServiceBean implements AreaUploadService {
     @EJB
     private RfmoSaverHandler rmfoSaverHandler;
 
+    @EJB
+    private PortSaverHandler portSaverHandler;
+
     @Override
     public void uploadArea(byte[] content, String areaTypeString, int crsCode) {
         try {
@@ -86,6 +90,8 @@ public class AreaUploadServiceBean implements AreaUploadService {
                 return eezSaverHandler;
             case RFMO:
                 return rmfoSaverHandler;
+            case PORT:
+                return portSaverHandler;
             default:
                 throw new IllegalArgumentException("Unsupported area type.");
         }

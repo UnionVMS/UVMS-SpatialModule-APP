@@ -49,8 +49,7 @@ public class EezServiceBean implements EezService {
     }
 
     @Override
-    public int disableAllEezAreas() throws ServiceException {
-        int count = repository.disableAllEezAreas();
-        return count;
+    public int disableAllAreas() throws ServiceException {
+        return repository.disableAllEezAreas();
     }
 }
