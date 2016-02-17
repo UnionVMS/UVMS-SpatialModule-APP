@@ -12,6 +12,7 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.transaction.Transactional;
 import java.math.BigInteger;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +32,7 @@ public class EezSaverHandler extends AbstractSaverHandler implements SaverHandle
     }
 
     private void saveNewAreas(Map<String, List<Property>> features) throws ServiceException {
+        Date enabledOn = new Date();
         for (List<Property> properties : features.values()) {
             Map<String, Object> values = createAttributesMap(properties);
 
@@ -49,6 +51,7 @@ public class EezSaverHandler extends AbstractSaverHandler implements SaverHandle
             eezDto.setLatitude((Double) values.get("latitude"));
             eezDto.setMrgidEez((Long) values.get("mrgid_eez"));
             eezDto.setGeometry((Geometry) values.get("the_geom"));
+            eezDto.setEnabledOn(enabledOn);
             eezDto.setEnabled(true);
 
             eezService.createEzz(eezDto);

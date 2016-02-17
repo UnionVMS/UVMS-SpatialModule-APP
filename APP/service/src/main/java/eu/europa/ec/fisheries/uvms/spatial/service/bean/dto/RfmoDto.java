@@ -2,6 +2,8 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto;
 
 import com.vividsolutions.jts.geom.Geometry;
 
+import java.util.Date;
+
 public class RfmoDto {
 
     private Geometry geometry;
@@ -9,6 +11,7 @@ public class RfmoDto {
     private String name;
     private String tuna;
     private Boolean enabled;
+    private Date enabledOn;
 
     public Geometry getGeometry() {
         return this.geometry;
@@ -48,6 +51,14 @@ public class RfmoDto {
 
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public Date getEnabledOn() {
+        return enabledOn;
+    }
+
+    public void setEnabledOn(Date enabledOn) {
+        this.enabledOn = enabledOn;
     }
 
 }

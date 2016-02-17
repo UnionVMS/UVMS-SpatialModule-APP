@@ -12,6 +12,7 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.transaction.Transactional;
 import java.math.BigInteger;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +32,7 @@ public class RfmoSaverHandler extends AbstractSaverHandler implements SaverHandl
     }
 
     private void saveNewAreas(Map<String, List<Property>> features) throws ServiceException {
+        Date enabledOn = new Date();
         for (List<Property> properties : features.values()) {
             Map<String, Object> values = createAttributesMap(properties);
 
@@ -40,6 +42,7 @@ public class RfmoSaverHandler extends AbstractSaverHandler implements SaverHandl
             rfmoDto.setName((String) values.get("name"));
             rfmoDto.setTuna((String) values.get("tuna"));
             rfmoDto.setEnabled(true);
+            rfmoDto.setEnabledOn(enabledOn);
 
             rfmoService.createRfmo(rfmoDto);
         }

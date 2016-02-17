@@ -7,7 +7,9 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasNa
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.Date;
 
 @Entity
 @SqlResultSetMappings({
@@ -52,6 +54,10 @@ public class RfmoEntity implements Serializable {
     @Convert(converter = CharBooleanConverter.class)
     @Column(name = "enabled", nullable = false, length = 1)
     private Boolean enabled = false;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "enabled_on")
+    private Date enabledOn;
 
     public RfmoEntity() {
     }
@@ -102,5 +108,13 @@ public class RfmoEntity implements Serializable {
 
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public Date getEnabledOn() {
+        return enabledOn;
+    }
+
+    public void setEnabledOn(Date enabledOn) {
+        this.enabledOn = enabledOn;
     }
 }

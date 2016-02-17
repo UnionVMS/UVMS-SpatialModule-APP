@@ -11,6 +11,7 @@ import org.hibernate.annotations.Type;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 @Entity
 @SqlResultSetMappings({
@@ -95,10 +96,14 @@ public class EezEntity implements Serializable {
     @Column(name = "enabled", nullable = false, length = 1)
     private Boolean enabled = false;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "enabled_on")
+    private Date enabledOn;
+
     @Builder
     public EezEntity(Geometry geom, String name, String country, String sovereign, String remarks, Integer sovId,
                      Long eezId, String code, BigDecimal mrgid, String dateChang, Double areaM2, Double longitude,
-                     Double latitude, Integer mrgidEez, Boolean enabled) {
+                     Double latitude, Integer mrgidEez, Boolean enabled, Date enabledOn) {
         this.geom = geom;
         this.name = name;
         this.country = country;
@@ -114,6 +119,7 @@ public class EezEntity implements Serializable {
         this.latitude = latitude;
         this.mrgidEez = mrgidEez;
         this.enabled = enabled;
+        this.enabledOn = enabledOn;
     }
 
     public EezEntity() {
@@ -245,6 +251,14 @@ public class EezEntity implements Serializable {
 
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public Date getEnabledOn() {
+        return enabledOn;
+    }
+
+    public void setEnabledOn(Date enabledOn) {
+        this.enabledOn = enabledOn;
     }
 
 }
