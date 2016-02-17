@@ -4,6 +4,8 @@ import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.EezService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.EezDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.opengis.feature.Property;
 
@@ -32,29 +34,33 @@ public class EezSaverHandler extends AbstractSaverHandler implements SaverHandle
     }
 
     private void saveNewAreas(Map<String, List<Property>> features) throws ServiceException {
-        Date enabledOn = new Date();
-        for (List<Property> properties : features.values()) {
-            Map<String, Object> values = createAttributesMap(properties);
+        try {
+            Date enabledOn = new Date();
+            for (List<Property> properties : features.values()) {
+                Map<String, Object> values = createAttributesMap(properties);
 
-            EezDto eezDto = new EezDto();
-            eezDto.setName((String) values.get("name"));
-            eezDto.setCountry((String) values.get("country"));
-            eezDto.setSovereign((String) values.get("sovereign"));
-            eezDto.setRemarks((String) values.get("remarks"));
-            eezDto.setSovId((Long) values.get("sov_id"));
-            eezDto.setEezId((Long) values.get("eez_id"));
-            eezDto.setCode((String) values.get("code"));
-            eezDto.setMrgid(BigInteger.valueOf(((Double) values.get("mrgid")).longValue()));
-            eezDto.setDateChang((String) values.get("date_chang"));
-            eezDto.setAreaM2((Double) values.get("area_m2"));
-            eezDto.setLongitude((Double) values.get("longitude"));
-            eezDto.setLatitude((Double) values.get("latitude"));
-            eezDto.setMrgidEez((Long) values.get("mrgid_eez"));
-            eezDto.setGeometry((Geometry) values.get("the_geom"));
-            eezDto.setEnabledOn(enabledOn);
-            eezDto.setEnabled(true);
+                EezDto eezDto = new EezDto();
+                eezDto.setName((String) values.get("name"));
+                eezDto.setCountry((String) values.get("country"));
+                eezDto.setSovereign((String) values.get("sovereign"));
+                eezDto.setRemarks((String) values.get("remarks"));
+                eezDto.setSovId((Long) values.get("sov_id"));
+                eezDto.setEezId((Long) values.get("eez_id"));
+                eezDto.setCode((String) values.get("code"));
+                eezDto.setMrgid(BigInteger.valueOf(((Double) values.get("mrgid")).longValue()));
+                eezDto.setDateChang((String) values.get("date_chang"));
+                eezDto.setAreaM2((Double) values.get("area_m2"));
+                eezDto.setLongitude((Double) values.get("longitude"));
+                eezDto.setLatitude((Double) values.get("latitude"));
+                eezDto.setMrgidEez((Long) values.get("mrgid_eez"));
+                eezDto.setGeometry((Geometry) values.get("the_geom"));
+                eezDto.setEnabledOn(enabledOn);
+                eezDto.setEnabled(true);
 
-            eezService.createEzz(eezDto);
+                eezService.createEzz(eezDto);
+            }
+        } catch (Exception e) {
+            throw new SpatialServiceException(SpatialServiceErrors.INVALID_UPLOAD_AREA_DATA, e);
         }
     }
 
