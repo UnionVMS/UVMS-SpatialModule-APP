@@ -5,12 +5,10 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.EezDto;
 
-public interface EezService {
+public interface EezService extends AreaDisableService {
     EezType getEezById(EezSpatialRQ getEezSpatialRQ);
 
     EezDto getEezById(int id);
 
     long createEzz(EezDto eezDto) throws ServiceException;
-
-    int disableAllEezAreas() throws ServiceException;
 }

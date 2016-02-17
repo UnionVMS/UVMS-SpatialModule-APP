@@ -24,9 +24,8 @@ public class RfmoServiceBean implements RfmoService {
     private RfmoMapper mapper;
 
     @Override
-    public int disableAllRfmoAreas() throws ServiceException {
-        int count = repository.disableAllRfmoAreas();
-        return count;
+    public int disableAllAreas() throws ServiceException {
+        return repository.disableAllRfmoAreas();
     }
 
     @Override
