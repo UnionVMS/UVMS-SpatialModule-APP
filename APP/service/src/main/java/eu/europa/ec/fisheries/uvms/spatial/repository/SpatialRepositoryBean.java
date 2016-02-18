@@ -13,15 +13,7 @@ import eu.europa.ec.fisheries.uvms.spatial.dao.ProjectionDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.ReportConnectSpatialDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.SysConfigDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.UserAreaDao;
-import eu.europa.ec.fisheries.uvms.spatial.entity.AreaGroupEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.BookmarkEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.PortsEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.ProjectionEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.*;
 import eu.europa.ec.fisheries.uvms.spatial.entity.config.SysConfigEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.bookmark.Bookmark;
@@ -280,8 +272,8 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     }
 
     @Override
-    public List<PortsEntity> findPortAreaById(Long portAreaId) throws ServiceException {
-        return findEntityByNamedQuery(PortsEntity.class, QueryNameConstants.FIND_PORT_AREA_BY_ID, with("portAreaId", portAreaId).parameters(), 1);
+    public List<PortAreasEntity> findPortAreaById(Long portAreaId) throws ServiceException {
+        return findEntityByNamedQuery(PortAreasEntity.class, QueryNameConstants.FIND_PORT_AREA_BY_ID, with("portAreaId", portAreaId).parameters(), 1);
     }
 
     @Override
