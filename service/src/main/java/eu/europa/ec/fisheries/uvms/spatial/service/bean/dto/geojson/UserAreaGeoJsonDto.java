@@ -1,13 +1,12 @@
-package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto;
+package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson;
 
 import eu.europa.ec.fisheries.uvms.common.DateUtils;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.GeoJsonDto;
 
 import java.util.Date;
 import java.util.List;
 
-import static org.apache.commons.lang.StringUtils.isNumeric;
-
-public class UserAreaGeomDto extends GeoJsonDto {
+public class UserAreaGeoJsonDto extends GeoJsonDto {
 
     private static final String NAME = "name";
     private static final String DESCRIPTION = "description";

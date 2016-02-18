@@ -5,19 +5,18 @@ import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.rest.constants.ErrorCodes;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.service.interceptor.ValidationInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Coordinate;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialFeaturesEnum;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.FilterDto;
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.UserAreaTypeDto;
+import eu.europa.ec.fisheries.uvms.spatial.rest.dto.geocoordinate.UserAreaTypeDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.AreaLocationDtoMapper;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.UserAreaService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaDetailsDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.AreaDetailsGeoJsonDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaGeomDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.UserAreaGeoJsonDto;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 
@@ -48,11 +47,11 @@ public class UserAreaResource extends UnionVMSResource {
     @Path("/userarea")
     @Interceptors(value = {ExceptionInterceptor.class})
     public Response storeUserArea(@Context HttpServletRequest request,
-                                  UserAreaGeomDto userAreaGeomDto,
+                                  UserAreaGeoJsonDto userAreaGeoJsonDto,
                                   @HeaderParam("scopeName") String scopeName) throws ServiceException {
         String userName = request.getRemoteUser();
         log.info("{} is requesting storeUserArea(...)", userName);
-        long gid = userAreaService.storeUserArea(userAreaGeomDto, userName);
+        long gid = userAreaService.storeUserArea(userAreaGeoJsonDto, userName);
         return createSuccessResponse(gid);
     }
 
@@ -62,11 +61,11 @@ public class UserAreaResource extends UnionVMSResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Interceptors(value = {ExceptionInterceptor.class})
     public Response updateUserArea(@Context HttpServletRequest request,
-                                   UserAreaGeomDto userAreaGeomDto,
+                                   UserAreaGeoJsonDto userAreaGeoJsonDto,
                                    @HeaderParam("scopeName") String scopeName) throws ServiceException {
         String userName = request.getRemoteUser();
-        log.info("{} is requesting updateUserArea(...), with a ID={}", userName, userAreaGeomDto.getId());
-        long gid = userAreaService.updateUserArea(userAreaGeomDto, request.getRemoteUser());
+        log.info("{} is requesting updateUserArea(...), with a ID={}", userName, userAreaGeoJsonDto.getId());
+        long gid = userAreaService.updateUserArea(userAreaGeoJsonDto, request.getRemoteUser());
         return createSuccessResponse(gid);
     }
 
@@ -117,14 +116,14 @@ public class UserAreaResource extends UnionVMSResource {
         if (!userAreaTypeDto.getIsGeom()) {
             AreaTypeEntry areaTypeEntry = areaLocationMapper.getAreaTypeEntry(userAreaTypeDto);
             AreaDetails areaDetails = userAreaService.getUserAreaDetailsWithExtentById(areaTypeEntry, userName);
-            AreaDetailsDto areaDetailsDto = areaLocationMapper.getAreaDetailsDto(areaDetails);
-            areaDetailsDto.removeGeometry();
-            return createSuccessResponse(areaDetailsDto.getProperties());
+            AreaDetailsGeoJsonDto areaDetailsGeoJsonDto = areaLocationMapper.getAreaDetailsDto(areaDetails);
+            areaDetailsGeoJsonDto.removeGeometry();
+            return createSuccessResponse(areaDetailsGeoJsonDto.getProperties());
         } else {
             AreaTypeEntry areaTypeEntry = AreaLocationDtoMapper.mapper().getAreaTypeEntry(userAreaTypeDto);
             List<AreaDetails> userAreaDetails = userAreaService.getUserAreaDetailsById(areaTypeEntry, userName);
-            AreaDetailsDto areaDetailsDto = areaLocationMapper.getAreaDetailsDtoForAllAreas(userAreaDetails, userAreaTypeDto);
-            return createSuccessResponse(areaDetailsDto.convertAll());
+            AreaDetailsGeoJsonDto areaDetailsGeoJsonDto = areaLocationMapper.getAreaDetailsDtoForAllAreas(userAreaDetails, userAreaTypeDto);
+            return createSuccessResponse(areaDetailsGeoJsonDto.convertAll());
         }
     }
 
@@ -136,8 +135,8 @@ public class UserAreaResource extends UnionVMSResource {
         } else {
             AreaTypeEntry areaTypeEntry = AreaLocationDtoMapper.mapper().getAreaTypeEntry(userAreaTypeDto);
             List<AreaDetails> userAreaDetails = userAreaService.getUserAreaDetailsByLocation(areaTypeEntry, userName);
-            AreaDetailsDto areaDetailsDto = areaLocationMapper.getAreaDetailsDtoForAllAreas(userAreaDetails, userAreaTypeDto);
-            return createSuccessResponse(areaDetailsDto.convertAll());
+            AreaDetailsGeoJsonDto areaDetailsGeoJsonDto = areaLocationMapper.getAreaDetailsDtoForAllAreas(userAreaDetails, userAreaTypeDto);
+            return createSuccessResponse(areaDetailsGeoJsonDto.convertAll());
         }
     }
 

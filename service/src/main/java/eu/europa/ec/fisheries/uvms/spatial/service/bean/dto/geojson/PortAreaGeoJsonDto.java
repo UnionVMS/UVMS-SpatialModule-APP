@@ -1,13 +1,13 @@
-package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto;
+package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson;
 
-public class PortAreaGeomDto extends GeoJsonDto {
+public class PortAreaGeoJsonDto extends GeoJsonDto {
 
     public Long getId() {
         Object gid = properties.get(ID);
         if (gid != null) {
             try {
-                return Long.valueOf((String)gid);
-            } catch (NumberFormatException nfe ) {
+                return Long.valueOf((String) gid);
+            } catch (NumberFormatException nfe) {
                 //do nothing, later we return null anyway
             }
         }
