@@ -21,7 +21,7 @@ import java.io.Serializable;
 @NamedNativeQueries({
         @NamedNativeQuery(
                 name = QueryNameConstants.PORTAREA_BY_COORDINATE,
-                query = "select * from port_area where st_intersects(geom, st_geomfromtext(CAST(:wktPoint as text), :crs))"
+                query = "select * from port_area where st_intersects(geom, st_geomfromtext(CAST(:wktPoint as text), :crs)) and enabled = 'Y'"
                 , resultSetMapping = "implicit.port")
 })
 @Where(clause = "enabled = 'Y'")

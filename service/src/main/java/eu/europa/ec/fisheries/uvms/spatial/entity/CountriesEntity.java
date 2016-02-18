@@ -31,7 +31,7 @@ import org.hibernate.annotations.Where;
 })
 @NamedNativeQuery(
 		name = QueryNameConstants.COUNTRY_BY_COORDINATE, 
-		query = "select * from spatial.countries where st_intersects(geom, st_geomfromtext(CAST(:wktPoint as text), :crs))", resultSetMapping = "implicit.country")
+		query = "select * from spatial.countries where st_intersects(geom, st_geomfromtext(CAST(:wktPoint as text), :crs)) and enabled = 'Y'", resultSetMapping = "implicit.country")
 @NamedQueries({
 		@NamedQuery(name = QueryNameConstants.FIND_ALL_COUNTRY_DESC,
 		query = "SELECT country.code AS code, country.name AS name FROM CountriesEntity country WHERE country.code IN (SELECT DISTINCT c.code FROM CountriesEntity c)")
