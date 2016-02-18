@@ -6,14 +6,12 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaDisableService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.PortAreaService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.PortAreaDto;
 import lombok.extern.slf4j.Slf4j;
-import org.opengis.feature.Property;
 
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.transaction.Transactional;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 @Stateless
@@ -26,19 +24,15 @@ public class PortAreaSaverHandler extends AbstractSaverHandler implements SaverH
     private PortAreaService portAreaService;
 
     @Override
-    protected void saveNewAreas(Map<String, List<Property>> features, Date enabledOn) throws ServiceException {
-        for (List<Property> properties : features.values()) {
-            Map<String, Object> values = createAttributesMap(properties);
+    protected void saveNewAreas(Map<String, Object> values, Date enabledOn) throws ServiceException {
+        PortAreaDto portAreaDto = new PortAreaDto();
+        portAreaDto.setGeometry((Geometry) values.get("the_geom"));
+        portAreaDto.setCode((String) values.get("code"));
+        portAreaDto.setName((String) values.get("name"));
+        portAreaDto.setEnabled(true);
+        portAreaDto.setEnabledOn(enabledOn);
 
-            PortAreaDto portAreaDto = new PortAreaDto();
-            portAreaDto.setGeometry((Geometry) values.get("the_geom"));
-            portAreaDto.setCode((String) values.get("code"));
-            portAreaDto.setName((String) values.get("name"));
-            portAreaDto.setEnabled(true);
-            portAreaDto.setEnabledOn(enabledOn);
-
-            portAreaService.createPortArea(portAreaDto);
-        }
+        portAreaService.createPortArea(portAreaDto);
     }
 
     @Override

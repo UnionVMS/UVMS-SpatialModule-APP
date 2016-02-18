@@ -13,7 +13,7 @@ import java.util.Map;
 
 public abstract class AbstractSaverHandler {
 
-    protected abstract void saveNewAreas(Map<String, List<Property>> features, Date enabledOn) throws ServiceException;
+    protected abstract void saveNewAreas(Map<String, Object> values, Date enabledOn) throws ServiceException;
 
     protected abstract AreaDisableService getAreaDisableService();
 
@@ -21,7 +21,11 @@ public abstract class AbstractSaverHandler {
         getAreaDisableService().disableAllAreas();
         try {
             Date enabledOn = new Date();
-            saveNewAreas(features, enabledOn);
+            for (List<Property> properties : features.values()) {
+                Map<String, Object> values = createAttributesMap(properties);
+                saveNewAreas(values, enabledOn);
+            }
+
         } catch (Exception e) {
             throw new SpatialServiceException(SpatialServiceErrors.INVALID_UPLOAD_AREA_DATA, e);
         }
