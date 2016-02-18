@@ -38,7 +38,7 @@ public class PortAreaServiceBean implements PortAreaService {
         validateNotNull(id, persistentPortAreas);
 
         PortsEntity persistentPortArea = persistentPortAreas.get(0);
-        persistentPortArea.setAreaGeom(geometry);
+        persistentPortArea.setGeom(geometry);
 
         PortsEntity persistedUpdatedEntity = (PortsEntity) repository.updateEntity(persistentPortArea);
         return persistedUpdatedEntity.getGid();

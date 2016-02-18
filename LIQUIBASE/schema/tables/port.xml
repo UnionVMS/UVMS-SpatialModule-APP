@@ -14,7 +14,6 @@
                 <constraints primaryKey="true" primaryKeyName="port_pkey"/>
             </column>
             <column name="geom" type="geometry(MultiPoint, 4326)"/>
-			<column name="area_geom" type="geometry(Multipolygon, 4326)"/>
 			<column name="country_code" type="VARCHAR(3)"/>
 			<column name="code" type="VARCHAR(10)"/>
 			<column name="name" type="VARCHAR(100)"/>

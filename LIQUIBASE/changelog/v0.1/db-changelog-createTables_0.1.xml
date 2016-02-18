@@ -17,6 +17,7 @@
     <include file="\schema\tables\fao.xml"/>
     <include file="\schema\tables\gfcm.xml"/>
     <include file="\schema\tables\port.xml"/>
+	<include file="\schema\tables\port_area.xml"/>
     <include file="\schema\tables\projection.xml"/>
     <include file="\schema\tables\service_layer.xml"/>
     <include file="\schema\tables\provider_format.xml"/>

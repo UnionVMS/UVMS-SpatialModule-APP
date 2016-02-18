@@ -13,18 +13,10 @@ import java.io.Serializable;
 @SqlResultSetMappings({
         @SqlResultSetMapping(name = "implicit.port", entities = @EntityResult(entityClass = PortsEntity.class))
 })
-@NamedQueries({
-        @NamedQuery(name = QueryNameConstants.FIND_PORT_AREA_BY_ID,
-                query = "SELECT port FROM PortsEntity port WHERE port.gid = :portAreaId")
-})
 @NamedNativeQueries({
         @NamedNativeQuery(
                 name = QueryNameConstants.PORT_BY_COORDINATE,
                 query = "select * from port order by ST_Distance_Spheroid(geom, st_geomfromtext(CAST(:wktPoint as text), :crs), 'SPHEROID[\"WGS 84\",6378137,298.257223563]') limit 1"
-                , resultSetMapping = "implicit.port"),
-        @NamedNativeQuery(
-                name = QueryNameConstants.PORTAREA_BY_COORDINATE,
-                query = "select * from port where st_intersects(area_geom, st_geomfromtext(CAST(:wktPoint as text), :crs))"
                 , resultSetMapping = "implicit.port")
 })
 @Table(name = "port", schema = "spatial")
@@ -42,11 +34,6 @@ public class PortsEntity implements Serializable {
     @Type(type = "org.hibernate.spatial.GeometryType")
     @ColumnAliasName(aliasName = GeoJsonDto.GEOMETRY)
     private Geometry geom;
-
-    @Column(name = "area_geom", nullable = true)
-    @Type(type = "org.hibernate.spatial.GeometryType")
-    @ColumnAliasName(aliasName = GeoJsonDto.AREA_GEOMETRY)
-    private Geometry areaGeom;
 
     @Column(name = "country_code", length = 3)
     @ColumnAliasName(aliasName = "countrycode")
@@ -89,14 +76,6 @@ public class PortsEntity implements Serializable {
 
     public void setGeom(Geometry geom) {
         this.geom = geom;
-    }
-
-    public Geometry getAreaGeom() {
-        return areaGeom;
-    }
-
-    public void setAreaGeom(Geometry areaGeom) {
-        this.areaGeom = areaGeom;
     }
 
     public String getCode() {

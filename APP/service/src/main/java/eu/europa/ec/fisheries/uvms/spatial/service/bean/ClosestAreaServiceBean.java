@@ -15,6 +15,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialService
 import eu.europa.ec.fisheries.uvms.spatial.util.SpatialUtils;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 
 import javax.ejb.EJB;
 import javax.ejb.Local;
@@ -25,6 +26,7 @@ import java.util.Map;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static eu.europa.ec.fisheries.uvms.spatial.util.SpatialUtils.convertToPointInWGS84;
+import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 
 @Stateless
 @Local(ClosestAreaService.class)
@@ -80,11 +82,13 @@ public class ClosestAreaServiceBean implements ClosestAreaService {
             List<ClosestAreaDto> closestAreaList = repository.findClosestArea(point, measurementUnit, areaDbTable);
             validateResponse(closestAreaList);
 
-            ClosestAreaDto closestAreaDto = closestAreaList.get(0);
-            if (closestAreaDto != null) {
-                closestAreaDto.setAreaType(areaType);
-                closestAreaDto.setUnit(measurementUnit.name());
-                closestAreas.add(closestAreaDto);
+            if (isNotEmpty(closestAreaList)) {
+                ClosestAreaDto closestAreaDto = closestAreaList.get(0);
+                if (closestAreaDto != null) {
+                    closestAreaDto.setAreaType(areaType);
+                    closestAreaDto.setUnit(measurementUnit.name());
+                    closestAreas.add(closestAreaDto);
+                }
             }
         }
 
