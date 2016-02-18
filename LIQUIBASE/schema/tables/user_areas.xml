@@ -29,6 +29,9 @@
             </column>
             <column name="start_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
             <column name="end_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+			<column name="enabled" type="BPCHAR(1)">
+                <constraints nullable="false"/>
+            </column>	
         </createTable>
         <sql>create index user_areas_geom_index on spatial.user_areas using gist(geom)</sql>
     </changeSet>

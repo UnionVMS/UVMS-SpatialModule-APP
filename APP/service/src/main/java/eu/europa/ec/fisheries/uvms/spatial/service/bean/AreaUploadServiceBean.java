@@ -69,7 +69,7 @@ public class AreaUploadServiceBean implements AreaUploadService {
             ShapeFileReader shapeFileReader = new ShapeFileReader();
             Map<String, List<Property>> features = shapeFileReader.readShapeFile(fileNames.get(SupportedFileExtensions.SHP), sourceCRS);
 
-            reaplaceAreas(areaType, features);
+            replaceAreas(areaType, features);
 
             FileUtils.deleteDirectory(new File(absolutePath.toString()));
 
@@ -79,7 +79,7 @@ public class AreaUploadServiceBean implements AreaUploadService {
         }
     }
 
-    private void reaplaceAreas(AreaType areaType, Map<String, List<Property>> features) throws ServiceException {
+    private void replaceAreas(AreaType areaType, Map<String, List<Property>> features) throws ServiceException {
         SaverHandler saverHandler = getHandler(areaType);
         saverHandler.replaceAreas(features);
     }

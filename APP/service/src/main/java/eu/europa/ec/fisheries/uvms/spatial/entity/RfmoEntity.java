@@ -5,6 +5,7 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.converter.CharBooleanConverter
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -19,9 +20,10 @@ import java.util.Date;
         name = QueryNameConstants.RFMO_BY_COORDINATE,
         query = "select * from rfmo where st_intersects(geom, st_geomfromtext(CAST(:wktPoint as text), :crs)) and enabled = 'Y'", resultSetMapping = "implicit.rfmo")
 @NamedQueries({
-        @NamedQuery(name = QueryNameConstants.RFMO_COLUMNS, query = "select rfmo.name as name, rfmo.code as code from RfmoEntity as rfmo where rfmo.gid =:gid and rfmo.enabled = 'Y'"),
+        @NamedQuery(name = QueryNameConstants.RFMO_COLUMNS, query = "select rfmo.name as name, rfmo.code as code from RfmoEntity as rfmo where rfmo.gid =:gid"),
         @NamedQuery(name = QueryNameConstants.DISABLE_RFMO_AREAS, query = "update RfmoEntity set enabled = 'N'")
 })
+@Where(clause = "enabled = 'Y'")
 @Table(name = "rfmo", schema = "spatial")
 public class RfmoEntity implements Serializable {
 

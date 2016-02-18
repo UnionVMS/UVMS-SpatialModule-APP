@@ -79,11 +79,11 @@
 			<column name="id" valueNumeric="8" />
 			<column name="service_layer_id" valueNumeric="11" />
 			<column name="type_name" value="PORTAREA" />
-			<column name="area_db_table" value="port" />
+			<column name="area_db_table" value="port_area" />
 			<column name="is_system_wide" value="Y" />
 			<column name="area_type_desc" value="Port area" />
 			<column name="is_location" value="N" />
-			<column name="area_group_type" value="port" />
+			<column name="area_group_type" value="portarea" />
 		</insert>
 	</changeSet>
 </databaseChangeLog>

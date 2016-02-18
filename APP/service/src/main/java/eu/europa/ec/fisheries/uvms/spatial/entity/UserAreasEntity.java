@@ -5,6 +5,7 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.converter.CharBooleanConverter
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -52,6 +53,7 @@ import java.util.Set;
                 query = "select * from user_areas where st_intersects(geom, st_geomfromtext(CAST(:wktPoint as text), :crs))", resultSetMapping = "implicit.userarea")
 
 })
+@Where(clause = "enabled = 'Y'")
 @Table(name = "user_areas", schema = "spatial")
 public class UserAreasEntity implements Serializable {
 

@@ -33,6 +33,9 @@
             <column name="region_un" type="VARCHAR(23)"/>
             <column name="subregion" type="VARCHAR(25)"/>
             <column name="region_wb" type="VARCHAR(26)"/>
+			<column name="enabled" type="BPCHAR(1)">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
         <sql>create index sidx_countries_geom on spatial.countries using gist(geom)</sql>
     </changeSet>

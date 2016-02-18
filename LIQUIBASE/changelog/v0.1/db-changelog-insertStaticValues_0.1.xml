@@ -8,6 +8,7 @@
     <include file="schema\initdata\eez_init.xml"/>
 	<include file="schema\initdata\rfmo_init.xml"/>
 	<include file="schema\initdata\port_init.xml"/>
+	<include file="schema\initdata\port_area_init.xml"/>
 	<include file="schema\initdata\service_layer_init.xml"/>
 	<include file="schema\initdata\area_location_types_init.xml"/>
 	<include file="schema\initdata\projection_init.xml"/>
