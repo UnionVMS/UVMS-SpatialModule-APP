@@ -4,7 +4,7 @@ import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.PortAreaService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.PortAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.PortAreaGeomDto;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.ejb.EJB;
@@ -30,11 +30,11 @@ public class AreaPortResource extends UnionVMSResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Interceptors(value = {ExceptionInterceptor.class})
     public Response updatePortArea(@Context HttpServletRequest request,
-                                   PortAreaDto portAreaDto,
+                                   PortAreaGeomDto portAreaGeomDto,
                                    @HeaderParam("scopeName") String scopeName) throws ServiceException {
         String userName = request.getRemoteUser();
         log.info("{} is requesting updatePortArea(...)", userName);
-        long gid = portAreaService.updatePortArea(portAreaDto);
+        long gid = portAreaService.updatePortArea(portAreaGeomDto);
         return createSuccessResponse(gid);
     }
 

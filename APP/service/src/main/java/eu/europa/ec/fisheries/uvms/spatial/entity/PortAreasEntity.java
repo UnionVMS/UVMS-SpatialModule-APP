@@ -18,7 +18,8 @@ import java.util.Date;
 })
 @NamedQueries({
         @NamedQuery(name = QueryNameConstants.FIND_PORT_AREA_BY_ID,
-                query = "SELECT portarea FROM PortAreasEntity portarea WHERE portarea.gid = :portAreaId")
+                query = "SELECT portarea FROM PortAreasEntity portarea WHERE portarea.gid = :portAreaId"),
+        @NamedQuery(name = QueryNameConstants.DISABLE_PORT_AREAS, query = "update PortAreasEntity set enabled = 'N'")
 })
 @NamedNativeQueries({
         @NamedNativeQuery(
