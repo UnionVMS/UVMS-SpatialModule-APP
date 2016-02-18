@@ -2,7 +2,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.entity.PortsEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.PortAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.PortAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
@@ -34,13 +34,13 @@ public class PortAreaServiceBean implements PortAreaService {
     }
 
     private long update(Long id, Geometry geometry) throws ServiceException {
-        List<PortsEntity> persistentPortAreas = repository.findPortAreaById(id);
+        List<PortAreasEntity> persistentPortAreas = repository.findPortAreaById(id);
         validateNotNull(id, persistentPortAreas);
 
-        PortsEntity persistentPortArea = persistentPortAreas.get(0);
+        PortAreasEntity persistentPortArea = persistentPortAreas.get(0);
         persistentPortArea.setGeom(geometry);
 
-        PortsEntity persistedUpdatedEntity = (PortsEntity) repository.updateEntity(persistentPortArea);
+        PortAreasEntity persistedUpdatedEntity = (PortAreasEntity) repository.updateEntity(persistentPortArea);
         return persistedUpdatedEntity.getGid();
     }
 
@@ -55,7 +55,7 @@ public class PortAreaServiceBean implements PortAreaService {
         }
     }
 
-    private void validateNotNull(Long portAreaId, List<PortsEntity> persistentPortAreas) {
+    private void validateNotNull(Long portAreaId, List<PortAreasEntity> persistentPortAreas) {
         if (CollectionUtils.isEmpty(persistentPortAreas)) {
             throw new SpatialServiceException(SpatialServiceErrors.PORT_AREA_DOES_NOT_EXIST, portAreaId);
         }

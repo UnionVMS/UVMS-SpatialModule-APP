@@ -13,7 +13,7 @@
             <column autoIncrement="true" name="gid" type="SERIAL">
                 <constraints primaryKey="true" primaryKeyName="port_area_pkey"/>
             </column>
-            <column name="geom" type="geometry(MultiPoint, 4326)"/>
+            <column name="geom" type="geometry(Multipolygon, 4326)"/>
 			<column name="code" type="VARCHAR(10)"/>
 			<column name="name" type="VARCHAR(100)"/>
 			<column name="enabled" type="BPCHAR(1)">
