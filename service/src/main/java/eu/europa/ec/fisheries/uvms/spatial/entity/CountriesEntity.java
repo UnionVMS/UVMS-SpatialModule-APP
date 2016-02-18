@@ -23,6 +23,7 @@ import com.vividsolutions.jts.geom.Geometry;
 
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
+import org.hibernate.annotations.Where;
 
 @Entity
 @SqlResultSetMappings({
@@ -35,6 +36,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasNa
 		@NamedQuery(name = QueryNameConstants.FIND_ALL_COUNTRY_DESC,
 		query = "SELECT country.code AS code, country.name AS name FROM CountriesEntity country WHERE country.code IN (SELECT DISTINCT c.code FROM CountriesEntity c)")
 })
+@Where(clause = "enabled = 'Y'")
 @Table(name = "countries", schema = "spatial")
 @EqualsAndHashCode(exclude = "id")
 public class CountriesEntity implements Serializable { // TODO rename to CountryEntity

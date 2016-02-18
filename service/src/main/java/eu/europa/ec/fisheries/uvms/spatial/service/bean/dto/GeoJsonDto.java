@@ -18,9 +18,7 @@ import java.util.Map.Entry;
 public abstract class GeoJsonDto {
 
     public static final String GEOMETRY = "geometry";
-    public static final String AREA_GEOMETRY = "areageometry";
     protected static final String ID = "id";
-    protected static final String PORTAREA = "PORTAREA";
     private static final String EXTENT = "extent";
     protected String type;
     @JsonDeserialize(using = GeometryDeserializer.class)
@@ -89,16 +87,8 @@ public abstract class GeoJsonDto {
     }
 
     public void removeGeometry() {
-        if (PORTAREA.equalsIgnoreCase(type) && properties.containsKey(AREA_GEOMETRY)) {
-            properties.put(EXTENT, getExtend(properties.get(AREA_GEOMETRY)));
-            properties.remove(AREA_GEOMETRY);
-            if (properties.containsKey(GEOMETRY)) {
-                properties.remove(GEOMETRY);
-            }
-        } else if (properties.containsKey(GEOMETRY)) {
-            properties.put(EXTENT, getExtend(properties.get(GEOMETRY)));
-            properties.remove(GEOMETRY);
-        }
+        properties.put(EXTENT, getExtend(properties.get(GEOMETRY)));
+        properties.remove(GEOMETRY);
     }
 
     protected String getExtend(Object geometry) {
@@ -110,7 +100,7 @@ public abstract class GeoJsonDto {
             }
             return extent;
         } catch (ParseException e) {
-            return geometry==null?null:geometry.toString();
+            return geometry == null ? null : geometry.toString();
         }
     }
 

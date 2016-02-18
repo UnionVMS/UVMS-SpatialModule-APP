@@ -15,7 +15,7 @@ public class ClosestAreaDto {
     private String areaType;
     private String code;
     private String name;
-    private double distance;
+    private Double distance;
     private String unit;
 
     public String getId() {
@@ -34,11 +34,11 @@ public class ClosestAreaDto {
         this.areaType = areaType;
     }
 
-    public double getDistance() {
+    public Double getDistance() {
         return distance;
     }
 
-    public void setDistance(double distance) {
+    public void setDistance(Double distance) {
         this.distance = distance;
     }
 

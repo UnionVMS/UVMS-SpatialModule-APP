@@ -7,6 +7,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasNa
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -21,9 +22,10 @@ import java.util.Date;
         name = QueryNameConstants.EEZ_BY_COORDINATE,
         query = "select * from eez where st_intersects(geom, st_geomfromtext(CAST(:wktPoint as text), :crs)) and enabled = 'Y'", resultSetMapping = "implicit.eez")
 @NamedQueries({
-        @NamedQuery(name = QueryNameConstants.EEZ_COLUMNS, query = "select eez.name as name, eez.code as code from EezEntity as eez where eez.gid =:gid and eez.enabled = 'Y'"),
+        @NamedQuery(name = QueryNameConstants.EEZ_COLUMNS, query = "select eez.name as name, eez.code as code from EezEntity as eez where eez.gid =:gid"),
         @NamedQuery(name = QueryNameConstants.DISABLE_EEZ_AREAS, query = "update EezEntity set enabled = 'N'")
 })
+@Where(clause = "enabled = 'Y'")
 @Table(name = "eez", schema = "spatial")
 @EqualsAndHashCode
 public class EezEntity implements Serializable {
