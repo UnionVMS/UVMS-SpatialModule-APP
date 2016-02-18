@@ -1,7 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -18,9 +17,9 @@ import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.service.interceptor.ValidationInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaDetailsDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.AreaDetailsGeoJsonDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaFilterDto;
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaTypeDto;
+import eu.europa.ec.fisheries.uvms.spatial.rest.dto.geocoordinate.AreaTypeDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseCode;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.error.ErrorHandler;
@@ -30,11 +29,8 @@ import eu.europa.ec.fisheries.uvms.spatial.rest.util.ValidationUtils;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaExtendedIdentifierDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestAreaDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaGroup.AreaGroupDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaGroup.AreaGroupTypeDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaServiceLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.LayerTypeEnum;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.ServiceLayerDto;
 import lombok.extern.slf4j.Slf4j;
 
 @Path("/")
@@ -174,21 +170,21 @@ public class AreaResource extends UnionVMSResource {
     
     private Response getAreaDetailsById(AreaTypeDto areaDto) throws IOException, ParseException {
     	AreaDetails areaDetails = areaDetailsService.getAreaDetailsById(mapper.getAreaTypeEntry(areaDto));
-    	AreaDetailsDto areaDetailsDto = mapper.getAreaDetailsDto(areaDetails);
+    	AreaDetailsGeoJsonDto areaDetailsGeoJsonDto = mapper.getAreaDetailsDto(areaDetails);
     	if (!areaDto.getIsGeom()) {
-    		areaDetailsDto.removeGeometry();
-        	return createSuccessResponse(areaDetailsDto.getProperties());
+    		areaDetailsGeoJsonDto.removeGeometry();
+        	return createSuccessResponse(areaDetailsGeoJsonDto.getProperties());
     	}  
-    	return createSuccessResponse(areaDetailsDto.convert());
+    	return createSuccessResponse(areaDetailsGeoJsonDto.convert());
     }
     
     private Response getAreaDetailsByLocation(AreaTypeDto areaDto) throws IOException, ParseException {
     	List<AreaDetails> areaDetailsList = areaDetailsService.getAreaDetailsByLocation(mapper.getAreaTypeEntry(areaDto));
-		AreaDetailsDto areaDetailsDto = mapper.getAreaDetailsDtoForAllAreas(areaDetailsList, areaDto);    		
+		AreaDetailsGeoJsonDto areaDetailsGeoJsonDto = mapper.getAreaDetailsDtoForAllAreas(areaDetailsList, areaDto);
 		if (!areaDto.getIsGeom()) {
-    		areaDetailsDto.removeGeometryAllAreas();
-        	return createSuccessResponse(areaDetailsDto.getAllAreaProperties());
+    		areaDetailsGeoJsonDto.removeGeometryAllAreas();
+        	return createSuccessResponse(areaDetailsGeoJsonDto.getAllAreaProperties());
     	}
-		return createSuccessResponse(areaDetailsDto.convertAll());
+		return createSuccessResponse(areaDetailsGeoJsonDto.convertAll());
     }
 }

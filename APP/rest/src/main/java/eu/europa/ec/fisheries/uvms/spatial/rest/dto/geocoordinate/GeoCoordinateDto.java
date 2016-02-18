@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.spatial.rest.dto;
+package eu.europa.ec.fisheries.uvms.spatial.rest.dto.geocoordinate;
 
 import java.io.Serializable;
 

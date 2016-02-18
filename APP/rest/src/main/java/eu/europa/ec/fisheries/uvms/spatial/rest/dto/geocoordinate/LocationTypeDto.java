@@ -1,10 +1,10 @@
-package eu.europa.ec.fisheries.uvms.spatial.rest.dto;
+package eu.europa.ec.fisheries.uvms.spatial.rest.dto.geocoordinate;
 
 import java.io.Serializable;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import eu.europa.ec.fisheries.uvms.spatial.rest.dto.geocoordinate.GeoCoordinateDto;
 import org.hibernate.validator.constraints.NotEmpty;
 
 public class LocationTypeDto extends GeoCoordinateDto implements Serializable {

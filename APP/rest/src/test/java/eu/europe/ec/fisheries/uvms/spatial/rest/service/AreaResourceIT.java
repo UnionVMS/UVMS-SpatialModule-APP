@@ -20,7 +20,7 @@ import org.junit.runner.RunWith;
 
 import eu.europa.ec.fisheries.uvms.rest.dto.ResponseDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaFilterDto;
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaTypeDto;
+import eu.europa.ec.fisheries.uvms.spatial.rest.dto.geocoordinate.AreaTypeDto;
 
 @RunWith(Arquillian.class)
 @RunAsClient

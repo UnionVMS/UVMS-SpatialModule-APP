@@ -12,7 +12,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Coordinate;
 import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaGeomDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.UserAreaGeoJsonDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
@@ -46,13 +46,13 @@ public class UserAreaServiceBean implements UserAreaService {
     private AreaTypeNamesService areaTypeNamesService;
 
     @Override
-    public long storeUserArea(UserAreaGeomDto userAreaDto, String userName) throws ServiceException {
+    public long storeUserArea(UserAreaGeoJsonDto userAreaDto, String userName) throws ServiceException {
         UserAreasEntity userAreasEntity = prepareNewEntity(userAreaDto, userName);
         UserAreasEntity persistedEntity = (UserAreasEntity) repository.createEntity(userAreasEntity);
         return persistedEntity.getGid();
     }
 
-    private UserAreasEntity prepareNewEntity(UserAreaGeomDto userAreaDto, String userName) {
+    private UserAreasEntity prepareNewEntity(UserAreaGeoJsonDto userAreaDto, String userName) {
         UserAreasEntity userAreasEntity = UserAreaMapper.mapper().fromDtoToEntity(userAreaDto);
         userAreasEntity.setUserName(userName);
         userAreasEntity.setCreatedOn(new Date());
@@ -60,7 +60,7 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     @Override
-    public long updateUserArea(UserAreaGeomDto userAreaDto, String userName) throws ServiceException {
+    public long updateUserArea(UserAreaGeoJsonDto userAreaDto, String userName) throws ServiceException {
         Long id = userAreaDto.getId();
         validateGid(id);
 
