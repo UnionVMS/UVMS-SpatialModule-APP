@@ -15,6 +15,7 @@ import javax.persistence.Table;
 
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
+import org.hibernate.annotations.Where;
 
 @Entity
 @SqlResultSetMappings({
@@ -22,8 +23,8 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasNa
 })
 @NamedNativeQuery(
 		name = QueryNameConstants.STAT_RECT_BY_COORDINATE, 
-		query = "select * from stat_rect where st_intersects(geom, st_geomfromtext(CAST(:wktPoint as text), :crs))", resultSetMapping = "implicit.statRect")
-
+		query = "select * from stat_rect where st_intersects(geom, st_geomfromtext(CAST(:wktPoint as text), :crs)) and enabled = 'Y'", resultSetMapping = "implicit.statRect")
+@Where(clause = "enabled = 'Y'")
 @Table(name = "stat_rect", schema = "spatial")
 public class StatRectEntity implements Serializable {
 	
