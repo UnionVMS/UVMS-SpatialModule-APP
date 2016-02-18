@@ -1,6 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import com.vividsolutions.jts.geom.Geometry;
+import eu.europa.ec.fisheries.uvms.spatial.entity.converter.CharBooleanConverter;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.GeoJsonDto;
@@ -9,6 +10,7 @@ import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 @Entity
 @SqlResultSetMappings({
@@ -44,6 +46,14 @@ public class PortAreasEntity implements Serializable {
     @Column(name = "code", length = 10)
     @ColumnAliasName(aliasName = "code")
     private String code;
+
+    @Convert(converter = CharBooleanConverter.class)
+    @Column(name = "enabled", nullable = false, length = 1)
+    private Boolean enabled = false;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "enabled_on")
+    private Date enabledOn;
 
     public PortAreasEntity() {
     }
