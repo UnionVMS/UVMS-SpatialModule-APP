@@ -2,14 +2,12 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.PortAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.PortAreaDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.PortAreaGeomDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.PortAreaGeoJsonDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.service.mapper.EezMapper;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.PortAreaMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
@@ -34,11 +32,11 @@ public class PortAreaServiceBean implements PortAreaService {
     private PortAreaMapper mapper;
 
     @Override
-    public long updatePortArea(PortAreaGeomDto portAreaGeomDto) throws ServiceException {
-        Long id = portAreaGeomDto.getId();
+    public long updatePortArea(PortAreaGeoJsonDto portAreaGeoJsonDto) throws ServiceException {
+        Long id = portAreaGeoJsonDto.getId();
         validateGid(id);
 
-        return update(id, portAreaGeomDto.getGeometry());
+        return update(id, portAreaGeoJsonDto.getGeometry());
     }
 
     private long update(Long id, Geometry geometry) throws ServiceException {

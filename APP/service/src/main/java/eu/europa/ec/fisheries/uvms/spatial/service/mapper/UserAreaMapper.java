@@ -2,8 +2,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.mapper;
 
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserScopeEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaGeomDto;
-import org.apache.commons.lang3.StringUtils;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.UserAreaGeoJsonDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -35,7 +34,7 @@ public abstract class UserAreaMapper {
             @Mapping(target = "endDate", expression = "java(stringToDate(userAreaDto.getEndDate()))"),
             @Mapping(target = "scopeSelection", expression = "java(fromScopeArrayToEntity(userAreaDto.getScopeSelection()))")
     })
-    public abstract UserAreasEntity fromDtoToEntity(UserAreaGeomDto userAreaDto);
+    public abstract UserAreasEntity fromDtoToEntity(UserAreaGeoJsonDto userAreaDto);
 
     protected Date stringToDate(String date) {
         if (isEmpty(date)) {

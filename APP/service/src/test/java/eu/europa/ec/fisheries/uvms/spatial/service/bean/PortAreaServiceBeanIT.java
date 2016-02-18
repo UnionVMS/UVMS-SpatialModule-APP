@@ -4,7 +4,7 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.PortAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.PortAreaGeoJsonDto;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,12 +23,12 @@ public class PortAreaServiceBeanIT extends AbstractArquillianIT {
     @Test
     public void shouldUpdatePortArea() throws ServiceException, ParseException {
         // given
-        PortAreaDto portAreaDto = new PortAreaDto();
-        portAreaDto.setId(new Long(1));
-        portAreaDto.setGeometry(createGeometry());
+        PortAreaGeoJsonDto portAreaGeoJsonDto = new PortAreaGeoJsonDto();
+        portAreaGeoJsonDto.setId(new Long(1));
+        portAreaGeoJsonDto.setGeometry(createGeometry());
 
         // when
-        long portAreaId = portAreaService.updatePortArea(portAreaDto);
+        long portAreaId = portAreaService.updatePortArea(portAreaGeoJsonDto);
 
         // then
         assertNotNull(portAreaId);

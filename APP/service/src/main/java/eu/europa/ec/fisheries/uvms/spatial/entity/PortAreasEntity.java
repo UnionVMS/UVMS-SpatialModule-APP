@@ -4,7 +4,7 @@ import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.spatial.entity.converter.CharBooleanConverter;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.GeoJsonDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.GeoJsonDto;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.Where;
 

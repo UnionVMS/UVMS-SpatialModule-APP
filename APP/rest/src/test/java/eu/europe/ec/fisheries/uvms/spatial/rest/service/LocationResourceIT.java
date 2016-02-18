@@ -18,7 +18,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import eu.europa.ec.fisheries.uvms.rest.dto.ResponseDto;
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.LocationTypeDto;
+import eu.europa.ec.fisheries.uvms.spatial.rest.dto.geocoordinate.LocationTypeDto;
 
 @RunWith(Arquillian.class)
 @RunAsClient
