@@ -1,20 +1,11 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EntityResult;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.NamedNativeQuery;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.SqlResultSetMapping;
-import javax.persistence.SqlResultSetMappings;
-import javax.persistence.Table;
+import javax.persistence.*;
+
+import eu.europa.ec.fisheries.uvms.spatial.entity.converter.CharBooleanConverter;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.Type;
@@ -108,11 +99,19 @@ public class CountriesEntity implements Serializable { // TODO rename to Country
     @ColumnAliasName(aliasName="regionWb")
 	private String regionWb;
 
+	@Convert(converter = CharBooleanConverter.class)
+	@Column(name = "enabled", nullable = false, length = 1)
+	private Boolean enabled = false;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "enabled_on")
+	private Date enabledOn;
+
 	public CountriesEntity() {
 	}
 
     @Builder
-    public CountriesEntity(Geometry geom, String sovereignt, String sovA3, String type, String admin, String code, String name, String nameLong, Double popEst, Double gdpMdEst, String incomeGrp, String continent, String regionUn, String subregion, String regionWb) {
+    public CountriesEntity(Geometry geom, String sovereignt, String sovA3, String type, String admin, String code, String name, String nameLong, Double popEst, Double gdpMdEst, String incomeGrp, String continent, String regionUn, String subregion, String regionWb, Boolean enabled, Date enabledOn) {
         this.geom = geom;
         this.sovereignt = sovereignt;
         this.sovA3 = sovA3;
@@ -128,6 +127,8 @@ public class CountriesEntity implements Serializable { // TODO rename to Country
         this.regionUn = regionUn;
         this.subregion = subregion;
         this.regionWb = regionWb;
+		this.enabled = enabled;
+		this.enabledOn = enabledOn;
     }
 
     public long getId() {

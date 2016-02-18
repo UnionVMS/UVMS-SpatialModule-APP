@@ -28,6 +28,7 @@ public class CountryFactory {
                     .incomeGrp("1. High income: OECD")
                     .continent("Europe").regionUn("Europe").subregion("Western Europe")
                     .regionWb("Europe & Central Asia")
+                    .enabled(true)
                     .build();
 
         }
@@ -43,6 +44,7 @@ public class CountryFactory {
                     .incomeGrp("1. High income: OECD")
                     .continent("Europe").regionUn("Europe").subregion("Western Europe")
                     .regionWb("Europe & Central Asia")
+                    .enabled(true)
                     .build();
         }
 
