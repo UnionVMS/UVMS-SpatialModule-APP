@@ -8,6 +8,10 @@
             <column autoIncrement="true" name="id" type="SERIAL">
                 <constraints primaryKey="true" primaryKeyName="fao_pkey"/>
             </column>
+			<column name="enabled" type="BPCHAR(1)">
+                <constraints nullable="false"/>
+            </column>
+			<column name="enabled_on" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
         </createTable>
     </changeSet>
 
