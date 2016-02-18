@@ -2,17 +2,22 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.PortAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.PortAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.PortAreaGeomDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.service.mapper.EezMapper;
+import eu.europa.ec.fisheries.uvms.spatial.service.mapper.PortAreaMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -25,12 +30,15 @@ public class PortAreaServiceBean implements PortAreaService {
     @EJB
     private SpatialRepository repository;
 
+    @Inject
+    private PortAreaMapper mapper;
+
     @Override
-    public long updatePortArea(PortAreaDto portAreaDto) throws ServiceException {
-        Long id = portAreaDto.getId();
+    public long updatePortArea(PortAreaGeomDto portAreaGeomDto) throws ServiceException {
+        Long id = portAreaGeomDto.getId();
         validateGid(id);
 
-        return update(id, portAreaDto.getGeometry());
+        return update(id, portAreaGeomDto.getGeometry());
     }
 
     private long update(Long id, Geometry geometry) throws ServiceException {
@@ -49,6 +57,18 @@ public class PortAreaServiceBean implements PortAreaService {
         update(portAreaId, null);
     }
 
+    @Override
+    public long createPortArea(PortAreaDto portAreaDto) throws ServiceException {
+        PortAreasEntity portAreasEntity = mapper.portAreaDtoToPortAreasEntity(portAreaDto);
+        portAreasEntity = (PortAreasEntity) repository.saveOrUpdateEntity(portAreasEntity);
+        return portAreasEntity.getGid();
+    }
+
+    @Override
+    public int disableAllAreas() throws ServiceException {
+        return repository.disableAllPortAreas();
+    }
+
     private void validateGid(Long gid) {
         if (gid == null) {
             throw new SpatialServiceException(SpatialServiceErrors.MISSING_PORT_AREA_ID);
@@ -60,5 +80,4 @@ public class PortAreaServiceBean implements PortAreaService {
             throw new SpatialServiceException(SpatialServiceErrors.PORT_AREA_DOES_NOT_EXIST, portAreaId);
         }
     }
-
 }

@@ -80,6 +80,7 @@ public final class QueryNameConstants {
 
     public static final String DISABLE_EEZ_AREAS = "eezEntity.disableEezAreas";
     public static final String DISABLE_RFMO_AREAS = "rfmoEntity.disableRfmoAreas";
+    public static final String DISABLE_PORT_AREAS = "portAreasEntity.disablePortAreas";
 
     /**
      * MapDto Config queries

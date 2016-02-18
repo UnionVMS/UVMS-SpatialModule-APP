@@ -1,11 +1,11 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.handler;
 
+import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaDisableService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.EezService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.PortAreaService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.PortAreaDto;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.NotImplementedException;
 import org.opengis.feature.Property;
 
 import javax.ejb.EJB;
@@ -27,11 +27,22 @@ public class PortAreaSaverHandler extends AbstractSaverHandler implements SaverH
 
     @Override
     protected void saveNewAreas(Map<String, List<Property>> features, Date enabledOn) throws ServiceException {
-        throw new NotImplementedException("Not yet implemented");
+        for (List<Property> properties : features.values()) {
+            Map<String, Object> values = createAttributesMap(properties);
+
+            PortAreaDto portAreaDto = new PortAreaDto();
+            portAreaDto.setGeometry((Geometry) values.get("the_geom"));
+            portAreaDto.setCode((String) values.get("code"));
+            portAreaDto.setName((String) values.get("name"));
+            portAreaDto.setEnabled(true);
+            portAreaDto.setEnabledOn(enabledOn);
+
+            portAreaService.createPortArea(portAreaDto);
+        }
     }
 
     @Override
     protected AreaDisableService getAreaDisableService() {
-        throw new NotImplementedException("Not yet implemented");
+        return portAreaService;
     }
 }
