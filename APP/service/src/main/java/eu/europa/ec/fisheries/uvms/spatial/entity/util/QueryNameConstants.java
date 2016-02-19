@@ -13,6 +13,7 @@ public final class QueryNameConstants {
      * Find all
      */
     public static final String FIND_ALL_AREA_TYPE_NAMES = "AreaLocationType.findAllAreaTypeNames";
+    public static final String FIND_ALL_AREA_AND_LOCATION_TYPE_NAMES = "AreaLocationType.findAllAreaAndLocationTypeNames";
     public static final String FIND_ALL_AREAS = "AreaLocationType.findAllAreas";
     public static final String FIND_ALL_LOCATIONS = "AreaLocationType.findAllLocations";
     public static final String FIND_ALL_COUNTRY_DESC = "Countries.findAllCountriesDesc";
@@ -81,6 +82,7 @@ public final class QueryNameConstants {
     public static final String DISABLE_EEZ_AREAS = "eezEntity.disableEezAreas";
     public static final String DISABLE_RFMO_AREAS = "rfmoEntity.disableRfmoAreas";
     public static final String DISABLE_PORT_AREAS = "portAreasEntity.disablePortAreas";
+    public static final String DISABLE_PORT_LOCATIONS = "portsEntity.disablePortLocations";
 
     /**
      * MapDto Config queries

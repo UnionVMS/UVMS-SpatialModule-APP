@@ -1,6 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import com.vividsolutions.jts.geom.Geometry;
+import eu.europa.ec.fisheries.uvms.spatial.entity.converter.CharBooleanConverter;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.GeoJsonDto;
@@ -8,15 +9,19 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 @Entity
 @SqlResultSetMappings({
         @SqlResultSetMapping(name = "implicit.port", entities = @EntityResult(entityClass = PortsEntity.class))
 })
+@NamedQueries({
+        @NamedQuery(name = QueryNameConstants.DISABLE_PORT_LOCATIONS, query = "update PortsEntity set enabled = 'N'")
+})
 @NamedNativeQueries({
         @NamedNativeQuery(
                 name = QueryNameConstants.PORT_BY_COORDINATE,
-                query = "select * from port order by ST_Distance_Spheroid(geom, st_geomfromtext(CAST(:wktPoint as text), :crs), 'SPHEROID[\"WGS 84\",6378137,298.257223563]') limit 1"
+                query = "select * from port where enabled = 'Y' order by ST_Distance_Spheroid(geom, st_geomfromtext(CAST(:wktPoint as text), :crs), 'SPHEROID[\"WGS 84\",6378137,298.257223563]') limit 1"
                 , resultSetMapping = "implicit.port")
 })
 @Table(name = "port", schema = "spatial")
@@ -58,6 +63,14 @@ public class PortsEntity implements Serializable {
     @Column(name = "commercial_port")
     @ColumnAliasName(aliasName = "commercialport")
     private String commercialPort;
+
+    @Convert(converter = CharBooleanConverter.class)
+    @Column(name = "enabled", nullable = false, length = 1)
+    private Boolean enabled = false;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "enabled_on")
+    private Date enabledOn;
 
     public PortsEntity() {
     }
@@ -124,5 +137,21 @@ public class PortsEntity implements Serializable {
 
     public void setCommercialPort(String commercialPort) {
         this.commercialPort = commercialPort;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public Date getEnabledOn() {
+        return enabledOn;
+    }
+
+    public void setEnabledOn(Date enabledOn) {
+        this.enabledOn = enabledOn;
     }
 }

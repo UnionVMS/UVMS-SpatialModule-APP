@@ -67,12 +67,14 @@ public class ShapeFileReader {
 
     private void transformCRSToDefault(SimpleFeature feature, CoordinateReferenceSystem sourceCRS, CoordinateReferenceSystem targetCRS, MathTransform transform) throws FactoryException, TransformException {
         Geometry sourceGeometry = (Geometry) feature.getDefaultGeometryProperty().getValue();
-        if (sourceCRS != targetCRS) {
-            Geometry targetGeometry = JTS.transform(sourceGeometry, transform);
-            targetGeometry.setSRID(DEFAULT_CRS_NUMBER);
-            feature.setDefaultGeometry(targetGeometry);
-        } else {
-            sourceGeometry.setSRID(DEFAULT_CRS_NUMBER);
+        if (sourceGeometry != null) {
+            if (sourceCRS != targetCRS) {
+                Geometry targetGeometry = JTS.transform(sourceGeometry, transform);
+                targetGeometry.setSRID(DEFAULT_CRS_NUMBER);
+                feature.setDefaultGeometry(targetGeometry);
+            } else {
+                sourceGeometry.setSRID(DEFAULT_CRS_NUMBER);
+            }
         }
     }
 
