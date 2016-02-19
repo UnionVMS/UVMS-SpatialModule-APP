@@ -1,20 +1,18 @@
-package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto;
+package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices;
 
 import com.vividsolutions.jts.geom.Geometry;
 
 import java.util.Date;
 
-public class RfmoDto {
-
+public class PortAreaDto {
     private Geometry geometry;
     private String code;
     private String name;
-    private String tuna;
     private Boolean enabled;
     private Date enabledOn;
 
     public Geometry getGeometry() {
-        return this.geometry;
+        return geometry;
     }
 
     public void setGeometry(Geometry geometry) {
@@ -22,7 +20,7 @@ public class RfmoDto {
     }
 
     public String getCode() {
-        return this.code;
+        return code;
     }
 
     public void setCode(String code) {
@@ -30,19 +28,11 @@ public class RfmoDto {
     }
 
     public String getName() {
-        return this.name;
+        return name;
     }
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getTuna() {
-        return this.tuna;
-    }
-
-    public void setTuna(String tuna) {
-        this.tuna = tuna;
     }
 
     public Boolean getEnabled() {
@@ -60,5 +50,4 @@ public class RfmoDto {
     public void setEnabledOn(Date enabledOn) {
         this.enabledOn = enabledOn;
     }
-
 }

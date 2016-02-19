@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.spatial.rest.dto;
+package eu.europa.ec.fisheries.uvms.spatial.rest.type;
 
 import java.io.Serializable;
 
@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-public class AreaFilterDto extends FilterDto implements Serializable {
+public class AreaFilterType extends FilterType implements Serializable {
 
 	private static final long serialVersionUID = -7738213219041918102L;
 	
@@ -14,11 +14,11 @@ public class AreaFilterDto extends FilterDto implements Serializable {
 	@NotEmpty
 	private String areaType;
 	
-	public AreaFilterDto() {
+	public AreaFilterType() {
 		super();
 	}
 
-	public AreaFilterDto(String areaType, String filter) {
+	public AreaFilterType(String areaType, String filter) {
 		super(filter);
 		this.areaType = areaType;
 	}

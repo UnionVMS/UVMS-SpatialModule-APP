@@ -1,10 +1,10 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaExtendedIdentifierDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestAreaDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestLocationDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.EnrichmentDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.AreaExtendedIdentifierDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.ClosestAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.ClosestLocationDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.EnrichmentDto;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.ejb.EJB;

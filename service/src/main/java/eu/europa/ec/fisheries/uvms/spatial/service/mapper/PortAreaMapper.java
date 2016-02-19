@@ -1,7 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.mapper;
 
 import eu.europa.ec.fisheries.uvms.spatial.entity.PortAreasEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.PortAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.PortAreaDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;

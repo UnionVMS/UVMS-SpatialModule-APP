@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.spatial.rest.dto;
+package eu.europa.ec.fisheries.uvms.spatial.rest.type;
 
 import java.io.Serializable;
 
@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-public class FilterDto implements Serializable {
+public class FilterType implements Serializable {
 	
 	private static final long serialVersionUID = -3027324059511336094L;
 	
@@ -14,10 +14,10 @@ public class FilterDto implements Serializable {
 	@NotEmpty
 	protected String filter;
 	
-	public FilterDto() {
+	public FilterType() {
 	}
 	
-	public FilterDto(String filter) {
+	public FilterType(String filter) {
 		this.filter = filter;
 	}
 	

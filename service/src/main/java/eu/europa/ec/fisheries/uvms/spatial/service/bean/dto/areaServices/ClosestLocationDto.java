@@ -1,6 +1,5 @@
-package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto;
+package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonPropertyOrder({

@@ -11,7 +11,7 @@ import org.hibernate.Session;
 import org.hibernate.transform.AliasToEntityMapResultTransformer;
 import org.hibernate.transform.Transformers;
 
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaExtendedIdentifierDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.AreaExtendedIdentifierDto;
 
 public abstract class CommonDao {
 	

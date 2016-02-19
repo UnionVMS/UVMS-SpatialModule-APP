@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto;
+package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -7,21 +7,16 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
         "areaType",
         "code",
         "name",
+        "distance",
+        "unit"
 })
-public class AreaExtendedIdentifierDto {
-
+public class ClosestAreaDto {
     private String id;
     private String areaType;
     private String code;
     private String name;
-
-    public AreaExtendedIdentifierDto() {
-    }
-
-    public AreaExtendedIdentifierDto(String id, String areaType) {
-        this.id = id;
-        this.areaType = areaType;
-    }
+    private Double distance;
+    private String unit;
 
     public String getId() {
         return id;
@@ -37,6 +32,22 @@ public class AreaExtendedIdentifierDto {
 
     public void setAreaType(String areaType) {
         this.areaType = areaType;
+    }
+
+    public Double getDistance() {
+        return distance;
+    }
+
+    public void setDistance(Double distance) {
+        this.distance = distance;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
     }
 
     public String getCode() {

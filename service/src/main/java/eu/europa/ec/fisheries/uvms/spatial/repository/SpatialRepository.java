@@ -7,10 +7,13 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.*;
 import eu.europa.ec.fisheries.uvms.spatial.entity.config.SysConfigEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.bookmark.Bookmark;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.*;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaGroup.AreaGroupTypeDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.ServiceLayerDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.util.MeasurementUnit;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;

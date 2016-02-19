@@ -1,16 +1,16 @@
-package eu.europa.ec.fisheries.uvms.spatial.rest.dto;
+package eu.europa.ec.fisheries.uvms.spatial.rest.type;
 
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.CoordinatesFormat;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.MapConfigurationType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ScaleBarUnits;
 import lombok.experimental.Delegate;
 
-public class MapSettingsDto {
+public class MapSettingsType {
 
     @Delegate(excludes = Exclude.class)
     private MapConfigurationType mapConfigurationType;
 
-    public MapSettingsDto(MapConfigurationType mapConfigurationType) {
+    public MapSettingsType(MapConfigurationType mapConfigurationType) {
         this.mapConfigurationType = mapConfigurationType;
     }
 

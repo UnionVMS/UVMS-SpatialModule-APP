@@ -4,7 +4,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestLocationSpatialR
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Location;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ObjectFactory;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestLocationDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.ClosestLocationDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;

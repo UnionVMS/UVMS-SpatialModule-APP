@@ -4,7 +4,7 @@ import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.rest.constants.ErrorCodes;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.MapConfigurationType;
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.MapSettingsDto;
+import eu.europa.ec.fisheries.uvms.spatial.rest.type.MapSettingsType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.MapConfigService;
 import lombok.extern.slf4j.Slf4j;
 import javax.ejb.EJB;
@@ -37,7 +37,7 @@ public class MapConfigResource extends UnionVMSResource {
 
             MapConfigurationType mapConfigurationType = mapConfigService.getMapConfigurationType(Long.valueOf(reportId));
 
-            response = createSuccessResponse(new MapSettingsDto(mapConfigurationType));
+            response = createSuccessResponse(new MapSettingsType(mapConfigurationType));
 
         } catch (ServiceException ex) {
 
