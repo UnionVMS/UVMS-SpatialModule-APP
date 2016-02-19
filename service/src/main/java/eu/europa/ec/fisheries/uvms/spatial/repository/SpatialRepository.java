@@ -90,6 +90,8 @@ public interface SpatialRepository extends DAO {
 
     int disableAllRfmoAreas() throws ServiceException;
 
+    int disableAllPortLocations() throws ServiceException;
+
     int disableAllPortAreas() throws ServiceException;
 
     List<String> getUserAreaTypes(String userName) throws ServiceException;

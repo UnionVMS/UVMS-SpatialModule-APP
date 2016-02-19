@@ -3,10 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.handler.EezSaverHandler;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.handler.PortAreaSaverHandler;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.handler.RfmoSaverHandler;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.handler.SaverHandler;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.handler.*;
 import eu.europa.ec.fisheries.uvms.spatial.util.FileSaver;
 import eu.europa.ec.fisheries.uvms.spatial.util.ShapeFileReader;
 import eu.europa.ec.fisheries.uvms.spatial.util.SupportedFileExtensions;
@@ -51,6 +48,9 @@ public class AreaUploadServiceBean implements AreaUploadService {
     @EJB
     private PortAreaSaverHandler portAreaSaverHandler;
 
+    @EJB
+    private PortLocationSaverHandler portLocationSaverHandler;
+
     @Override
     public void uploadArea(byte[] content, String areaTypeString, int crsCode) {
         try {
@@ -90,6 +90,8 @@ public class AreaUploadServiceBean implements AreaUploadService {
                 return eezSaverHandler;
             case RFMO:
                 return rmfoSaverHandler;
+            case PORT:
+                return portLocationSaverHandler;
             case PORTAREA:
                 return portAreaSaverHandler;
             default:
@@ -107,7 +109,7 @@ public class AreaUploadServiceBean implements AreaUploadService {
         } catch (FactoryException e) {
             throw new IllegalArgumentException("CrsCode is wrong.");
         }
-        List<String> areaTypes = areaTypeService.listAllAreaTypeNames();
+        List<String> areaTypes = areaTypeService.listAllAreaAndLocationTypeNames();
         if (!areaTypes.contains(areaType.toUpperCase())) {
             throw new IllegalArgumentException("Unsupported area type.");
         }
@@ -121,6 +123,7 @@ public class AreaUploadServiceBean implements AreaUploadService {
     private enum AreaType {
         EEZ("eez"),
         RFMO("rfmo"),
+        PORT("port"),
         PORTAREA("portarea");
 
         private final String value;

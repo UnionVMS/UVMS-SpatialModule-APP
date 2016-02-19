@@ -83,4 +83,20 @@ public class PortAreasEntity implements Serializable {
         this.code = code;
     }
 
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public Date getEnabledOn() {
+        return enabledOn;
+    }
+
+    public void setEnabledOn(Date enabledOn) {
+        this.enabledOn = enabledOn;
+    }
+
 }

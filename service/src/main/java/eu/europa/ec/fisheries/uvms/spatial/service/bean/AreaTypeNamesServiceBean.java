@@ -37,7 +37,14 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
     public List<String> listAllAreaTypeNames() {
         return repository.findEntityByNamedQuery(String.class, QueryNameConstants.FIND_ALL_AREA_TYPE_NAMES);
     }
-    
+
+    @Override
+    @SneakyThrows
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
+    public List<String> listAllAreaAndLocationTypeNames() {
+        return repository.findEntityByNamedQuery(String.class, QueryNameConstants.FIND_ALL_AREA_AND_LOCATION_TYPE_NAMES);
+    }
+
     @Override
     public List<AreaLayerDto> listSystemAreaLayerMapping() {
         List<AreaLayerDto> systemAreaLayerMapping = repository.findSystemAreaLayerMapping();
