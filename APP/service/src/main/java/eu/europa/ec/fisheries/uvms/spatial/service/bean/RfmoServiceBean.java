@@ -3,7 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.RfmoEntity;
 import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.RfmoDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.RfmoDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.RfmoMapper;
 
 import javax.ejb.EJB;

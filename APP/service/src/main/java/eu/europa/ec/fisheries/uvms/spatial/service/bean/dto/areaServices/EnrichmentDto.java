@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto;
+package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices;
 
 import java.util.List;
 

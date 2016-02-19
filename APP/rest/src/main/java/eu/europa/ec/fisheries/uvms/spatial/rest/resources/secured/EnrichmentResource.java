@@ -1,11 +1,11 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseCode;
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseDto;
+import eu.europa.ec.fisheries.uvms.spatial.rest.type.ResponseCode;
+import eu.europa.ec.fisheries.uvms.spatial.rest.type.ResponseDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.error.ErrorHandler;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ValidationUtils;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialEnrichmentService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.EnrichmentDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.EnrichmentDto;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.ejb.EJB;

@@ -13,7 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Coordinate;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.UserAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
 
 @RunWith(Arquillian.class)

@@ -1,7 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.error;
 
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseCode;
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseDto;
+import eu.europa.ec.fisheries.uvms.spatial.rest.type.ResponseCode;
+import eu.europa.ec.fisheries.uvms.spatial.rest.type.ResponseDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 
 public final class ErrorHandler {

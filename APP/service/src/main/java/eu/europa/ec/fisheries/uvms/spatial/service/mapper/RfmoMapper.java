@@ -1,7 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.mapper;
 
 import eu.europa.ec.fisheries.uvms.spatial.entity.RfmoEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.RfmoDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.RfmoDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;

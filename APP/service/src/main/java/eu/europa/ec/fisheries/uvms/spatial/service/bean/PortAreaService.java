@@ -1,7 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.PortAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.PortAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.PortAreaGeoJsonDto;
 
 public interface PortAreaService extends AreaDisableService {

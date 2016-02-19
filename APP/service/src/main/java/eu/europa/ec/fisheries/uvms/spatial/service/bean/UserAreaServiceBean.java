@@ -11,7 +11,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Coordinate;
 import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.UserAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.UserAreaGeoJsonDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
