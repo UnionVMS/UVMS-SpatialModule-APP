@@ -20,17 +20,17 @@ import com.vividsolutions.jts.io.ParseException;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.service.interceptor.ValidationInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationDetails;
+import eu.europa.ec.fisheries.uvms.spatial.rest.type.geocoordinate.LocationCoordinateType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.LocationDetailsGeoJsonDto;
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.geocoordinate.LocationTypeDto;
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseCode;
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseDto;
+import eu.europa.ec.fisheries.uvms.spatial.rest.type.ResponseCode;
+import eu.europa.ec.fisheries.uvms.spatial.rest.type.ResponseDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.error.ErrorHandler;
 import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.AreaLocationDtoMapper;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ValidationUtils;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.ClosestLocationService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.LocationDetailsService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestLocationDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.ClosestLocationDto;
 import lombok.extern.slf4j.Slf4j;
 
 @Path("/")
@@ -70,7 +70,7 @@ public class LocationResource extends UnionVMSResource {
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/locationdetails")
     @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
-    public Response getLocationDetails(LocationTypeDto locationDto) throws IOException, ParseException {
+    public Response getLocationDetails(LocationCoordinateType locationDto) throws IOException, ParseException {
     	LocationDetails locationDetails = locationDetailsService.getLocationDetails(mapper.getLocationTypeEntry(locationDto));
     	LocationDetailsGeoJsonDto locationDetailsGeoJsonDto = mapper.getLocationDetailsDto(locationDetails);
     	return createSuccessResponse(locationDetailsGeoJsonDto.convert());

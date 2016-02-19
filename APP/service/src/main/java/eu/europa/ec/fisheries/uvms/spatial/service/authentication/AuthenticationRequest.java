@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.spatial.service.dto;
+package eu.europa.ec.fisheries.uvms.spatial.service.authentication;
 
 import java.io.Serializable;
 

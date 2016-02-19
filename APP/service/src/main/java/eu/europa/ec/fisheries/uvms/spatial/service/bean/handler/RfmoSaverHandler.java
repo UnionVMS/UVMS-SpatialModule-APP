@@ -4,7 +4,7 @@ import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaDisableService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.RfmoService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.RfmoDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.RfmoDto;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.ejb.EJB;

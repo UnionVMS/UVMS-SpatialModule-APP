@@ -3,11 +3,11 @@ package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.uvms.rest.FeatureToGeoJsonMapper;
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseCode;
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseDto;
+import eu.europa.ec.fisheries.uvms.spatial.rest.type.ResponseCode;
+import eu.europa.ec.fisheries.uvms.spatial.rest.type.ResponseDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.error.ErrorHandler;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.EezService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.EezDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.EezDto;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.ejb.EJB;

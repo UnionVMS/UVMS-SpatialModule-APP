@@ -9,6 +9,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import eu.europa.ec.fisheries.uvms.spatial.rest.type.geocoordinate.LocationCoordinateType;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.extension.rest.client.ArquillianResteasyResource;
 import org.jboss.arquillian.junit.Arquillian;
@@ -18,7 +19,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import eu.europa.ec.fisheries.uvms.rest.dto.ResponseDto;
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.geocoordinate.LocationTypeDto;
 
 @RunWith(Arquillian.class)
 @RunAsClient
@@ -29,7 +29,7 @@ public class LocationResourceIT extends AbstractArquillianIT {
     
     @Test
     public void getLocationByIdTest(@ArquillianResteasyResource("rest/") ResteasyWebTarget webTarget) {    	
-    	LocationTypeDto locationDto = getlocationTypeDto("1", "PORT", null, null, null);
+    	LocationCoordinateType locationDto = getlocationTypeDto("1", "PORT", null, null, null);
     	
     	Response response = webTarget.path("/locationdetails" ).request(MediaType.APPLICATION_JSON).post(Entity.entity(locationDto,MediaType.APPLICATION_JSON));
     	
@@ -40,7 +40,7 @@ public class LocationResourceIT extends AbstractArquillianIT {
     
     @Test
     public void getLocationByCoordinatesTest(@ArquillianResteasyResource("rest/") ResteasyWebTarget webTarget) {    	
-    	LocationTypeDto locationDto = getlocationTypeDto(null, "PORT", -9.5, 41.0, 4326);
+    	LocationCoordinateType locationDto = getlocationTypeDto(null, "PORT", -9.5, 41.0, 4326);
     	
     	Response response = webTarget.path("/locationdetails" ).request(MediaType.APPLICATION_JSON).post(Entity.entity(locationDto,MediaType.APPLICATION_JSON));
     	
@@ -51,7 +51,7 @@ public class LocationResourceIT extends AbstractArquillianIT {
     
     @Test
     public void serviceExceptionTest(@ArquillianResteasyResource("rest/") ResteasyWebTarget webTarget) {    	
-    	LocationTypeDto locationDto = getlocationTypeDto("1", "INVALID", null, null, null);
+    	LocationCoordinateType locationDto = getlocationTypeDto("1", "INVALID", null, null, null);
     	
     	Response response = webTarget.path("/locationdetails" ).request(MediaType.APPLICATION_JSON).post(Entity.entity(locationDto,MediaType.APPLICATION_JSON));
     	
@@ -63,7 +63,7 @@ public class LocationResourceIT extends AbstractArquillianIT {
     
     @Test
     public void locationTypeInputValidationTest(@ArquillianResteasyResource("rest/") ResteasyWebTarget webTarget) {    	
-    	LocationTypeDto locationDto = getlocationTypeDto("1", null, null, null, null);
+    	LocationCoordinateType locationDto = getlocationTypeDto("1", null, null, null, null);
     	
     	Response response = webTarget.path("/locationdetails" ).request(MediaType.APPLICATION_JSON).post(Entity.entity(locationDto,MediaType.APPLICATION_JSON));
     	
@@ -75,7 +75,7 @@ public class LocationResourceIT extends AbstractArquillianIT {
     
     @Test
     public void coordinateInputValidationTest(@ArquillianResteasyResource("rest/") ResteasyWebTarget webTarget) {    	
-    	LocationTypeDto locationDto = getlocationTypeDto(null, "PORT", 10.0, 10.0, null);
+    	LocationCoordinateType locationDto = getlocationTypeDto(null, "PORT", 10.0, 10.0, null);
     	
     	Response response = webTarget.path("/locationdetails" ).request(MediaType.APPLICATION_JSON).post(Entity.entity(locationDto,MediaType.APPLICATION_JSON));
     	
@@ -85,13 +85,13 @@ public class LocationResourceIT extends AbstractArquillianIT {
     	assertEquals("INPUT_VALIDATION_FAILED", responseDto.getMsg());
     }
     
-    private LocationTypeDto getlocationTypeDto(String id, String locationType, Double longitude, Double latitude, Integer crs) {
-    	LocationTypeDto locationTypeDto = new LocationTypeDto();
-    	locationTypeDto.setId(id);
-    	locationTypeDto.setLocationType(locationType);
-    	locationTypeDto.setLongitude(longitude);
-    	locationTypeDto.setLatitude(latitude);
-    	locationTypeDto.setCrs(crs);
-    	return locationTypeDto;
+    private LocationCoordinateType getlocationTypeDto(String id, String locationType, Double longitude, Double latitude, Integer crs) {
+    	LocationCoordinateType locationCoordinateTypeDto = new LocationCoordinateType();
+    	locationCoordinateTypeDto.setId(id);
+    	locationCoordinateTypeDto.setLocationType(locationType);
+    	locationCoordinateTypeDto.setLongitude(longitude);
+    	locationCoordinateTypeDto.setLatitude(latitude);
+    	locationCoordinateTypeDto.setCrs(crs);
+    	return locationCoordinateTypeDto;
     }
 }

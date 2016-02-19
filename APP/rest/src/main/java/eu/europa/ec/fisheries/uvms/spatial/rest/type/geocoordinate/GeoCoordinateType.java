@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.spatial.rest.dto.geocoordinate;
+package eu.europa.ec.fisheries.uvms.spatial.rest.type.geocoordinate;
 
 import java.io.Serializable;
 
@@ -7,7 +7,7 @@ import org.hibernate.validator.constraints.ScriptAssert;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @ScriptAssert(script="_this.isInputValid(_this.id,_this.crs,_this.longitude,_this.latitude)", lang = "javascript")
-public class GeoCoordinateDto implements Serializable {
+public class GeoCoordinateType implements Serializable {
 	
 	private static final long serialVersionUID = 4875764412505175274L;
 	

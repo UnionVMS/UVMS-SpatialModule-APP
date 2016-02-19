@@ -1,13 +1,12 @@
-package eu.europa.ec.fisheries.uvms.spatial.rest.dto.geocoordinate;
+package eu.europa.ec.fisheries.uvms.spatial.rest.type.geocoordinate;
 
 import java.io.Serializable;
 
 import javax.validation.constraints.NotNull;
 
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.geocoordinate.GeoCoordinateDto;
 import org.hibernate.validator.constraints.NotEmpty;
 
-public class LocationTypeDto extends GeoCoordinateDto implements Serializable {
+public class LocationCoordinateType extends GeoCoordinateType implements Serializable {
 	
 	private static final long serialVersionUID = 6434161134531651548L;
 

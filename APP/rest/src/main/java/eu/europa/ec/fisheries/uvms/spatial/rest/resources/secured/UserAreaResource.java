@@ -9,13 +9,13 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Coordinate;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialFeaturesEnum;
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.FilterDto;
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.geocoordinate.UserAreaTypeDto;
+import eu.europa.ec.fisheries.uvms.spatial.rest.type.FilterType;
+import eu.europa.ec.fisheries.uvms.spatial.rest.type.geocoordinate.UserAreaCoordinateType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.AreaLocationDtoMapper;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.UserAreaService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.AreaDetailsGeoJsonDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.UserAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.UserAreaGeoJsonDto;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -95,7 +95,7 @@ public class UserAreaResource extends UnionVMSResource {
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/userareadetails")
     @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
-    public Response getUserAreaDetails(UserAreaTypeDto userAreaTypeDto, @Context HttpServletRequest request, @HeaderParam("scopeName") String scopeName) throws IOException, ParseException, ServiceException {
+    public Response getUserAreaDetails(UserAreaCoordinateType userAreaTypeDto, @Context HttpServletRequest request, @HeaderParam("scopeName") String scopeName) throws IOException, ParseException, ServiceException {
         if (userAreaTypeDto.getId() != null) {
             return getUserAreaDetailsById(userAreaTypeDto, request.getRemoteUser());
         } else {
@@ -112,7 +112,7 @@ public class UserAreaResource extends UnionVMSResource {
         return createSuccessResponse(userAreaService.getUserAreaTypes(request.getRemoteUser()));
     }
 
-    private Response getUserAreaDetailsById(UserAreaTypeDto userAreaTypeDto, String userName) throws ServiceException, IOException, ParseException {
+    private Response getUserAreaDetailsById(UserAreaCoordinateType userAreaTypeDto, String userName) throws ServiceException, IOException, ParseException {
         if (!userAreaTypeDto.getIsGeom()) {
             AreaTypeEntry areaTypeEntry = areaLocationMapper.getAreaTypeEntry(userAreaTypeDto);
             AreaDetails areaDetails = userAreaService.getUserAreaDetailsWithExtentById(areaTypeEntry, userName);
@@ -127,7 +127,7 @@ public class UserAreaResource extends UnionVMSResource {
         }
     }
 
-    private Response getUserAreaDetailsByLocation(UserAreaTypeDto userAreaTypeDto, String userName) throws IOException, ParseException {
+    private Response getUserAreaDetailsByLocation(UserAreaCoordinateType userAreaTypeDto, String userName) throws IOException, ParseException {
         if (!userAreaTypeDto.getIsGeom()) {
             Coordinate coordinate = areaLocationMapper.getCoordinateFromDto(userAreaTypeDto);
             List<UserAreaDto> userAreaDetails = userAreaService.getUserAreaDetailsWithExtentByLocation(coordinate, userName);
@@ -144,7 +144,7 @@ public class UserAreaResource extends UnionVMSResource {
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/userareasbyfilter")
     @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
-    public Response searchUserAreas(FilterDto filter, @Context HttpServletRequest request, @HeaderParam("scopeName") String scopeName) {
+    public Response searchUserAreas(FilterType filter, @Context HttpServletRequest request, @HeaderParam("scopeName") String scopeName) {
         return createSuccessResponse(userAreaService.searchUserAreasByCriteria(request.getRemoteUser(), scopeName, filter.getFilter()));
     }
 

@@ -17,18 +17,18 @@ import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.service.interceptor.ValidationInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
+import eu.europa.ec.fisheries.uvms.spatial.rest.type.geocoordinate.AreaCoordinateType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.AreaDetailsGeoJsonDto;
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaFilterDto;
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.geocoordinate.AreaTypeDto;
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseCode;
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseDto;
+import eu.europa.ec.fisheries.uvms.spatial.rest.type.AreaFilterType;
+import eu.europa.ec.fisheries.uvms.spatial.rest.type.ResponseCode;
+import eu.europa.ec.fisheries.uvms.spatial.rest.type.ResponseDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.error.ErrorHandler;
 import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.AreaLocationDtoMapper;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ValidationUtils;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.*;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaExtendedIdentifierDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.ClosestAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.AreaExtendedIdentifierDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.ClosestAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaServiceLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.LayerTypeEnum;
 import lombok.extern.slf4j.Slf4j;
@@ -115,7 +115,7 @@ public class AreaResource extends UnionVMSResource {
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/areadetails")
     @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
-    public Response getAreaDetails(AreaTypeDto areaDto) throws IOException, ParseException {
+    public Response getAreaDetails(AreaCoordinateType areaDto) throws IOException, ParseException {
     	if (areaDto.getId() != null) {
     		return getAreaDetailsById(areaDto);
     	} else {
@@ -128,7 +128,7 @@ public class AreaResource extends UnionVMSResource {
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/areaproperties")
     @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
-    public Response getAreaProperties(List<AreaTypeDto> areaDtoList) {
+    public Response getAreaProperties(List<AreaCoordinateType> areaDtoList) {
     	return createSuccessResponse(searchAreaService.getSelectedAreaColumns(mapper.getAreaTypeEntryList(areaDtoList)));
     }
    
@@ -145,8 +145,8 @@ public class AreaResource extends UnionVMSResource {
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/areasbyfilter")
     @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
-    public Response getAreasByFilter(AreaFilterDto areaFilterDto) {
-    	return createSuccessResponse(searchAreaService.getAreasByFilter(areaFilterDto.getAreaType(), areaFilterDto.getFilter()));
+    public Response getAreasByFilter(AreaFilterType areaFilterType) {
+    	return createSuccessResponse(searchAreaService.getAreasByFilter(areaFilterType.getAreaType(), areaFilterType.getFilter()));
     }
 
     @GET
@@ -168,7 +168,7 @@ public class AreaResource extends UnionVMSResource {
         ValidationUtils.validateAreaTypes(areaTypes);
     }
     
-    private Response getAreaDetailsById(AreaTypeDto areaDto) throws IOException, ParseException {
+    private Response getAreaDetailsById(AreaCoordinateType areaDto) throws IOException, ParseException {
     	AreaDetails areaDetails = areaDetailsService.getAreaDetailsById(mapper.getAreaTypeEntry(areaDto));
     	AreaDetailsGeoJsonDto areaDetailsGeoJsonDto = mapper.getAreaDetailsDto(areaDetails);
     	if (!areaDto.getIsGeom()) {
@@ -178,7 +178,7 @@ public class AreaResource extends UnionVMSResource {
     	return createSuccessResponse(areaDetailsGeoJsonDto.convert());
     }
     
-    private Response getAreaDetailsByLocation(AreaTypeDto areaDto) throws IOException, ParseException {
+    private Response getAreaDetailsByLocation(AreaCoordinateType areaDto) throws IOException, ParseException {
     	List<AreaDetails> areaDetailsList = areaDetailsService.getAreaDetailsByLocation(mapper.getAreaTypeEntry(areaDto));
 		AreaDetailsGeoJsonDto areaDetailsGeoJsonDto = mapper.getAreaDetailsDtoForAllAreas(areaDetailsList, areaDto);
 		if (!areaDto.getIsGeom()) {

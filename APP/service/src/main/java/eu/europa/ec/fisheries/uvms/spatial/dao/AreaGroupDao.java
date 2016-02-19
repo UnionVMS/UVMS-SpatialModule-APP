@@ -3,7 +3,6 @@ package eu.europa.ec.fisheries.uvms.spatial.dao;
 import com.google.common.collect.ImmutableMap;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaGroupEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.FilterAreasDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaGroup.AreaGroupTypeDto;
 import eu.europa.ec.fisheries.uvms.spatial.util.SqlPropertyHolder;
 import org.hibernate.Query;

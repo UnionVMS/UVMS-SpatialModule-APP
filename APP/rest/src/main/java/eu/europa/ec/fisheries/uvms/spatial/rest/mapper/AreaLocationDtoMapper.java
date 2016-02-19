@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import eu.europa.ec.fisheries.uvms.spatial.rest.type.geocoordinate.AreaCoordinateType;
+import eu.europa.ec.fisheries.uvms.spatial.rest.type.geocoordinate.GeoCoordinateType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.AreaDetailsGeoJsonDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -18,10 +20,8 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Coordinate;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationProperty;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationTypeEntry;
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.geocoordinate.AreaTypeDto;
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.geocoordinate.GeoCoordinateDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.LocationDetailsGeoJsonDto;
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.geocoordinate.LocationTypeDto;
+import eu.europa.ec.fisheries.uvms.spatial.rest.type.geocoordinate.LocationCoordinateType;
 
 @Mapper
 public abstract class AreaLocationDtoMapper {
@@ -36,9 +36,9 @@ public abstract class AreaLocationDtoMapper {
 		return INSTANCE;
 	}
 	
-	public abstract AreaTypeEntry getAreaTypeEntry(AreaTypeDto areaDto);
+	public abstract AreaTypeEntry getAreaTypeEntry(AreaCoordinateType areaDto);
 
-	public abstract LocationTypeEntry getLocationTypeEntry(LocationTypeDto locationDto);
+	public abstract LocationTypeEntry getLocationTypeEntry(LocationCoordinateType locationDto);
 	
 	@Mappings( {
 		@Mapping(target = "properties", expression = "java(extractProperties(locationDetails))"),
@@ -52,16 +52,16 @@ public abstract class AreaLocationDtoMapper {
 	})
 	public abstract AreaDetailsGeoJsonDto getAreaDetailsDto(AreaDetails areaDetails);
 	
-	public abstract List<AreaTypeEntry> getAreaTypeEntryList(List<AreaTypeDto> areaDtoList);
+	public abstract List<AreaTypeEntry> getAreaTypeEntryList(List<AreaCoordinateType> areaDtoList);
 	
-	public AreaDetailsGeoJsonDto getAreaDetailsDtoForAllAreas(List<AreaDetails> areaDetailsList, AreaTypeDto areaDto) {
+	public AreaDetailsGeoJsonDto getAreaDetailsDtoForAllAreas(List<AreaDetails> areaDetailsList, AreaCoordinateType areaDto) {
 		AreaDetailsGeoJsonDto areaDetailsGeoJsonDto = new AreaDetailsGeoJsonDto();
 		areaDetailsGeoJsonDto.setAllAreaProperties(extractProperties(areaDetailsList));
 		areaDetailsGeoJsonDto.setType(extractType(areaDto));
 		return areaDetailsGeoJsonDto;
 	}
 	
-	public abstract Coordinate getCoordinateFromDto(GeoCoordinateDto geoCoordinateDto);
+	public abstract Coordinate getCoordinateFromDto(GeoCoordinateType geoCoordinateType);
 	
 	protected Map<String, Object> extractProperties(AreaDetails areaDetails) {
 		Map<String, Object> propertyMap = new HashMap<>();
@@ -87,7 +87,7 @@ public abstract class AreaLocationDtoMapper {
 		return String.valueOf(areaDetails.getAreaType().getAreaType());
 	}
 	
-	protected String extractType(AreaTypeDto areaDto) {
+	protected String extractType(AreaCoordinateType areaDto) {
 		return areaDto.getAreaType();
 	}
 	

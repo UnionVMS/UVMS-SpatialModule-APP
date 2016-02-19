@@ -2,7 +2,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRS;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.EnrichmentDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.EnrichmentDto;
 
 import java.util.List;
 

@@ -5,8 +5,8 @@
  */
 package eu.europe.ec.fisheries.uvms.spatial.rest.service.dto;
 
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseCode;
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.ResponseDto;
+import eu.europa.ec.fisheries.uvms.spatial.rest.type.ResponseCode;
+import eu.europa.ec.fisheries.uvms.spatial.rest.type.ResponseDto;
 import junit.framework.Assert;
 import org.junit.*;
 
