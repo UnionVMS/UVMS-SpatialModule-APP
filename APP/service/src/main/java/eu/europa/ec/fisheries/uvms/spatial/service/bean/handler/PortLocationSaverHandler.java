@@ -25,18 +25,22 @@ public class PortLocationSaverHandler extends AbstractSaverHandler implements Sa
 
     @Override
     protected void saveNewAreas(Map<String, Object> values, Date enabledOn) throws ServiceException {
-        PortLocationDto portLocationDto = new PortLocationDto();
-        portLocationDto.setGeometry((Geometry) values.get("the_geom"));
-        portLocationDto.setCode((String) values.get("code"));
-        portLocationDto.setName((String) values.get("name"));
-        portLocationDto.setCountryCode((String) values.get("country_code"));
-        portLocationDto.setFishingPort((String) values.get("fishing_port"));
-        portLocationDto.setLandingPlace((String) values.get("landing_place"));
-        portLocationDto.setCommercialPort((String) values.get("commercial_port"));
-        portLocationDto.setEnabled(true);
-        portLocationDto.setEnabledOn(enabledOn);
+        try {
+            PortLocationDto portLocationDto = new PortLocationDto();
+            portLocationDto.setGeometry((Geometry) values.get("the_geom"));
+            portLocationDto.setCode((String) values.get("code"));
+            portLocationDto.setName((String) values.get("name"));
+            portLocationDto.setCountryCode((String) values.get("country_co"));
+            portLocationDto.setFishingPort((String) values.get("fishing_po"));
+            portLocationDto.setLandingPlace((String) values.get("landing_pl"));
+            portLocationDto.setCommercialPort((String) values.get("commercial"));
+            portLocationDto.setEnabled(true);
+            portLocationDto.setEnabledOn(enabledOn);
 
-        portLocationService.createPortLocation(portLocationDto);
+            portLocationService.createPortLocation(portLocationDto);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Override
