@@ -253,6 +253,11 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     }
 
     @Override
+    public int disableAllPortLocations() throws ServiceException {
+        return updateEntityByNamedQuery(QueryNameConstants.DISABLE_PORT_LOCATIONS);
+    }
+
+    @Override
     public int disableAllPortAreas() throws ServiceException {
         return updateEntityByNamedQuery(QueryNameConstants.DISABLE_PORT_AREAS);
     }

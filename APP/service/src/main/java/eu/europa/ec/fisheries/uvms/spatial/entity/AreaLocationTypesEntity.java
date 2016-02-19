@@ -11,6 +11,7 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 @Entity
 @Table(name = "area_location_types", schema = "spatial", uniqueConstraints = @UniqueConstraint(columnNames = "type_name"))
 @NamedQueries({
+    @NamedQuery(name = QueryNameConstants.FIND_ALL_AREA_AND_LOCATION_TYPE_NAMES, query = "SELECT area.typeName FROM AreaLocationTypesEntity area"),
     @NamedQuery(name = QueryNameConstants.FIND_ALL_AREA_TYPE_NAMES, query = "SELECT area.typeName FROM AreaLocationTypesEntity area WHERE area.isLocation = 'N'"),
     @NamedQuery(name = QueryNameConstants.FIND_ALL_AREAS, query = "SELECT area FROM AreaLocationTypesEntity area WHERE area.isLocation = 'N'"),
     @NamedQuery(name = QueryNameConstants.FIND_ALL_LOCATIONS, query = "SELECT area FROM AreaLocationTypesEntity area WHERE area.isLocation = 'Y'"),
