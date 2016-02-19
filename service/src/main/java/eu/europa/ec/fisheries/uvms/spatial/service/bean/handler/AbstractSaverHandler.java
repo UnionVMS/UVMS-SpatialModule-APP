@@ -25,7 +25,6 @@ public abstract class AbstractSaverHandler {
                 Map<String, Object> values = createAttributesMap(properties);
                 saveNewAreas(values, enabledOn);
             }
-
         } catch (Exception e) {
             throw new SpatialServiceException(SpatialServiceErrors.INVALID_UPLOAD_AREA_DATA, e);
         }
