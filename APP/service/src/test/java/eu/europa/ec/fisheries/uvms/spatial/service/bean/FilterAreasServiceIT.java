@@ -20,8 +20,6 @@ import static org.junit.Assert.fail;
 @RunWith(Arquillian.class)
 public class FilterAreasServiceIT extends AbstractArquillianIT {
 
-    private static final String EEZ = "eez";
-    private static final String RFMO = "rfmo";
     private static final String NOT_EXISTING_TYPE = "NOT_EXISTING_TYPE";
 
     @EJB
@@ -30,7 +28,7 @@ public class FilterAreasServiceIT extends AbstractArquillianIT {
     @Test
     public void shouldReturnMergedAreaAndSkipNotExisting() throws Exception {
         // given
-        FilterAreasSpatialRQ request = createRequest(RFMO);
+        FilterAreasSpatialRQ request = createRequest(AreaType.RFMO);
 
         // when
         FilterAreasSpatialRS filterAreasSpatialRS = filterAreasService.filterAreas(request);
@@ -44,7 +42,7 @@ public class FilterAreasServiceIT extends AbstractArquillianIT {
     @Test
     public void shouldThrowExceptionWhenWrongAreaType() throws Exception {
         // given
-        FilterAreasSpatialRQ request = createRequest(NOT_EXISTING_TYPE);
+        FilterAreasSpatialRQ request = createRequest(null);
 
         // when
         try {
@@ -57,17 +55,17 @@ public class FilterAreasServiceIT extends AbstractArquillianIT {
 
     }
 
-    private FilterAreasSpatialRQ createRequest(String areaType) {
+    private FilterAreasSpatialRQ createRequest(AreaType areaType) {
         ArrayList<AreaIdentifierType> userAreaIdentifiers = Lists.newArrayList();
-        userAreaIdentifiers.add(new AreaIdentifierType("1", EEZ));
-        userAreaIdentifiers.add(new AreaIdentifierType("12", EEZ));
-        userAreaIdentifiers.add(new AreaIdentifierType("10", RFMO));
-        userAreaIdentifiers.add(new AreaIdentifierType("18", RFMO));
+        userAreaIdentifiers.add(new AreaIdentifierType("1",  AreaType.EEZ));
+        userAreaIdentifiers.add(new AreaIdentifierType("12",  AreaType.EEZ));
+        userAreaIdentifiers.add(new AreaIdentifierType("10", AreaType.RFMO));
+        userAreaIdentifiers.add(new AreaIdentifierType("18", AreaType.RFMO));
         userAreaIdentifiers.add(new AreaIdentifierType("20", areaType));
 
         ArrayList<AreaIdentifierType> scopeAreaIdentifiers = Lists.newArrayList();
-        scopeAreaIdentifiers.add(new AreaIdentifierType("1", EEZ));
-        scopeAreaIdentifiers.add(new AreaIdentifierType("44", EEZ));
+        scopeAreaIdentifiers.add(new AreaIdentifierType("1", AreaType.EEZ));
+        scopeAreaIdentifiers.add(new AreaIdentifierType("44",  AreaType.EEZ));
 
         UserAreasType userAreasType = new UserAreasType(userAreaIdentifiers);
         ScopeAreasType scopeAreasType = new ScopeAreasType(scopeAreaIdentifiers);

@@ -2,6 +2,7 @@ package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
+import eu.europa.ec.fisheries.uvms.spatial.model.constants.USMSpatial;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.PortAreaService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.PortAreaGeoJsonDto;
@@ -31,7 +32,7 @@ public class AreaPortResource extends UnionVMSResource {
     @Interceptors(value = {ExceptionInterceptor.class})
     public Response updatePortArea(@Context HttpServletRequest request,
                                    PortAreaGeoJsonDto portAreaGeoJsonDto,
-                                   @HeaderParam("scopeName") String scopeName) throws ServiceException {
+                                   @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName) throws ServiceException {
         String userName = request.getRemoteUser();
         log.info("{} is requesting updatePortArea(...)", userName);
         long gid = portAreaService.updatePortArea(portAreaGeoJsonDto);
@@ -44,7 +45,7 @@ public class AreaPortResource extends UnionVMSResource {
     @Interceptors(value = {ExceptionInterceptor.class})
     public Response deleteUserArea(@Context HttpServletRequest request,
                                    @PathParam("id") Long portAreaId,
-                                   @HeaderParam("scopeName") String scopeName) throws ServiceException {
+                                   @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName) throws ServiceException {
         String userName = request.getRemoteUser();
         log.info("{} is requesting deletePortArea(...), with a ID={}", userName, portAreaId);
         portAreaService.deletePortArea(portAreaId);

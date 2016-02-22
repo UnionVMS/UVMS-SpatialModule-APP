@@ -85,7 +85,9 @@ public final class SpatialModuleResponseMapper {
             AreaTypeNamesSpatialRS response = new AreaTypeNamesSpatialRS();
             AreasNameType areasNameType = new AreasNameType();
             if (areaTypeNames != null) {
-                areasNameType.getAreaTypes().addAll(areaTypeNames);
+                for (String areaType: areaTypeNames) {
+                    areasNameType.getAreaTypes().add(AreaType.fromValue(areaType));
+                }
             }
             response.setAreaTypes(areasNameType);
             return JAXBMarshaller.marshall(response);

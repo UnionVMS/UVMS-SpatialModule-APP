@@ -15,10 +15,11 @@ public class UserAreaGeoJsonDto extends GeoJsonDto {
     private static final String START_DATE = "startDate";
     private static final String END_DATE = "endDate";
     private static final String SUB_TYPE = "subType";
+    private static final String DATASET_NAME = "datasetName";
 
 
     public String getName() {
-        return String.valueOf(properties.get(NAME));
+        return getNullOrString(properties.get(NAME));
     }
 
     public void setName(String name) {
@@ -28,7 +29,7 @@ public class UserAreaGeoJsonDto extends GeoJsonDto {
     }
 
     public String getDesc() {
-        return String.valueOf(properties.get(DESCRIPTION));
+        return getNullOrString(properties.get(DESCRIPTION));
     }
 
     public void setDesc(String desc) {
@@ -38,7 +39,7 @@ public class UserAreaGeoJsonDto extends GeoJsonDto {
     }
 
     public String getStartDate() {
-        return String.valueOf(properties.get(START_DATE));
+        return getNullOrString(properties.get(START_DATE));
     }
 
     public void setStartDate(Date startDate) {
@@ -48,7 +49,7 @@ public class UserAreaGeoJsonDto extends GeoJsonDto {
     }
 
     public String getEndDate() {
-        return String.valueOf( properties.get(END_DATE));
+        return getNullOrString(properties.get(END_DATE));
     }
 
     public void setEndDate(Date startDate) {
@@ -58,7 +59,7 @@ public class UserAreaGeoJsonDto extends GeoJsonDto {
     }
 
     public String getSubType() {
-        return String.valueOf(properties.get(SUB_TYPE));
+        return getNullOrString(properties.get(SUB_TYPE));
     }
 
     public void setSubType(String subType) {
@@ -83,7 +84,7 @@ public class UserAreaGeoJsonDto extends GeoJsonDto {
     }
 
     public void setId(Long gid) {
-        properties.put(ID, String.valueOf(gid));
+        properties.put(ID, getNullOrString(gid));
     }
 
     public List<String> getScopeSelection() {
@@ -99,6 +100,31 @@ public class UserAreaGeoJsonDto extends GeoJsonDto {
 
     public void setScopeSelection(List<String> scopeSelection){
         properties.put(SCOPE_SELECTION, scopeSelection);
+    }
+
+    public String getDatasetName() {
+        Object datasetNameObj = properties.get(DATASET_NAME);
+        String datasetName = null;
+
+        if (datasetNameObj != null) {
+            datasetName = (String) datasetNameObj;
+        }
+
+        return datasetName;
+    }
+
+    public void setDatasetName(String datasetName) {
+        properties.put(DATASET_NAME, datasetName);
+    }
+
+    private String getNullOrString(Object propObj) {
+        String propValue = null;
+
+        if (propObj != null) {
+            propValue = String.valueOf(propObj);
+        }
+
+        return propValue;
     }
 
 }

@@ -6,6 +6,7 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaExtendedIdentifierType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.AreaExtendedIdentifierDto;
 import eu.europa.ec.fisheries.uvms.spatial.util.SqlPropertyHolder;
@@ -44,7 +45,7 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
         List<AreaExtendedIdentifierType> areaTypes = Lists.newArrayList();
         for (AreaLocationTypesEntity areaType : systemAreaTypes) {
             String areaDbTable = areaType.getAreaDbTable();
-            String areaTypeName = areaType.getTypeName();
+            AreaType areaTypeName = AreaType.valueOf(areaType.getTypeName());
 
             List<AreaExtendedIdentifierDto> resultList = repository.findAreasIdByLocation(point, areaDbTable);
             for (AreaExtendedIdentifierDto area : resultList) {

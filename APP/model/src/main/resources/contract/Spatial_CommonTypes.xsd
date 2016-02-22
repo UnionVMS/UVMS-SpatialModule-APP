@@ -9,7 +9,7 @@
             <xs:extension base="Coordinate">
                 <xs:sequence>
                     <xs:element name="Id" type="NumericStringLength1to9"/>
-                    <xs:element name="AreaType" type="StringLength1to255"/>
+                    <xs:element name="AreaType" type="AreaType"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
@@ -40,7 +40,7 @@
     </xs:complexType>
     <xs:complexType name="AreasNameType">
         <xs:sequence>
-            <xs:element name="AreaType" type="StringLength1to255" maxOccurs="1000"/>
+            <xs:element name="AreaType" type="AreaType" maxOccurs="1000"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="Area">
@@ -165,7 +165,7 @@
     <xs:complexType name="AreaIdentifierType">
         <xs:sequence>
             <xs:element name="Id" type="NumericStringLength1to9" nillable="false"/>
-            <xs:element name="AreaType" type="StringLength1to255" nillable="false"/>
+            <xs:element name="AreaType" type="AreaType" nillable="false"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -224,9 +224,13 @@
 
     <xs:simpleType name="SpatialFeaturesEnum">
         <xs:restriction base="xs:string">
+            <xs:enumeration value="MANAGE_ANY_USER_AREA" />
             <xs:enumeration value="MANAGE_SYSTEM_SPATIAL_CONFIGURATIONS"/>
-            <xs:enumeration value="USE_SPATIAL_CONFIGURATIONS"/>
             <xs:enumeration value="MANAGE_USER_DEFINED_AREAS"/>
+            <xs:enumeration value="MANAGE_BOOKMARKS"/>
+            <xs:enumeration value="USE_SPATIAL_CONFIGURATIONS"/>
+            <xs:enumeration value="SHARE_USER_DEFINED_AREAS"/>
+            <xs:enumeration value="CREATE_USER_AREA_DATASET"/>
         </xs:restriction>
     </xs:simpleType>
 

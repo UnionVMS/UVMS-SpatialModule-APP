@@ -22,13 +22,21 @@ public interface UserAreaService {
 
 	List<AreaDetails> getUserAreaDetailsById(AreaTypeEntry areaTypeEntry, String userName) throws ServiceException;
 
-	List<UserAreaDto> searchUserAreasByCriteria(String userName, String scopeName, String searchCriteria);
+	AreaDetails getUserAreaDetailsWithExtentById(AreaTypeEntry areaTypeEntry, String userName, boolean isPowerUser) throws ServiceException;
+
+	List<AreaDetails> getUserAreaDetailsById(AreaTypeEntry areaTypeEntry, String userName, boolean isPowerUser) throws ServiceException;
+
+	List<UserAreaDto> searchUserAreasByCriteria(String userName, String scopeName, String searchCriteria, boolean isPowerUser);
 
 	long storeUserArea(UserAreaGeoJsonDto userAreaDto, String remoteUser) throws ServiceException;
 
 	long updateUserArea(UserAreaGeoJsonDto userAreaDto, String userName) throws ServiceException;
 
 	void deleteUserArea(Long userAreaId, String userName) throws ServiceException;
+
+	long updateUserArea(UserAreaGeoJsonDto userAreaDto, String userName, boolean isPowerUser) throws ServiceException;
+
+	void deleteUserArea(Long userAreaId, String userName, boolean isPowerUser) throws ServiceException;
 
 	List<String> getUserAreaTypes(String userName) throws ServiceException;
 }

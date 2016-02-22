@@ -4,20 +4,20 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Coordinate;
+import eu.europa.ec.fisheries.uvms.spatial.model.constants.USMSpatial;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.UserAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.UserAreaGeoJsonDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.UserAreaMapper;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 
 import javax.ejb.EJB;
 import javax.ejb.Local;
@@ -36,21 +36,41 @@ import static eu.europa.ec.fisheries.uvms.spatial.util.SpatialUtils.convertToPoi
 @Transactional
 public class UserAreaServiceBean implements UserAreaService {
 
-    private static final String USER_NAME = "userName";
-    private static final String SCOPE_NAME = "scopeName";
-
     @EJB
     private SpatialRepository repository;
 
     @EJB
     private AreaTypeNamesService areaTypeNamesService;
 
+    @EJB
+    private USMService usmService;
+
     @Override
     public long storeUserArea(UserAreaGeoJsonDto userAreaDto, String userName) throws ServiceException {
         UserAreasEntity userAreasEntity = prepareNewEntity(userAreaDto, userName);
+
         UserAreasEntity persistedEntity = (UserAreasEntity) repository.createEntity(userAreasEntity);
+
+        if (StringUtils.isNotBlank(persistedEntity.getDatasetName())) {
+            usmService.createDataset(USMSpatial.APPLICATION_NAME, persistedEntity.getDatasetName(),createDescriminator(persistedEntity), USMSpatial.USM_DATASET_CATEGORY,USMSpatial.USM_DATASET_DESCRIPTION);
+        }
         return persistedEntity.getGid();
     }
+
+    @Override
+    public long updateUserArea(UserAreaGeoJsonDto userAreaDto, String userName) throws ServiceException {
+        return updateUserArea(userAreaDto, userName, false);
+    }
+
+    @Override
+    public void deleteUserArea(Long userAreaId, String userName) throws ServiceException {
+        deleteUserArea(userAreaId, userName, false);
+    }
+
+    private String createDescriminator(UserAreasEntity persistedEntity) {
+        return  AreaType.USERAREA.value() + USMSpatial.DELIMITER + persistedEntity.getGid();
+    }
+
 
     private UserAreasEntity prepareNewEntity(UserAreaGeoJsonDto userAreaDto, String userName) {
         UserAreasEntity userAreasEntity = UserAreaMapper.mapper().fromDtoToEntity(userAreaDto);
@@ -60,21 +80,43 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     @Override
-    public long updateUserArea(UserAreaGeoJsonDto userAreaDto, String userName) throws ServiceException {
+    public long updateUserArea(UserAreaGeoJsonDto userAreaDto, String userName,  boolean isPowerUser) throws ServiceException {
         Long id = userAreaDto.getId();
         validateGid(id);
 
-        List<UserAreasEntity> persistentUserAreas = repository.findUserAreaById(id, userName);
+        List<UserAreasEntity> persistentUserAreas = repository.findUserAreaById(id, userName, isPowerUser);
         validateNotNull(id, persistentUserAreas);
 
         UserAreasEntity persistentUserArea = persistentUserAreas.get(0);
+
+        if (!persistentUserArea.getUserName().equals(userName)  && !isPowerUser) {
+            throw new ServiceException("user_not_authorised");
+        }
+
+        if (!userAreaDto.getDatasetName().equals(persistentUserArea.getDatasetName())){
+            updateUSMDataset(persistentUserArea, userAreaDto.getDatasetName());
+        }
 
         UserAreasEntity userAreasEntityToUpdate = prepareNewEntity(userAreaDto, userName);
         userAreasEntityToUpdate.setCreatedOn(persistentUserArea.getCreatedOn());
         userAreasEntityToUpdate.setGid(persistentUserArea.getGid());
 
         UserAreasEntity persistedUpdatedEntity = (UserAreasEntity) repository.updateEntity(userAreasEntityToUpdate);
+
         return persistedUpdatedEntity.getGid();
+    }
+
+    private void updateUSMDataset(UserAreasEntity oldDatasetName, String newDatasetName) throws ServiceException {
+        //first remove the old dataset
+        if (StringUtils.isNotBlank(oldDatasetName.getDatasetName())) {
+            usmService.deleteDataset(USMSpatial.APPLICATION_NAME, oldDatasetName.getDatasetName());
+        }
+
+        //and if it is a renaming action
+        if (StringUtils.isNotBlank(newDatasetName)) {
+            //create the new dataset
+            usmService.createDataset(USMSpatial.APPLICATION_NAME, newDatasetName, createDescriminator(oldDatasetName), USMSpatial.USM_DATASET_CATEGORY, USMSpatial.USM_DATASET_DESCRIPTION);
+        }
     }
 
     private void validateGid(Long gid) {
@@ -84,8 +126,8 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     @Override
-    public void deleteUserArea(Long userAreaId, String userName) throws ServiceException {
-        List<UserAreasEntity> persistentUserAreas = repository.findUserAreaById(userAreaId, userName);
+    public void deleteUserArea(Long userAreaId, String userName, boolean isPowerUser) throws ServiceException {
+        List<UserAreasEntity> persistentUserAreas = repository.findUserAreaById(userAreaId, userName, isPowerUser);
         validateNotNull(userAreaId, persistentUserAreas);
 
         repository.deleteEntity(persistentUserAreas.get(0));
@@ -126,7 +168,17 @@ public class UserAreaServiceBean implements UserAreaService {
 
     @Override
     public AreaDetails getUserAreaDetailsWithExtentById(AreaTypeEntry areaTypeEntry, String userName) throws ServiceException {
-        List<UserAreasEntity> userAreasDetails = repository.findUserAreaById(Long.parseLong(areaTypeEntry.getId()), userName);
+        return getUserAreaDetailsWithExtentById(areaTypeEntry, userName, false);
+    }
+
+    @Override
+    public List<AreaDetails> getUserAreaDetailsById(AreaTypeEntry areaTypeEntry, String userName) throws ServiceException {
+        return getUserAreaDetailsById(areaTypeEntry, userName, false);
+    }
+
+    @Override
+    public AreaDetails getUserAreaDetailsWithExtentById(AreaTypeEntry areaTypeEntry, String userName, boolean isPowerUser) throws ServiceException {
+        List<UserAreasEntity> userAreasDetails = repository.findUserAreaById(Long.parseLong(areaTypeEntry.getId()), userName, isPowerUser);
         if (CollectionUtils.isNotEmpty(userAreasDetails)) {
             return getAllAreaDetails(userAreasDetails, areaTypeEntry).get(0);
         } else {
@@ -137,8 +189,8 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     @Override
-    public List<AreaDetails> getUserAreaDetailsById(AreaTypeEntry areaTypeEntry, String userName) throws ServiceException {
-        List<UserAreasEntity> userAreaDetails = repository.findUserAreaById(Long.parseLong(areaTypeEntry.getId()), userName);
+    public List<AreaDetails> getUserAreaDetailsById(AreaTypeEntry areaTypeEntry, String userName, boolean isPowerUser) throws ServiceException {
+        List<UserAreasEntity> userAreaDetails = repository.findUserAreaById(Long.parseLong(areaTypeEntry.getId()), userName, isPowerUser);
         return getAllAreaDetails(userAreaDetails, areaTypeEntry);
     }
 
@@ -166,15 +218,15 @@ public class UserAreaServiceBean implements UserAreaService {
         return areaDetails;
     }
 
-    public List<UserAreaDto> searchUserAreasByCriteria(String userName, String scopeName, String searchCriteria) {
-        List<UserAreaDto> userAreaDetails = repository.findUserAreaDetailsBySearchCriteria(userName, scopeName, searchCriteria);
+    public List<UserAreaDto> searchUserAreasByCriteria(String userName, String scopeName, String searchCriteria, boolean isPowerUser) {
+        List<UserAreaDto> userAreaDetails = repository.findUserAreaDetailsBySearchCriteria(userName, scopeName, searchCriteria, isPowerUser);
         return userAreaDetails;
     }
 
     @SuppressWarnings("unchecked")
     private List<Long> getUserAreaGuid(String userName, String scopeName) {
         try {
-            Map<String, String> parameters = ImmutableMap.<String, String>builder().put(USER_NAME, userName).put(SCOPE_NAME, scopeName).build();
+            Map<String, String> parameters = ImmutableMap.<String, String>builder().put(USMSpatial.USER_NAME, userName).put(USMSpatial.SCOPE_NAME, scopeName).build();
             return repository.findEntityByNamedQuery(Long.class, QueryNameConstants.FIND_GID_BY_USER, parameters);
         } catch (ServiceException e) {
             throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
