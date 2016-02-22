@@ -32,7 +32,8 @@ public abstract class UserAreaMapper {
             @Mapping(source = "geometry", target = "geom"),
             @Mapping(target = "startDate", expression = "java(stringToDate(userAreaDto.getStartDate()))"),
             @Mapping(target = "endDate", expression = "java(stringToDate(userAreaDto.getEndDate()))"),
-            @Mapping(target = "scopeSelection", expression = "java(fromScopeArrayToEntity(userAreaDto.getScopeSelection()))")
+            @Mapping(target = "scopeSelection", expression = "java(fromScopeArrayToEntity(userAreaDto.getScopeSelection()))"),
+            @Mapping(target = "datasetName", expression = "java(userAreaDto.getDatasetName())")
     })
     public abstract UserAreasEntity fromDtoToEntity(UserAreaGeoJsonDto userAreaDto);
 

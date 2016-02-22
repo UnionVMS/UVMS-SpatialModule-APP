@@ -557,6 +557,9 @@
             <xs:enumeration value="RFMO" />
             <xs:enumeration value="RAC" />
             <xs:enumeration value="STatRect" />
+            <xs:enumeration value="USERAREA" />
+            <xs:enumeration value="PORT" />
+            <xs:enumeration value="PORTAREA" />
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="LocationType">

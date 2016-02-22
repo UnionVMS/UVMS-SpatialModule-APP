@@ -8,8 +8,8 @@ public class TransformUtils {
     public static Function<AreaIdentifierType, String> EXTRACT_AREA_TYPE = new Function<AreaIdentifierType, String>() {
         @Override
         public String apply(AreaIdentifierType area) {
-            if(area != null) {
-                return area.getAreaType().toUpperCase();
+            if(area != null && area.getAreaType() != null) {
+                return area.getAreaType().toString().toUpperCase();
             }
             return "";
         }

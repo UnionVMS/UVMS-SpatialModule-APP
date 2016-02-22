@@ -10,6 +10,7 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
 
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,7 +34,7 @@ public class AreaDetailsServiceIT extends AbstractArquillianIT {
 	@Test
 	public void getEezAreaDetailsByCoordinates() {
 		AreaTypeEntry areaCoordinate = new AreaTypeEntry();
-		areaCoordinate.setAreaType("eez");
+		areaCoordinate.setAreaType(AreaType.EEZ);
 		areaCoordinate.setLatitude(41.0);
 		areaCoordinate.setLongitude(-9.5);
 		areaCoordinate.setCrs(4326);
@@ -47,7 +48,7 @@ public class AreaDetailsServiceIT extends AbstractArquillianIT {
 	public void getAreaInvalidCoordinate() {
 		try {
 			AreaTypeEntry areaCoordinate = new AreaTypeEntry();
-			areaCoordinate.setAreaType("eez");
+			areaCoordinate.setAreaType(AreaType.EEZ);
 			areaCoordinate.setLatitude(410.0);
 			areaCoordinate.setLongitude(-90.5);
 			areaCoordinate.setCrs(4326);
@@ -61,7 +62,7 @@ public class AreaDetailsServiceIT extends AbstractArquillianIT {
 	public void getAreaInvalidCrsCodeTest() {
 		try {
 			AreaTypeEntry areaCoordinate = new AreaTypeEntry();
-			areaCoordinate.setAreaType("eez");
+			areaCoordinate.setAreaType(AreaType.EEZ);
 			areaCoordinate.setLatitude(41.0);
 			areaCoordinate.setLongitude(-9.5);
 			areaCoordinate.setCrs(43260);
@@ -78,7 +79,7 @@ public class AreaDetailsServiceIT extends AbstractArquillianIT {
 	public void getEezAreaDetailsTest() {
         AreaDetailsSpatialRequest areaDetailsSpatialRequest = new AreaDetailsSpatialRequest();
         AreaTypeEntry areaTypeEntry = new AreaTypeEntry();
-        areaTypeEntry.setAreaType("eez");
+        areaTypeEntry.setAreaType(AreaType.EEZ);
         areaTypeEntry.setId("1");
         areaDetailsSpatialRequest.setAreaType(areaTypeEntry);
         AreaDetails areaDetails = areaDetailsService.getAreaDetails(areaDetailsSpatialRequest);
@@ -93,7 +94,7 @@ public class AreaDetailsServiceIT extends AbstractArquillianIT {
 	public void getRfmoAreaDetailsTest() {
         AreaDetailsSpatialRequest areaDetailsSpatialRequest = new AreaDetailsSpatialRequest();
         AreaTypeEntry areaTypeEntry = new AreaTypeEntry();
-        areaTypeEntry.setAreaType("rfmo");
+        areaTypeEntry.setAreaType(AreaType.RFMO);
         areaTypeEntry.setId("1");
         areaDetailsSpatialRequest.setAreaType(areaTypeEntry);
         AreaDetails areaDetails = areaDetailsService.getAreaDetails(areaDetailsSpatialRequest);
@@ -110,7 +111,7 @@ public class AreaDetailsServiceIT extends AbstractArquillianIT {
         try{
             AreaDetailsSpatialRequest areaDetailsSpatialRequest = new AreaDetailsSpatialRequest();
             AreaTypeEntry areaTypeEntry = new AreaTypeEntry();
-            areaTypeEntry.setAreaType("eez");
+            areaTypeEntry.setAreaType(AreaType.EEZ);
             areaTypeEntry.setId("invalid");
             areaDetailsSpatialRequest.setAreaType(areaTypeEntry);
             areaDetailsService.getAreaDetails(areaDetailsSpatialRequest);
@@ -129,7 +130,7 @@ public class AreaDetailsServiceIT extends AbstractArquillianIT {
         try {
             AreaDetailsSpatialRequest areaDetailsSpatialRequest = new AreaDetailsSpatialRequest();
             AreaTypeEntry areaTypeEntry = new AreaTypeEntry();
-            areaTypeEntry.setAreaType("Invalid");
+            areaTypeEntry.setAreaType(null);
             areaTypeEntry.setId("1");
             areaDetailsSpatialRequest.setAreaType(areaTypeEntry);
             areaDetailsService.getAreaDetails(areaDetailsSpatialRequest);
@@ -148,7 +149,7 @@ public class AreaDetailsServiceIT extends AbstractArquillianIT {
         try {
             AreaDetailsSpatialRequest areaDetailsSpatialRequest = new AreaDetailsSpatialRequest();
             AreaTypeEntry areaTypeEntry = new AreaTypeEntry();
-            areaTypeEntry.setAreaType("eez");
+            areaTypeEntry.setAreaType(AreaType.EEZ);
             areaTypeEntry.setId("10000000");
             areaDetailsSpatialRequest.setAreaType(areaTypeEntry);
             areaDetailsService.getAreaDetails(areaDetailsSpatialRequest);

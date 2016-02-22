@@ -161,7 +161,7 @@ public class SpatialEventMDBTest {
     @Test
     public void testOnMessageWithFilterAreasMethod() throws SpatialModelMarshallException, JMSException {
         AreaIdentifierType areaType = new AreaIdentifierType();
-        areaType.setAreaType("EEZ");
+        areaType.setAreaType(AreaType.EEZ);
         areaType.setId("1");
 
         String requestString = SpatialModuleRequestMapper.mapToFilterAreaSpatialRequest(Arrays.asList(areaType), Arrays.asList(areaType));
