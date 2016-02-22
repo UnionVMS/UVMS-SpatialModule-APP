@@ -11,6 +11,7 @@ import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.transaction.Transactional;
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.Map;
 
@@ -24,11 +25,11 @@ public class PortAreaSaverHandler extends AbstractSaverHandler implements SaverH
     private PortAreaService portAreaService;
 
     @Override
-    protected void saveNewAreas(Map<String, Object> values, Date enabledOn) throws ServiceException {
+    protected void saveNewAreas(Map<String, Object> values, Date enabledOn) throws ServiceException, UnsupportedEncodingException {
         PortAreaDto portAreaDto = new PortAreaDto();
         portAreaDto.setGeometry((Geometry) values.get("the_geom"));
-        portAreaDto.setCode((String) values.get("code"));
-        portAreaDto.setName((String) values.get("name"));
+        portAreaDto.setCode(readStringProperty(values, "code"));
+        portAreaDto.setName(readStringProperty(values, "name"));
         portAreaDto.setEnabled(true);
         portAreaDto.setEnabledOn(enabledOn);
 

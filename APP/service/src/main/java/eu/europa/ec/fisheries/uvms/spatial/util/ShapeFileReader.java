@@ -66,7 +66,7 @@ public class ShapeFileReader {
     }
 
     private void transformCRSToDefault(SimpleFeature feature, CoordinateReferenceSystem sourceCRS, CoordinateReferenceSystem targetCRS, MathTransform transform) throws FactoryException, TransformException {
-        Geometry sourceGeometry = (Geometry) feature.getDefaultGeometryProperty().getValue();
+        Geometry sourceGeometry = (Geometry) feature.getDefaultGeometry();
         if (sourceGeometry != null) {
             if (sourceCRS != targetCRS) {
                 Geometry targetGeometry = JTS.transform(sourceGeometry, transform);

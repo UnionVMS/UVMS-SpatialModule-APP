@@ -28,7 +28,7 @@ public class PortLocationServiceBean implements PortLocationService {
     @Override
     public long createPortLocation(PortLocationDto portLocationDto) throws ServiceException {
         PortsEntity portsEntity = mapper.portLocationDtoToPortsEntity(portLocationDto);
-        portsEntity = (PortsEntity) repository.saveOrUpdateEntity(portsEntity);
+        portsEntity = (PortsEntity) repository.createEntity(portsEntity);
         return portsEntity.getGid();
     }
 
