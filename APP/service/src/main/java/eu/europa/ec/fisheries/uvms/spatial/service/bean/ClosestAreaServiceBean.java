@@ -45,21 +45,23 @@ public class ClosestAreaServiceBean implements ClosestAreaService {
         Map<String, String> areaType2TableName = getAreaType2TableNameMap();
         List<Area> closestAreas = newArrayList();
         for (AreaType areaType : request.getAreaTypes().getAreaTypes()) {
-            String areaDbTable = areaType2TableName.get(areaType.value());
+            if (areaType!= null) {
+                String areaDbTable = areaType2TableName.get(areaType.value());
 
-            List<ClosestAreaDto> closestAreaList = repository.findClosestArea(point, measurementUnit, areaDbTable);
-            validateResponse(closestAreaList);
+                List<ClosestAreaDto> closestAreaList = repository.findClosestArea(point, measurementUnit, areaDbTable);
+                validateResponse(closestAreaList);
 
-            ClosestAreaDto closestAreaDto = closestAreaList.get(0);
-            if (closestAreaDto != null) {
-                Area closestAreaEntry = new Area();
-                closestAreaEntry.setId(closestAreaDto.getId());
-                closestAreaEntry.setDistance(closestAreaDto.getDistance());
-                closestAreaEntry.setUnit(request.getUnit());
-                closestAreaEntry.setCode(closestAreaDto.getCode());
-                closestAreaEntry.setName(closestAreaDto.getName());
-                closestAreaEntry.setAreaType(areaType);
-                closestAreas.add(closestAreaEntry);
+                ClosestAreaDto closestAreaDto = closestAreaList.get(0);
+                if (closestAreaDto != null) {
+                    Area closestAreaEntry = new Area();
+                    closestAreaEntry.setId(closestAreaDto.getId());
+                    closestAreaEntry.setDistance(closestAreaDto.getDistance());
+                    closestAreaEntry.setUnit(request.getUnit());
+                    closestAreaEntry.setCode(closestAreaDto.getCode());
+                    closestAreaEntry.setName(closestAreaDto.getName());
+                    closestAreaEntry.setAreaType(areaType);
+                    closestAreas.add(closestAreaEntry);
+                }
             }
         }
 

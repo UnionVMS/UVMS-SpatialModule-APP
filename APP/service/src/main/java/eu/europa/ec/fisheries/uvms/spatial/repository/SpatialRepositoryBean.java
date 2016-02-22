@@ -3,7 +3,17 @@ package eu.europa.ec.fisheries.uvms.spatial.repository;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
-import eu.europa.ec.fisheries.uvms.spatial.dao.*;
+import eu.europa.ec.fisheries.uvms.service.QueryParameter;
+import eu.europa.ec.fisheries.uvms.spatial.dao.AreaDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.AreaGroupDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.BookmarkDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.CountryDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.EezDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.MapConfigDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.ProjectionDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.ReportConnectSpatialDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.SysConfigDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.UserAreaDao;
 import eu.europa.ec.fisheries.uvms.spatial.entity.*;
 import eu.europa.ec.fisheries.uvms.spatial.entity.config.SysConfigEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
@@ -17,13 +27,20 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.ServiceLayerD
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.util.MeasurementUnit;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.BookmarkMapper;
 import eu.europa.ec.fisheries.uvms.spatial.util.SqlPropertyHolder;
-
 import javax.annotation.PostConstruct;
-import javax.ejb.*;
+import javax.ejb.EJB;
+import javax.ejb.Local;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static eu.europa.ec.fisheries.uvms.service.QueryParameter.with;
 import static org.apache.commons.collections.CollectionUtils.isEmpty;
@@ -34,12 +51,8 @@ import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 @TransactionAttribute(TransactionAttributeType.REQUIRED) // TODO why class level?
 public class SpatialRepositoryBean extends AbstractDAO implements SpatialRepository {
 
-    private
-    @PersistenceContext(unitName = "spatialPU")
-    EntityManager em;
-    private
-    @EJB
-    SqlPropertyHolder sql;
+    private @PersistenceContext(unitName = "spatialPU") EntityManager em;
+    private @EJB SqlPropertyHolder sql;
 
     private AreaDao areaDao;
     private UserAreaDao userAreaDao;
@@ -117,8 +130,8 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     }
 
     @Override
-    public List<UserAreaDto> findUserAreaDetailsBySearchCriteria(String userName, String scopeName, String searchCriteria) {
-        return userAreaDao.findUserAreaDetailsBySearchCriteria(userName, scopeName, searchCriteria);
+    public List<UserAreaDto> findUserAreaDetailsBySearchCriteria(String userName, String scopeName, String searchCriteria, boolean isPowerUser) {
+        return userAreaDao.findUserAreaDetailsBySearchCriteria(userName, scopeName, searchCriteria, isPowerUser);
     }
 
     @Override
@@ -238,8 +251,14 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     }
 
     @Override
-    public List<UserAreasEntity> findUserAreaById(Long userAreaId, String userName) throws ServiceException {
-        return findEntityByNamedQuery(UserAreasEntity.class, QueryNameConstants.FIND_USER_AREA_BY_ID, with("userAreaId", userAreaId).and("userName", userName).parameters(), 1);
+    public List<UserAreasEntity> findUserAreaById(Long userAreaId, String userName, Boolean isPowerUser) throws ServiceException {
+        QueryParameter param = with("userAreaId", userAreaId);
+
+        if (!isPowerUser) {
+            param = param.and("userName", userName);
+        }
+
+        return findEntityByNamedQuery(UserAreasEntity.class, QueryNameConstants.FIND_USER_AREA_BY_ID, param.parameters(), 1);
     }
 
     @Override

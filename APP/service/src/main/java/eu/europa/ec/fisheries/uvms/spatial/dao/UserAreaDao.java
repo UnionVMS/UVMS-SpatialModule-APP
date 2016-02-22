@@ -7,6 +7,7 @@ import com.google.common.collect.ImmutableMap;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
+import eu.europa.ec.fisheries.uvms.spatial.model.constants.USMSpatial;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GeometryType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.UserAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
@@ -16,7 +17,6 @@ import eu.europa.ec.fisheries.uvms.spatial.service.mapper.GeometryMapper;
 public class UserAreaDao extends CommonDao {
 	
 	private static final String USER_NAME = "userName";
-	private static final String SCOPE_NAME = "scopeName";
 	private static final String NAME = "name";
 	private static final String DESC = "desc";
 	private static final String CRS = "crs";
@@ -57,13 +57,15 @@ public class UserAreaDao extends CommonDao {
 	}
 
     @SuppressWarnings("unchecked")
-    public List<UserAreaDto> findUserAreaDetailsBySearchCriteria(String userName, String scopeName, String searchCriteria) {
+    public List<UserAreaDto> findUserAreaDetailsBySearchCriteria(String userName, String scopeName, String searchCriteria, boolean isPowerUser) {
     	Map<String, Object> parameters = ImmutableMap.<String, Object>builder().
     			put(USER_NAME, userName).
-    			put(SCOPE_NAME, scopeName).
+    			put(USMSpatial.SCOPE_NAME, scopeName).
     			put(NAME, "%" + searchCriteria + "%").
     			put(DESC, "%" + searchCriteria + "%").
+				put("isPowerUser", isPowerUser ? 1 : 0).
     			build();
+
     	return createNamedNativeQuery(QueryNameConstants.SEARCH_USER_AREA, parameters, UserAreaDto.class).list();
     }
 

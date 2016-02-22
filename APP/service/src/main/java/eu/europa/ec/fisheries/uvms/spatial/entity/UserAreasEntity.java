@@ -46,7 +46,7 @@ import java.util.Set;
                 name = QueryNameConstants.SEARCH_USER_AREA,
                 query = "select gid, name, area_desc as desc, CAST(st_astext(st_extent(geom))AS TEXT) as extent FROM spatial.user_areas area LEFT JOIN spatial.user_scope scopeSelection"
                         + " ON area.gid = scopeSelection.user_area_id"
-                        + " WHERE (area.user_name=:userName OR scopeSelection.scope_name=:scopeName)"
+                        + " WHERE ((1=:isPowerUser) OR (area.user_name=:userName OR scopeSelection.scope_name=:scopeName))"
                         + " AND (UPPER(area.name) LIKE(UPPER(:name)) OR UPPER(area.area_desc) LIKE(UPPER(:desc))) group by area.gid"),
         @NamedNativeQuery(
                 name = QueryNameConstants.USERAREA_BY_COORDINATE,
@@ -90,6 +90,10 @@ public class UserAreasEntity implements Serializable {
     @ColumnAliasName(aliasName ="areaDesc")
     private String areaDesc;
 
+    @Column(columnDefinition = "text", name = "dataset_name", unique = true)
+    @ColumnAliasName(aliasName ="datasetName")
+    private String datasetName;
+
     @Basic
     @Column(name = "geom", nullable = false)
     @Type(type = "org.hibernate.spatial.GeometryType")
@@ -104,7 +108,7 @@ public class UserAreasEntity implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAreas", cascade = CascadeType.ALL)
     private Set<AreaStatusEntity> areaStatuses;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAreas", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAreas", cascade = CascadeType.ALL, orphanRemoval = true)
     @ColumnAliasName(aliasName ="scopeSelection")
     private Set<UserScopeEntity> scopeSelection;
 
@@ -203,5 +207,14 @@ public class UserAreasEntity implements Serializable {
             }
             this.scopeSelection = scopeSelection;
         }
+    }
+
+
+    public String getDatasetName() {
+        return datasetName;
+    }
+
+    public void setDatasetName(String datasetName) {
+        this.datasetName = datasetName;
     }
 }

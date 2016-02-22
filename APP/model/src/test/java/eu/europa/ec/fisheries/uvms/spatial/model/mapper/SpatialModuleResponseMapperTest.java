@@ -96,7 +96,7 @@ public class SpatialModuleResponseMapperTest {
 
             AreasByLocationType areasByLocationType = SpatialModuleResponseMapper.mapToAreasByLocationTypeFromResponse(mock, "666");
             assertEquals("2", areasByLocationType.getAreas().get(0).getId());
-            assertEquals("EEZ", areasByLocationType.getAreas().get(0).getAreaType());
+            assertEquals("EEZ", areasByLocationType.getAreas().get(0).getAreaType().toString());
         } catch (SpatialModelMapperException | JMSException | JAXBException e) {
             fail("test should not throw these exceptions");
         }
@@ -126,7 +126,7 @@ public class SpatialModuleResponseMapperTest {
 
         List<AreaExtendedIdentifierType> entryList = new ArrayList<>();
         AreaExtendedIdentifierType entry = new AreaExtendedIdentifierType();
-        entry.setAreaType("EEZ");
+        entry.setAreaType(AreaType.EEZ);
         entry.setId("2");
         entry.setName("EEZ name");
         entry.setCode("ECD");

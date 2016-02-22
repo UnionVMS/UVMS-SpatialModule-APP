@@ -4,10 +4,7 @@ import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.RfmoEntity;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetailsSpatialRequest;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import lombok.SneakyThrows;
@@ -48,12 +45,12 @@ public class AreaDetailsServiceTest {
     @Test
     public void getEezDetailsByCoordinates() {
         List<AreaLocationTypesEntity> areaEntities = new ArrayList<AreaLocationTypesEntity>();
-        areaEntities.add(getMockAreaTypeEntity("EEZ", true));
+        areaEntities.add(getMockAreaTypeEntity(AreaType.EEZ.value(), true));
         EezEntity eezEntity = getMockedEezEntity();
         mockCrudServiceBean(areaEntities, eezEntity);
         mockEntityByCoordinate(Arrays.asList(eezEntity));
         AreaTypeEntry request = new AreaTypeEntry();
-        request.setAreaType("eez");
+        request.setAreaType(AreaType.EEZ);
         request.setLatitude(41.0);
         request.setLongitude(-9.5);
         request.setCrs(4326);
@@ -77,12 +74,12 @@ public class AreaDetailsServiceTest {
 
     private AreaTypeEntry createAreaTypeEntry() {
         List<AreaLocationTypesEntity> areaEntities = new ArrayList<AreaLocationTypesEntity>();
-        areaEntities.add(getMockAreaTypeEntity("EEZ", true));
+        areaEntities.add(getMockAreaTypeEntity(AreaType.EEZ.value(), true));
         EezEntity eezEntity = getMockedEezEntity();
         mockCrudServiceBean(areaEntities, eezEntity);
         mockEntityByCoordinate(new ArrayList());
         AreaTypeEntry request = new AreaTypeEntry();
-        request.setAreaType("eez");
+        request.setAreaType(AreaType.EEZ);
         request.setLatitude(41.0);
         request.setLongitude(-9.5);
         request.setCrs(4326);
@@ -95,12 +92,12 @@ public class AreaDetailsServiceTest {
     @Test
     public void getEezAreaDetailsTest() {
         List<AreaLocationTypesEntity> areaEntities = new ArrayList<AreaLocationTypesEntity>();
-        areaEntities.add(getMockAreaTypeEntity("EEZ", true));
+        areaEntities.add(getMockAreaTypeEntity(AreaType.EEZ.value(), true));
         EezEntity eezEntity = getMockedEezEntity();
         mockCrudServiceBean(areaEntities, eezEntity);
         AreaDetailsSpatialRequest areaDetailsSpatialRequest = new AreaDetailsSpatialRequest();
         AreaTypeEntry areaTypeEntry = new AreaTypeEntry();
-        areaTypeEntry.setAreaType("eez");
+        areaTypeEntry.setAreaType(AreaType.EEZ);
         areaTypeEntry.setId("1");
         areaDetailsSpatialRequest.setAreaType(areaTypeEntry);
         AreaDetailsSpatialRequest request = areaDetailsSpatialRequest;
@@ -121,7 +118,7 @@ public class AreaDetailsServiceTest {
         mockCrudServiceBean(areaEntities, rfmoEntity);
         AreaDetailsSpatialRequest areaDetailsSpatialRequest = new AreaDetailsSpatialRequest();
         AreaTypeEntry areaTypeEntry = new AreaTypeEntry();
-        areaTypeEntry.setAreaType("rfmo");
+        areaTypeEntry.setAreaType(AreaType.RFMO);
         areaTypeEntry.setId("1");
         areaDetailsSpatialRequest.setAreaType(areaTypeEntry);
         AreaDetailsSpatialRequest request = areaDetailsSpatialRequest;
@@ -138,7 +135,7 @@ public class AreaDetailsServiceTest {
     public void invalidEntityTest() {
         AreaDetailsSpatialRequest areaDetailsSpatialRequest = new AreaDetailsSpatialRequest();
         AreaTypeEntry areaTypeEntry = new AreaTypeEntry();
-        areaTypeEntry.setAreaType("INVALID_ENTITY");
+        areaTypeEntry.setAreaType(null);
         areaTypeEntry.setId("1");
         areaDetailsSpatialRequest.setAreaType(areaTypeEntry);
         AreaDetailsSpatialRequest request = areaDetailsSpatialRequest;
@@ -152,7 +149,7 @@ public class AreaDetailsServiceTest {
     public void invalidRowTest() {
         AreaDetailsSpatialRequest areaDetailsSpatialRequest = new AreaDetailsSpatialRequest();
         AreaTypeEntry areaTypeEntry = new AreaTypeEntry();
-        areaTypeEntry.setAreaType("EEZ");
+        areaTypeEntry.setAreaType(AreaType.EEZ);
         areaTypeEntry.setId("INVALID_ROW");
         areaDetailsSpatialRequest.setAreaType(areaTypeEntry);
         areaDetailsServiceBean.getAreaDetails(areaDetailsSpatialRequest);
@@ -165,7 +162,7 @@ public class AreaDetailsServiceTest {
     public void nonExistingRowTest() {
         AreaDetailsSpatialRequest areaDetailsSpatialRequest = new AreaDetailsSpatialRequest();
         AreaTypeEntry areaTypeEntry = new AreaTypeEntry();
-        areaTypeEntry.setAreaType("EEZ");
+        areaTypeEntry.setAreaType(AreaType.EEZ);
         areaTypeEntry.setId("100000");
         areaDetailsSpatialRequest.setAreaType(areaTypeEntry);
         areaDetailsServiceBean.getAreaDetails(areaDetailsSpatialRequest);
@@ -194,7 +191,7 @@ public class AreaDetailsServiceTest {
         eezEntity.setAreaM2(50.0);
         eezEntity.setCountry("Belgium");
         eezEntity.setDateChang(String.valueOf(new Date().getTime()));
-        eezEntity.setName("EEZ");
+        eezEntity.setName(AreaType.EEZ.value());
         eezEntity.setEezId(new Long(123));
         eezEntity.setGeom(new GeometryBuilder().point());
         eezEntity.setGid(1);

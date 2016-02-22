@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.ejb.EJB;
 
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -52,7 +53,7 @@ public class SearchAreaServiceIT extends AbstractArquillianIT {
 	@Test
 	public void shouldGetSelectedColumns() {
 		AreaTypeEntry areaTypeEntry = new AreaTypeEntry();
-		areaTypeEntry.setAreaType("EEZ");
+		areaTypeEntry.setAreaType(AreaType.EEZ);
 		areaTypeEntry.setId("1");
 		List<Map<String, String>> columnListMap = searchAreaService.getSelectedAreaColumns(Arrays.asList(areaTypeEntry));
 		assertNotNull(columnListMap);
@@ -63,7 +64,7 @@ public class SearchAreaServiceIT extends AbstractArquillianIT {
 	public void shouldNotGetUnknownColumnsMap() {
 		try {
 			AreaTypeEntry areaTypeEntry = new AreaTypeEntry();
-			areaTypeEntry.setAreaType("EEZ");
+			areaTypeEntry.setAreaType(AreaType.EEZ);
 			areaTypeEntry.setId("100000000000000");
 			searchAreaService.getSelectedAreaColumns(Arrays.asList(areaTypeEntry));			
 		} catch (Exception e) {
@@ -75,7 +76,7 @@ public class SearchAreaServiceIT extends AbstractArquillianIT {
 	public void shouldNotGetInvalidColumnsMap() {
 		try {
 			AreaTypeEntry areaTypeEntry = new AreaTypeEntry();
-			areaTypeEntry.setAreaType("INVALID");
+			areaTypeEntry.setAreaType(null);
 			areaTypeEntry.setId("1");
 			searchAreaService.getSelectedAreaColumns(Arrays.asList(areaTypeEntry));			
 		} catch (Exception e) {

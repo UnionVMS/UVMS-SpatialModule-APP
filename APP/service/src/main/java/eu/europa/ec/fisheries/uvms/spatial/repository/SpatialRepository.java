@@ -40,7 +40,7 @@ public interface SpatialRepository extends DAO {
 
     List<UserAreasEntity> findUserAreaDetailsByLocation(String userName, Point point);
 
-    List<UserAreaDto> findUserAreaDetailsBySearchCriteria(String userName, String scopeName, String searchCriteria);
+    List<UserAreaDto> findUserAreaDetailsBySearchCriteria(String userName, String scopeName, String searchCriteria, boolean isPowerUser);
 
     FilterAreasDto filterAreas(List<String> userAreaTables, List<String> userAreaIds, List<String> scopeAreaTables, List<String> scopeAreaIds);
 
@@ -76,7 +76,7 @@ public interface SpatialRepository extends DAO {
 
     List<AreaDto> findAllUserAreasByGids(List<Long> gids);
 
-    List<UserAreasEntity> findUserAreaById(Long userAreaId, String userName) throws ServiceException;
+    List<UserAreasEntity> findUserAreaById(Long userAreaId, String userName, Boolean isPowerUser) throws ServiceException;
 
     List<AreaGroupEntity> getAreaGroups(String userName);
 

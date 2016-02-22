@@ -41,8 +41,8 @@ public class SearchAreaServiceBean extends SpatialServiceBean implements SearchA
 	public List<Map<String, String>> getSelectedAreaColumns(List<AreaTypeEntry> areaTypes) {
 		List<Map<String, String>> columnMapList = new ArrayList<Map<String, String>>();
 		for(AreaTypeEntry areaTypeEntry : areaTypes) {
-			validateArea(areaTypeEntry.getAreaType(), areaTypeEntry.getId());
-			columnMapList.add(getSelectedColumnMap(areaTypeEntry.getAreaType(), areaTypeEntry.getId()));
+			validateArea(areaTypeEntry.getAreaType().value(), areaTypeEntry.getId());
+			columnMapList.add(getSelectedColumnMap(areaTypeEntry.getAreaType().value(), areaTypeEntry.getId()));
 		}
 		return columnMapList;
 	}

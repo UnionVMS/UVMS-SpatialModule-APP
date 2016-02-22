@@ -25,7 +25,7 @@ public class UserAreaServiceIT extends AbstractArquillianIT {
 	@Test
 	public void testSearchUserAreaByFilter() {
 		//Given
-		List<UserAreaDto> userAreas = userAreaService.searchUserAreasByCriteria("rep_power", "EC", "area");
+		List<UserAreaDto> userAreas = userAreaService.searchUserAreasByCriteria("rep_power", "EC", "area", false);
 		
 		assertNotNull(userAreas);
 		assertFalse(userAreas.isEmpty());
@@ -34,7 +34,7 @@ public class UserAreaServiceIT extends AbstractArquillianIT {
 	@Test
 	public void testSearchInvalidUserAreaByFilter() {
 		//Given
-		List<UserAreaDto> userAreas = userAreaService.searchUserAreasByCriteria("rep_power", "EC", "invalid");
+		List<UserAreaDto> userAreas = userAreaService.searchUserAreasByCriteria("rep_power", "EC", "invalid", false);
 		
 		assertNotNull(userAreas);
 		assertTrue(userAreas.isEmpty());

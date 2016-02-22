@@ -13,8 +13,10 @@ import java.util.Map;
 import javax.ejb.EJB;
 
 import com.google.common.collect.Maps;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import lombok.SneakyThrows;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.collect.ImmutableMap;
@@ -52,7 +54,19 @@ public abstract class SpatialServiceBean {
 			throw new SpatialServiceException(SpatialServiceErrors.INVALID_ID_TYPE, id);
 		}
     }
-    
+
+
+	@SuppressWarnings("unchecked")
+	@SneakyThrows
+	protected AreaLocationTypesEntity getAreaLocationType(AreaType type) {
+
+		if (type == null) {
+			throw new SpatialServiceException(SpatialServiceErrors.INVALID_AREA_LOCATION_TYPE, StringUtils.EMPTY);
+		}
+		return getAreaLocationType(type.value()) ;
+	}
+
+
     @SuppressWarnings("unchecked")
     @SneakyThrows
 	protected Map<String, Object> getAreaLocationDetailsById(Number id, AreaLocationTypesEntity areaLocationTypeEntity) {
