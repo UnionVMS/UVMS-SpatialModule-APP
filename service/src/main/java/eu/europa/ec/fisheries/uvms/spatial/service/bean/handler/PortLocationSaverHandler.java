@@ -11,6 +11,7 @@ import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.transaction.Transactional;
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.Map;
 
@@ -24,23 +25,19 @@ public class PortLocationSaverHandler extends AbstractSaverHandler implements Sa
     private PortLocationService portLocationService;
 
     @Override
-    protected void saveNewAreas(Map<String, Object> values, Date enabledOn) throws ServiceException {
-        try {
-            PortLocationDto portLocationDto = new PortLocationDto();
-            portLocationDto.setGeometry((Geometry) values.get("the_geom"));
-            portLocationDto.setCode((String) values.get("code"));
-            portLocationDto.setName((String) values.get("name"));
-            portLocationDto.setCountryCode((String) values.get("country_co"));
-            portLocationDto.setFishingPort((String) values.get("fishing_po"));
-            portLocationDto.setLandingPlace((String) values.get("landing_pl"));
-            portLocationDto.setCommercialPort((String) values.get("commercial"));
-            portLocationDto.setEnabled(true);
-            portLocationDto.setEnabledOn(enabledOn);
+    protected void saveNewAreas(Map<String, Object> values, Date enabledOn) throws ServiceException, UnsupportedEncodingException {
+        PortLocationDto portLocationDto = new PortLocationDto();
+        portLocationDto.setGeometry((Geometry) values.get("the_geom"));
+        portLocationDto.setCode(readStringProperty(values, "code"));
+        portLocationDto.setName(readStringProperty(values, "name"));
+        portLocationDto.setCountryCode(readStringProperty(values, "country_co"));
+        portLocationDto.setFishingPort(readStringProperty(values, "fishing_po"));
+        portLocationDto.setLandingPlace(readStringProperty(values, "landing_pl"));
+        portLocationDto.setCommercialPort(readStringProperty(values, "commercial"));
+        portLocationDto.setEnabled(true);
+        portLocationDto.setEnabledOn(enabledOn);
 
-            portLocationService.createPortLocation(portLocationDto);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        portLocationService.createPortLocation(portLocationDto);
     }
 
     @Override

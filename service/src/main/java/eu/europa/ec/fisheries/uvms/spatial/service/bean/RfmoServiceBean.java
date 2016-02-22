@@ -31,7 +31,7 @@ public class RfmoServiceBean implements RfmoService {
     @Override
     public long createRfmo(RfmoDto rfmoDto) throws ServiceException {
         RfmoEntity rfmoEntity = mapper.rfmoDtoToRfmoEntity(rfmoDto);
-        rfmoEntity = (RfmoEntity) repository.saveOrUpdateEntity(rfmoEntity);
+        rfmoEntity = (RfmoEntity) repository.createEntity(rfmoEntity);
         return rfmoEntity.getGid();
     }
 }
