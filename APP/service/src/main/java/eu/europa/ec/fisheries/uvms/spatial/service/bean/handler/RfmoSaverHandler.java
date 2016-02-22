@@ -11,6 +11,7 @@ import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.transaction.Transactional;
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.Map;
 
@@ -24,12 +25,12 @@ public class RfmoSaverHandler extends AbstractSaverHandler implements SaverHandl
     private RfmoService rfmoService;
 
     @Override
-    protected void saveNewAreas(Map<String, Object> values, Date enabledOn) throws ServiceException {
+    protected void saveNewAreas(Map<String, Object> values, Date enabledOn) throws ServiceException, UnsupportedEncodingException {
         RfmoDto rfmoDto = new RfmoDto();
         rfmoDto.setGeometry((Geometry) values.get("the_geom"));
-        rfmoDto.setCode((String) values.get("code"));
-        rfmoDto.setName((String) values.get("name"));
-        rfmoDto.setTuna((String) values.get("tuna"));
+        rfmoDto.setCode(readStringProperty(values, "code"));
+        rfmoDto.setName(readStringProperty(values, "name"));
+        rfmoDto.setTuna(readStringProperty(values, "tuna"));
         rfmoDto.setEnabled(true);
         rfmoDto.setEnabledOn(enabledOn);
 

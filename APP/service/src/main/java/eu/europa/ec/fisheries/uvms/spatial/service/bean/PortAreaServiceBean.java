@@ -58,7 +58,7 @@ public class PortAreaServiceBean implements PortAreaService {
     @Override
     public long createPortArea(PortAreaDto portAreaDto) throws ServiceException {
         PortAreasEntity portAreasEntity = mapper.portAreaDtoToPortAreasEntity(portAreaDto);
-        portAreasEntity = (PortAreasEntity) repository.saveOrUpdateEntity(portAreasEntity);
+        portAreasEntity = (PortAreasEntity) repository.createEntity(portAreasEntity);
         return portAreasEntity.getGid();
     }
 

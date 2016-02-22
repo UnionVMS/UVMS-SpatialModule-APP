@@ -44,7 +44,7 @@ public class EezServiceBean implements EezService {
     @Override
     public long createEzz(EezDto eezDto) throws ServiceException {
         EezEntity eezEntity = mapper.eezDtoToEezEntity(eezDto);
-        eezEntity = (EezEntity) repository.saveOrUpdateEntity(eezEntity);
+        eezEntity = (EezEntity) repository.createEntity(eezEntity);
         return eezEntity.getGid();
     }
 

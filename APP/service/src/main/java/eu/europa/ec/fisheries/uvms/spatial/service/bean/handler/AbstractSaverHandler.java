@@ -7,13 +7,14 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialService
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import org.opengis.feature.Property;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 public abstract class AbstractSaverHandler {
 
-    protected abstract void saveNewAreas(Map<String, Object> values, Date enabledOn) throws ServiceException;
+    protected abstract void saveNewAreas(Map<String, Object> values, Date enabledOn) throws ServiceException, UnsupportedEncodingException;
 
     protected abstract AreaDisableService getAreaDisableService();
 
@@ -38,6 +39,10 @@ public abstract class AbstractSaverHandler {
             resultMap.put(name, value);
         }
         return resultMap;
+    }
+
+    protected String readStringProperty(Map<String, Object> values, String propertyName) throws UnsupportedEncodingException {
+        return new String(((String) values.get(propertyName)).getBytes("ISO-8859-1"), "UTF-8");
     }
 
 }
