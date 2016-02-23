@@ -274,7 +274,9 @@
         "0-2": "#1a9641",
         "2-5": "#a6d96a",
         "5-8": "#fdae61",
-        "default": "#d7191c"
+        "default": "#d7191c",
+        "lineStyle": "solid",
+        "lineWidth": "2"
       }
     }
   },
@@ -298,7 +300,8 @@
       ],
       "userAreas": {
         "serviceLayerId": 5,
-        "areas": []
+        "areas": [
+        ]
       }
     },
     "additionalLayers": [
@@ -354,7 +357,8 @@
   "visibilitySettings": {
     "positions": {
       "popup": {
-        "values": [
+        "isAttributeVisible" : true,
+        "values" : [
           "fs",
           "extMark",
           "ircs",
@@ -371,7 +375,7 @@
           "source",
           "name"
         ],
-        "order": [
+        "order" : [
           "fs",
           "extMark",
           "ircs",
@@ -390,7 +394,8 @@
         ]
       },
       "labels": {
-        "values": [
+        "isAttributeVisible" : true,
+        "values" : [
           "fs",
           "extMark",
           "ircs",
@@ -407,7 +412,7 @@
           "source",
           "name"
         ],
-        "order": [
+        "order" : [
           "fs",
           "extMark",
           "ircs",
@@ -426,7 +431,7 @@
         ]
       },
       "table": {
-        "values": [
+        "values" : [
           "fs",
           "extMark",
           "ircs",
@@ -443,7 +448,7 @@
           "source",
           "name"
         ],
-        "order": [
+        "order" : [
           "fs",
           "extMark",
           "ircs",
@@ -464,7 +469,8 @@
     },
     "segments": {
       "popup": {
-        "values": [
+        "isAttributeVisible" : true,
+        "values" : [
           "fs",
           "extMark",
           "ircs",
@@ -476,7 +482,7 @@
           "cat",
           "name"
         ],
-        "order": [
+        "order" : [
           "fs",
           "extMark",
           "ircs",
@@ -490,7 +496,8 @@
         ]
       },
       "labels": {
-        "values": [
+        "isAttributeVisible" : true,
+        "values" : [
           "extMark",
           "ircs",
           "cfr",
@@ -502,7 +509,7 @@
           "fs",
           "name"
         ],
-        "order": [
+        "order" : [
           "extMark",
           "ircs",
           "cfr",
@@ -516,7 +523,7 @@
         ]
       },
       "table": {
-        "values": [
+        "values" : [
           "extMark",
           "ircs",
           "cfr",
@@ -528,7 +535,7 @@
           "fs",
           "name"
         ],
-        "order": [
+        "order" : [
           "extMark",
           "ircs",
           "cfr",
@@ -544,7 +551,7 @@
     },
     "tracks": {
       "table": {
-        "values": [
+        "values" : [
           "fs",
           "extMark",
           "ircs",
@@ -554,7 +561,7 @@
           "dur",
           "timeSea"
         ],
-        "order": [
+        "order" : [
           "fs",
           "extMark",
           "ircs",

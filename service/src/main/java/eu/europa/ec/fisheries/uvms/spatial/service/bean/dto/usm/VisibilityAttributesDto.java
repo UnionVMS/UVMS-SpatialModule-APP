@@ -1,5 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreType;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -12,6 +14,8 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class VisibilityAttributesDto {
 
+    private Boolean isAttributeVisible;
+
     @JsonProperty("order")
     private List<String> order;
 
@@ -20,9 +24,10 @@ public class VisibilityAttributesDto {
 
     public VisibilityAttributesDto(){}
 
-    public VisibilityAttributesDto(List<String> order, List<String> values) {
+    public VisibilityAttributesDto(List<String> order, List<String> values, Boolean isAttributeVisible) {
         this.order = order;
         this.values = values;
+        this.isAttributeVisible = isAttributeVisible;
     }
 
     @JsonProperty("order")
@@ -43,5 +48,15 @@ public class VisibilityAttributesDto {
     @JsonProperty("values")
     public void setValues(List<String> values) {
         this.values = values;
+    }
+
+    @JsonProperty("isAttributeVisible")
+    public Boolean isAttributeVisible() {
+        return isAttributeVisible;
+    }
+
+    @JsonProperty("isAttributeVisible")
+    public void setIsAttributeVisible(Boolean isAttributeVisible) {
+        this.isAttributeVisible = isAttributeVisible;
     }
 }
