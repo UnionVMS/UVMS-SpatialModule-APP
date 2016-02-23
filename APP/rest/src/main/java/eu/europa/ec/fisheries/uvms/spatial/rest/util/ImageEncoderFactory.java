@@ -34,9 +34,11 @@ public class ImageEncoderFactory {
     private static final String LINE = "line";
     private static final String POSITION_SVG = "/position.svg";
     private static final String SEGMENT_SVG = "/line.svg";
+    private static final String CLUSTER_SVG = "/cluster.svg";
     private static final String TRANSFORM = "transform";
     private static final String FILL = "fill:";
     private static final int LINE_HEIGHT = 12;
+    public static final String CIRCLE = "circle";
     private static Font FONT_BOLD = new Font("Arial", Font.BOLD, LINE_HEIGHT);
     private static Font FONT_NORMAL = new Font("Arial", Font.PLAIN, LINE_HEIGHT);
     private static int OFFSET = 0;
@@ -45,6 +47,15 @@ public class ImageEncoderFactory {
     private static final int WIDTH = 180;
 
     private ImageEncoderFactory(){}
+
+    public static BufferedImage renderCluster(String backGroundColor, String borderColor) throws TranscoderException, IOException {
+
+        log.debug("Rendering cluster");
+        Document cluster = createDocument(CLUSTER_SVG);
+        NamedNodeMap attributes = cluster.getElementById(CIRCLE).getAttributes();
+        attributes.getNamedItem("stroke").getFirstChild().setNodeValue(borderColor);
+        return getBufferedImage(cluster);
+    }
 
     public static BufferedImage renderSegment(String hexColor, String strokeDashArray, String scale) throws TranscoderException, IOException {
 
