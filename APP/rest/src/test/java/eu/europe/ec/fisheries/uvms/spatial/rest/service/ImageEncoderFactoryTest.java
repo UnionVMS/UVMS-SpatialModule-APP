@@ -5,6 +5,7 @@ import lombok.SneakyThrows;
 import org.apache.batik.transcoder.TranscoderException;
 import org.junit.Test;
 import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -20,11 +21,17 @@ public class ImageEncoderFactoryTest {
 
         BufferedImage position = getPosition("scale(0.3)");
         BufferedImage line = getLine("scale(1.3)");
+        BufferedImage cluster = getCluster();
 
         List<ImageEncoderFactory.LegendEntry> entries = new ArrayList<>();
         ImageEncoderFactory.LegendEntry legendEntry = new ImageEncoderFactory.LegendEntry();
         legendEntry.setMsg("Hello world!");
         legendEntry.setIcon(position);
+        entries.add(legendEntry);
+
+        legendEntry = new ImageEncoderFactory.LegendEntry();
+        legendEntry.setMsg("Hello Cluster!");
+        legendEntry.setIcon(cluster);
         entries.add(legendEntry);
 
         legendEntry = new ImageEncoderFactory.LegendEntry();
@@ -44,10 +51,16 @@ public class ImageEncoderFactoryTest {
 
     }
 
+    private BufferedImage getCluster() throws IOException, TranscoderException {
+        Document cluster = ImageEncoderFactory.createDocument("/cluster.svg");
+        NamedNodeMap attributes = cluster.getElementById("circle").getAttributes();
+        attributes.getNamedItem("stroke").getFirstChild().setNodeValue("#EE0000");
+        return ImageEncoderFactory.getBufferedImage(cluster);
+    }
+
     @Test
     @SneakyThrows
     public void test3() {
-
         BufferedImage position = getPosition("scale(1)");
         File outputfile = new File("test3.png");
         ImageIO.write(position, "PNG", outputfile);
