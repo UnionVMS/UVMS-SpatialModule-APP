@@ -4,6 +4,7 @@ import static org.apache.commons.lang3.StringUtils.*;
 
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.spatial.model.mapfish.request.Class;
+import eu.europa.ec.fisheries.uvms.spatial.model.mapfish.request.Cluster;
 import eu.europa.ec.fisheries.uvms.spatial.model.mapfish.request.Icons;
 import eu.europa.ec.fisheries.uvms.spatial.model.mapfish.response.ImageResponse;
 import eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured.LegendResource;
@@ -71,6 +72,17 @@ public class ImageResource extends UnionVMSResource {
 
             response.getMap().getVmspos().getColors().add(clazz.getColor().replace("#", EMPTY));
             temp.add(legendEntry);
+        }
+
+        Cluster cluster = icons.getPositions().getCluster();
+
+        if (cluster != null){
+
+            BufferedImage bufferedImage = ImageEncoderFactory.renderCluster(cluster.getBgcolor(), cluster.getBordercolor());
+            ImageEncoderFactory.LegendEntry clusterEntry = new ImageEncoderFactory.LegendEntry();
+            clusterEntry.setMsg(cluster.getText());
+            clusterEntry.setIcon(bufferedImage);
+            temp.add(clusterEntry);
         }
 
         String guid = UUID.randomUUID().toString();

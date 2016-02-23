@@ -1,8 +1,5 @@
 package eu.europa.ec.fisheries.uvms.spatial.model.mapfish.request;
 
-import java.lang.Object;
-import java.lang.Override;
-import java.lang.String;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,31 +19,36 @@ public class Positions {
 
     @JsonProperty("title")
     private String title;
+    @JsonProperty("cluster")
+    @Valid
+    private Cluster cluster;
     @JsonProperty("classes")
     @Valid
-    private List<Class> classes = new ArrayList<Class>();
+    private List<Class> classes = new ArrayList<>();
     @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private Map<String, Object> additionalProperties = new HashMap<>();
 
     /**
      * No args constructor for use in serialization
-     * 
+     *
      */
     public Positions() {
     }
 
     /**
-     * 
+     *
      * @param classes
      * @param title
+     * @param cluster
      */
-    public Positions(String title, List<Class> classes) {
+    public Positions(String title, Cluster cluster, List<Class> classes) {
         this.title = title;
+        this.cluster = cluster;
         this.classes = classes;
     }
 
     /**
-     * 
+     *
      * @return
      *     The title
      */
@@ -56,7 +58,7 @@ public class Positions {
     }
 
     /**
-     * 
+     *
      * @param title
      *     The title
      */
@@ -71,7 +73,32 @@ public class Positions {
     }
 
     /**
-     * 
+     *
+     * @return
+     *     The cluster
+     */
+    @JsonProperty("cluster")
+    public Cluster getCluster() {
+        return cluster;
+    }
+
+    /**
+     *
+     * @param cluster
+     *     The cluster
+     */
+    @JsonProperty("cluster")
+    public void setCluster(Cluster cluster) {
+        this.cluster = cluster;
+    }
+
+    public Positions withCluster(Cluster cluster) {
+        this.cluster = cluster;
+        return this;
+    }
+
+    /**
+     *
      * @return
      *     The classes
      */
@@ -81,7 +108,7 @@ public class Positions {
     }
 
     /**
-     * 
+     *
      * @param classes
      *     The classes
      */
@@ -117,7 +144,7 @@ public class Positions {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(title).append(classes).append(additionalProperties).toHashCode();
+        return new HashCodeBuilder().append(title).append(cluster).append(classes).append(additionalProperties).toHashCode();
     }
 
     @Override
@@ -129,7 +156,7 @@ public class Positions {
             return false;
         }
         Positions rhs = ((Positions) other);
-        return new EqualsBuilder().append(title, rhs.title).append(classes, rhs.classes).append(additionalProperties, rhs.additionalProperties).isEquals();
+        return new EqualsBuilder().append(title, rhs.title).append(cluster, rhs.cluster).append(classes, rhs.classes).append(additionalProperties, rhs.additionalProperties).isEquals();
     }
 
 }
