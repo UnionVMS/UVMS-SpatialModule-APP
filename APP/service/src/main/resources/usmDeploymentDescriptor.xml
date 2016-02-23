@@ -2,52 +2,33 @@
 <ns2:deployApplicationRequest  xmlns:ns2="module.user.wsdl.fisheries.ec.europa.eu">
     <method>DEPLOY_APPLICATION</method>
     <application>
-        <name>${spatial.name}</name>
-        <description>Deployment descriptor of module "${spatial.name}" version "@application.version@".</description>
+        <name>Spatial</name>
+        <description>Deployment descriptor of module "Spatial" version "@application.version@".</description>
         <parent>Union VMS</parent>
-        <retainDatasets>true</retainDatasets>
 
 
-        <feature>
-            <name>MANAGE_ANY_USER_AREA</name>
-            <description>Allows you to to list/update/delete any user area, no matter who has created it.</description>
-            <group>${spatial.name}</group>
-        </feature>
         <feature>
             <name>MANAGE_SYSTEM_SPATIAL_CONFIGURATIONS</name>
             <description>Allows you to view/update spatial configurations located under the Admin tab</description>
-            <group>${spatial.name}</group>
+            <group>spatial</group>
         </feature>
-
 
         <feature>
             <name>MANAGE_USER_DEFINED_AREAS</name>
             <description>Allows you to create, view, update and delete user defined areas.</description>
-            <group>${spatial.name}</group>
+            <group>spatial</group>
         </feature>
 
         <feature>
             <name>MANAGE_BOOKMARKS</name>
             <description>Allows you to create, view, update and delete bookmarks.</description>
-            <group>${spatial.name}</group>
+            <group>spatial</group>
         </feature>
 
         <feature>
             <name>USE_SPATIAL_CONFIGURATIONS</name>
             <description>Allows you to read spatial configurations while creating/running reports</description>
-            <group>${spatial.name}</group>
-        </feature>
-
-        <feature>
-            <name>SHARE_USER_DEFINED_AREAS</name>
-            <description>Allows you to share your user defined areas within the available to your profile, scopes.</description>
-            <group>${spatial.name}</group>
-        </feature>
-
-        <feature>
-            <name>CREATE_USER_AREA_DATASET</name>
-            <description>Allows you to set create a USM dataset, for given user defined area, which later can be used as scope data restriction.</description>
-            <group>${spatial.name}</group>
+            <group>spatial</group>
         </feature>
 
         <option>
@@ -331,8 +312,8 @@
                 "2-5": "#a6d96a",
                 "5-8": "#fdae61",
                 "default": "#d7191c",
-				"lineStyle": "solid",
-				"lineWidth": 2
+                "lineStyle": "solid",
+                "lineWidth": "2"
             }
         }
     },
@@ -413,6 +394,7 @@
     "visibilitySettings": {
         "positions": {
             "popup": {
+                "isAttributeVisible" : true,
                 "values" : [
                     "fs",
                     "extMark",
@@ -449,6 +431,7 @@
                 ]
             },
             "labels": {
+                "isAttributeVisible" : true,
                 "values" : [
                     "fs",
                     "extMark",
@@ -523,6 +506,7 @@
         },
         "segments": {
             "popup": {
+                "isAttributeVisible" : true,
                 "values" : [
                     "fs",
                     "extMark",
@@ -549,6 +533,7 @@
                 ]
             },
             "labels": {
+                "isAttributeVisible" : true,
                 "values" : [
                     "extMark",
                     "ircs",
