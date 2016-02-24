@@ -10,13 +10,13 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Coordinate;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialFeaturesEnum;
-import eu.europa.ec.fisheries.uvms.spatial.rest.type.FilterType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.AreaLocationDtoMapper;
+import eu.europa.ec.fisheries.uvms.spatial.rest.type.FilterType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.type.geocoordinate.UserAreaCoordinateType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.UserAreaService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.AreaDetailsGeoJsonDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.UserAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.AreaDetailsGeoJsonDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.UserAreaGeoJsonDto;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -97,9 +97,6 @@ public class UserAreaResource extends UnionVMSResource {
         } else {
             return createErrorResponse("user_areas_management_not_allowed");
         }
-
-
-
     }
 
     @DELETE
