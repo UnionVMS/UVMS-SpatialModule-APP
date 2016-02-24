@@ -13,7 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static eu.europa.ec.fisheries.uvms.common.DateUtils.*;
+import static eu.europa.ec.fisheries.uvms.common.DateUtils.UI_FORMATTER;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @Mapper
@@ -33,7 +33,7 @@ public abstract class UserAreaMapper {
             @Mapping(target = "startDate", expression = "java(stringToDate(userAreaDto.getStartDate()))"),
             @Mapping(target = "endDate", expression = "java(stringToDate(userAreaDto.getEndDate()))"),
             @Mapping(target = "scopeSelection", expression = "java(fromScopeArrayToEntity(userAreaDto.getScopeSelection()))"),
-            @Mapping(target = "datasetName", expression = "java(userAreaDto.getDatasetName())")
+            @Mapping(target = "datasetName", expression = "java(userAreaDto.getDatasetName())"),
     })
     public abstract UserAreasEntity fromDtoToEntity(UserAreaGeoJsonDto userAreaDto);
 

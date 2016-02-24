@@ -112,6 +112,11 @@ public class UserAreasEntity implements Serializable {
     @ColumnAliasName(aliasName ="scopeSelection")
     private Set<UserScopeEntity> scopeSelection;
 
+    @Convert(converter = CharBooleanConverter.class)
+    @Column(name = "enabled", nullable = false, length = 1)
+    @ColumnAliasName(aliasName ="enabled")
+    private Boolean enabled = true;
+
     public UserAreasEntity() {
     }
 
@@ -195,10 +200,10 @@ public class UserAreasEntity implements Serializable {
         this.userName = userName;
     }
 
-
     public Set<UserScopeEntity> getScopeSelection() {
         return scopeSelection;
     }
+
 
     public void setScopeSelection(Set<UserScopeEntity> scopeSelection) {
         if (scopeSelection != null) {
@@ -209,12 +214,20 @@ public class UserAreasEntity implements Serializable {
         }
     }
 
-
     public String getDatasetName() {
         return datasetName;
     }
 
+
     public void setDatasetName(String datasetName) {
         this.datasetName = datasetName;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 }
