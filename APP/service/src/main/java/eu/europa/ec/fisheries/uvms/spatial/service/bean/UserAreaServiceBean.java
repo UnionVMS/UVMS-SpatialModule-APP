@@ -52,7 +52,7 @@ public class UserAreaServiceBean implements UserAreaService {
         UserAreasEntity persistedEntity = (UserAreasEntity) repository.createEntity(userAreasEntity);
 
         if (StringUtils.isNotBlank(persistedEntity.getDatasetName())) {
-            usmService.createDataset(USMSpatial.APPLICATION_NAME, persistedEntity.getDatasetName(),createDescriminator(persistedEntity), USMSpatial.USM_DATASET_CATEGORY,USMSpatial.USM_DATASET_DESCRIPTION);
+            usmService.createDataset(USMSpatial.APPLICATION_NAME, persistedEntity.getDatasetName(), createDescriminator(persistedEntity), USMSpatial.USM_DATASET_CATEGORY, USMSpatial.USM_DATASET_DESCRIPTION);
         }
         return persistedEntity.getGid();
     }
@@ -68,7 +68,7 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     private String createDescriminator(UserAreasEntity persistedEntity) {
-        return  AreaType.USERAREA.value() + USMSpatial.DELIMITER + persistedEntity.getGid();
+        return AreaType.USERAREA.value() + USMSpatial.DELIMITER + persistedEntity.getGid();
     }
 
 
@@ -80,7 +80,7 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     @Override
-    public long updateUserArea(UserAreaGeoJsonDto userAreaDto, String userName,  boolean isPowerUser) throws ServiceException {
+    public long updateUserArea(UserAreaGeoJsonDto userAreaDto, String userName, boolean isPowerUser) throws ServiceException {
         Long id = userAreaDto.getId();
         validateGid(id);
 
@@ -89,11 +89,11 @@ public class UserAreaServiceBean implements UserAreaService {
 
         UserAreasEntity persistentUserArea = persistentUserAreas.get(0);
 
-        if (!persistentUserArea.getUserName().equals(userName)  && !isPowerUser) {
+        if (!persistentUserArea.getUserName().equals(userName) && !isPowerUser) {
             throw new ServiceException("user_not_authorised");
         }
 
-        if (!userAreaDto.getDatasetName().equals(persistentUserArea.getDatasetName())){
+        if ((userAreaDto.getDatasetName() != null && !userAreaDto.getDatasetName().equals(persistentUserArea.getDatasetName()))) {
             updateUSMDataset(persistentUserArea, userAreaDto.getDatasetName());
         }
 
