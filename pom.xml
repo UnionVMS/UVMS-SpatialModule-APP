@@ -19,34 +19,6 @@
         </developer>
     </developers>
 
-    <properties>
-        <!-- The spatial name is used as a common point to rename the application alias visible in USM-->
-        <spatial.name>Spatial</spatial.name>
-        <spatial.model>1.0.3-SNAPSHOT</spatial.model>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <javaee.version>7.0</javaee.version>
-        <sl4j.version>1.7.12</sl4j.version>
-        <logback.version>1.1.2</logback.version>
-        <mapstruct.version>1.0.0.Final</mapstruct.version>
-        <jackson.version>2.6.0</jackson.version>
-        <logback.core.version>1.1.2</logback.core.version>
-        <asset.module.version>1.0.0</asset.module.version>
-        <movement.model.version>1.0.0</movement.model.version>
-        <application.name>${project.parent.artifactId}</application.name>
-        <application.version>${project.parent.version}</application.version>
-        <application.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}.log</application.logfile>
-        <application.error.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}-error.log</application.error.logfile>
-        <application.logfile.boot>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}-boot.log</application.logfile.boot>
-        <hibernate.version>4.3.5.Final</hibernate.version>
-        <hibernate-spatial.version>4.3</hibernate-spatial.version>
-        <geotools.version>14-M1</geotools.version>
-        <uvms.commons.version>1.6-SNAPSHOT</uvms.commons.version>
-        <hibernate.validator.version>5.2.1.Final</hibernate.validator.version>
-        <usm4uvms.version>1.0.1-SNAPSHOT</usm4uvms.version>
-        <usm_deployment_descriptor_force_update>false</usm_deployment_descriptor_force_update>
-        <release.branch.name>uvms-1.0.0</release.branch.name>
-    </properties>
 
     <dependencyManagement>
 
@@ -124,8 +96,8 @@
     </repositories>
 
     <modules>
-        <module>APP</module>
 		<module>APP/model</module>
+        <module>APP</module>
         <module>LIQUIBASE</module>
     </modules>
 </project>
