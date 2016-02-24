@@ -90,7 +90,7 @@ public class UserAreaResource extends UnionVMSResource {
             }
 
             boolean isPowerUser = isPowerUser(request);
-            log.info("{} is requesting updateUserArea(...), with a ID={}. Spatial power user: {}", userName, userAreaGeoJsonDto.getId(), isPowerUser);
+            log.info("{} is requesting updateUserArea(...), with a ID={}. Spatial power user: {}", userName, Long.toString(userAreaGeoJsonDto.getId()), isPowerUser);
 
             long gid = userAreaService.updateUserArea(userAreaGeoJsonDto, request.getRemoteUser(), isPowerUser);
             return createSuccessResponse(gid);

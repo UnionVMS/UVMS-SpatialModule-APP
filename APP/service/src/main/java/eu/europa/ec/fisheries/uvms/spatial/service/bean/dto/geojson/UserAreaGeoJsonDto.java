@@ -1,7 +1,8 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson;
 
 import eu.europa.ec.fisheries.uvms.common.DateUtils;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.GeoJsonDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 
 import java.util.Date;
 import java.util.List;
@@ -69,17 +70,20 @@ public class UserAreaGeoJsonDto extends GeoJsonDto {
     }
 
 
-
     public Long getId() {
-        Object gid = properties.get(ID);
-        if (gid != null) {
-            try {
-                return Long.valueOf((String)gid);
-            } catch (NumberFormatException nfe ) {
-                //do nothing, later we return null anyway
-            }
-        }
+        try {
+            Object gid = properties.get(ID);
+            if (gid != null) {
+                if (gid instanceof Number) {
+                    return ((Number) gid).longValue();
+                } else {
+                    return Long.valueOf((String) gid);
+                }
 
+            }
+        } catch (NumberFormatException nfe) {
+            throw new SpatialServiceException(SpatialServiceErrors.INVALID_USER_AREA_ID, nfe);
+        }
         return null;
     }
 
@@ -98,7 +102,7 @@ public class UserAreaGeoJsonDto extends GeoJsonDto {
         return returnList;
     }
 
-    public void setScopeSelection(List<String> scopeSelection){
+    public void setScopeSelection(List<String> scopeSelection) {
         properties.put(SCOPE_SELECTION, scopeSelection);
     }
 
