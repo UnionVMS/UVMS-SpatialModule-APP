@@ -20,18 +20,6 @@
     </developers>
 
 
-    <dependencyManagement>
-
-        <dependencies>
-         
-
-        </dependencies>
-
-    </dependencyManagement>
-
-    <dependencies>
-
-    </dependencies>
 
     	
     <distributionManagement>
@@ -56,27 +44,6 @@
     </scm>
 
 
-    <build>
-        <pluginManagement>
-            <plugins>
-                <!-- compiler plugin -->
-               
-            </plugins>
-        </pluginManagement>
-
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-plugin-plugin</artifactId>
-                <version>3.4</version>
-                <configuration>
-                    <goalPrefix>plugin</goalPrefix>
-                    <outputDirectory>target/dir</outputDirectory>
-                </configuration>
-            </plugin>
-    
-        </plugins>
-    </build>
 
     <!-- add repositories for JTS and Hibernate Spatial and Hibernate (JBoss) -->
     <repositories>
