@@ -26,9 +26,6 @@ import java.util.Map;
 import static com.google.common.collect.Lists.newArrayList;
 import static eu.europa.ec.fisheries.uvms.spatial.util.SpatialUtils.convertToPointInWGS84;
 
-/**
- * Created by Michal Kopyczok on 03-Sep-15.
- */
 @Stateless
 @Local(ClosestLocationService.class)
 @Transactional
