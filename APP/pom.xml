@@ -4,7 +4,7 @@
 
     <groupId>eu.europa.ec.fisheries.uvms.spatial</groupId>
     <artifactId>spatial</artifactId>
-    <version>0.4.2-SNAPSHOT</version>
+    <version>0.4.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <description>Maven projekt-archetype for UnionVms modules</description>
 
@@ -82,12 +82,7 @@
                 <artifactId>service</artifactId>
                 <version>${project.parent.version}</version>
             </dependency>
-
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>spatial-model</artifactId>
-                <version>${project.parent.version}</version>
-            </dependency>
+ 
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
