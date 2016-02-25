@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.mapper;
 
+import com.google.common.collect.Sets;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserScopeEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.UserAreaGeoJsonDto;
@@ -44,11 +45,10 @@ public abstract class UserAreaMapper {
         return UI_FORMATTER.parseDateTime(date).toDate();
     }
 
-    protected Set<UserScopeEntity> fromScopeArrayToEntity(List<String> scopeSelection) {
-        Set<UserScopeEntity> userScopeEntities = null;
+    public static Set<UserScopeEntity> fromScopeArrayToEntity(List<String> scopeSelection) {
+        Set<UserScopeEntity> userScopeEntities = Sets.newHashSet();
 
         if (scopeSelection != null) {
-            userScopeEntities = new HashSet<>(scopeSelection.size());
             for (String scope : scopeSelection) {
                 UserScopeEntity userScopeEntity = new UserScopeEntity();
                 userScopeEntity.setName(scope);
