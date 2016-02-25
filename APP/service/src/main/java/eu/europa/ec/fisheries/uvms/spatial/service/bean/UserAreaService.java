@@ -28,7 +28,7 @@ public interface UserAreaService {
 
 	List<UserAreaDto> searchUserAreasByCriteria(String userName, String scopeName, String searchCriteria, boolean isPowerUser);
 
-	long storeUserArea(UserAreaGeoJsonDto userAreaDto, String remoteUser) throws ServiceException;
+	long storeUserArea(UserAreaGeoJsonDto userAreaDto, String userName) throws ServiceException;
 
 	long updateUserArea(UserAreaGeoJsonDto userAreaDto, String userName) throws ServiceException;
 
