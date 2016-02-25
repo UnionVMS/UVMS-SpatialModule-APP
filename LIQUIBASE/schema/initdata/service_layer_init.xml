@@ -14,8 +14,8 @@
 			<column name="provider_format_id" valueNumeric="2" />
 			<column name="geo_name" value="uvms:eez" />
 			<column name="srs_code" valueNumeric="4326" />
-			<column name="short_copyright" value="Powered by EEZ Master" />
-			<column name="long_copyright" value="Powered by EEZ Master" />
+			<column name="short_copyright" value="EEZ by UnionVMS" />
+			<column name="long_copyright" value="Long copyright EEZ by UnionVMS" />
 			<column name="is_internal" value="Y" />			
 			<column name="style_geom" value="eez" />
             <column name="style_label" value="eez_label" />
@@ -29,8 +29,8 @@
 			<column name="provider_format_id" valueNumeric="2" />
 			<column name="geo_name" value="uvms:rfmo" />
 			<column name="srs_code" valueNumeric="4326" />
-			<column name="short_copyright" value="Powered by RFMO Master" />
-			<column name="long_copyright" value="Powered by RFMO Master" />
+			<column name="short_copyright" value="RFMO by UnionVMS" />
+			<column name="long_copyright" value="Long copyright RFMO by UnionVMS" />
 			<column name="is_internal" value="Y" />
 			<column name="style_geom" value="rfmo" />
             <column name="style_label" value="rfmo_label" />
@@ -44,8 +44,8 @@
 			<column name="provider_format_id" valueNumeric="2" />
 			<column name="geo_name" value="uvms:countries" />
 			<column name="srs_code" valueNumeric="4326" />
-			<column name="short_copyright" value="Powered by COUNTRY Master" />
-			<column name="long_copyright" value="Powered by COUNTRY Master" />
+			<column name="short_copyright" value="COUNTRIES by UnionVMS" />
+			<column name="long_copyright" value="Long copyright COUNTRIES by UnionVMS" />
 			<column name="is_internal" value="Y" />
 			<column name="subtype" value="others"/>
 		</insert>
@@ -56,8 +56,8 @@
 			<column name="provider_format_id" valueNumeric="2" />
 			<column name="geo_name" value="uvms:port" />
 			<column name="srs_code" valueNumeric="4326" />
-			<column name="short_copyright" value="Powered by PORT Master" />
-			<column name="long_copyright" value="Powered by PORT Master" />
+			<column name="short_copyright" value="PORTS by UnionVMS" />
+			<column name="long_copyright" value="Long copyright PORTS by UnionVMS" />
 			<column name="is_internal" value="Y" />
 			<column name="style_geom" value="port"/>
             <column name="style_label" value="port_label"/>
@@ -71,8 +71,8 @@
 			<column name="provider_format_id" valueNumeric="2" />
 			<column name="geo_name" value="uvms:userareas" />
 			<column name="srs_code" valueNumeric="4326" />
-			<column name="short_copyright" value="Powered by User Areas" />
-			<column name="long_copyright" value="Powered by User Areas" />
+			<column name="short_copyright" value="USER AREAS by UnionVMS" />
+			<column name="long_copyright" value="Long copyright USER AREAS by UnionVMS" />
 			<column name="is_internal" value="Y" />
 			<column name="style_geom" value="userareas"/>
             <column name="style_label_geom" value="userareas_label_geom"/>
@@ -128,12 +128,13 @@
 			<column name="name" value="PortAreas" />
 			<column name="layer_desc" value="Port Areas" />
 			<column name="provider_format_id" valueNumeric="2" />
-			<column name="geo_name" value="uvms:port" />
+			<column name="geo_name" value="uvms:port_area" />
 			<column name="srs_code" valueNumeric="4326" />
-			<column name="short_copyright" value="Powered by PORT Master" />
-			<column name="long_copyright" value="Powered by PORT Master" />
+			<column name="short_copyright" value="PORT AREAS by UnionVMS" />
+			<column name="long_copyright" value="Long copyright PORT AREAS by UnionVMS" />
 			<column name="is_internal" value="Y" />
 			<column name="style_geom" value="port_area"/>
+			<column name="style_label" value="port_area_label"/>
             <column name="style_label_geom" value="port_area_label_geom"/>
 			<column name="subtype" value="portarea"/>
 		</insert>
