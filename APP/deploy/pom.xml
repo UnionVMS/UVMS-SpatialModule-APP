@@ -10,7 +10,7 @@
         <groupId>eu.europa.ec.fisheries.uvms.spatial</groupId>
         <artifactId>spatial</artifactId>
         <version>0.4.2-SNAPSHOT</version>
-    </parent>
+    </parent> 
 
     <build>
         <finalName>${project.name}</finalName>
