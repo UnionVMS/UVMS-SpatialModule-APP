@@ -6,6 +6,7 @@ import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.UserScopeEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.constants.USMSpatial;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
@@ -26,6 +27,7 @@ import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static eu.europa.ec.fisheries.uvms.spatial.util.ColumnAliasNameHelper.getFieldMap;
@@ -93,17 +95,26 @@ public class UserAreaServiceBean implements UserAreaService {
             throw new ServiceException("user_not_authorised");
         }
 
-        if ((userAreaDto.getDatasetName() != null && !userAreaDto.getDatasetName().equals(persistentUserArea.getDatasetName()))) {
+        if (userAreaDto.getDatasetName() != null && !userAreaDto.getDatasetName().equals(persistentUserArea.getDatasetName())) {
             updateUSMDataset(persistentUserArea, userAreaDto.getDatasetName());
         }
 
         UserAreasEntity userAreasEntityToUpdate = prepareNewEntity(userAreaDto, userName);
         userAreasEntityToUpdate.setCreatedOn(persistentUserArea.getCreatedOn());
         userAreasEntityToUpdate.setGid(persistentUserArea.getGid());
+        userAreasEntityToUpdate.setScopeSelection(createScopeSelection(userAreaDto, persistentUserArea));
 
         UserAreasEntity persistedUpdatedEntity = (UserAreasEntity) repository.updateEntity(userAreasEntityToUpdate);
 
         return persistedUpdatedEntity.getGid();
+    }
+
+    //BUG FIX: Caused by: org.hibernate.HibernateException: A collection with cascade="all-delete-orphan" was no longer referenced by the owning entity instance: eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity.scopeSelection
+    private Set<UserScopeEntity> createScopeSelection(UserAreaGeoJsonDto userAreaDto, UserAreasEntity persistentUserArea) {
+        Set<UserScopeEntity> scopeSelection = persistentUserArea.getScopeSelection();
+        scopeSelection.clear();
+        scopeSelection.addAll(UserAreaMapper.fromScopeArrayToEntity(userAreaDto.getScopeSelection()));
+        return scopeSelection;
     }
 
     private void updateUSMDataset(UserAreasEntity oldDatasetName, String newDatasetName) throws ServiceException {
