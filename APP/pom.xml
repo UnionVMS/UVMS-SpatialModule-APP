@@ -4,7 +4,7 @@
 
     <groupId>eu.europa.ec.fisheries.uvms.spatial</groupId>
     <artifactId>spatial</artifactId>
-    <version>0.4.1</version>
+    <version>0.4.2-SNAPSHOT</version>
     <packaging>pom</packaging>
     <description>Maven projekt-archetype for UnionVms modules</description>
 
@@ -425,7 +425,7 @@
     <scm>
 
 		<!--connection>scm:svn:https://webgate.ec.europa.eu/CITnet/svn/UNIONVMS/tags/spatial-1.0.0.final</connection-->
-		<developerConnection>scm:svn:https://webgate.ec.europa.eu/CITnet/svn/UNIONVMS/tags/Spatial/spatial-0.4.1</developerConnection>
+		<developerConnection>scm:svn:https://webgate.ec.europa.eu/CITnet/svn/UNIONVMS/trunk/Modules/Spatial/</developerConnection>
 		<!--url>https://webgate.ec.europa.eu/CITnet/svn/UNIONVMS/tags/spatial-1.0.0.final</url-->
        
     </scm>
