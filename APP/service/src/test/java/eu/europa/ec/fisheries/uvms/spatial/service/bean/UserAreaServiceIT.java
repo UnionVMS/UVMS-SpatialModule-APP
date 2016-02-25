@@ -1,20 +1,22 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.List;
-
-import javax.ejb.EJB;
-
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.io.ParseException;
+import com.vividsolutions.jts.io.WKTReader;
+import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Coordinate;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.UserAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.UserAreaGeoJsonDto;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Coordinate;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.UserAreaDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
+import javax.ejb.EJB;
+import java.util.List;
+import java.util.UUID;
+
+import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
 public class UserAreaServiceIT extends AbstractArquillianIT {
@@ -82,4 +84,40 @@ public class UserAreaServiceIT extends AbstractArquillianIT {
 		assertNotNull(userAreaLayer);
 		assertTrue(userAreaLayer.getIdList().isEmpty());
 	}
+
+	@Test
+	public void shouldCreateAndUpdateUserArea() throws ServiceException, ParseException {
+		// Given
+		UserAreaGeoJsonDto userAreaDto = createUserArea("name", UUID.randomUUID().toString(), "desc", null);
+
+		// When
+		Long userAreaId = userAreaService.storeUserArea(userAreaDto, "rep_power");
+
+		// Then
+		assertNotNull(userAreaId);
+
+
+		// Given
+		userAreaDto = createUserArea("updated name", "updated-" + UUID.randomUUID().toString(), "updated desc", new Long(userAreaId));
+
+		// When
+		userAreaId = userAreaService.updateUserArea(userAreaDto, "rep_power");
+
+		// Then
+		assertNotNull(userAreaId);
+	}
+
+	private UserAreaGeoJsonDto createUserArea(String name, String datasetName, String desc, Long gid) throws ParseException {
+		Geometry geometry = new WKTReader().read("MULTIPOLYGON(((1 1,5 1,5 5,1 5,1 1),(2 2, 3 2, 3 3, 2 3,2 2)),((3 3,6 2,6 4,3 3)))");
+		geometry.setSRID(4326);
+
+		UserAreaGeoJsonDto userAreaDto = new UserAreaGeoJsonDto();
+		userAreaDto.setGeometry(geometry);
+		userAreaDto.setId(gid);
+		userAreaDto.setName(name);
+		userAreaDto.setDatasetName(datasetName);
+		userAreaDto.setDesc(desc);
+		return userAreaDto;
+	}
+
 }
