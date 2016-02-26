@@ -134,10 +134,10 @@ public class MapConfigServiceTest {
 
     private List<ServiceLayerEntity> getServiceLayers() {
         List<ServiceLayerEntity> serviceLayerEntities = new ArrayList<ServiceLayerEntity>();
-        serviceLayerEntities.add(getServiceLayerEntity("OSM", "others", 4));
-        serviceLayerEntities.add(getServiceLayerEntity("WMS", "sysarea", 1));
-        serviceLayerEntities.add(getServiceLayerEntity("WMS", "sysarea", 2));
-        serviceLayerEntities.add(getServiceLayerEntity("WMS", "sysarea", 7));
+        serviceLayerEntities.add(getServiceLayerEntity("OSM", 4));
+        serviceLayerEntities.add(getServiceLayerEntity("WMS",  1));
+        serviceLayerEntities.add(getServiceLayerEntity("WMS",  2));
+        serviceLayerEntities.add(getServiceLayerEntity("WMS",  7));
         return serviceLayerEntities;
     }
 
@@ -163,13 +163,12 @@ public class MapConfigServiceTest {
         return new DisplayProjectionDto(3857, CoordinatesFormat.DDM, ScaleBarUnits.NAUTICAL);
     }
 
-    private ServiceLayerEntity getServiceLayerEntity(String serviceType, String groupType, int id) {
+    private ServiceLayerEntity getServiceLayerEntity(String serviceType, int id) {
         ServiceLayerEntity serviceLayerEntity = new ServiceLayerEntity();
         ProviderFormatEntity providerFormatEntity = new ProviderFormatEntity();
         providerFormatEntity.setServiceType(serviceType);
         serviceLayerEntity.setProviderFormat(providerFormatEntity);
         AreaLocationTypesEntity areaLocationTypesEntity = new AreaLocationTypesEntity();
-        areaLocationTypesEntity.setAreaGroupType(groupType);
         serviceLayerEntity.setAreaType(areaLocationTypesEntity);
         serviceLayerEntity.setId(id);
         serviceLayerEntity.setName(serviceType);
@@ -184,7 +183,7 @@ public class MapConfigServiceTest {
         entityOne.setIsBackground(true);
         entityOne.setLayerOrder(3);
         entityOne.setSqlFilter("Test filter");
-        entityOne.setServiceLayer(getServiceLayerEntity("OSM", "others", 4));
+        entityOne.setServiceLayer(getServiceLayerEntity("OSM", 4));
 
         // second object
         ReportConnectServiceAreasEntity entityTwo = new ReportConnectServiceAreasEntity();
@@ -192,7 +191,7 @@ public class MapConfigServiceTest {
         entityTwo.setIsBackground(true);
         entityTwo.setLayerOrder(1);
         entityTwo.setSqlFilter("Test filter");
-        entityTwo.setServiceLayer(getServiceLayerEntity("WMS", "sysarea", 1));
+        entityTwo.setServiceLayer(getServiceLayerEntity("WMS",  1));
 
         //third object
         ReportConnectServiceAreasEntity entityThree = new ReportConnectServiceAreasEntity();
@@ -200,7 +199,7 @@ public class MapConfigServiceTest {
         entityThree.setIsBackground(false);
         entityThree.setLayerOrder(2);
         entityThree.setSqlFilter("Test filter");
-        entityThree.setServiceLayer(getServiceLayerEntity("OSM", "others", 2));
+        entityThree.setServiceLayer(getServiceLayerEntity("OSM",2));
 
         return Arrays.asList(entityOne, entityTwo, entityThree);
     }

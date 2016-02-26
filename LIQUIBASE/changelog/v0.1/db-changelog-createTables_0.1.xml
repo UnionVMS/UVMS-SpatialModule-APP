@@ -8,8 +8,6 @@
     <include file="\schema\tables\report_layer_config.xml"/>
     <include file="\schema\tables\report_connect_service_areas.xml"/>
     <include file="\schema\tables\report_connect_spatial.xml"/>
-    <include file="\schema\tables\area_connect_group.xml"/>
-    <include file="\schema\tables\area_group.xml"/>
     <include file="\schema\tables\area_status.xml"/>
     <include file="\schema\tables\area_location_types.xml"/>
     <include file="\schema\tables\bookmark.xml"/>

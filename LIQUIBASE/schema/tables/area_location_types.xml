@@ -24,7 +24,6 @@
 			<column name="is_location" type="BPCHAR(1)">
                 <constraints nullable="false"/>
             </column>
-            <column name="area_group_type" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
     
@@ -32,8 +31,4 @@
         <addUniqueConstraint columnNames="type_name" constraintName="area_location_types_type_name_key" tableName="area_location_types"/>
     </changeSet>
     
-     <changeSet author="padhyad" id="1439890745706-54">
-        <addForeignKeyConstraint baseColumnNames="area_type_id" baseTableName="area_connect_group" constraintName="area_connect_group_area_type_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="area_location_types"/>
-    </changeSet>
-
 </databaseChangeLog>

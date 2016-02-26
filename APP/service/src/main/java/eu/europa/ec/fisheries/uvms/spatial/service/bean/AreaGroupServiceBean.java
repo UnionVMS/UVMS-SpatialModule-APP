@@ -1,7 +1,5 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import eu.europa.ec.fisheries.uvms.spatial.entity.AreaConnectGroupEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.AreaGroupEntity;
 import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaGroup.AreaGroupDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaGroup.AreaGroupTypeDto;
@@ -36,7 +34,7 @@ public class AreaGroupServiceBean implements AreaGroupService {
     @SneakyThrows
     public List<AreaGroupDto> getAreaGroups(String userName) {
         List<AreaGroupDto> areaGroupDtos = new ArrayList<AreaGroupDto>();
-        List<AreaGroupEntity> areaGroups = repository.getAreaGroups(userName);
+       /* List<AreaGroupEntity> areaGroups = repository.getAreaGroups(userName);
         if (areaGroups == null || areaGroups.isEmpty()) {
             return areaGroupDtos;
         }
@@ -45,22 +43,22 @@ public class AreaGroupServiceBean implements AreaGroupService {
             Map<AreaConnectGroupEntity, List<String>> areaGroupMap = getAreaGroupMap(areaConnectGroups);
             List<AreaGroupTypeDto> areaGroupTypeDtos = getAreaGroupTypes(areaGroupMap);
             areaGroupDtos.add(new AreaGroupDto(areaGroupEntity.getId(), areaGroupEntity.getGroupName(), areaGroupEntity.getDescription(), areaGroupTypeDtos));
-        }
+        }*/
         return areaGroupDtos;
     }
 
     @Override
     @SneakyThrows
     public void deleteAreaGroup(Long groupId) {
-        AreaGroupEntity areaGroupEntity = repository.getAreaGroup(groupId);
+       /* AreaGroupEntity areaGroupEntity = repository.getAreaGroup(groupId);
         if (areaGroupEntity != null) {
             repository.deleteEntity(areaGroupEntity);
-        }
+        }*/
     }
 
-    private List<AreaGroupTypeDto> getAreaGroupTypes(Map<AreaConnectGroupEntity, List<String>> areaGroupMap) {
+   /*   private List<AreaGroupTypeDto> getAreaGroupTypes(Map<AreaConnectGroupEntity, List<String>> areaGroupMap) {
         List<AreaGroupTypeDto> areaGroupTypeDtos = new ArrayList<>();
-        for (Map.Entry<AreaConnectGroupEntity, List<String>> entry : areaGroupMap.entrySet()) {
+      for (Map.Entry<AreaConnectGroupEntity, List<String>> entry : areaGroupMap.entrySet()) {
             String tableName = entry.getKey().getAreaLocationTypes().getAreaDbTable();
             String gids = getIds(entry.getValue());
             if (gids == null) {
@@ -90,7 +88,7 @@ public class AreaGroupServiceBean implements AreaGroupService {
         }
         return areaGroupMap;
     }
-
+    */
     private String getIds(List<String> ids) {
         StringBuilder gids = new StringBuilder();
         Iterator<String> iterator = ids.iterator();
