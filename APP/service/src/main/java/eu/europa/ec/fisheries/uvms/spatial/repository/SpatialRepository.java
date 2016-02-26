@@ -30,6 +30,8 @@ public interface SpatialRepository extends DAO {
 
     List<AreaLayerDto> findSystemAreaLayerMapping();
 
+    List<AreaLayerDto> findSystemAreaAndLocationLayerMapping();
+
     List<UserAreaLayerDto> findUserAreaLayerMapping();
 
     List<Map<String, String>> findAreaByFilter(String areaType, String filter);
