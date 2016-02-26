@@ -74,6 +74,11 @@ public class AreaDao extends CommonDao {
     }
 
     @SuppressWarnings("unchecked")
+    public List<AreaLayerDto> findSystemAreaAndLocationLayerMapping() {
+        return createNamedQuery(QueryNameConstants.FIND_SYSTEM_AREA_AND_LOCATION_LAYER, AreaLayerDto.class).list();
+    }
+
+    @SuppressWarnings("unchecked")
     public List<Map<String, String>> findSelectedAreaColumns(String namedQueryString, Number gid) {
         return createNamedQuery(namedQueryString, gid).list();
     }

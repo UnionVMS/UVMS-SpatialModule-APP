@@ -5,11 +5,12 @@ import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaLayerDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import lombok.SneakyThrows;
+
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
@@ -52,6 +53,12 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
         return systemAreaLayerMapping;
     }
 
+    @Override
+    public List<AreaLayerDto> listSystemAreaAndLocationLayerMapping() {
+        List<AreaLayerDto> systemAreaLayerMapping = repository.findSystemAreaAndLocationLayerMapping();
+        addServiceUrlForInternalWMSLayers(systemAreaLayerMapping);
+        return systemAreaLayerMapping;
+    }
 
     @Override
     public List<ServiceLayerDto> getAreaLayerDescription(LayerTypeEnum layerTypeEnum) throws ServiceException {
@@ -65,7 +72,7 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
 
     public List<AreaServiceLayerDto> getAllAreasLayerDescription(LayerTypeEnum layerTypeEnum, String userName) throws ServiceException {
         List<AreaServiceLayerDto> areaServiceLayerDtos = new ArrayList<AreaServiceLayerDto>();
-        switch(layerTypeEnum) {
+        switch (layerTypeEnum) {
             case USERAREA:
                 List<ServiceLayerDto> serviceLayerDtos = getAreaLayerDescription(layerTypeEnum);
                 List<AreaDto> allAreas = repository.getAllUserAreas(userName);
@@ -85,7 +92,7 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
 
     private List<String> constructInParameters(LayerTypeEnum layerTypeEnum) {
         List<String> inClause = new ArrayList<String>();
-        switch(layerTypeEnum) {
+        switch (layerTypeEnum) {
             case BACKGROUND:
                 inClause.add(AreaSubTypeEnum.BACKGROUND.getAreaSubType());
                 inClause.add(AreaSubTypeEnum.OTHERS.getAreaSubType());
