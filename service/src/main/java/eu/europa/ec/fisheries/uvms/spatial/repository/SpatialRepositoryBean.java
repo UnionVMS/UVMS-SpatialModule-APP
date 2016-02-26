@@ -5,7 +5,6 @@ import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.service.QueryParameter;
 import eu.europa.ec.fisheries.uvms.spatial.dao.AreaDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.AreaGroupDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.BookmarkDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.CountryDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.EezDao;
@@ -20,7 +19,6 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.bookmark.Bookmark;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.*;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaGroup.AreaGroupTypeDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.ServiceLayerDto;
@@ -61,7 +59,6 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     private EezDao eezDao;
     private SysConfigDao sysConfigDao;
     private ReportConnectSpatialDao reportConnectSpatialDao;
-    private AreaGroupDao areaGroupDao;
     private BookmarkDao bookmarkDao;
     private ProjectionDao projectionDao;
 
@@ -79,7 +76,6 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
         eezDao = new EezDao(em);
         sysConfigDao = new SysConfigDao(em);
         reportConnectSpatialDao = new ReportConnectSpatialDao(em);
-        areaGroupDao = new AreaGroupDao(em, sql);
         bookmarkDao = new BookmarkDao(em);
         projectionDao = new ProjectionDao(em);
     }
@@ -336,18 +332,6 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     public ProjectionEntity findProjection(Integer srsCode) throws ServiceException {
 
         return projectionDao.findBySrsCode(srsCode);
-    }
-
-    public List<AreaGroupEntity> getAreaGroups(String userName) {
-        return areaGroupDao.getAreaGroups(userName);
-    }
-
-    public List<AreaGroupTypeDto> getAreasByGid(String sqlQuery) {
-        return areaGroupDao.getAreasByGid(sqlQuery);
-    }
-
-    public AreaGroupEntity getAreaGroup(Long groupId) {
-        return areaGroupDao.getAreaGroup(groupId);
     }
 
 }

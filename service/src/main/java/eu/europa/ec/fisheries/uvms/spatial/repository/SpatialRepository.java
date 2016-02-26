@@ -80,12 +80,6 @@ public interface SpatialRepository extends DAO {
 
     List<UserAreasEntity> findUserAreaById(Long userAreaId, String userName, Boolean isPowerUser) throws ServiceException;
 
-    List<AreaGroupEntity> getAreaGroups(String userName);
-
-    List<AreaGroupTypeDto> getAreasByGid(String sqlQuery);
-
-    AreaGroupEntity getAreaGroup(Long groupId);
-
     List<PortAreasEntity> findPortAreaById(Long id) throws ServiceException;
 
     int disableAllEezAreas() throws ServiceException;

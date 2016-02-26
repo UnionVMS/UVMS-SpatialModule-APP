@@ -22,10 +22,6 @@ public class ReportLayerConfigEntity implements java.io.Serializable {
 	private long id;
 	
 	@ManyToOne
-	@JoinColumn(name = "area_connect_group_id", nullable = false)
-	private AreaConnectGroupEntity areaConnectGroup;
-	
-	@ManyToOne
 	@JoinColumn(name = "report_connect_service_areas_id")
 	private ReportConnectServiceAreasEntity reportConnectServiceAreas;
 	
@@ -47,13 +43,6 @@ public class ReportLayerConfigEntity implements java.io.Serializable {
 		this.id = id;
 	}
 
-	public AreaConnectGroupEntity getAreaConnectGroup() {
-		return this.areaConnectGroup;
-	}
-
-	public void setAreaConnectGroup(AreaConnectGroupEntity areaConnectGroup) {
-		this.areaConnectGroup = areaConnectGroup;
-	}
 
 	public ReportConnectServiceAreasEntity getReportConnectServiceAreas() {
 		return this.reportConnectServiceAreas;
