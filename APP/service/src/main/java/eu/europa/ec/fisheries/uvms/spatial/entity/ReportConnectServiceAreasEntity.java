@@ -41,10 +41,6 @@ public class ReportConnectServiceAreasEntity implements Serializable, Comparable
 	private long id;
 	
 	@ManyToOne
-	@JoinColumn(name = "area_group_id")
-	private AreaGroupEntity areaGroup;
-	
-	@ManyToOne
 	@JoinColumn(name = "report_connect_spatial_id", nullable = false)
 	private ReportConnectSpatialEntity reportConnectSpatial;
 	
@@ -76,13 +72,6 @@ public class ReportConnectServiceAreasEntity implements Serializable, Comparable
 		this.id = id;
 	}
 
-	public AreaGroupEntity getAreaGroup() {
-		return this.areaGroup;
-	}
-
-	public void setAreaGroup(AreaGroupEntity areaGroup) {
-		this.areaGroup = areaGroup;
-	}
 
 	public ReportConnectSpatialEntity getReportConnectSpatial() {
 		return this.reportConnectSpatial;

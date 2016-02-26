@@ -46,7 +46,7 @@ public class ImageEncoderFactoryTest {
 
         BufferedImage image = ImageEncoderFactory.renderLegend(entries, "TITLE", 40);
 
-        File outputfile = new File("test2.png");
+        File outputfile = File.createTempFile("test2", ".png");
         ImageIO.write(image, "PNG", outputfile);
 
     }
@@ -62,7 +62,7 @@ public class ImageEncoderFactoryTest {
     @SneakyThrows
     public void test3() {
         BufferedImage position = getPosition("scale(1)");
-        File outputfile = new File("test3.png");
+        File outputfile = File.createTempFile("test3", ".png");
         ImageIO.write(position, "PNG", outputfile);
     }
 

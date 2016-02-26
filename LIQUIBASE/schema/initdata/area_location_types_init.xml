@@ -15,7 +15,6 @@
 			<column name="is_system_wide" value="Y" />
 			<column name="area_type_desc" value="Exclusive Economic Zone" />
 			<column name="is_location" value="N" />
-			<column name="area_group_type" value="sysarea" />
 		</insert>
 		<insert tableName="area_location_types">
 			<column name="id" valueNumeric="2" />
@@ -25,7 +24,6 @@
 			<column name="is_system_wide" value="Y" />
 			<column name="area_type_desc" value="Regional Fisheries Management Organisation" />
 			<column name="is_location" value="N" />
-			<column name="area_group_type" value="sysarea" />
 		</insert>
 		<insert tableName="area_location_types">
 			<column name="id" valueNumeric="3" />
@@ -35,7 +33,6 @@
 			<column name="is_system_wide" value="N" />
 			<column name="area_type_desc" value="Country" />
 			<column name="is_location" value="N" />
-			<column name="area_group_type" value="others" />
 		</insert>
 		<insert tableName="area_location_types">
 			<column name="id" valueNumeric="4" />
@@ -45,7 +42,6 @@
 			<column name="is_system_wide" value="Y" />
 			<column name="area_type_desc" value="Port" />
 			<column name="is_location" value="Y" />
-			<column name="area_group_type" value="port" />
 		</insert>
 		<insert tableName="area_location_types">
 			<column name="id" valueNumeric="5" />
@@ -55,7 +51,6 @@
 			<column name="is_system_wide" value="N" />
 			<column name="area_type_desc" value="User Areas" />
 			<column name="is_location" value="N" />
-			<column name="area_group_type" value="userarea" />
 		</insert>
 		<insert tableName="area_location_types">
 			<column name="id" valueNumeric="6" />
@@ -83,7 +78,6 @@
 			<column name="is_system_wide" value="Y" />
 			<column name="area_type_desc" value="Port area" />
 			<column name="is_location" value="N" />
-			<column name="area_group_type" value="portarea" />
 		</insert>
 	</changeSet>
 </databaseChangeLog>
