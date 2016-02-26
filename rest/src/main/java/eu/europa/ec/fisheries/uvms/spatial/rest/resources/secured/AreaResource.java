@@ -139,7 +139,15 @@ public class AreaResource extends UnionVMSResource {
     public Response getSystemAreaLayerMapping() {
     	return createSuccessResponse(areaTypeService.listSystemAreaLayerMapping());
     }
-    
+
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/arealocationlayers")
+    @Interceptors(value = {ExceptionInterceptor.class})
+    public Response getSystemAreaAndLocationLayerMapping() {
+        return createSuccessResponse(areaTypeService.listSystemAreaAndLocationLayerMapping());
+    }
+
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})

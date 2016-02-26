@@ -24,6 +24,7 @@ public final class QueryNameConstants {
     public static final String FIND_SYSTEM_AREAS = "AreaLocationType.findSystemAreas";
     public static final String FIND_SYSTEM_LOCATIONS = "AreaLocationType.findSystemLocations";
     public static final String FIND_SYSTEM_AREA_LAYER = "AreaLocationType.findSystemAreaLayerMappings";
+    public static final String FIND_SYSTEM_AREA_AND_LOCATION_LAYER = "AreaLocationType.findSystemAreaAndLocationLayerMappings";
     public static final String FIND_USER_AREA_LAYER = "AreaLocationType.findUserAreaLayerMappings";
     
     /**
