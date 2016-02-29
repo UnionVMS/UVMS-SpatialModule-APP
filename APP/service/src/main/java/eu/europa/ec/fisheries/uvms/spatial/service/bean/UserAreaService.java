@@ -38,5 +38,5 @@ public interface UserAreaService {
 
 	void deleteUserArea(Long userAreaId, String userName, boolean isPowerUser) throws ServiceException;
 
-	List<String> getUserAreaTypes(String userName) throws ServiceException;
+	List<String> getUserAreaTypes(String userName, String scopeName, boolean isPowerUser) throws ServiceException;
 }
