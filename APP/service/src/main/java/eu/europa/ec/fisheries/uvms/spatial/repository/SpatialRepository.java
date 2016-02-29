@@ -90,7 +90,7 @@ public interface SpatialRepository extends DAO {
 
     int disableAllPortAreas() throws ServiceException;
 
-    List<String> getUserAreaTypes(String userName) throws ServiceException;
+    List<String> getUserAreaTypes(String userName, String scopeName, boolean isPowerUser) throws ServiceException;
 
     BookmarkEntity create(BookmarkEntity bookmark) throws ServiceException;
 
@@ -101,4 +101,6 @@ public interface SpatialRepository extends DAO {
     void update(Bookmark bookmark) throws ServiceException;
 
     ProjectionEntity findProjection(Integer srsCode) throws ServiceException;
+
+    List<String> getAreaGroups(String userName, String scopeName, boolean isPowerUser);
 }

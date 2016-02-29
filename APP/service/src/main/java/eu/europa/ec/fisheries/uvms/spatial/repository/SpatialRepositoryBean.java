@@ -17,6 +17,7 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.*;
 import eu.europa.ec.fisheries.uvms.spatial.entity.config.SysConfigEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.bookmark.Bookmark;
+import eu.europa.ec.fisheries.uvms.spatial.model.constants.USMSpatial;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
@@ -283,8 +284,9 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     }
 
     @Override
-    public List<String> getUserAreaTypes(String userName) throws ServiceException {
-        List<String> userAreaTypes = findEntityByNamedQuery(String.class, QueryNameConstants.FIND_USER_AREA_TYPES, with("userName", userName).parameters());
+    public List<String> getUserAreaTypes(String userName, String scopeName, boolean isPowerUser) throws ServiceException {
+        QueryParameter params = with(USMSpatial.USER_NAME, userName).and(USMSpatial.SCOPE_NAME, scopeName).and("isPowerUser", isPowerUser?1:0);
+        List<String> userAreaTypes = findEntityByNamedQuery(String.class, QueryNameConstants.FIND_USER_AREA_TYPES, params.parameters());
         if (isEmpty(userAreaTypes) || userAreaTypes.get(0) == null) {
             return Collections.emptyList();
         }
@@ -332,6 +334,11 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     public ProjectionEntity findProjection(Integer srsCode) throws ServiceException {
 
         return projectionDao.findBySrsCode(srsCode);
+    }
+
+    @Override
+    public List<String> getAreaGroups(String userName, String scopeName, boolean isPowerUser) {
+        return areaDao.listAreaGroups(userName, scopeName, isPowerUser);
     }
 
 }

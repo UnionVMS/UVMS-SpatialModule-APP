@@ -145,7 +145,13 @@ public class UserAreaResource extends UnionVMSResource {
     @Interceptors(value = {ExceptionInterceptor.class})
     public Response getUserAreaTypes(@Context HttpServletRequest request, @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName) throws ServiceException {
         log.debug("UserName from security : " + request.getRemoteUser());
-        return createSuccessResponse(userAreaService.getUserAreaTypes(request.getRemoteUser()));
+        boolean isPowerUser = false;
+
+        if (request.isUserInRole(SpatialFeaturesEnum.MANAGE_ANY_USER_AREA.value())) {
+            isPowerUser = true;
+        }
+
+        return createSuccessResponse(userAreaService.getUserAreaTypes(request.getRemoteUser(), scopeName, isPowerUser));
     }
 
     private Response getUserAreaDetailsById(UserAreaCoordinateType userAreaTypeDto, String userName, boolean isPowerUser) throws ServiceException, IOException, ParseException {

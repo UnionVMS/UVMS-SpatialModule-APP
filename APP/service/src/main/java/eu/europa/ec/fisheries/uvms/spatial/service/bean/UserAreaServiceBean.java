@@ -145,8 +145,8 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     @Override
-    public List<String> getUserAreaTypes(String userName) throws ServiceException {
-        return repository.getUserAreaTypes(userName);
+    public List<String> getUserAreaTypes(String userName, String scopeName, boolean isPowerUser) throws ServiceException {
+        return repository.getUserAreaTypes(userName, scopeName, isPowerUser);
     }
 
     private void validateNotNull(Long userAreaId, List<UserAreasEntity> persistentUserAreas) {
