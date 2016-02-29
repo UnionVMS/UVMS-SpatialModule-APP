@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
 
+import eu.europa.ec.fisheries.uvms.service.QueryParameter;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GeometryType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.ServiceLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.GeometryMapper;
@@ -156,5 +157,11 @@ public class AreaDao extends CommonDao {
 
     private String replaceSearchStrings(String queryString, String tableName, String filter) {
         return queryString.replace(TABLE_NAME_PLACEHOLDER, tableName).replace(NAME_PLACEHOLDER, filter).replace(CODE_PLACEHOLDER, filter);
+    }
+
+    public List<String> listAreaGroups(String userName, String scopeName, boolean isPowerUser) {
+        QueryParameter params =  QueryParameter.with("userName", userName).and("scopeName", scopeName).and("isPowerUser", isPowerUser);
+
+        return createNamedQuery(QueryNameConstants.FIND_USER_AREA_TYPES, params.parameters()).list();
     }
 }

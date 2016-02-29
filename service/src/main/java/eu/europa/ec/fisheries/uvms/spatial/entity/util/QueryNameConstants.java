@@ -99,9 +99,4 @@ public final class QueryNameConstants {
     public static final String FIND_SERVICE_LAYER_BY_SUBTYPE = "ServiceLayer.findServiceLayerBySubType";
     public static final String FIND_SERVICE_LAYER_BY_SUBTYPE_WITHOUT_BING = "ServiceLayer.findServiceLayerBySubTypeWithoutBing";
 
-    /**
-     * Area Group
-     */
-    public static final String FIND_ALL_AREA_GROUP_BY_NAME = "AreaGroup.findAllAreaGroupByName";
-    public static final String FIND_AREA_GROUP_BY_ID = "AreaGroup.findAreaGroupById";
 }
