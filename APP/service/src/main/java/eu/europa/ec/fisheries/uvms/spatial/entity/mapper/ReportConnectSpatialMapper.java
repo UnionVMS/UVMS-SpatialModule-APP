@@ -21,7 +21,9 @@ public abstract class ReportConnectSpatialMapper {
             @Mapping(source = "scaleBarUnits", target = "scaleBarType"),
             @Mapping(source = "coordinatesFormat", target = "displayFormatType"),
             @Mapping(target = "projectionByMapProjId", expression = "java(createProjection(map.getMapProjectionId()))"),
-            @Mapping(target = "projectionByDisplayProjId", expression = "java(createProjection(map.getDisplayProjectionId()))")
+            @Mapping(target = "projectionByDisplayProjId", expression = "java(createProjection(map.getDisplayProjectionId()))"),
+            @Mapping(target = "styleSettings", ignore = true),
+            @Mapping(target = "visibilitySettings", ignore = true)
     })
     public abstract ReportConnectSpatialEntity mapConfigurationTypeToReportConnectSpatialEntity(MapConfigurationType map);
 
@@ -31,6 +33,8 @@ public abstract class ReportConnectSpatialMapper {
             @Mapping(source = "projectionByDisplayProjId.id", target = "displayProjectionId"),
             @Mapping(source = "displayFormatType", target = "coordinatesFormat"),
             @Mapping(source = "scaleBarType", target = "scaleBarUnits"),
+            @Mapping(target = "styleSettings", ignore = true),
+            @Mapping(target = "visibilitySettings", ignore = true)
     })
     public abstract MapConfigurationType reportConnectSpatialEntityToMapConfigurationType(ReportConnectSpatialEntity entity);
 

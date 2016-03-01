@@ -62,9 +62,6 @@ public class ReportConnectSpatialEntity implements Serializable {
 	@Column(name = "map_zoom")
 	private Integer mapZoom;
 	
-	@Column(columnDefinition = "text", name = "map_extent")
-	private String mapExtent;
-	
 	@Column(name = "display_format", length = 255)
     @Enumerated(EnumType.STRING)
 	private CoordinatesFormat displayFormatType;
@@ -76,8 +73,11 @@ public class ReportConnectSpatialEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     private ScaleBarUnits scaleBarType;
 
-	@Column(columnDefinition = "text", name = "vector_styles")
-	private String vectorStyles;
+	@Column(columnDefinition = "text", name = "styles_settings")
+	private String styleSettings;
+
+	@Column(columnDefinition = "text", name = "visibility_settings")
+	private String visibilitySettings;
 
 	@Column(name = "app_version", nullable = false, length = 255)
 	private String appVersion;
@@ -91,22 +91,22 @@ public class ReportConnectSpatialEntity implements Serializable {
     @Builder
     public ReportConnectSpatialEntity(ProjectionEntity projectionByMapProjId,
                                       ProjectionEntity projectionByDisplayProjId,
-                                      long reportId, String mapCenter, int mapZoom, String mapExtent,
+                                      long reportId, String mapCenter, int mapZoom, String styleSettings,
                                       CoordinatesFormat displayFormatType, String measurementUnits,
-                                      ScaleBarUnits scaleBarType, String vectorStyles, String appVersion,
+                                      ScaleBarUnits scaleBarType, String visibilitySettings, String appVersion,
                                       Set<ReportConnectServiceAreasEntity> reportConnectServiceAreases) {
         this.projectionByMapProjId = projectionByMapProjId;
         this.projectionByDisplayProjId = projectionByDisplayProjId;
         this.reportId = reportId;
         this.mapCenter = mapCenter;
         this.mapZoom = mapZoom;
-        this.mapExtent = mapExtent;
         this.displayFormatType = displayFormatType;
         this.measurementUnits = measurementUnits;
         this.scaleBarType = scaleBarType;
-        this.vectorStyles = vectorStyles;
+        this.styleSettings = styleSettings;
         this.appVersion = appVersion;
         this.reportConnectServiceAreases = reportConnectServiceAreases;
+		this.visibilitySettings = visibilitySettings;
     }
 
     public Long getId() {
@@ -157,14 +157,6 @@ public class ReportConnectSpatialEntity implements Serializable {
 		this.mapZoom = mapZoom;
 	}
 
-	public String getMapExtent() {
-		return this.mapExtent;
-	}
-
-	public void setMapExtent(String mapExtent) {
-		this.mapExtent = mapExtent;
-	}
-
 	public String getMeasurementUnits() {
 		return this.measurementUnits;
 	}
@@ -189,14 +181,13 @@ public class ReportConnectSpatialEntity implements Serializable {
         this.scaleBarType = scaleBarType;
     }
 
-    public String getVectorStyles() {
-		return this.vectorStyles;
+	public String getStyleSettings() {
+		return styleSettings;
 	}
 
-	public void setVectorStyles(String vectorStyles) {
-		this.vectorStyles = vectorStyles;
+	public void setStyleSettings(String styleSettings) {
+		this.styleSettings = styleSettings;
 	}
-
 
 	public String getAppVersion() {
 		return this.appVersion;
@@ -214,4 +205,11 @@ public class ReportConnectSpatialEntity implements Serializable {
 		this.reportConnectServiceAreases = reportConnectServiceAreases;
 	}
 
+	public String getVisibilitySettings() {
+		return visibilitySettings;
+	}
+
+	public void setVisibilitySettings(String visibilitySettings) {
+		this.visibilitySettings = visibilitySettings;
+	}
 }

@@ -51,11 +51,8 @@ public class MapConfigServiceBean implements MapConfigService {
     @Override
     @SneakyThrows
     public List<ProjectionDto> getAllProjections() {
-
         List<ProjectionEntity> projections = repository.findAllEntity(ProjectionEntity.class); // TODO projectionDAO
-
         return ProjectionMapper.INSTANCE.projectionEntityListToProjectionDtoList(projections);
-
     }
 
     @Override
@@ -63,26 +60,26 @@ public class MapConfigServiceBean implements MapConfigService {
     @Transactional(Transactional.TxType.REQUIRES_NEW) // annotation required to send error response
     public void handleDeleteMapConfiguration(SpatialDeleteMapConfigurationRQ request) throws ServiceException {
         SpatialValidator.validate(request);
-
         repository.deleteBy(request.getSpatialConnectIds());
     }
 
     @Override
     public MapConfigurationType getMapConfigurationType(final Long reportId) throws ServiceException {
         SpatialValidator.validate(reportId);
-
         ReportConnectSpatialEntity entity = repository.findReportConnectSpatialBy(reportId);
-
-        return ReportConnectSpatialMapper.INSTANCE.reportConnectSpatialEntityToMapConfigurationType(entity);
+        MapConfigurationType mapConfigurationType = ReportConnectSpatialMapper.INSTANCE.reportConnectSpatialEntityToMapConfigurationType(entity);
+        VisibilitySettingsDto visibilitySettings = getVisibilitySettings(entity.getVisibilitySettings());
+        mapConfigurationType.setVisibilitySettings(MapConfigMapper.INSTANCE.getVisibilitySettingsType(visibilitySettings));
+        StyleSettingsDto styleSettingsDto = getStyleSettings(entity.getStyleSettings());
+        mapConfigurationType.setStyleSettings(MapConfigMapper.INSTANCE.getStyleSettingsType(styleSettingsDto));
+        return mapConfigurationType;
     }
 
     @Override
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public SpatialGetMapConfigurationRS getMapConfiguration(SpatialGetMapConfigurationRQ mapConfigurationRQ) throws ServiceException {
         long reportId = mapConfigurationRQ.getReportId();
-
         return new SpatialGetMapConfigurationRS(getMapConfigurationType(reportId));
-
     }
 
     @Override
@@ -90,13 +87,15 @@ public class MapConfigServiceBean implements MapConfigService {
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public SpatialSaveOrUpdateMapConfigurationRS handleSaveOrUpdateSpatialMapConfiguration(final SpatialSaveOrUpdateMapConfigurationRQ request) {
         SpatialValidator.validate(request);
+        ReportConnectSpatialEntity entity = ReportConnectSpatialMapper.INSTANCE.mapConfigurationTypeToReportConnectSpatialEntity(request.getMapConfiguration());
+        VisibilitySettingsDto visibilitySettings = MapConfigMapper.INSTANCE.getVisibilitySettingsDto(request.getMapConfiguration().getVisibilitySettings());
+        entity.setVisibilitySettings(getVisibilitySettingsJson(visibilitySettings));
 
-        ReportConnectSpatialEntity entity =
-                ReportConnectSpatialMapper.INSTANCE.mapConfigurationTypeToReportConnectSpatialEntity(request.getMapConfiguration());
+        StyleSettingsDto styleSettings = MapConfigMapper.INSTANCE.getStyleSettingsDto(request.getMapConfiguration().getStyleSettings());
+        entity.setStyleSettings(getStyleSettingsJson(styleSettings));
 
         repository.saveOrUpdateMapConfiguration(entity);
         return createSaveOrUpdateMapConfigurationResponse();
-
     }
 
     private SpatialSaveOrUpdateMapConfigurationRS createSaveOrUpdateMapConfigurationResponse() {
@@ -176,7 +175,7 @@ public class MapConfigServiceBean implements MapConfigService {
     @SneakyThrows
     public MapConfigDto getReportConfig(int reportId, String userPreferences, String adminPreferences, String userName) {
         ConfigurationDto configurationDto = mergeConfiguration(getUserConfiguration(userPreferences), getAdminConfiguration(adminPreferences)); //Returns merged config object between Admin and User configuration from USM
-        return new MapConfigDto(getMap(configurationDto, reportId, userName), getVectorStyles(configurationDto), getVisibilitySettings(configurationDto));
+        return new MapConfigDto(getMap(configurationDto, reportId, userName), getVectorStyles(configurationDto, reportId), getVisibilitySettings(configurationDto, reportId));
     }
 
     private void updateLayerSettings(LayerSettingsDto layerSettingsDto, String userName, boolean includeUserArea) throws ServiceException {
@@ -311,12 +310,59 @@ public class MapConfigServiceBean implements MapConfigService {
         }
     }
 
-    private VectorStylesDto getVectorStyles(ConfigurationDto configurationDto) {
-        return MapConfigMapper.INSTANCE.getStyleDtos(configurationDto.getStylesSettings());
+    private VectorStylesDto getVectorStyles(ConfigurationDto configurationDto, Integer reportId) throws ServiceException {
+        ReportConnectSpatialEntity entity = repository.findReportConnectSpatialBy(reportId.longValue());
+        if (entity != null && entity.getStyleSettings() != null) {
+            StyleSettingsDto styleSettingsDto = getStyleSettings(entity.getStyleSettings());
+            if ((styleSettingsDto.getPositions() != null && styleSettingsDto.getPositions().getStyle() != null) ||
+                    (styleSettingsDto.getSegments() != null && styleSettingsDto.getSegments().getStyle() != null)) {
+                return MapConfigMapper.INSTANCE.getStyleDtos(styleSettingsDto); // Style Settings is overridden by Report. Return the report configured style settings
+            }
+        }
+        return MapConfigMapper.INSTANCE.getStyleDtos(configurationDto.getStylesSettings()); // Return merged style settings from Admin and User config
     }
 
-    private VisibilitySettingsDto getVisibilitySettings(ConfigurationDto configurationDto) {
-        return configurationDto.getVisibilitySettings();
+    private VisibilitySettingsDto getVisibilitySettings(ConfigurationDto configurationDto, Integer reportId) throws ServiceException {
+        ReportConnectSpatialEntity entity = repository.findReportConnectSpatialBy(reportId.longValue());
+        if (entity != null && entity.getVisibilitySettings() != null) {
+            VisibilitySettingsDto visibilitySettingsDto = getVisibilitySettings(entity.getVisibilitySettings());
+            if (isVisibilitySettingsOverriddenByReport(visibilitySettingsDto)) {
+                return visibilitySettingsDto; // VisibilitySettings is overridden by Report. Return the report configured visibility settings
+            }
+        }
+        return configurationDto.getVisibilitySettings(); // Return merged visibility settings from Admin and User Config
+    }
+
+    private boolean isVisibilitySettingsOverriddenByReport(VisibilitySettingsDto visibilitySettingsDto) {
+        boolean isOverridden = false;
+        if (visibilitySettingsDto.getVisibilityPositionsDto() != null) {
+            if (visibilitySettingsDto.getVisibilityPositionsDto().getLabels() != null && (visibilitySettingsDto.getVisibilityPositionsDto().getLabels().getOrder() != null || visibilitySettingsDto.getVisibilityPositionsDto().getLabels().getValues() != null)) {
+                isOverridden = true;
+            }
+            if (visibilitySettingsDto.getVisibilityPositionsDto().getPopup() != null && (visibilitySettingsDto.getVisibilityPositionsDto().getPopup().getOrder() != null || visibilitySettingsDto.getVisibilityPositionsDto().getPopup().getValues() != null)) {
+                isOverridden = true;
+            }
+            if (visibilitySettingsDto.getVisibilityPositionsDto().getTable() != null && (visibilitySettingsDto.getVisibilityPositionsDto().getTable().getOrder() != null || visibilitySettingsDto.getVisibilityPositionsDto().getTable().getValues() != null)) {
+                isOverridden = true;
+            }
+        }
+        if (visibilitySettingsDto.getVisibilitySegmentDto() != null) {
+            if (visibilitySettingsDto.getVisibilitySegmentDto().getLabels() != null && (visibilitySettingsDto.getVisibilitySegmentDto().getLabels().getOrder() != null || visibilitySettingsDto.getVisibilitySegmentDto().getLabels().getValues() != null)) {
+                isOverridden = true;
+            }
+            if (visibilitySettingsDto.getVisibilitySegmentDto().getPopup() != null && (visibilitySettingsDto.getVisibilitySegmentDto().getPopup().getOrder() != null || visibilitySettingsDto.getVisibilitySegmentDto().getPopup().getValues() != null)) {
+                isOverridden = true;
+            }
+            if (visibilitySettingsDto.getVisibilitySegmentDto().getTable() != null && (visibilitySettingsDto.getVisibilitySegmentDto().getTable().getOrder() != null || visibilitySettingsDto.getVisibilitySegmentDto().getTable().getValues() != null)) {
+                isOverridden = true;
+            }
+        }
+        if (visibilitySettingsDto.getVisibilityTracksDto() != null) {
+            if (visibilitySettingsDto.getVisibilityTracksDto().getTable() != null && (visibilitySettingsDto.getVisibilityTracksDto().getTable().getOrder() != null || visibilitySettingsDto.getVisibilityTracksDto().getTable().getValues() != null)) {
+                isOverridden = true;
+            }
+        }
+        return isOverridden;
     }
 
     private RefreshDto getRefreshDto(ConfigurationDto configurationDto) {
@@ -501,6 +547,32 @@ public class MapConfigServiceBean implements MapConfigService {
         return (userPreference == null || userPreference.isEmpty()) ? new ConfigurationDto() : getConfiguration(userPreference);
     }
 
+    private VisibilitySettingsDto getVisibilitySettings(String visibilitySettings) throws ServiceException {
+        if (visibilitySettings == null) {
+            return null;
+        }
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
+            return mapper.readValue(visibilitySettings, VisibilitySettingsDto.class);
+        } catch (IOException e) {
+            throw new ServiceException("Parse Exception from Json to Object", e);
+        }
+    }
+
+    private StyleSettingsDto getStyleSettings(String styleSettings) throws ServiceException {
+        if (styleSettings == null) {
+            return null;
+        }
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
+            return mapper.readValue(styleSettings, StyleSettingsDto.class);
+        } catch (IOException e) {
+            throw new ServiceException("Parse Exception from Json to Object", e);
+        }
+    }
+
     private ConfigurationDto getConfiguration(String configString) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
@@ -510,6 +582,30 @@ public class MapConfigServiceBean implements MapConfigService {
     private String getJson(ConfigurationDto config) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         return mapper.writeValueAsString(config);
+    }
+
+    private String getVisibilitySettingsJson(VisibilitySettingsDto visibilitySettings) throws ServiceException {
+        if (visibilitySettings == null) {
+            return null;
+        }
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.writeValueAsString(visibilitySettings);
+        } catch (IOException e) {
+            throw new ServiceException("Parse Exception from Object to json", e);
+        }
+    }
+
+    private String getStyleSettingsJson(StyleSettingsDto styleSettings) throws ServiceException {
+        if (styleSettings == null) {
+            return null;
+        }
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.writeValueAsString(styleSettings);
+        } catch (IOException e) {
+            throw new ServiceException("Parse Exception from Object to json", e);
+        }
     }
 
     private SystemSettingsDto getConfigSystemSettings() throws ServiceException {
