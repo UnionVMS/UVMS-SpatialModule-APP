@@ -13,16 +13,16 @@
             </column>
             <column name="map_center" type="VARCHAR(255)"/>
             <column name="map_zoom" type="INT"/>
-            <column name="map_extent" remarks="it might become not nullable field" type="TEXT"/>
             <column name="map_proj_id" type="BIGINT"/>
             <column name="display_proj_id" type="BIGINT"/>
             <column name="display_format" type="VARCHAR(255)"/>
             <column name="measurement_units" type="VARCHAR(255)"/>
             <column name="scalebar_units" type="VARCHAR(255)"/>
-            <column name="vector_styles" type="TEXT"/>
+            <column name="styles_settings" type="TEXT"/>
             <column name="app_version" type="VARCHAR(255)">
                 <constraints/>
             </column>
+            <column name="visibility_settings" type="TEXT"/>
         </createTable>
     </changeSet>
     
