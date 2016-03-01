@@ -218,9 +218,76 @@
             <xs:element name="displayProjectionId" type="xs:long" minOccurs="0"/>
             <xs:element name="coordinatesFormat" type="CoordinatesFormat" minOccurs="0" />
             <xs:element name="scaleBarUnits" type="ScaleBarUnits" minOccurs="0"/>
+            <xs:element name="StyleSettings" type="StyleSettingsType" minOccurs="0"/>
+            <xs:element name="VisibilitySettings" type="VisibilitySettingsType" minOccurs="0" />
         </xs:sequence>
     </xs:complexType>
 
+    <xs:complexType name="VisibilitySettingsType">
+        <xs:sequence>
+            <xs:element name="positions" type="VisibilityPositionsType"/>
+            <xs:element name="segments" type="VisibilitySegmentType"/>
+            <xs:element name="tracks" type="VisibilityTracksType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="VisibilityPositionsType">
+        <xs:sequence>
+            <xs:element name="popup" type="VisibilityAttributeType"/>
+            <xs:element name="labels" type="VisibilityAttributeType"/>
+            <xs:element name="table" type="VisibilityAttributeType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="VisibilitySegmentType">
+        <xs:sequence>
+            <xs:element name="popup" type="VisibilityAttributeType"/>
+            <xs:element name="labels" type="VisibilityAttributeType"/>
+            <xs:element name="table" type="VisibilityAttributeType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="VisibilityTracksType">
+        <xs:sequence>
+            <xs:element name="table" type="VisibilityAttributeType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="VisibilityAttributeType">
+        <xs:sequence>
+            <xs:element name="isAttributeVisible" type="xs:boolean"/>
+            <xs:element name="order" minOccurs="0" type="xs:string" maxOccurs="unbounded"/>
+            <xs:element name="values" minOccurs="0" type="xs:string" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="StyleSettingsType">
+        <xs:sequence>
+            <xs:element name="position" type="PositionType" minOccurs="0"/>
+            <xs:element name="segment" type="SegmentType" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="StyleDataType">
+        <xs:sequence>
+            <xs:element name="key" type="xs:string"/>
+            <xs:element name="value" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="PositionType">
+        <xs:sequence>
+            <xs:element name="attribute" type="xs:string"/>
+            <xs:element name="style" type="StyleDataType" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="SegmentType">
+        <xs:sequence>
+            <xs:element name="attribute" type="xs:string"/>
+            <xs:element name="style" type="StyleDataType" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
 
     <xs:simpleType name="SpatialFeaturesEnum">
         <xs:restriction base="xs:string">
