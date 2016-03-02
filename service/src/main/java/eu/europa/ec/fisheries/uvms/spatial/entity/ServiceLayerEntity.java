@@ -2,9 +2,21 @@ package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import java.io.Serializable;
 import java.util.Set;
-
-import javax.persistence.*;
-
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import eu.europa.ec.fisheries.uvms.spatial.entity.converter.CharBooleanConverter;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.LayerDto;
@@ -14,6 +26,8 @@ import org.apache.commons.lang3.StringUtils;
 @Entity
 @Table(name = "service_layer", schema = "spatial")
 @NamedQueries({
+        @NamedQuery(name = ServiceLayerEntity.BY_NAME,
+                query = "FROM ServiceLayerEntity s WHERE s.name = :name"),
         @NamedQuery(name = QueryNameConstants.FIND_SERVICE_LAYERS_BY_ID,
                 query = "SELECT serviceLayer FROM ServiceLayerEntity serviceLayer WHERE serviceLayer.id in (:ids) order by serviceLayer.id"),
         @NamedQuery(name = QueryNameConstants.FIND_SERVICE_LAYER_BY_SUBTYPE,
@@ -27,6 +41,8 @@ import org.apache.commons.lang3.StringUtils;
 public class ServiceLayerEntity implements Serializable {
 
     private static final long serialVersionUID = 6797853213499502871L;
+
+    public static final String BY_NAME = "ServiceLayer.byName";
 
     private static final String GEOSERVER = "geoserver";
 

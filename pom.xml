@@ -21,6 +21,7 @@
 
     <properties>
         <!-- The spatial name is used as a common point to rename the application alias visible in USM-->
+        <!-- The spatial name is used as a common point to rename the application alias visible in USM-->
         <spatial.name>Spatial</spatial.name>
         <spatial.model>0.4.2-SNAPSHOT</spatial.model>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -31,8 +32,8 @@
         <mapstruct.version>1.0.0.Final</mapstruct.version>
         <jackson.version>2.6.0</jackson.version>
         <logback.core.version>1.1.2</logback.core.version>
-        <asset.module.version>1.0.0</asset.module.version>
-        <movement.model.version>1.0.0</movement.model.version>
+        <asset.module.version>1.0.2-SNAPSHOT</asset.module.version>
+        <movement.model.version>1.0.2-SNAPSHOT</movement.model.version>
         <application.name>${project.parent.artifactId}</application.name>
         <application.version>${project.parent.version}</application.version>
         <application.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}.log</application.logfile>
@@ -41,12 +42,12 @@
         <hibernate.version>4.3.5.Final</hibernate.version>
         <hibernate-spatial.version>4.3</hibernate-spatial.version>
         <geotools.version>14-M1</geotools.version>
-        <uvms.commons.version>1.6</uvms.commons.version>
+        <uvms.commons.version>1.7-SNAPSHOT</uvms.commons.version>
         <hibernate.validator.version>5.2.1.Final</hibernate.validator.version>
-        <usm4uvms.version>1.0.1</usm4uvms.version>
+        <usm4uvms.version>1.0.2-SNAPSHOT</usm4uvms.version>
         <usm_deployment_descriptor_force_update>false</usm_deployment_descriptor_force_update>
         <release.branch.name>uvms-1.0.0</release.branch.name>
-		<maven.release.plugin.version>2.5.2</maven.release.plugin.version>
+        <maven.release.plugin.version>2.5.2</maven.release.plugin.version>
         <maven.scm.provider.version>2.1.1</maven.scm.provider.version>
     </properties>
 

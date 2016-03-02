@@ -6,7 +6,13 @@ public final class RestConstants {
 
     public static final String REST_URL = "/rest";
     public static final String IMAGE_URL = "/image";
+    public static final String SERVICE_LAYER_PATH = "/servicelayer";
+
     public static final String MODULE_NAME = "spatial";
+
+    public static final String VIEW = "view";
+    public static final String NAME = "name";
+    public static final String DETAIL = "DETAIL";
 
     public static final String ACCESS_CONTROL_ALLOW_ORIGIN = "Access-ControlDto-Allow-Origin";
     public static final String ACCESS_CONTROL_ALLOW_METHODS_ALL = "*";
