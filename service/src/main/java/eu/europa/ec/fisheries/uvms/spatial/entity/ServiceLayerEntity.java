@@ -27,7 +27,7 @@ import org.apache.commons.lang3.StringUtils;
 @Table(name = "service_layer", schema = "spatial")
 @NamedQueries({
         @NamedQuery(name = ServiceLayerEntity.BY_NAME,
-                query = "FROM ServiceLayerEntity s WHERE s.name = :name"),
+                query = "FROM ServiceLayerEntity s WHERE upper(s.name) = upper(:name)"),
         @NamedQuery(name = QueryNameConstants.FIND_SERVICE_LAYERS_BY_ID,
                 query = "SELECT serviceLayer FROM ServiceLayerEntity serviceLayer WHERE serviceLayer.id in (:ids) order by serviceLayer.id"),
         @NamedQuery(name = QueryNameConstants.FIND_SERVICE_LAYER_BY_SUBTYPE,
