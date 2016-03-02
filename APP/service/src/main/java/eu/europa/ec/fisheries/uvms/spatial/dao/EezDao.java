@@ -6,9 +6,6 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 
 import javax.persistence.EntityManager;
 
-/**
- * //TODO create test
- */
 public class EezDao extends AbstractDAO<EezEntity> {
 
     private EntityManager em;
