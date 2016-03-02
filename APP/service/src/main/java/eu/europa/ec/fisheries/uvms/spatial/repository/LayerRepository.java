@@ -1,0 +1,9 @@
+package eu.europa.ec.fisheries.uvms.spatial.repository;
+
+import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity;
+
+public interface LayerRepository {
+
+    public ServiceLayerEntity getServiceLayerBy(String name) throws ServiceException;
+}

@@ -31,6 +31,7 @@ public class RestActivator extends Application {
         set.add(FileUploadResource.class);
         set.add(BookmarkResource.class);
         set.add(ImageResource.class);
+        set.add(ServiceLayerResource.class);
         LOG.info(RestConstants.MODULE_NAME + " module starting up");
     }
 
