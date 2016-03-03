@@ -7,4 +7,5 @@ public interface ServiceLayerService {
 
     public ServiceLayer findBy(String name) throws ServiceException;
 
+    void update(ServiceLayer serviceLayer) throws ServiceException;
 }

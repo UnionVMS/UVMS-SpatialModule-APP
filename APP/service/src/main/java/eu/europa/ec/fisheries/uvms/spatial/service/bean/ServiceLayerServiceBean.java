@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
+import javax.transaction.Transactional;
 
 @Stateless
 @Local(ServiceLayerService.class)
@@ -16,18 +17,55 @@ import javax.ejb.Stateless;
 public class ServiceLayerServiceBean implements ServiceLayerService {
 
     @EJB
-    private LayerRepository layerRepository;
+    private LayerRepository repository;
 
     @Override
     public ServiceLayer findBy(final String name) throws ServiceException {
 
         if (name == null){
-            throw new ServiceException("Service layer null not allowed");
+            throw new ServiceException("name null not allowed");
         }
 
-        ServiceLayerEntity entity = layerRepository.getServiceLayerBy(name);
+        ServiceLayerEntity entity = repository.getServiceLayerBy(name);
 
         return ServiceLayerMapper.INSTANCE.serviceLayerEntityToServiceLayer(entity);
 
+    }
+
+    @Override
+    @Transactional
+    public void update(final ServiceLayer serviceLayer) throws ServiceException {
+
+        if (serviceLayer == null){
+            throw new ServiceException("serviceLayer null not allowed");
+        }
+
+        ServiceLayerEntity serviceLayerBy = repository.getServiceLayerBy(serviceLayer.getId());
+        merge(serviceLayer, serviceLayerBy);
+
+    }
+
+    private void merge(ServiceLayer source, ServiceLayerEntity target) {
+
+        if(source.getName() != null)
+            target.setName( source.getName() );
+
+        if( source.getLayerDesc() != null)
+            target.setLayerDesc( source.getLayerDesc() );
+
+        if( source.getGeoName() != null)
+            target.setGeoName( source.getGeoName() );
+
+        if( source.getSrsCode() != null)
+            target.setSrsCode( source.getSrsCode() );
+
+        if( source.getShortCopyright() != null)
+            target.setShortCopyright( source.getShortCopyright() );
+
+        if( source.getLongCopyright() != null)
+            target.setLongCopyright( source.getLongCopyright() );
+
+        if(  source.getStyleGeom() != null)
+            target.setStyleGeom( source.getStyleGeom() );
     }
 }

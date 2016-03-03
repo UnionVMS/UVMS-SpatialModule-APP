@@ -170,7 +170,6 @@ public class MapConfigServiceTest {
         serviceLayerEntity.setProviderFormat(providerFormatEntity);
         AreaLocationTypesEntity areaLocationTypesEntity = new AreaLocationTypesEntity();
         serviceLayerEntity.setAreaType(areaLocationTypesEntity);
-        serviceLayerEntity.setId(id);
         serviceLayerEntity.setName(serviceType);
         return serviceLayerEntity;
     }

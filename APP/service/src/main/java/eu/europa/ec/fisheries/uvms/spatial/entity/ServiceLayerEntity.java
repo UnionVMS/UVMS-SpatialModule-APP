@@ -38,18 +38,11 @@ import org.apache.commons.lang3.StringUtils;
                         "From ServiceLayerEntity serviceLayer INNER JOIN serviceLayer.providerFormat providerFormat " +
                         "WHERE serviceLayer.subType in (:subTypes) AND providerFormat.serviceType <> 'BING' order by serviceLayer.id")
 })
-public class ServiceLayerEntity implements Serializable {
-
-    private static final long serialVersionUID = 6797853213499502871L;
+public class ServiceLayerEntity extends BaseEntity {
 
     public static final String BY_NAME = "ServiceLayer.byName";
 
     private static final String GEOSERVER = "geoserver";
-
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
 
     @ManyToOne
     @JoinColumn(name = "provider_format_id", nullable = false)
@@ -102,14 +95,6 @@ public class ServiceLayerEntity implements Serializable {
     private Set<ReportConnectServiceAreasEntity> reportConnectServiceAreas;
 
     public ServiceLayerEntity() {
-    }
-
-    public long getId() {
-        return this.id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public ProviderFormatEntity getProviderFormat() {
