@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Created by padhyad on 11/25/2015.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class LayersDto {
+public class LayersDto implements Comparable<LayersDto> {
 
     @JsonProperty("name")
     private String name;
@@ -17,6 +17,9 @@ public class LayersDto {
 
     @JsonProperty("subType")
     private String subType;
+
+    @JsonProperty("order")
+    private Long order;
 
     public LayersDto() {}
 
@@ -59,6 +62,24 @@ public class LayersDto {
     @JsonProperty("subType")
     public void setSubType(String subType) {
         this.subType = subType;
+    }
+
+    @JsonProperty("order")
+    public Long getOrder() {
+        return order;
+    }
+
+    @JsonProperty("order")
+    public void setOrder(Long order) {
+        this.order = order;
+    }
+
+    @Override
+    public int compareTo(LayersDto layersDto) {
+        if (this.getOrder() == null || layersDto.getOrder() == null) {
+            return 1;
+        }
+        return Long.compare(this.getOrder(), layersDto.getOrder());
     }
 }
 

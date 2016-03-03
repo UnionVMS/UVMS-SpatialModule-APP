@@ -289,21 +289,18 @@
         "serviceLayerId": 11
       }
     ],
-    "areaLayers": {
-      "sysAreas": [
-        {
-          "serviceLayerId": 1
-        },
-        {
-          "serviceLayerId": 2
-        }
-      ],
-      "userAreas": {
-        "serviceLayerId": 5,
-        "areas": [
-        ]
+    "areaLayers": [
+      {
+        "areaType" : "sysarea",
+        "serviceLayerId": 1,
+        "order" : 1
+      },
+      {
+        "areaType" : "sysarea",
+        "serviceLayerId": 2,
+        "order" : 2
       }
-    },
+    ],
     "additionalLayers": [
       {
         "serviceLayerId": 7
