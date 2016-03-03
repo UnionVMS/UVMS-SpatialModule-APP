@@ -18,16 +18,18 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 public class ServiceLayer {
 
     @JsonProperty("id")
+    @JsonView(Views.Public.class)
     private Long id;
     @JsonProperty("name")
+    @JsonView(Views.Public.class)
     private String name;
-    @JsonView(Views.Detail.class)
+    @JsonView(Views.Public.class)
     @JsonProperty("layerDesc")
     private String layerDesc;
-    @JsonView(Views.Detail.class)
+    @JsonView(Views.Public.class)
     @JsonProperty("longCopyright")
     private String longCopyright;
-    @JsonView(Views.Detail.class)
+    @JsonView(Views.Public.class)
     @JsonProperty("shortCopyright")
     private String shortCopyright;
     @JsonProperty("geoName")
@@ -224,7 +226,7 @@ public class ServiceLayer {
      *     The srsCode
      */
     @JsonProperty("srsCode")
-    public long getSrsCode() {
+    public Integer getSrsCode() {
         return srsCode;
     }
 

@@ -3,6 +3,8 @@ package eu.europa.ec.fisheries.uvms.spatial.repository;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.dao.ServiceLayerDao;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity;
+import eu.europa.ec.fisheries.uvms.spatial.model.layer.ServiceLayer;
+
 import javax.annotation.PostConstruct;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
@@ -25,5 +27,10 @@ public class LayerRepositoryBean implements LayerRepository {
     @Override
     public ServiceLayerEntity getServiceLayerBy(String name) throws ServiceException {
         return serviceLayerDao.getBy(name);
+    }
+
+    @Override
+    public ServiceLayerEntity getServiceLayerBy(Long id) throws ServiceException {
+        return serviceLayerDao.findEntityById(ServiceLayerEntity.class, id);
     }
 }
