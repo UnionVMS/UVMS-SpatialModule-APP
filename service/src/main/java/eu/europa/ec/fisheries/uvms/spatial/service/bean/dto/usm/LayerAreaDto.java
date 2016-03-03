@@ -3,6 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.util.AreaTypeEnum;
 
 import java.util.List;
 
@@ -12,23 +13,69 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class LayerAreaDto extends LayersDto {
 
-    @JsonProperty("areas")
-    private List<AreaDto> areaDtos;
+    @JsonProperty("areaType")
+    private AreaTypeEnum areaType;
 
-    public LayerAreaDto() {}
+    @JsonProperty("gid")
+    private Long gid;
 
-    public LayerAreaDto(List<AreaDto> areaDtos, String name, String serviceLayerId, String subType) {
-        super(name, serviceLayerId, subType);
-        this.areaDtos = areaDtos;
+    @JsonProperty("areaName")
+    private String areaName;
+
+    @JsonProperty("desc")
+    private String areaDesc;
+
+    @JsonProperty("areaGroupName")
+    private String areaGroupName;
+
+    @JsonProperty("areaType")
+    public AreaTypeEnum getAreaType() {
+        return areaType;
     }
 
-    @JsonProperty("areas")
-    public List<AreaDto> getAreaDtos() {
-        return areaDtos;
+    @JsonProperty("areaType")
+    public void setAreaType(AreaTypeEnum areaType) {
+        this.areaType = areaType;
     }
 
-    @JsonProperty("areas")
-    public void setAreaDtos(List<AreaDto> areaDtos) {
-        this.areaDtos = areaDtos;
+    @JsonProperty("gid")
+    public Long getGid() {
+        return gid;
     }
+
+    @JsonProperty("gid")
+    public void setGid(Long gid) {
+        this.gid = gid;
+    }
+
+    @JsonProperty("areaName")
+    public String getAreaName() {
+        return areaName;
+    }
+
+    @JsonProperty("areaName")
+    public void setAreaName(String areaName) {
+        this.areaName = areaName;
+    }
+
+    @JsonProperty("desc")
+    public String getAreaDesc() {
+        return areaDesc;
+    }
+
+    @JsonProperty("desc")
+    public void setAreaDesc(String areaDesc) {
+        this.areaDesc = areaDesc;
+    }
+
+    @JsonProperty("areaGroupName")
+    public String getAreaGroupName() {
+        return areaGroupName;
+    }
+
+    @JsonProperty("areaGroupName")
+    public void setAreaGroupName(String areaGroupName) {
+        this.areaGroupName = areaGroupName;
+    }
+
 }

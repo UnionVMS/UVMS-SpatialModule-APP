@@ -21,11 +21,11 @@ public class LayerSettingsDto {
     private List<LayersDto> additionalLayers;
 
     @JsonProperty("areaLayers")
-    private AreaLayersDto areaLayers;
+    private List<LayerAreaDto> areaLayers;
 
     public LayerSettingsDto() {}
 
-    public LayerSettingsDto(List<LayersDto> baseLayers, List<LayersDto> portLayers, List<LayersDto> additionalLayers, AreaLayersDto areaLayers) {
+    public LayerSettingsDto(List<LayersDto> baseLayers, List<LayersDto> portLayers, List<LayersDto> additionalLayers, List<LayerAreaDto> areaLayers) {
         this.baseLayers = baseLayers;
         this.portLayers = portLayers;
         this.additionalLayers = additionalLayers;
@@ -33,12 +33,12 @@ public class LayerSettingsDto {
     }
 
     @JsonProperty("areaLayers")
-    public AreaLayersDto getAreaLayers() {
+    public List<LayerAreaDto> getAreaLayers() {
         return areaLayers;
     }
 
     @JsonProperty("areaLayers")
-    public void setAreaLayers(AreaLayersDto areaLayers) {
+    public void setAreaLayers(List<LayerAreaDto> areaLayers) {
         this.areaLayers = areaLayers;
     }
 

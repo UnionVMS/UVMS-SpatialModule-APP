@@ -49,11 +49,21 @@ public class LayerDto {
     @JsonProperty("styles")
     private StylesDto styles;
 
+    @JsonProperty("gid")
+    private Long gid;
+
+    @JsonProperty("name")
+    private String name;
+
+/*
     @JsonProperty("areas")
-    private List<AreaDto> areaDto;
+    private List<AreaDto> areaDto;*/
 
     @JsonProperty("apiKey")
     private String apiKey;
+
+    @JsonProperty("cql")
+    private String cql;
 
     /**
      * No args constructor for use in serialization
@@ -160,13 +170,33 @@ public class LayerDto {
         this.apiKey = apiKey;
     }
 
-    @JsonProperty("areas")
-    public List<AreaDto> getAreaDto() {
-        return areaDto;
+    @JsonProperty("gid")
+    public Long getGid() {
+        return gid;
     }
 
-    @JsonProperty("areas")
-    public void setAreaDto(List<AreaDto> areaDto) {
-        this.areaDto = areaDto;
+    @JsonProperty("gid")
+    public void setGid(Long gid) {
+        this.gid = gid;
+    }
+
+    @JsonProperty("name")
+    public String getName() {
+        return name;
+    }
+
+    @JsonProperty("name")
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @JsonProperty("cql")
+    public String getCql() {
+        return cql;
+    }
+
+    @JsonProperty("cql")
+    public void setCql(String cql) {
+        this.cql = cql;
     }
 }
