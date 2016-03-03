@@ -7,12 +7,14 @@ import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.*;
 import eu.europa.ec.fisheries.uvms.spatial.entity.mapper.ReportConnectSpatialMapper;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
+import eu.europa.ec.fisheries.uvms.spatial.repository.LayerRepository;
 import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.MapConfigMapper;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.ProjectionMapper;
+import eu.europa.ec.fisheries.uvms.spatial.util.AreaTypeEnum;
 import eu.europa.ec.fisheries.uvms.spatial.util.SpatialTypeEnum;
 import eu.europa.ec.fisheries.uvms.spatial.validator.SpatialValidator;
 import lombok.SneakyThrows;
@@ -45,8 +47,13 @@ public class MapConfigServiceBean implements MapConfigService {
 
     private static final Integer DEFAULT_EPSG = 3857;
 
+    private static final String USER_AREA = "userarea";
+
     @EJB
     private SpatialRepository repository;
+
+    @EJB
+    private LayerRepository layer;
 
     @Override
     @SneakyThrows
@@ -184,11 +191,7 @@ public class MapConfigServiceBean implements MapConfigService {
         ids.addAll(getServiceLayerIds(layerSettingsDto.getAdditionalLayers()));
         ids.addAll(getServiceLayerIds(layerSettingsDto.getBaseLayers()));
         ids.addAll(getServiceLayerIds(layerSettingsDto.getPortLayers()));
-
-        if (layerSettingsDto.getAreaLayers() != null) {
-            ids.addAll(getServiceLayerIds(layerSettingsDto.getAreaLayers().getSysAreas()));
-            ids.addAll(getServiceLayerIds(layerSettingsDto.getAreaLayers().getUserAreas() != null ? Arrays.asList(layerSettingsDto.getAreaLayers().getUserAreas()) : null));
-        }
+        ids.addAll(getServiceLayerIds(layerSettingsDto.getAreaLayers()));
 
         if (ids.isEmpty()) {
             return; // There is no Areas in the LayersSettings. Returning the call
@@ -200,18 +203,61 @@ public class MapConfigServiceBean implements MapConfigService {
         updateLayer(layerSettingsDto.getAdditionalLayers(), serviceLayers, bingApiKey);
         updateLayer(layerSettingsDto.getBaseLayers(), serviceLayers, bingApiKey);
         updateLayer(layerSettingsDto.getPortLayers(), serviceLayers, bingApiKey);
+        updateLayer(layerSettingsDto.getAreaLayers(), serviceLayers, bingApiKey);
+        updateAreaLayer(layerSettingsDto.getAreaLayers(), serviceLayers, bingApiKey, userName);
 
-        if (layerSettingsDto.getAreaLayers() != null) { // Extra null check for AreaLayers before updating system area and user area
-            updateLayer(layerSettingsDto.getAreaLayers().getSysAreas(), serviceLayers, bingApiKey);
-            updateLayer(layerSettingsDto.getAreaLayers().getUserAreas() != null ? Arrays.asList(layerSettingsDto.getAreaLayers().getUserAreas()) : null, serviceLayers, bingApiKey);
+        sortLayer(layerSettingsDto.getAdditionalLayers());
+        sortLayer(layerSettingsDto.getBaseLayers());
+        sortLayer(layerSettingsDto.getPortLayers());
+        sortLayer(layerSettingsDto.getAreaLayers());
+    }
 
-            if (userName != null && layerSettingsDto.getAreaLayers().getUserAreas() != null && includeUserArea) {
-                updateAreas(layerSettingsDto.getAreaLayers().getUserAreas(), SpatialTypeEnum.USERAREA, userName);
-            } else if (!includeUserArea) {
-                layerSettingsDto.getAreaLayers().setUserAreas(null);
+    private void sortLayer(List<? extends LayersDto> layers) {
+        Collections.sort(layers);
+        for (LayersDto layerDto : layers) {
+            layerDto.setOrder(null);
+        }
+    }
+
+    private List<Long> getUserAreaIds(List<LayerAreaDto> layers) {
+        List<Long> userAreaIds = new ArrayList<>();
+        for (LayerAreaDto layerDto : layers) {
+            if (layerDto.getAreaType().getType().equalsIgnoreCase(USER_AREA)) {
+                userAreaIds.add(layerDto.getGid());
+            }
+        }
+        return userAreaIds;
+    }
+
+    private void updateAreaLayer(List<LayerAreaDto> layers, List<ServiceLayerEntity> serviceLayers, String bingApiKey, String userName) throws ServiceException {
+        List<Long> userAreaIds = getUserAreaIds(layers);
+        if (!userAreaIds.isEmpty()) {
+            List<AreaDto> areaDtos = repository.findAllUserAreasByGids(userAreaIds);
+            for (LayerAreaDto layerDto : layers) {
+                for (AreaDto areaDto :  areaDtos) {
+                    if (layerDto.getGid() == areaDto.getGid()) {
+                        layerDto.setAreaName(areaDto.getName());
+                        layerDto.setAreaDesc(areaDto.getDesc());
+                    }
+                }
+            }
+        } else if (userName != null) {
+            List<AreaDto> areaDtos = repository.getAllUserAreas(userName);
+            ServiceLayerEntity serviceLayerEntity = layer.getServiceLayerBy(USER_AREA.toUpperCase());
+            for (AreaDto areaDto :  areaDtos) {
+                LayerAreaDto layerAreaDto = new LayerAreaDto();
+                layerAreaDto.setGid(areaDto.getGid());
+                layerAreaDto.setAreaName(areaDto.getName());
+                layerAreaDto.setAreaDesc(areaDto.getDesc());
+                layerAreaDto.setAreaType(AreaTypeEnum.userarea);
+                layerAreaDto.setServiceLayerId(Long.toString(serviceLayerEntity.getId()));
+                layerAreaDto.setName(serviceLayerEntity.getName());
+                layerAreaDto.setSubType(serviceLayerEntity.getSubType());
+                layers.add(layerAreaDto);
             }
         }
     }
+
 
     private void updateLayer(List<? extends LayersDto> layers, List<ServiceLayerEntity> serviceLayers, String bingApiKey) {
         if (layers != null) {
@@ -231,31 +277,6 @@ public class MapConfigServiceBean implements MapConfigService {
             }
             layers.removeAll(layersToExclude);
         }
-    }
-
-    private void updateAreas(LayerAreaDto layerAreaDto, SpatialTypeEnum spatialTypeEnum, String userName) {
-        List<AreaDto> areas = layerAreaDto.getAreaDtos();
-        switch (spatialTypeEnum) {
-            case USERAREA:
-                layerAreaDto.setAreaDtos(sortAreas(getUserAreaDtos(areas, userName), areas));
-                break;
-        }
-    }
-
-    private List<AreaDto> getUserAreaDtos(List<AreaDto> areas, String userName) {
-        if (areas != null && !areas.isEmpty()) {
-            return repository.findAllUserAreasByGids(getAreaIds(areas));
-        } else {
-            return repository.getAllUserAreas(userName);
-        }
-    }
-
-    private List<Long> getAreaIds(List<AreaDto> areas) {
-        List<Long> ids = new ArrayList<Long>();
-        for (AreaDto areaDto : areas) {
-            ids.add(areaDto.getGid());
-        }
-        return ids;
     }
 
     private MapDto getMap(ConfigurationDto configurationDto, int reportId, String userName) throws ServiceException {
@@ -372,70 +393,51 @@ public class MapConfigServiceBean implements MapConfigService {
     private ServiceLayersDto getServiceAreaLayersFromConfig(ConfigurationDto configurationDto, String geoServerUrl, String bingApiKey, ProjectionDto projection, String userName) throws ServiceException {
         ServiceLayersDto serviceLayersDto = new ServiceLayersDto();
         serviceLayersDto.setPortLayers(getLayerDtoList(configurationDto.getLayerSettings().getPortLayers(), geoServerUrl, bingApiKey, projection, false)); // Get Service Layers for Port layers
-
-        if (configurationDto.getLayerSettings().getAreaLayers() != null) {
-            serviceLayersDto.setSystemLayers(getLayerDtoList(configurationDto.getLayerSettings().getAreaLayers().getSysAreas(), geoServerUrl, bingApiKey, projection, false)); // Get Service Layers for system layers
-            serviceLayersDto.setUserLayer(getUserLayer(configurationDto.getLayerSettings().getAreaLayers().getUserAreas(), configurationDto, geoServerUrl, bingApiKey, projection, userName)); // Get Service layer and areas for user area
-        }
+        serviceLayersDto.setSystemLayers(getAreaLayerDtoList(configurationDto.getLayerSettings().getAreaLayers(), geoServerUrl, bingApiKey, projection, false)); // // Get Service Layers for system layers and User Layers
         serviceLayersDto.setAdditionalLayers(getLayerDtoList(configurationDto.getLayerSettings().getAdditionalLayers(), geoServerUrl, bingApiKey, projection, false)); // Get Service Layers for Additional layers
         serviceLayersDto.setBaseLayers(getLayerDtoList(configurationDto.getLayerSettings().getBaseLayers(), geoServerUrl, bingApiKey, projection, true)); // Get Service Layers for base layers
         return serviceLayersDto;
     }
 
-    private LayerDto getUserLayer(LayerAreaDto userArea, ConfigurationDto configurationDto, String geoServerUrl, String bingApiKey, ProjectionDto projection, String userName) {
-        LayerDto userLayer = null;
-        if (userArea != null && userArea.getAreaDtos() != null && !userArea.getAreaDtos().isEmpty()) {
-            List<LayerDto> userLayerDtos = getLayerDtoList(Arrays.asList(userArea), geoServerUrl, bingApiKey, projection, false);
-            if (userLayerDtos != null && !userLayerDtos.isEmpty()) {
-                userLayer = userLayerDtos.get(0);
-                List<AreaDto> areaDtos = sortAreas(getUserAreaDtos(configurationDto.getLayerSettings().getAreaLayers().getUserAreas().getAreaDtos(), userName), userArea.getAreaDtos());
-                for(AreaDto areaDto : areaDtos) {
-                    areaDto.setDesc(null);
-                }
-                userLayer.setAreaDto(areaDtos);
-            }
+    private List<LayerDto> getAreaLayerDtoList(List<LayerAreaDto> layersDtos, String geoServerUrl, String bingApiKey, ProjectionDto projection, boolean isBackground) {
+        if (layersDtos == null || layersDtos.isEmpty()) {
+            return null;
         }
-        return userLayer;
-    }
-
-    private List<AreaDto> sortAreas(List<AreaDto> toSort, List<AreaDto> order) {
-        if(toSort == null || toSort.isEmpty()) {
-            return Collections.emptyList();
-        }
-        List<AreaDto> tempAreDtos = new ArrayList<>();
-        for (AreaDto areaOrder : order) {
-            for (AreaDto areaToSort : toSort) {
-                if (areaOrder.getGid() == areaToSort.getGid()) {
-                    tempAreDtos.add(areaToSort);
+        Collections.sort(layersDtos);
+        List<LayerDto> layerDtoList = new ArrayList<>();
+        for (LayerAreaDto layerAreaDto : layersDtos) {
+            List<ServiceLayerEntity> serviceLayers = getServiceLayers(Arrays.asList(Long.parseLong(layerAreaDto.getServiceLayerId())), projection, bingApiKey);
+            if (serviceLayers != null && !serviceLayers.isEmpty()) {
+                ServiceLayerEntity serviceLayer = serviceLayers.get(0);
+                List<LayerDto> layerDtos = getLayerDtos(Arrays.asList(serviceLayer), geoServerUrl, bingApiKey, isBackground);
+                if (layerDtos != null && !layerDtos.isEmpty()) {
+                    LayerDto layerDto = layerDtos.get(0);
+                    if (layerAreaDto.getAreaType().equals(AreaTypeEnum.userarea)) {
+                        List<AreaDto> userAreas = repository.findAllUserAreasByGids(Arrays.asList(layerAreaDto.getGid()));
+                        layerDto.setGid((userAreas != null & !userAreas.isEmpty()) ? userAreas.get(0).getGid() : null);
+                        layerDto.setName((userAreas != null & !userAreas.isEmpty()) ? userAreas.get(0).getName() : null);
+                    } else if (layerAreaDto.getAreaType().equals(AreaTypeEnum.areagroup)) {
+                        layerDto.setCql("type=" + layerAreaDto.getAreaGroupName());
+                    }
+                    layerDtoList.add(layerDto);
                 }
             }
         }
-        return tempAreDtos;
+        return layerDtoList;
     }
 
     private List<LayerDto> getLayerDtoList(List<? extends LayersDto> layersDtos, String geoServerUrl, String bingApiKey, ProjectionDto projection, boolean isBackground) {
         if (layersDtos == null || layersDtos.isEmpty()) {
             return null;
         }
+        Collections.sort(layersDtos);
         List<Long> serviceLayerIds = getServiceLayerIds(layersDtos);
-        List<ServiceLayerEntity> serviceLayerEntities = sort(getServiceLayers(serviceLayerIds, projection, bingApiKey), serviceLayerIds);
+        List<ServiceLayerEntity> serviceLayerEntities = getServiceLayers(serviceLayerIds, projection, bingApiKey);
         return getLayerDtos(serviceLayerEntities, geoServerUrl, bingApiKey, isBackground);
-    }
-
-    private List<ServiceLayerEntity> sort(List<ServiceLayerEntity> overlayServiceLayerEntities, List<Long> ids) {
-        List<ServiceLayerEntity> tempList = new ArrayList<ServiceLayerEntity>();
-        for(Long id : ids) {
-            for(ServiceLayerEntity serviceLayerEntity : overlayServiceLayerEntities) {
-                if (id.equals(serviceLayerEntity.getId())) {
-                    tempList.add(serviceLayerEntity);
-                }
-            }
-        }
-        return tempList;
-    }
+    };
 
     private List<LayerDto> getLayerDtos(List<ServiceLayerEntity> serviceLayerEntities, String geoserverUrl, String bingApiKey, boolean isBaseLayer) {
-        List<LayerDto> layerDtos = new ArrayList<LayerDto>();
+        List<LayerDto> layerDtos = new ArrayList<>();
         for (ServiceLayerEntity serviceLayerEntity : serviceLayerEntities) {
             layerDtos.add(serviceLayerEntity.convertToServiceLayer(geoserverUrl, bingApiKey, isBaseLayer));
         }

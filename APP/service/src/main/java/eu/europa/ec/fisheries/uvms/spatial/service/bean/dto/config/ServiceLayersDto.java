@@ -33,21 +33,21 @@ public class ServiceLayersDto {
     @JsonProperty("systemAreas")
     private List<LayerDto> systemLayers;
 
-    @JsonProperty("userAreas")
-    private LayerDto userLayer;
+/*    @JsonProperty("userAreas")
+    private LayerDto userLayer;*/
 
     public ServiceLayersDto() {}
 
     public ServiceLayersDto(List<LayerDto> portLayers,
                             List<LayerDto> additionalLayers,
                             List<LayerDto> baseLayers,
-                            List<LayerDto> systemLayers,
-                            LayerDto userLayer) {
+                            List<LayerDto> systemLayers/*,
+                            LayerDto userLayer*/) {
         this.portLayers = portLayers;
         this.additionalLayers = additionalLayers;
         this.baseLayers = baseLayers;
         this.systemLayers = systemLayers;
-        this.userLayer = userLayer;
+       // this.userLayer = userLayer;
 
     }
 
@@ -91,7 +91,7 @@ public class ServiceLayersDto {
         this.systemLayers = systemLayers;
     }
 
-    @JsonProperty("userAreas")
+/*    @JsonProperty("userAreas")
     public LayerDto getUserLayer() {
         return userLayer;
     }
@@ -99,5 +99,5 @@ public class ServiceLayersDto {
     @JsonProperty("userAreas")
     public void setUserLayer(LayerDto userLayer) {
         this.userLayer = userLayer;
-    }
+    }*/
 }
