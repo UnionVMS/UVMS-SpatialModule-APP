@@ -12,7 +12,7 @@ public final class RestConstants {
 
     public static final String VIEW = "view";
     public static final String NAME = "name";
-    public static final String DETAIL = "DETAIL";
+    public static final String PUBLIC = "PUBLIC";
 
     public static final String ACCESS_CONTROL_ALLOW_ORIGIN = "Access-ControlDto-Allow-Origin";
     public static final String ACCESS_CONTROL_ALLOW_METHODS_ALL = "*";
