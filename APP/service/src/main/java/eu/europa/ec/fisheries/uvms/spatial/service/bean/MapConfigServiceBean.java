@@ -481,7 +481,7 @@ public class MapConfigServiceBean implements MapConfigService {
     }
 
     private List<ServiceLayerEntity> getServiceLayers(List<Long> ids, ProjectionDto projection, String bingApiKey) {
-        List<ServiceLayerEntity> serviceLayers = repository.findServiceLayerEntityByIds(ids);
+        List<ServiceLayerEntity> serviceLayers = sortServiceLayers(repository.findServiceLayerEntityByIds(ids), ids);
         Iterator<ServiceLayerEntity> layerIterator = serviceLayers.iterator();
         while(layerIterator.hasNext()) {
             ServiceLayerEntity serviceLayer = layerIterator.next();
@@ -490,6 +490,20 @@ public class MapConfigServiceBean implements MapConfigService {
             }
         }
         return serviceLayers;
+    }
+
+    public List<ServiceLayerEntity> sortServiceLayers(List<ServiceLayerEntity> serviceLayers, List<Long> ids) {
+        List<ServiceLayerEntity> sortedServiceLayers = new ArrayList<>();
+        if (serviceLayers!= null && ids != null) {
+            for (Long id : ids) {
+                for (ServiceLayerEntity serviceLayerEntity : serviceLayers) {
+                    if (id == serviceLayerEntity.getId()) {
+                        sortedServiceLayers.add(serviceLayerEntity);
+                    }
+                }
+            }
+        }
+        return sortedServiceLayers;
     }
 
     private boolean isRemoveLayer(ProjectionDto projection, ServiceLayerEntity serviceLayer, String bingApiKey) {
