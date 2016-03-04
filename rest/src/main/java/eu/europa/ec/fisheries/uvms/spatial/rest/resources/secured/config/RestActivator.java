@@ -32,6 +32,7 @@ public class RestActivator extends Application {
         set.add(BookmarkResource.class);
         set.add(ImageResource.class);
         set.add(ServiceLayerResource.class);
+        set.add(CalculateResource.class);
         LOG.info(RestConstants.MODULE_NAME + " module starting up");
     }
 

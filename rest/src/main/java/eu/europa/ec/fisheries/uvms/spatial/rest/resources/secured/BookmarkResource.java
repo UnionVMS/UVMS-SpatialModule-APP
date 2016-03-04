@@ -5,7 +5,7 @@ import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.spatial.model.bookmark.Bookmark;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.service.bookmark.BookmarkService;
+import eu.europa.ec.fisheries.uvms.spatial.service.BookmarkService;
 import lombok.extern.slf4j.Slf4j;
 import javax.ejb.EJB;
 import javax.interceptor.Interceptors;

@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.mapfish;
 
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.MapFishService;
 import lombok.extern.slf4j.Slf4j;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
