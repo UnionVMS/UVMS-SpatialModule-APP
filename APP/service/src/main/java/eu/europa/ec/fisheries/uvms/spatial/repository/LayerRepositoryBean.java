@@ -25,8 +25,8 @@ public class LayerRepositoryBean implements LayerRepository {
     }
 
     @Override
-    public ServiceLayerEntity getServiceLayerBy(String name) throws ServiceException {
-        return serviceLayerDao.getBy(name);
+    public ServiceLayerEntity getServiceLayerBy(String locationType) throws ServiceException {
+        return serviceLayerDao.getBy(locationType);
     }
 
     @Override

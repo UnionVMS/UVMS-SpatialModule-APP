@@ -20,13 +20,13 @@ public class ServiceLayerServiceBean implements ServiceLayerService {
     private LayerRepository repository;
 
     @Override
-    public ServiceLayer findBy(final String name) throws ServiceException {
+    public ServiceLayer findBy(final String locationType) throws ServiceException {
 
-        if (name == null){
-            throw new ServiceException("name null not allowed");
+        if (locationType == null){
+            throw new ServiceException("locationType null not allowed");
         }
 
-        ServiceLayerEntity entity = repository.getServiceLayerBy(name);
+        ServiceLayerEntity entity = repository.getServiceLayerBy(locationType);
 
         return ServiceLayerMapper.INSTANCE.serviceLayerEntityToServiceLayer(entity);
 
