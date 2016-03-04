@@ -23,7 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 @Table(name = "service_layer", schema = "spatial")
 @NamedQueries({
         @NamedQuery(name = ServiceLayerEntity.BY_LOCATION_TYPE,
-                query = "FROM ServiceLayerEntity s JOIN FETCH s.areaType WHERE upper(s.areaType.typeName) = upper(:locationType)"),
+                query = "FROM ServiceLayerEntity s JOIN FETCH s.areaType a WHERE a.isSystemWide = 'Y' AND upper(s.areaType.typeName) = upper(:locationType)"),
         @NamedQuery(name = QueryNameConstants.FIND_SERVICE_LAYERS_BY_ID,
                 query = "SELECT serviceLayer FROM ServiceLayerEntity serviceLayer WHERE serviceLayer.id in (:ids) order by serviceLayer.id"),
         @NamedQuery(name = QueryNameConstants.FIND_SERVICE_LAYER_BY_SUBTYPE,
