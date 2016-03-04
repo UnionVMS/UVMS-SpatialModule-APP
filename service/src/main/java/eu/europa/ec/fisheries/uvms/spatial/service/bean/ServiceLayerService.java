@@ -5,7 +5,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.layer.ServiceLayer;
 
 public interface ServiceLayerService {
 
-    public ServiceLayer findBy(String name) throws ServiceException;
+    public ServiceLayer findBy(String locationType) throws ServiceException;
 
     void update(ServiceLayer serviceLayer) throws ServiceException;
 }

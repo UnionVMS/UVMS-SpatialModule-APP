@@ -37,15 +37,15 @@ public class ServiceLayerResource extends UnionVMSResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("{name}")
-    public Response getServiceLayerByName(
-            @PathParam(NAME) String name,
+    public Response getServiceLayerBylocationType(
+            @PathParam(NAME) String locationType,
             @DefaultValue(RestConstants.PUBLIC) @QueryParam(value = VIEW) String view) {
 
         Response response = createErrorResponse("Service layer not found");
 
         try {
 
-            final ServiceLayer serviceLayer = service.findBy(name);
+            final ServiceLayer serviceLayer = service.findBy(locationType);
 
             if (serviceLayer != null){
 

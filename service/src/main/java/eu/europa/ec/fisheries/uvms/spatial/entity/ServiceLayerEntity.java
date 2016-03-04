@@ -1,15 +1,11 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
-import java.io.Serializable;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -26,8 +22,8 @@ import org.apache.commons.lang3.StringUtils;
 @Entity
 @Table(name = "service_layer", schema = "spatial")
 @NamedQueries({
-        @NamedQuery(name = ServiceLayerEntity.BY_NAME,
-                query = "FROM ServiceLayerEntity s WHERE upper(s.name) = upper(:name)"),
+        @NamedQuery(name = ServiceLayerEntity.BY_LOCATION_TYPE,
+                query = "FROM ServiceLayerEntity s JOIN FETCH s.areaType WHERE upper(s.areaType.typeName) = upper(:locationType)"),
         @NamedQuery(name = QueryNameConstants.FIND_SERVICE_LAYERS_BY_ID,
                 query = "SELECT serviceLayer FROM ServiceLayerEntity serviceLayer WHERE serviceLayer.id in (:ids) order by serviceLayer.id"),
         @NamedQuery(name = QueryNameConstants.FIND_SERVICE_LAYER_BY_SUBTYPE,
@@ -40,7 +36,7 @@ import org.apache.commons.lang3.StringUtils;
 })
 public class ServiceLayerEntity extends BaseEntity {
 
-    public static final String BY_NAME = "ServiceLayer.byName";
+    public static final String BY_LOCATION_TYPE = "ServiceLayer.byLocationType";
 
     private static final String GEOSERVER = "geoserver";
 
