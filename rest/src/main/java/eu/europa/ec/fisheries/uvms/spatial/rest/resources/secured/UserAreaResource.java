@@ -128,12 +128,20 @@ public class UserAreaResource extends UnionVMSResource {
     @Path("/userareadetails")
     @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
     public Response getUserAreaDetails(UserAreaCoordinateType userAreaTypeDto, @Context HttpServletRequest request, @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName) throws IOException, ParseException, ServiceException {
+        Response response;
         boolean isPowerUser = isPowerUser(request);
-        if (userAreaTypeDto.getId() != null) {
-            return getUserAreaDetailsById(userAreaTypeDto, request.getRemoteUser(), isPowerUser, scopeName);
-        } else {
-            return getUserAreaDetailsByLocation(userAreaTypeDto, request.getRemoteUser());
+        try {
+            if (userAreaTypeDto.getId() != null) {
+                response = getUserAreaDetailsById(userAreaTypeDto, request.getRemoteUser(), isPowerUser, scopeName);
+            } else {
+                response = getUserAreaDetailsByLocation(userAreaTypeDto, request.getRemoteUser());
+            }
         }
+        catch (Exception ex){
+            response = createErrorResponse(ex.getMessage());
+        }
+
+        return response;
     }
 
     private boolean isPowerUser(HttpServletRequest request) {
@@ -170,7 +178,8 @@ public class UserAreaResource extends UnionVMSResource {
         }
     }
 
-    private Response getUserAreaDetailsByLocation(UserAreaCoordinateType userAreaTypeDto, String userName) throws IOException, ParseException {
+    private Response getUserAreaDetailsByLocation(UserAreaCoordinateType userAreaTypeDto, String userName) throws Exception {
+
         if (!userAreaTypeDto.getIsGeom()) {
             Coordinate coordinate = areaLocationMapper.getCoordinateFromDto(userAreaTypeDto);
             List<UserAreaDto> userAreaDetails = userAreaService.getUserAreaDetailsWithExtentByLocation(coordinate, userName);
