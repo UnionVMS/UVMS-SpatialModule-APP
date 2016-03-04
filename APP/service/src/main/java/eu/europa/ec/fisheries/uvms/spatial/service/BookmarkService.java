@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.spatial.service.bookmark;
+package eu.europa.ec.fisheries.uvms.spatial.service;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.model.bookmark.Bookmark;

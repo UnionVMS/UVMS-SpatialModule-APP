@@ -19,7 +19,7 @@ import javax.ejb.Stateless;
 import javax.transaction.Transactional;
 import java.util.List;
 
-import static eu.europa.ec.fisheries.uvms.spatial.util.SpatialUtils.convertToPointInWGS84;
+import static eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialUtils.convertToPointInWGS84;
 
 @Stateless
 @Local(AreaByLocationService.class)

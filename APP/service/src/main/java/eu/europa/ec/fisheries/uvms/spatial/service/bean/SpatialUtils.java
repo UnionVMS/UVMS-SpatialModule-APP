@@ -1,15 +1,18 @@
-package eu.europa.ec.fisheries.uvms.spatial.util;
+package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.PointType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.geotools.geometry.jts.JTS;
+import org.geotools.geometry.jts.WKTWriter2;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.geometry.MismatchedDimensionException;
@@ -28,14 +31,18 @@ public class SpatialUtils {
     private SpatialUtils() {
     }
 
-    public static Point convertToPointInWGS84(PointType schemaPoint) {
+    static Point convertToPointInWGS84(PointType schemaPoint) {
         return convertToPointInWGS84(schemaPoint.getLongitude(), schemaPoint.getLatitude(), defaultIfNull(schemaPoint.getCrs()));
     }
 
-    public static Point convertToPointInWGS84(double lon, double lat, int crs) {
+    static String calculateBuffer(final Double latitude, final Double longitude, final Double buffer) {
+        Geometry geometry = SpatialUtils.getPoint(longitude, latitude).buffer(buffer);
+        return new WKTWriter2().write(geometry);
+    }
+
+    static Point convertToPointInWGS84(double lon, double lat, int crs) {
         try {
-            GeometryFactory gf = new GeometryFactory();
-            Point point = gf.createPoint(new Coordinate(lon, lat));
+            Point point = getPoint(lon, lat);
             if (!isDefaultCrs(crs)) {
                 point = transform(crs, point);
             }
@@ -50,7 +57,19 @@ public class SpatialUtils {
         }
     }
 
-    public static Point transform(int crs, Point point) throws FactoryException, TransformException {
+    static Point getPoint(double lon, double lat) {
+
+        try {
+            GeometryFactory gf = new GeometryFactory();
+            return gf.createPoint(new Coordinate(lon, lat));
+        }
+        catch (Exception ex){
+            log.error("Exception while conversion to point", ex);
+            throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR, ex);
+        }
+    }
+
+    static Point transform(int crs, Point point) throws FactoryException, TransformException {
         CoordinateReferenceSystem inputCrs = CRS.decode(EPSG + crs);
         MathTransform mathTransform = CRS.findMathTransform(inputCrs, DefaultGeographicCRS.WGS84, false);
         point = (Point) JTS.transform(point, mathTransform);
@@ -71,7 +90,7 @@ public class SpatialUtils {
                 if (value != null) {
                     return value.toUpperCase();
                 }
-                return "";
+                return StringUtils.EMPTY;
             }
         });
     }
