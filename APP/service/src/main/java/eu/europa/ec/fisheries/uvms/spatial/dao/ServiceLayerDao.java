@@ -24,13 +24,13 @@ public class ServiceLayerDao extends AbstractDAO<ServiceLayerEntity> {
     }
 
     @SuppressWarnings("unchecked")
-    public ServiceLayerEntity getBy(String name) throws ServiceException {
+    public ServiceLayerEntity getBy(String locationType) throws ServiceException {
 
         ServiceLayerEntity serviceLayerEntity = null;
 
         try {
-            List<ServiceLayerEntity> layers = findEntityByNamedQuery(ServiceLayerEntity.class, ServiceLayerEntity.BY_NAME,
-                    QueryParameter.with("name", name).parameters(), 1);
+            List<ServiceLayerEntity> layers = findEntityByNamedQuery(ServiceLayerEntity.class, ServiceLayerEntity.BY_LOCATION_TYPE,
+                    QueryParameter.with("locationType", locationType).parameters(), 1);
 
             if (layers != null && layers.size() == 1) {
                 serviceLayerEntity = layers.get(0);
