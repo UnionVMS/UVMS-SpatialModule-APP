@@ -18,25 +18,25 @@ public interface UserAreaService {
 
 	List<AreaDetails> getUserAreaDetailsByLocation(AreaTypeEntry areaTypeEntry, String userName);
 
-	AreaDetails getUserAreaDetailsWithExtentById(AreaTypeEntry areaTypeEntry, String userName) throws ServiceException;
+	AreaDetails getUserAreaDetailsWithExtentById(AreaTypeEntry areaTypeEntry, String userName, String scopeName) throws ServiceException;
 
-	List<AreaDetails> getUserAreaDetailsById(AreaTypeEntry areaTypeEntry, String userName) throws ServiceException;
+	List<AreaDetails> getUserAreaDetailsById(AreaTypeEntry areaTypeEntry, String userName, String scopeName) throws ServiceException;
 
-	AreaDetails getUserAreaDetailsWithExtentById(AreaTypeEntry areaTypeEntry, String userName, boolean isPowerUser) throws ServiceException;
+	AreaDetails getUserAreaDetailsWithExtentById(AreaTypeEntry areaTypeEntry, String userName, boolean isPowerUser, String scopeName) throws ServiceException;
 
-	List<AreaDetails> getUserAreaDetailsById(AreaTypeEntry areaTypeEntry, String userName, boolean isPowerUser) throws ServiceException;
+	List<AreaDetails> getUserAreaDetailsById(AreaTypeEntry areaTypeEntry, String userName, boolean isPowerUser, String scopeName) throws ServiceException;
 
 	List<UserAreaDto> searchUserAreasByCriteria(String userName, String scopeName, String searchCriteria, boolean isPowerUser);
 
 	long storeUserArea(UserAreaGeoJsonDto userAreaDto, String userName) throws ServiceException;
 
-	long updateUserArea(UserAreaGeoJsonDto userAreaDto, String userName) throws ServiceException;
+	long updateUserArea(UserAreaGeoJsonDto userAreaDto, String userName, String scopeName) throws ServiceException;
 
-	void deleteUserArea(Long userAreaId, String userName) throws ServiceException;
+	void deleteUserArea(Long userAreaId, String userName, String scopeName) throws ServiceException;
 
-	long updateUserArea(UserAreaGeoJsonDto userAreaDto, String userName, boolean isPowerUser) throws ServiceException;
+	long updateUserArea(UserAreaGeoJsonDto userAreaDto, String userName, boolean isPowerUser, String scopeName) throws ServiceException;
 
-	void deleteUserArea(Long userAreaId, String userName, boolean isPowerUser) throws ServiceException;
+	void deleteUserArea(Long userAreaId, String userName, boolean isPowerUser, String scopeName) throws ServiceException;
 
 	List<String> getUserAreaTypes(String userName, String scopeName, boolean isPowerUser) throws ServiceException;
 }
