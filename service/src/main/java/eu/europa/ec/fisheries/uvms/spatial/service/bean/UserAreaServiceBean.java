@@ -60,13 +60,13 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     @Override
-    public long updateUserArea(UserAreaGeoJsonDto userAreaDto, String userName) throws ServiceException {
-        return updateUserArea(userAreaDto, userName, false);
+    public long updateUserArea(UserAreaGeoJsonDto userAreaDto, String userName, String scopeName) throws ServiceException {
+        return updateUserArea(userAreaDto, userName, false, scopeName);
     }
 
     @Override
-    public void deleteUserArea(Long userAreaId, String userName) throws ServiceException {
-        deleteUserArea(userAreaId, userName, false);
+    public void deleteUserArea(Long userAreaId, String userName, String scopeName) throws ServiceException {
+        deleteUserArea(userAreaId, userName, false, scopeName);
     }
 
     private String createDescriminator(UserAreasEntity persistedEntity) {
@@ -82,11 +82,11 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     @Override
-    public long updateUserArea(UserAreaGeoJsonDto userAreaDto, String userName, boolean isPowerUser) throws ServiceException {
+    public long updateUserArea(UserAreaGeoJsonDto userAreaDto, String userName, boolean isPowerUser, String scopeName) throws ServiceException {
         Long id = userAreaDto.getId();
         validateGid(id);
 
-        List<UserAreasEntity> persistentUserAreas = repository.findUserAreaById(id, userName, isPowerUser);
+        List<UserAreasEntity> persistentUserAreas = repository.findUserAreaById(id, userName, isPowerUser, scopeName);
         validateNotNull(id, persistentUserAreas);
 
         UserAreasEntity persistentUserArea = persistentUserAreas.get(0);
@@ -95,7 +95,7 @@ public class UserAreaServiceBean implements UserAreaService {
             throw new ServiceException("user_not_authorised");
         }
 
-        if (userAreaDto.getDatasetName() != null && !userAreaDto.getDatasetName().equals(persistentUserArea.getDatasetName())) {
+        if (StringUtils.isNotBlank(userAreaDto.getDatasetName()) && !userAreaDto.getDatasetName().equals(persistentUserArea.getDatasetName())) {
             updateUSMDataset(persistentUserArea, userAreaDto.getDatasetName());
         }
 
@@ -137,9 +137,13 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     @Override
-    public void deleteUserArea(Long userAreaId, String userName, boolean isPowerUser) throws ServiceException {
-        List<UserAreasEntity> persistentUserAreas = repository.findUserAreaById(userAreaId, userName, isPowerUser);
+    public void deleteUserArea(Long userAreaId, String userName, boolean isPowerUser, String scopeName) throws ServiceException {
+        List<UserAreasEntity> persistentUserAreas = repository.findUserAreaById(userAreaId, userName, isPowerUser, scopeName);
         validateNotNull(userAreaId, persistentUserAreas);
+
+        if (!persistentUserAreas.get(0).getUserName().equals(userName) && !isPowerUser) {
+            throw new ServiceException("user_not_authorised");
+        }
 
         repository.deleteEntity(persistentUserAreas.get(0));
     }
@@ -178,18 +182,18 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     @Override
-    public AreaDetails getUserAreaDetailsWithExtentById(AreaTypeEntry areaTypeEntry, String userName) throws ServiceException {
-        return getUserAreaDetailsWithExtentById(areaTypeEntry, userName, false);
+    public AreaDetails getUserAreaDetailsWithExtentById(AreaTypeEntry areaTypeEntry, String userName, String scopeName) throws ServiceException {
+        return getUserAreaDetailsWithExtentById(areaTypeEntry, userName, false, scopeName);
     }
 
     @Override
-    public List<AreaDetails> getUserAreaDetailsById(AreaTypeEntry areaTypeEntry, String userName) throws ServiceException {
-        return getUserAreaDetailsById(areaTypeEntry, userName, false);
+    public List<AreaDetails> getUserAreaDetailsById(AreaTypeEntry areaTypeEntry, String userName, String scopeName) throws ServiceException {
+        return getUserAreaDetailsById(areaTypeEntry, userName, false, scopeName);
     }
 
     @Override
-    public AreaDetails getUserAreaDetailsWithExtentById(AreaTypeEntry areaTypeEntry, String userName, boolean isPowerUser) throws ServiceException {
-        List<UserAreasEntity> userAreasDetails = repository.findUserAreaById(Long.parseLong(areaTypeEntry.getId()), userName, isPowerUser);
+    public AreaDetails getUserAreaDetailsWithExtentById(AreaTypeEntry areaTypeEntry, String userName, boolean isPowerUser, String scopeName) throws ServiceException {
+        List<UserAreasEntity> userAreasDetails = repository.findUserAreaById(Long.parseLong(areaTypeEntry.getId()), userName, isPowerUser, scopeName);
         if (CollectionUtils.isNotEmpty(userAreasDetails)) {
             return getAllAreaDetails(userAreasDetails, areaTypeEntry).get(0);
         } else {
@@ -200,8 +204,8 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     @Override
-    public List<AreaDetails> getUserAreaDetailsById(AreaTypeEntry areaTypeEntry, String userName, boolean isPowerUser) throws ServiceException {
-        List<UserAreasEntity> userAreaDetails = repository.findUserAreaById(Long.parseLong(areaTypeEntry.getId()), userName, isPowerUser);
+    public List<AreaDetails> getUserAreaDetailsById(AreaTypeEntry areaTypeEntry, String userName, boolean isPowerUser, String scopeName) throws ServiceException {
+        List<UserAreasEntity> userAreaDetails = repository.findUserAreaById(Long.parseLong(areaTypeEntry.getId()), userName, isPowerUser, scopeName);
         return getAllAreaDetails(userAreaDetails, areaTypeEntry);
     }
 

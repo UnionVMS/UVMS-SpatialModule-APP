@@ -92,7 +92,7 @@ public class UserAreaResource extends UnionVMSResource {
             boolean isPowerUser = isPowerUser(request);
             log.info("{} is requesting updateUserArea(...), with a ID={}. Spatial power user: {}", userName, Long.toString(userAreaGeoJsonDto.getId()), isPowerUser);
 
-            long gid = userAreaService.updateUserArea(userAreaGeoJsonDto, request.getRemoteUser(), isPowerUser);
+            long gid = userAreaService.updateUserArea(userAreaGeoJsonDto, request.getRemoteUser(), isPowerUser, scopeName);
             return createSuccessResponse(gid);
         } else {
             return createErrorResponse("user_areas_management_not_allowed");
@@ -108,8 +108,9 @@ public class UserAreaResource extends UnionVMSResource {
                                    @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName) throws ServiceException {
         String userName = request.getRemoteUser();
         log.info("{} is requesting deleteUserArea(...), with a ID={} and scopeName={}", userName, userAreaId, scopeName);
+
         boolean isPowerUser = isPowerUser(request);
-        userAreaService.deleteUserArea(userAreaId, userName, isPowerUser);
+        userAreaService.deleteUserArea(userAreaId, userName, isPowerUser, null); // we pass NULL for scope because deletion shouldn't happen on shared areas, unless you are a power user
         return createSuccessResponse();
     }
 
@@ -129,7 +130,7 @@ public class UserAreaResource extends UnionVMSResource {
     public Response getUserAreaDetails(UserAreaCoordinateType userAreaTypeDto, @Context HttpServletRequest request, @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName) throws IOException, ParseException, ServiceException {
         boolean isPowerUser = isPowerUser(request);
         if (userAreaTypeDto.getId() != null) {
-            return getUserAreaDetailsById(userAreaTypeDto, request.getRemoteUser(), isPowerUser);
+            return getUserAreaDetailsById(userAreaTypeDto, request.getRemoteUser(), isPowerUser, scopeName);
         } else {
             return getUserAreaDetailsByLocation(userAreaTypeDto, request.getRemoteUser());
         }
@@ -154,16 +155,16 @@ public class UserAreaResource extends UnionVMSResource {
         return createSuccessResponse(userAreaService.getUserAreaTypes(request.getRemoteUser(), scopeName, isPowerUser));
     }
 
-    private Response getUserAreaDetailsById(UserAreaCoordinateType userAreaTypeDto, String userName, boolean isPowerUser) throws ServiceException, IOException, ParseException {
+    private Response getUserAreaDetailsById(UserAreaCoordinateType userAreaTypeDto, String userName, boolean isPowerUser, String scopeName) throws ServiceException, IOException, ParseException {
         if (!userAreaTypeDto.getIsGeom()) {
             AreaTypeEntry areaTypeEntry = areaLocationMapper.getAreaTypeEntry(userAreaTypeDto);
-            AreaDetails areaDetails = userAreaService.getUserAreaDetailsWithExtentById(areaTypeEntry, userName, isPowerUser);
+            AreaDetails areaDetails = userAreaService.getUserAreaDetailsWithExtentById(areaTypeEntry, userName, isPowerUser, scopeName);
             AreaDetailsGeoJsonDto areaDetailsGeoJsonDto = areaLocationMapper.getAreaDetailsDto(areaDetails);
             areaDetailsGeoJsonDto.removeGeometry();
             return createSuccessResponse(areaDetailsGeoJsonDto.getProperties());
         } else {
             AreaTypeEntry areaTypeEntry = AreaLocationDtoMapper.mapper().getAreaTypeEntry(userAreaTypeDto);
-            List<AreaDetails> userAreaDetails = userAreaService.getUserAreaDetailsById(areaTypeEntry, userName, isPowerUser);
+            List<AreaDetails> userAreaDetails = userAreaService.getUserAreaDetailsById(areaTypeEntry, userName, isPowerUser, scopeName);
             AreaDetailsGeoJsonDto areaDetailsGeoJsonDto = areaLocationMapper.getAreaDetailsDtoForAllAreas(userAreaDetails, userAreaTypeDto);
             return createSuccessResponse(areaDetailsGeoJsonDto.convertAll());
         }
