@@ -2,7 +2,9 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.io.ParseException;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
@@ -17,8 +19,11 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.UserAreaGeoJ
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.UserAreaMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.geotools.geometry.jts.WKTReader2;
+import org.geotools.geometry.jts.WKTWriter2;
 
 import javax.ejb.EJB;
 import javax.ejb.Local;
@@ -36,6 +41,7 @@ import static eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialUtils.conv
 @Stateless
 @Local(UserAreaService.class)
 @Transactional
+@Slf4j
 public class UserAreaServiceBean implements UserAreaService {
 
     @EJB
@@ -175,10 +181,16 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     @Override
-    public List<AreaDetails> getUserAreaDetailsByLocation(AreaTypeEntry areaTypeEntry, String userName) {
+    public List<AreaDetails> getUserAreaDetailsByLocation(AreaTypeEntry areaTypeEntry, String userName) throws ServiceException {
         Point point = convertToPointInWGS84(areaTypeEntry.getLongitude(), areaTypeEntry.getLatitude(), areaTypeEntry.getCrs());
         List<UserAreasEntity> userAreaDetails = repository.findUserAreaDetailsByLocation(userName, point);
-        return getAllAreaDetails(userAreaDetails, areaTypeEntry);
+        try {
+            return getAllAreaDetails(userAreaDetails, areaTypeEntry);
+        } catch (ParseException e) {
+            String error = "Error while trying to parse geometry";
+            log.error(error);
+            throw new ServiceException(error);
+        }
     }
 
     @Override
@@ -194,28 +206,51 @@ public class UserAreaServiceBean implements UserAreaService {
     @Override
     public AreaDetails getUserAreaDetailsWithExtentById(AreaTypeEntry areaTypeEntry, String userName, boolean isPowerUser, String scopeName) throws ServiceException {
         List<UserAreasEntity> userAreasDetails = repository.findUserAreaById(Long.parseLong(areaTypeEntry.getId()), userName, isPowerUser, scopeName);
-        if (CollectionUtils.isNotEmpty(userAreasDetails)) {
-            return getAllAreaDetails(userAreasDetails, areaTypeEntry).get(0);
-        } else {
-            AreaDetails areaDetails = new AreaDetails();
-            areaDetails.setAreaType(areaTypeEntry);
-            return areaDetails;
+        try {
+            if (CollectionUtils.isNotEmpty(userAreasDetails)) {
+
+                    return getAllAreaDetails(userAreasDetails, areaTypeEntry).get(0);
+
+            } else {
+                AreaDetails areaDetails = new AreaDetails();
+                areaDetails.setAreaType(areaTypeEntry);
+                return areaDetails;
+            }
+        } catch (ParseException e) {
+            String error = "Error while trying to parse geometry";
+            log.error(error);
+            throw new ServiceException(error);
         }
     }
 
     @Override
     public List<AreaDetails> getUserAreaDetailsById(AreaTypeEntry areaTypeEntry, String userName, boolean isPowerUser, String scopeName) throws ServiceException {
         List<UserAreasEntity> userAreaDetails = repository.findUserAreaById(Long.parseLong(areaTypeEntry.getId()), userName, isPowerUser, scopeName);
-        return getAllAreaDetails(userAreaDetails, areaTypeEntry);
+        try {
+            return getAllAreaDetails(userAreaDetails, areaTypeEntry);
+        } catch (ParseException e) {
+            String error = "Error while trying to parse geometry";
+            log.error(error);
+            throw new ServiceException(error);
+        }
     }
 
-    private List<AreaDetails> getAllAreaDetails(List allAreas, AreaTypeEntry areaTypeEntry) {
+    private List<AreaDetails> getAllAreaDetails(List allAreas, AreaTypeEntry areaTypeEntry) throws ParseException {
         List<AreaDetails> areaDetailsList = Lists.newArrayList();
         for (int i = 0; i < allAreas.size(); i++) {
             Map<String, Object> properties = getFieldMap(allAreas.get(i));
+            addCentroidToProperties(properties);
             areaDetailsList.add(createAreaDetailsSpatialResponse(properties, areaTypeEntry));
         }
         return areaDetailsList;
+    }
+
+    private void addCentroidToProperties(Map<String, Object> properties) throws ParseException {
+        Object geometry = properties.get("geometry");
+        if(geometry != null){
+            Geometry centroid = new WKTReader2().read(String.valueOf(geometry)).getCentroid();
+            properties.put("centroid", new WKTWriter2().write(centroid));
+        }
     }
 
     private AreaDetails createAreaDetailsSpatialResponse(Map<String, Object> properties, AreaTypeEntry areaTypeEntry) {
