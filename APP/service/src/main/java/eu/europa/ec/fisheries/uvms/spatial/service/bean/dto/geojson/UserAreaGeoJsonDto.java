@@ -3,6 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson;
 import eu.europa.ec.fisheries.uvms.common.DateUtils;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -110,7 +111,7 @@ public class UserAreaGeoJsonDto extends GeoJsonDto {
         Object datasetNameObj = properties.get(DATASET_NAME);
         String datasetName = null;
 
-        if (datasetNameObj != null) {
+        if (datasetNameObj instanceof String && StringUtils.isNotBlank((String) datasetNameObj)) {
             datasetName = (String) datasetNameObj;
         }
 

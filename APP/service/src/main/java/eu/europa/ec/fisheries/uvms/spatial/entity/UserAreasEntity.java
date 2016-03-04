@@ -20,7 +20,7 @@ import java.util.Set;
         @NamedQuery(name = QueryNameConstants.FIND_GID_BY_USER,
                 query = "SELECT area.gid FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection WHERE area.userName = :userName OR scopeSelection.name = :scopeName"),
         @NamedQuery(name = QueryNameConstants.FIND_USER_AREA_BY_ID,
-                query = "SELECT area FROM UserAreasEntity area WHERE area.userName = :userName AND area.gid = :userAreaId"),
+                query = "SELECT area FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection WHERE   area.gid = :userAreaId AND ((1=:isPowerUser) OR (area.userName=:userName OR scopeSelection.name=:scopeName))"),
         @NamedQuery(name = QueryNameConstants.USERAREA_COLUMNS,
 				query = "select userArea.name as name, userArea.areaDesc as desc from UserAreasEntity as userArea where userArea.gid =:gid"),
 		@NamedQuery(name = QueryNameConstants.FIND_ALL_USER_AREAS,
@@ -28,7 +28,7 @@ import java.util.Set;
         @NamedQuery(name = QueryNameConstants.FIND_ALL_USER_AREAS_BY_GIDS,
                 query = "SELECT area.gid as gid, area.name as name, area.areaDesc as desc FROM UserAreasEntity area WHERE area.gid in (:gids)"),
         @NamedQuery(name = QueryNameConstants.FIND_USER_AREA_TYPES,
-                query = "SELECT DISTINCT area.type FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection WHERE  area.type<>'' AND ((1=:isPowerUser) OR (area.userName=:userName OR scopeSelection.name=:scopeName))")
+                query = "SELECT DISTINCT area.type FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection WHERE  area.type<>'' AND area.type <> null AND ((1=:isPowerUser) OR (area.userName=:userName OR scopeSelection.name=:scopeName))")
 })
 
 @NamedNativeQueries({
