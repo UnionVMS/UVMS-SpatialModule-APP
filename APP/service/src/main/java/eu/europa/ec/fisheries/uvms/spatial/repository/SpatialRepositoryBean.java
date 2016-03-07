@@ -337,4 +337,18 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
         return areaDao.listAreaGroups(userName, scopeName, isPowerUser);
     }
 
+    @Override
+    public List<UserAreasEntity> findUserAreasByType(String userName, String scopeName, String type, boolean isPowerUser) throws ServiceException {
+        List<UserAreasEntity> userAreasDTOs;
+        QueryParameter params = with(USMSpatial.USER_NAME, userName).and(USMSpatial.SCOPE_NAME, scopeName).and("isPowerUser", isPowerUser?1:0).and("type", type);
+        List<UserAreasEntity>  userAreas = findEntityByNamedQuery(UserAreasEntity.class, QueryNameConstants.FIND_USER_AREA_BY_TYPE, params.parameters());
+        if (isEmpty(userAreas)) {
+            userAreasDTOs = Collections.emptyList();
+        } else {
+            userAreasDTOs = userAreas;
+        }
+
+        return userAreasDTOs;
+    }
+
 }
