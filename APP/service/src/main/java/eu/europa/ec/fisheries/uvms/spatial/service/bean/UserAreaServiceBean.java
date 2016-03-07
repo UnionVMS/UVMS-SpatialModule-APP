@@ -268,11 +268,6 @@ public class UserAreaServiceBean implements UserAreaService {
         return areaDetails;
     }
 
-    public List<UserAreaDto> searchUserAreasByCriteria(String userName, String scopeName, String searchCriteria, boolean isPowerUser) {
-        List<UserAreaDto> userAreaDetails = repository.findUserAreaDetailsBySearchCriteria(userName, scopeName, searchCriteria, isPowerUser);
-        return userAreaDetails;
-    }
-
     @SuppressWarnings("unchecked")
     private List<Long> getUserAreaGuid(String userName, String scopeName) {
         try {
@@ -281,5 +276,17 @@ public class UserAreaServiceBean implements UserAreaService {
         } catch (ServiceException e) {
             throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
         }
+    }
+
+    public List<UserAreaDto> searchUserAreasByCriteria(String userName, String scopeName, String searchCriteria, boolean isPowerUser) {
+        List<UserAreaDto> userAreaDetails = repository.findUserAreaDetailsBySearchCriteria(userName, scopeName, searchCriteria, isPowerUser);
+        return userAreaDetails;
+    }
+
+    @Override
+    public List<UserAreaDto> searchUserAreasByType(String userName, String scopeName, String type, boolean isPowerUser) throws ServiceException {
+        List<UserAreasEntity> userAreas = repository.findUserAreasByType(userName, scopeName, type, isPowerUser);
+
+        return  UserAreaMapper.mapper().fromEntityListToDtoList(userAreas);
     }
 }
