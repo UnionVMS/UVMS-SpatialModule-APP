@@ -3,6 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.mapper;
 import com.google.common.collect.Sets;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserScopeEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.UserAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.UserAreaGeoJsonDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -10,7 +11,6 @@ import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -58,5 +58,15 @@ public abstract class UserAreaMapper {
 
         return userScopeEntities;
     }
+
+    @Mappings({
+            @Mapping(source = "gid", target = "gid"),
+            @Mapping(source = "name", target = "name"),
+            @Mapping(source = "areaDesc", target = "desc"),
+    })
+    public abstract UserAreaDto fromEntityToDto(UserAreasEntity userAreaEntity);
+
+    public abstract List<UserAreaDto> fromEntityListToDtoList(List<UserAreasEntity> userAreas);
+
 
 }

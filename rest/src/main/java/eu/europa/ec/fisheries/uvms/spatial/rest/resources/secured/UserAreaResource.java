@@ -214,4 +214,17 @@ public class UserAreaResource extends UnionVMSResource {
         return response;
     }
 
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/userareaslist/{type}")
+    public Response listUserAreas(@Context HttpServletRequest request, @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName, @PathParam("type") String userAreaType) throws ServiceException {
+        Response response;
+
+        if (request.isUserInRole(SpatialFeaturesEnum.MANAGE_USER_DEFINED_AREAS.toString())) {
+            response = createSuccessResponse(userAreaService.searchUserAreasByType(request.getRemoteUser(), scopeName, userAreaType, isPowerUser(request)));
+        } else {
+            response = createErrorResponse(ErrorCodes.NOT_AUTHORIZED);
+        }
+        return response;
+    }
 }
