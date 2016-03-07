@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.spatial.repository;
+package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
@@ -12,14 +12,27 @@ import eu.europa.ec.fisheries.uvms.spatial.dao.MapConfigDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.ProjectionDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.ReportConnectSpatialDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.SysConfigDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.UserAreaDao;
-import eu.europa.ec.fisheries.uvms.spatial.entity.*;
+import eu.europa.ec.fisheries.uvms.spatial.dao.UserAreaJpaDao;
+import eu.europa.ec.fisheries.uvms.spatial.entity.BookmarkEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.PortAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ProjectionEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.config.SysConfigEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.bookmark.Bookmark;
 import eu.europa.ec.fisheries.uvms.spatial.model.constants.USMSpatial;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.*;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.*;
+import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaLayerDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.AreaExtendedIdentifierDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.ClosestAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.ClosestLocationDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.FilterAreasDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.UserAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.ServiceLayerDto;
@@ -54,7 +67,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     private @EJB SqlPropertyHolder sql;
 
     private AreaDao areaDao;
-    private UserAreaDao userAreaDao;
+    private UserAreaJpaDao userAreaDao;
     private CountryDao countryDao;
     private MapConfigDao mapConfigDao;
     private EezDao eezDao;
@@ -71,7 +84,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     @PostConstruct
     public void init() {
         areaDao = new AreaDao(em, sql);
-        userAreaDao = new UserAreaDao(em);
+        userAreaDao = new UserAreaJpaDao(em);
         countryDao = new CountryDao(em);
         mapConfigDao = new MapConfigDao(em);
         eezDao = new EezDao(em);

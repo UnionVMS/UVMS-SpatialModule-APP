@@ -2,7 +2,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezType;
-import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
+import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.EezMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;

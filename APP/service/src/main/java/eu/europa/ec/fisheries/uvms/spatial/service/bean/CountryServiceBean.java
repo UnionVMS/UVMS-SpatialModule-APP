@@ -1,6 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
+import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 
 import javax.ejb.EJB;
 import javax.ejb.Local;

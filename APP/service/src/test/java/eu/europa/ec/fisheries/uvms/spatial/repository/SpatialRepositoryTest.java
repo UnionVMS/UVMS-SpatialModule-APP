@@ -3,6 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.repository;
 import com.google.common.collect.ImmutableMap;
 import eu.europa.ec.fisheries.uvms.spatial.dao.*;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialRepositoryBean;
 import eu.europa.ec.fisheries.uvms.spatial.util.SqlPropertyHolder;
 import lombok.SneakyThrows;
 import org.junit.Before;
@@ -35,7 +36,7 @@ public class SpatialRepositoryTest {
     private AreaDao areaDao;
 
     @Mock
-    private UserAreaDao userAreaDao;
+    private UserAreaJpaDao userAreaDao;
 
     @Mock
     private CountryDao countryDao;
