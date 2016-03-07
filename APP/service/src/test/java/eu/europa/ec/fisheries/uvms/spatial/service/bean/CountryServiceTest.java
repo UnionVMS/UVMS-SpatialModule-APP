@@ -1,8 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.google.common.collect.ImmutableMap;
-import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
-import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
+import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

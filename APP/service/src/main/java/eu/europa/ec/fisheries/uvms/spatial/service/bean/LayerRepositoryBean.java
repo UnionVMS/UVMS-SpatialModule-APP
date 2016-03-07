@@ -1,9 +1,9 @@
-package eu.europa.ec.fisheries.uvms.spatial.repository;
+package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.dao.ServiceLayerDao;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity;
-import eu.europa.ec.fisheries.uvms.spatial.model.layer.ServiceLayer;
+import eu.europa.ec.fisheries.uvms.spatial.service.LayerRepository;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Local;

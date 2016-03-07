@@ -6,6 +6,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.io.ParseException;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.PointType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
@@ -20,6 +21,7 @@ import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
+
 import java.util.List;
 
 @Slf4j
@@ -99,4 +101,13 @@ public class SpatialUtils {
         return crs == DEFAULT_CRS;
     }
 
+    static String transform(Double tx, Double ty, String wkt) throws ParseException {
+
+       // AffineTransform translate = AffineTransform.getTranslateInstance(tx, ty);
+       // log.info("Translate:" + translate.toString());
+       // Geometry geometry = new WKTReader2().read(wkt);
+       // geometry.
+       // translate.transform(geometry, null);
+        return null;
+    }
 }

@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.spatial.repository;
+package eu.europa.ec.fisheries.uvms.spatial.service;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity;
