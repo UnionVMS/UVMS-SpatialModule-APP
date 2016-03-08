@@ -9,7 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Date;
 import java.util.List;
 
-@JsonIgnoreProperties({"properties"})
 public class UserAreaGeoJsonDto extends GeoJsonDto {
 
     private static final String NAME = "name";
