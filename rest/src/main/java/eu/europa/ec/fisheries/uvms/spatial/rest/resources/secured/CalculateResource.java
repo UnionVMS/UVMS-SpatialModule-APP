@@ -23,7 +23,7 @@ public class CalculateResource extends UnionVMSResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/buffer")
-    public Response buffer(Map<String, Object> payload){
+    public Response buffer(Map<String, Object> payload) {
 
         Response response;
 
@@ -32,9 +32,7 @@ public class CalculateResource extends UnionVMSResource {
             Double longitude = Double.valueOf(String.valueOf(payload.get("longitude")));
             Double buffer = Double.valueOf(String.valueOf(payload.get("buffer")));
             response = createSuccessResponse(service.calculateBuffer(latitude, longitude, buffer));
-        }
-
-        catch (Exception ex){
+        } catch (Exception ex) {
             String error = "[ Error when calculating buffer. ] ";
             log.error(error, ex);
             response = createErrorResponse(error);
@@ -54,8 +52,8 @@ public class CalculateResource extends UnionVMSResource {
         try {
             Double latitude = Double.valueOf(String.valueOf(payload.get("x")));
             Double longitude = Double.valueOf(String.valueOf(payload.get("y")));
-            Double buffer = Double.valueOf(String.valueOf(payload.get("wkt")));
-            response = createSuccessResponse(service.calculateBuffer(latitude, longitude, buffer));
+            String wkt = String.valueOf(String.valueOf(payload.get("wkt")));
+            response = createSuccessResponse(service.translate(latitude, longitude, wkt));
         }
 
         catch (Exception ex){
