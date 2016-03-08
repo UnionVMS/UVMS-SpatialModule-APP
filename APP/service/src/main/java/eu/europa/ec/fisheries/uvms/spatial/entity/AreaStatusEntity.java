@@ -1,33 +1,20 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
-import java.io.Serializable;
-import java.util.Date;
+import eu.europa.ec.fisheries.uvms.spatial.entity.converter.CharBooleanConverter;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
-import eu.europa.ec.fisheries.uvms.spatial.entity.converter.CharBooleanConverter;
+import java.util.Date;
 
 @Entity
 @Table(name = "area_status", schema = "spatial")
-public class AreaStatusEntity implements Serializable {
-	
-	private static final long serialVersionUID = 6797853213499502858L;
+public class AreaStatusEntity extends BaseEntity {
 
-	@Id
-	@Column(name = "id")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
-	
 	@ManyToOne
 	@JoinColumn(name = "user_area_id", nullable = false)
 	private UserAreasEntity userAreas;
@@ -45,14 +32,6 @@ public class AreaStatusEntity implements Serializable {
 	private Boolean isVisible = false;
 
 	public AreaStatusEntity() {
-	}
-
-	public long getId() {
-		return this.id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
 	}
 
 	public UserAreasEntity getUserAreas() {
