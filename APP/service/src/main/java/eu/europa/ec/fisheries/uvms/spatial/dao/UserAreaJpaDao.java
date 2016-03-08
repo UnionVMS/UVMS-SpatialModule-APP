@@ -28,7 +28,7 @@ public class UserAreaJpaDao extends AbstractDAO<UserAreasEntity> {
 	private static final String WKT = "wktPoint";
 	private static final String GID_LIST = "gids";
 
-    private NativeQueries nativeQueries;
+    private GeometryRelationFunction nativeQueries;
 
     public UserAreaJpaDao(EntityManager em) {
         this.em = em;
@@ -48,7 +48,7 @@ public class UserAreaJpaDao extends AbstractDAO<UserAreasEntity> {
     }
 
     public void initializeNatieveQueries(){
-        nativeQueries = new PostgreNativeQueries(em);
+        nativeQueries = new PostgreGeometryRelationFunction(em);
     }
 
 	public List<UserAreaDto> findUserAreaDetailsWithExtent(String userName, Point point) {

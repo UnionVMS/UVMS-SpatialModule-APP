@@ -2,16 +2,26 @@ package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-
-import javax.persistence.*;
-
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.EntityResult;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.SqlResultSetMapping;
+import javax.persistence.SqlResultSetMappings;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import eu.europa.ec.fisheries.uvms.spatial.entity.converter.CharBooleanConverter;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.Type;
-
 import com.vividsolutions.jts.geom.Geometry;
-
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 import org.hibernate.annotations.Where;
@@ -20,9 +30,6 @@ import org.hibernate.annotations.Where;
 @SqlResultSetMappings({
 	@SqlResultSetMapping(name = "implicit.country", entities = @EntityResult(entityClass = CountriesEntity.class))
 })
-@NamedNativeQuery(
-		name = QueryNameConstants.COUNTRY_BY_COORDINATE, 
-		query = "select * from spatial.countries where st_intersects(geom, st_geomfromtext(CAST(:wktPoint as text), :crs)) and enabled = 'Y'", resultSetMapping = "implicit.country")
 @NamedQueries({
 		@NamedQuery(name = QueryNameConstants.FIND_ALL_COUNTRY_DESC,
 		query = "SELECT country.code AS code, country.name AS name FROM CountriesEntity country WHERE country.code IN (SELECT DISTINCT c.code FROM CountriesEntity c)")

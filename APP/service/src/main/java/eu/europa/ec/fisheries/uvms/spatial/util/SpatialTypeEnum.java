@@ -7,7 +7,6 @@ public enum SpatialTypeEnum {
 	
 	EEZ("EEZ", QueryNameConstants.EEZ_BY_COORDINATE, QueryNameConstants.EEZ_COLUMNS, EezEntity.class),
 	RFMO("RFMO", QueryNameConstants.RFMO_BY_COORDINATE, QueryNameConstants.RFMO_COLUMNS, RfmoEntity.class),
-	COUNTRY("COUNTRY", QueryNameConstants.COUNTRY_BY_COORDINATE, CountriesEntity.class),
 	GFCM("GFCM", QueryNameConstants.GFCM_BY_COORDINATE, GfcmEntity.class),
 	RAC("RAC", QueryNameConstants.RAC_BY_COORDINATE, RacEntity.class),
 	S_TAT_RECT("STatRect", QueryNameConstants.STAT_RECT_BY_COORDINATE, StatRectEntity.class),
