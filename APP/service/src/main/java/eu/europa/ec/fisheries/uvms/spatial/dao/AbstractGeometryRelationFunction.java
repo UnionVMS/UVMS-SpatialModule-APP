@@ -2,7 +2,7 @@ package eu.europa.ec.fisheries.uvms.spatial.dao;
 
 import javax.persistence.EntityManager;
 
-public abstract class AbstractNativeQueries implements NativeQueries {
+public abstract class AbstractGeometryRelationFunction implements GeometryRelationFunction {
 
     protected EntityManager em;
 

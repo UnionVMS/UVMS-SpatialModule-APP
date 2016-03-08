@@ -2,10 +2,10 @@ package eu.europa.ec.fisheries.uvms.spatial.dao;
 
 import com.vividsolutions.jts.geom.Geometry;
 
-public interface NativeQueries {
+public interface GeometryRelationFunction {
 
     public String stAsText(String wkt);
 
-    public String stTransate(Geometry geometry, Double x, Double y);
+    public String stTranslate(Geometry geometry, Double x, Double y);
 
 }
