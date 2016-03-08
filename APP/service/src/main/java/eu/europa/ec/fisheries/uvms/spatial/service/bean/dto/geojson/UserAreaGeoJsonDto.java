@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import eu.europa.ec.fisheries.uvms.common.DateUtils;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
@@ -8,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Date;
 import java.util.List;
 
+@JsonIgnoreProperties({"properties"})
 public class UserAreaGeoJsonDto extends GeoJsonDto {
 
     private static final String NAME = "name";
@@ -132,4 +134,12 @@ public class UserAreaGeoJsonDto extends GeoJsonDto {
         return propValue;
     }
 
+
+    public String getExtent() {
+        return (String) properties.get(EXTENT);
+    }
+
+    public void setExtent(String extent) {
+        properties.put(EXTENT, extent);
+    }
 }

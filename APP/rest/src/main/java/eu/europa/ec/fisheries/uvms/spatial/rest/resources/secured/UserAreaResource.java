@@ -219,9 +219,9 @@ public class UserAreaResource extends UnionVMSResource {
     @Path("/userareaslist/{type}")
     public Response listUserAreas(@Context HttpServletRequest request, @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName, @PathParam("type") String userAreaType) throws ServiceException {
         Response response;
-
         if (request.isUserInRole(SpatialFeaturesEnum.MANAGE_USER_DEFINED_AREAS.toString())) {
-            response = createSuccessResponse(userAreaService.searchUserAreasByType(request.getRemoteUser(), scopeName, userAreaType, isPowerUser(request)));
+            List<UserAreaGeoJsonDto> userAreas = userAreaService.searchUserAreasByType(request.getRemoteUser(), scopeName, userAreaType, isPowerUser(request));
+            response = createSuccessResponse(userAreas);
         } else {
             response = createErrorResponse(ErrorCodes.NOT_AUTHORIZED);
         }
