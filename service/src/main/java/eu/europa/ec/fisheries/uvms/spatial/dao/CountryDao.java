@@ -6,9 +6,6 @@ import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by padhyad on 11/18/2015.
- */
 public class CountryDao extends CommonDao {
 
     public CountryDao(EntityManager em) {
