@@ -29,34 +29,30 @@ public class CalculationServiceBean implements CalculateService {
     }
 
     @Override
-    public String transform(final Double tx, final Double ty, final String wkt, Boolean nativeQuery) {
+    public String translate(final Double tx, final Double ty, final String wkt) {
 
         try {
 
             Geometry geometry = new WKTReader2().read(wkt);
             com.vividsolutions.jts.geom.Coordinate[] sourceCoordinates = geometry.getCoordinates();
             com.vividsolutions.jts.geom.Coordinate[] targetCoordinates = new com.vividsolutions.jts.geom.Coordinate[]{};
-            AffineTransform translate= AffineTransform.getTranslateInstance(tx, ty);
+            AffineTransform translate= AffineTransform.getTranslateInstance(tx, ty); // FIXME
 
             for (int i= 0; i < sourceCoordinates.length; i++){
                 com.vividsolutions.jts.geom.Coordinate sourceCoordinate = sourceCoordinates[i];
-                Point2D p = new Point2D.Double(sourceCoordinate.x,sourceCoordinate.y);
+                Point2D p = new Point2D.Double(sourceCoordinate.x,sourceCoordinate.y); // FIXME
                 Point2D transform = translate.transform(p, null);
                 targetCoordinates[i] = new com.vividsolutions.jts.geom.Coordinate(transform.getX(), transform.getY());
             }
 
-            if (nativeQuery){
-
-            }
             GeometryFactory geometryFactory = JTSFactoryFinder.getGeometryFactory();
 
             LinearRing ring = geometryFactory.createLinearRing( targetCoordinates );
             Polygon polygon = geometryFactory.createPolygon(ring, null );
             return new WKTWriter2().write(polygon);
 
-
         } catch (ParseException e) {
-            e.printStackTrace();
+            e.printStackTrace(); // FIXME
         }
 
         return null;
