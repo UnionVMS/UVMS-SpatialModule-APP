@@ -29,7 +29,7 @@ public interface UserAreaService {
 
 	List<UserAreaDto> searchUserAreasByCriteria(String userName, String scopeName, String searchCriteria, boolean isPowerUser);
 
-	List<UserAreaDto> searchUserAreasByType(String userName, String scopeName, String type, boolean isPowerUser) throws ServiceException;
+	List<UserAreaGeoJsonDto> searchUserAreasByType(String userName, String scopeName, String type, boolean isPowerUser) throws ServiceException;
 
 	long storeUserArea(UserAreaGeoJsonDto userAreaDto, String userName) throws ServiceException;
 

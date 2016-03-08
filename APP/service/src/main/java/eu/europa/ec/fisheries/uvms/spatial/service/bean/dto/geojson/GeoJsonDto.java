@@ -20,7 +20,7 @@ public abstract class GeoJsonDto {
 
     public static final String GEOMETRY = "geometry";
     protected static final String ID = "id";
-    private static final String EXTENT = "extent";
+    public static final String EXTENT = "extent";
     protected String type;
     @JsonDeserialize(using = GeometryDeserializer.class)
     protected Geometry geometry;
@@ -92,7 +92,7 @@ public abstract class GeoJsonDto {
         properties.remove(GEOMETRY);
     }
 
-    protected String getExtend(Object geometry) {
+    public String getExtend(Object geometry) {
         String extent = null;
         try {
             if (geometry != null) {
