@@ -2,10 +2,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.*;
 import com.vividsolutions.jts.io.ParseException;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.PointType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
@@ -13,6 +10,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialService
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.geotools.geometry.jts.JTS;
+import org.geotools.geometry.jts.JTSFactoryFinder;
 import org.geotools.geometry.jts.WKTWriter2;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -22,6 +20,8 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
 
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 import java.util.List;
 
 @Slf4j
@@ -40,6 +40,40 @@ public class SpatialUtils {
     static String calculateBuffer(final Double latitude, final Double longitude, final Double buffer) {
         Geometry geometry = SpatialUtils.getPoint(longitude, latitude).buffer(buffer);
         return new WKTWriter2().write(geometry);
+    }
+
+    static Geometry translate(Double tx, Double ty, Geometry geometry) {
+
+        AffineTransform translate= AffineTransform.getTranslateInstance(tx, ty);
+
+        Coordinate[] source = geometry.getCoordinates();
+        Coordinate[] target = new Coordinate[source.length];
+
+        for (int i= 0; i < source.length; i++){
+            Coordinate sourceCoordinate = source[i];
+            Point2D p = new Point2D.Double(sourceCoordinate.x,sourceCoordinate.y);
+            Point2D transform = translate.transform(p, null);
+            target[i] = new Coordinate(transform.getX(), transform.getY());
+        }
+
+        GeometryFactory geometryFactory = JTSFactoryFinder.getGeometryFactory();
+
+        Geometry targetGeometry;
+
+        if (geometry instanceof Point){
+            targetGeometry = geometryFactory.createPoint(target[0]);
+        }
+
+        else if (geometry instanceof Polygon){
+           targetGeometry = geometryFactory.createPolygon(target);
+        }
+
+        else {
+            throw new UnsupportedOperationException("Geometry type not supported");
+        }
+
+        return targetGeometry;
+
     }
 
     static Point convertToPointInWGS84(double lon, double lat, int crs) {
