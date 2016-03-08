@@ -1,6 +1,9 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.mapper;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserScopeEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.UserAreaDto;
@@ -10,6 +13,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -59,14 +63,60 @@ public abstract class UserAreaMapper {
         return userScopeEntities;
     }
 
-    @Mappings({
-            @Mapping(source = "gid", target = "gid"),
-            @Mapping(source = "name", target = "name"),
-            @Mapping(source = "areaDesc", target = "desc"),
-    })
-    public abstract UserAreaDto fromEntityToDto(UserAreasEntity userAreaEntity);
+    public static List<String> fromEntityToScopeArray(Set<UserScopeEntity> scopeSelection) {
+        List<String> returnArray = Lists.newArrayList();
 
-    public abstract List<UserAreaDto> fromEntityListToDtoList(List<UserAreasEntity> userAreas);
+        if (scopeSelection != null) {
+            for (UserScopeEntity scope : scopeSelection) {
+                returnArray.add(scope.getName());
+            }
+        }
 
+        return returnArray;
+    }
+
+    public UserAreaGeoJsonDto fromEntityToDto(UserAreasEntity userAreaEntity, boolean isGeometryNeeded) {
+        UserAreaGeoJsonDto dto = new UserAreaGeoJsonDto();
+        dto.setName(userAreaEntity.getName());
+        dto.setDatasetName(userAreaEntity.getDatasetName());
+        dto.setDesc(userAreaEntity.getAreaDesc());
+        dto.setId(userAreaEntity.getGid());
+        dto.setType(userAreaEntity.getType());
+        dto.setScopeSelection(fromEntityToScopeArray(userAreaEntity.getScopeSelection()));
+        Geometry geometry = userAreaEntity.getGeom();
+
+        if (!isGeometryNeeded){
+            //that removes the geometry and sets extent. Be aware that Jackson don't serialize automatically the geometry well
+            dto.getProperties().put(UserAreaGeoJsonDto.EXTENT, dto.getExtend(geometry));
+        } else {
+            dto.setGeometry(geometry);
+        }
+
+        return dto;
+    }
+
+
+    public List<UserAreaGeoJsonDto> fromEntityListToDtoList(List<UserAreasEntity> userAreas, boolean isGeometryNeeded) {
+        List<UserAreaGeoJsonDto> listAreas = Lists.newArrayList();
+        for(UserAreasEntity entity : userAreas) {
+            listAreas.add(fromEntityToDto(entity, isGeometryNeeded));
+        }
+
+        return listAreas;
+    }
+
+
+    public List<Double> computeEnvelope(Geometry geometry) {
+        List<Double> extent = new ArrayList<>();
+        if (geometry != null && geometry.getEnvelopeInternal() != null) {
+            Envelope internal = geometry.getEnvelopeInternal();
+            extent.add(internal.getMinX());
+            extent.add(internal.getMinY());
+            extent.add(internal.getMaxX());
+            extent.add(internal.getMaxY());
+        }
+
+        return extent;
+    }
 
 }
