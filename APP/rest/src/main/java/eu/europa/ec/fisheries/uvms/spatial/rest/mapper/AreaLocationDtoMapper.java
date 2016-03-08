@@ -1,13 +1,12 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.mapper;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import eu.europa.ec.fisheries.uvms.spatial.entity.UserScopeEntity;
 import eu.europa.ec.fisheries.uvms.spatial.rest.type.geocoordinate.AreaCoordinateType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.type.geocoordinate.GeoCoordinateType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.AreaDetailsGeoJsonDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.mapper.UserAreaMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -66,7 +65,15 @@ public abstract class AreaLocationDtoMapper {
 	protected Map<String, Object> extractProperties(AreaDetails areaDetails) {
 		Map<String, Object> propertyMap = new HashMap<>();
 		for (AreaProperty property : areaDetails.getAreaProperties()) {
-			propertyMap.put(property.getPropertyName(), property.getPropertyValue());
+			Object propertyValue = null;
+
+			if ("scopeSelection".equalsIgnoreCase(property.getPropertyName()) ) {
+				propertyValue = UserAreaMapper.fromEntityToScopeArray((Set<UserScopeEntity>) property.getPropertyValue());
+			} else {
+				propertyValue = property.getPropertyValue();
+			}
+
+			propertyMap.put(property.getPropertyName(), propertyValue);
 		}
 		if (!propertyMap.isEmpty()) {
 			propertyMap.put(AREA_TYPE, String.valueOf(areaDetails.getAreaType().getAreaType()).toUpperCase());
