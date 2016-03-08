@@ -4,6 +4,6 @@ public interface CalculateService {
 
     String calculateBuffer(Double latitude, Double longitude, Double buffer);
 
-    String transform(Double tx, Double ty, String wkt, Boolean nativeQuery);
+    String translate(Double tx, Double ty, String wkt);
 
 }
