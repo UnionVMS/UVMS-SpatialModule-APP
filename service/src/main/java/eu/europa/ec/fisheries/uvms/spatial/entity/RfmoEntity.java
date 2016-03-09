@@ -13,13 +13,15 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@SqlResultSetMappings({
-        @SqlResultSetMapping(name = "implicit.rfmo", entities = @EntityResult(entityClass = RfmoEntity.class))
-})
-@NamedNativeQuery(
-        name = QueryNameConstants.RFMO_BY_COORDINATE,
-        query = "select * from rfmo where st_intersects(geom, st_geomfromtext(CAST(:wktPoint as text), :crs)) and enabled = 'Y'", resultSetMapping = "implicit.rfmo")
+//@SqlResultSetMappings({
+//        @SqlResultSetMapping(name = "implicit.rfmo", entities = @EntityResult(entityClass = RfmoEntity.class))
+//})
+//@NamedNativeQuery(
+//        name = QueryNameConstants.RFMO_BY_COORDINATE,
+//        query = "select * from rfmo where st_intersects(geom, st_geomfromtext(CAST(:wktPoint as text), :crs)) and enabled = 'Y'", resultSetMapping = "implicit.rfmo")
 @NamedQueries({
+        @NamedQuery(name = RfmoEntity.RFMO_BY_COORDINATE,
+                query = "FROM RfmoEntity WHERE intersects(geom, :shape) = true) AND enabled = 'Y'"),
         @NamedQuery(name = QueryNameConstants.RFMO_COLUMNS, query = "select rfmo.name as name, rfmo.code as code from RfmoEntity as rfmo where rfmo.gid =:gid"),
         @NamedQuery(name = QueryNameConstants.DISABLE_RFMO_AREAS, query = "update RfmoEntity set enabled = 'N'")
 })
@@ -27,7 +29,7 @@ import java.util.Date;
 @Table(name = "rfmo", schema = "spatial")
 public class RfmoEntity implements Serializable {
 
-    private static final long serialVersionUID = 6797853213499502870L;
+    public static final String RFMO_BY_COORDINATE = "rfmoEntity.ByCoordinate";
 
     @Id
     @Column(name = "gid")

@@ -4,8 +4,11 @@ import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
 import com.google.common.collect.ImmutableMap;
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
+import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
+import eu.europa.ec.fisheries.uvms.service.QueryParameter;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.constants.USMSpatial;
@@ -28,16 +31,21 @@ public class UserAreaJpaDao extends AbstractDAO<UserAreasEntity> {
 	private static final String WKT = "wktPoint";
 	private static final String GID_LIST = "gids";
 
-    private GeometryRelationFunction nativeQueries;
-
     public UserAreaJpaDao(EntityManager em) {
         this.em = em;
     }
 
-
     @Override
     public EntityManager getEntityManager() {
         return em;
+    }
+
+    public List<UserAreasEntity> intersects(final Geometry shape, final String userName) throws ServiceException {
+        return findEntityByNamedQuery(UserAreasEntity.class, UserAreasEntity.USER_AREA_DETAILS_BY_LOCATION, QueryParameter.with("shape", shape).and("userName", userName).parameters());
+    }
+
+    public List<UserAreasEntity> intersects(final Geometry shape) throws ServiceException {
+        return findEntityByNamedQuery(UserAreasEntity.class, UserAreasEntity.USERAREA_BY_COORDINATE, QueryParameter.with("shape", shape).parameters());
     }
 
     public List findUserAreaLayerMapping() {
@@ -45,10 +53,6 @@ public class UserAreaJpaDao extends AbstractDAO<UserAreasEntity> {
         Query query = getSession().getNamedQuery(QueryNameConstants.FIND_USER_AREA_LAYER);
         query.setResultTransformer(Transformers.aliasToBean(UserAreaLayerDto.class));
         return query.list();
-    }
-
-    public void initializeNatieveQueries(){
-        nativeQueries = new PostgreGeometryRelationFunction(em);
     }
 
 	public List<UserAreaDto> findUserAreaDetailsWithExtent(String userName, Point point) {
@@ -74,7 +78,7 @@ public class UserAreaJpaDao extends AbstractDAO<UserAreasEntity> {
 				put(CRS, crs).
 				build();
 
-        Query query = getSession().getNamedQuery(QueryNameConstants.USER_AREA_DETAILS_BY_LOCATION);
+        Query query = getSession().getNamedQuery(UserAreasEntity.USER_AREA_DETAILS_BY_LOCATION);
         for (Map.Entry<String, Object> entry : parameters.entrySet()) {
             query.setParameter(entry.getKey(), entry.getValue());
         }
