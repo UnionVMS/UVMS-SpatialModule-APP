@@ -50,6 +50,12 @@
             <group>${spatial.name}</group>
         </feature>
 
+        <feature>
+            <name>MANAGE_REFERENCE_DATA</name>
+            <description>Allows you to manage reference data.</description>
+            <group>${spatial.name}</group>
+        </feature>
+
         <option>
             <name>DEFAULT_CONFIG</name>
             <description>Default map configuation settings</description>
