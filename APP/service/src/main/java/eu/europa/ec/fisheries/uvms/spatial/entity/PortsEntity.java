@@ -20,14 +20,14 @@ import java.util.Date;
 })
 @NamedNativeQueries({
         @NamedNativeQuery(
-                name = QueryNameConstants.PORT_BY_COORDINATE,
+                name = PortsEntity.PORT_BY_COORDINATE,
                 query = "select * from port where enabled = 'Y' order by ST_Distance_Spheroid(geom, st_geomfromtext(CAST(:wktPoint as text), :crs), 'SPHEROID[\"WGS 84\",6378137,298.257223563]') limit 1"
                 , resultSetMapping = "implicit.port")
 })
 @Table(name = "port", schema = "spatial")
 public class PortsEntity implements Serializable {
 
-    private static final long serialVersionUID = -2233177907262739920L;
+    public static final String PORT_BY_COORDINATE = "portEntity.ByCoordinate";
 
     @Id
     @Column(name = "gid")

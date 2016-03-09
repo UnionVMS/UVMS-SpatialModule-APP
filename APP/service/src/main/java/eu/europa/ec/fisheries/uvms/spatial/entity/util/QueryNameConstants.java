@@ -33,10 +33,8 @@ public final class QueryNameConstants {
     public static final String FIND_GID_BY_USER = "UserArea.findGidByUserNameOrScope";
     public static final String FIND_ALL_USER_AREAS = "UserArea.findAllUserAreas";
     public static final String FIND_ALL_USER_AREAS_BY_GIDS = "UserAreas.findAllUserAreasByGid";
-    public static final String USER_AREA_DETAILS = "UserArea.findUserAreaDetails";
 
     public static final String USER_AREA_DETAILS_WITH_EXTENT_BY_LOCATION = "UserArea.findUserAreaDetailsWithExtentByLocation";
-    public static final String USER_AREA_DETAILS_BY_LOCATION = "UserArea.findUserAreaDetailsByLocation";
 
     public static final String SEARCH_USER_AREA = "UserArea.searchUserAreaByNameAndDesc";
     public static final String FIND_USER_AREA_BY_ID = "UserArea.findUserAreaById";
@@ -57,16 +55,10 @@ public final class QueryNameConstants {
     /**
      * Named Native queries
      */
-    public static final String EEZ_BY_COORDINATE = "eezEntity.ByCoordinate";
-    public static final String RFMO_BY_COORDINATE = "rfmoEntity.ByCoordinate";
-    public static final String COUNTRY_BY_COORDINATE = "countryEntity.ByCoordinate";
     public static final String FAO_BY_COORDINATE = "faoEntity.ByCoordinate";
     public static final String GFCM_BY_COORDINATE = "gfcmEntity.ByCoordinate";
     public static final String RAC_BY_COORDINATE = "racEntity.ByCoordinate";
     public static final String STAT_RECT_BY_COORDINATE = "statRectEntity.ByCoordinate";
-    public static final String PORT_BY_COORDINATE = "portEntity.ByCoordinate";
-    public static final String PORTAREA_BY_COORDINATE = "portEntity.PortAreaByCoordinate";
-    public static final String USERAREA_BY_COORDINATE = "userAreasEntity.ByCoordinate";
 
     /**
      * Native Queries

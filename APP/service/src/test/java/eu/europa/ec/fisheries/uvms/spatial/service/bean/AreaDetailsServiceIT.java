@@ -11,6 +11,7 @@ import javax.ejb.EJB;
 import javax.ejb.EJBException;
 
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
+import lombok.SneakyThrows;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,6 +33,7 @@ public class AreaDetailsServiceIT extends AbstractArquillianIT {
 	
 
 	@Test
+    @SneakyThrows
 	public void getEezAreaDetailsByCoordinates() {
 		AreaTypeEntry areaCoordinate = new AreaTypeEntry();
 		areaCoordinate.setAreaType(AreaType.EEZ);
@@ -76,7 +78,8 @@ public class AreaDetailsServiceIT extends AbstractArquillianIT {
 	 * Test EEZ entity for valid response
 	 */
 	@Test
-	public void getEezAreaDetailsTest() {
+    @SneakyThrows
+    public void getEezAreaDetailsTest() {
         AreaDetailsSpatialRequest areaDetailsSpatialRequest = new AreaDetailsSpatialRequest();
         AreaTypeEntry areaTypeEntry = new AreaTypeEntry();
         areaTypeEntry.setAreaType(AreaType.EEZ);
@@ -91,7 +94,8 @@ public class AreaDetailsServiceIT extends AbstractArquillianIT {
 	 * Test RFMO entity for valid response
 	 */
 	@Test
-	public void getRfmoAreaDetailsTest() {
+    @SneakyThrows
+    public void getRfmoAreaDetailsTest() {
         AreaDetailsSpatialRequest areaDetailsSpatialRequest = new AreaDetailsSpatialRequest();
         AreaTypeEntry areaTypeEntry = new AreaTypeEntry();
         areaTypeEntry.setAreaType(AreaType.RFMO);

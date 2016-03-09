@@ -7,16 +7,15 @@
         <class>eu.europa.ec.fisheries.uvms.spatial.entity.ProjectionEntity</class>
         <class>eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity</class>
         <class>eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity</class>
-        <class>eu.europa.ec.fisheries.uvms.spatial.entity.AreaGroupEntity</class>
         <class>eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity</class>
         <class>eu.europa.ec.fisheries.uvms.spatial.entity.ProviderFormatEntity</class>
-        <class>eu.europa.ec.fisheries.uvms.spatial.entity.AreaConnectGroupEntity</class>
         <class>eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity</class>
         <class>eu.europa.ec.fisheries.uvms.spatial.entity.AreaStatusEntity</class>
         <class>eu.europa.ec.fisheries.uvms.spatial.entity.BookmarkEntity</class>
         <class>eu.europa.ec.fisheries.uvms.spatial.entity.CountriesEntity</class>
         <class>eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity</class>
         <class>eu.europa.ec.fisheries.uvms.spatial.entity.RfmoEntity</class>
+        <class>eu.europa.ec.fisheries.uvms.spatial.entity.PortAreasEntity</class>
         <class>eu.europa.ec.fisheries.uvms.spatial.entity.FaoEntity</class>
         <class>eu.europa.ec.fisheries.uvms.spatial.entity.PortsEntity</class>
         <class>eu.europa.ec.fisheries.uvms.spatial.entity.RacEntity</class>
