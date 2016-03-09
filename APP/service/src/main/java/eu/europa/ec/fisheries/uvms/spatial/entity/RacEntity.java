@@ -18,12 +18,12 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasNa
 import org.hibernate.annotations.Where;
 
 @Entity
-@SqlResultSetMappings({
-	@SqlResultSetMapping(name = "implicit.rac", entities = @EntityResult(entityClass = RacEntity.class))
-})
-@NamedNativeQuery(
-		name = QueryNameConstants.RAC_BY_COORDINATE, 
-		query = "select * from rac where st_intersects(geom, st_geomfromtext(CAST(:wktPoint as text), :crs)) and enabled = 'Y'", resultSetMapping = "implicit.rac")
+//@SqlResultSetMappings({
+//	@SqlResultSetMapping(name = "implicit.rac", entities = @EntityResult(entityClass = RacEntity.class))
+//})
+//@NamedNativeQuery(
+//		name = QueryNameConstants.RAC_BY_COORDINATE,
+//		query = "select * from rac where st_intersects(geom, st_geomfromtext(CAST(:wktPoint as text), :crs)) and enabled = 'Y'", resultSetMapping = "implicit.rac")
 @Where(clause = "enabled = 'Y'")
 @Table(name = "rac", schema = "spatial")
 public class RacEntity implements Serializable {
