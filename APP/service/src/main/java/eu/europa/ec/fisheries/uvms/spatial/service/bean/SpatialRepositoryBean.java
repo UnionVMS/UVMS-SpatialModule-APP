@@ -4,15 +4,7 @@ import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.service.QueryParameter;
-import eu.europa.ec.fisheries.uvms.spatial.dao.AreaDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.BookmarkDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.CountryDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.EezDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.MapConfigDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.ProjectionDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.ReportConnectSpatialDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.SysConfigDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.UserAreaJpaDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.*;
 import eu.europa.ec.fisheries.uvms.spatial.entity.BookmarkEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.PortAreasEntity;
@@ -61,7 +53,7 @@ import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 @Stateless
 @Local(value = SpatialRepository.class)
 @TransactionAttribute(TransactionAttributeType.REQUIRED) // TODO why class level?
-public class SpatialRepositoryBean extends AbstractDAO implements SpatialRepository {
+public class SpatialRepositoryBean extends AbstractDAO implements SpatialRepository { //FIXME extends AbstractDao
 
     private @PersistenceContext(unitName = "spatialPU") EntityManager em;
     private @EJB SqlPropertyHolder sql;
@@ -75,6 +67,8 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     private ReportConnectSpatialDao reportConnectSpatialDao;
     private BookmarkDao bookmarkDao;
     private ProjectionDao projectionDao;
+    private PortAreaDao portAreaDao;
+    private RfmoDao rfmoDao;
 
     @Override
     public EntityManager getEntityManager() {
@@ -92,6 +86,9 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
         reportConnectSpatialDao = new ReportConnectSpatialDao(em);
         bookmarkDao = new BookmarkDao(em);
         projectionDao = new ProjectionDao(em);
+        portAreaDao = new PortAreaDao(em);
+        rfmoDao = new RfmoDao(em);
+
     }
 
     @Override
@@ -364,4 +361,27 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
         return userAreasDTOs;
     }
 
+    // AreaRepository
+    @Override
+    public List findEezByIntersect(final Point point) throws ServiceException {
+        return eezDao.intersects(point);
+    }
+
+    // AreaRepository
+    @Override
+    public List findPortAreaByIntersect(final Point point) throws ServiceException {
+        return portAreaDao.intersects(point);
+    }
+
+    // AreaRepository
+    @Override
+    public List findRfmoByIntersect(final Point point) throws ServiceException {
+        return rfmoDao.intersects(point);
+    }
+
+    // AreaRepository
+    @Override
+    public List findUserAreaByIntersect(final Point point) throws ServiceException {
+        return userAreaDao.intersects(point);
+    }
 }

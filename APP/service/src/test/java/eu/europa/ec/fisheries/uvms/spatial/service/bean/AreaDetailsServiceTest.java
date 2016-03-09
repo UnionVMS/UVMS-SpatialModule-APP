@@ -43,6 +43,7 @@ public class AreaDetailsServiceTest {
     }
 
     @Test
+    @SneakyThrows
     public void getEezDetailsByCoordinates() {
         List<AreaLocationTypesEntity> areaEntities = new ArrayList<AreaLocationTypesEntity>();
         areaEntities.add(getMockAreaTypeEntity(AreaType.EEZ.value(), true));
@@ -60,6 +61,7 @@ public class AreaDetailsServiceTest {
     }
 
     @Test
+    @SneakyThrows
     public void shouldReturnEmptyResponseWhenNoAreaFound() {
         // given
         AreaTypeEntry areaTypeEntry = createAreaTypeEntry();
@@ -90,6 +92,7 @@ public class AreaDetailsServiceTest {
      * Test EEZ entity for valid response
      */
     @Test
+    @SneakyThrows
     public void getEezAreaDetailsTest() {
         List<AreaLocationTypesEntity> areaEntities = new ArrayList<AreaLocationTypesEntity>();
         areaEntities.add(getMockAreaTypeEntity(AreaType.EEZ.value(), true));
@@ -111,6 +114,7 @@ public class AreaDetailsServiceTest {
      * Test RFMO entity for valid response
      */
     @Test
+    @SneakyThrows
     public void getRfmoAreaDetailsTest() {
         List<AreaLocationTypesEntity> areaEntities = new ArrayList<AreaLocationTypesEntity>();
         areaEntities.add(getMockAreaTypeEntity("RFMO", true));
@@ -132,6 +136,7 @@ public class AreaDetailsServiceTest {
      * Test for Invalid entity in the DB
      */
     @Test(expected = SpatialServiceException.class)
+    @SneakyThrows
     public void invalidEntityTest() {
         AreaDetailsSpatialRequest areaDetailsSpatialRequest = new AreaDetailsSpatialRequest();
         AreaTypeEntry areaTypeEntry = new AreaTypeEntry();
@@ -146,6 +151,7 @@ public class AreaDetailsServiceTest {
      * Test for invalid for in input
      */
     @Test(expected = SpatialServiceException.class)
+    @SneakyThrows
     public void invalidRowTest() {
         AreaDetailsSpatialRequest areaDetailsSpatialRequest = new AreaDetailsSpatialRequest();
         AreaTypeEntry areaTypeEntry = new AreaTypeEntry();
@@ -159,6 +165,7 @@ public class AreaDetailsServiceTest {
      * Test for non existing row in DB
      */
     @Test(expected = SpatialServiceException.class)
+    @SneakyThrows
     public void nonExistingRowTest() {
         AreaDetailsSpatialRequest areaDetailsSpatialRequest = new AreaDetailsSpatialRequest();
         AreaTypeEntry areaTypeEntry = new AreaTypeEntry();

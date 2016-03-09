@@ -85,6 +85,8 @@ public abstract class SpatialServiceBean {
     }
     
     protected List getAllAreaByCoordinates(Coordinate request, AreaLocationTypesEntity areaLocationTypeEntry) {
+
+
     	Point point = convertToPointInWGS84(request.getLongitude(), request.getLatitude(), request.getCrs());
 		return repository.findAreaOrLocationByCoordinates(point, getNativeQueryByType(areaLocationTypeEntry.getTypeName()));
     }

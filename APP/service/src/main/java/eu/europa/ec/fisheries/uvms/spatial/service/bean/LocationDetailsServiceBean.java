@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional
 @Slf4j
 public class LocationDetailsServiceBean extends SpatialServiceBean implements LocationDetailsService {
-	
+
     @Override
     public LocationDetails getLocationDetails(LocationTypeEntry locationTypeEntry) {
     	AreaLocationTypesEntity locationType = getAreaLocationType(locationTypeEntry.getLocationType());
