@@ -18,12 +18,12 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasNa
 import org.hibernate.annotations.Where;
 
 @Entity
-@SqlResultSetMappings({
-	@SqlResultSetMapping(name = "implicit.statRect", entities = @EntityResult(entityClass = StatRectEntity.class))
-})
-@NamedNativeQuery(
-		name = QueryNameConstants.STAT_RECT_BY_COORDINATE, 
-		query = "select * from stat_rect where st_intersects(geom, st_geomfromtext(CAST(:wktPoint as text), :crs)) and enabled = 'Y'", resultSetMapping = "implicit.statRect")
+//@SqlResultSetMappings({
+//	@SqlResultSetMapping(name = "implicit.statRect", entities = @EntityResult(entityClass = StatRectEntity.class))
+//})
+//@NamedNativeQuery(
+//		name = QueryNameConstants.STAT_RECT_BY_COORDINATE,
+//		query = "select * from stat_rect where st_intersects(geom, st_geomfromtext(CAST(:wktPoint as text), :crs)) and enabled = 'Y'", resultSetMapping = "implicit.statRect")
 @Where(clause = "enabled = 'Y'")
 @Table(name = "stat_rect", schema = "spatial")
 public class StatRectEntity implements Serializable {
