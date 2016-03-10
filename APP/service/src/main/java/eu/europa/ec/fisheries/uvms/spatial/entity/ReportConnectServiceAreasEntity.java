@@ -25,10 +25,12 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "report_connect_service_areas", schema = "spatial")
-@NamedQueries(
+@NamedQueries({
 		@NamedQuery(name = QueryNameConstants.FIND_REPORT_SERVICE_AREAS,
-				query = "SELECT rcsa FROM ReportConnectServiceAreasEntity rcsa WHERE rcsa.reportConnectSpatial.reportId = :reportId")
-)
+				query = "SELECT rcsa FROM ReportConnectServiceAreasEntity rcsa WHERE rcsa.reportConnectSpatial.reportId = :reportId"),
+		@NamedQuery(name = QueryNameConstants.DELETE_BY_REPORT_CONNECT_SPATIAL_ID,
+				query = "DELETE FROM ReportConnectServiceAreasEntity rcsa WHERE rcsa.id = :id")
+})
 public class ReportConnectServiceAreasEntity implements Serializable, Comparable<ReportConnectServiceAreasEntity> {
 	
 	private static final long serialVersionUID = 6797853213499502868L;
@@ -38,7 +40,7 @@ public class ReportConnectServiceAreasEntity implements Serializable, Comparable
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private Long id;
 	
 	@ManyToOne
 	@JoinColumn(name = "report_connect_spatial_id", nullable = false)
@@ -54,12 +56,11 @@ public class ReportConnectServiceAreasEntity implements Serializable, Comparable
 	@Column(name = "layer_order", nullable = false)
 	private int layerOrder;
 
-	@Convert(converter = CharBooleanConverter.class)
-	@Column(name = "is_background", length = 1)
-	private Boolean isBackground = false;
-	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "reportConnectServiceAreas", cascade = CascadeType.ALL)
-	private Set<ReportLayerConfigEntity> reportLayerConfigs;
+	@Column(name = "layer_type", nullable = false)
+	private String layerType;
+
+	@Column(name = "area_type")
+	private String areaType;
 
 	public ReportConnectServiceAreasEntity() {
 	}
@@ -105,20 +106,20 @@ public class ReportConnectServiceAreasEntity implements Serializable, Comparable
 		this.layerOrder = layerOrder;
 	}
 
-	public Boolean getIsBackground() {
-		return this.isBackground;
+	public String getLayerType() {
+		return layerType;
 	}
 
-	public void setIsBackground(Boolean isBackground) {
-		this.isBackground = isBackground;
+	public void setLayerType(String layerType) {
+		this.layerType = layerType;
 	}
 
-	public Set<ReportLayerConfigEntity> getReportLayerConfigs() {
-		return this.reportLayerConfigs;
+	public String getAreaType() {
+		return areaType;
 	}
 
-	public void setReportLayerConfigs(Set<ReportLayerConfigEntity> reportLayerConfigs) {
-		this.reportLayerConfigs = reportLayerConfigs;
+	public void setAreaType(String areaType) {
+		this.areaType = areaType;
 	}
 
 	@Override
@@ -127,12 +128,6 @@ public class ReportConnectServiceAreasEntity implements Serializable, Comparable
 	}
 
 	public LayerDto convertToServiceLayer(String geoServerUrl, String bingApiKey) {
-		return serviceLayer.convertToServiceLayer(geoServerUrl, bingApiKey, getIsBackground());
-	}
-
-	private void setStyle(LayerDto layerDto) {
-		if(!serviceLayer.isStyleEmpty()) {
-			layerDto.setStyles(new StylesDto(serviceLayer.getStyleGeom(), serviceLayer.getStyleLabel(), serviceLayer.getStyleLabelGeom()));
-		}
+		return serviceLayer.convertToServiceLayer(geoServerUrl, bingApiKey, false); // TODO Fix is background check
 	}
 }
