@@ -61,7 +61,7 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
     }
 
     @Override
-    public List<ServiceLayerDto> getAreaLayerDescription(LayerTypeEnum layerTypeEnum) throws ServiceException {
+    public List<ServiceLayerDto> getAreaLayerDescription(LayerSubTypeEnum layerTypeEnum) throws ServiceException {
         String apiKey = getBingApiKey();
         if (apiKey != null) {
             return repository.findServiceLayerBySubType(constructInParameters(layerTypeEnum), true);
@@ -70,7 +70,7 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
         }
     }
 
-    public List<AreaServiceLayerDto> getAllAreasLayerDescription(LayerTypeEnum layerTypeEnum, String userName) throws ServiceException {
+    public List<AreaServiceLayerDto> getAllAreasLayerDescription(LayerSubTypeEnum layerTypeEnum, String userName) throws ServiceException {
         List<AreaServiceLayerDto> areaServiceLayerDtos = new ArrayList<AreaServiceLayerDto>();
         switch (layerTypeEnum) {
             case USERAREA:
@@ -90,7 +90,7 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
         return repository.findSystemConfigByName(parameters);
     }
 
-    private List<String> constructInParameters(LayerTypeEnum layerTypeEnum) {
+    private List<String> constructInParameters(LayerSubTypeEnum layerTypeEnum) {
         List<String> inClause = new ArrayList<String>();
         switch (layerTypeEnum) {
             case BACKGROUND:
