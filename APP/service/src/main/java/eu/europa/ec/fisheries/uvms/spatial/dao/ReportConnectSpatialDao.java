@@ -2,6 +2,7 @@ package eu.europa.ec.fisheries.uvms.spatial.dao;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 
@@ -29,6 +30,13 @@ public class ReportConnectSpatialDao extends AbstractDAO<ReportConnectSpatialEnt
         return findEntityByNamedQuery(
                 ReportConnectSpatialEntity.class, QueryNameConstants.FIND_BY_REPORT_ID,
                 with("reportId", reportId).parameters(), 1
+        );
+    }
+
+    public List<ReportConnectSpatialEntity> findReportConnectSpatialById(Long reportId, Long id) throws ServiceException {
+        return findEntityByNamedQuery(
+                ReportConnectSpatialEntity.class, QueryNameConstants.FIND_BY_ID,
+                with("reportId", reportId).and("id", id).parameters(), 1
         );
     }
 
