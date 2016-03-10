@@ -2,7 +2,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaServiceLayerDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.LayerTypeEnum;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.LayerSubTypeEnum;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.ServiceLayerDto;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
@@ -47,25 +47,25 @@ public class AreaTypeNamesServiceIT extends AbstractArquillianIT {
 
     @Test
     public void shouldReturnAreaLayerDescription() throws ServiceException {
-        List<ServiceLayerDto> serviceLayerDtos = areaTypeNamesService.getAreaLayerDescription(LayerTypeEnum.SYSAREA);
+        List<ServiceLayerDto> serviceLayerDtos = areaTypeNamesService.getAreaLayerDescription(LayerSubTypeEnum.SYSAREA);
         assertNotNull(serviceLayerDtos);
 
-        serviceLayerDtos = areaTypeNamesService.getAreaLayerDescription(LayerTypeEnum.BACKGROUND);
+        serviceLayerDtos = areaTypeNamesService.getAreaLayerDescription(LayerSubTypeEnum.BACKGROUND);
         assertNotNull(serviceLayerDtos);
 
-        serviceLayerDtos = areaTypeNamesService.getAreaLayerDescription(LayerTypeEnum.ADDITIONAL);
+        serviceLayerDtos = areaTypeNamesService.getAreaLayerDescription(LayerSubTypeEnum.ADDITIONAL);
         assertNotNull(serviceLayerDtos);
 
-        serviceLayerDtos = areaTypeNamesService.getAreaLayerDescription(LayerTypeEnum.PORT);
+        serviceLayerDtos = areaTypeNamesService.getAreaLayerDescription(LayerSubTypeEnum.PORT);
         assertNotNull(serviceLayerDtos);
 
-        serviceLayerDtos = areaTypeNamesService.getAreaLayerDescription(LayerTypeEnum.USERAREA);
+        serviceLayerDtos = areaTypeNamesService.getAreaLayerDescription(LayerSubTypeEnum.USERAREA);
         assertNotNull(serviceLayerDtos);
     }
 
     @Test
     public void shouldReturnAllAreaLayerDescription() throws ServiceException {
-        List<AreaServiceLayerDto> areaServiceLayerDtos = areaTypeNamesService.getAllAreasLayerDescription(LayerTypeEnum.USERAREA, "rep_power");
+        List<AreaServiceLayerDto> areaServiceLayerDtos = areaTypeNamesService.getAllAreasLayerDescription(LayerSubTypeEnum.USERAREA, "rep_power");
         assertNotNull(areaServiceLayerDtos);
         assertFalse(areaServiceLayerDtos.isEmpty());
     }
