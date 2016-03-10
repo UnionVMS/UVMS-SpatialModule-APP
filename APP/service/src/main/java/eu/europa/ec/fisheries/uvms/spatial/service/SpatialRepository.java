@@ -116,6 +116,13 @@ public interface SpatialRepository extends DAO {
     List<String> getAreaGroups(String userName, String scopeName, boolean isPowerUser);
 
     List<UserAreasEntity> findUserAreasByType(String userName, String scopeName, String type, boolean isPowerUser) throws ServiceException;
+
+    void deleteReportConnectServiceAreas(Long id);
+
+    void deleteReportConnectServiceAreas(Set<ReportConnectServiceAreasEntity> reportConnectServiceAreases);
+
+    ReportConnectSpatialEntity findReportConnectSpatialById(Long reportId, Long id) throws ServiceException;
+
     // AreaRepository
     List findEezByIntersect(Point point) throws ServiceException;
     // AreaRepository

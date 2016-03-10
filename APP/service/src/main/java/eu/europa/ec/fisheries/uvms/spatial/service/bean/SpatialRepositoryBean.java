@@ -384,4 +384,27 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     public List findUserAreaByIntersect(final Point point) throws ServiceException {
         return userAreaDao.intersects(point);
     }
+
+    @Override
+    public void deleteReportConnectServiceAreas(Long id) {
+        mapConfigDao.deleteReportConnectServiceAreas(id);
+    }
+
+    @Override
+    public void deleteReportConnectServiceAreas(Set<ReportConnectServiceAreasEntity> reportConnectServiceAreases) {
+        if (!reportConnectServiceAreases.isEmpty()) {
+            for (ReportConnectServiceAreasEntity entity : reportConnectServiceAreases) {
+                deleteEntity(entity);
+            }
+        }
+    }
+
+    @Override
+    public ReportConnectSpatialEntity findReportConnectSpatialById(final Long reportId, final Long id) throws ServiceException {
+        List<ReportConnectSpatialEntity> list = reportConnectSpatialDao.findReportConnectSpatialById(reportId, id);
+        if (isNotEmpty(list)) {
+            return list.get(0);
+        }
+        return null;
+    }
 }
