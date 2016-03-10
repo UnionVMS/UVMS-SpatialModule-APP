@@ -23,10 +23,16 @@ public class LayersDto implements Comparable<LayersDto> {
 
     public LayersDto() {}
 
-    public LayersDto(String name, String serviceLayerId, String subType) {
+    public LayersDto(String name, String serviceLayerId, String subType, Long order) {
         this.name = name;
         this.serviceLayerId = serviceLayerId;
         this.subType = subType;
+        this.order = order;
+    }
+
+    public LayersDto(String serviceLayerId, Long order) {
+        this.serviceLayerId = serviceLayerId;
+        this.order = order;
     }
 
     @JsonProperty("name")

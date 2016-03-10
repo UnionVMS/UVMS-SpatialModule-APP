@@ -3,6 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -70,6 +71,34 @@ public class LayerSettingsDto {
     @JsonProperty("portLayers")
     public void setPortLayers(List<LayersDto> portLayers) {
         this.portLayers = portLayers;
+    }
+
+    public void addBaseLayer(LayersDto layersDto) {
+        if (baseLayers == null) {
+            baseLayers = new ArrayList<>();
+        }
+        baseLayers.add(layersDto);
+    }
+
+    public  void addPortLayer(LayersDto layersDto) {
+        if (portLayers == null) {
+            portLayers = new ArrayList<>();
+        }
+        portLayers.add(layersDto);
+    }
+
+    public void addAdditionalLayer(LayersDto layersDto) {
+        if (additionalLayers == null) {
+            additionalLayers = new ArrayList<>();
+        }
+        additionalLayers.add(layersDto);
+    }
+
+    public void addAreaLayer(LayerAreaDto layerAreaDto) {
+        if (areaLayers == null) {
+            areaLayers = new ArrayList<>();
+        }
+        areaLayers.add(layerAreaDto);
     }
 }
 
