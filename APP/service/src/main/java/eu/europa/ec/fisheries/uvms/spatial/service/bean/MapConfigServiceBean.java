@@ -180,7 +180,7 @@ public class MapConfigServiceBean implements MapConfigService {
             Set<ReportConnectServiceAreasEntity> areas = entity.getReportConnectServiceAreases();
             if (areas == null) {
                 entity.setReportConnectServiceAreases(serviceAreas);
-            } else if(areas != null) {
+            } else {
                 areas.clear();
                 areas.addAll(serviceAreas);
                 entity.setReportConnectServiceAreases(areas);
@@ -301,8 +301,7 @@ public class MapConfigServiceBean implements MapConfigService {
     @Override
     @SneakyThrows
     public ConfigDto getReportConfigWithoutMap(String userPref, String adminPref) {
-        ConfigDto configDto = mergeNoMapConfiguration(getUserConfiguration(userPref), getAdminConfiguration(adminPref)); //Returns merged config object between Admin and User configuration from USM
-        return configDto;
+        return mergeNoMapConfiguration(getUserConfiguration(userPref), getAdminConfiguration(adminPref));
     }
 
     @Override
@@ -314,7 +313,7 @@ public class MapConfigServiceBean implements MapConfigService {
 
     private void updateLayerSettings(LayerSettingsDto layerSettingsDto, String userName, boolean includeUserArea) throws ServiceException {
         String bingApiKey = getBingApiKey();
-        List<Long> ids =  new ArrayList<Long>(); // Get All the Ids to query for Service layer all together
+        List<Long> ids = new ArrayList<>(); // Get All the Ids to query for Service layer all together
         ids.addAll(getServiceLayerIds(layerSettingsDto.getAdditionalLayers()));
         ids.addAll(getServiceLayerIds(layerSettingsDto.getBaseLayers()));
         ids.addAll(getServiceLayerIds(layerSettingsDto.getPortLayers()));
@@ -367,7 +366,7 @@ public class MapConfigServiceBean implements MapConfigService {
             List<AreaDto> areaDtos = repository.findAllUserAreasByGids(userAreaIds);
             for (LayerAreaDto layerDto : layers) {
                 for (AreaDto areaDto :  areaDtos) {
-                    if (layerDto.getGid() == areaDto.getGid()) {
+                    if (Objects.equals(layerDto.getGid(), areaDto.getGid())) {
                         layerDto.setAreaName(areaDto.getName());
                         layerDto.setAreaDesc(areaDto.getDesc());
                     }
@@ -375,7 +374,7 @@ public class MapConfigServiceBean implements MapConfigService {
             }
         } else if (userName != null && includeUserArea) {
             List<AreaDto> areaDtos = repository.getAllUserAreas(userName);
-            ServiceLayerEntity serviceLayerEntity = layer.getServiceLayerBy(USER_AREA.toUpperCase());
+            ServiceLayerEntity serviceLayerEntity = layer.getByAreaLocationType(USER_AREA.toUpperCase());
             for (AreaDto areaDto :  areaDtos) {
                 LayerAreaDto layerAreaDto = new LayerAreaDto();
                 layerAreaDto.setGid(areaDto.getGid());
@@ -449,17 +448,17 @@ public class MapConfigServiceBean implements MapConfigService {
     private ServiceLayersDto getServiceAreaLayer(int reportId, ConfigurationDto configurationDto, ProjectionDto projection, String userName) throws ServiceException {
         String geoServerUrl = getGeoServerUrl();
         String bingApiKey = getBingApiKey();
-        List<ReportConnectServiceAreasEntity> reportConnectServiceAreas = getReportConnectServiceAreas(reportId, projection, bingApiKey);
-        if (reportConnectServiceAreas != null && !reportConnectServiceAreas.isEmpty()) { // If report is having service layer then return it
-            List<LayerDto> layerDtos = new ArrayList<LayerDto>();
-            for (ReportConnectServiceAreasEntity reportConnectServiceArea : reportConnectServiceAreas) {
-                layerDtos.add(reportConnectServiceArea.convertToServiceLayer(geoServerUrl, bingApiKey));
+        ReportConnectSpatialEntity entity = repository.findReportConnectSpatialBy((long) reportId);
+        if (entity != null) {
+            Set<ReportConnectServiceAreasEntity> reportConnectServiceAreas = entity.getReportConnectServiceAreases(); // Report is overridden with Layer Settings. Ignore USM layer configuration
+            if (reportConnectServiceAreas != null && !reportConnectServiceAreas.isEmpty()) {
+                LayerSettingsDto layerSettingsDto = getLayerSettingsForMap(entity.getReportConnectServiceAreases());
+                return getServiceAreaLayersFromConfig(layerSettingsDto, geoServerUrl, bingApiKey, projection, userName);
+            } else {
+                return getServiceAreaLayersFromConfig(configurationDto.getLayerSettings(), geoServerUrl, bingApiKey, projection, userName);
             }
-            // TODO fix ServiceLayer Dto return type if the report is configured with service layers
-            return null;
-        } else { // otherwise get the default layer configuration from USM
-           return getServiceAreaLayersFromConfig(configurationDto, geoServerUrl, bingApiKey, projection, userName);
-
+        } else {
+            return getServiceAreaLayersFromConfig(configurationDto.getLayerSettings(), geoServerUrl, bingApiKey, projection, userName);
         }
     }
 
@@ -522,12 +521,12 @@ public class MapConfigServiceBean implements MapConfigService {
         return new RefreshDto(configurationDto.getMapSettings().getRefreshStatus(), configurationDto.getMapSettings().getRefreshRate());
     }
 
-    private ServiceLayersDto getServiceAreaLayersFromConfig(ConfigurationDto configurationDto, String geoServerUrl, String bingApiKey, ProjectionDto projection, String userName) throws ServiceException {
+    private ServiceLayersDto getServiceAreaLayersFromConfig(LayerSettingsDto layerSettingsDto, String geoServerUrl, String bingApiKey, ProjectionDto projection, String userName) throws ServiceException {
         ServiceLayersDto serviceLayersDto = new ServiceLayersDto();
-        serviceLayersDto.setPortLayers(getLayerDtoList(configurationDto.getLayerSettings().getPortLayers(), geoServerUrl, bingApiKey, projection, false)); // Get Service Layers for Port layers
-        serviceLayersDto.setSystemLayers(getAreaLayerDtoList(configurationDto.getLayerSettings().getAreaLayers(), geoServerUrl, bingApiKey, projection, false)); // // Get Service Layers for system layers and User Layers
-        serviceLayersDto.setAdditionalLayers(getLayerDtoList(configurationDto.getLayerSettings().getAdditionalLayers(), geoServerUrl, bingApiKey, projection, false)); // Get Service Layers for Additional layers
-        serviceLayersDto.setBaseLayers(getLayerDtoList(configurationDto.getLayerSettings().getBaseLayers(), geoServerUrl, bingApiKey, projection, true)); // Get Service Layers for base layers
+        serviceLayersDto.setPortLayers(getLayerDtoList(layerSettingsDto.getPortLayers(), geoServerUrl, bingApiKey, projection, false)); // Get Service Layers for Port layers
+        serviceLayersDto.setSystemLayers(getAreaLayerDtoList(layerSettingsDto.getAreaLayers(), geoServerUrl, bingApiKey, projection, false)); // // Get Service Layers for system layers and User Layers
+        serviceLayersDto.setAdditionalLayers(getLayerDtoList(layerSettingsDto.getAdditionalLayers(), geoServerUrl, bingApiKey, projection, false)); // Get Service Layers for Additional layers
+        serviceLayersDto.setBaseLayers(getLayerDtoList(layerSettingsDto.getBaseLayers(), geoServerUrl, bingApiKey, projection, true)); // Get Service Layers for base layers
         return serviceLayersDto;
     }
 
@@ -595,21 +594,6 @@ public class MapConfigServiceBean implements MapConfigService {
             ids.add(Long.parseLong(layer.getServiceLayerId()));
         }
         return ids;
-    }
-
-    private List<ReportConnectServiceAreasEntity> getReportConnectServiceAreas(int reportId, ProjectionDto projection, String bingApiKey) {
-        List<ReportConnectServiceAreasEntity> reportConnectServiceAreas = repository.findReportConnectServiceAreas(reportId);
-        if (reportConnectServiceAreas != null) {
-            Iterator<ReportConnectServiceAreasEntity> areaIterator = reportConnectServiceAreas.iterator();
-            while (areaIterator.hasNext()) {
-                ReportConnectServiceAreasEntity reportConnectServiceArea = areaIterator.next();
-                if (isRemoveLayer(projection, reportConnectServiceArea.getServiceLayer(), bingApiKey)) {
-                    areaIterator.remove();
-                }
-            }
-            Collections.sort(reportConnectServiceAreas);
-        }
-        return reportConnectServiceAreas;
     }
 
     private List<ServiceLayerEntity> getServiceLayers(List<Long> ids, ProjectionDto projection, String bingApiKey) {

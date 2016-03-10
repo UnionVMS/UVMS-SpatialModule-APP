@@ -8,4 +8,6 @@ public interface LayerRepository {
     ServiceLayerEntity getServiceLayerBy(String locationType) throws ServiceException;
 
     ServiceLayerEntity getServiceLayerBy(Long id) throws ServiceException;
+
+    ServiceLayerEntity getByAreaLocationType(String areaLocationType) throws ServiceException;
 }

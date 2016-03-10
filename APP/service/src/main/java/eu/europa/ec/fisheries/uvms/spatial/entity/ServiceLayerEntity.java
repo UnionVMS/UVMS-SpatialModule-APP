@@ -34,11 +34,15 @@ import org.hibernate.annotations.Cascade;
         @NamedQuery(name = QueryNameConstants.FIND_SERVICE_LAYER_BY_SUBTYPE_WITHOUT_BING,
                 query = "SELECT serviceLayer.id AS id, serviceLayer.name AS name, serviceLayer.layerDesc AS layerDesc, serviceLayer.subType as subType " +
                         "From ServiceLayerEntity serviceLayer INNER JOIN serviceLayer.providerFormat providerFormat " +
-                        "WHERE serviceLayer.subType in (:subTypes) AND providerFormat.serviceType <> 'BING' order by serviceLayer.id")
+                        "WHERE serviceLayer.subType in (:subTypes) AND providerFormat.serviceType <> 'BING' order by serviceLayer.id"),
+        @NamedQuery(name = ServiceLayerEntity.BY_AREA_LOCATION_TYPE,
+                query = "FROM ServiceLayerEntity serviceLayer WHERE upper(serviceLayer.areaType.typeName) = upper(:typeName)")
 })
 public class ServiceLayerEntity extends BaseEntity {
 
     public static final String BY_LOCATION_TYPE = "ServiceLayer.byLocationType";
+
+    public static final String BY_AREA_LOCATION_TYPE = "ServiceLayer.byAreaLocationType";
 
     private static final String GEOSERVER = "geoserver";
 

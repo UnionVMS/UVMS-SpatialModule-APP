@@ -46,4 +46,13 @@ public class ServiceLayerDao extends AbstractDAO<ServiceLayerEntity> {
         return serviceLayerEntity;
 
     }
+
+    public ServiceLayerEntity getByAreaLocationType(String areaLocationType) throws ServiceException {
+        List<ServiceLayerEntity> serviceLayers = findEntityByNamedQuery(ServiceLayerEntity.class, ServiceLayerEntity.BY_AREA_LOCATION_TYPE,
+                QueryParameter.with("typeName", areaLocationType).parameters(), 1);
+        if (serviceLayers != null && !serviceLayers.isEmpty()) {
+            return serviceLayers.get(0);
+        }
+        return null;
+    }
 }
