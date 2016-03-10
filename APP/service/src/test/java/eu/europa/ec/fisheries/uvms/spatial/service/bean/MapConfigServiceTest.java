@@ -178,7 +178,6 @@ public class MapConfigServiceTest {
         //first object
         ReportConnectServiceAreasEntity entityOne = new ReportConnectServiceAreasEntity();
         entityOne.setId(1);
-        entityOne.setIsBackground(true);
         entityOne.setLayerOrder(3);
         entityOne.setSqlFilter("Test filter");
         entityOne.setServiceLayer(getServiceLayerEntity("OSM", 4));
@@ -186,7 +185,6 @@ public class MapConfigServiceTest {
         // second object
         ReportConnectServiceAreasEntity entityTwo = new ReportConnectServiceAreasEntity();
         entityTwo.setId(2);
-        entityTwo.setIsBackground(true);
         entityTwo.setLayerOrder(1);
         entityTwo.setSqlFilter("Test filter");
         entityTwo.setServiceLayer(getServiceLayerEntity("WMS",  1));
@@ -194,7 +192,6 @@ public class MapConfigServiceTest {
         //third object
         ReportConnectServiceAreasEntity entityThree = new ReportConnectServiceAreasEntity();
         entityThree.setId(3);
-        entityThree.setIsBackground(false);
         entityThree.setLayerOrder(2);
         entityThree.setSqlFilter("Test filter");
         entityThree.setServiceLayer(getServiceLayerEntity("OSM",2));
