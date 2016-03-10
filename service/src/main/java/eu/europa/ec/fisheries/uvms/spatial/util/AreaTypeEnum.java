@@ -19,7 +19,7 @@ public enum AreaTypeEnum {
         return type;
     }
 
-    public AreaTypeEnum getEnumFromValue(String value) {
+    public static AreaTypeEnum getEnumFromValue(String value) {
         for (AreaTypeEnum areaTypeEnum : AreaTypeEnum.values()) {
             if (areaTypeEnum.getType().equalsIgnoreCase(value)) {
                 return areaTypeEnum;
