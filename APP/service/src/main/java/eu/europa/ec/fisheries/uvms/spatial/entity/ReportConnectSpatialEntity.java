@@ -5,6 +5,8 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.CoordinatesFormat;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ScaleBarUnits;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.Cascade;
+
 import java.io.Serializable;
 import java.util.Set;
 import javax.persistence.CascadeType;
@@ -32,6 +34,8 @@ import javax.persistence.Table;
 						"WHERE rcs.reportId = :reportId"),
 		@NamedQuery(name = QueryNameConstants.FIND_BY_REPORT_ID,
 				query = "from ReportConnectSpatialEntity where reportId = :reportId"),
+		@NamedQuery(name = QueryNameConstants.FIND_BY_ID,
+				query = "from ReportConnectSpatialEntity where reportId = :reportId and id = :id"),
         @NamedQuery(name = ReportConnectSpatialEntity.DELETE_BY_ID_LIST,
                 query = "DELETE FROM ReportConnectSpatialEntity where id in :idList")
 })
@@ -82,7 +86,7 @@ public class ReportConnectSpatialEntity implements Serializable {
 	@Column(name = "app_version", nullable = false, length = 255)
 	private String appVersion;
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "reportConnectSpatial", cascade = CascadeType.ALL)
+	@OneToMany(orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "reportConnectSpatial", cascade = CascadeType.ALL)
 	private Set<ReportConnectServiceAreasEntity> reportConnectServiceAreases;
 
     public ReportConnectSpatialEntity() {
