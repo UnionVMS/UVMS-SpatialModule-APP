@@ -7,6 +7,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.mapper;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.*;
+import eu.europa.ec.fisheries.uvms.spatial.util.AreaTypeEnum;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -78,6 +79,25 @@ public abstract class MapConfigMapper {
     })
     public abstract VisibilitySettingsDto getVisibilitySettingsDto(VisibilitySettingsType visibilitySettingsType);
 
+    public abstract LayerSettingsType getLayerSettingsType(LayerSettingsDto layerSettingsDto);
+
+    public abstract LayerSettingsDto getLayerSettingsDto(LayerSettingsType layerSettingsType);
+
+    public abstract LayersType getLayersType(LayersDto layersDto);
+
+    public abstract LayersDto getLayersDto(LayersType layersType);
+
+    @Mappings({
+            @Mapping(target = "areaType", expression = "java(getAreaType(layerAreaDto.getAreaType()))")
+    })
+    public abstract LayerAreaType getLayerAreaType(LayerAreaDto layerAreaDto);
+
+    @Mappings({
+            @Mapping(target = "areaType", expression = "java(getAreaTypeEnum(layerAreaType.getAreaType()))")
+    })
+    public abstract LayerAreaDto getLayerAreaDto(LayerAreaType layerAreaType);
+
+
     @Mappings({
             @Mapping(source = "positions", target = "position"),
             @Mapping(source = "segments", target = "segment")
@@ -109,6 +129,14 @@ public abstract class MapConfigMapper {
             @Mapping(target = "style", expression = "java(convertToStyleMap(segmentType.getStyles()))")
     })
     public abstract SegmentsDto getSegmentDto(SegmentType segmentType);
+
+    protected String getAreaType(AreaTypeEnum areaTypeEnum) {
+        return areaTypeEnum.getType();
+    }
+
+    protected AreaTypeEnum getAreaTypeEnum(String areaType) {
+        return AreaTypeEnum.valueOf(areaType);
+    }
 
     protected Boolean getAttributeValue(Boolean isAttrVisible) {
         if (isAttrVisible == null) {
