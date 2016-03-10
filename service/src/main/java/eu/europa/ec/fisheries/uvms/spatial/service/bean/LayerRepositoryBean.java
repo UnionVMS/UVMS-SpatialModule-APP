@@ -33,4 +33,9 @@ public class LayerRepositoryBean implements LayerRepository {
     public ServiceLayerEntity getServiceLayerBy(Long id) throws ServiceException {
         return serviceLayerDao.findEntityById(ServiceLayerEntity.class, id);
     }
+
+    @Override
+    public ServiceLayerEntity getByAreaLocationType(String areaLocationType) throws ServiceException {
+        return  serviceLayerDao.getByAreaLocationType(areaLocationType);
+    }
 }
