@@ -3,7 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers;
 /**
  * Created by padhyad on 1/7/2016.
  */
-public enum LayerTypeEnum {
+public enum LayerSubTypeEnum {
 
     BACKGROUND("background"),
     ADDITIONAL("additional"),
@@ -13,7 +13,7 @@ public enum LayerTypeEnum {
 
     private String layerType;
 
-    LayerTypeEnum(String layerType) {
+    LayerSubTypeEnum(String layerType) {
         this.layerType = layerType;
     }
 
@@ -21,8 +21,8 @@ public enum LayerTypeEnum {
         return layerType;
     }
 
-    public static LayerTypeEnum value(String type) {
-        for (LayerTypeEnum layer: LayerTypeEnum.values()) {
+    public static LayerSubTypeEnum value(String type) {
+        for (LayerSubTypeEnum layer: LayerSubTypeEnum.values()) {
             if (layer.layerType.equalsIgnoreCase(type)) {
                 return layer;
             }
