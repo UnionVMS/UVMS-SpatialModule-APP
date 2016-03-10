@@ -34,7 +34,8 @@ public abstract class ReportConnectSpatialMapper {
             @Mapping(source = "displayFormatType", target = "coordinatesFormat"),
             @Mapping(source = "scaleBarType", target = "scaleBarUnits"),
             @Mapping(target = "styleSettings", ignore = true),
-            @Mapping(target = "visibilitySettings", ignore = true)
+            @Mapping(target = "visibilitySettings", ignore = true),
+            @Mapping(target = "layerSettings", ignore = true)
     })
     public abstract MapConfigurationType reportConnectSpatialEntityToMapConfigurationType(ReportConnectSpatialEntity entity);
 
