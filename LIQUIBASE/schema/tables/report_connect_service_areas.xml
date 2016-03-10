@@ -12,12 +12,14 @@
                 <constraints nullable="false"/>
             </column>
             <column name="service_layer_id" remarks="soft link to the Layers table" type="INT"/>
-            <column name="area_group_id" type="INT"/>
             <column name="sql_filter" remarks="this will contain the actual area ID in a particular area table" type="TEXT"/>
-            <column defaultValueNumeric="0" name="layer_order" remarks="The order of the layer group" type="INT">
+            <column name="layer_order" remarks="The order of the layer group" type="INT">
                 <constraints nullable="false"/>
             </column>
-            <column name="is_background" type="BPCHAR(1)"/>
+            <column name="layer_type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="area_type" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
     
