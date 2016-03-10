@@ -28,6 +28,13 @@ public class LayerAreaDto extends LayersDto {
     @JsonProperty("areaGroupName")
     private String areaGroupName;
 
+    public LayerAreaDto() {}
+
+    public LayerAreaDto(AreaTypeEnum areaType, String serviceLayerId, Long order) {
+        super(serviceLayerId, order);
+        this.areaType = areaType;
+    }
+
     @JsonProperty("areaType")
     public AreaTypeEnum getAreaType() {
         return areaType;
