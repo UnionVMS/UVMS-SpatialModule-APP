@@ -1,6 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.dao;
 
 import com.google.common.collect.ImmutableMap;
+import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity;
@@ -12,6 +13,8 @@ import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static eu.europa.ec.fisheries.uvms.service.QueryParameter.with;
 
 /**
  * Created by padhyad on 11/20/2015.
@@ -49,5 +52,10 @@ public class MapConfigDao extends CommonDao {
     public List<ServiceLayerEntity> findServiceLayerEntityByIds(List<Long> ids) {
         Map<String, List<Long>> parameters = ImmutableMap.<String, List<Long>>builder().put(ID_LIST, ids).build();
         return createNamedQueryWithParameterList(QueryNameConstants.FIND_SERVICE_LAYERS_BY_ID, parameters).list();
+    }
+
+    public void deleteReportConnectServiceAreas(Long id) {
+        Map<String, Object> parameters = ImmutableMap.<String, Object>builder().put(ID, id).build();
+        createNamedQuery(QueryNameConstants.DELETE_BY_REPORT_CONNECT_SPATIAL_ID, parameters).executeUpdate();
     }
 }
