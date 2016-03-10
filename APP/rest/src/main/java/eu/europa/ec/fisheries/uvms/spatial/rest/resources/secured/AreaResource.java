@@ -30,7 +30,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.AreaExtendedIdentifierDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.ClosestAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaServiceLayerDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.LayerTypeEnum;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.LayerSubTypeEnum;
 import lombok.extern.slf4j.Slf4j;
 
 @Path("/")
@@ -181,8 +181,8 @@ public class AreaResource extends UnionVMSResource {
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/servicelayers/{layerType}")
     public Response getServiceLayersByType(@PathParam("layerType") String layerType, @Context HttpServletRequest request) throws ServiceException {
-        LayerTypeEnum layerTypeEnum = LayerTypeEnum.value(layerType);
-        if (layerTypeEnum.equals(LayerTypeEnum.USERAREA)) {
+        LayerSubTypeEnum layerTypeEnum = LayerSubTypeEnum.value(layerType);
+        if (layerTypeEnum.equals(LayerSubTypeEnum.USERAREA)) {
             List<AreaServiceLayerDto> areaServiceLayerDtos = areaTypeService.getAllAreasLayerDescription(layerTypeEnum, request.getRemoteUser());
             return createSuccessResponse(areaServiceLayerDtos);
         } else {
