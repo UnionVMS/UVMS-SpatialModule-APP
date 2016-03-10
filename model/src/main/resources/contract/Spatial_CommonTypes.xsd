@@ -220,6 +220,7 @@
             <xs:element name="scaleBarUnits" type="ScaleBarUnits" minOccurs="0"/>
             <xs:element name="StyleSettings" type="StyleSettingsType" minOccurs="0"/>
             <xs:element name="VisibilitySettings" type="VisibilitySettingsType" minOccurs="0" />
+            <xs:element name="LayerSettings" type="LayerSettingsType" minOccurs="0" />
         </xs:sequence>
     </xs:complexType>
 
@@ -259,6 +260,38 @@
             <xs:element name="order" minOccurs="0" type="xs:string" maxOccurs="unbounded"/>
             <xs:element name="values" minOccurs="0" type="xs:string" maxOccurs="unbounded"/>
         </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="LayerSettingsType">
+        <xs:sequence>
+            <xs:element name="baseLayers" minOccurs="0" type="LayersType" maxOccurs="unbounded"/>
+            <xs:element name="portLayers" minOccurs="0" type="LayersType" maxOccurs="unbounded"/>
+            <xs:element name="additionalLayers" minOccurs="0" type="LayersType" maxOccurs="unbounded"/>
+            <xs:element name="areaLayers" minOccurs="0" type="LayerAreaType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="LayersType">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="serviceLayerId" type="xs:string"/>
+            <xs:element name="subType" type="xs:string"/>
+            <xs:element name="order" type="xs:long"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="LayerAreaType">
+        <xs:complexContent>
+            <xs:extension base="LayersType">
+                <xs:sequence>
+                    <xs:element name="areaType" type="xs:string" />
+                    <xs:element name="gid" type="xs:long" />
+                    <xs:element name="areaName" type="xs:string" />
+                    <xs:element name="areaDesc" type="xs:string" />
+                    <xs:element name="areaGroupName" type="xs:string" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>
 
     <xs:complexType name="StyleSettingsType">
