@@ -4,17 +4,21 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.entity.*;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ProjectionEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.mapper.ReportConnectSpatialMapper;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
-import eu.europa.ec.fisheries.uvms.spatial.service.LayerRepository;
-import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
+import eu.europa.ec.fisheries.uvms.spatial.repository.LayerRepository;
+import eu.europa.ec.fisheries.uvms.spatial.repository.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.MapConfigMapper;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.ProjectionMapper;
 import eu.europa.ec.fisheries.uvms.spatial.util.AreaTypeEnum;
+import eu.europa.ec.fisheries.uvms.spatial.util.LayerTypeEnum;
 import eu.europa.ec.fisheries.uvms.spatial.validator.SpatialValidator;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -73,13 +77,53 @@ public class MapConfigServiceBean implements MapConfigService {
     public MapConfigurationType getMapConfigurationType(final Long reportId) throws ServiceException {
         SpatialValidator.validate(reportId);
         ReportConnectSpatialEntity entity = repository.findReportConnectSpatialBy(reportId);
+        if (entity == null) {
+            return null;
+        }
         MapConfigurationType mapConfigurationType = ReportConnectSpatialMapper.INSTANCE.reportConnectSpatialEntityToMapConfigurationType(entity);
         VisibilitySettingsDto visibilitySettings = getVisibilitySettings(entity.getVisibilitySettings());
         mapConfigurationType.setVisibilitySettings(MapConfigMapper.INSTANCE.getVisibilitySettingsType(visibilitySettings));
         StyleSettingsDto styleSettingsDto = getStyleSettings(entity.getStyleSettings());
         mapConfigurationType.setStyleSettings(MapConfigMapper.INSTANCE.getStyleSettingsType(styleSettingsDto));
+        LayerSettingsDto layerSettingsDto = getLayerSettingsForMap(entity.getReportConnectServiceAreases());
+        updateLayerSettings(layerSettingsDto, null, false);
+        mapConfigurationType.setLayerSettings(MapConfigMapper.INSTANCE.getLayerSettingsType(layerSettingsDto));
         return mapConfigurationType;
     }
+
+    private LayerSettingsDto getLayerSettingsForMap(Set<ReportConnectServiceAreasEntity> reportConnectServiceArea) {
+        LayerSettingsDto layerSettingsDto = new LayerSettingsDto();
+        for (ReportConnectServiceAreasEntity layer : reportConnectServiceArea) {
+            LayerTypeEnum layerTypeEnum = LayerTypeEnum.getLayerType(layer.getLayerType());
+            switch (layerTypeEnum) {
+                case BASE:
+                    LayersDto baseLayersDto = new LayersDto(String.valueOf(layer.getServiceLayer().getId()), Long.valueOf(layer.getLayerOrder()));
+                    layerSettingsDto.addBaseLayer(baseLayersDto);
+                    break;
+                case ADDITIONAL:
+                    LayersDto additionalLayersDto = new LayersDto(String.valueOf(layer.getServiceLayer().getId()), Long.valueOf(layer.getLayerOrder()));
+                    layerSettingsDto.addAdditionalLayer(additionalLayersDto);
+                    break;
+                case PORT:
+                    LayersDto portLayersDto = new LayersDto(String.valueOf(layer.getServiceLayer().getId()), Long.valueOf(layer.getLayerOrder()));
+                    layerSettingsDto.addPortLayer(portLayersDto);
+                    break;
+                case AREA:
+                    AreaTypeEnum areaTypeEnum = AreaTypeEnum.valueOf(layer.getAreaType());
+                    LayerAreaDto areaLayersDto = new LayerAreaDto(areaTypeEnum, String.valueOf(layer.getServiceLayer().getId()), Long.valueOf(layer.getLayerOrder()));
+                    if (areaTypeEnum.equals(AreaTypeEnum.userarea)) {
+                        areaLayersDto.setGid(Long.parseLong(layer.getSqlFilter()));
+                    }
+                    if (areaTypeEnum.equals(AreaTypeEnum.areagroup)) {
+                        areaLayersDto.setAreaGroupName(layer.getSqlFilter());
+                    }
+                    layerSettingsDto.addAreaLayer(areaLayersDto);
+                    break;
+            }
+        }
+        return layerSettingsDto;
+    }
+
 
     @Override
     @Transactional(Transactional.TxType.REQUIRES_NEW)
@@ -93,15 +137,95 @@ public class MapConfigServiceBean implements MapConfigService {
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public SpatialSaveOrUpdateMapConfigurationRS handleSaveOrUpdateSpatialMapConfiguration(final SpatialSaveOrUpdateMapConfigurationRQ request) {
         SpatialValidator.validate(request);
-        ReportConnectSpatialEntity entity = ReportConnectSpatialMapper.INSTANCE.mapConfigurationTypeToReportConnectSpatialEntity(request.getMapConfiguration());
+        ReportConnectSpatialEntity entity = getReportConnectSpatialEntity(request);
         VisibilitySettingsDto visibilitySettings = MapConfigMapper.INSTANCE.getVisibilitySettingsDto(request.getMapConfiguration().getVisibilitySettings());
         entity.setVisibilitySettings(getVisibilitySettingsJson(visibilitySettings));
-
         StyleSettingsDto styleSettings = MapConfigMapper.INSTANCE.getStyleSettingsDto(request.getMapConfiguration().getStyleSettings());
         entity.setStyleSettings(getStyleSettingsJson(styleSettings));
-
+        LayerSettingsDto layerSettingsDto = MapConfigMapper.INSTANCE.getLayerSettingsDto(request.getMapConfiguration().getLayerSettings());
+        updateReportConnectServiceAreasEntity(request, entity, layerSettingsDto);
         repository.saveOrUpdateMapConfiguration(entity);
         return createSaveOrUpdateMapConfigurationResponse();
+    }
+    
+    private ReportConnectSpatialEntity getReportConnectSpatialEntity(final SpatialSaveOrUpdateMapConfigurationRQ request) throws ServiceException {
+        ReportConnectSpatialEntity entity = repository.findReportConnectSpatialById(request.getMapConfiguration().getReportId(), request.getMapConfiguration().getSpatialConnectId());
+        if (entity != null) {
+            entity.setScaleBarType(request.getMapConfiguration().getScaleBarUnits());
+            entity.setDisplayFormatType(request.getMapConfiguration().getCoordinatesFormat());
+            entity.setProjectionByMapProjId(createProjection(request.getMapConfiguration().getMapProjectionId()));
+            entity.setProjectionByDisplayProjId(createProjection(request.getMapConfiguration().getDisplayProjectionId()));
+            repository.deleteReportConnectServiceAreas(entity.getReportConnectServiceAreases());
+        } else {
+            entity = ReportConnectSpatialMapper.INSTANCE.mapConfigurationTypeToReportConnectSpatialEntity(request.getMapConfiguration());
+        }
+        return entity;
+    }
+
+    ProjectionEntity createProjection(Long id) {
+        ProjectionEntity entity = null;
+        if (id != null) {
+            entity = new ProjectionEntity(id);
+        }
+        return entity;
+    }
+
+    private void updateReportConnectServiceAreasEntity(SpatialSaveOrUpdateMapConfigurationRQ request, ReportConnectSpatialEntity entity, LayerSettingsDto layerSettingsDto) throws ServiceException {
+        if(layerSettingsDto == null) {
+            clearReportConectServiceAreas(entity);
+            return;
+        }
+        Set<ReportConnectServiceAreasEntity> serviceAreas = createReportConnectServiceAreas(request, entity, layerSettingsDto);
+        if (serviceAreas != null && !serviceAreas.isEmpty()) {
+            Set<ReportConnectServiceAreasEntity> areas = entity.getReportConnectServiceAreases();
+            if (areas == null) {
+                entity.setReportConnectServiceAreases(serviceAreas);
+            } else if(areas != null) {
+                areas.clear();
+                areas.addAll(serviceAreas);
+                entity.setReportConnectServiceAreases(areas);
+            }
+        } else {
+            clearReportConectServiceAreas(entity);
+        }
+    }
+
+    private void clearReportConectServiceAreas(ReportConnectSpatialEntity entity) {
+        Set<ReportConnectServiceAreasEntity> areas = entity.getReportConnectServiceAreases();
+        if(areas != null) {
+            areas.clear();
+            entity.setReportConnectServiceAreases(areas);
+        }
+    }
+
+    private Set<ReportConnectServiceAreasEntity> createReportConnectServiceAreas(SpatialSaveOrUpdateMapConfigurationRQ request, ReportConnectSpatialEntity reportConnectSpatialEntity, LayerSettingsDto layerSettingsDto) throws ServiceException {
+        Set<ReportConnectServiceAreasEntity> reportConnectServiceAreasEntities = createReportConnectServiceAreasPerLayer(layerSettingsDto.getAreaLayers(), reportConnectSpatialEntity, LayerTypeEnum.AREA);
+        reportConnectServiceAreasEntities.addAll(createReportConnectServiceAreasPerLayer(layerSettingsDto.getPortLayers(), reportConnectSpatialEntity, LayerTypeEnum.PORT));
+        reportConnectServiceAreasEntities.addAll(createReportConnectServiceAreasPerLayer(layerSettingsDto.getAdditionalLayers(), reportConnectSpatialEntity, LayerTypeEnum.ADDITIONAL));
+        reportConnectServiceAreasEntities.addAll(createReportConnectServiceAreasPerLayer(layerSettingsDto.getBaseLayers(), reportConnectSpatialEntity, LayerTypeEnum.BASE));
+        return reportConnectServiceAreasEntities;
+    }
+
+    private Set<ReportConnectServiceAreasEntity> createReportConnectServiceAreasPerLayer(List<? extends LayersDto> layers, ReportConnectSpatialEntity reportConnectSpatialEntity, LayerTypeEnum layerTypeEnum) {
+        Set<ReportConnectServiceAreasEntity> reportConnectServiceAreasEntities = new HashSet<>();
+        for (LayersDto layer : layers) {
+            ReportConnectServiceAreasEntity reportConnectServiceAreasEntity = new ReportConnectServiceAreasEntity();
+            reportConnectServiceAreasEntity.setReportConnectSpatial(reportConnectSpatialEntity);
+            List<ServiceLayerEntity> serviceLayerEntities = repository.findServiceLayerEntityByIds(Arrays.asList(Long.parseLong(layer.getServiceLayerId())));
+            reportConnectServiceAreasEntity.setServiceLayer((serviceLayerEntities != null && !serviceLayerEntities.isEmpty()) ? serviceLayerEntities.get(0) : null);
+            reportConnectServiceAreasEntity.setLayerOrder(layer.getOrder().intValue());
+            reportConnectServiceAreasEntity.setLayerType(layerTypeEnum.getType());
+            if (layer instanceof LayerAreaDto) {
+                reportConnectServiceAreasEntity.setAreaType(((LayerAreaDto) layer).getAreaType().getType());
+                if (((LayerAreaDto)layer).getAreaType().equals(AreaTypeEnum.userarea)) {
+                    reportConnectServiceAreasEntity.setSqlFilter(String.valueOf(((LayerAreaDto) layer).getGid()));
+                } else if (((LayerAreaDto)layer).getAreaType().equals(AreaTypeEnum.areagroup)) {
+                    reportConnectServiceAreasEntity.setSqlFilter(((LayerAreaDto) layer).getAreaGroupName());
+                }
+            }
+            reportConnectServiceAreasEntities.add(reportConnectServiceAreasEntity);
+        }
+        return reportConnectServiceAreasEntities;
     }
 
     private SpatialSaveOrUpdateMapConfigurationRS createSaveOrUpdateMapConfigurationResponse() {
@@ -123,7 +247,11 @@ public class MapConfigServiceBean implements MapConfigService {
         ConfigurationDto userConfig = getUserConfiguration(config);
         ConfigurationDto adminConfig = getAdminConfiguration(defaultConfig);
         ConfigurationDto mergedConfig = mergeUserConfiguration(adminConfig, userConfig);
-        updateLayerSettings(mergedConfig.getLayerSettings(), userName, true);
+        boolean isLayersOverridden = false;
+        if (userConfig.getLayerSettings() != null) {
+            isLayersOverridden = true;
+        }
+        updateLayerSettings(mergedConfig.getLayerSettings(), userName, !isLayersOverridden);
         return mergedConfig;
     }
 
@@ -203,7 +331,7 @@ public class MapConfigServiceBean implements MapConfigService {
         updateLayer(layerSettingsDto.getBaseLayers(), serviceLayers, bingApiKey);
         updateLayer(layerSettingsDto.getPortLayers(), serviceLayers, bingApiKey);
         updateLayer(layerSettingsDto.getAreaLayers(), serviceLayers, bingApiKey);
-        updateAreaLayer(layerSettingsDto.getAreaLayers(), serviceLayers, bingApiKey, userName);
+        updateAreaLayer(layerSettingsDto.getAreaLayers(), serviceLayers, bingApiKey, userName, includeUserArea);
 
         sortLayer(layerSettingsDto.getAdditionalLayers());
         sortLayer(layerSettingsDto.getBaseLayers());
@@ -212,13 +340,18 @@ public class MapConfigServiceBean implements MapConfigService {
     }
 
     private void sortLayer(List<? extends LayersDto> layers) {
-        Collections.sort(layers);
-        for (LayersDto layerDto : layers) {
-            layerDto.setOrder(null);
+        if(layers != null) {
+            Collections.sort(layers);
+            for (LayersDto layerDto : layers) {
+                layerDto.setOrder(null);
+            }
         }
     }
 
     private List<Long> getUserAreaIds(List<LayerAreaDto> layers) {
+        if (layers == null || !layers.isEmpty()) {
+            return Collections.emptyList();
+        }
         List<Long> userAreaIds = new ArrayList<>();
         for (LayerAreaDto layerDto : layers) {
             if (layerDto.getAreaType().getType().equalsIgnoreCase(USER_AREA)) {
@@ -228,7 +361,7 @@ public class MapConfigServiceBean implements MapConfigService {
         return userAreaIds;
     }
 
-    private void updateAreaLayer(List<LayerAreaDto> layers, List<ServiceLayerEntity> serviceLayers, String bingApiKey, String userName) throws ServiceException {
+    private void updateAreaLayer(List<LayerAreaDto> layers, List<ServiceLayerEntity> serviceLayers, String bingApiKey, String userName, boolean includeUserArea) throws ServiceException {
         List<Long> userAreaIds = getUserAreaIds(layers);
         if (!userAreaIds.isEmpty()) {
             List<AreaDto> areaDtos = repository.findAllUserAreasByGids(userAreaIds);
@@ -240,7 +373,7 @@ public class MapConfigServiceBean implements MapConfigService {
                     }
                 }
             }
-        } else if (userName != null) {
+        } else if (userName != null && includeUserArea) {
             List<AreaDto> areaDtos = repository.getAllUserAreas(userName);
             ServiceLayerEntity serviceLayerEntity = layer.getServiceLayerBy(USER_AREA.toUpperCase());
             for (AreaDto areaDto :  areaDtos) {
