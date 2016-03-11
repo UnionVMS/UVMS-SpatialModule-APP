@@ -4,7 +4,17 @@ import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.service.QueryParameter;
-import eu.europa.ec.fisheries.uvms.spatial.dao.*;
+import eu.europa.ec.fisheries.uvms.spatial.dao.AreaDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.BookmarkDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.CountryDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.EezDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.MapConfigDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.PortAreaDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.ProjectionDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.ReportConnectSpatialDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.RfmoDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.SysConfigDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.UserAreaJpaDao;
 import eu.europa.ec.fisheries.uvms.spatial.entity.BookmarkEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.PortAreasEntity;
@@ -20,7 +30,6 @@ import eu.europa.ec.fisheries.uvms.spatial.model.constants.USMSpatial;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.AreaExtendedIdentifierDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.ClosestAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.ClosestLocationDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.FilterAreasDto;
@@ -92,11 +101,6 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     }
 
     @Override
-    public List<AreaExtendedIdentifierDto> findAreasIdByLocation(Point point, String areaDbTable) {
-        return areaDao.findAreasIdByLocation(point, areaDbTable);
-    }
-
-    @Override
     public List<ClosestAreaDto> findClosestArea(Point point, MeasurementUnit unit, String areaDbTable) {
         return areaDao.findClosestArea(point, unit, areaDbTable);
     }
@@ -129,11 +133,6 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     @Override
     public List<Map<String, String>> findAreaByFilter(String areaType, String filter) {
         return areaDao.findAreaByFilter(areaType, filter);
-    }
-
-    @Override
-    public List<UserAreaDto> findUserAreaDetailsWithExtentByLocation(String userName, Point point) {
-        return userAreaDao.findUserAreaDetailsWithExtent(userName, point);
     }
 
     @Override
@@ -363,7 +362,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
 
     // AreaRepository
     @Override
-    public List findEezByIntersect(final Point point) throws ServiceException {
+    public List<EezEntity> findEezByIntersect(final Point point) throws ServiceException {
         return eezDao.intersects(point);
     }
 

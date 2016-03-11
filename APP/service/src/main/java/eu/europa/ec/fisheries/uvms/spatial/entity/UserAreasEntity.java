@@ -40,7 +40,7 @@ import java.util.Set;
         @NamedQuery(name = QueryNameConstants.FIND_GID_BY_USER,
                 query = "SELECT area.gid FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection WHERE area.userName = :userName OR scopeSelection.name = :scopeName"),
         @NamedQuery(name = QueryNameConstants.FIND_USER_AREA_BY_ID,
-                query = "SELECT area FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection WHERE   area.gid = :userAreaId AND ((1=:isPowerUser) OR (area.userName=:userName OR scopeSelection.name=:scopeName))"),
+                query = "SELECT area FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection WHERE area.gid = :userAreaId AND ((1=:isPowerUser) OR (area.userName=:userName OR scopeSelection.name=:scopeName))"),
         @NamedQuery(name = QueryNameConstants.USERAREA_COLUMNS,
 				query = "select userArea.name as name, userArea.areaDesc as desc from UserAreasEntity as userArea where userArea.gid =:gid"),
 		@NamedQuery(name = QueryNameConstants.FIND_ALL_USER_AREAS,
@@ -53,11 +53,11 @@ import java.util.Set;
                 query = "SELECT area FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection WHERE area.type = :type AND ((1=:isPowerUser) OR (area.userName=:userName OR scopeSelection.name=:scopeName)) GROUP BY area.gid")
 })
 @NamedNativeQueries({
-        @NamedNativeQuery(
-                name = QueryNameConstants.USER_AREA_DETAILS_WITH_EXTENT_BY_LOCATION,
-                query = "select gid, name, area_desc as desc, CAST(st_astext(st_extent(geom))AS TEXT) as extent from spatial.user_areas"
-                        + " WHERE user_name=:userName"
-                        + " AND st_intersects(geom, st_geomfromtext(CAST(:wktPoint as text), :crs)) group by gid"),
+//        @NamedNativeQuery(
+//                name = QueryNameConstants.USER_AREA_DETAILS_WITH_EXTENT_BY_LOCATION,
+//                query = "select gid, name, area_desc as desc, CAST(st_astext(st_extent(geom))AS TEXT) as extent from spatial.user_areas"
+//                        + " WHERE user_name=:userName"
+//                        + " AND st_intersects(geom, st_geomfromtext(CAST(:wktPoint as text), :crs)) group by gid"),
 //        @NamedNativeQuery(
 //                name = QueryNameConstants.USER_AREA_DETAILS_BY_LOCATION,
 //                query = "select * from spatial.user_areas"

@@ -24,14 +24,11 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.ServiceLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.util.MeasurementUnit;
-import javax.ejb.Local;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public interface SpatialRepository extends DAO {
-
-    List<AreaExtendedIdentifierDto> findAreasIdByLocation(Point point, String areaDbTable);
 
     List<ClosestAreaDto> findClosestArea(Point point, MeasurementUnit unit, String areaDbTable);
 
@@ -48,8 +45,6 @@ public interface SpatialRepository extends DAO {
     List<Map<String, String>> findAreaByFilter(String areaType, String filter);
 
     List<Map<String, String>> findSelectedAreaColumns(String namedQueryString, Number gid);
-
-    List<UserAreaDto> findUserAreaDetailsWithExtentByLocation(String userName, Point point);
 
     List<UserAreasEntity> findUserAreaDetailsByLocation(String userName, Point point);
 
@@ -124,7 +119,7 @@ public interface SpatialRepository extends DAO {
     ReportConnectSpatialEntity findReportConnectSpatialById(Long reportId, Long id) throws ServiceException;
 
     // AreaRepository
-    List findEezByIntersect(Point point) throws ServiceException;
+    List<EezEntity> findEezByIntersect(Point point) throws ServiceException;
     // AreaRepository
     List findPortAreaByIntersect(Point point) throws ServiceException;
     // AreaRepository

@@ -70,9 +70,9 @@ public abstract class CommonDao {
 		return query;
 	}
 
-	protected <T> Query createNamedQuery(String nativeQuery, Class<T> dtoClass) {
+	protected <T> Query createNamedQuery(String nativeQuery, Class<T> resultTransformer) {
 		Query query = getSession().getNamedQuery(nativeQuery);
-		query.setResultTransformer(Transformers.aliasToBean(dtoClass));
+		query.setResultTransformer(Transformers.aliasToBean(resultTransformer));
 		return query;
 	}
 

@@ -134,7 +134,7 @@ public class UserAreaResource extends UnionVMSResource {
             if (userAreaTypeDto.getId() != null) {
                 response = getUserAreaDetailsById(userAreaTypeDto, request.getRemoteUser(), isPowerUser, scopeName);
             } else {
-                response = getUserAreaDetailsByLocation(userAreaTypeDto, request.getRemoteUser());
+                response = getUserAreaDetailsByLocation(userAreaTypeDto, request.getRemoteUser()); // FIXME native query alert
             }
         }
         catch (Exception ex){
@@ -166,8 +166,8 @@ public class UserAreaResource extends UnionVMSResource {
     private Response getUserAreaDetailsById(UserAreaCoordinateType userAreaTypeDto, String userName, boolean isPowerUser, String scopeName) throws ServiceException, IOException, ParseException {
         if (!userAreaTypeDto.getIsGeom()) {
             AreaTypeEntry areaTypeEntry = areaLocationMapper.getAreaTypeEntry(userAreaTypeDto);
-            AreaDetails areaDetails = userAreaService.getUserAreaDetailsWithExtentById(areaTypeEntry, userName, isPowerUser, scopeName);
-            AreaDetailsGeoJsonDto areaDetailsGeoJsonDto = areaLocationMapper.getAreaDetailsDto(areaDetails);
+            List<AreaDetails> userAreaDetailsWithExtentById = userAreaService.getUserAreaDetailsWithExtentById(areaTypeEntry, userName, isPowerUser, scopeName);
+            AreaDetailsGeoJsonDto areaDetailsGeoJsonDto = areaLocationMapper.getAreaDetailsDto(userAreaDetailsWithExtentById.get(0));
             areaDetailsGeoJsonDto.removeGeometry();
             return createSuccessResponse(areaDetailsGeoJsonDto.getProperties());
         } else {
@@ -182,7 +182,7 @@ public class UserAreaResource extends UnionVMSResource {
 
         if (!userAreaTypeDto.getIsGeom()) {
             Coordinate coordinate = areaLocationMapper.getCoordinateFromDto(userAreaTypeDto);
-            List<UserAreaDto> userAreaDetails = userAreaService.getUserAreaDetailsWithExtentByLocation(coordinate, userName);
+            List<UserAreaDto> userAreaDetails = userAreaService.getUserAreaDetailsWithExtentByLocation(coordinate, userName);// FIXME native query
             return createSuccessResponse(userAreaDetails);
         } else {
             AreaTypeEntry areaTypeEntry = AreaLocationDtoMapper.mapper().getAreaTypeEntry(userAreaTypeDto);
