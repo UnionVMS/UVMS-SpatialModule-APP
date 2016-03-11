@@ -55,17 +55,19 @@ public class UserAreaJpaDao extends AbstractDAO<UserAreasEntity> {
         return query.list();
     }
 
-	public List<UserAreaDto> findUserAreaDetailsWithExtent(String userName, Point point) {
+	public List<UserAreasEntity> findUserAreaDetailsWithExtent(String userName, Point point) {
         String wkt = new WKTWriter2().write(point);
         int crs = point.getSRID();
     	Map<String, Object> parameters = ImmutableMap.<String, Object>builder().
     			put(USER_NAME, userName).
-    			put(WKT, wkt).
-    			put(CRS, crs).
+    			put("shape", point).
     			build();
 
-        Query query = createNamedNativeQuery(QueryNameConstants.USER_AREA_DETAILS_WITH_EXTENT_BY_LOCATION, parameters);
-        query.setResultTransformer(Transformers.aliasToBean(UserAreaDto.class));
+        Query query = getSession().getNamedQuery(UserAreasEntity.USER_AREA_DETAILS_BY_LOCATION);
+
+        for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+            query.setParameter(entry.getKey(), entry.getValue());
+        }
         return query.list();
     }
 
