@@ -26,7 +26,6 @@ import java.util.List;
 
 @Stateless
 @Local(AreaByLocationService.class)
-@Transactional
 @Slf4j
 public class AreaByLocationServiceBean implements AreaByLocationService {
 
