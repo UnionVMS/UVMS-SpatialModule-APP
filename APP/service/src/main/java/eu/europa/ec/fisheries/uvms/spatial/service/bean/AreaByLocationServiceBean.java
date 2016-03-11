@@ -9,7 +9,6 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaExtendedIdentifierT
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.AreaExtendedIdentifierDto;
-import eu.europa.ec.fisheries.uvms.spatial.util.SqlPropertyHolder;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.SQLQuery;
@@ -35,9 +34,6 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
 
     @EJB
     private SpatialRepository repository;
-
-    @EJB
-    private SqlPropertyHolder sqlPropertyHolder;
 
     @Override
     @SneakyThrows
