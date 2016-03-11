@@ -9,7 +9,8 @@ public enum LayerSubTypeEnum {
     ADDITIONAL("additional"),
     PORT("port"),
     USERAREA("userarea"),
-    SYSAREA("sysarea");
+    SYSAREA("sysarea"),
+    AREAGROUP("areagroup");
 
     private String layerType;
 
