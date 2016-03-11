@@ -7,7 +7,8 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.AreaExt
 import java.util.List;
 
 public interface AreaByLocationService {
+
     List<AreaExtendedIdentifierType> getAreaTypesByLocation(AreaByLocationSpatialRQ request);
 
-    List<AreaExtendedIdentifierDto> getAreaTypesByLocation(double lat, double lon, int crs);
+    List<AreaExtendedIdentifierDto> getAreaTypesByLocation(Double lat, Double lon, Integer crs);
 }

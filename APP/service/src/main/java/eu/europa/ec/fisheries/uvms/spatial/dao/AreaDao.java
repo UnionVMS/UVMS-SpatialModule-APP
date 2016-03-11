@@ -5,11 +5,15 @@ import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
 
+import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.service.QueryParameter;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GeometryType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.ServiceLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.GeometryMapper;
+import org.apache.xalan.xsltc.compiler.util.StringType;
+import org.geotools.geometry.jts.WKTWriter2;
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.hibernate.transform.Transformers;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
@@ -22,9 +26,14 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.util.MeasurementUnit
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.util.SqlPropertyHolder;
+import org.hibernate.type.LongType;
+import org.hibernate.type.StandardBasicTypes;
 
 public class AreaDao extends CommonDao {
 
+
+    private static final String CRS = "crs";
+    private static final String WKT = "wktPoint";
     private static final String FIND_AREAS_ID_BY_LOCATION = "sql.findAreasIdByLocation";
     private static final String CLOSEST_AREA_QUERY = "sql.findClosestArea";
     private static final String CLOSEST_LOCATION_QUERY = "sql.findClosestLocation";
@@ -39,16 +48,11 @@ public class AreaDao extends CommonDao {
     private static final String SCOPE_AREA_IDS = "scopeAreaIds";
     private static final String SUB_TYPE = "subTypes";
 
-    private SqlPropertyHolder propertyHolder;
+    private SqlPropertyHolder propertyHolder; // FIXME remove
 
     public AreaDao(EntityManager em, SqlPropertyHolder propertyHolder) {
     	super(em);
         this.propertyHolder = propertyHolder;
-    }
-
-    public List<AreaExtendedIdentifierDto> findAreasIdByLocation(Point point, String areaDbTable) {
-        String queryString = propertyHolder.getProperty(FIND_AREAS_ID_BY_LOCATION);
-        return executeAreasByLocation(queryString, point, areaDbTable);
     }
 
     @SuppressWarnings("unchecked")
@@ -132,15 +136,6 @@ public class AreaDao extends CommonDao {
         String userAreaTypesString = Arrays.toString(userAreaTypesArr);
         userAreaTypesString = userAreaTypesString.substring(1, userAreaTypesString.length() - 1);
         return userAreaTypesString;
-    }
-
-    @SuppressWarnings("unchecked")
-    private List<AreaExtendedIdentifierDto> executeAreasByLocation(String queryString, Point point, String areaDbTable) {
-        queryString = replaceTableName(queryString, areaDbTable);
-        GeometryType geometryType = GeometryMapper.INSTANCE.geometryToWKT(point);
-        int crs = point.getSRID();
-
-        return createSQLQueryForClosestArea(queryString, geometryType.getGeometry(), crs).list();
     }
 
     private List executeClosest(String queryString, Point point, MeasurementUnit unit, String areaDbTable, Class resultClass) {

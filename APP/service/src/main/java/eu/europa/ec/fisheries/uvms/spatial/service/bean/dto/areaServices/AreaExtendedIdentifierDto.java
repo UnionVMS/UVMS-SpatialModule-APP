@@ -23,6 +23,11 @@ public class AreaExtendedIdentifierDto {
         this.areaType = areaType;
     }
 
+    public AreaExtendedIdentifierDto(String id, String areaType, String code, String name) {
+        this.id = id;
+        this.areaType = areaType;
+    }
+
     public String getId() {
         return id;
     }

@@ -6,7 +6,6 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.io.ParseException;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.rest.FeatureToGeoJsonJacksonMapper;
 import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserScopeEntity;
@@ -29,11 +28,11 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.geotools.geometry.jts.WKTReader2;
 import org.geotools.geometry.jts.WKTWriter2;
-
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.transaction.Transactional;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -83,7 +82,6 @@ public class UserAreaServiceBean implements UserAreaService {
     private String createDescriminator(UserAreasEntity persistedEntity) {
         return AreaType.USERAREA.value() + USMSpatial.DELIMITER + persistedEntity.getGid();
     }
-
 
     private UserAreasEntity prepareNewEntity(UserAreaGeoJsonDto userAreaDto, String userName) {
         UserAreasEntity userAreasEntity = UserAreaMapper.mapper().fromDtoToEntity(userAreaDto);
@@ -179,10 +177,23 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     @Override
-    public List<UserAreaDto> getUserAreaDetailsWithExtentByLocation(Coordinate coordinate, String userName) {
+    public List<UserAreaDto> getUserAreaDetailsWithExtentByLocation(Coordinate coordinate, String userName) {// FIXME native query alert
         Point point = convertToPointInWGS84(coordinate.getLongitude(), coordinate.getLatitude(), coordinate.getCrs());
-        List<UserAreaDto> userAreaDetails = repository.findUserAreaDetailsWithExtentByLocation(userName, point);
-        return userAreaDetails;
+
+        List<UserAreasEntity> userAreaDetailsWithExtentByLocation = repository.findUserAreaDetailsByLocation(userName, point);
+
+        List<UserAreaDto> userAreaDtos = newArrayList();
+        for (UserAreasEntity userAreaDetails : userAreaDetailsWithExtentByLocation){
+            UserAreaDto userAreaDto = new UserAreaDto();
+            userAreaDto.setGid(userAreaDetails.getGid());
+            userAreaDto.setDesc(userAreaDetails.getAreaDesc());
+            userAreaDto.setExtent(new WKTWriter2().write(userAreaDetails.getGeom().getEnvelope()));
+            userAreaDto.setName(userAreaDetails.getName());
+            userAreaDto.setAreaType(userAreaDetails.getType());
+            userAreaDtos.add(userAreaDto);
+        }
+
+        return userAreaDtos;
     }
 
     @Override
@@ -190,7 +201,14 @@ public class UserAreaServiceBean implements UserAreaService {
         Point point = convertToPointInWGS84(areaTypeEntry.getLongitude(), areaTypeEntry.getLatitude(), areaTypeEntry.getCrs());
         List<UserAreasEntity> userAreaDetails = repository.findUserAreaDetailsByLocation(userName, point);
         try {
-            return getAllAreaDetails(userAreaDetails, areaTypeEntry);
+            List<AreaDetails> areaDetailsList = Lists.newArrayList();
+            for (int i = 0; i < userAreaDetails.size(); i++) {
+                Map<String, Object> properties = getFieldMap(userAreaDetails.get(i));
+                addCentroidToProperties(properties);
+                areaDetailsList.add(createAreaDetailsSpatialResponse(properties, areaTypeEntry));
+            }
+            return areaDetailsList;
+
         } catch (ParseException e) {
             String error = "Error while trying to parse geometry";
             log.error(error);
@@ -199,7 +217,7 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     @Override
-    public AreaDetails getUserAreaDetailsWithExtentById(AreaTypeEntry areaTypeEntry, String userName, String scopeName) throws ServiceException {
+    public List<AreaDetails> getUserAreaDetailsWithExtentById(AreaTypeEntry areaTypeEntry, String userName, String scopeName) throws ServiceException { // FIXME
         return getUserAreaDetailsWithExtentById(areaTypeEntry, userName, false, scopeName);
     }
 
@@ -209,17 +227,23 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     @Override
-    public AreaDetails getUserAreaDetailsWithExtentById(AreaTypeEntry areaTypeEntry, String userName, boolean isPowerUser, String scopeName) throws ServiceException {
+    public List<AreaDetails> getUserAreaDetailsWithExtentById(AreaTypeEntry areaTypeEntry, String userName, boolean isPowerUser, String scopeName) throws ServiceException {
         List<UserAreasEntity> userAreasDetails = repository.findUserAreaById(Long.parseLong(areaTypeEntry.getId()), userName, isPowerUser, scopeName);
         try {
             if (CollectionUtils.isNotEmpty(userAreasDetails)) {
 
-                    return getAllAreaDetails(userAreasDetails, areaTypeEntry).get(0);
+                List<AreaDetails> areaDetailsList = Lists.newArrayList();
+                for (int i = 0; i < userAreasDetails.size(); i++) {
+                    Map<String, Object> properties = getFieldMap(userAreasDetails.get(i));
+                    addCentroidToProperties(properties);
+                    areaDetailsList.add(createAreaDetailsSpatialResponse(properties, areaTypeEntry));
+                }
+                return areaDetailsList;
 
             } else {
                 AreaDetails areaDetails = new AreaDetails();
                 areaDetails.setAreaType(areaTypeEntry);
-                return areaDetails;
+                return Arrays.asList(areaDetails);
             }
         } catch (ParseException e) {
             String error = "Error while trying to parse geometry";
@@ -232,22 +256,20 @@ public class UserAreaServiceBean implements UserAreaService {
     public List<AreaDetails> getUserAreaDetailsById(AreaTypeEntry areaTypeEntry, String userName, boolean isPowerUser, String scopeName) throws ServiceException {
         List<UserAreasEntity> userAreaDetails = repository.findUserAreaById(Long.parseLong(areaTypeEntry.getId()), userName, isPowerUser, scopeName);
         try {
-            return getAllAreaDetails(userAreaDetails, areaTypeEntry);
+
+            List<AreaDetails> areaDetailsList = Lists.newArrayList();
+            for (int i = 0; i < userAreaDetails.size(); i++) {
+                Map<String, Object> properties = getFieldMap(userAreaDetails.get(i));
+                addCentroidToProperties(properties);
+                areaDetailsList.add(createAreaDetailsSpatialResponse(properties, areaTypeEntry));
+            }
+            return areaDetailsList;
+
         } catch (ParseException e) {
             String error = "Error while trying to parse geometry";
             log.error(error);
             throw new ServiceException(error);
         }
-    }
-
-    private List<AreaDetails> getAllAreaDetails(List allAreas, AreaTypeEntry areaTypeEntry) throws ParseException {
-        List<AreaDetails> areaDetailsList = Lists.newArrayList();
-        for (int i = 0; i < allAreas.size(); i++) {
-            Map<String, Object> properties = getFieldMap(allAreas.get(i));
-            addCentroidToProperties(properties);
-            areaDetailsList.add(createAreaDetailsSpatialResponse(properties, areaTypeEntry));
-        }
-        return areaDetailsList;
     }
 
     private void addCentroidToProperties(Map<String, Object> properties) throws ParseException {
