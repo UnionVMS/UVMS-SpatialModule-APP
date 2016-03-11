@@ -52,7 +52,7 @@ import java.util.Set;
         @NamedQuery(name = QueryNameConstants.FIND_USER_AREA_BY_TYPE,
                 query = "SELECT area FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection WHERE area.type = :type AND ((1=:isPowerUser) OR (area.userName=:userName OR scopeSelection.name=:scopeName)) GROUP BY area.gid"),
         @NamedQuery(name = QueryNameConstants.FIND_ALL_USER_AREAS_GROUP,
-        query = "SELECT distinct(area.type) as name FROM UserAreasEntity area WHERE area.userName = :userName")
+        query = "SELECT distinct(area.type) as name FROM UserAreasEntity area WHERE area.userName = :userName AND area.type IS NOT NULL AND area.type IS NOT EMPTY")
 
         })
 @NamedNativeQueries({
