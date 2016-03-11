@@ -182,7 +182,7 @@ public class AreaResource extends UnionVMSResource {
     @Path("/servicelayers/{layerType}")
     public Response getServiceLayersByType(@PathParam("layerType") String layerType, @Context HttpServletRequest request) throws ServiceException {
         LayerSubTypeEnum layerTypeEnum = LayerSubTypeEnum.value(layerType);
-        if (layerTypeEnum.equals(LayerSubTypeEnum.USERAREA)) {
+        if (layerTypeEnum.equals(LayerSubTypeEnum.USERAREA) || layerTypeEnum.equals(LayerSubTypeEnum.AREAGROUP)) {
             List<AreaServiceLayerDto> areaServiceLayerDtos = areaTypeService.getAllAreasLayerDescription(layerTypeEnum, request.getRemoteUser());
             return createSuccessResponse(areaServiceLayerDtos);
         } else {

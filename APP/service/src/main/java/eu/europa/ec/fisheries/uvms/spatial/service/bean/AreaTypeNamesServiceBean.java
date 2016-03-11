@@ -74,13 +74,20 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
         List<AreaServiceLayerDto> areaServiceLayerDtos = new ArrayList<AreaServiceLayerDto>();
         switch (layerTypeEnum) {
             case USERAREA:
-                List<ServiceLayerDto> serviceLayerDtos = getAreaLayerDescription(layerTypeEnum);
-                List<AreaDto> allAreas = repository.getAllUserAreas(userName);
-                for (ServiceLayerDto serviceLayerDto : serviceLayerDtos) {
-                    AreaServiceLayerDto areaServiceLayerDto = new AreaServiceLayerDto(serviceLayerDto, allAreas);
+                List<ServiceLayerDto> userserviceLayerDtos = getAreaLayerDescription(layerTypeEnum);
+                List<AreaDto> allUserAreas = repository.getAllUserAreas(userName);
+                for (ServiceLayerDto serviceLayerDto : userserviceLayerDtos) {
+                    AreaServiceLayerDto areaServiceLayerDto = new AreaServiceLayerDto(serviceLayerDto, allUserAreas);
                     areaServiceLayerDtos.add(areaServiceLayerDto);
                 }
                 break;
+            case AREAGROUP:
+                List<ServiceLayerDto> areGroupServiceLayerDtos = getAreaLayerDescription(layerTypeEnum);
+                List<AreaDto> allUserAreaGroupNames = repository.getAllUserAreaGroupNames(userName);
+                for (ServiceLayerDto serviceLayerDto : areGroupServiceLayerDtos) {
+                    AreaServiceLayerDto areaServiceLayerDto = new AreaServiceLayerDto(serviceLayerDto, allUserAreaGroupNames);
+                    areaServiceLayerDtos.add(areaServiceLayerDto);
+                }
         }
         return areaServiceLayerDtos;
     }
@@ -109,6 +116,9 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
                 inClause.add(AreaSubTypeEnum.SYSAREA.getAreaSubType());
                 break;
             case USERAREA:
+                inClause.add(AreaSubTypeEnum.USERAREA.getAreaSubType());
+                break;
+            case AREAGROUP:
                 inClause.add(AreaSubTypeEnum.USERAREA.getAreaSubType());
                 break;
         }
