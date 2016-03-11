@@ -108,6 +108,13 @@ public class UserAreaJpaDao extends AbstractDAO<UserAreasEntity> {
         return query.list();
 	}
 
+    public List<AreaDto> getAllUserAreaGroupName(String userName) {
+        Map<String, Object> parameters = ImmutableMap.<String, Object>builder().put(USER_NAME, userName).build();
+        Query query = createNamedNativeQuery(QueryNameConstants.FIND_ALL_USER_AREAS_GROUP, parameters);
+        query.setResultTransformer(Transformers.aliasToBean(AreaDto.class));
+        return query.list();
+    }
+
     public List<AreaDto> findAllUserAreasByGids(List<Long> gids) {
         Query query = getSession().getNamedQuery(QueryNameConstants.FIND_ALL_USER_AREAS_BY_GIDS);
         query.setParameterList(GID_LIST, gids);
