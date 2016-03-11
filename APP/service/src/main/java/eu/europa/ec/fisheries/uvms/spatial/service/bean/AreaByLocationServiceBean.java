@@ -53,7 +53,7 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
 
         List<AreaExtendedIdentifierType> areaTypes = Lists.newArrayList();
 
-        PostGres function = new PostGres(null);
+        PostGres function = new PostGres();
 
         for (AreaLocationTypesEntity areaType : systemAreaTypes) {
 
@@ -76,7 +76,7 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
 
         List<AreaExtendedIdentifierDto> areaTypes = Lists.newArrayList();
 
-        PostGres function = new PostGres(null);
+        PostGres function = new PostGres();
 
         for (AreaLocationTypesEntity areaType : systemAreaTypes) {
 
