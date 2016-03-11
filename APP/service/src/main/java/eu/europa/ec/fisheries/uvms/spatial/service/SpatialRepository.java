@@ -82,6 +82,8 @@ public interface SpatialRepository extends DAO {
 
     List<AreaDto> getAllUserAreas(String userName);
 
+    List<AreaDto> getAllUserAreaGroupNames(String userName);
+
     List<AreaDto> findAllUserAreasByGids(List<Long> gids);
 
     List<UserAreasEntity> findUserAreaById(Long userAreaId, String userName, Boolean isPowerUser, String scopeName) throws ServiceException;
