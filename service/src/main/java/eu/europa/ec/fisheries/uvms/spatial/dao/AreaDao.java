@@ -5,19 +5,16 @@ import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
 
-import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.service.QueryParameter;
+import eu.europa.ec.fisheries.uvms.spatial.model.area.SystemAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GeometryType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.ServiceLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.GeometryMapper;
-import org.apache.xalan.xsltc.compiler.util.StringType;
-import org.geotools.geometry.jts.WKTWriter2;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.transform.Transformers;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.AreaExtendedIdentifierDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.ClosestAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.ClosestLocationDto;
@@ -26,7 +23,6 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.util.MeasurementUnit
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.util.SqlPropertyHolder;
-import org.hibernate.type.LongType;
 import org.hibernate.type.StandardBasicTypes;
 
 public class AreaDao extends CommonDao {
@@ -88,11 +84,24 @@ public class AreaDao extends CommonDao {
         return createNamedQuery(namedQueryString, gid).list();
     }
 
-    @SuppressWarnings("unchecked")
-    public List<Map<String, String>> findAreaByFilter(String areaType, String filter) {
+    public List<Map<String, String>> findSystemAreaByFilter(String areaType, String filter) {
+
+        //sql.searchArea = SELECT gid, name, code, CAST(st_astext(st_extent(geom)) AS text) as extent FROM spatial.{tableName} WHERE name ILIKE '%{name}%' or code ILIKE '%{code}%' GROUP BY gid
+
         String queryString = propertyHolder.getProperty(SEARCH_AREA);
-        queryString = replaceSearchStrings(queryString, areaType, filter);
-        return createSQLQuery(queryString).list();
+
+        queryString = queryString.replace(TABLE_NAME_PLACEHOLDER, areaType).replace(NAME_PLACEHOLDER, filter).replace(CODE_PLACEHOLDER, filter);
+
+        javax.persistence.Query emNativeQuery = em.createNativeQuery(queryString);
+
+        emNativeQuery.unwrap(SQLQuery.class)
+                .addScalar("gid", StandardBasicTypes.STRING)
+                .addScalar("name", StandardBasicTypes.STRING)
+                .addScalar("code", StandardBasicTypes.STRING)
+                .addScalar("extent", StandardBasicTypes.STRING)
+                .setResultTransformer(Transformers.aliasToBean(SystemAreaDto.class));
+
+        return emNativeQuery.getResultList();
     }
 
     @SuppressWarnings("unchecked")

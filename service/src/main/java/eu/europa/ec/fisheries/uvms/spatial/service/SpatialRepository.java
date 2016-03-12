@@ -3,19 +3,11 @@ package eu.europa.ec.fisheries.uvms.spatial.service;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.DAO;
-import eu.europa.ec.fisheries.uvms.spatial.entity.BookmarkEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.PortAreasEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.ProjectionEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.*;
 import eu.europa.ec.fisheries.uvms.spatial.entity.config.SysConfigEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.bookmark.Bookmark;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.AreaExtendedIdentifierDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.ClosestAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.ClosestLocationDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.FilterAreasDto;
@@ -42,7 +34,7 @@ public interface SpatialRepository extends DAO {
 
     List<UserAreaLayerDto> findUserAreaLayerMapping();
 
-    List<Map<String, String>> findAreaByFilter(String areaType, String filter);
+    List<Map<String, String>> findSystemAreaByFilter(String areaType, String filter);
 
     List<Map<String, String>> findSelectedAreaColumns(String namedQueryString, Number gid);
 
@@ -128,5 +120,7 @@ public interface SpatialRepository extends DAO {
     List findRfmoByIntersect(Point point) throws ServiceException;
     // AreaRepository
     List findUserAreaByIntersect(Point point) throws ServiceException;
+
+    AreaLocationTypesEntity findAreaLocationTypeByTypeName(String typeName) throws ServiceException;
 
 }

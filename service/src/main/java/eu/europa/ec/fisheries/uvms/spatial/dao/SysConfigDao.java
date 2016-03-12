@@ -1,17 +1,13 @@
 package eu.europa.ec.fisheries.uvms.spatial.dao;
 
+import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.spatial.entity.config.SysConfigEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.SysConfig;
-
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Georgi on 23-Nov-15.
- */
-public class SysConfigDao {
+public class SysConfigDao extends AbstractDAO<SysConfigEntity> {
 
     private EntityManager em;
 
@@ -57,5 +53,10 @@ public class SysConfigDao {
 
         em.flush();
 
+    }
+
+    @Override
+    public EntityManager getEntityManager() {
+        return em;
     }
 }

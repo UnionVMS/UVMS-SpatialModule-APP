@@ -26,7 +26,7 @@ import java.io.Serializable;
     @NamedQuery(name = QueryNameConstants.FIND_ALL_LOCATIONS, query = "SELECT area FROM AreaLocationTypesEntity area WHERE area.isLocation = 'Y'"),
     @NamedQuery(name = QueryNameConstants.FIND_SYSTEM_AREAS, query = "SELECT area FROM AreaLocationTypesEntity area WHERE area.isLocation = 'N' AND area.isSystemWide = 'Y'"),
     @NamedQuery(name = QueryNameConstants.FIND_SYSTEM_LOCATIONS, query = "SELECT area FROM AreaLocationTypesEntity area WHERE area.isLocation = 'N' AND area.isSystemWide = 'Y'"),
-    @NamedQuery(name = QueryNameConstants.FIND_TYPE_BY_NAME, query = "SELECT area FROM AreaLocationTypesEntity area WHERE area.typeName= :typeName"),
+    @NamedQuery(name = AreaLocationTypesEntity.FIND_TYPE_BY_NAME, query = "SELECT area FROM AreaLocationTypesEntity area WHERE area.typeName= :typeName"),
 	@NamedQuery(name = QueryNameConstants.FIND_TYPE_BY_NAMES, query = "SELECT area FROM AreaLocationTypesEntity area WHERE area.typeName in (:typeNames)"),
     @NamedQuery(name = QueryNameConstants.FIND_SYSTEM_AREA_LAYER, query = "select area.typeName as typeName, area.areaTypeDesc as areaTypeDesc,"
     									+ " layer.geoName as geoName, layer.isInternal as isInternal, layer.styleLabelGeom as style,"
@@ -44,14 +44,9 @@ import java.io.Serializable;
 										+ " AND area.serviceLayer = layer AND area.areaDbTable = 'user_areas' AND layer.providerFormat = provider")
 })
 
-public class AreaLocationTypesEntity implements Serializable {
-	
-	private static final long serialVersionUID = 6797853213499502859L;
+public class AreaLocationTypesEntity extends BaseEntity {
 
-	@Id
-	@Column(name = "id")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+    public static final String FIND_TYPE_BY_NAME = "AreaLocationType.findAreaByName";
 	
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "service_layer_id", nullable = false)
@@ -74,16 +69,7 @@ public class AreaLocationTypesEntity implements Serializable {
 	@Column(name = "is_location", nullable = false, length = 1)
 	private Boolean isLocation = false;
 
-
 	public AreaLocationTypesEntity() {
-	}
-
-	public int getId() {
-		return this.id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	public ServiceLayerEntity getServiceLayer() {

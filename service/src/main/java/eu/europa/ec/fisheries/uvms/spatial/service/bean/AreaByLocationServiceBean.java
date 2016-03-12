@@ -4,11 +4,11 @@ import com.google.common.collect.Lists;
 import eu.europa.ec.fisheries.uvms.spatial.dao.PostGres;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
+import eu.europa.ec.fisheries.uvms.spatial.model.area.SystemAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaExtendedIdentifierType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.AreaExtendedIdentifierDto;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.SQLQuery;
@@ -52,10 +52,10 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
 
         for (AreaLocationTypesEntity areaType : systemAreaTypes) {
 
-            List<AreaExtendedIdentifierDto> resultList = fetchIntersecting(crs, latitude, longitude, function, areaType);
+            List<SystemAreaDto> resultList = fetchIntersecting(crs, latitude, longitude, function, areaType);
 
-            for (AreaExtendedIdentifierDto area : resultList) {
-                AreaExtendedIdentifierType areaIdentifier = new AreaExtendedIdentifierType(area.getId(), AreaType.valueOf(areaType.getTypeName()), area.getCode(), area.getName());
+            for (SystemAreaDto area : resultList) {
+                AreaExtendedIdentifierType areaIdentifier = new AreaExtendedIdentifierType(String.valueOf(area.getGid()), AreaType.valueOf(areaType.getTypeName()), area.getCode(), area.getName());
                 areaTypes.add(areaIdentifier);
             }
         }
@@ -65,19 +65,19 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
     @Override
     @Transactional
     @SneakyThrows
-    public List<AreaExtendedIdentifierDto> getAreaTypesByLocation(final Double latitude, final Double longitude, final Integer crs) {
+    public List<SystemAreaDto> getAreaTypesByLocation(final Double latitude, final Double longitude, final Integer crs) {
 
         List<AreaLocationTypesEntity> systemAreaTypes = repository.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_SYSTEM_AREAS);
 
-        List<AreaExtendedIdentifierDto> areaTypes = Lists.newArrayList();
+        List<SystemAreaDto> areaTypes = Lists.newArrayList();
 
         PostGres function = new PostGres();
 
         for (AreaLocationTypesEntity areaType : systemAreaTypes) {
 
-            List<AreaExtendedIdentifierDto> resultList = fetchIntersecting(crs, latitude, longitude, function, areaType);
+            List<SystemAreaDto> resultList = fetchIntersecting(crs, latitude, longitude, function, areaType);
 
-            for (AreaExtendedIdentifierDto area : resultList) {
+            for (SystemAreaDto area : resultList) {
                 area.setAreaType(areaType.getTypeName());
                 areaTypes.add(area);
             }
@@ -86,11 +86,11 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
         return areaTypes;
     }
 
-    private List<AreaExtendedIdentifierDto> fetchIntersecting(Integer crs, double latitude, double longitude, PostGres function, AreaLocationTypesEntity areaType) {
+    private List<SystemAreaDto> fetchIntersecting(Integer crs, double latitude, double longitude, PostGres function, AreaLocationTypesEntity areaType) {
         String areaDbTable = areaType.getAreaDbTable();
 
         String queryString = "SELECT gid AS id, name, code FROM spatial." + areaDbTable +
-                " where " + function.stIntersects(latitude, longitude, crs) + " and enabled = 'Y'";
+                " WHERE " + function.stIntersects(latitude, longitude, crs) + " AND enabled = 'Y'";
 
         Query emNativeQuery = em.createNativeQuery(queryString);
 
@@ -98,7 +98,7 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
                 .addScalar("id", StandardBasicTypes.STRING)
                 .addScalar("code", StandardBasicTypes.STRING)
                 .addScalar("name", StandardBasicTypes.STRING)
-                .setResultTransformer(Transformers.aliasToBean(AreaExtendedIdentifierDto.class));
+                .setResultTransformer(Transformers.aliasToBean(SystemAreaDto.class));
 
         return emNativeQuery.getResultList();
     }

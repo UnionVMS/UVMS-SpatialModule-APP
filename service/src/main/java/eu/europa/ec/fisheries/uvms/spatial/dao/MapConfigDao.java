@@ -1,24 +1,14 @@
 package eu.europa.ec.fisheries.uvms.spatial.dao;
 
 import com.google.common.collect.ImmutableMap;
-import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.DisplayProjectionDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
-
 import javax.persistence.EntityManager;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static eu.europa.ec.fisheries.uvms.service.QueryParameter.with;
-
-/**
- * Created by padhyad on 11/20/2015.
- */
 public class MapConfigDao extends CommonDao {
 
     private static final String REPORT_ID = "reportId";

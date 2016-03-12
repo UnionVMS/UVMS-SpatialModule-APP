@@ -1,26 +1,28 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices;
 
+import eu.europa.ec.fisheries.uvms.spatial.model.area.SystemAreaDto;
+
 import java.util.List;
 
 public class EnrichmentDto {
-    private List<AreaExtendedIdentifierDto> areasByLocation;
+    private List<SystemAreaDto> areasByLocation;
     private List<ClosestAreaDto> closestAreas;
     private List<ClosestLocationDto> closestLocations;
 
     public EnrichmentDto() {
     }
 
-    public EnrichmentDto(List<AreaExtendedIdentifierDto> areasByLocation, List<ClosestAreaDto> closestAreas, List<ClosestLocationDto> closestLocations) {
+    public EnrichmentDto(List<SystemAreaDto> areasByLocation, List<ClosestAreaDto> closestAreas, List<ClosestLocationDto> closestLocations) {
         this.areasByLocation = areasByLocation;
         this.closestAreas = closestAreas;
         this.closestLocations = closestLocations;
     }
 
-    public List<AreaExtendedIdentifierDto> getAreasByLocation() {
+    public List<SystemAreaDto> getAreasByLocation() {
         return areasByLocation;
     }
 
-    public void setAreasByLocation(List<AreaExtendedIdentifierDto> areasByLocation) {
+    public void setAreasByLocation(List<SystemAreaDto> areasByLocation) {
         this.areasByLocation = areasByLocation;
     }
 
