@@ -16,6 +16,7 @@ import com.vividsolutions.jts.io.ParseException;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.service.interceptor.ValidationInterceptor;
+import eu.europa.ec.fisheries.uvms.spatial.model.area.SystemAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.rest.type.geocoordinate.AreaCoordinateType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.AreaDetailsGeoJsonDto;
@@ -27,7 +28,6 @@ import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.AreaLocationDtoMapper;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ValidationUtils;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.*;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.AreaExtendedIdentifierDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.ClosestAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaServiceLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.LayerSubTypeEnum;
@@ -82,7 +82,7 @@ public class AreaResource extends UnionVMSResource {
         try {
             log.info("Getting spatial enrichment by location");
             ValidationUtils.validateInputParameters(lat, lon);
-            List<AreaExtendedIdentifierDto> areasByLocation = areaByLocationService.getAreaTypesByLocation(lat, lon, crs);
+            List<SystemAreaDto> areasByLocation = areaByLocationService.getAreaTypesByLocation(lat, lon, crs);
             return new ResponseDto(areasByLocation, ResponseCode.OK);
         } catch (Exception ex) {
             log.error("[ Error when getting areas by location. ] ", ex);
@@ -172,8 +172,8 @@ public class AreaResource extends UnionVMSResource {
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/areasbyfilter")
     @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
-    public Response getAreasByFilter(AreaFilterType areaFilterType) {
-    	return createSuccessResponse(searchAreaService.getAreasByFilter(areaFilterType.getAreaType(), areaFilterType.getFilter()));
+    public Response getAreasByFilter(AreaFilterType areaFilterType) throws ServiceException {
+    	return createSuccessResponse(searchAreaService.getAreasByFilter(areaFilterType.getAreaType(), areaFilterType.getFilter())); // FIXME native query alert
     }
 
     @GET

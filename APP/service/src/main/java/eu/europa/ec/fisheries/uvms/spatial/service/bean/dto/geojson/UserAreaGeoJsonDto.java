@@ -1,25 +1,17 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import eu.europa.ec.fisheries.uvms.common.DateUtils;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import org.apache.commons.lang3.StringUtils;
-
 import java.util.Date;
 import java.util.List;
 
 public class UserAreaGeoJsonDto extends GeoJsonDto {
 
-    private static final String NAME = "name";
-    private static final String DESCRIPTION = "description";
-    private static final String ID = "id";
-    private static final String SCOPE_SELECTION = "scopeSelection";
-    private static final String START_DATE = "startDate";
-    private static final String END_DATE = "endDate";
-    private static final String SUB_TYPE = "subType";
-    private static final String DATASET_NAME = "datasetName";
-
+    private static final String NAME = "name", DESCRIPTION = "description", ID = "id";
+    private static final String SCOPE_SELECTION = "scopeSelection", START_DATE = "startDate", END_DATE = "endDate";
+    private static final String SUB_TYPE = "subType", DATASET_NAME = "datasetName";
 
     public String getName() {
         return getNullOrString(properties.get(NAME));

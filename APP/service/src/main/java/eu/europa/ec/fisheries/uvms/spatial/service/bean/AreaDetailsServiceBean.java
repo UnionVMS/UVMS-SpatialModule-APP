@@ -26,7 +26,6 @@ import java.util.Map;
 
 import static eu.europa.ec.fisheries.uvms.spatial.util.ColumnAliasNameHelper.getFieldMap;
 import static eu.europa.ec.fisheries.uvms.spatial.util.SpatialTypeEnum.getEntityClassByType;
-import static eu.europa.ec.fisheries.uvms.spatial.util.SpatialTypeEnum.getNativeQueryByType;
 
 @Stateless
 @Local(AreaDetailsService.class)
@@ -59,7 +58,7 @@ public class AreaDetailsServiceBean implements AreaDetailsService {
         }
 
         Map<String, String> parameters = ImmutableMap.<String, String>builder().put(TYPE_NAME, areaType.value().toUpperCase()).build();
-        List<AreaLocationTypesEntity> areasLocationTypes = repository.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_TYPE_BY_NAME, parameters, 1);
+        List<AreaLocationTypesEntity> areasLocationTypes = repository.findEntityByNamedQuery(AreaLocationTypesEntity.class, AreaLocationTypesEntity.FIND_TYPE_BY_NAME, parameters, 1); // FIXME greg use daa
 
         if (areasLocationTypes.isEmpty()) {
             throw new SpatialServiceException(SpatialServiceErrors.INVALID_AREA_LOCATION_TYPE, areasLocationTypes);
@@ -91,7 +90,7 @@ public class AreaDetailsServiceBean implements AreaDetailsService {
         }
 
         Map<String, String> parameters = ImmutableMap.<String, String>builder().put(TYPE_NAME, areaTypeEntry.getAreaType().value().toUpperCase()).build();
-        List<AreaLocationTypesEntity> areasLocationTypes = repository.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_TYPE_BY_NAME, parameters, 1);
+        List<AreaLocationTypesEntity> areasLocationTypes = repository.findEntityByNamedQuery(AreaLocationTypesEntity.class, AreaLocationTypesEntity.FIND_TYPE_BY_NAME, parameters, 1); // FIXME greg replace by dao
 
         if (areasLocationTypes.isEmpty()) {
             throw new SpatialServiceException(SpatialServiceErrors.INVALID_AREA_LOCATION_TYPE, areasLocationTypes);

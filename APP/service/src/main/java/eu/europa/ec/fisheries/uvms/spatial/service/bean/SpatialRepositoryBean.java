@@ -4,25 +4,8 @@ import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.service.QueryParameter;
-import eu.europa.ec.fisheries.uvms.spatial.dao.AreaDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.BookmarkDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.CountryDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.EezDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.MapConfigDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.PortAreaDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.ProjectionDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.ReportConnectSpatialDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.RfmoDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.SysConfigDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.UserAreaJpaDao;
-import eu.europa.ec.fisheries.uvms.spatial.entity.BookmarkEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.PortAreasEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.ProjectionEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.dao.*;
+import eu.europa.ec.fisheries.uvms.spatial.entity.*;
 import eu.europa.ec.fisheries.uvms.spatial.entity.config.SysConfigEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.bookmark.Bookmark;
@@ -78,6 +61,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     private ProjectionDao projectionDao;
     private PortAreaDao portAreaDao;
     private RfmoDao rfmoDao;
+    private AreaLocationTypesDao areaLocationTypeDao;
 
     @Override
     public EntityManager getEntityManager() {
@@ -97,6 +81,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
         projectionDao = new ProjectionDao(em);
         portAreaDao = new PortAreaDao(em);
         rfmoDao = new RfmoDao(em);
+        areaLocationTypeDao = new AreaLocationTypesDao(em);
 
     }
 
@@ -131,8 +116,8 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     }
 
     @Override
-    public List<Map<String, String>> findAreaByFilter(String areaType, String filter) {
-        return areaDao.findAreaByFilter(areaType, filter);
+    public List<Map<String, String>> findSystemAreaByFilter(String areaType, String filter) {
+        return areaDao.findSystemAreaByFilter(areaType, filter);
     }
 
     @Override
@@ -387,6 +372,11 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     @Override
     public List findUserAreaByIntersect(final Point point) throws ServiceException {
         return userAreaDao.intersects(point);
+    }
+
+    @Override
+    public AreaLocationTypesEntity findAreaLocationTypeByTypeName(String typeName) throws ServiceException {
+        return areaLocationTypeDao.findBy(typeName);
     }
 
     @Override

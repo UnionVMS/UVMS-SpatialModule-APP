@@ -50,7 +50,6 @@ public final class QueryNameConstants {
     /**
      * Find Area By Name
      */
-    public static final String FIND_TYPE_BY_NAME = "AreaLocationType.findAreaByName";
     public static final String FIND_TYPE_BY_NAMES = "AreaLocationType.findAreaByNames";
 
     /**

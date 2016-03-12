@@ -11,4 +11,19 @@ public class PostGres extends AbstractGisFunction {
     public String stIntersects(Double latitude, Double longitude, Integer crs) {
         return "st_intersects(geom, st_geomfromtext(CAST('POINT(" + latitude + " " + longitude + ")' as text), " + crs + "))";
     }
+
+    @Override
+    public String stAsText(String wkt) {
+        return null;
+    }
+
+    @Override
+    public String castAsUnlimitedLength() {
+        return "TEXT";
+    }
+
+    @Override
+    public String geomToWkt() {
+        return "ST_AsText(geom)";
+    }
 }
