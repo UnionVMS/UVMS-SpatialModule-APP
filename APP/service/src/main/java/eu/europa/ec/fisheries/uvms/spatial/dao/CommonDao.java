@@ -2,16 +2,12 @@ package eu.europa.ec.fisheries.uvms.spatial.dao;
 
 import java.util.List;
 import java.util.Map;
-
 import javax.persistence.EntityManager;
-
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.transform.AliasToEntityMapResultTransformer;
 import org.hibernate.transform.Transformers;
-
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.AreaExtendedIdentifierDto;
 
 public abstract class CommonDao {
 	
@@ -103,14 +99,6 @@ public abstract class CommonDao {
 		query.setParameterList(parameterName, parameters);
 		query.setResultTransformer(Transformers.aliasToBean(dtoClass));
 		return query;
-	}
-
-	protected SQLQuery createSQLQueryForClosestArea(String queryString, String wktPoint, int crs) {
-		SQLQuery sqlQuery = getSession().createSQLQuery(queryString);
-		sqlQuery.setString(WKT, wktPoint);
-		sqlQuery.setInteger(CRS, crs);
-		sqlQuery.setResultTransformer(Transformers.aliasToBean(AreaExtendedIdentifierDto.class));
-		return sqlQuery;
 	}
 
 	protected Session getSession() {
