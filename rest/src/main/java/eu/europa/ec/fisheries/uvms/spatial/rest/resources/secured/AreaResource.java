@@ -173,7 +173,7 @@ public class AreaResource extends UnionVMSResource {
     @Path("/areasbyfilter")
     @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
     public Response getAreasByFilter(AreaFilterType areaFilterType) throws ServiceException {
-    	return createSuccessResponse(searchAreaService.getAreasByFilter(areaFilterType.getAreaType(), areaFilterType.getFilter())); // FIXME native query alert
+    	return createSuccessResponse(searchAreaService.getAreasByFilter(areaFilterType.getAreaType(), areaFilterType.getFilter()));
     }
 
     @GET

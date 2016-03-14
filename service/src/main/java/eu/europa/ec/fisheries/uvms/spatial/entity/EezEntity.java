@@ -30,7 +30,7 @@ import java.util.Date;
 //@NamedNativeQuery(
 //        name = QueryNameConstants.EEZ_BY_COORDINATE,
 //        query = "select * from eez where st_intersects(geom, st_geomfromtext(CAST(:wktPoint as text), :crs)) and enabled = 'Y'", resultSetMapping = "implicit.eez")
-@NamedQueries({
+@NamedQueries({ // FIXME check geodesic of intersects method
         @NamedQuery(name = EezEntity.EEZ_BY_COORDINATE, query = "FROM EezEntity WHERE intersects(geom, :shape) = true) AND enabled = 'Y'"),
         @NamedQuery(name = QueryNameConstants.EEZ_COLUMNS, query = "select eez.name as name, eez.code as code from EezEntity as eez where eez.gid =:gid"),
         @NamedQuery(name = QueryNameConstants.DISABLE_EEZ_AREAS, query = "update EezEntity set enabled = 'N'")

@@ -2,7 +2,6 @@ package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import java.io.Serializable;
 import java.util.Set;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,8 +15,6 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "provider_format", schema = "spatial")
 public class ProviderFormatEntity implements Serializable { 
-	
-	private static final long serialVersionUID = 6797853213499502854L;
 
 	@Id
 	@Column(name = "id")
