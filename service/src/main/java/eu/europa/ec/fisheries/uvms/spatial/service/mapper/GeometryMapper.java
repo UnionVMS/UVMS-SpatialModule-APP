@@ -13,6 +13,6 @@ public interface GeometryMapper {
     GeometryMapper INSTANCE = Mappers.getMapper(GeometryMapper.class);
 
     @Mapping(target = "geometry", expression = "java(new WKTWriter().write(geometry))")
-    GeometryType geometryToWKT(Geometry geometry); // FIXME change name inside GeometryType to wkt
+    GeometryType geometryToWKT(Geometry geometry);
 
 }

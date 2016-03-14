@@ -14,6 +14,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.PingRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRS;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
+import lombok.SneakyThrows;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -74,12 +75,13 @@ public class SpatialEventServiceTest {
     }
 
     @Test
+    @SneakyThrows
     public void testGetClosestLocation() {
         SpatialMessageEvent message = new SpatialMessageEvent(textMessage, new ClosestLocationSpatialRQ());
 
         service.getClosestLocation(message);
 
-        verify(closestLocationService, times(1)).getClosestLocations(any(ClosestLocationSpatialRQ.class));
+        verify(closestLocationService, times(1)).getClosestLocationByLocationType(any(ClosestLocationSpatialRQ.class));
         verify(messageProducer, times(1)).sendModuleResponseMessage(eq(textMessage), anyString());
         verify(spatialErrorEvent, times(0)).fire(message);
     }
@@ -96,6 +98,7 @@ public class SpatialEventServiceTest {
     }
 
     @Test
+    @SneakyThrows
     public void testGetSpatialEnrichment() {
         SpatialMessageEvent message = new SpatialMessageEvent(textMessage, new SpatialEnrichmentRQ());
         when(enrichmentService.getSpatialEnrichment(any(SpatialEnrichmentRQ.class))).thenReturn(new SpatialEnrichmentRS());
@@ -108,6 +111,7 @@ public class SpatialEventServiceTest {
     }
 
     @Test
+    @SneakyThrows
     public void testGetSpatialEnrichmentError() throws SpatialModelMarshallException {
         SpatialMessageEvent message = new SpatialMessageEvent(textMessage, new SpatialEnrichmentRQ());
         when(enrichmentService.getSpatialEnrichment(any(SpatialEnrichmentRQ.class))).thenThrow(SpatialServiceException.class);

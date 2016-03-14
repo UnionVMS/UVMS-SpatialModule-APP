@@ -1,29 +1,37 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.google.common.collect.Maps;
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.io.ParseException;
+import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.dao.GisFunction;
+import eu.europa.ec.fisheries.uvms.spatial.dao.PostGres;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestLocationSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Location;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.UnitType;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.ClosestLocationDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.util.MeasurementUnit;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-
+import org.geotools.geometry.jts.WKTReader2;
+import org.geotools.referencing.GeodeticCalculator;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialUtils.convertToPointInWGS84;
 
 @Stateless
 @Local(ClosestLocationService.class)
@@ -31,73 +39,140 @@ import static eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialUtils.conv
 @Slf4j
 public class ClosestLocationServiceBean implements ClosestLocationService {
 
-    @EJB
-    private SpatialRepository repository;
+    private @PersistenceContext(unitName = "spatialPU") EntityManager em;
+    private @EJB SpatialRepository repository;
 
     @Override
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public List<Location> getClosestLocations(ClosestLocationSpatialRQ request) {
-        Point point = convertToPointInWGS84(request.getPoint());
-        MeasurementUnit measurementUnit = MeasurementUnit.getMeasurement(request.getUnit().name());
+    public List<Location> getClosestLocationByLocationType(ClosestLocationSpatialRQ request) throws ServiceException {
 
-        Map<String, String> areaType2TableName = getLocationType2TableNameMap();
-        List<Location> closestLocations = newArrayList();
-        for (LocationType locationType : request.getLocationTypes().getLocationTypes()) {
-            String areaDbTable = areaType2TableName.get(locationType.value());
+        try {
 
-            List<ClosestLocationDto> closestAreaList = repository.findClosestlocation(point, measurementUnit, areaDbTable);
-            validateResponse(closestAreaList);
+            final List<Location> locations = newArrayList();
 
-            ClosestLocationDto closestLocationDto = closestAreaList.get(0);
-            if (closestLocationDto != null) {
-                Location closestLocationEntry = new Location(); // TODO use generated LocationMapper
-                closestLocationEntry.setId(closestLocationDto.getId());
-                closestLocationEntry.setDistance(closestLocationDto.getDistance());
-                closestLocationEntry.setUnit(request.getUnit());
-                closestLocationEntry.setCode(closestLocationDto.getCode());
-                closestLocationEntry.setName(closestLocationDto.getName());
-                closestLocationEntry.setLocationType(locationType);
-                closestLocations.add(closestLocationEntry);
+            final Double latitude = request.getPoint().getLatitude();
+            final Double longitude = request.getPoint().getLongitude();
+            final Integer crs = request.getPoint().getCrs();
+            final UnitType unit = request.getUnit();
+            final MeasurementUnit measurementUnit = MeasurementUnit.getMeasurement(unit.name());
+            final Map<String, String> areaType2TableName = getLocationType2TableNameMap();
+            final List<Location> closestLocations = newArrayList();
+            final GisFunction gisFunction = new PostGres();
+            final WKTReader2 wktReader2 = new WKTReader2();
+            final GeodeticCalculator calc = new GeodeticCalculator();
+
+            for (LocationType locationType : request.getLocationTypes().getLocationTypes()) {
+
+                Location closestLocation = new Location();
+                closestLocation.setDistance(Double.MAX_VALUE);
+
+                final String areaDbTable = areaType2TableName.get(locationType.value());
+
+                final String queryString = "SELECT gid, code, name, "+ gisFunction.toWkt("geom")+ ", " + gisFunction.stDistance(longitude, latitude, crs) + " / " + measurementUnit.getRatio()
+                        + " AS distance " +
+                        "FROM spatial." + areaDbTable + " WHERE NOT " + gisFunction.isEmptyGeom() + " AND enabled = 'Y' ORDER BY distance";
+
+                final Query emNativeQuery = em.createNativeQuery(queryString);
+                final List records = emNativeQuery.getResultList();
+
+                for (Object record : records) {
+
+                    final Object[] result = (Object[]) record;
+                    final String wkt = result[3].toString();
+                    final Geometry geometry = wktReader2.read(wkt);
+                    final Point centroid = geometry.getCentroid();
+                    calc.setStartingGeographicPoint(centroid.getX(), centroid.getY());
+                    calc.setDestinationGeographicPoint(longitude, latitude);
+                    double orthodromicDistance = calc.getOrthodromicDistance();
+
+                    if (closestLocation.getDistance() > orthodromicDistance) {
+                        closestLocation.setId(result[0].toString());
+                        closestLocation.setDistance(orthodromicDistance);
+                        closestLocation.setUnit(unit);
+                        closestLocation.setCode(result[1].toString());
+                        closestLocation.setName(result[2].toString());
+                        closestLocation.setLocationType(locationType);
+                    }
+
+                }
+
+                if (closestLocation.getDistance() != Double.MAX_VALUE){
+                    locations.add(closestLocation);
+                }
+
             }
+
+            return closestLocations;
+
+        } catch (ParseException ex) {
+            throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR, ex);
         }
 
-        return closestLocations;
     }
 
     @Override
-    public List<ClosestLocationDto> getClosestLocations(double lat, double lon, int crs, String unit, List<String> locations) {
-        Point point = convertToPointInWGS84(lon, lat, crs);
-        MeasurementUnit measurementUnit = MeasurementUnit.getMeasurement(unit);
+    public List<ClosestLocationDto> getClosestLocations(final Double lat, final Double lon, final Integer crs,
+                                                        final String unit, final List<String> locations)
+            throws ServiceException {
 
-        List<String> locationTypes = SpatialUtils.toUpperCase(locations);
-        Map<String, String> areaType2TableName = getLocationType2TableNameMap();
-        List<ClosestLocationDto> closestLocations = newArrayList();
-        for (String locationType : locationTypes) {
-            String areaDbTable = areaType2TableName.get(locationType);
-            validateLocationType(locationType, areaDbTable);
+        try {
 
-            List<ClosestLocationDto> closestAreaList = repository.findClosestlocation(point, measurementUnit, areaDbTable);
-            validateResponse(closestAreaList);
+            final List<ClosestLocationDto> locationList = newArrayList();
+            final List<String> locationTypes = SpatialUtils.toUpperCase(locations);
+            final Map<String, String> areaType2TableName = getLocationType2TableNameMap();
+            final GisFunction gisFunction = new PostGres();
+            final WKTReader2 wktReader2 = new WKTReader2();
+            final GeodeticCalculator calc = new GeodeticCalculator();
 
-            ClosestLocationDto closestLocationDto = closestAreaList.get(0);
-            if (closestLocationDto != null) {
-                closestLocationDto.setLocationType(locationType);
-                closestLocationDto.setUnit(measurementUnit.name());
-                closestLocations.add(closestLocationDto);
+            for (String locationType : locationTypes) {
+
+                ClosestLocationDto closestLocation = new ClosestLocationDto();
+                closestLocation.setDistance(Double.MAX_VALUE);
+
+                final String areaDbTable = areaType2TableName.get(locationType);
+
+                final String queryString = "SELECT gid, code, name, "+ gisFunction.toWkt("geom")+ ", " + gisFunction.stDistance(lon, lat, crs) + " / " + MeasurementUnit.getMeasurement(unit).getRatio()
+                        + " AS distance " +
+                        "FROM spatial." + areaDbTable + " WHERE NOT " + gisFunction.isEmptyGeom() + " AND enabled = 'Y' ORDER BY distance";
+
+                final Query emNativeQuery = em.createNativeQuery(queryString);
+                final List records = emNativeQuery.getResultList();
+
+                for (Object record : records) {
+
+                    final Object[] result = (Object[]) record;
+                    final String wkt = result[3].toString();
+                    final Geometry geometry = wktReader2.read(wkt);
+                    final Point centroid = geometry.getCentroid();
+                    calc.setStartingGeographicPoint(centroid.getX(), centroid.getY());
+                    calc.setDestinationGeographicPoint(lon, lat);
+                    double orthodromicDistance = calc.getOrthodromicDistance();
+
+                    if (closestLocation.getDistance() > orthodromicDistance) {
+                        closestLocation.setId(result[0].toString());
+                        closestLocation.setDistance(orthodromicDistance);
+                        closestLocation.setUnit(unit);
+                        closestLocation.setCode(result[1].toString());
+                        closestLocation.setName(result[2].toString());
+                        closestLocation.setLocationType(locationType);
+                    }
+
+                }
+
+                if (closestLocation.getDistance() != Double.MAX_VALUE){
+                    locationList.add(closestLocation);
+                }
+
             }
-        }
 
-        return closestLocations;
-    }
+            return locationList;
 
-    private void validateLocationType(String locationType, String areaDbTable) {
-        if (areaDbTable == null) {
-            throw new SpatialServiceException(SpatialServiceErrors.WRONG_LOCATION_TYPE, locationType);
+        } catch (ParseException ex) {
+            throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR, ex);
         }
     }
 
-    @SneakyThrows
-    private Map<String, String> getLocationType2TableNameMap() {
+    private Map<String, String> getLocationType2TableNameMap() throws ServiceException {
         List<AreaLocationTypesEntity> locations = repository.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_ALL_LOCATIONS);
         Map<String, String> locationMap = Maps.newHashMap();
         for (AreaLocationTypesEntity location : locations) {
@@ -106,10 +181,7 @@ public class ClosestLocationServiceBean implements ClosestLocationService {
         return locationMap;
     }
 
-    private void validateResponse(List<ClosestLocationDto> closestLocationList) {
-        if (closestLocationList.size() > 1) {
-            throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
-        }
-    }
-
 }
+
+//sql.findClosestLocation = SELECT CAST(gid AS text) AS id, code, name, ST_Distance_Spheroid(geom, st_geomfromtext(CAST(:wktPoint as text), :crs), 'SPHEROID["WGS 84",6378137,298.257223563]') /:unit AS distance FROM spatial.{tableName} where not ST_IsEmpty(geom) and enabled = 'Y' order by distance limit 1
+

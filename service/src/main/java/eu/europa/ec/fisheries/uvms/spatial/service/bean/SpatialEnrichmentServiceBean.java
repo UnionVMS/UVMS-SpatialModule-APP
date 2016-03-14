@@ -1,12 +1,12 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
+import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.model.area.SystemAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.ClosestAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.ClosestLocationDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.EnrichmentDto;
 import lombok.extern.slf4j.Slf4j;
-
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
@@ -15,22 +15,16 @@ import java.util.List;
 
 @Stateless
 @Local(SpatialEnrichmentService.class)
-@Transactional
 @Slf4j
 public class SpatialEnrichmentServiceBean implements SpatialEnrichmentService {
 
-    @EJB
-    private AreaByLocationService areaByLocationService;
-
-    @EJB
-    private ClosestAreaService closestAreaService;
-
-    @EJB
-    private ClosestLocationService closestLocationService;
+    private @EJB AreaByLocationService areaByLocationService;
+    private @EJB ClosestAreaService closestAreaService;
+    private @EJB ClosestLocationService closestLocationService;
 
     @Override
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public SpatialEnrichmentRS getSpatialEnrichment(SpatialEnrichmentRQ request) {
+    public SpatialEnrichmentRS getSpatialEnrichment(SpatialEnrichmentRQ request) throws ServiceException {
 
         AreaByLocationSpatialRQ areaByLocationSpatialRQ = new AreaByLocationSpatialRQ();
         areaByLocationSpatialRQ.setPoint(request.getPoint());
@@ -54,7 +48,7 @@ public class SpatialEnrichmentServiceBean implements SpatialEnrichmentService {
         locationTp.getLocationTypes().addAll(locationTypes);
         closestLocationSpatialRQ.setLocationTypes(locationTp);
 
-        List<Location> closestLocations = closestLocationService.getClosestLocations(closestLocationSpatialRQ);
+        List<Location> closestLocations = closestLocationService.getClosestLocationByLocationType(closestLocationSpatialRQ);
 
         SpatialEnrichmentRS response = new SpatialEnrichmentRS();
 
@@ -80,7 +74,8 @@ public class SpatialEnrichmentServiceBean implements SpatialEnrichmentService {
     }
 
     @Override
-    public EnrichmentDto getSpatialEnrichment(double lat, double lon, int crs, String unit, List<String> areaTypes, List<String> locationTypes) {
+    @Transactional
+    public EnrichmentDto getSpatialEnrichment(double lat, double lon, int crs, String unit, List<String> areaTypes, List<String> locationTypes) throws ServiceException {
         List<SystemAreaDto> areasByLocation = areaByLocationService.getAreaTypesByLocation(lat, lon, crs);
         List<ClosestAreaDto> closestAreas = closestAreaService.getClosestAreas(lat, lon, crs, unit, areaTypes);
         List<ClosestLocationDto> closestLocations = closestLocationService.getClosestLocations(lat, lon, crs, unit, locationTypes);

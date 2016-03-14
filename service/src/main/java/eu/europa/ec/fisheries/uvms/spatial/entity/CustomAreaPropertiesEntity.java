@@ -12,8 +12,6 @@ import javax.persistence.ManyToOne;
 
 public class CustomAreaPropertiesEntity implements Serializable {
 
-	private static final long serialVersionUID = 8199059649811707308L;
-	
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
