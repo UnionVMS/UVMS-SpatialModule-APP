@@ -125,7 +125,7 @@
 		</insert>
 		<insert tableName="service_layer">
 			<column name="id" valueNumeric="11" />
-			<column name="name" value="PortAreas" />
+			<column name="name" value="Port Areas" />
 			<column name="layer_desc" value="Port Areas" />
 			<column name="provider_format_id" valueNumeric="2" />
 			<column name="geo_name" value="uvms:port_area" />
