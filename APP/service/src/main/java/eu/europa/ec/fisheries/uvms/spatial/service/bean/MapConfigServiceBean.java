@@ -348,7 +348,7 @@ public class MapConfigServiceBean implements MapConfigService {
     }
 
     private List<Long> getUserAreaIds(List<LayerAreaDto> layers) {
-        if (layers == null || !layers.isEmpty()) {
+        if (layers == null || layers.isEmpty()) {
             return Collections.emptyList();
         }
         List<Long> userAreaIds = new ArrayList<>();
