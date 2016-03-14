@@ -9,12 +9,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "report_layer_config", schema = "spatial")
-public class ReportLayerConfigEntity implements java.io.Serializable {
-
-	private static final long serialVersionUID = 6797853213499502857L;
+public class ReportLayerConfigEntity implements Serializable {
 
 	@Id
 	@Column(name = "id")

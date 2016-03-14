@@ -1,6 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
+import lombok.SneakyThrows;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,6 +28,7 @@ public class ClosestLocationServiceIT extends AbstractArquillianIT {
     private ClosestLocationService closestLocationService;
 
     @Test
+    @SneakyThrows
     public void shouldGetClosestLocation() {
         // given
         PointType point = new PointType();
@@ -41,7 +43,7 @@ public class ClosestLocationServiceIT extends AbstractArquillianIT {
         request.setUnit(UnitType.METERS);
 
         // when
-        List<Location> closestLocations = closestLocationService.getClosestLocations(request);
+        List<Location> closestLocations = closestLocationService.getClosestLocationByLocationType(request);
 
         //then
         assertNotNull(closestLocations);
@@ -57,6 +59,7 @@ public class ClosestLocationServiceIT extends AbstractArquillianIT {
     }
 
     @Test
+    @SneakyThrows
     public void shouldGetClosestAreaWithCrsTransform() {
         // given
         PointType point = new PointType();
@@ -71,7 +74,7 @@ public class ClosestLocationServiceIT extends AbstractArquillianIT {
         request.setUnit(UnitType.METERS);
 
         // when
-        List<Location> closestLocations = closestLocationService.getClosestLocations(request);
+        List<Location> closestLocations = closestLocationService.getClosestLocationByLocationType(request);
 
         //then
         assertNotNull(closestLocations);

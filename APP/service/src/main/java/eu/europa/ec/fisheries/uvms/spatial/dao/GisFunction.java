@@ -6,12 +6,13 @@ public interface GisFunction {
 
     String stIntersects(Double latitude, Double longitude,Integer crs);
 
-    String stAsText(String wkt);
+    String stDistance(Double latitude, Double longitude, Integer crs);
 
     // ORACLE = CLOB
     String castAsUnlimitedLength();
 
-    String geomToWkt();
+    String toWkt(String value);
 
+    String isEmptyGeom();
 
 }

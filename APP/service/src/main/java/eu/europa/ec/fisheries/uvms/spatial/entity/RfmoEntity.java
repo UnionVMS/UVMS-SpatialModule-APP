@@ -6,9 +6,17 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.Where;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -19,11 +27,13 @@ import java.util.Date;
 //@NamedNativeQuery(
 //        name = QueryNameConstants.RFMO_BY_COORDINATE,
 //        query = "select * from rfmo where st_intersects(geom, st_geomfromtext(CAST(:wktPoint as text), :crs)) and enabled = 'Y'", resultSetMapping = "implicit.rfmo")
-@NamedQueries({
+@NamedQueries({  // FIXME check geodesic of intersects method
         @NamedQuery(name = RfmoEntity.RFMO_BY_COORDINATE,
                 query = "FROM RfmoEntity WHERE intersects(geom, :shape) = true) AND enabled = 'Y'"),
-        @NamedQuery(name = QueryNameConstants.RFMO_COLUMNS, query = "select rfmo.name as name, rfmo.code as code from RfmoEntity as rfmo where rfmo.gid =:gid"),
-        @NamedQuery(name = QueryNameConstants.DISABLE_RFMO_AREAS, query = "update RfmoEntity set enabled = 'N'")
+        @NamedQuery(name = QueryNameConstants.RFMO_COLUMNS,
+                query = "SELECT rfmo.name AS name, rfmo.code AS code FROM RfmoEntity AS rfmo WHERE rfmo.gid =:gid"),
+        @NamedQuery(name = QueryNameConstants.DISABLE_RFMO_AREAS,
+                query = "UPDATE RfmoEntity SET enabled = 'N'")
 })
 @Where(clause = "enabled = 'Y'")
 @Table(name = "rfmo", schema = "spatial")
@@ -37,7 +47,6 @@ public class RfmoEntity implements Serializable {
     @ColumnAliasName(aliasName = "gid")
     private long gid;
 
-    @Basic
     @Column(name = "geom")
     @Type(type = "org.hibernate.spatial.GeometryType")
     @ColumnAliasName(aliasName = "geometry")

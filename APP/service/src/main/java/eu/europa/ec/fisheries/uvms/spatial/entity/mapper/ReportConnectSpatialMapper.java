@@ -8,9 +8,6 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
 
-/**
- * //TODO create test
- */
 @Mapper(componentModel = "cdi", imports = ProjectionEntity.class)
 public abstract class ReportConnectSpatialMapper {
 

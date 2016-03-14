@@ -20,15 +20,12 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasNa
 
 public class CustomAreasEntity implements Serializable {
 
-	private static final long serialVersionUID = -3035659211511252825L;
-	
 	@Id
 	@Column(name = "gid")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@ColumnAliasName(aliasName ="gid")
 	private long gid;
 
-    @Basic
     @Column(name = "geom", nullable = false)
     @Type(type = "org.hibernate.spatial.GeometryType")
     @ColumnAliasName(aliasName ="geometry")

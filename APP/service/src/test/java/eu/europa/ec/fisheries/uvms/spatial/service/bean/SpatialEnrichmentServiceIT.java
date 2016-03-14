@@ -1,6 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
+import lombok.SneakyThrows;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,6 +23,7 @@ public class SpatialEnrichmentServiceIT extends AbstractArquillianIT {
     private SpatialEnrichmentService enrichmentService;
 
     @Test
+    @SneakyThrows
     public void shouldGetClosestArea() {
         // given
         PointType pointType = new PointType();

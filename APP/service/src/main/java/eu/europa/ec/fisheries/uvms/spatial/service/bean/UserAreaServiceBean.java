@@ -7,6 +7,8 @@ import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.io.ParseException;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
+import eu.europa.ec.fisheries.uvms.spatial.dao.GisFunction;
+import eu.europa.ec.fisheries.uvms.spatial.dao.PostGres;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserScopeEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
@@ -31,9 +33,13 @@ import org.geotools.geometry.jts.WKTWriter2;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -47,6 +53,8 @@ import static eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialUtils.conv
 @Transactional
 @Slf4j
 public class UserAreaServiceBean implements UserAreaService {
+
+    private @PersistenceContext(unitName = "spatialPU") EntityManager em;
 
     @EJB
     private SpatialRepository repository;
@@ -177,7 +185,7 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     @Override
-    public List<UserAreaDto> getUserAreaDetailsWithExtentByLocation(Coordinate coordinate, String userName) {// FIXME native query alert
+    public List<UserAreaDto> getUserAreaDetailsWithExtentByLocation(Coordinate coordinate, String userName) {
         Point point = convertToPointInWGS84(coordinate.getLongitude(), coordinate.getLatitude(), coordinate.getCrs());
 
         List<UserAreasEntity> userAreaDetailsWithExtentByLocation = repository.findUserAreaDetailsByLocation(userName, point);
@@ -305,9 +313,43 @@ public class UserAreaServiceBean implements UserAreaService {
         }
     }
 
-    public List<UserAreaDto> searchUserAreasByCriteria(String userName, String scopeName, String searchCriteria, boolean isPowerUser) {
-        List<UserAreaDto> userAreaDetails = repository.findUserAreaDetailsBySearchCriteria(userName, scopeName, searchCriteria, isPowerUser);
-        return userAreaDetails;
+    public List<UserAreaDto> searchUserAreasByCriteria(String userName, String scopeName, String searchCriteria, boolean isPowerUser) throws ServiceException {
+
+        try {
+
+            GisFunction gisFunction = new PostGres();
+
+            final String queryString = "SELECT gid, name, area_desc as desc, CAST( " + gisFunction.toWkt("geom") + " AS " + gisFunction.castAsUnlimitedLength()  + ") FROM " +
+                    "spatial.user_areas area LEFT JOIN spatial.user_scope scopeSelection"
+                    + " ON area.gid = scopeSelection.user_area_id"
+                    + " WHERE ((1 = " + (isPowerUser ? 1 : 0) + ") OR (area.user_name = " + userName + " OR scopeSelection.scope_name = " + scopeName + "))"
+                    + " AND (UPPER(area.name) LIKE(UPPER(%" + searchCriteria + "%)) OR UPPER(area.area_desc) LIKE(UPPER(%" + searchCriteria + "%))) group by area.gid";
+
+
+            List<UserAreaDto> userAreaDtos = newArrayList();
+
+            final Query emNativeQuery = em.createNativeQuery(queryString);
+            final List records = emNativeQuery.getResultList();
+            Iterator it = records.iterator();
+
+            WKTWriter2 wktWriter2 = new WKTWriter2();
+            WKTReader2 wktReader2 = new WKTReader2();
+            while (it.hasNext( )) {
+                final Object[] result = (Object[])it.next();
+                final String wkt = result[3].toString();
+                final Geometry geometry = wktReader2.read(wkt);
+                final Geometry envelope = geometry.getEnvelope();
+                final String wktEnvelope = wktWriter2.write(envelope);
+                userAreaDtos.add(
+                        new UserAreaDto(Integer.valueOf(result[0].toString()), result[1].toString(), result[2].toString(), wktEnvelope));
+            }
+
+            return userAreaDtos;
+
+        } catch (ParseException e) {
+            throw new ServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR.toString(), e);
+        }
+
     }
 
     @Override

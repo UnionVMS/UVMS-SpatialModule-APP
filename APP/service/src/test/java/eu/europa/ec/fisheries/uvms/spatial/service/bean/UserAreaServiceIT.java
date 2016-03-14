@@ -8,6 +8,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Coordinate;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.UserAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.UserAreaGeoJsonDto;
+import lombok.SneakyThrows;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,7 +26,8 @@ public class UserAreaServiceIT extends AbstractArquillianIT {
 	private UserAreaService userAreaService;
 	
 	@Test
-	public void testSearchUserAreaByFilter() {
+    @SneakyThrows
+    public void testSearchUserAreaByFilter() {
 		//Given
 		List<UserAreaDto> userAreas = userAreaService.searchUserAreasByCriteria("rep_power", "EC", "area", false);
 		
@@ -34,6 +36,7 @@ public class UserAreaServiceIT extends AbstractArquillianIT {
 	}
 	
 	@Test
+    @SneakyThrows
 	public void testSearchInvalidUserAreaByFilter() {
 		//Given
 		List<UserAreaDto> userAreas = userAreaService.searchUserAreasByCriteria("rep_power", "EC", "invalid", false);
