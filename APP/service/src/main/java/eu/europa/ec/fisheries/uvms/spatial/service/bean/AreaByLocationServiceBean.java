@@ -31,9 +31,7 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
     // we can not use typed entities here because tables can be made on the fly thus we don't
     // have all area type entities pre-defined
     private @PersistenceContext(unitName = "spatialPU") EntityManager em;
-
-    @EJB
-    private SpatialRepository repository;
+    private @EJB SpatialRepository repository;
 
     @Override
     @SneakyThrows
