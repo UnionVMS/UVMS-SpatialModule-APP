@@ -34,13 +34,9 @@ public interface SpatialRepository extends DAO {
 
     List<UserAreaLayerDto> findUserAreaLayerMapping();
 
-    List<Map<String, String>> findSystemAreaByFilter(String areaType, String filter);
-
     List<Map<String, String>> findSelectedAreaColumns(String namedQueryString, Number gid);
 
     List<UserAreasEntity> findUserAreaDetailsByLocation(String userName, Point point);
-
-    List<UserAreaDto> findUserAreaDetailsBySearchCriteria(String userName, String scopeName, String searchCriteria, boolean isPowerUser);
 
     FilterAreasDto filterAreas(List<String> userAreaTables, List<String> userAreaIds, List<String> scopeAreaTables, List<String> scopeAreaIds);
 

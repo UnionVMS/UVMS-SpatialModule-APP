@@ -4,17 +4,17 @@ public class PostGres extends AbstractGisFunction {
 
     @Override
     public String stIntersects(String wkt, Integer crs) {
-        return "st_intersects(geom, st_geomfromtext(CAST('" + wkt+ "' as text), " + crs + "))";
+        return "ST_Intersects(geom, ST_GeomFromText(CAST('" + wkt + "' AS " + castAsUnlimitedLength() +" ), " + crs + "))";
     }
 
     @Override
     public String stIntersects(Double latitude, Double longitude, Integer crs) {
-        return "st_intersects(geom, st_geomfromtext(CAST('POINT(" + latitude + " " + longitude + ")' as text), " + crs + "))";
+        return "ST_Intersects(geom, ST_GeomFromText(CAST('POINT(" + latitude + " " + longitude + ")' AS " + castAsUnlimitedLength() + " ), " + crs + "))";
     }
 
     @Override
-    public String stAsText(String wkt) {
-        return null;
+    public String stDistance(Double latitude, Double longitude, Integer crs) {
+        return "ST_Distance(geom, ST_GeomFromText(CAST('POINT(" + latitude + " " + longitude + ")' AS " + castAsUnlimitedLength() + "), " + crs + "))";
     }
 
     @Override
@@ -23,7 +23,12 @@ public class PostGres extends AbstractGisFunction {
     }
 
     @Override
-    public String geomToWkt() {
-        return "ST_AsText(geom)";
+    public String toWkt(String value) {
+        return "ST_AsText(" + value + ")";
+    }
+
+    @Override
+    public String isEmptyGeom() {
+        return "ST_IsEmpty(geom)";
     }
 }

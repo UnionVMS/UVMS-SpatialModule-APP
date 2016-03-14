@@ -12,7 +12,6 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.MapConfigDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.ConfigurationDto;
 import lombok.extern.slf4j.Slf4j;
-
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
@@ -30,7 +29,6 @@ import java.util.List;
 public class ConfigResource extends UnionVMSResource {
 
     private static final String DEFAULT_CONFIG = "DEFAULT_CONFIG";
-
     private static final String USER_CONFIG = "USER_CONFIG";
 
     @EJB

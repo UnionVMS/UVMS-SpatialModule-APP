@@ -16,7 +16,6 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.ClosestAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.ClosestLocationDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.FilterAreasDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.UserAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.ServiceLayerDto;
@@ -115,20 +114,12 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
         return userAreaDao.findUserAreaLayerMapping();
     }
 
-    @Override
-    public List<Map<String, String>> findSystemAreaByFilter(String areaType, String filter) {
-        return areaDao.findSystemAreaByFilter(areaType, filter);
-    }
 
     @Override
     public List<UserAreasEntity> findUserAreaDetailsByLocation(String userName, Point point) {
         return userAreaDao.findUserAreaDetailsWithGeom(userName, point);
     }
 
-    @Override
-    public List<UserAreaDto> findUserAreaDetailsBySearchCriteria(String userName, String scopeName, String searchCriteria, boolean isPowerUser) {
-        return userAreaDao.findUserAreaDetailsBySearchCriteria(userName, scopeName, searchCriteria, isPowerUser);
-    }
 
     @Override
     public List<Map<String, String>> findSelectedAreaColumns(String namedQueryString, Number gid) {

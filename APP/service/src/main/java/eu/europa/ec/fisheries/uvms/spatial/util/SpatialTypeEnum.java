@@ -13,7 +13,7 @@ public enum SpatialTypeEnum {
 	FAO("FAO", QueryNameConstants.FAO_BY_COORDINATE, FaoEntity.class),
 	PORT("PORT", PortsEntity.PORT_BY_COORDINATE, PortsEntity.class),
 	PORTAREA("PORTAREA", PortAreasEntity.PORTAREA_BY_COORDINATE, PortAreasEntity.class),
-	USERAREA("USERAREA", UserAreasEntity.USERAREA_BY_COORDINATE, QueryNameConstants.USERAREA_COLUMNS, UserAreasEntity.class);
+	USERAREA("USERAREA", UserAreasEntity.USER_AREA_BY_COORDINATE, QueryNameConstants.USERAREA_COLUMNS, UserAreasEntity.class);
 	
 	private String type;
 	private String nativeQuery;

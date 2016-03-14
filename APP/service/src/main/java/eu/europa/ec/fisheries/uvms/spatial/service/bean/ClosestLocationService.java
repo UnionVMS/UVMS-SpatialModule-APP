@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
+import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestLocationSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Location;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.ClosestLocationDto;
@@ -7,7 +8,8 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.Closest
 import java.util.List;
 
 public interface ClosestLocationService {
-    List<Location> getClosestLocations(ClosestLocationSpatialRQ request);
 
-    List<ClosestLocationDto> getClosestLocations(double lat, double lon, int crs, String unit, List<String> locationTypes);
+    List<Location> getClosestLocationByLocationType(ClosestLocationSpatialRQ request) throws ServiceException;
+
+    List<ClosestLocationDto> getClosestLocations(Double lat, Double lon, Integer crs, String unit, List<String> locationTypes) throws ServiceException;
 }

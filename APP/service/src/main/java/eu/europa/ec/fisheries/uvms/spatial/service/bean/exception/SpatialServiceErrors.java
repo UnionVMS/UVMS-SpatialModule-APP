@@ -3,7 +3,6 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean.exception;
 import java.text.MessageFormat;
 
 public enum SpatialServiceErrors {
-    //@formatter:off
 
     INTERNAL_APPLICATION_ERROR("INTERNAL_APPLICATION_ERROR", 500, "An internal application error has occurred.", "An internal application error has occurred."),
     WRONG_NATIVE_SQL_CONFIGURATION_ERROR("WRONG_NATIVE_SQL_CONFIGURATION_ERROR", 5001, "Sql Native query with name {0} does not exist.", "Wrong configuration."),
@@ -25,7 +24,6 @@ public enum SpatialServiceErrors {
     MISSING_PORT_AREA_ID("MISSING_PORT_AREA_ID", 5017, "Please specify port area id.", "Wrong argument."),
     INVALID_UPLOAD_AREA_DATA("INVALID_UPLOAD_AREA_DATA", 5018, "Invalid upload area data.", "Wrong argument."),
     INVALID_USER_AREA_ID("INVALID_USER_AREA_ID", 5019, "Invalid user area id.", "Wrong argument.");
-    //@formatter:on
 
     private final Integer errorCode;
     private final String messagePattern;
@@ -41,33 +39,6 @@ public enum SpatialServiceErrors {
         this.messagePattern = message;
         this.description = description;
         this.errorMessageCode = errorMessageCode;
-    }
-
-    public static String retrieveErrorCode(SpatialServiceException e) {
-        if (e.getError() != null) {
-            try {
-                return e.getError().getErrorCode().toString();
-            } catch (Exception var2) {
-                return "Error code cannot be resolved (Reason:" + var2.getMessage() + ")";
-            }
-        } else {
-            return null;
-        }
-    }
-
-    public static SpatialServiceErrors getErrorByErrorCode(String errorCode) {
-        SpatialServiceErrors[] arr$ = values();
-        int len$ = arr$.length;
-
-        for (int i$ = 0; i$ < len$; ++i$) {
-            SpatialServiceErrors error = arr$[i$];
-            String code = error.errorCode.toString();
-            if (code.equals(errorCode)) {
-                return error;
-            }
-        }
-
-        return null;
     }
 
     public Integer getErrorCode() {

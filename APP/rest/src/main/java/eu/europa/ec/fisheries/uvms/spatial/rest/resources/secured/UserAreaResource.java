@@ -134,7 +134,7 @@ public class UserAreaResource extends UnionVMSResource {
             if (userAreaTypeDto.getId() != null) {
                 response = getUserAreaDetailsById(userAreaTypeDto, request.getRemoteUser(), isPowerUser, scopeName);
             } else {
-                response = getUserAreaDetailsByLocation(userAreaTypeDto, request.getRemoteUser()); // FIXME native query alert
+                response = getUserAreaDetailsByLocation(userAreaTypeDto, request.getRemoteUser());
             }
         }
         catch (Exception ex){
@@ -182,7 +182,7 @@ public class UserAreaResource extends UnionVMSResource {
 
         if (!userAreaTypeDto.getIsGeom()) {
             Coordinate coordinate = areaLocationMapper.getCoordinateFromDto(userAreaTypeDto);
-            List<UserAreaDto> userAreaDetails = userAreaService.getUserAreaDetailsWithExtentByLocation(coordinate, userName);// FIXME native query
+            List<UserAreaDto> userAreaDetails = userAreaService.getUserAreaDetailsWithExtentByLocation(coordinate, userName);
             return createSuccessResponse(userAreaDetails);
         } else {
             AreaTypeEntry areaTypeEntry = AreaLocationDtoMapper.mapper().getAreaTypeEntry(userAreaTypeDto);
@@ -194,16 +194,16 @@ public class UserAreaResource extends UnionVMSResource {
 
     @POST
     @Produces({MediaType.APPLICATION_JSON})
-    @Path("/userareasbyfilter")
+    @Path("/userareasbyfilter") // TODO test with postman
     @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
-    public Response searchUserAreas(FilterType filter, @Context HttpServletRequest request, @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName) {
+    public Response searchUserAreas(FilterType filter, @Context HttpServletRequest request, @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName) throws ServiceException {
         return createSuccessResponse(userAreaService.searchUserAreasByCriteria(request.getRemoteUser(), scopeName, filter.getFilter(), isPowerUser(request)));
     }
 
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    @Path("/userareaslist")
-    public Response listUserAreas(@Context HttpServletRequest request, @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName) {
+    @Path("/userareaslist") // TODO test with postman
+    public Response listUserAreas(@Context HttpServletRequest request, @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName) throws ServiceException {
         Response response;
 
         if (request.isUserInRole(SpatialFeaturesEnum.MANAGE_USER_DEFINED_AREAS.toString())) {

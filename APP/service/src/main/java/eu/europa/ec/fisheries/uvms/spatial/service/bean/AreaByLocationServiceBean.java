@@ -84,16 +84,17 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
         return areaTypes;
     }
 
-    private List<SystemAreaDto> fetchIntersecting(Integer crs, double latitude, double longitude, PostGres function, AreaLocationTypesEntity areaType) {
+    private List<SystemAreaDto> fetchIntersecting(final Integer crs, final Double latitude, final Double longitude,
+                                                  final PostGres function, final AreaLocationTypesEntity areaType) {
         String areaDbTable = areaType.getAreaDbTable();
 
-        String queryString = "SELECT gid AS id, name, code FROM spatial." + areaDbTable +
+        String queryString = "SELECT gid, name, code FROM spatial." + areaDbTable +
                 " WHERE " + function.stIntersects(latitude, longitude, crs) + " AND enabled = 'Y'";
 
         Query emNativeQuery = em.createNativeQuery(queryString);
 
         emNativeQuery.unwrap(SQLQuery.class)
-                .addScalar("id", StandardBasicTypes.STRING)
+                .addScalar("gid", StandardBasicTypes.INTEGER)
                 .addScalar("code", StandardBasicTypes.STRING)
                 .addScalar("name", StandardBasicTypes.STRING)
                 .setResultTransformer(Transformers.aliasToBean(SystemAreaDto.class));

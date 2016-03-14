@@ -59,7 +59,7 @@ public class SearchAreaServiceBean implements SearchAreaService {
 
             GisFunction gisFunction = new PostGres();
             final String toUpperCase = filter.toUpperCase();
-            final String queryString= "SELECT gid, name, code, CAST(" + gisFunction.geomToWkt() +" AS " + gisFunction.castAsUnlimitedLength() + ")" +
+            final String queryString= "SELECT gid, name, code, CAST(" + gisFunction.toWkt("geom") +" AS " + gisFunction.castAsUnlimitedLength() + ")" +
                     " FROM spatial." + tableName + " WHERE UPPER(name) LIKE '%" + toUpperCase + "%' OR code LIKE '%" + toUpperCase + "%' GROUP BY gid";
 
             final Query emNativeQuery = em.createNativeQuery(queryString);

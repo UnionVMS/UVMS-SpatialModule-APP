@@ -6,7 +6,11 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaIdentifierType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ScopeAreasType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.UserAreasType;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.FilterAreasDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
@@ -14,19 +18,19 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialService
 import eu.europa.ec.fisheries.uvms.spatial.util.TransformUtils;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.transaction.Transactional;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 import static org.apache.commons.collections.CollectionUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Stateless
 @Local(FilterAreasService.class)
-@Transactional
 @Slf4j
 public class FilterAreasServiceBean implements FilterAreasService {
 
@@ -38,39 +42,38 @@ public class FilterAreasServiceBean implements FilterAreasService {
     @Override
     @SneakyThrows
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public FilterAreasSpatialRS filterAreas(FilterAreasSpatialRQ request) {
-        UserAreasType userAreas = request.getUserAreas();
-        ScopeAreasType scopeAreas = request.getScopeAreas();
-        validateAreas(userAreas, scopeAreas);
+    public FilterAreasSpatialRS filterAreas(final FilterAreasSpatialRQ request) {
+
+        final UserAreasType userAreas = request.getUserAreas();
+        final ScopeAreasType scopeAreas = request.getScopeAreas();
+
+        if ((userAreas == null || isEmpty(userAreas.getUserAreas()))
+                && (scopeAreas == null || isEmpty(scopeAreas.getScopeAreas()))) {
+            throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
+        }
 
         List<String> userAreaTypes = mapToStringList(userAreas, TransformUtils.EXTRACT_AREA_TYPE);
         List<String> userAreaIds = mapToStringList(userAreas, TransformUtils.EXTRACT_AREA_ID);
-
         List<String> scopeAreaTypes = mapToStringList(scopeAreas, TransformUtils.EXTRACT_AREA_TYPE);
         List<String> scopeAreaIds = mapToStringList(scopeAreas, TransformUtils.EXTRACT_AREA_ID);
 
-        Map<String, String> areaType2TableName = createAreaTableMapping(createUnionAreas(userAreaTypes, scopeAreaTypes));
+        Map<String, List<String>> parameters = ImmutableMap.<String, List<String>>builder().put(TYPE_NAMES, userAreaTypes).build();
+
+        List<AreaLocationTypesEntity> areaEntities = repository.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_TYPE_BY_NAMES, parameters);
+        Map<String, String> areaType2TableMap = createAreaType2TableMap(areaEntities);
+        validateTableNames(userAreaTypes, areaType2TableMap);
+        Map<String, String> areaType2TableName =  areaType2TableMap;
+
         List<String> userAreaTables = convertToAreaTables(userAreaTypes, areaType2TableName);
         List<String> scopeAreaTables = convertToAreaTables(scopeAreaTypes, areaType2TableName);
 
         FilterAreasDto result = repository.filterAreas(userAreaTables, userAreaIds, scopeAreaTables, scopeAreaIds);
 
-        return createResponse(result);
-    }
+        FilterAreasSpatialRS response = new FilterAreasSpatialRS();
+        response.setGeometry(result.getWktgeometry());
+        response.setCode(result.getResultcode());
+        return response;
 
-    @SneakyThrows
-    private Map<String, String> createAreaTableMapping(List<String> userAreaTypes) {
-        Map<String, List<String>> parameters = createParameters(userAreaTypes);
-        List<AreaLocationTypesEntity> areaEntities = repository.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_TYPE_BY_NAMES, parameters);
-        Map<String, String> areaType2TableMap = createAreaType2TableMap(areaEntities);
-        validateTableNames(userAreaTypes, areaType2TableMap);
-        return areaType2TableMap;
-    }
-
-    private List<String> createUnionAreas(List<String> userAreaTypes, List<String> scopeAreaTypes) {
-        Set<String> uniqueAreasSet = new HashSet(userAreaTypes);
-        uniqueAreasSet.addAll(scopeAreaTypes);
-        return Lists.newArrayList(uniqueAreasSet);
     }
 
     private List<String> convertToAreaTables(List<String> areaTypes, final Map<String, String> areaType2TableName) {
@@ -111,31 +114,6 @@ public class FilterAreasServiceBean implements FilterAreasService {
             areaType2TableName.put(areaEntity.getTypeName(), areaEntity.getAreaDbTable());
         }
         return areaType2TableName;
-    }
-
-    private Map<String, List<String>> createParameters(List<String> userAreaTypes) {
-        return ImmutableMap.<String, List<String>>builder().put(TYPE_NAMES, userAreaTypes).build();
-    }
-
-    private void validateAreas(UserAreasType userAreas, ScopeAreasType scopeAreas) {
-        if (isUserAreasEmpty(userAreas) && isScopeAreasEmpty(scopeAreas)) {
-            throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
-        }
-    }
-
-    private boolean isScopeAreasEmpty(ScopeAreasType scopeAreas) {
-        return scopeAreas == null || isEmpty(scopeAreas.getScopeAreas());
-    }
-
-    private boolean isUserAreasEmpty(UserAreasType userAreas) {
-        return userAreas == null || isEmpty(userAreas.getUserAreas());
-    }
-
-    private FilterAreasSpatialRS createResponse(FilterAreasDto result) {
-        FilterAreasSpatialRS response = new FilterAreasSpatialRS();
-        response.setGeometry(result.getWktgeometry());
-        response.setCode(result.getResultcode());
-        return response;
     }
 
 }
