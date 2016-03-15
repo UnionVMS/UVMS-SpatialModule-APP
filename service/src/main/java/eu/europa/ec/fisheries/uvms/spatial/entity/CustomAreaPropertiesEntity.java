@@ -10,8 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-// FIXME DEAD CODE also tables is db
-
 public class CustomAreaPropertiesEntity implements Serializable { // This is not an entity
 
 	@Id
