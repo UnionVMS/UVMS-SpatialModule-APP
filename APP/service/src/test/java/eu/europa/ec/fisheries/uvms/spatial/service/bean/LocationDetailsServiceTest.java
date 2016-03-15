@@ -49,7 +49,8 @@ public class LocationDetailsServiceTest {
 	 * Test Port by coordinates
 	 */
 	@Test
-	public void getPortDetailsByCoordinates() {
+    @SneakyThrows
+    public void getPortDetailsByCoordinates() {
 		setMocks(getMockedPortsEntity());
 		mockEntityByCoordinate(Arrays.asList(getMockedPortsEntity()));
 		LocationTypeEntry locationEntry = new LocationTypeEntry();
@@ -66,6 +67,7 @@ public class LocationDetailsServiceTest {
 	 * Invalid coordinate test
 	 */
 	@Test
+    @SneakyThrows
 	public void shouldReturnEmptyResponseWhenNoAreaFound() {
 		// given
 		LocationTypeEntry locationEntry = createLocationTypeEntry();
@@ -94,7 +96,8 @@ public class LocationDetailsServiceTest {
 	 * Test Port entity for valid response
 	 */
 	@Test
-	public void getPortDetailsTest() {
+    @SneakyThrows
+    public void getPortDetailsTest() {
 		setMocks(getMockedPortsEntity());	
 		LocationTypeEntry locationEntry = new LocationTypeEntry();
 		locationEntry.setId("1");
@@ -109,7 +112,8 @@ public class LocationDetailsServiceTest {
 	 * Test for invalid Entry in input
 	 */
 	@Test(expected=SpatialServiceException.class)
-	public void invalidRowTest() {
+    @SneakyThrows
+    public void invalidRowTest() {
 		setMocks(getMockedPortsEntity());		
 		LocationTypeEntry locationEntry = new LocationTypeEntry();
 		locationEntry.setId("INVALID_ROW");
@@ -120,7 +124,8 @@ public class LocationDetailsServiceTest {
 	/**
 	 * Test for non existing row in DB
 	 */
-	@Test(expected=SpatialServiceException.class)
+    @SneakyThrows
+    @Test(expected=SpatialServiceException.class)
 	public void nonExistingRowTest() {
 		setMocks(null);	
 		LocationTypeEntry locationEntry = new LocationTypeEntry();
@@ -133,7 +138,8 @@ public class LocationDetailsServiceTest {
 	 * Test for non existing row in DB
 	 */
 	@Test(expected=SpatialServiceException.class)
-	public void invalidTypeTest() {
+    @SneakyThrows
+    public void invalidTypeTest() {
 		LocationTypeEntry locationEntry = new LocationTypeEntry();
 		locationEntry.setId("1");
 		locationEntry.setLocationType("INVALID_PORT");        
