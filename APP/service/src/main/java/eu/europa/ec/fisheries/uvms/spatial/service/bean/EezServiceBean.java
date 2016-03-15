@@ -14,7 +14,6 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
-// FIXME Dead code?
 @Stateless
 @Local(EezService.class)
 @Transactional
@@ -31,14 +30,6 @@ public class EezServiceBean implements EezService {
     public EezType getEezById(EezSpatialRQ getEezSpatialRQ) {
         EezEntity eezById = repository.getEezById(Long.parseLong(getEezSpatialRQ.getEezId()));
         return mapper.eezEntityToEezType(eezById);
-    }
-
-    @Override
-    @SneakyThrows
-    @SuppressWarnings("unchecked")
-    public EezDto getEezById(int id) {
-        EezEntity eez = (EezEntity) repository.findEntityById(EezEntity.class, id);
-        return mapper.eezEntityToEezDto(eez);
     }
 
     @Override
