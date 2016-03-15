@@ -19,6 +19,7 @@ import com.vividsolutions.jts.io.ParseException;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.service.interceptor.ValidationInterceptor;
+import eu.europa.ec.fisheries.uvms.spatial.model.constants.USMSpatial;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.rest.type.geocoordinate.AreaCoordinateType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaByLocationService;
@@ -137,10 +138,10 @@ public class AreaResource extends UnionVMSResource {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/servicelayers/{layerType}")
-    public Response getServiceLayersByType(@PathParam("layerType") String layerType, @Context HttpServletRequest request) throws ServiceException {
+    public Response getServiceLayersByType(@PathParam("layerType") String layerType, @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName, @Context HttpServletRequest request) throws ServiceException {
         LayerSubTypeEnum layerTypeEnum = LayerSubTypeEnum.value(layerType);
         if (layerTypeEnum.equals(LayerSubTypeEnum.USERAREA) || layerTypeEnum.equals(LayerSubTypeEnum.AREAGROUP)) {
-            List<AreaServiceLayerDto> areaServiceLayerDtos = areaTypeService.getAllAreasLayerDescription(layerTypeEnum, request.getRemoteUser());
+            List<AreaServiceLayerDto> areaServiceLayerDtos = areaTypeService.getAllAreasLayerDescription(layerTypeEnum, request.getRemoteUser(), scopeName);
             return createSuccessResponse(areaServiceLayerDtos);
         } else {
             return createSuccessResponse(areaTypeService.getAreaLayerDescription(layerTypeEnum));

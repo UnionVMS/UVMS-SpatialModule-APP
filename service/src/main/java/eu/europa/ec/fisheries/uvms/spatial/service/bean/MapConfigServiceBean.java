@@ -247,11 +247,7 @@ public class MapConfigServiceBean implements MapConfigService {
         ConfigurationDto userConfig = getUserConfiguration(config);
         ConfigurationDto adminConfig = getAdminConfiguration(defaultConfig);
         ConfigurationDto mergedConfig = mergeUserConfiguration(adminConfig, userConfig);
-        boolean isLayersOverridden = false;
-        if (userConfig.getLayerSettings() != null) {
-            isLayersOverridden = true;
-        }
-        updateLayerSettings(mergedConfig.getLayerSettings(), userName, !isLayersOverridden);
+        updateLayerSettings(mergedConfig.getLayerSettings(), userName, false);
         return mergedConfig;
     }
 
@@ -293,7 +289,7 @@ public class MapConfigServiceBean implements MapConfigService {
         }
         ConfigurationDto defaultNodeConfig = getDefaultNodeConfiguration(configurationDto, getAdminConfiguration(adminConfig));
         if (configurationDto.getLayerSettings() != null) {
-            updateLayerSettings(defaultNodeConfig.getLayerSettings(), userName, true);
+            updateLayerSettings(defaultNodeConfig.getLayerSettings(), userName, false);
         }
         return defaultNodeConfig;
     }
@@ -371,20 +367,6 @@ public class MapConfigServiceBean implements MapConfigService {
                         layerDto.setAreaDesc(areaDto.getDesc());
                     }
                 }
-            }
-        } else if (userName != null && includeUserArea) {
-            List<AreaDto> areaDtos = repository.getAllUserAreas(userName);
-            ServiceLayerEntity serviceLayerEntity = layer.getByAreaLocationType(USER_AREA.toUpperCase());
-            for (AreaDto areaDto :  areaDtos) {
-                LayerAreaDto layerAreaDto = new LayerAreaDto();
-                layerAreaDto.setGid(areaDto.getGid());
-                layerAreaDto.setAreaName(areaDto.getName());
-                layerAreaDto.setAreaDesc(areaDto.getDesc());
-                layerAreaDto.setAreaType(AreaTypeEnum.userarea);
-                layerAreaDto.setServiceLayerId(Long.toString(serviceLayerEntity.getId()));
-                layerAreaDto.setName(serviceLayerEntity.getName());
-                layerAreaDto.setSubType(serviceLayerEntity.getSubType());
-                layers.add(layerAreaDto);
             }
         }
     }
@@ -546,9 +528,14 @@ public class MapConfigServiceBean implements MapConfigService {
                     if (layerAreaDto.getAreaType().equals(AreaTypeEnum.userarea)) {
                         List<AreaDto> userAreas = repository.findAllUserAreasByGids(Arrays.asList(layerAreaDto.getGid()));
                         layerDto.setGid((userAreas != null & !userAreas.isEmpty()) ? userAreas.get(0).getGid() : null);
-                        layerDto.setName((userAreas != null & !userAreas.isEmpty()) ? userAreas.get(0).getName() : null);
+                        layerDto.setTitle((userAreas != null & !userAreas.isEmpty()) ? userAreas.get(0).getName() : null);
+                        layerDto.setAreaType(AreaTypeEnum.userarea.getType().toUpperCase());
                     } else if (layerAreaDto.getAreaType().equals(AreaTypeEnum.areagroup)) {
                         layerDto.setCql("type=" + layerAreaDto.getAreaGroupName());
+                        layerDto.setAreaType(AreaTypeEnum.areagroup.getType().toUpperCase());
+                        layerDto.setTitle(layerAreaDto.getAreaGroupName());
+                    } else if (layerAreaDto.getAreaType().equals(AreaTypeEnum.sysarea)) {
+                        layerDto.setAreaType(AreaTypeEnum.sysarea.getType().toUpperCase());
                     }
                     layerDtoList.add(layerDto);
                 }
