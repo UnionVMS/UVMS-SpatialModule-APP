@@ -1,32 +1,11 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices;
 
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import org.geotools.feature.simple.SimpleFeatureBuilder;
-import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
-import org.geotools.referencing.crs.DefaultGeographicCRS;
-import org.opengis.feature.simple.SimpleFeature;
-import org.opengis.feature.simple.SimpleFeatureType;
 import java.math.BigInteger;
 import java.util.Date;
 
 public class EezDto {
 
-    private static final String GID = "gid";
-    private static final String GEOMETRY = "geometry";
-    private static final String NAME = "name";
-    private static final String COUNTRY = "country";
-    private static final String SOV_ID = "sovId";
-    private static final String EEZ_ID = "eezId";
-    private static final String CODE = "code";
-    private static final String MRG_ID = "mrgId";
-    private static final String AREA_M_2 = "areaM2";
-    private static final String LONGITUDE = "longitude";
-    private static final String LATITUDE = "latitude";
-    private static final String MRGID_EEZ = "mrgidEez";
-    private static final String SOVEREIGN = "sovereign";
-    private static final String REMARKS = "remarks";
-    private static final SimpleFeatureType EEZ_FEATURE = build();
     private Geometry geometry;
     private String name;
     private String country;
@@ -44,46 +23,6 @@ public class EezDto {
     private Double latitude;
     private Boolean enabled;
     private Date enabledOn;
-
-    private static SimpleFeatureType build() {
-        SimpleFeatureTypeBuilder sb = new SimpleFeatureTypeBuilder();
-        sb.setCRS(DefaultGeographicCRS.WGS84); //TODO check it
-        sb.setName("EEZ");
-        sb.add(GEOMETRY, MultiPolygon.class);
-        sb.add(GID, BigInteger.class);
-        sb.add(NAME, String.class);
-        sb.add(COUNTRY, String.class);
-        sb.add(SOV_ID, Integer.class);
-        sb.add(EEZ_ID, Integer.class);
-        sb.add(CODE, String.class);
-        sb.add(MRG_ID, BigInteger.class);
-        sb.add(AREA_M_2, Double.class);
-        sb.add(LONGITUDE, Double.class);
-        sb.add(LATITUDE, Double.class);
-        sb.add(MRGID_EEZ, Integer.class);
-        sb.add(SOVEREIGN, String.class);
-        sb.add(REMARKS, String.class);
-        return sb.buildFeatureType();
-    }
-
-    public SimpleFeature toFeature() {
-        SimpleFeatureBuilder featureBuilder = new SimpleFeatureBuilder(EEZ_FEATURE);
-        featureBuilder.set(GEOMETRY, getGeometry());
-        featureBuilder.set(GID, getGid());
-        featureBuilder.set(NAME, getName());
-        featureBuilder.set(COUNTRY, getCountry());
-        featureBuilder.set(SOV_ID, getSovId());
-        featureBuilder.set(EEZ_ID, getEezId());
-        featureBuilder.set(CODE, getCode());
-        featureBuilder.set(MRG_ID, getMrgid());
-        featureBuilder.set(AREA_M_2, getAreaM2());
-        featureBuilder.set(LONGITUDE, getLongitude());
-        featureBuilder.set(LATITUDE, getLatitude());
-        featureBuilder.set(MRGID_EEZ, getMrgidEez());
-        featureBuilder.set(SOVEREIGN, getSovereign());
-        featureBuilder.set(REMARKS, getRemarks());
-        return featureBuilder.buildFeature(String.valueOf(getEezId()));
-    }
 
     public BigInteger getGid() {
         return gid;

@@ -2,6 +2,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialRQ.AreaTypes;
+import lombok.SneakyThrows;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,6 +28,7 @@ public class ClosestAreaServiceBeanIT extends AbstractArquillianIT {
     private AreaService closestAreaService;
 
     @Test
+    @SneakyThrows
     public void testGetClosestAreas() {
         PointType pointType = new PointType();
         pointType.setLongitude(LONGITUDE);
@@ -53,6 +55,7 @@ public class ClosestAreaServiceBeanIT extends AbstractArquillianIT {
     }
 
     @Test
+    @SneakyThrows
     public void testGetClosestAreasWithTransform() {
         PointType pointType = new PointType();
         pointType.setCrs(CRS);
