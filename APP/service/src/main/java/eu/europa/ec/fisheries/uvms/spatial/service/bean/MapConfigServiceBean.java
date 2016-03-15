@@ -537,7 +537,7 @@ public class MapConfigServiceBean implements MapConfigService {
                         layerDto.setTitle((userAreas != null & !userAreas.isEmpty()) ? userAreas.get(0).getName() : null);
                         layerDto.setAreaType(AreaTypeEnum.userarea.getType().toUpperCase());
                     } else if (layerAreaDto.getAreaType().equals(AreaTypeEnum.areagroup)) {
-                        layerDto.setCql("'" + "type=" + "'" + layerAreaDto.getAreaGroupName());
+                        layerDto.setCql("type=" + "'" + layerAreaDto.getAreaGroupName() + "'");
                         layerDto.setAreaType(AreaTypeEnum.areagroup.getType().toUpperCase());
                         layerDto.setTitle(layerAreaDto.getAreaGroupName());
                     } else if (layerAreaDto.getAreaType().equals(AreaTypeEnum.sysarea)) {
