@@ -33,8 +33,8 @@ public class OracleGis extends AbstractGisFunction {
     }
 
     @Override
-    public String isEmptyGeom() {
+    public String limit(int i) {
 
-        return null;
+        return "ROWNUM <= " + i;
     }
 }

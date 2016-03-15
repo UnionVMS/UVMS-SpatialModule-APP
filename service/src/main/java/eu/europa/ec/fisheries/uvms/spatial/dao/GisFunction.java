@@ -13,6 +13,5 @@ public interface GisFunction {
 
     String toWkt(String value);
 
-    String isEmptyGeom();
-
+    String limit(int i);
 }

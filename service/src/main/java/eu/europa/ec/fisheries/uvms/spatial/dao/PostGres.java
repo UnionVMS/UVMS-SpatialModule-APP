@@ -28,7 +28,7 @@ public class PostGres extends AbstractGisFunction {
     }
 
     @Override
-    public String isEmptyGeom() {
-        return "ST_IsEmpty(geom)";
+    public String limit(int i) {
+        return "LIMIT " + i;
     }
 }

@@ -7,6 +7,7 @@ import static org.junit.Assert.fail;
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
 
+import lombok.SneakyThrows;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +23,8 @@ public class LocationDetailsServiceIT extends AbstractArquillianIT {
 	private LocationDetailsService locationDetailsService;
 	
 	@Test
-	public void getPortDetailsByCoordinates() {
+    @SneakyThrows
+    public void getPortDetailsByCoordinates() {
 		LocationTypeEntry locationEntry = new LocationTypeEntry();
 		locationEntry.setLocationType("port");
 		locationEntry.setLatitude(41.0);
@@ -65,7 +67,8 @@ public class LocationDetailsServiceIT extends AbstractArquillianIT {
 	 * Test PORT entity for valid response
 	 */
 	@Test
-	public void getPortDetailsTest() {
+    @SneakyThrows
+    public void getPortDetailsTest() {
         LocationTypeEntry locationTypeEntry = new LocationTypeEntry();
         locationTypeEntry.setLocationType("PORT");
         locationTypeEntry.setId("1");
