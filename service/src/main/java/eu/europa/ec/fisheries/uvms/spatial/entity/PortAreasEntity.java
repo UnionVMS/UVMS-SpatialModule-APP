@@ -22,7 +22,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@NamedQueries({  // FIXME check geodesic of intersects method
+@NamedQueries({
         @NamedQuery(name = PortAreasEntity.PORTAREA_BY_COORDINATE,
                 query = "FROM PortAreasEntity where intersects(geom, :shape) = true) and enabled = 'Y'"),
         @NamedQuery(name = QueryNameConstants.DISABLE_PORT_AREAS, query = "update PortAreasEntity set enabled = 'N'"),
