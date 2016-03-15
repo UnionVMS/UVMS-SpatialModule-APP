@@ -1,10 +1,10 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRS;
 
-/**
- * Created by Cegeka on 09-Oct-15.
- */
 public interface FilterAreasService {
+
     FilterAreasSpatialRS filterAreas(FilterAreasSpatialRQ filterAreasSpatialRQ);
+
 }

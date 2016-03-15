@@ -4,7 +4,6 @@ import eu.europa.ec.fisheries.uvms.spatial.rest.constants.RestConstants;
 import eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 import java.util.HashSet;
@@ -21,8 +20,7 @@ public class RestActivator extends Application {
     public RestActivator() {
         set.add(AreaResource.class);
         set.add(LocationResource.class);
-        set.add(EezResource.class);
-        set.add(EnrichmentResource.class);
+        set.add(XMLResource.class);
         set.add(ConfigResource.class);
         set.add(UserAreaResource.class);
         set.add(AreaPortResource.class);

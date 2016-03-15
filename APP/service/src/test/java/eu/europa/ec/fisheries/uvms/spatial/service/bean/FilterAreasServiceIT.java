@@ -10,6 +10,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.ejb.EJB;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import java.util.ArrayList;
 
 import static org.fest.assertions.Assertions.assertThat;
@@ -55,7 +58,7 @@ public class FilterAreasServiceIT extends AbstractArquillianIT {
 
     }
 
-    private FilterAreasSpatialRQ createRequest(AreaType areaType) {
+    private FilterAreasSpatialRQ createRequest(AreaType areaType) throws JAXBException {
         ArrayList<AreaIdentifierType> userAreaIdentifiers = Lists.newArrayList();
         userAreaIdentifiers.add(new AreaIdentifierType("1",  AreaType.EEZ));
         userAreaIdentifiers.add(new AreaIdentifierType("12",  AreaType.EEZ));
@@ -70,7 +73,18 @@ public class FilterAreasServiceIT extends AbstractArquillianIT {
         UserAreasType userAreasType = new UserAreasType(userAreaIdentifiers);
         ScopeAreasType scopeAreasType = new ScopeAreasType(scopeAreaIdentifiers);
 
-        return new FilterAreasSpatialRQ(SpatialModuleMethod.GET_FILTER_AREA, userAreasType, scopeAreasType);
+
+        FilterAreasSpatialRQ filterAreasSpatialRQ = new FilterAreasSpatialRQ(SpatialModuleMethod.GET_FILTER_AREA, userAreasType, scopeAreasType);
+
+        JAXBContext jaxbContext = JAXBContext.newInstance(FilterAreasSpatialRQ.class);
+        Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+
+        // output pretty printed
+        jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+        jaxbMarshaller.marshal(filterAreasSpatialRQ, System.out);
+
+        return filterAreasSpatialRQ;
     }
 
 }
