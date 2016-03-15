@@ -1,13 +1,9 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-
 import eu.europa.ec.fisheries.uvms.spatial.message.bean.SpatialMessageServiceBean;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageEvent;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMarshallException;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AllAreaTypesRequest;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestLocationSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRS;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.PingRQ;
@@ -38,7 +34,7 @@ public class SpatialEventServiceTest {
     @Mock
     private SpatialService areaByLocationService;
     @Mock
-    private AreaService closestAreaService;
+    private SpatialService closestAreaService;
     @Mock
     private SpatialService closestLocationService;
     @Mock
@@ -51,18 +47,6 @@ public class SpatialEventServiceTest {
     private FilterAreasServiceBean filterAreasService;
     @Mock
     private TextMessage textMessage;
-
-    @Test
-    @SneakyThrows
-    public void testGetClosestArea() {
-        SpatialMessageEvent message = new SpatialMessageEvent(textMessage, new ClosestAreaSpatialRQ());
-
-        service.getClosestArea(message);
-
-        verify(closestAreaService, times(1)).getClosestAreas(any(ClosestAreaSpatialRQ.class));
-        verify(messageProducer, times(1)).sendModuleResponseMessage(eq(textMessage), anyString());
-        verify(spatialErrorEvent, times(0)).fire(message);
-    }
 
     @Test
     public void testGetAreaTypeNames() {
