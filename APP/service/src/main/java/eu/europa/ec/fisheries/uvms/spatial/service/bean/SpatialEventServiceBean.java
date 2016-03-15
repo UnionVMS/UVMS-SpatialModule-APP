@@ -31,7 +31,7 @@ public class SpatialEventServiceBean implements SpatialEventService {
 
     @Inject @SpatialMessageErrorEvent Event<SpatialMessageEvent> spatialErrorEvent;
     private @EJB AreaByLocationService areaByLocationService;
-    private @EJB ClosestAreaService closestAreaService;
+    private @EJB AreaService areaService;
     private @EJB ClosestLocationService closestLocationService;
     private @EJB SpatialEnrichmentService enrichmentService;
     private @EJB MapConfigService mapConfigService;
@@ -72,7 +72,7 @@ public class SpatialEventServiceBean implements SpatialEventService {
     public void getClosestArea(@Observes @GetClosestAreaEvent SpatialMessageEvent message) {
         log.info("Getting closest area.");
         try {
-            List<Area> closestAreas = closestAreaService.getClosestAreas(message.getClosestAreaSpatialRQ());
+            List<Area> closestAreas = areaService.getClosestAreas(message.getClosestAreaSpatialRQ());
             log.debug("Send back closestAreas response.");
             messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapClosestAreaResponse(closestAreas));
         } catch (Exception e) {

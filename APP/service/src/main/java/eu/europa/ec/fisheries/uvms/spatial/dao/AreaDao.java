@@ -14,19 +14,13 @@ import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.ClosestAreaDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.ClosestLocationDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.FilterAreasDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.util.MeasurementUnit;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.util.SqlPropertyHolder;
 
 public class AreaDao extends CommonDao {
 
-
-    private static final String CLOSEST_AREA_QUERY = "sql.findClosestArea";
-    private static final String CLOSEST_LOCATION_QUERY = "sql.findClosestLocation";
-    private static final String FILTER_AREAS_QUERY = "sql.filterAreas";
     private static final String TABLE_NAME_PLACEHOLDER = "{tableName}";
     private static final String USER_AREA_TABLES = "userAreaTypes";
     private static final String USER_AREA_IDS = "userAreaIds";
@@ -34,23 +28,13 @@ public class AreaDao extends CommonDao {
     private static final String SCOPE_AREA_IDS = "scopeAreaIds";
     private static final String SUB_TYPE = "subTypes";
 
-    private SqlPropertyHolder propertyHolder; // FIXME remove
-
-    public AreaDao(EntityManager em, SqlPropertyHolder propertyHolder) {
+    public AreaDao(EntityManager em) {
     	super(em);
-        this.propertyHolder = propertyHolder;
     }
 
     @SuppressWarnings("unchecked")
     public List<ClosestAreaDto> findClosestArea(Point point, MeasurementUnit unit, String areaDbTable) {
-        String queryString = propertyHolder.getProperty(CLOSEST_AREA_QUERY); // FIXME native query alert
-        return executeClosest(queryString, point, unit, areaDbTable, ClosestAreaDto.class);
-    }
-
-    @SuppressWarnings("unchecked")
-    public List<ClosestLocationDto> findClosestlocation(Point point, MeasurementUnit unit, String areaDbTable) {
-        String queryString = propertyHolder.getProperty(CLOSEST_LOCATION_QUERY); // FIXME native query alert
-        return executeClosest(queryString, point, unit, areaDbTable, ClosestLocationDto.class);
+        return executeClosest(point, unit, areaDbTable, ClosestAreaDto.class);
     }
 
     public List findAreaOrLocationByCoordinates(Point point, String nativeQueryString) {
@@ -85,7 +69,8 @@ public class AreaDao extends CommonDao {
         String scopeAreaTablesString = convertToString(scopeAreaTables);
         String scopeAreaIdsString = convertToString(scopeAreaIds);
 
-        String queryString = propertyHolder.getProperty(FILTER_AREAS_QUERY); // FIXME native query alert
+        String queryString = "SELECT wkt_geometry as wktGeometry, result_code as resultCode FROM spatial.filter_geom(:userAreaTypes, :userAreaIds, :scopeAreaTypes, :scopeAreaIds)";// FIXME native query alert
+
         Query query = getSession().createSQLQuery(queryString)
                 .setParameter(USER_AREA_TABLES, userAreaTablesString)
                 .setParameter(USER_AREA_IDS, userAreaIdsString)
@@ -119,11 +104,16 @@ public class AreaDao extends CommonDao {
     }
 
 
-    private List executeClosest(String queryString, Point point, MeasurementUnit unit, String areaDbTable, Class resultClass) {
-        queryString = replaceTableName(queryString, areaDbTable);
+    private List executeClosest(Point point, MeasurementUnit unit, String areaDbTable, Class resultClass) {
+        // FIXME native query alert
+        String q = "WITH prox_query AS (SELECT CAST(gid AS text), code, name, st_closestpoint(geom, st_geomfromtext(CAST(:wktPoint as text), :crs)) as closestPoint FROM spatial.{tableName} where not ST_IsEmpty(geom) and enabled = 'Y' ORDER BY geom <#> st_geomfromtext(CAST(:wktPoint as text), :crs) limit 30) SELECT gid AS id, code, name, st_length_spheroid(st_makeline(closestPoint, st_geomfromtext(CAST(:wktPoint as text), :crs)), 'SPHEROID[\"WGS 84\",6378137,298.257223563]') /:unit AS distance FROM prox_query ORDER BY distance LIMIT 1";
+
+        String queryString = replaceTableName(q, areaDbTable);
         GeometryType geometryType = GeometryMapper.INSTANCE.geometryToWKT(point);
         int crs = point.getSRID();
         double unitRatio = unit.getRatio();
+
+
         return createSQLQuery(queryString, geometryType.getGeometry(), crs, unitRatio, resultClass).list();
     }
 

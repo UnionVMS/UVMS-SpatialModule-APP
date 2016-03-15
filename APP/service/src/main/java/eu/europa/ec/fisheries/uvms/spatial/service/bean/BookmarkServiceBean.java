@@ -19,11 +19,8 @@ import java.util.Set;
 @Slf4j
 public class BookmarkServiceBean implements BookmarkService {
 
-    @EJB
-    private SpatialRepository repository;
-
-    @EJB
-    private USMService usmService;
+    private @EJB SpatialRepository repository;
+    private @EJB USMService usmService;
 
     @Override
     public Set<Bookmark> listByUsername(String userName, String scopeName, String roleName, String applicationName) throws ServiceException {

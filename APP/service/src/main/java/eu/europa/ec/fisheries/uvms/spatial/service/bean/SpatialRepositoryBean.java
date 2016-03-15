@@ -4,8 +4,27 @@ import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.service.QueryParameter;
-import eu.europa.ec.fisheries.uvms.spatial.dao.*;
-import eu.europa.ec.fisheries.uvms.spatial.entity.*;
+import eu.europa.ec.fisheries.uvms.spatial.dao.AreaDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.AreaLocationTypesDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.BookmarkDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.CountryDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.EezDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.MapConfigDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.PortAreaDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.ProjectionDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.ReportConnectSpatialDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.RfmoDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.SysConfigDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.UserAreaJpaDao;
+import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.BookmarkEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.PortAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ProjectionEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.config.SysConfigEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.bookmark.Bookmark;
@@ -14,16 +33,13 @@ import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.ClosestAreaDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.ClosestLocationDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.FilterAreasDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.ServiceLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.util.MeasurementUnit;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.BookmarkMapper;
-import eu.europa.ec.fisheries.uvms.spatial.util.SqlPropertyHolder;
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -44,10 +60,9 @@ import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 @Stateless
 @Local(value = SpatialRepository.class)
 @TransactionAttribute(TransactionAttributeType.REQUIRED) // TODO why class level?
-public class SpatialRepositoryBean extends AbstractDAO implements SpatialRepository { //FIXME extends AbstractDao
+public class SpatialRepositoryBean extends AbstractDAO implements SpatialRepository {
 
     private @PersistenceContext(unitName = "spatialPU") EntityManager em;
-    private @EJB SqlPropertyHolder sql;
 
     private AreaDao areaDao;
     private UserAreaJpaDao userAreaDao;
@@ -69,7 +84,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
 
     @PostConstruct
     public void init() {
-        areaDao = new AreaDao(em, sql);
+        areaDao = new AreaDao(em);
         userAreaDao = new UserAreaJpaDao(em);
         countryDao = new CountryDao(em);
         mapConfigDao = new MapConfigDao(em);
@@ -81,17 +96,11 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
         portAreaDao = new PortAreaDao(em);
         rfmoDao = new RfmoDao(em);
         areaLocationTypeDao = new AreaLocationTypesDao(em);
-
     }
 
     @Override
     public List<ClosestAreaDto> findClosestArea(Point point, MeasurementUnit unit, String areaDbTable) {
         return areaDao.findClosestArea(point, unit, areaDbTable);
-    }
-
-    @Override
-    public List<ClosestLocationDto> findClosestlocation(Point point, MeasurementUnit unit, String areaDbTable) {
-        return areaDao.findClosestlocation(point, unit, areaDbTable);
     }
 
     @Override

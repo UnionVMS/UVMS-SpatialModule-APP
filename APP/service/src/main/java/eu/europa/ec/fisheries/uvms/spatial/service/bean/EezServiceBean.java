@@ -8,13 +8,13 @@ import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.EezDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.EezMapper;
 import lombok.SneakyThrows;
-
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
+// FIXME Dead code?
 @Stateless
 @Local(EezService.class)
 @Transactional

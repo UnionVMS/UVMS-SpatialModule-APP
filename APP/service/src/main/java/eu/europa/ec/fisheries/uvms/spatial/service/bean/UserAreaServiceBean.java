@@ -55,19 +55,16 @@ import static eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialUtils.conv
 public class UserAreaServiceBean implements UserAreaService {
 
     private @PersistenceContext(unitName = "spatialPU") EntityManager em;
-
-    @EJB
-    private SpatialRepository repository;
-
-    @EJB
-    private AreaTypeNamesService areaTypeNamesService;
-
-    @EJB
-    private USMService usmService;
+    private @EJB SpatialRepository repository;
+    private @EJB AreaTypeNamesService areaTypeNamesService;
+    private @EJB USMService usmService;
 
     @Override
     public long storeUserArea(UserAreaGeoJsonDto userAreaDto, String userName) throws ServiceException {
-        UserAreasEntity userAreasEntity = prepareNewEntity(userAreaDto, userName);
+
+        UserAreasEntity userAreasEntity = UserAreaMapper.mapper().fromDtoToEntity(userAreaDto);
+        userAreasEntity.setUserName(userName);
+        userAreasEntity.setCreatedOn(new Date());
 
         UserAreasEntity persistedEntity = (UserAreasEntity) repository.createEntity(userAreasEntity);
 
@@ -91,13 +88,6 @@ public class UserAreaServiceBean implements UserAreaService {
         return AreaType.USERAREA.value() + USMSpatial.DELIMITER + persistedEntity.getGid();
     }
 
-    private UserAreasEntity prepareNewEntity(UserAreaGeoJsonDto userAreaDto, String userName) {
-        UserAreasEntity userAreasEntity = UserAreaMapper.mapper().fromDtoToEntity(userAreaDto);
-        userAreasEntity.setUserName(userName);
-        userAreasEntity.setCreatedOn(new Date());
-        return userAreasEntity;
-    }
-
     @Override
     public long updateUserArea(UserAreaGeoJsonDto userAreaDto, String userName, boolean isPowerUser, String scopeName) throws ServiceException {
         Long id = userAreaDto.getId();
@@ -116,7 +106,10 @@ public class UserAreaServiceBean implements UserAreaService {
             updateUSMDataset(persistentUserArea, userAreaDto.getDatasetName());
         }
 
-        UserAreasEntity userAreasEntityToUpdate = prepareNewEntity(userAreaDto, userName);
+        UserAreasEntity userAreasEntityToUpdate = UserAreaMapper.mapper().fromDtoToEntity(userAreaDto);
+        userAreasEntityToUpdate.setUserName(userName);
+        userAreasEntityToUpdate.setCreatedOn(new Date());
+
         userAreasEntityToUpdate.setCreatedOn(persistentUserArea.getCreatedOn());
         userAreasEntityToUpdate.setGid(persistentUserArea.getGid());
         userAreasEntityToUpdate.setScopeSelection(createScopeSelection(userAreaDto, persistentUserArea));

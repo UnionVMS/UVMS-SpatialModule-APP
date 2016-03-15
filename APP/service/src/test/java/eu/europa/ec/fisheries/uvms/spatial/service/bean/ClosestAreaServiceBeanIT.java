@@ -24,7 +24,7 @@ public class ClosestAreaServiceBeanIT extends AbstractArquillianIT {
     private static final int DEFAULT_CRS = 4326;
     private static final int CRS = 3857;
     @EJB
-    private ClosestAreaService closestAreaService;
+    private AreaService closestAreaService;
 
     @Test
     public void testGetClosestAreas() {

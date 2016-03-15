@@ -18,7 +18,9 @@ import com.vividsolutions.jts.geom.Geometry;
 
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 
-public class CustomAreasEntity implements Serializable {
+// FIXME DEAD CODE also tables is db
+
+public class CustomAreasEntity implements Serializable {  // This is not an entity
 
 	@Id
 	@Column(name = "gid")

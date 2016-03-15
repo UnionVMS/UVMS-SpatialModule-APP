@@ -6,7 +6,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.Closest
 
 import java.util.List;
 
-public interface ClosestAreaService {
+public interface AreaService {
 
     List<ClosestAreaDto> getClosestAreas(double lat, double lon, int crs, String unit, List<String> areaTypes);
 
