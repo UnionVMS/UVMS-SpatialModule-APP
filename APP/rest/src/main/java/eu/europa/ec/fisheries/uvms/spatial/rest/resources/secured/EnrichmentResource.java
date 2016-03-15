@@ -14,6 +14,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
+// FIXME DEAD CODE not used
+
 @Path("/")
 @Slf4j
 @Stateless

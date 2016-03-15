@@ -135,13 +135,4 @@ public class SpatialUtils {
         return crs == DEFAULT_CRS;
     }
 
-    static String transform(Double tx, Double ty, String wkt) throws ParseException {
-
-       // AffineTransform translate = AffineTransform.getTranslateInstance(tx, ty);
-       // log.info("Translate:" + translate.toString());
-       // Geometry geometry = new WKTReader2().read(wkt);
-       // geometry.
-       // translate.transform(geometry, null);
-        return null;
-    }
 }

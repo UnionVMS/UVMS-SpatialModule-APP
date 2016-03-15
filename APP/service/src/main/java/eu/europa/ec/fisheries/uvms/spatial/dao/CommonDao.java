@@ -32,12 +32,6 @@ public abstract class CommonDao {
 		return sqlQuery;
 	}
 
-	protected SQLQuery createSQLQuery(String queryString) {
-		SQLQuery sqlQuery = getSession().createSQLQuery(queryString);
-		sqlQuery.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
-		return sqlQuery;
-	}
-
 	protected Query createNamedNativeQuery(String nativeQueryString, String wktPoint, int crs) {
 		Query query = getSession().getNamedQuery(nativeQueryString);
 		query.setParameter(WKT, wktPoint);

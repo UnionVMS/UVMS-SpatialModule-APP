@@ -23,8 +23,6 @@ public class UserAreaJpaDao extends AbstractDAO<UserAreasEntity> {
     private EntityManager em;
 
     private static final String USER_NAME = "userName";
-	private static final String CRS = "crs";
-	private static final String WKT = "wktPoint";
 	private static final String GID_LIST = "gids";
 
     public UserAreaJpaDao(EntityManager em) {
@@ -56,8 +54,7 @@ public class UserAreaJpaDao extends AbstractDAO<UserAreasEntity> {
         int crs = point.getSRID();
 		Map<String, Object> parameters = ImmutableMap.<String, Object>builder().
                 put(USER_NAME, userName).
-				put(WKT, wkt).
-				put(CRS, crs).
+				put("shape", "SRID=" + crs + ";" + wkt).
 				build();
 
         Query query = getSession().getNamedQuery(UserAreasEntity.USER_AREA_DETAILS_BY_LOCATION);

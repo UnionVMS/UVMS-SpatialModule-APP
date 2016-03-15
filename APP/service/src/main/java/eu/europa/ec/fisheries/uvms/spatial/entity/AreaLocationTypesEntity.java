@@ -23,7 +23,7 @@ import java.io.Serializable;
     @NamedQuery(name = QueryNameConstants.FIND_ALL_AREA_AND_LOCATION_TYPE_NAMES, query = "SELECT area.typeName FROM AreaLocationTypesEntity area"),
     @NamedQuery(name = QueryNameConstants.FIND_ALL_AREA_TYPE_NAMES, query = "SELECT area.typeName FROM AreaLocationTypesEntity area WHERE area.isLocation = 'N'"),
     @NamedQuery(name = QueryNameConstants.FIND_ALL_AREAS, query = "SELECT area FROM AreaLocationTypesEntity area WHERE area.isLocation = 'N'"),
-    @NamedQuery(name = QueryNameConstants.FIND_ALL_LOCATIONS, query = "SELECT area FROM AreaLocationTypesEntity area WHERE area.isLocation = 'Y'"),
+    @NamedQuery(name = AreaLocationTypesEntity.FIND_ALL_LOCATIONS, query = "FROM AreaLocationTypesEntity area WHERE area.isLocation = 'Y'"),
     @NamedQuery(name = QueryNameConstants.FIND_SYSTEM_AREAS, query = "SELECT area FROM AreaLocationTypesEntity area WHERE area.isLocation = 'N' AND area.isSystemWide = 'Y'"),
     @NamedQuery(name = QueryNameConstants.FIND_SYSTEM_LOCATIONS, query = "SELECT area FROM AreaLocationTypesEntity area WHERE area.isLocation = 'N' AND area.isSystemWide = 'Y'"),
     @NamedQuery(name = AreaLocationTypesEntity.FIND_TYPE_BY_NAME, query = "SELECT area FROM AreaLocationTypesEntity area WHERE area.typeName= :typeName"),
@@ -47,8 +47,9 @@ import java.io.Serializable;
 public class AreaLocationTypesEntity extends BaseEntity {
 
     public static final String FIND_TYPE_BY_NAME = "AreaLocationType.findAreaByName";
-	
-	@OneToOne(fetch = FetchType.LAZY)
+    public static final String FIND_ALL_LOCATIONS = "AreaLocationType.findAllLocations";
+
+    @OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "service_layer_id", nullable = false)
 	private ServiceLayerEntity serviceLayer;
 	

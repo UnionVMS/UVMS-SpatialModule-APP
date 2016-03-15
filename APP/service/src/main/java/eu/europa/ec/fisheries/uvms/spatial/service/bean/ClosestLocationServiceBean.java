@@ -8,7 +8,6 @@ import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.dao.GisFunction;
 import eu.europa.ec.fisheries.uvms.spatial.dao.PostGres;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestLocationSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Location;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationType;
@@ -49,7 +48,6 @@ public class ClosestLocationServiceBean implements ClosestLocationService {
         try {
 
             final List<Location> locations = newArrayList();
-
             final Double latitude = request.getPoint().getLatitude();
             final Double longitude = request.getPoint().getLongitude();
             final Integer crs = request.getPoint().getCrs();
@@ -173,7 +171,7 @@ public class ClosestLocationServiceBean implements ClosestLocationService {
     }
 
     private Map<String, String> getLocationType2TableNameMap() throws ServiceException {
-        List<AreaLocationTypesEntity> locations = repository.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_ALL_LOCATIONS);
+        List<AreaLocationTypesEntity> locations = repository.findEntityByNamedQuery(AreaLocationTypesEntity.class, AreaLocationTypesEntity.FIND_ALL_LOCATIONS);
         Map<String, String> locationMap = Maps.newHashMap();
         for (AreaLocationTypesEntity location : locations) {
             locationMap.put(location.getTypeName().toUpperCase(), location.getAreaDbTable());

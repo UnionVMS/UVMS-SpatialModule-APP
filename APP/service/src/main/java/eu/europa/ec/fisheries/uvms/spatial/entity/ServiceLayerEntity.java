@@ -18,8 +18,6 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.LayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.StylesDto;
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.action.internal.OrphanRemovalAction;
-import org.hibernate.annotations.Cascade;
 
 @Entity
 @Table(name = "service_layer", schema = "spatial")

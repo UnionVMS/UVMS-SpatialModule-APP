@@ -19,7 +19,7 @@ import java.util.List;
 public class SpatialEnrichmentServiceBean implements SpatialEnrichmentService {
 
     private @EJB AreaByLocationService areaByLocationService;
-    private @EJB ClosestAreaService closestAreaService;
+    private @EJB AreaService areaService;
     private @EJB ClosestLocationService closestLocationService;
 
     @Override
@@ -38,7 +38,7 @@ public class SpatialEnrichmentServiceBean implements SpatialEnrichmentService {
         closestAreaSpatialRQ.setUnit(request.getUnit());
         closestAreaSpatialRQ.setPoint(request.getPoint());
 
-        List<Area> closestAreas = closestAreaService.getClosestAreas(closestAreaSpatialRQ);
+        List<Area> closestAreas = areaService.getClosestAreas(closestAreaSpatialRQ);
 
         List<LocationType> locationTypes = request.getLocationTypes().getLocationTypes();
         ClosestLocationSpatialRQ closestLocationSpatialRQ = new ClosestLocationSpatialRQ();
@@ -77,7 +77,7 @@ public class SpatialEnrichmentServiceBean implements SpatialEnrichmentService {
     @Transactional
     public EnrichmentDto getSpatialEnrichment(double lat, double lon, int crs, String unit, List<String> areaTypes, List<String> locationTypes) throws ServiceException {
         List<SystemAreaDto> areasByLocation = areaByLocationService.getAreaTypesByLocation(lat, lon, crs);
-        List<ClosestAreaDto> closestAreas = closestAreaService.getClosestAreas(lat, lon, crs, unit, areaTypes);
+        List<ClosestAreaDto> closestAreas = areaService.getClosestAreas(lat, lon, crs, unit, areaTypes);
         List<ClosestLocationDto> closestLocations = closestLocationService.getClosestLocations(lat, lon, crs, unit, locationTypes);
         EnrichmentDto dto = new EnrichmentDto();
         dto.setAreasByLocation(areasByLocation);

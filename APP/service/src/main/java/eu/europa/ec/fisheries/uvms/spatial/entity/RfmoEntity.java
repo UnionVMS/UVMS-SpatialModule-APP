@@ -27,7 +27,7 @@ import java.util.Date;
 //@NamedNativeQuery(
 //        name = QueryNameConstants.RFMO_BY_COORDINATE,
 //        query = "select * from rfmo where st_intersects(geom, st_geomfromtext(CAST(:wktPoint as text), :crs)) and enabled = 'Y'", resultSetMapping = "implicit.rfmo")
-@NamedQueries({  // FIXME check geodesic of intersects method
+@NamedQueries({
         @NamedQuery(name = RfmoEntity.RFMO_BY_COORDINATE,
                 query = "FROM RfmoEntity WHERE intersects(geom, :shape) = true) AND enabled = 'Y'"),
         @NamedQuery(name = QueryNameConstants.RFMO_COLUMNS,

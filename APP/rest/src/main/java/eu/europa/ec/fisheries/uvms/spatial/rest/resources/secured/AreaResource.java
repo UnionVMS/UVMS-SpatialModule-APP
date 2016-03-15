@@ -2,16 +2,21 @@ package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import java.io.IOException;
 import java.util.List;
-
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import com.vividsolutions.jts.io.ParseException;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
@@ -19,6 +24,12 @@ import eu.europa.ec.fisheries.uvms.service.interceptor.ValidationInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.model.area.SystemAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.rest.type.geocoordinate.AreaCoordinateType;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaByLocationService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaDetailsService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.SearchAreaService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.UserAreaService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.AreaDetailsGeoJsonDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.type.AreaFilterType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.type.ResponseCode;
@@ -27,7 +38,6 @@ import eu.europa.ec.fisheries.uvms.spatial.rest.error.ErrorHandler;
 import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.AreaLocationDtoMapper;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ValidationUtils;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.ClosestAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaServiceLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.LayerSubTypeEnum;
@@ -38,23 +48,12 @@ import lombok.extern.slf4j.Slf4j;
 @Stateless
 public class AreaResource extends UnionVMSResource {
 
-    @EJB
-    private AreaTypeNamesService areaTypeService;
-
-    @EJB
-    private AreaByLocationService areaByLocationService;
-
-    @EJB
-    private ClosestAreaService closestAreaService;
-    
-    @EJB
-    private AreaDetailsService areaDetailsService;
-    
-	@EJB
-	private SearchAreaService searchAreaService;
-
-    @EJB
-    private UserAreaService userAreaService;
+    private @EJB AreaTypeNamesService areaTypeService;
+    private @EJB AreaByLocationService areaByLocationService;
+    private @EJB AreaService areaService;
+    private @EJB AreaDetailsService areaDetailsService;
+	private @EJB SearchAreaService searchAreaService;
+    private @EJB UserAreaService userAreaService;
     
     private AreaLocationDtoMapper mapper = AreaLocationDtoMapper.mapper();
 
@@ -102,7 +101,7 @@ public class AreaResource extends UnionVMSResource {
         try {
             log.info("Getting closest areas");
             validateInputParameters(lat, lon, areaTypes);
-            List<ClosestAreaDto> closestAreas = closestAreaService.getClosestAreas(lat, lon, crs, unit, areaTypes);
+            List<ClosestAreaDto> closestAreas = areaService.getClosestAreas(lat, lon, crs, unit, areaTypes);
             return new ResponseDto(closestAreas, ResponseCode.OK);
         } catch (Exception ex) {
             log.error("[ Error when getting closest areas. ] ", ex);
