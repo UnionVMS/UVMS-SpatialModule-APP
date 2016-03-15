@@ -73,24 +73,6 @@ public class AreaResource extends UnionVMSResource {
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
-    @Path("/areasbylocation")
-    public ResponseDto getAreasByLocation(
-            @QueryParam(value = "lat") Double lat,
-            @QueryParam(value = "lon") Double lon,
-            @DefaultValue("4326") @QueryParam(value = "crs") int crs) {
-        try {
-            log.info("Getting spatial enrichment by location");
-            ValidationUtils.validateInputParameters(lat, lon);
-            List<SystemAreaDto> areasByLocation = areaByLocationService.getAreaTypesByLocation(lat, lon, crs);
-            return new ResponseDto(areasByLocation, ResponseCode.OK);
-        } catch (Exception ex) {
-            log.error("[ Error when getting areas by location. ] ", ex);
-            return ErrorHandler.getFault(ex);
-        }
-    }
-
-    @GET
-    @Produces(value = {MediaType.APPLICATION_JSON})
     @Path("/closestareas")
     public ResponseDto closestArea(
             @QueryParam(value = "lat") Double lat,
