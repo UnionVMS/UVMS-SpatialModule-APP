@@ -52,7 +52,7 @@
 
         <feature>
             <name>MANAGE_REFERENCE_DATA</name>
-            <description>Allows you to manage reference data.</description>
+            <description>Allows you to manage reference data/system areas.</description>
             <group>${spatial.name}</group>
         </feature>
 
