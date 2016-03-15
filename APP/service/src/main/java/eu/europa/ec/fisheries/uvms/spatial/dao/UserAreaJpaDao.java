@@ -23,6 +23,9 @@ public class UserAreaJpaDao extends AbstractDAO<UserAreasEntity> {
     private EntityManager em;
 
     private static final String USER_NAME = "userName";
+    private static final String SCOPE_NAME = "scopeName";
+	private static final String CRS = "crs";
+	private static final String WKT = "wktPoint";
 	private static final String GID_LIST = "gids";
 
     public UserAreaJpaDao(EntityManager em) {
@@ -64,15 +67,15 @@ public class UserAreaJpaDao extends AbstractDAO<UserAreasEntity> {
         return query.list();
 	}
 
-    public List<AreaDto> getAllUserAreas(String userName) {
-		Map<String, Object> parameters = ImmutableMap.<String, Object>builder().put(USER_NAME, userName).build();
+    public List<AreaDto> getAllUserAreas(String userName, String scopeName) {
+		Map<String, Object> parameters = ImmutableMap.<String, Object>builder().put(USER_NAME, userName).put(SCOPE_NAME, scopeName).build();
         Query query = createNamedNativeQuery(QueryNameConstants.FIND_ALL_USER_AREAS, parameters);
         query.setResultTransformer(Transformers.aliasToBean(AreaDto.class));
         return query.list();
 	}
 
-    public List<AreaDto> getAllUserAreaGroupName(String userName) {
-        Map<String, Object> parameters = ImmutableMap.<String, Object>builder().put(USER_NAME, userName).build();
+    public List<AreaDto> getAllUserAreaGroupName(String userName, String scopeName) {
+        Map<String, Object> parameters = ImmutableMap.<String, Object>builder().put(USER_NAME, userName).put(SCOPE_NAME, scopeName).build();
         Query query = createNamedNativeQuery(QueryNameConstants.FIND_ALL_USER_AREAS_GROUP, parameters);
         query.setResultTransformer(Transformers.aliasToBean(AreaDto.class));
         return query.list();

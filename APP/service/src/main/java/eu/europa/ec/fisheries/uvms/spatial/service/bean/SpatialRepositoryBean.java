@@ -242,13 +242,13 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     }
 
     @Override
-    public List<AreaDto> getAllUserAreas(String userName) {
-        return userAreaDao.getAllUserAreas(userName);
+    public List<AreaDto> getAllUserAreas(String userName, String scopeName) {
+        return userAreaDao.getAllUserAreas(userName, scopeName);
     }
 
     @Override
-    public List<AreaDto> getAllUserAreaGroupNames(String userName) {
-        return userAreaDao.getAllUserAreaGroupName(userName);
+    public List<AreaDto> getAllUserAreaGroupNames(String userName, String scopeName) {
+        return userAreaDao.getAllUserAreaGroupName(userName, scopeName);
     }
 
     @Override

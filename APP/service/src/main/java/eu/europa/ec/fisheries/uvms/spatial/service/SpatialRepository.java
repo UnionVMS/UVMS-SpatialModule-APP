@@ -64,9 +64,9 @@ public interface SpatialRepository extends DAO {
 
     List<ServiceLayerDto> findServiceLayerBySubType(List<String> subAreaTypes, boolean isWithBing);
 
-    List<AreaDto> getAllUserAreas(String userName);
+    List<AreaDto> getAllUserAreas(String userName, String scopeName);
 
-    List<AreaDto> getAllUserAreaGroupNames(String userName);
+    List<AreaDto> getAllUserAreaGroupNames(String userName, String scopeName);
 
     List<AreaDto> findAllUserAreasByGids(List<Long> gids);
 

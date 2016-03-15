@@ -8,6 +8,7 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
         "type",
+        "areaType",
         "groupType",
         "title",
         "isBaseLayer",
@@ -24,6 +25,9 @@ public class LayerDto {
 
     @JsonProperty("type")
     private String type;
+
+    @JsonProperty("areaType")
+    private String areaType;
 
     @JsonProperty("title")
     private String title;
@@ -54,10 +58,6 @@ public class LayerDto {
 
     @JsonProperty("name")
     private String name;
-
-/*
-    @JsonProperty("areas")
-    private List<AreaDto> areaDto;*/
 
     @JsonProperty("apiKey")
     private String apiKey;
@@ -198,5 +198,15 @@ public class LayerDto {
     @JsonProperty("cql")
     public void setCql(String cql) {
         this.cql = cql;
+    }
+
+    @JsonProperty("areaType")
+    public String getAreaType() {
+        return areaType;
+    }
+
+    @JsonProperty("areaType")
+    public void setAreaType(String areaType) {
+        this.areaType = areaType;
     }
 }

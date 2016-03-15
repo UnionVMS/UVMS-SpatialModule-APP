@@ -40,7 +40,8 @@ import java.util.Set;
         @NamedQuery(name = QueryNameConstants.USERAREA_COLUMNS,
 				query = "select userArea.name as name, userArea.areaDesc as desc from UserAreasEntity AS userArea WHERE userArea.gid =:gid"),
 		@NamedQuery(name = QueryNameConstants.FIND_ALL_USER_AREAS,
-				query = "SELECT area.gid as gid, area.name as name, area.areaDesc as desc FROM UserAreasEntity area WHERE area.userName = :userName"),
+				query = "SELECT DISTINCT area.gid as gid, area.name as name, area.areaDesc as desc FROM UserAreasEntity area " +
+                        "LEFT JOIN area.scopeSelection scope WHERE area.userName = :userName OR scope.name = :scopeName"),
         @NamedQuery(name = QueryNameConstants.FIND_ALL_USER_AREAS_BY_GIDS,
                 query = "SELECT area.gid as gid, area.name as name, area.areaDesc as desc FROM UserAreasEntity area WHERE area.gid IN (:gids)"),
         @NamedQuery(name = QueryNameConstants.FIND_USER_AREA_TYPES,
@@ -48,7 +49,8 @@ import java.util.Set;
         @NamedQuery(name = QueryNameConstants.FIND_USER_AREA_BY_TYPE,
                 query = "SELECT area FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection WHERE area.type = :type AND ((1=:isPowerUser) OR (area.userName=:userName OR scopeSelection.name=:scopeName)) GROUP BY area.gid"),
         @NamedQuery(name = QueryNameConstants.FIND_ALL_USER_AREAS_GROUP,
-                query = "SELECT distinct(area.type) as name FROM UserAreasEntity area WHERE area.userName = :userName AND area.type IS NOT NULL AND area.type IS NOT EMPTY")
+                query = "SELECT distinct area.gid as gid, area.type as name, area.areaDesc as desc FROM UserAreasEntity area " +
+                        "LEFT JOIN area.scopeSelection scope WHERE (area.userName = :userName OR (scope.name = :scopeName AND scope.userAreas = area))")
         })
 //@NamedNativeQueries({
 //        @NamedNativeQuery(
