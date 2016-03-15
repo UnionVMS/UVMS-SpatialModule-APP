@@ -50,7 +50,20 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
 
         for (AreaLocationTypesEntity areaType : systemAreaTypes) {
 
-            List<SystemAreaDto> resultList = fetchIntersecting(crs, latitude, longitude, function, areaType);
+            String areaDbTable = areaType.getAreaDbTable();
+
+            String queryString = "SELECT gid, name, code FROM spatial." + areaDbTable +
+                    " WHERE " + function.stIntersects(latitude, longitude, crs) + " AND enabled = 'Y'";
+
+            Query emNativeQuery = em.createNativeQuery(queryString);
+
+            emNativeQuery.unwrap(SQLQuery.class)
+                    .addScalar("gid", StandardBasicTypes.INTEGER)
+                    .addScalar("code", StandardBasicTypes.STRING)
+                    .addScalar("name", StandardBasicTypes.STRING)
+                    .setResultTransformer(Transformers.aliasToBean(SystemAreaDto.class));
+
+            List<SystemAreaDto> resultList = emNativeQuery.getResultList();
 
             for (SystemAreaDto area : resultList) {
                 AreaExtendedIdentifierType areaIdentifier = new AreaExtendedIdentifierType(String.valueOf(area.getGid()), AreaType.valueOf(areaType.getTypeName()), area.getCode(), area.getName());
@@ -60,45 +73,4 @@ public class AreaByLocationServiceBean implements AreaByLocationService {
         return areaTypes;
     }
 
-    @Override
-    @Transactional
-    @SneakyThrows
-    public List<SystemAreaDto> getAreaTypesByLocation(final Double latitude, final Double longitude, final Integer crs) {
-
-        List<AreaLocationTypesEntity> systemAreaTypes = repository.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_SYSTEM_AREAS);
-
-        List<SystemAreaDto> areaTypes = Lists.newArrayList();
-
-        PostGres function = new PostGres();
-
-        for (AreaLocationTypesEntity areaType : systemAreaTypes) {
-
-            List<SystemAreaDto> resultList = fetchIntersecting(crs, latitude, longitude, function, areaType);
-
-            for (SystemAreaDto area : resultList) {
-                area.setAreaType(areaType.getTypeName());
-                areaTypes.add(area);
-            }
-        }
-
-        return areaTypes;
-    }
-
-    private List<SystemAreaDto> fetchIntersecting(final Integer crs, final Double latitude, final Double longitude,
-                                                  final PostGres function, final AreaLocationTypesEntity areaType) {
-        String areaDbTable = areaType.getAreaDbTable();
-
-        String queryString = "SELECT gid, name, code FROM spatial." + areaDbTable +
-                " WHERE " + function.stIntersects(latitude, longitude, crs) + " AND enabled = 'Y'";
-
-        Query emNativeQuery = em.createNativeQuery(queryString);
-
-        emNativeQuery.unwrap(SQLQuery.class)
-                .addScalar("gid", StandardBasicTypes.INTEGER)
-                .addScalar("code", StandardBasicTypes.STRING)
-                .addScalar("name", StandardBasicTypes.STRING)
-                .setResultTransformer(Transformers.aliasToBean(SystemAreaDto.class));
-
-        return emNativeQuery.getResultList();
-    }
 }
