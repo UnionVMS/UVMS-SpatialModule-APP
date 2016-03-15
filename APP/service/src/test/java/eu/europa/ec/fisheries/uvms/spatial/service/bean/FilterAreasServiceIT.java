@@ -26,7 +26,7 @@ public class FilterAreasServiceIT extends AbstractArquillianIT {
     private static final String NOT_EXISTING_TYPE = "NOT_EXISTING_TYPE";
 
     @EJB
-    private FilterAreasService filterAreasService;
+    private SpatialService filterAreasService;
 
     @Test
     public void shouldReturnMergedAreaAndSkipNotExisting() throws Exception {

@@ -17,7 +17,6 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRS;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Location;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRS;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.FilterAreasService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialEnrichmentService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialService;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +36,6 @@ import java.util.List;
 public class XMLResource {
 
     private @EJB SpatialEnrichmentService enrichmentService;
-    private @EJB FilterAreasService filterAreasService;
     private @EJB SpatialService spatialService;
 
     @POST
@@ -50,14 +48,13 @@ public class XMLResource {
 
     }
 
-
     @POST
     @Produces(value = {MediaType.APPLICATION_XML})
     @Consumes(value = {MediaType.APPLICATION_XML})
     @Path("/filter-areas")
-    public FilterAreasSpatialRS filterAreas(FilterAreasSpatialRQ request){
+    public FilterAreasSpatialRS filterAreas(FilterAreasSpatialRQ request) throws ServiceException {
 
-        return  filterAreasService.filterAreas(request);
+        return  spatialService.filterAreas(request);
 
     }
 
