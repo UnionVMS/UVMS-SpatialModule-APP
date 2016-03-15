@@ -50,6 +50,8 @@ public interface SpatialRepository extends DAO {
 
     ReportConnectSpatialEntity findReportConnectSpatialBy(Long reportId) throws ServiceException;
 
+    ReportConnectSpatialEntity findReportConnectSpatialByConnectId(final Long id) throws ServiceException;
+
     boolean saveOrUpdateMapConfiguration(ReportConnectSpatialEntity mapConfiguration) throws ServiceException;
 
     void updateSystemConfigs(List<SysConfigEntity> sysConfigs);
