@@ -47,7 +47,7 @@ public class AreaDetailsServiceTest {
     @SneakyThrows
     @Ignore("WILL FIX LATER")
     public void getEezDetailsByCoordinates() {
-        List<AreaLocationTypesEntity> areaEntities = new ArrayList<AreaLocationTypesEntity>();
+        List<AreaLocationTypesEntity> areaEntities = new ArrayList<>();
         areaEntities.add(getMockAreaTypeEntity(AreaType.EEZ.value(), true));
         EezEntity eezEntity = getMockedEezEntity();
         mockCrudServiceBean(areaEntities, eezEntity);
@@ -201,7 +201,7 @@ public class AreaDetailsServiceTest {
         eezEntity.setCountry("Belgium");
         eezEntity.setDateChang(String.valueOf(new Date().getTime()));
         eezEntity.setName(AreaType.EEZ.value());
-        eezEntity.setEezId(new Long(123));
+        eezEntity.setEezId((long) 123);
         eezEntity.setGeom(new GeometryBuilder().point());
         eezEntity.setGid(1);
         eezEntity.setCode("iso3digit");

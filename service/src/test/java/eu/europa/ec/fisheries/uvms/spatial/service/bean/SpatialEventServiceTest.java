@@ -64,6 +64,7 @@ public class SpatialEventServiceTest {
     }
 
     @Test
+    @SneakyThrows
     public void testGetClosestArea() {
         SpatialMessageEvent message = new SpatialMessageEvent(textMessage, new ClosestAreaSpatialRQ());
 
