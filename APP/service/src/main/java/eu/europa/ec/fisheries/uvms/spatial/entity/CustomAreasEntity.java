@@ -18,8 +18,6 @@ import com.vividsolutions.jts.geom.Geometry;
 
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 
-// FIXME DEAD CODE also tables is db
-
 public class CustomAreasEntity implements Serializable {  // This is not an entity
 
 	@Id
