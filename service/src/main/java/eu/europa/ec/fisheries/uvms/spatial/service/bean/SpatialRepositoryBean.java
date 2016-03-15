@@ -184,6 +184,16 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
 
     @Override
     @Transactional
+    public ReportConnectSpatialEntity findReportConnectSpatialByConnectId(final Long id) throws ServiceException {
+        List<ReportConnectSpatialEntity> list = reportConnectSpatialDao.findReportConnectSpatialByConnectId(id);
+        if (list != null && !list.isEmpty()) {
+            return list.get(0);
+        }
+        return null;
+    }
+
+    @Override
+    @Transactional
     public boolean saveOrUpdateMapConfiguration(final ReportConnectSpatialEntity mapConfiguration) throws ServiceException {
         validateMapConfiguration(mapConfiguration);
         return reportConnectSpatialDao.saveOrUpdateEntity(mapConfiguration) != null;

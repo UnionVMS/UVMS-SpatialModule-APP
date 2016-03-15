@@ -36,6 +36,8 @@ import javax.persistence.Table;
 				query = "from ReportConnectSpatialEntity where reportId = :reportId"),
 		@NamedQuery(name = QueryNameConstants.FIND_BY_ID,
 				query = "from ReportConnectSpatialEntity where reportId = :reportId and id = :id"),
+		@NamedQuery(name = ReportConnectSpatialEntity.FIND_BY_REPORT_CONNECT_ID,
+				query = "from ReportConnectSpatialEntity where id = :id"),
         @NamedQuery(name = ReportConnectSpatialEntity.DELETE_BY_ID_LIST,
                 query = "DELETE FROM ReportConnectSpatialEntity where id in :idList")
 })
@@ -43,6 +45,8 @@ import javax.persistence.Table;
 public class ReportConnectSpatialEntity implements Serializable {
 
     public static final String DELETE_BY_ID_LIST = "reportConnectSpatialEntity.deleteByIdList";
+
+	public static final String FIND_BY_REPORT_CONNECT_ID = "reportConnectSpatialEntity.findByReportConnectId";
 
     @Id
 	@Column(name = "id")
