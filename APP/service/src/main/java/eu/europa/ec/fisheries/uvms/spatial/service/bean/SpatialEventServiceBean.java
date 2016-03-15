@@ -16,7 +16,16 @@ import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageEvent;
 import eu.europa.ec.fisheries.uvms.spatial.model.FaultCode;
 import eu.europa.ec.fisheries.uvms.spatial.model.mapper.SpatialModuleMapper;
 import eu.europa.ec.fisheries.uvms.spatial.model.mapper.SpatialModuleResponseMapper;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Area;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaExtendedIdentifierType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Location;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.PingRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialDeleteMapConfigurationRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialGetMapConfigurationRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveOrUpdateMapConfigurationRS;
 import lombok.extern.slf4j.Slf4j;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -34,7 +43,6 @@ public class SpatialEventServiceBean implements SpatialEventService {
     private @EJB SpatialEnrichmentService enrichmentService;
     private @EJB MapConfigService mapConfigService;
     private @EJB AreaTypeNamesService areaTypeNamesService;
-    private @EJB FilterAreasService filterAreasService;
     private @EJB SpatialMessageServiceBean messageProducer;
 
     @Override
@@ -120,7 +128,7 @@ public class SpatialEventServiceBean implements SpatialEventService {
         log.info("Getting Filter Areas");
         try {
             FilterAreasSpatialRQ filterAreaSpatialRQ = message.getFilterAreasSpatialRQ();
-            FilterAreasSpatialRS filterAreasSpatialRS = filterAreasService.filterAreas(filterAreaSpatialRQ);
+            FilterAreasSpatialRS filterAreasSpatialRS = spatialService.filterAreas(filterAreaSpatialRQ);
             log.debug("Send back filtered Areas");
             messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapFilterAreasResponse(filterAreasSpatialRS));
         } catch (Exception e) {

@@ -1,5 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
+import com.google.common.base.Function;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.vividsolutions.jts.geom.Geometry;
@@ -14,11 +16,13 @@ import eu.europa.ec.fisheries.uvms.spatial.model.area.SystemAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.ClosestAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.FilterAreasDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.util.MeasurementUnit;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.geotools.geometry.jts.WKTReader2;
 import org.geotools.referencing.GeodeticCalculator;
 import org.hibernate.SQLQuery;
@@ -31,19 +35,23 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialUtils.convertToPointInWGS84;
+import static org.apache.commons.collections.CollectionUtils.isEmpty;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
+/**
+ * This class groups all the spatial operations on the spatial database.
+ */
 @Stateless
 @Local(SpatialService.class)
 @Transactional
 @Slf4j
 public class SpatialServiceBean implements SpatialService {
+
+    private static final String TYPE_NAMES = "typeNames";
 
     private @PersistenceContext(unitName = "spatialPU") EntityManager em;
     private @EJB SpatialRepository repository;
@@ -179,8 +187,8 @@ public class SpatialServiceBean implements SpatialService {
             areaType2TableName.put(area.getTypeName().toUpperCase(), area.getAreaDbTable());
         }
 
-
         List<Area> closestAreas = newArrayList();
+
         for (AreaType areaType : request.getAreaTypes().getAreaTypes()) {
             if (areaType!= null) {
                 String areaDbTable = areaType2TableName.get(areaType.value());
@@ -192,6 +200,7 @@ public class SpatialServiceBean implements SpatialService {
                 }
 
                 ClosestAreaDto closestAreaDto = closestAreaList.get(0);
+
                 if (closestAreaDto != null) {
                     Area closestAreaEntry = new Area();
                     closestAreaEntry.setId(closestAreaDto.getId());
@@ -206,6 +215,95 @@ public class SpatialServiceBean implements SpatialService {
         }
 
         return closestAreas;
+    }
+
+    @Override
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
+    public FilterAreasSpatialRS filterAreas(final FilterAreasSpatialRQ request) throws ServiceException {
+
+        final UserAreasType userAreas = request.getUserAreas();
+        final ScopeAreasType scopeAreas = request.getScopeAreas();
+
+        if ((userAreas == null || isEmpty(userAreas.getUserAreas()))
+                && (scopeAreas == null || isEmpty(scopeAreas.getScopeAreas()))) {
+            throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
+        }
+
+        Function<AreaIdentifierType, String> extractAreaType = new Function<AreaIdentifierType, String>() {
+
+            @Override
+            public String apply(AreaIdentifierType area) {
+                if (area != null && area.getAreaType() != null) {
+                    return area.getAreaType().toString().toUpperCase();
+                }
+                return StringUtils.EMPTY;
+            }
+        };
+
+        Function<AreaIdentifierType, String> extractAreaId = new Function<AreaIdentifierType, String>() {
+
+            @Override
+            public String apply(AreaIdentifierType area) {
+
+                if (area != null) {
+                    return area.getId();
+                }
+                return StringUtils.EMPTY;
+            }
+        };
+
+        List<String> userAreaTypes = Collections.emptyList();
+        List<String> userAreaIds = Collections.emptyList();
+        List<String> scopeAreaTypes = Collections.emptyList();
+        List<String> scopeAreaIds = Collections.emptyList();
+
+        if (userAreas != null) {
+            userAreaTypes = Lists.transform(userAreas.getUserAreas(), extractAreaType);
+            userAreaIds = Lists.transform(userAreas.getUserAreas(), extractAreaId);
+        }
+        if (scopeAreas != null) {
+            scopeAreaTypes = Lists.transform(scopeAreas.getScopeAreas(), extractAreaType);
+            scopeAreaIds = Lists.transform(scopeAreas.getScopeAreas(), extractAreaId);
+        }
+
+        Map<String, List<String>> parameters = ImmutableMap.<String, List<String>>builder().put(TYPE_NAMES, userAreaTypes).build();
+
+        List<AreaLocationTypesEntity> areaEntities = repository.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_TYPE_BY_NAMES, parameters);
+
+        final Map<String, String> areaType2TableName = Maps.newHashMap();
+        for (AreaLocationTypesEntity areaEntity : areaEntities) {
+            areaType2TableName.put(areaEntity.getTypeName(), areaEntity.getAreaDbTable());
+        }
+
+        for (String areaType : userAreaTypes) {
+            String userAreaTableName = areaType2TableName.get(areaType);
+            if (isBlank(userAreaTableName)) {
+                throw new SpatialServiceException(SpatialServiceErrors.INVALID_AREA_TYPE, areaType);
+            }
+        }
+
+        List<String> userAreaTables = Lists.transform(userAreaTypes, new Function<String, String>() {
+            @Override
+            public String apply(String areaType) {
+                return areaType2TableName.get(areaType);
+            }
+        });
+
+        List<String> scopeAreaTables = Lists.transform(scopeAreaTypes, new Function<String, String>() {
+            @Override
+            public String apply(String areaType) {
+                return areaType2TableName.get(areaType);
+            }
+        });
+
+        // FIXME Oracle problem
+        FilterAreasDto result = repository.filterAreas(userAreaTables, userAreaIds, scopeAreaTables, scopeAreaIds);
+
+        FilterAreasSpatialRS response = new FilterAreasSpatialRS();
+        response.setGeometry(result.getWktgeometry());
+        response.setCode(result.getResultcode());
+        return response;
+
     }
 
 

@@ -44,7 +44,7 @@ public class SpatialEventServiceTest {
     @Mock
     private SpatialMessageServiceBean messageProducer;
     @Mock
-    private FilterAreasServiceBean filterAreasService;
+    private SpatialService filterAreasService;
     @Mock
     private TextMessage textMessage;
 
@@ -83,18 +83,6 @@ public class SpatialEventServiceTest {
         verify(enrichmentService, times(1)).getSpatialEnrichment(any(SpatialEnrichmentRQ.class));
         verify(messageProducer, times(0)).sendModuleResponseMessage(eq(textMessage), anyString());
         verify(spatialErrorEvent, times(1)).fire(any(SpatialMessageEvent.class));
-    }
-
-    @Test
-    public void testGetFilterAreas() {
-        SpatialMessageEvent message = new SpatialMessageEvent(textMessage, new FilterAreasSpatialRQ());
-        when(filterAreasService.filterAreas(any(FilterAreasSpatialRQ.class))).thenReturn(new FilterAreasSpatialRS());
-
-        service.getFilterAreas(message);
-
-        verify(filterAreasService, times(1)).filterAreas(any(FilterAreasSpatialRQ.class));
-        verify(messageProducer, times(1)).sendModuleResponseMessage(eq(textMessage), anyString());
-        verify(spatialErrorEvent, times(0)).fire(message);
     }
 
     @Test
