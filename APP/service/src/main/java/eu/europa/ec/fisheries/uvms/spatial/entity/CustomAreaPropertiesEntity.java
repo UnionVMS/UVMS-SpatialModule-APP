@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-public class CustomAreaPropertiesEntity implements Serializable { // This is not an entity
+public class CustomAreaPropertiesEntity implements Serializable {
 
 	@Id
 	@Column(name = "id")

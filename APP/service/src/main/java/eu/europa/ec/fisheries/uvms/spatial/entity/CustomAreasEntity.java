@@ -18,7 +18,7 @@ import com.vividsolutions.jts.geom.Geometry;
 
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 
-public class CustomAreasEntity implements Serializable {  // This is not an entity
+public class CustomAreasEntity implements Serializable {
 
 	@Id
 	@Column(name = "gid")
