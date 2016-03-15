@@ -32,9 +32,18 @@ public class AreaDao extends CommonDao {
     	super(em);
     }
 
-    @SuppressWarnings("unchecked")
     public List<ClosestAreaDto> findClosestArea(Point point, MeasurementUnit unit, String areaDbTable) {
-        return executeClosest(point, unit, areaDbTable, ClosestAreaDto.class);
+
+        // FIXME native query alert
+        String q = "WITH prox_query AS (SELECT CAST(gid AS text), code, name, st_closestpoint(geom, st_geomfromtext(CAST(:wktPoint as text), :crs)) as closestPoint FROM spatial.{tableName} where not ST_IsEmpty(geom) and enabled = 'Y' ORDER BY geom <#> st_geomfromtext(CAST(:wktPoint as text), :crs) limit 30) SELECT gid AS id, code, name, st_length_spheroid(st_makeline(closestPoint, st_geomfromtext(CAST(:wktPoint as text), :crs)), 'SPHEROID[\"WGS 84\",6378137,298.257223563]') /:unit AS distance FROM prox_query ORDER BY distance LIMIT 1";
+
+        String queryString = q.replace(TABLE_NAME_PLACEHOLDER, areaDbTable);
+        GeometryType geometryType = GeometryMapper.INSTANCE.geometryToWKT(point);
+        int crs = point.getSRID();
+        double unitRatio = unit.getRatio();
+
+        return createSQLQuery(queryString, geometryType.getGeometry(), crs, unitRatio, ClosestAreaDto.class).list();
+
     }
 
     public List findAreaOrLocationByCoordinates(Point point, String nativeQueryString) {
@@ -69,7 +78,8 @@ public class AreaDao extends CommonDao {
         String scopeAreaTablesString = convertToString(scopeAreaTables);
         String scopeAreaIdsString = convertToString(scopeAreaIds);
 
-        String queryString = "SELECT wkt_geometry as wktGeometry, result_code as resultCode FROM spatial.filter_geom(:userAreaTypes, :userAreaIds, :scopeAreaTypes, :scopeAreaIds)";// FIXME native query alert
+        // FIXME native query alert
+        String queryString = "SELECT wkt_geometry as wktGeometry, result_code as resultCode FROM spatial.filter_geom(:userAreaTypes, :userAreaIds, :scopeAreaTypes, :scopeAreaIds)";
 
         Query query = getSession().createSQLQuery(queryString)
                 .setParameter(USER_AREA_TABLES, userAreaTablesString)
@@ -102,25 +112,6 @@ public class AreaDao extends CommonDao {
             throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
         }
     }
-
-
-    private List executeClosest(Point point, MeasurementUnit unit, String areaDbTable, Class resultClass) {
-        // FIXME native query alert
-        String q = "WITH prox_query AS (SELECT CAST(gid AS text), code, name, st_closestpoint(geom, st_geomfromtext(CAST(:wktPoint as text), :crs)) as closestPoint FROM spatial.{tableName} where not ST_IsEmpty(geom) and enabled = 'Y' ORDER BY geom <#> st_geomfromtext(CAST(:wktPoint as text), :crs) limit 30) SELECT gid AS id, code, name, st_length_spheroid(st_makeline(closestPoint, st_geomfromtext(CAST(:wktPoint as text), :crs)), 'SPHEROID[\"WGS 84\",6378137,298.257223563]') /:unit AS distance FROM prox_query ORDER BY distance LIMIT 1";
-
-        String queryString = replaceTableName(q, areaDbTable);
-        GeometryType geometryType = GeometryMapper.INSTANCE.geometryToWKT(point);
-        int crs = point.getSRID();
-        double unitRatio = unit.getRatio();
-
-
-        return createSQLQuery(queryString, geometryType.getGeometry(), crs, unitRatio, resultClass).list();
-    }
-
-    private String replaceTableName(String queryString, String tableName) {
-        return queryString.replace(TABLE_NAME_PLACEHOLDER, tableName);
-    }
-
 
     public List<String> listAreaGroups(String userName, String scopeName, boolean isPowerUser) {
         QueryParameter params =  QueryParameter.with("userName", userName).and("scopeName", scopeName).and("isPowerUser", isPowerUser);
