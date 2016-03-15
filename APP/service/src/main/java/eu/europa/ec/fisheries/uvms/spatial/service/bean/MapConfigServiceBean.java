@@ -70,7 +70,13 @@ public class MapConfigServiceBean implements MapConfigService {
     @Transactional(Transactional.TxType.REQUIRES_NEW) // annotation required to send error response
     public void handleDeleteMapConfiguration(SpatialDeleteMapConfigurationRQ request) throws ServiceException {
         SpatialValidator.validate(request);
-        repository.deleteBy(request.getSpatialConnectIds());
+        for (Long id : request.getSpatialConnectIds()) {
+            ReportConnectSpatialEntity entity = repository.findReportConnectSpatialByConnectId(id);
+            if (entity != null) {
+                repository.deleteReportConnectServiceAreas(entity.getReportConnectServiceAreases());
+                repository.deleteEntity(entity);
+            }
+        }
     }
 
     @Override

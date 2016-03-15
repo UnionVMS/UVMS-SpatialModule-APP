@@ -30,6 +30,10 @@ public class ReportConnectSpatialDao extends AbstractDAO<ReportConnectSpatialEnt
         );
     }
 
+    public List<ReportConnectSpatialEntity> findReportConnectSpatialByConnectId(Long id) throws ServiceException {
+        return findEntityByNamedQuery(ReportConnectSpatialEntity.class, ReportConnectSpatialEntity.FIND_BY_REPORT_CONNECT_ID, with("id", id).parameters(), 1);
+    }
+
     public List<ReportConnectSpatialEntity> findReportConnectSpatialById(Long reportId, Long id) throws ServiceException {
         return findEntityByNamedQuery(
                 ReportConnectSpatialEntity.class, QueryNameConstants.FIND_BY_ID,
