@@ -30,9 +30,8 @@ import java.util.List;
 public class SpatialEventServiceBean implements SpatialEventService {
 
     @Inject @SpatialMessageErrorEvent Event<SpatialMessageEvent> spatialErrorEvent;
-    private @EJB AreaByLocationService areaByLocationService;
     private @EJB AreaService areaService;
-    private @EJB ClosestLocationService closestLocationService;
+    private @EJB SpatialService spatialService;
     private @EJB SpatialEnrichmentService enrichmentService;
     private @EJB MapConfigService mapConfigService;
     private @EJB AreaTypeNamesService areaTypeNamesService;
@@ -43,7 +42,7 @@ public class SpatialEventServiceBean implements SpatialEventService {
     public void getAreaByLocation(@Observes @GetAreaByLocationEvent SpatialMessageEvent message) {
         log.info("Getting area by location.");
         try {
-            List<AreaExtendedIdentifierType> areaTypesByLocation = areaByLocationService.getAreaTypesByLocation(message.getAreaByLocationSpatialRQ());
+            List<AreaExtendedIdentifierType> areaTypesByLocation = spatialService.getAreaTypesByLocation(message.getAreaByLocationSpatialRQ());
             log.debug("Send back areaByLocation response.");
             messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapAreaByLocationResponse(areaTypesByLocation));
         } catch (Exception e) {
@@ -84,7 +83,7 @@ public class SpatialEventServiceBean implements SpatialEventService {
     public void getClosestLocation(@Observes @GetClosestLocationEvent SpatialMessageEvent message) {
         log.info("Getting closest locations.");
         try {
-            List<Location> closestLocations = closestLocationService.getClosestLocationByLocationType(message.getClosestLocationSpatialRQ());
+            List<Location> closestLocations = spatialService.getClosestLocationByLocationType(message.getClosestLocationSpatialRQ());
             log.debug("Send back closest locations response.");
             messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapClosestLocationResponse(closestLocations));
         } catch (Exception e) {

@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
@@ -8,17 +9,20 @@ import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.dao.GisFunction;
 import eu.europa.ec.fisheries.uvms.spatial.dao.PostGres;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestLocationSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Location;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.UnitType;
+import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
+import eu.europa.ec.fisheries.uvms.spatial.model.area.SystemAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.util.MeasurementUnit;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.geotools.geometry.jts.WKTReader2;
 import org.geotools.referencing.GeodeticCalculator;
+import org.hibernate.SQLQuery;
+import org.hibernate.transform.Transformers;
+import org.hibernate.type.StandardBasicTypes;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
@@ -31,10 +35,10 @@ import java.util.List;
 import java.util.Map;
 
 @Stateless
-@Local(ClosestLocationService.class)
+@Local(SpatialService.class)
 @Transactional
 @Slf4j
-public class ClosestLocationServiceBean implements ClosestLocationService {
+public class SpatialServiceBean implements SpatialService {
 
     private @PersistenceContext(unitName = "spatialPU") EntityManager em;
     private @EJB SpatialRepository repository;
@@ -112,10 +116,46 @@ public class ClosestLocationServiceBean implements ClosestLocationService {
         } catch (ParseException ex) {
             throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR, ex);
         }
+    }
 
+    @Override
+    @SneakyThrows
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
+    public List<AreaExtendedIdentifierType> getAreaTypesByLocation(final AreaByLocationSpatialRQ request) {
+
+        final Integer crs = request.getPoint().getCrs();
+        final double latitude = request.getPoint().getLatitude();
+        final double longitude = request.getPoint().getLongitude();
+
+        List<AreaLocationTypesEntity> systemAreaTypes = repository.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_SYSTEM_AREAS);
+
+        List<AreaExtendedIdentifierType> areaTypes = Lists.newArrayList();
+
+        PostGres function = new PostGres();
+
+        for (AreaLocationTypesEntity areaType : systemAreaTypes) {
+
+            String areaDbTable = areaType.getAreaDbTable();
+
+            String queryString = "SELECT gid, name, code FROM spatial." + areaDbTable +
+                    " WHERE " + function.stIntersects(latitude, longitude, crs) + " AND enabled = 'Y'";
+
+            Query emNativeQuery = em.createNativeQuery(queryString);
+
+            emNativeQuery.unwrap(SQLQuery.class)
+                    .addScalar("gid", StandardBasicTypes.INTEGER)
+                    .addScalar("code", StandardBasicTypes.STRING)
+                    .addScalar("name", StandardBasicTypes.STRING)
+                    .setResultTransformer(Transformers.aliasToBean(SystemAreaDto.class));
+
+            List<SystemAreaDto> resultList = emNativeQuery.getResultList();
+
+            for (SystemAreaDto area : resultList) {
+                AreaExtendedIdentifierType areaIdentifier = new AreaExtendedIdentifierType(String.valueOf(area.getGid()), AreaType.valueOf(areaType.getTypeName()), area.getCode(), area.getName());
+                areaTypes.add(areaIdentifier);
+            }
+        }
+        return areaTypes;
     }
 
 }
-
-//sql.findClosestLocation = SELECT CAST(gid AS text) AS id, code, name, ST_Distance_Spheroid(geom, st_geomfromtext(CAST(:wktPoint as text), :crs), 'SPHEROID["WGS 84",6378137,298.257223563]') /:unit AS distance FROM spatial.{tableName} where not ST_IsEmpty(geom) and enabled = 'Y' order by distance limit 1
-

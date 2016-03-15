@@ -17,11 +17,8 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRS;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Location;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRS;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaByLocationService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.ClosestLocationService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.FilterAreasService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialEnrichmentService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.*;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialService;
 import lombok.extern.slf4j.Slf4j;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
@@ -40,9 +37,8 @@ public class XMLResource {
 
     private @EJB SpatialEnrichmentService enrichmentService;
     private @EJB FilterAreasService filterAreasService;
-    private @EJB AreaByLocationService areaByLocationService;
     private @EJB AreaService areaService;
-    private @EJB ClosestLocationService closestLocationService;
+    private @EJB SpatialService spatialService;
 
     @POST
     @Produces(value = {MediaType.APPLICATION_XML})
@@ -72,7 +68,7 @@ public class XMLResource {
     public AreaByLocationSpatialRS getAreasByLocation(AreaByLocationSpatialRQ request) {
 
         AreaByLocationSpatialRS response = new AreaByLocationSpatialRS();
-        List<AreaExtendedIdentifierType> areaTypesByLocation = areaByLocationService.getAreaTypesByLocation(request);
+        List<AreaExtendedIdentifierType> areaTypesByLocation = spatialService.getAreaTypesByLocation(request);
 
         if(areaTypesByLocation != null){
             AreasByLocationType areasByLocationType = new AreasByLocationType();
@@ -110,7 +106,7 @@ public class XMLResource {
     public ClosestLocationSpatialRS closestLocation(ClosestLocationSpatialRQ request) throws ServiceException {
 
         ClosestLocationSpatialRS response = new ClosestLocationSpatialRS();
-        List<Location> closestLocations = closestLocationService.getClosestLocationByLocationType(request);
+        List<Location> closestLocations = spatialService.getClosestLocationByLocationType(request);
 
         if (closestLocations != null){
             ClosestLocationsType locationType = new ClosestLocationsType();

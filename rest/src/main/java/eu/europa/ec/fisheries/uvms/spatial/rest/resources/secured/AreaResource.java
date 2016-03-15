@@ -17,7 +17,6 @@ import eu.europa.ec.fisheries.uvms.service.interceptor.ValidationInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.model.constants.USMSpatial;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.rest.type.geocoordinate.AreaCoordinateType;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaByLocationService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaDetailsService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
@@ -30,7 +29,6 @@ import eu.europa.ec.fisheries.uvms.spatial.rest.type.ResponseDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.error.ErrorHandler;
 import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.AreaLocationDtoMapper;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.rest.util.ValidationUtils;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaServiceLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.LayerSubTypeEnum;
 import lombok.extern.slf4j.Slf4j;
@@ -41,7 +39,6 @@ import lombok.extern.slf4j.Slf4j;
 public class AreaResource extends UnionVMSResource {
 
     private @EJB AreaTypeNamesService areaTypeService;
-    private @EJB AreaByLocationService areaByLocationService;
     private @EJB AreaService areaService;
     private @EJB AreaDetailsService areaDetailsService;
 	private @EJB SearchAreaService searchAreaService;
@@ -143,8 +140,4 @@ public class AreaResource extends UnionVMSResource {
         }
     }
 
-    public void validateInputParameters(Double lat, Double lon, List<String> areaTypes) {
-        ValidationUtils.validateCoordinates(lat, lon);
-        ValidationUtils.validateAreaTypes(areaTypes);
-    }
 }
