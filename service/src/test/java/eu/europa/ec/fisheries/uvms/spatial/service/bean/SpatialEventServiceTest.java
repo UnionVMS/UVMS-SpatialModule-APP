@@ -38,7 +38,7 @@ public class SpatialEventServiceTest {
     @Mock
     private AreaByLocationService areaByLocationService;
     @Mock
-    private ClosestAreaService closestAreaService;
+    private AreaService closestAreaService;
     @Mock
     private ClosestLocationService closestLocationService;
     @Mock

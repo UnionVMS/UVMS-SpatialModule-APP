@@ -5,7 +5,6 @@ import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetailsSpatialRequest;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
@@ -16,6 +15,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialService
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.mapstruct.ap.internal.util.Collections;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
@@ -100,7 +100,7 @@ public class AreaDetailsServiceBean implements AreaDetailsService {
 
         Point point = SpatialUtils.convertToPointInWGS84(areaTypeEntry.getLongitude(), areaTypeEntry.getLatitude(), areaTypeEntry.getCrs());
 
-        List allAreas = null;
+        List allAreas = Collections.newArrayList();
 
         switch (areaLocationTypesEntity.getTypeName().toUpperCase()){
             case "EEZ" :
@@ -125,8 +125,8 @@ public class AreaDetailsServiceBean implements AreaDetailsService {
 
         List<AreaDetails> areaDetailsList = new ArrayList<>();
 
-        for (int i = 0; i < allAreas.size(); i++) {
-            Map<String, Object> properties = getFieldMap(allAreas.get(i));
+        for (Object allArea : allAreas) {
+            Map<String, Object> properties = getFieldMap(allArea);
             areaDetailsList.add(createAreaDetailsSpatialResponse(properties, areaTypeEntry));
         }
         return areaDetailsList;

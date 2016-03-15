@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMap;
 import eu.europa.ec.fisheries.uvms.spatial.dao.*;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialRepositoryBean;
-import eu.europa.ec.fisheries.uvms.spatial.util.SqlPropertyHolder;
 import lombok.SneakyThrows;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +13,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
-
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,9 +26,6 @@ public class SpatialRepositoryTest {
 
     @Mock
     private EntityManager em;
-
-    @Mock
-    private SqlPropertyHolder sql;
 
     @Mock
     private AreaDao areaDao;

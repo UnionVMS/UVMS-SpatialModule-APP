@@ -19,6 +19,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 
+// FIXME DEAD CODE not used
+
 @Path("/eez")
 @Slf4j
 @Stateless

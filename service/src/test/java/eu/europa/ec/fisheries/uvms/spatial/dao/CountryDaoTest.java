@@ -11,7 +11,6 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
-
 public class CountryDaoTest extends BaseSpatialDaoTest {
 
     private CountryDao dao = new CountryDao(em);

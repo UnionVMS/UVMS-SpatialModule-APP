@@ -27,10 +27,10 @@ import static eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialUtils.conv
 import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 
 @Stateless
-@Local(ClosestAreaService.class)
+@Local(AreaService.class)
 @Transactional
 @Slf4j
-public class ClosestAreaServiceBean implements ClosestAreaService {
+public class AreaServiceBean implements AreaService {
 
     @EJB
     private SpatialRepository repository;
