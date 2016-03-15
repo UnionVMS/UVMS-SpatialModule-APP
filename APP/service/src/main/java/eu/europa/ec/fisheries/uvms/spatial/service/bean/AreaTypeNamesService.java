@@ -17,6 +17,6 @@ public interface AreaTypeNamesService {
     List<AreaLayerDto> listSystemAreaLayerMapping();
     List<AreaLayerDto> listSystemAreaAndLocationLayerMapping();
     List<ServiceLayerDto> getAreaLayerDescription(LayerSubTypeEnum layerTypeEnum) throws ServiceException;
-    List<AreaServiceLayerDto> getAllAreasLayerDescription(LayerSubTypeEnum layerTypeEnum, String userName) throws ServiceException;
+    List<AreaServiceLayerDto> getAllAreasLayerDescription(LayerSubTypeEnum layerTypeEnum, String userName, String scopeName) throws ServiceException;
     List<UserAreaLayerDto> listUserAreaLayerMapping();
 }

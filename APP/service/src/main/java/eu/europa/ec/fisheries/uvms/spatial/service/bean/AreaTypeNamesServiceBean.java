@@ -70,12 +70,12 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
         }
     }
 
-    public List<AreaServiceLayerDto> getAllAreasLayerDescription(LayerSubTypeEnum layerTypeEnum, String userName) throws ServiceException {
+    public List<AreaServiceLayerDto> getAllAreasLayerDescription(LayerSubTypeEnum layerTypeEnum, String userName, String scopeName) throws ServiceException {
         List<AreaServiceLayerDto> areaServiceLayerDtos = new ArrayList<AreaServiceLayerDto>();
         switch (layerTypeEnum) {
             case USERAREA:
                 List<ServiceLayerDto> userserviceLayerDtos = getAreaLayerDescription(layerTypeEnum);
-                List<AreaDto> allUserAreas = repository.getAllUserAreas(userName);
+                List<AreaDto> allUserAreas = repository.getAllUserAreas(userName, scopeName);
                 for (ServiceLayerDto serviceLayerDto : userserviceLayerDtos) {
                     AreaServiceLayerDto areaServiceLayerDto = new AreaServiceLayerDto(serviceLayerDto, allUserAreas);
                     areaServiceLayerDtos.add(areaServiceLayerDto);
@@ -83,7 +83,7 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
                 break;
             case AREAGROUP:
                 List<ServiceLayerDto> areGroupServiceLayerDtos = getAreaLayerDescription(layerTypeEnum);
-                List<AreaDto> allUserAreaGroupNames = repository.getAllUserAreaGroupNames(userName);
+                List<AreaDto> allUserAreaGroupNames = repository.getAllUserAreaGroupNames(userName, scopeName);
                 for (ServiceLayerDto serviceLayerDto : areGroupServiceLayerDtos) {
                     AreaServiceLayerDto areaServiceLayerDto = new AreaServiceLayerDto(serviceLayerDto, allUserAreaGroupNames);
                     areaServiceLayerDtos.add(areaServiceLayerDto);

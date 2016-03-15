@@ -65,7 +65,7 @@ public class AreaTypeNamesServiceIT extends AbstractArquillianIT {
 
     @Test
     public void shouldReturnAllAreaLayerDescription() throws ServiceException {
-        List<AreaServiceLayerDto> areaServiceLayerDtos = areaTypeNamesService.getAllAreasLayerDescription(LayerSubTypeEnum.USERAREA, "rep_power");
+        List<AreaServiceLayerDto> areaServiceLayerDtos = areaTypeNamesService.getAllAreasLayerDescription(LayerSubTypeEnum.USERAREA, "rep_power", "EC");
         assertNotNull(areaServiceLayerDtos);
         assertFalse(areaServiceLayerDtos.isEmpty());
     }
