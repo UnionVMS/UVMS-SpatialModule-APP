@@ -26,7 +26,6 @@ import java.util.List;
 @Slf4j
 public class SpatialEnrichmentServiceBean implements SpatialEnrichmentService {
 
-    private @EJB AreaService areaService;
     private @EJB SpatialService spatialService;
 
     @Override
@@ -45,7 +44,7 @@ public class SpatialEnrichmentServiceBean implements SpatialEnrichmentService {
         closestAreaSpatialRQ.setUnit(request.getUnit());
         closestAreaSpatialRQ.setPoint(request.getPoint());
 
-        List<Area> closestAreas = areaService.getClosestAreas(closestAreaSpatialRQ);
+        List<Area> closestAreas = spatialService.getClosestAreas(closestAreaSpatialRQ);
 
         List<LocationType> locationTypes = request.getLocationTypes().getLocationTypes();
         ClosestLocationSpatialRQ closestLocationSpatialRQ = new ClosestLocationSpatialRQ();

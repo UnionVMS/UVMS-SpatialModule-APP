@@ -17,7 +17,8 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRS;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Location;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRS;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.*;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.FilterAreasService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialEnrichmentService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialService;
 import lombok.extern.slf4j.Slf4j;
 import javax.ejb.EJB;
@@ -37,7 +38,6 @@ public class XMLResource {
 
     private @EJB SpatialEnrichmentService enrichmentService;
     private @EJB FilterAreasService filterAreasService;
-    private @EJB AreaService areaService;
     private @EJB SpatialService spatialService;
 
     @POST
@@ -87,7 +87,7 @@ public class XMLResource {
     public ClosestAreaSpatialRS closestArea(ClosestAreaSpatialRQ request) throws ServiceException {
 
         ClosestAreaSpatialRS response = new ClosestAreaSpatialRS();
-        List<Area> closestAreas = areaService.getClosestAreas(request);
+        List<Area> closestAreas = spatialService.getClosestAreas(request);
 
         if (closestAreas != null) {
             ClosestAreasType closestAreasType = new ClosestAreasType();

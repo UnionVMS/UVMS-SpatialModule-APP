@@ -30,7 +30,6 @@ import java.util.List;
 public class SpatialEventServiceBean implements SpatialEventService {
 
     @Inject @SpatialMessageErrorEvent Event<SpatialMessageEvent> spatialErrorEvent;
-    private @EJB AreaService areaService;
     private @EJB SpatialService spatialService;
     private @EJB SpatialEnrichmentService enrichmentService;
     private @EJB MapConfigService mapConfigService;
@@ -71,7 +70,7 @@ public class SpatialEventServiceBean implements SpatialEventService {
     public void getClosestArea(@Observes @GetClosestAreaEvent SpatialMessageEvent message) {
         log.info("Getting closest area.");
         try {
-            List<Area> closestAreas = areaService.getClosestAreas(message.getClosestAreaSpatialRQ());
+            List<Area> closestAreas = spatialService.getClosestAreas(message.getClosestAreaSpatialRQ());
             log.debug("Send back closestAreas response.");
             messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapClosestAreaResponse(closestAreas));
         } catch (Exception e) {
