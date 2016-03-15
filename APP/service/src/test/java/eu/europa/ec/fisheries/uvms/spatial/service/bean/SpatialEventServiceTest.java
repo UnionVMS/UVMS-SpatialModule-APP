@@ -36,11 +36,11 @@ public class SpatialEventServiceTest {
     @InjectMocks
     private SpatialEventService service = new SpatialEventServiceBean();
     @Mock
-    private AreaByLocationService areaByLocationService;
+    private SpatialService areaByLocationService;
     @Mock
     private AreaService closestAreaService;
     @Mock
-    private ClosestLocationService closestLocationService;
+    private SpatialService closestLocationService;
     @Mock
     private SpatialEnrichmentService enrichmentService;
     @Mock
@@ -53,17 +53,6 @@ public class SpatialEventServiceTest {
     private TextMessage textMessage;
 
     @Test
-    public void testGetAreaByLocation() {
-        SpatialMessageEvent message = new SpatialMessageEvent(textMessage, new AreaByLocationSpatialRQ());
-
-        service.getAreaByLocation(message);
-
-        verify(areaByLocationService, times(1)).getAreaTypesByLocation(any(AreaByLocationSpatialRQ.class));
-        verify(messageProducer, times(1)).sendModuleResponseMessage(eq(textMessage), anyString());
-        verify(spatialErrorEvent, times(0)).fire(message);
-    }
-
-    @Test
     @SneakyThrows
     public void testGetClosestArea() {
         SpatialMessageEvent message = new SpatialMessageEvent(textMessage, new ClosestAreaSpatialRQ());
@@ -71,18 +60,6 @@ public class SpatialEventServiceTest {
         service.getClosestArea(message);
 
         verify(closestAreaService, times(1)).getClosestAreas(any(ClosestAreaSpatialRQ.class));
-        verify(messageProducer, times(1)).sendModuleResponseMessage(eq(textMessage), anyString());
-        verify(spatialErrorEvent, times(0)).fire(message);
-    }
-
-    @Test
-    @SneakyThrows
-    public void testGetClosestLocation() {
-        SpatialMessageEvent message = new SpatialMessageEvent(textMessage, new ClosestLocationSpatialRQ());
-
-        service.getClosestLocation(message);
-
-        verify(closestLocationService, times(1)).getClosestLocationByLocationType(any(ClosestLocationSpatialRQ.class));
         verify(messageProducer, times(1)).sendModuleResponseMessage(eq(textMessage), anyString());
         verify(spatialErrorEvent, times(0)).fire(message);
     }

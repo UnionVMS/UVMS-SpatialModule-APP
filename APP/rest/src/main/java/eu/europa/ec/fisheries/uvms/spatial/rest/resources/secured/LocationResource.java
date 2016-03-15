@@ -16,10 +16,10 @@ import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.service.interceptor.ValidationInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationDetails;
 import eu.europa.ec.fisheries.uvms.spatial.rest.type.geocoordinate.LocationCoordinateType;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.LocationDetailsGeoJsonDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.AreaLocationDtoMapper;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.ClosestLocationService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.LocationDetailsService;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,7 +28,8 @@ import lombok.extern.slf4j.Slf4j;
 @Stateless
 public class LocationResource extends UnionVMSResource {
 
-    private @EJB ClosestLocationService closestLocationService;
+    private @EJB
+    SpatialService closestLocationService;
     private @EJB LocationDetailsService locationDetailsService;
     
     private AreaLocationDtoMapper mapper = AreaLocationDtoMapper.mapper();

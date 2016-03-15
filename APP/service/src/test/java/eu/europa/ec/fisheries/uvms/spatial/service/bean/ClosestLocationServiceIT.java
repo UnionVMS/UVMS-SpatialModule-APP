@@ -25,7 +25,7 @@ public class ClosestLocationServiceIT extends AbstractArquillianIT {
     private static final int DEFAULT_CRS = 4326;
     private static final int CRS = 3857;
     @EJB
-    private ClosestLocationService closestLocationService;
+    private SpatialService closestLocationService;
 
     @Test
     @SneakyThrows

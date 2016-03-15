@@ -21,7 +21,7 @@ public class AreaByLocationServiceIT extends AbstractArquillianIT {
     private static final int DEFAULT_CRS = 4326;
 
     @EJB
-    private AreaByLocationService areaByLocationService;
+    private SpatialService areaByLocationService;
 
     @Test
     public void shouldGetAreasByLocation() throws Exception {
