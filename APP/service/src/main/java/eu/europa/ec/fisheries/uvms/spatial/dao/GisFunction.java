@@ -8,7 +8,6 @@ public interface GisFunction {
 
     String stDistance(Double latitude, Double longitude, Integer crs);
 
-    // ORACLE = CLOB
     String castAsUnlimitedLength();
 
     String toWkt(String value);
