@@ -23,11 +23,13 @@ public class SearchAreaServiceIT extends AbstractArquillianIT {
 	
 	@EJB
 	private SearchAreaService searchAreaService;
-	
-	@Test
+    private @EJB SpatialService spatialService;
+
+
+    @Test
     @SneakyThrows
 	public void shouldGetAreaByFilter() {
-        List<SystemAreaDto> areaListMap = searchAreaService.getAreasByFilter("eez", "island");
+        List<SystemAreaDto> areaListMap = spatialService.getAreasByFilter("eez", "island");
 
         assertNotNull(areaListMap);
 		assertFalse(areaListMap.isEmpty());
@@ -36,7 +38,7 @@ public class SearchAreaServiceIT extends AbstractArquillianIT {
 	@Test
     @SneakyThrows
     public void shouldGetNoResult() {
-        List<SystemAreaDto> areaListMap = searchAreaService.getAreasByFilter("eez", "INVALID_DATA");
+        List<SystemAreaDto> areaListMap = spatialService.getAreasByFilter("eez", "INVALID_DATA");
 
         assertNotNull(areaListMap);
 		assertFalse(!areaListMap.isEmpty());
@@ -45,7 +47,7 @@ public class SearchAreaServiceIT extends AbstractArquillianIT {
 	@Test
 	public void shouldThrowException() {
 		try {
-            List<SystemAreaDto> areaListMap = searchAreaService.getAreasByFilter("invalid", "island");
+            List<SystemAreaDto> areaListMap = spatialService.getAreasByFilter("invalid", "island");
 
             assertNotNull(areaListMap);
 			assertFalse(!areaListMap.isEmpty());

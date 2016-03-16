@@ -5,7 +5,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.EezDto;
 
-public interface EezService extends AreaDisableService {
+public interface EezService extends AreaDisableService { // FIXME illegal Ejb should only have max 2 interfaces LOCAL AND/OR REMOTE
 
     EezType getEezById(EezSpatialRQ getEezSpatialRQ);
 
