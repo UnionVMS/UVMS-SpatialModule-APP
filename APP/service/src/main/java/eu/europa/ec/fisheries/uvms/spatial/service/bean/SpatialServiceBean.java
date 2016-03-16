@@ -11,6 +11,7 @@ import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.dao.GisFunction;
 import eu.europa.ec.fisheries.uvms.spatial.dao.PostGres;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.PortsEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.area.SystemAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
@@ -364,6 +365,10 @@ public class SpatialServiceBean implements SpatialService {
     @Transactional
     public LocationDetails getLocationDetails(LocationTypeEntry locationTypeEntry) throws ServiceException {
 
+        final GisFunction gisFunction = new PostGres();
+        final WKTReader2 wktReader2 = new WKTReader2();
+        final GeodeticCalculator calc = new GeodeticCalculator();
+
         String id = locationTypeEntry.getId();
         String locationType = locationTypeEntry.getLocationType();
 
@@ -395,8 +400,43 @@ public class SpatialServiceBean implements SpatialService {
 
             Map<String, Object> fieldMap = new HashMap();
 
-            Point point = convertToPointInWGS84(locationTypeEntry.getLongitude(), locationTypeEntry.getLatitude(), locationTypeEntry.getCrs());
-            List list = repository.findAreaOrLocationByCoordinates(point, getNativeQueryByType(locationTypesEntity.getTypeName()));// FIXME debug
+            Double longitude = locationTypeEntry.getLongitude();
+            Double latitude = locationTypeEntry.getLatitude();
+            Integer crs = locationTypeEntry.getCrs();
+
+            List list = new ArrayList();
+
+            if (locationType.equals("PORT")){
+
+                final String queryString = "SELECT * FROM spatial.port WHERE enabled = 'Y' ORDER BY " + gisFunction.stDistance(longitude, latitude, crs) + " ASC " + gisFunction.limit(15); // FIXME this can and should be replaces by NamedQuery
+                Query emNativeQuery = em.createNativeQuery(queryString, PortsEntity.class);
+                List<PortsEntity> records = emNativeQuery.getResultList();
+
+                PortsEntity closestLocation = null;
+                Double closestDistance = Double.MAX_VALUE;
+                for (PortsEntity portsEntity : records) {
+
+                    final Geometry geometry = portsEntity.getGeom();
+                    final Point centroid = geometry.getCentroid();
+                    calc.setStartingGeographicPoint(centroid.getX(), centroid.getY());
+                    calc.setDestinationGeographicPoint(longitude, latitude);
+                    Double orthodromicDistance = calc.getOrthodromicDistance();
+
+                    if (closestDistance > orthodromicDistance) {
+                        closestDistance = orthodromicDistance;
+                        closestLocation = portsEntity;
+
+                    }
+
+                }
+                if (closestLocation != null){
+                    list.add(closestLocation);
+                }
+            }
+            else {
+                Point point = convertToPointInWGS84(longitude, latitude, crs);
+                list = repository.findAreaOrLocationByCoordinates(point, getNativeQueryByType(locationTypesEntity.getTypeName()));
+            }
 
             if (isNotEmpty(list)) {
                 fieldMap = getFieldMap(list.get(0));

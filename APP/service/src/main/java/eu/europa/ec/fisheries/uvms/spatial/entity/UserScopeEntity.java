@@ -2,11 +2,15 @@ package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
-/**
- * Created by georgige on 2/9/2016.
- */
 @Entity
 @Table(name = "user_scope", schema = "spatial")
 public class UserScopeEntity {
@@ -23,7 +27,6 @@ public class UserScopeEntity {
     @Column(name = "scope_name", nullable = false, length = 255)
     @ColumnAliasName(aliasName ="scope_name")
     private String name;
-
 
     public long getId() {
         return id;

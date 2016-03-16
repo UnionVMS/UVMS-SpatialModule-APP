@@ -5,8 +5,6 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.CoordinatesFormat;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ScaleBarUnits;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.Cascade;
-
 import java.io.Serializable;
 import java.util.Set;
 import javax.persistence.CascadeType;
@@ -45,7 +43,6 @@ import javax.persistence.Table;
 public class ReportConnectSpatialEntity implements Serializable {
 
     public static final String DELETE_BY_ID_LIST = "reportConnectSpatialEntity.deleteByIdList";
-
 	public static final String FIND_BY_REPORT_CONNECT_ID = "reportConnectSpatialEntity.findByReportConnectId";
 
     @Id
