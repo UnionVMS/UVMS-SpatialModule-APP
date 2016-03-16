@@ -22,7 +22,9 @@ import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.service.interceptor.ValidationInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.model.constants.USMSpatial;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationDetails;
 import eu.europa.ec.fisheries.uvms.spatial.rest.type.geocoordinate.AreaCoordinateType;
+import eu.europa.ec.fisheries.uvms.spatial.rest.type.geocoordinate.LocationCoordinateType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.AreaDetailsGeoJsonDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.type.AreaFilterType;
@@ -31,6 +33,7 @@ import eu.europa.ec.fisheries.uvms.spatial.rest.type.ResponseDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.error.ErrorHandler;
 import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.AreaLocationDtoMapper;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.LocationDetailsGeoJsonDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaServiceLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.LayerSubTypeEnum;
 import lombok.extern.slf4j.Slf4j;
@@ -140,6 +143,20 @@ public class AreaResource extends UnionVMSResource {
         } else {
             return createSuccessResponse(areaTypeService.getAreaLayerDescription(layerTypeEnum));
         }
+    }
+
+
+    // TODO check this it looks like DUPLICATE functionality as areadetails
+    // the nly the output is a bit different
+    @POST
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/locationdetails") // FIXME native query alert
+    @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
+    public Response getLocationDetails(LocationCoordinateType locationDto) throws IOException, ParseException, ServiceException {
+        LocationDetails locationDetails = spatialService.getLocationDetails(mapper.getLocationTypeEntry(locationDto));
+        LocationDetailsGeoJsonDto locationDetailsGeoJsonDto = mapper.getLocationDetailsDto(locationDetails);
+        return createSuccessResponse(locationDetailsGeoJsonDto.convert());
     }
 
 }

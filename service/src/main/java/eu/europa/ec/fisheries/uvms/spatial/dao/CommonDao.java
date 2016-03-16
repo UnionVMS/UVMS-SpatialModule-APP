@@ -34,12 +34,12 @@ public abstract class CommonDao {
 
 	protected Query createNamedNativeQuery(String nativeQueryString, String wktPoint, int crs) {
 		Query query = getSession().getNamedQuery(nativeQueryString);
-		query.setParameter(WKT, wktPoint);
-		query.setParameter(CRS, crs);
+		query.setParameter("shape", "SRID=" + crs + ";" + wktPoint);
+		//query.setParameter(CRS, crs);
 		return query;
 	}
 
-	protected <T> Query createNamedNativeQuery(String nativeQueryString, Map<String, Object> parameters) {
+	protected Query createNamedNativeQuery(String nativeQueryString, Map<String, Object> parameters) {
 		Query query = getSession().getNamedQuery(nativeQueryString);
 		for (Map.Entry<String, Object> entry : parameters.entrySet()) {
 			query.setParameter(entry.getKey(), entry.getValue());
