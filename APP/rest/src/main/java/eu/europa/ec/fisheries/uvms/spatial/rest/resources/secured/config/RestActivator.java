@@ -1,7 +1,18 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured.config;
 
 import eu.europa.ec.fisheries.uvms.spatial.rest.constants.RestConstants;
-import eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured.*;
+import eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured.AreaPortResource;
+import eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured.AreaResource;
+import eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured.BookmarkResource;
+import eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured.CalculateResource;
+import eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured.ConfigResource;
+import eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured.CountryResource;
+import eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured.FileUploadResource;
+import eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured.ImageResource;
+import eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured.MapConfigResource;
+import eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured.ServiceLayerResource;
+import eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured.UserAreaResource;
+import eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured.XMLResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.ws.rs.ApplicationPath;
@@ -19,7 +30,6 @@ public class RestActivator extends Application {
 
     public RestActivator() {
         set.add(AreaResource.class);
-        set.add(LocationResource.class);
         set.add(XMLResource.class);
         set.add(ConfigResource.class);
         set.add(UserAreaResource.class);

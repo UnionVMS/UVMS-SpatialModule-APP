@@ -29,4 +29,5 @@ public class LocationCoordinateType extends GeoCoordinateType implements Seriali
 	public void setLocationType(String locationType) {
 		this.locationType = locationType;
 	}
+
 }
