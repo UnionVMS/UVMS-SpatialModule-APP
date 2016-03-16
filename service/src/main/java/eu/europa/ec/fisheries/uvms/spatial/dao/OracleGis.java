@@ -22,7 +22,6 @@ public class OracleGis extends AbstractGisFunction {
 
     @Override
     public String castAsUnlimitedLength() {
-
         return "CLOB";
     }
 
