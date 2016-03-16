@@ -21,9 +21,6 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-//@SqlResultSetMappings({
-//        @SqlResultSetMapping(name = "implicit.port", entities = @EntityResult(entityClass = PortsEntity.class))
-//})
 @NamedQueries({
         @NamedQuery(name = QueryNameConstants.DISABLE_PORT_LOCATIONS, query = "update PortsEntity set enabled = 'N'")
 })

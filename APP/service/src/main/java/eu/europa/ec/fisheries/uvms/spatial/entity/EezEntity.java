@@ -24,16 +24,10 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
-//@SqlResultSetMappings({
-//        @SqlResultSetMapping(name = "implicit.eez", entities = @EntityResult(entityClass = EezEntity.class))
-//})
-//@NamedNativeQuery(
-//        name = QueryNameConstants.EEZ_BY_COORDINATE,
-//        query = "select * from eez where st_intersects(geom, st_geomfromtext(CAST(:wktPoint as text), :crs)) and enabled = 'Y'", resultSetMapping = "implicit.eez")
 @NamedQueries({
         @NamedQuery(name = EezEntity.EEZ_BY_COORDINATE, query = "FROM EezEntity WHERE intersects(geom, :shape) = true) AND enabled = 'Y'"),
-        @NamedQuery(name = QueryNameConstants.EEZ_COLUMNS, query = "select eez.name as name, eez.code as code from EezEntity as eez where eez.gid =:gid"),
-        @NamedQuery(name = QueryNameConstants.DISABLE_EEZ_AREAS, query = "update EezEntity set enabled = 'N'")
+        @NamedQuery(name = QueryNameConstants.EEZ_COLUMNS, query = "SELECT eez.name AS name, eez.code AS code FROM EezEntity AS eez WHERE eez.gid =:gid"),
+        @NamedQuery(name = QueryNameConstants.DISABLE_EEZ_AREAS, query = "UPDATE EezEntity SET enabled = 'N'")
 })
 @Where(clause = "enabled = 'Y'")
 @Table(name = "eez", schema = "spatial")

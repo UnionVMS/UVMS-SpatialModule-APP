@@ -1,18 +1,10 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
-import eu.europa.ec.fisheries.uvms.spatial.entity.converter.CharBooleanConverter;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.LayerDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.StylesDto;
-
 import java.io.Serializable;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,7 +12,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -32,10 +23,6 @@ import javax.persistence.Table;
 				query = "DELETE FROM ReportConnectServiceAreasEntity rcsa WHERE rcsa.id = :id")
 })
 public class ReportConnectServiceAreasEntity implements Serializable, Comparable<ReportConnectServiceAreasEntity> {
-	
-	private static final long serialVersionUID = 6797853213499502868L;
-
-	private static final String GEOSERVER = "geoserver";
 
 	@Id
 	@Column(name = "id")
