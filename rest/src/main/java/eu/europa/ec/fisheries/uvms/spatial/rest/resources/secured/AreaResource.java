@@ -146,12 +146,11 @@ public class AreaResource extends UnionVMSResource {
     }
 
 
-    // TODO check this it looks like DUPLICATE functionality as areadetails
-    // the nly the output is a bit different
+    // TODO check this it looks like DUPLICATE functionality as 'areadetails' at first sight only the output looks a bit different
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    @Path("/locationdetails") // FIXME native query alert
+    @Path("/locationdetails")
     @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
     public Response getLocationDetails(LocationCoordinateType locationDto) throws IOException, ParseException, ServiceException {
         LocationDetails locationDetails = spatialService.getLocationDetails(mapper.getLocationTypeEntry(locationDto));
