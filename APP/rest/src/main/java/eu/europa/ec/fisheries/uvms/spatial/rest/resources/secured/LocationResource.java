@@ -28,8 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 @Stateless
 public class LocationResource extends UnionVMSResource {
 
-    private @EJB
-    SpatialService closestLocationService;
+    private @EJB SpatialService spatialService;
     private @EJB LocationDetailsService locationDetailsService;
     
     private AreaLocationDtoMapper mapper = AreaLocationDtoMapper.mapper();
@@ -37,7 +36,7 @@ public class LocationResource extends UnionVMSResource {
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    @Path("/locationdetails")
+    @Path("/locationdetails") // FIXME native query alert
     @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
     public Response getLocationDetails(LocationCoordinateType locationDto) throws IOException, ParseException, ServiceException {
     	LocationDetails locationDetails = locationDetailsService.getLocationDetails(mapper.getLocationTypeEntry(locationDto));

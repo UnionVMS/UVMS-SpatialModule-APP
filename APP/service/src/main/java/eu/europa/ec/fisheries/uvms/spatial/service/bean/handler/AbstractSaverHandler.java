@@ -19,7 +19,7 @@ public abstract class AbstractSaverHandler {
     protected abstract AreaDisableService getAreaDisableService();
 
     public void replaceAreas(Map<String, List<Property>> features) throws ServiceException {
-        getAreaDisableService().disableAllAreas();
+        getAreaDisableService().disableAllAreas(); // FIXME this is illegal use of EJB
         try {
             Date enabledOn = new Date();
             for (List<Property> properties : features.values()) {

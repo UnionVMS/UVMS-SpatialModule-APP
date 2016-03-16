@@ -6,6 +6,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaDisableService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.EezService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.EezDto;
 import lombok.extern.slf4j.Slf4j;
+import org.opengis.feature.Property;
 
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
@@ -14,6 +15,7 @@ import javax.transaction.Transactional;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @Stateless
@@ -52,5 +54,4 @@ public class EezSaverHandler extends AbstractSaverHandler implements SaverHandle
     protected AreaDisableService getAreaDisableService() {
         return eezService;
     }
-
 }

@@ -69,7 +69,8 @@ public class AreaUploadServiceBean implements AreaUploadService {
             ShapeFileReader shapeFileReader = new ShapeFileReader();
             Map<String, List<Property>> features = shapeFileReader.readShapeFile(fileNames.get(SupportedFileExtensions.SHP), sourceCRS);
 
-            replaceAreas(areaType, features);
+            SaverHandler saverHandler = getHandler(areaType);
+            saverHandler.replaceAreas(features); // FIXME not good
 
             FileUtils.deleteDirectory(new File(absolutePath.toString()));
 
@@ -79,12 +80,7 @@ public class AreaUploadServiceBean implements AreaUploadService {
         }
     }
 
-    private void replaceAreas(AreaType areaType, Map<String, List<Property>> features) throws ServiceException {
-        SaverHandler saverHandler = getHandler(areaType);
-        saverHandler.replaceAreas(features);
-    }
-
-    private SaverHandler getHandler(AreaType areaType) {
+    private SaverHandler getHandler(AreaType areaType) { // FIXME not good
         switch (areaType) {
             case EEZ:
                 return eezSaverHandler;
