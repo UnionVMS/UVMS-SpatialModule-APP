@@ -24,6 +24,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.geotools.geometry.jts.WKTReader2;
+import org.geotools.geometry.jts.WKTWriter2;
 import org.geotools.referencing.GeodeticCalculator;
 import org.hibernate.SQLQuery;
 import org.hibernate.transform.Transformers;
@@ -35,11 +36,19 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import static com.google.common.collect.Lists.newArrayList;
 import static eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialUtils.convertToPointInWGS84;
+import static eu.europa.ec.fisheries.uvms.spatial.util.ColumnAliasNameHelper.getFieldMap;
+import static eu.europa.ec.fisheries.uvms.spatial.util.SpatialTypeEnum.getEntityClassByType;
+import static eu.europa.ec.fisheries.uvms.spatial.util.SpatialTypeEnum.getNativeQueryByType;
 import static org.apache.commons.collections.CollectionUtils.isEmpty;
+import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
@@ -52,6 +61,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 public class SpatialServiceBean implements SpatialService {
 
     private static final String TYPE_NAMES = "typeNames";
+    private static final String TYPE_NAME = "typeName";
 
     private @PersistenceContext(unitName = "spatialPU") EntityManager em;
     private @EJB SpatialRepository repository;
@@ -306,5 +316,110 @@ public class SpatialServiceBean implements SpatialService {
 
     }
 
+    @Override
+    @Transactional
+    public List<SystemAreaDto> getAreasByFilter(final String tableName, final String filter) throws ServiceException {
 
+        try {
+            AreaLocationTypesEntity areaLocationType = repository.findAreaLocationTypeByTypeName(tableName.toUpperCase());
+
+            if (areaLocationType == null) {
+                throw new SpatialServiceException(SpatialServiceErrors.INVALID_AREA_LOCATION_TYPE, areaLocationType);
+            }
+
+            GisFunction gisFunction = new PostGres();
+            final String toUpperCase = filter.toUpperCase();
+            final String queryString= "SELECT gid, name, code, CAST(" + gisFunction.toWkt("geom") +" AS " + gisFunction.castAsUnlimitedLength() + ")" +
+                    " FROM spatial." + tableName + " WHERE UPPER(name) LIKE '%" + toUpperCase + "%' OR code LIKE '%" + toUpperCase + "%' GROUP BY gid";
+
+            final Query emNativeQuery = em.createNativeQuery(queryString);
+            final List records = emNativeQuery.getResultList();
+            Iterator it = records.iterator();
+
+            final ArrayList<SystemAreaDto> systemAreaByFilterRecords = new ArrayList<>();
+            final WKTReader2 wktReader2 = new WKTReader2();
+            final WKTWriter2 wktWriter2 = new WKTWriter2();
+
+            while (it.hasNext( )) {
+                final Object[] result = (Object[])it.next();
+                final String wkt = result[3].toString();
+                Geometry geometry = wktReader2.read(wkt);
+                final Geometry envelope = geometry.getEnvelope();
+
+                final String wktEnvelope = wktWriter2.write(envelope);
+                systemAreaByFilterRecords.add(
+                        new SystemAreaDto(Integer.valueOf(result[0].toString()),
+                                result[2].toString(), tableName.toUpperCase(), wktEnvelope, result[1].toString()));
+            }
+
+            return systemAreaByFilterRecords;
+
+        } catch (ParseException e) {
+            throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR, e.getMessage());
+        }
+    }
+
+
+    @Override
+    @Transactional
+    public LocationDetails getLocationDetails(LocationTypeEntry locationTypeEntry) throws ServiceException {
+
+        String id = locationTypeEntry.getId();
+        String locationType = locationTypeEntry.getLocationType();
+
+        Map<String, String> parameters = ImmutableMap.<String, String>builder().put(TYPE_NAME, locationType.toUpperCase()).build();
+        List<AreaLocationTypesEntity> areasLocationTypes =
+                repository.findEntityByNamedQuery(AreaLocationTypesEntity.class, AreaLocationTypesEntity.FIND_TYPE_BY_NAME, parameters, 1);//Fixme greg replace with dao call
+        if (areasLocationTypes.isEmpty()) {
+            throw new SpatialServiceException(SpatialServiceErrors.INVALID_AREA_LOCATION_TYPE, areasLocationTypes);
+        }
+
+        AreaLocationTypesEntity locationTypesEntity = areasLocationTypes.get(0);
+        Map<String, Object> properties;
+
+        if (locationTypeEntry.getId() != null) {
+
+            if (!StringUtils.isNumeric(id)) {
+                throw new SpatialServiceException(SpatialServiceErrors.INVALID_ID_TYPE, id);
+            }
+
+            Object object = repository.findEntityById(getEntityClassByType(locationTypesEntity.getTypeName()), Long.parseLong(locationTypeEntry.getId()));
+
+            if (object == null) {
+                throw new SpatialServiceException(SpatialServiceErrors.ENTITY_NOT_FOUND, locationTypesEntity.getTypeName());
+            }
+
+            properties = getFieldMap(object);
+
+        } else {
+
+            Map<String, Object> fieldMap = new HashMap();
+
+            Point point = convertToPointInWGS84(locationTypeEntry.getLongitude(), locationTypeEntry.getLatitude(), locationTypeEntry.getCrs());
+            List list = repository.findAreaOrLocationByCoordinates(point, getNativeQueryByType(locationTypesEntity.getTypeName()));// FIXME debug
+
+            if (isNotEmpty(list)) {
+                fieldMap = getFieldMap(list.get(0));
+            }
+
+            properties = fieldMap;
+        }
+
+        List<LocationProperty> locationProperties = new ArrayList<>();
+
+        for (Map.Entry<String, Object> entry : properties.entrySet()) {
+
+            LocationProperty locationProperty = new LocationProperty();
+            locationProperty.setPropertyName(entry.getKey());
+            locationProperty.setPropertyValue(entry.getValue()!=null?entry.getValue().toString():null);
+            locationProperties.add(locationProperty);
+        }
+
+        LocationDetails locationDetails = new LocationDetails();
+        locationDetails.setLocationType(locationTypeEntry);
+        locationDetails.getLocationProperties().addAll(locationProperties);
+
+        return locationDetails;
+
+    }
 }

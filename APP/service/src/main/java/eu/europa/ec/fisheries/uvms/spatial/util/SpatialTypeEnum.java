@@ -7,10 +7,10 @@ public enum SpatialTypeEnum {
 	
 	EEZ("EEZ", EezEntity.EEZ_BY_COORDINATE, QueryNameConstants.EEZ_COLUMNS, EezEntity.class),
 	RFMO("RFMO", RfmoEntity.RFMO_BY_COORDINATE, QueryNameConstants.RFMO_COLUMNS, RfmoEntity.class),
-	GFCM("GFCM", QueryNameConstants.GFCM_BY_COORDINATE, GfcmEntity.class),
-	RAC("RAC", QueryNameConstants.RAC_BY_COORDINATE, RacEntity.class),
-	S_TAT_RECT("STatRect", QueryNameConstants.STAT_RECT_BY_COORDINATE, StatRectEntity.class),
-	FAO("FAO", QueryNameConstants.FAO_BY_COORDINATE, FaoEntity.class),
+	GFCM("GFCM", QueryNameConstants.GFCM_BY_COORDINATE, GfcmEntity.class),// Not used yet
+	RAC("RAC", QueryNameConstants.RAC_BY_COORDINATE, RacEntity.class),// Not used yet
+	S_TAT_RECT("STatRect", QueryNameConstants.STAT_RECT_BY_COORDINATE, StatRectEntity.class),// Not used yet
+	FAO("FAO", QueryNameConstants.FAO_BY_COORDINATE, FaoEntity.class), // Not used yet
 	PORT("PORT", PortsEntity.PORT_BY_COORDINATE, PortsEntity.class),
 	PORTAREA("PORTAREA", PortAreasEntity.PORTAREA_BY_COORDINATE, PortAreasEntity.class),
 	USERAREA("USERAREA", UserAreasEntity.USER_AREA_BY_COORDINATE, QueryNameConstants.USERAREA_COLUMNS, UserAreasEntity.class);
