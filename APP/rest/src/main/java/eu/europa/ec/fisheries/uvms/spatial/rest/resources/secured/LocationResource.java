@@ -20,7 +20,6 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.LocationDetailsGeoJsonDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.AreaLocationDtoMapper;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.LocationDetailsService;
 import lombok.extern.slf4j.Slf4j;
 
 @Path("/")
@@ -29,8 +28,6 @@ import lombok.extern.slf4j.Slf4j;
 public class LocationResource extends UnionVMSResource {
 
     private @EJB SpatialService spatialService;
-    private @EJB LocationDetailsService locationDetailsService;
-    
     private AreaLocationDtoMapper mapper = AreaLocationDtoMapper.mapper();
     
     @POST
@@ -39,7 +36,7 @@ public class LocationResource extends UnionVMSResource {
     @Path("/locationdetails") // FIXME native query alert
     @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
     public Response getLocationDetails(LocationCoordinateType locationDto) throws IOException, ParseException, ServiceException {
-    	LocationDetails locationDetails = locationDetailsService.getLocationDetails(mapper.getLocationTypeEntry(locationDto));
+    	LocationDetails locationDetails = spatialService.getLocationDetails(mapper.getLocationTypeEntry(locationDto));
     	LocationDetailsGeoJsonDto locationDetailsGeoJsonDto = mapper.getLocationDetailsDto(locationDetails);
     	return createSuccessResponse(locationDetailsGeoJsonDto.convert());
     }
