@@ -2,6 +2,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
@@ -15,6 +16,8 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialService
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.geotools.geometry.jts.JTS;
+import org.geotools.referencing.CRS;
 import org.mapstruct.ap.internal.util.Collections;
 import javax.ejb.EJB;
 import javax.ejb.Local;
