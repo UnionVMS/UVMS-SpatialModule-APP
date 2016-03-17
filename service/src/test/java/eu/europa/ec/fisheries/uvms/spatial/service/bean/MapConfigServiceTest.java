@@ -23,10 +23,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -47,6 +44,26 @@ public class MapConfigServiceTest {
     @Before
     public void initMocks() {
         MockitoAnnotations.initMocks(this);
+    }
+
+    @Test
+    public void testCqlActive() {
+        String startDate = null;
+        String endDate = "2016-08-12 00:00:00";
+        StringBuilder cql = new StringBuilder();
+        if (startDate != null && endDate != null) {
+            cql.append("(").
+                    append("(").append("start_date IS NULL").append(" AND ").append("end_date IS NULL").append(")").append(" OR ").
+                    append("(").append("NOT ( ").append("start_date > ").append("'").append(endDate).append("'").append(" OR ").append("end_date < ").append("'").append(startDate).append("'").append(")").append(")").append(" OR ").
+                    append("(").append("start_date IS NULL").append(" AND ").append("end_date >= ").append("'").append(startDate).append("'").append(")").append(" OR ").
+                    append("(").append("end_date IS NULL").append(" AND ").append("start_date <= ").append("'").append(endDate).append("'").append(")").
+                    append(")");
+        } else if (startDate == null && endDate != null) {
+            cql.append("(").append("start_date <= ").append("'").append(endDate).append("'").append(" OR ").append("start_date IS NULL").append(")");
+        } else {
+            cql.append("");
+        }
+        assertNotNull(cql);
     }
 
     @Test
@@ -83,7 +100,7 @@ public class MapConfigServiceTest {
         mockGenMapProjectionWithDefaultConfig();
 
         //Given
-        MapConfigDto mapConfigDto = mapConfigServiceBean.getReportConfig(1, getConfig("src/test/resources/UserConfig.json"), getConfig("src/test/resources/Config.json"), "rep_power");
+        MapConfigDto mapConfigDto = mapConfigServiceBean.getReportConfig(1, getConfig("src/test/resources/UserConfig.json"), getConfig("src/test/resources/Config.json"), "rep_power", "EC", new Date().toString());
         MapDto mapDto = mapConfigDto.getMap();
         ServiceLayersDto layers = mapDto.getServiceLayers();
 
@@ -103,7 +120,7 @@ public class MapConfigServiceTest {
         mockGenMapProjectionWithoutDefaultConfig();
 
         //Given
-        MapConfigDto mapConfigDto = mapConfigServiceBean.getReportConfig(1, getConfig("src/test/resources/UserConfig.json"), getConfig("src/test/resources/Config.json"), "rep_power");
+        MapConfigDto mapConfigDto = mapConfigServiceBean.getReportConfig(1, getConfig("src/test/resources/UserConfig.json"), getConfig("src/test/resources/Config.json"), "rep_power", "EC", new Date().toString());
         MapDto mapDto = mapConfigDto.getMap();
         ServiceLayersDto layers = mapDto.getServiceLayers();
 

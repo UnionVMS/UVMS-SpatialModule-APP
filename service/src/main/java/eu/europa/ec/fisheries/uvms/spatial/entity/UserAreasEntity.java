@@ -47,14 +47,18 @@ import java.util.Set;
                 query = "SELECT area FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection WHERE area.type = :type AND ((1=:isPowerUser) OR (area.userName=:userName OR scopeSelection.name=:scopeName)) GROUP BY area.gid"),
         @NamedQuery(name = QueryNameConstants.FIND_ALL_USER_AREAS_GROUP,
                 query = "SELECT distinct area.type as name FROM UserAreasEntity area " +
-                        "LEFT JOIN area.scopeSelection scope WHERE (area.userName = :userName OR (scope.name = :scopeName AND scope.userAreas = area))")
-        })
+                        "LEFT JOIN area.scopeSelection scope WHERE (area.userName = :userName OR (scope.name = :scopeName AND scope.userAreas = area))"),
+        @NamedQuery(name = UserAreasEntity.FIND_GID_FOR_SHARED_AREA,
+                query = "SELECT area.gid FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection WHERE (area.userName <> :userName AND area.type = :type AND scopeSelection.name = :scopeName)"),
+
+})
 @Where(clause = "enabled = 'Y'")
 @Table(name = "user_areas", schema = "spatial")
 public class UserAreasEntity implements Serializable {
 
     public static final String USER_AREA_DETAILS_BY_LOCATION = "UserArea.findUserAreaDetailsByLocation";
     public static final String USER_AREA_BY_COORDINATE = "userAreasEntity.ByCoordinate";
+    public static final String FIND_GID_FOR_SHARED_AREA = "userAreasEntity.findGidForSharedAreas";
 
     @Id
     @Column(name = "gid")
