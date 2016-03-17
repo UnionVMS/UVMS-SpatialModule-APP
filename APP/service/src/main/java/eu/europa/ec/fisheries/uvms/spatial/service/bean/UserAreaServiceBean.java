@@ -7,8 +7,6 @@ import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.io.ParseException;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
-import eu.europa.ec.fisheries.uvms.spatial.dao.GisFunction;
-import eu.europa.ec.fisheries.uvms.spatial.dao.PostGres;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserScopeEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
@@ -30,6 +28,10 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.geotools.geometry.jts.WKTReader2;
 import org.geotools.geometry.jts.WKTWriter2;
+import org.hibernate.SQLQuery;
+import org.hibernate.spatial.GeometryType;
+import org.hibernate.type.IntegerType;
+import org.hibernate.type.StringType;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
@@ -37,6 +39,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
@@ -309,39 +312,34 @@ public class UserAreaServiceBean implements UserAreaService {
     @Override
     public List<UserAreaDto> searchUserAreasByCriteria(String userName, String scopeName, String searchCriteria, boolean isPowerUser) throws ServiceException {
 
-        try {
+        final String queryString = "SELECT gid, name, area_desc, geom FROM spatial.user_areas area LEFT JOIN spatial.user_scope scopeSelection"
+                + " ON area.gid = scopeSelection.user_area_id"
+                + " WHERE ((1 = " + (isPowerUser ? 1 : 0) + ") OR (area.user_name = '" + userName + "' OR scopeSelection.scope_name = '" + scopeName + "'))"
+                + " AND (UPPER(area.name) LIKE(UPPER('%" + searchCriteria + "%')) OR UPPER(area.area_desc) LIKE(UPPER('%" + searchCriteria + "%'))) group by area.gid";
 
-            GisFunction gisFunction = new PostGres();
+        List<UserAreaDto> userAreaDtos = new ArrayList<>();
 
-            final String queryString = "SELECT gid, name, area_desc as desc, CAST( " + gisFunction.toWkt("geom") + " AS " + gisFunction.castAsUnlimitedLength()  + ") FROM " +
-                    "spatial.user_areas area LEFT JOIN spatial.user_scope scopeSelection"
-                    + " ON area.gid = scopeSelection.user_area_id"
-                    + " WHERE ((1 = " + (isPowerUser ? 1 : 0) + ") OR (area.user_name = '" + userName + "' OR scopeSelection.scope_name = '" + scopeName + "'))"
-                    + " AND (UPPER(area.name) LIKE(UPPER('%" + searchCriteria + "%')) OR UPPER(area.area_desc) LIKE(UPPER('%" + searchCriteria + "%'))) group by area.gid";
+        final Query emNativeQuery = em.createNativeQuery(queryString);
 
-            List<UserAreaDto> userAreaDtos = newArrayList();
+        emNativeQuery.unwrap(SQLQuery.class)
+                .addScalar("gid", IntegerType.INSTANCE)
+                .addScalar("name", StringType.INSTANCE)
+                .addScalar("area_desc", StringType.INSTANCE)
+                .addScalar("geom", GeometryType.INSTANCE);
 
-            final Query emNativeQuery = em.createNativeQuery(queryString);
-            final List records = emNativeQuery.getResultList();
-            Iterator it = records.iterator();
+        final List records = emNativeQuery.getResultList();
+        Iterator it = records.iterator();
 
-            WKTWriter2 wktWriter2 = new WKTWriter2();
-            WKTReader2 wktReader2 = new WKTReader2();
-            while (it.hasNext( )) {
-                final Object[] result = (Object[])it.next();
-                final String wkt = result[3].toString();
-                final Geometry geometry = wktReader2.read(wkt);
-                final Geometry envelope = geometry.getEnvelope();
-                final String wktEnvelope = wktWriter2.write(envelope);
-                userAreaDtos.add(
-                        new UserAreaDto(Integer.valueOf(result[0].toString()), result[1].toString(), result[2].toString(), wktEnvelope));
-            }
-
-            return userAreaDtos;
-
-        } catch (ParseException e) {
-            throw new ServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR.toString(), e);
+        WKTWriter2 wktWriter2 = new WKTWriter2();
+        while (it.hasNext( )) {
+            final Object[] result = (Object[])it.next();
+            it.remove(); // avoids a ConcurrentModificationException
+            final Geometry envelope = ((Geometry) result[3]).getEnvelope();
+            userAreaDtos.add(new UserAreaDto(Integer.valueOf(result[0].toString()), result[1].toString(),
+                            result[2].toString(), wktWriter2.write(envelope)));
         }
+
+        return userAreaDtos;
 
     }
 
