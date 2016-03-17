@@ -22,6 +22,9 @@ import eu.europa.ec.fisheries.uvms.spatial.util.LayerTypeEnum;
 import eu.europa.ec.fisheries.uvms.spatial.validator.SpatialValidator;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -51,6 +54,8 @@ public class MapConfigServiceBean implements MapConfigService {
     private static final Integer DEFAULT_EPSG = 3857;
 
     private static final String USER_AREA = "userarea";
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MapConfigServiceBean.class.getName());
 
     @EJB
     private SpatialRepository repository;
@@ -308,9 +313,9 @@ public class MapConfigServiceBean implements MapConfigService {
 
     @Override
     @SneakyThrows
-    public MapConfigDto getReportConfig(int reportId, String userPreferences, String adminPreferences, String userName) {
+    public MapConfigDto getReportConfig(int reportId, String userPreferences, String adminPreferences, String userName, String scopeName, String timeStamp) {
         ConfigurationDto configurationDto = mergeConfiguration(getUserConfiguration(userPreferences), getAdminConfiguration(adminPreferences)); //Returns merged config object between Admin and User configuration from USM
-        return new MapConfigDto(getMap(configurationDto, reportId, userName), getVectorStyles(configurationDto, reportId), getVisibilitySettings(configurationDto, reportId));
+        return new MapConfigDto(getMap(configurationDto, reportId, userName, scopeName, timeStamp), getVectorStyles(configurationDto, reportId), getVisibilitySettings(configurationDto, reportId));
     }
 
     private void updateLayerSettings(LayerSettingsDto layerSettingsDto, String userName, boolean includeUserArea) throws ServiceException {
@@ -398,11 +403,11 @@ public class MapConfigServiceBean implements MapConfigService {
         }
     }
 
-    private MapDto getMap(ConfigurationDto configurationDto, int reportId, String userName) throws ServiceException {
+    private MapDto getMap(ConfigurationDto configurationDto, int reportId, String userName, String scopeName, String timeStamp) throws ServiceException {
         ProjectionDto projection = getMapProjection(reportId, configurationDto);
         List<ControlDto> controls = getControls(reportId, configurationDto);
         List<TbControlDto> tbControls = getTbControls(configurationDto);
-        ServiceLayersDto layers = getServiceAreaLayer(reportId, configurationDto, projection, userName);
+        ServiceLayersDto layers = getServiceAreaLayer(reportId, configurationDto, projection, userName, scopeName, timeStamp);
         RefreshDto refreshDto = getRefreshDto(configurationDto);
         return new MapDto(projection, controls, tbControls, layers, refreshDto);
     }
@@ -433,7 +438,7 @@ public class MapConfigServiceBean implements MapConfigService {
         return MapConfigMapper.INSTANCE.getTbControls(configurationDto.getToolSettings().getTbControl());
     }
 
-    private ServiceLayersDto getServiceAreaLayer(int reportId, ConfigurationDto configurationDto, ProjectionDto projection, String userName) throws ServiceException {
+    private ServiceLayersDto getServiceAreaLayer(int reportId, ConfigurationDto configurationDto, ProjectionDto projection, String userName, String scopeName, String timeStamp) throws ServiceException {
         String geoServerUrl = getGeoServerUrl();
         String bingApiKey = getBingApiKey();
         ReportConnectSpatialEntity entity = repository.findReportConnectSpatialBy((long) reportId);
@@ -441,12 +446,12 @@ public class MapConfigServiceBean implements MapConfigService {
             Set<ReportConnectServiceAreasEntity> reportConnectServiceAreas = entity.getReportConnectServiceAreases(); // Report is overridden with Layer Settings. Ignore USM layer configuration
             if (reportConnectServiceAreas != null && !reportConnectServiceAreas.isEmpty()) {
                 LayerSettingsDto layerSettingsDto = getLayerSettingsForMap(entity.getReportConnectServiceAreases());
-                return getServiceAreaLayersFromConfig(layerSettingsDto, geoServerUrl, bingApiKey, projection, userName);
+                return getServiceAreaLayers(layerSettingsDto, geoServerUrl, bingApiKey, projection, userName, scopeName, timeStamp, reportId);
             } else {
-                return getServiceAreaLayersFromConfig(configurationDto.getLayerSettings(), geoServerUrl, bingApiKey, projection, userName);
+                return getServiceAreaLayers(configurationDto.getLayerSettings(), geoServerUrl, bingApiKey, projection, userName, scopeName, timeStamp, reportId);
             }
         } else {
-            return getServiceAreaLayersFromConfig(configurationDto.getLayerSettings(), geoServerUrl, bingApiKey, projection, userName);
+            return getServiceAreaLayers(configurationDto.getLayerSettings(), geoServerUrl, bingApiKey, projection, userName, scopeName, timeStamp, reportId);
         }
     }
 
@@ -509,16 +514,16 @@ public class MapConfigServiceBean implements MapConfigService {
         return new RefreshDto(configurationDto.getMapSettings().getRefreshStatus(), configurationDto.getMapSettings().getRefreshRate());
     }
 
-    private ServiceLayersDto getServiceAreaLayersFromConfig(LayerSettingsDto layerSettingsDto, String geoServerUrl, String bingApiKey, ProjectionDto projection, String userName) throws ServiceException {
+    private ServiceLayersDto getServiceAreaLayers(LayerSettingsDto layerSettingsDto, String geoServerUrl, String bingApiKey, ProjectionDto projection, String userName, String scopeName, String timeStamp, int reportId) throws ServiceException {
         ServiceLayersDto serviceLayersDto = new ServiceLayersDto();
         serviceLayersDto.setPortLayers(getLayerDtoList(layerSettingsDto.getPortLayers(), geoServerUrl, bingApiKey, projection, false)); // Get Service Layers for Port layers
-        serviceLayersDto.setSystemLayers(getAreaLayerDtoList(layerSettingsDto.getAreaLayers(), geoServerUrl, bingApiKey, projection, false)); // // Get Service Layers for system layers and User Layers
+        serviceLayersDto.setSystemLayers(getAreaLayerDtoList(layerSettingsDto.getAreaLayers(), geoServerUrl, bingApiKey, projection, false, userName, scopeName, timeStamp, reportId)); // // Get Service Layers for system layers and User Layers
         serviceLayersDto.setAdditionalLayers(getLayerDtoList(layerSettingsDto.getAdditionalLayers(), geoServerUrl, bingApiKey, projection, false)); // Get Service Layers for Additional layers
         serviceLayersDto.setBaseLayers(getLayerDtoList(layerSettingsDto.getBaseLayers(), geoServerUrl, bingApiKey, projection, true)); // Get Service Layers for base layers
         return serviceLayersDto;
     }
 
-    private List<LayerDto> getAreaLayerDtoList(List<LayerAreaDto> layersDtos, String geoServerUrl, String bingApiKey, ProjectionDto projection, boolean isBackground) {
+    private List<LayerDto> getAreaLayerDtoList(List<LayerAreaDto> layersDtos, String geoServerUrl, String bingApiKey, ProjectionDto projection, boolean isBackground, String userName, String scopeName, String timeStamp, int reportId) {
         if (layersDtos == null || layersDtos.isEmpty()) {
             return null;
         }
@@ -537,7 +542,8 @@ public class MapConfigServiceBean implements MapConfigService {
                         layerDto.setTitle((userAreas != null & !userAreas.isEmpty()) ? userAreas.get(0).getName() : null);
                         layerDto.setAreaType(AreaTypeEnum.userarea.getType().toUpperCase());
                     } else if (layerAreaDto.getAreaType().equals(AreaTypeEnum.areagroup)) {
-                        layerDto.setCql("type=" + "'" + layerAreaDto.getAreaGroupName() + "'");
+                        layerDto.setCqlAll(getAreaGroupCqlAll(userName, scopeName, layerAreaDto.getAreaGroupName()));
+                        layerDto.setCqlActive(getAreaGroupCqlActive(reportId, timeStamp));
                         layerDto.setAreaType(AreaTypeEnum.areagroup.getType().toUpperCase());
                         layerDto.setTitle(layerAreaDto.getAreaGroupName());
                     } else if (layerAreaDto.getAreaType().equals(AreaTypeEnum.sysarea)) {
@@ -550,6 +556,36 @@ public class MapConfigServiceBean implements MapConfigService {
         return layerDtoList;
     }
 
+    private String getAreaGroupCqlAll(String userName, String scopeName, String areaGroupName) {
+        StringBuilder cql = new StringBuilder("type=" + "'" + areaGroupName + "'");
+        List<Long> gids = repository.getAllSharedGids(userName, scopeName, areaGroupName);
+        if (gids != null && !gids.isEmpty()) {
+            cql.append("OR gid IN (" + StringUtils.join(gids, ",") + ")");
+        }
+        LOGGER.info("cql All for geo server : \n" + cql);
+        return cql.toString();
+    }
+
+    private String getAreaGroupCqlActive(int reportId, String timeStamp) {
+        // TODO call Reporting to get the start date and end date of the report
+        String startDate = null;
+        String endDate = null;
+        StringBuilder cql = new StringBuilder();
+        if (startDate != null && endDate != null) {
+            cql.append("(").
+                    append("(").append("start_date IS NULL").append(" AND ").append("end_date IS NULL").append(")").append(" OR ").
+                    append("(").append("NOT ( ").append("start_date > ").append("'").append(endDate).append("'").append(" OR ").append("end_date < ").append("'").append(startDate).append("'").append(")").append(")").append(" OR ").
+                    append("(").append("start_date IS NULL").append(" AND ").append("end_date >= ").append("'").append(startDate).append("'").append(")").append(" OR ").
+                    append("(").append("end_date IS NULL").append(" AND ").append("start_date <= ").append("'").append(endDate).append("'").append(")").
+                append(")");
+        } else if (startDate == null && endDate != null) {
+            cql.append("(").append("start_date <= ").append("'").append(endDate).append("'").append(" OR ").append("start_date IS NULL").append(")");
+        } else {
+            cql.append("");
+        }
+        return cql.toString();
+    }
+
     private List<LayerDto> getLayerDtoList(List<? extends LayersDto> layersDtos, String geoServerUrl, String bingApiKey, ProjectionDto projection, boolean isBackground) {
         if (layersDtos == null || layersDtos.isEmpty()) {
             return null;
@@ -558,7 +594,7 @@ public class MapConfigServiceBean implements MapConfigService {
         List<Long> serviceLayerIds = getServiceLayerIds(layersDtos);
         List<ServiceLayerEntity> serviceLayerEntities = getServiceLayers(serviceLayerIds, projection, bingApiKey);
         return getLayerDtos(serviceLayerEntities, geoServerUrl, bingApiKey, isBackground);
-    };
+    }
 
     private List<LayerDto> getLayerDtos(List<ServiceLayerEntity> serviceLayerEntities, String geoserverUrl, String bingApiKey, boolean isBaseLayer) {
         List<LayerDto> layerDtos = new ArrayList<>();

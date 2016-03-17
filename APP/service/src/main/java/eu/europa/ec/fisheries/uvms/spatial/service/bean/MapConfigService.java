@@ -18,7 +18,7 @@ import javax.ejb.Local;
 @Local
 public interface MapConfigService {
 
-    MapConfigDto getReportConfig(int reportId, String userPreferences, String adminPreferences, String userName);
+    MapConfigDto getReportConfig(int reportId, String userPreferences, String adminPreferences, String userName, String scopeName, String timeStamp);
 
     MapConfigurationType getMapConfigurationType(final Long reportId) throws ServiceException;
 

@@ -62,8 +62,11 @@ public class LayerDto {
     @JsonProperty("apiKey")
     private String apiKey;
 
-    @JsonProperty("cql")
-    private String cql;
+    @JsonProperty("cql_all")
+    private String cqlAll;
+
+    @JsonProperty("cql_active")
+    private String cqlActive;
 
     /**
      * No args constructor for use in serialization
@@ -190,14 +193,14 @@ public class LayerDto {
         this.name = name;
     }
 
-    @JsonProperty("cql")
-    public String getCql() {
-        return cql;
+    @JsonProperty("cql_all")
+    public String getCqlAll() {
+        return cqlAll;
     }
 
-    @JsonProperty("cql")
-    public void setCql(String cql) {
-        this.cql = cql;
+    @JsonProperty("cql_all")
+    public void setCqlAll(String cqlAll) {
+        this.cqlAll = cqlAll;
     }
 
     @JsonProperty("areaType")
@@ -208,5 +211,15 @@ public class LayerDto {
     @JsonProperty("areaType")
     public void setAreaType(String areaType) {
         this.areaType = areaType;
+    }
+
+    @JsonProperty("cql_active")
+    public String getCqlActive() {
+        return cqlActive;
+    }
+
+    @JsonProperty("cql_active")
+    public void setCqlActive(String cqlActive) {
+        this.cqlActive = cqlActive;
     }
 }

@@ -24,8 +24,7 @@ public class UserAreaJpaDao extends AbstractDAO<UserAreasEntity> {
 
     private static final String USER_NAME = "userName";
     private static final String SCOPE_NAME = "scopeName";
-	private static final String CRS = "crs";
-	private static final String WKT = "wktPoint";
+    private static final String TYPE = "type";
 	private static final String GID_LIST = "gids";
 
     public UserAreaJpaDao(EntityManager em) {
@@ -78,6 +77,12 @@ public class UserAreaJpaDao extends AbstractDAO<UserAreasEntity> {
         Map<String, Object> parameters = ImmutableMap.<String, Object>builder().put(USER_NAME, userName).put(SCOPE_NAME, scopeName).build();
         Query query = createNamedNativeQuery(QueryNameConstants.FIND_ALL_USER_AREAS_GROUP, parameters);
         query.setResultTransformer(Transformers.aliasToBean(AreaDto.class));
+        return query.list();
+    }
+
+    public List<Long> getAllSharedGids(String userName, String scopeName, String type) {
+        Map<String, Object> parameters = ImmutableMap.<String, Object>builder().put(USER_NAME, userName).put(SCOPE_NAME, scopeName).put(TYPE, type).build();
+        Query query = createNamedNativeQuery(UserAreasEntity.FIND_GID_FOR_SHARED_AREA, parameters);
         return query.list();
     }
 

@@ -262,6 +262,11 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     }
 
     @Override
+    public List<Long> getAllSharedGids(String userName, String scopeName, String type) {
+        return userAreaDao.getAllSharedGids(userName, scopeName, type);
+    }
+
+    @Override
     public List<UserAreasEntity> findUserAreaById(Long userAreaId, String userName, Boolean isPowerUser, String scopeName) throws ServiceException {
         QueryParameter param = with("userAreaId", userAreaId).and("userName", userName).and("isPowerUser", isPowerUser?1:0).and("scopeName", scopeName);
 
