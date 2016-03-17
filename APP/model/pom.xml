@@ -143,6 +143,7 @@
                             <schemaDirectory>${project.basedir}/src/main/resources/contract</schemaDirectory>
                             <extension>true</extension>
                             <args>
+                                <arg>-XtoString</arg>
                                 <arg>-Xsetters</arg>
                                 <arg>-Xvalue-constructor</arg>
                                 <arg>-Xsetters-mode=direct</arg>

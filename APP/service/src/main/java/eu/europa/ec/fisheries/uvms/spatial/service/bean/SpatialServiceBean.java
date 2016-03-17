@@ -1,56 +1,83 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import com.google.common.base.Function;
+import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryCollection;
+import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.io.ParseException;
+import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.interceptors.TracingInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.dao.GisFunction;
 import eu.europa.ec.fisheries.uvms.spatial.dao.PostGres;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.PortsEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.area.SystemAreaDto;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Area;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaExtendedIdentifierType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaIdentifierType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestLocationSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Location;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationDetails;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationProperty;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationTypeEntry;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ScopeAreasType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.UnitType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.UserAreasType;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.ClosestAreaDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.FilterAreasDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.util.MeasurementUnit;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.geotools.geometry.jts.JTS;
+import org.geotools.geometry.jts.JTSFactoryFinder;
 import org.geotools.geometry.jts.WKTReader2;
 import org.geotools.geometry.jts.WKTWriter2;
+import org.geotools.referencing.CRS;
 import org.geotools.referencing.GeodeticCalculator;
 import org.hibernate.SQLQuery;
+import org.hibernate.spatial.GeometryType;
 import org.hibernate.transform.Transformers;
+import org.hibernate.type.IntegerType;
 import org.hibernate.type.StandardBasicTypes;
+import org.hibernate.type.StringType;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.operation.TransformException;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
+import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import static com.google.common.collect.Lists.newArrayList;
+
 import static eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialUtils.convertToPointInWGS84;
 import static eu.europa.ec.fisheries.uvms.spatial.util.ColumnAliasNameHelper.getFieldMap;
 import static eu.europa.ec.fisheries.uvms.spatial.util.SpatialTypeEnum.getEntityClassByType;
 import static eu.europa.ec.fisheries.uvms.spatial.util.SpatialTypeEnum.getNativeQueryByType;
 import static org.apache.commons.collections.CollectionUtils.isEmpty;
 import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
-import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  * This class groups all the spatial operations on the spatial database.
@@ -59,10 +86,15 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 @Local(SpatialService.class)
 @Transactional
 @Slf4j
+@Interceptors(TracingInterceptor.class)
 public class SpatialServiceBean implements SpatialService {
 
-    private static final String TYPE_NAMES = "typeNames";
+    private static final String EPSG = "EPSG:";
     private static final String TYPE_NAME = "typeName";
+    private static final String GEOM = "geom";
+    private static final String GID = "gid";
+    private static final String NAME = "name";
+    private static final String CODE = "code";
 
     private @PersistenceContext(unitName = "spatialPU") EntityManager em;
     private @EJB SpatialRepository repository;
@@ -99,6 +131,7 @@ public class SpatialServiceBean implements SpatialService {
 
                 final String areaDbTable = locationMap.get(locationType.value());
 
+                // FIXME replace by GeometryType
                 final String queryString = "SELECT gid, code, name, "+ gisFunction.toWkt("geom")+ ", " + gisFunction.stDistance(longitude, latitude, crs) + " AS distance " +
                         "FROM spatial." + areaDbTable + " WHERE enabled = 'Y' ORDER BY distance ASC " + gisFunction.limit(15);
 
@@ -167,9 +200,9 @@ public class SpatialServiceBean implements SpatialService {
             Query emNativeQuery = em.createNativeQuery(queryString);
 
             emNativeQuery.unwrap(SQLQuery.class)
-                    .addScalar("gid", StandardBasicTypes.INTEGER)
-                    .addScalar("code", StandardBasicTypes.STRING)
-                    .addScalar("name", StandardBasicTypes.STRING)
+                    .addScalar(GID, StandardBasicTypes.INTEGER)
+                    .addScalar(CODE, StandardBasicTypes.STRING)
+                    .addScalar(NAME, StandardBasicTypes.STRING)
                     .setResultTransformer(Transformers.aliasToBean(SystemAreaDto.class));
 
             List<SystemAreaDto> resultList = emNativeQuery.getResultList();
@@ -198,7 +231,7 @@ public class SpatialServiceBean implements SpatialService {
             areaType2TableName.put(area.getTypeName().toUpperCase(), area.getAreaDbTable());
         }
 
-        List<Area> closestAreas = newArrayList();
+        List<Area> closestAreas = new ArrayList<>();
 
         for (AreaType areaType : request.getAreaTypes().getAreaTypes()) {
             if (areaType!= null) {
@@ -229,8 +262,7 @@ public class SpatialServiceBean implements SpatialService {
     }
 
     @Override
-    @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public FilterAreasSpatialRS filterAreas(final FilterAreasSpatialRQ request) throws ServiceException {
+    public FilterAreasSpatialRS filterAreas(FilterAreasSpatialRQ request) throws ServiceException {
 
         final UserAreasType userAreas = request.getUserAreas();
         final ScopeAreasType scopeAreas = request.getScopeAreas();
@@ -240,133 +272,135 @@ public class SpatialServiceBean implements SpatialService {
             throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
         }
 
-        Function<AreaIdentifierType, String> extractAreaType = new Function<AreaIdentifierType, String>() {
+        final Multimap<Long, String> userStringLongMap = ArrayListMultimap.create();
+        final Multimap<Long, String> scopeStringLongMap = ArrayListMultimap.create();
+        final Geometry userAreasUnion = union(userStringLongMap, userAreas.getUserAreas());
+        final Geometry scopeAreasUnion = union(scopeStringLongMap, scopeAreas.getScopeAreas());
 
-            @Override
-            public String apply(AreaIdentifierType area) {
-                if (area != null && area.getAreaType() != null) {
-                    return area.getAreaType().toString().toUpperCase();
-                }
-                return StringUtils.EMPTY;
-            }
-        };
+        FilterAreasSpatialRS response = new FilterAreasSpatialRS(null,0);
+        Geometry intersection = null;
 
-        Function<AreaIdentifierType, String> extractAreaId = new Function<AreaIdentifierType, String>() {
-
-            @Override
-            public String apply(AreaIdentifierType area) {
-
-                if (area != null) {
-                    return area.getId();
-                }
-                return StringUtils.EMPTY;
-            }
-        };
-
-        List<String> userAreaTypes = Collections.emptyList();
-        List<String> userAreaIds = Collections.emptyList();
-        List<String> scopeAreaTypes = Collections.emptyList();
-        List<String> scopeAreaIds = Collections.emptyList();
-
-        if (userAreas != null) {
-            userAreaTypes = Lists.transform(userAreas.getUserAreas(), extractAreaType);
-            userAreaIds = Lists.transform(userAreas.getUserAreas(), extractAreaId);
-        }
-        if (scopeAreas != null) {
-            scopeAreaTypes = Lists.transform(scopeAreas.getScopeAreas(), extractAreaType);
-            scopeAreaIds = Lists.transform(scopeAreas.getScopeAreas(), extractAreaId);
-        }
-
-        Map<String, List<String>> parameters = ImmutableMap.<String, List<String>>builder().put(TYPE_NAMES, userAreaTypes).build();
-
-        List<AreaLocationTypesEntity> areaEntities = repository.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_TYPE_BY_NAMES, parameters);
-
-        final Map<String, String> areaType2TableName = Maps.newHashMap();
-        for (AreaLocationTypesEntity areaEntity : areaEntities) {
-            areaType2TableName.put(areaEntity.getTypeName(), areaEntity.getAreaDbTable());
-        }
-
-        for (String areaType : userAreaTypes) {
-            String userAreaTableName = areaType2TableName.get(areaType);
-            if (isBlank(userAreaTableName)) {
-                throw new SpatialServiceException(SpatialServiceErrors.INVALID_AREA_TYPE, areaType);
+        if (!userAreasUnion.isEmpty() && !scopeAreasUnion.isEmpty()){
+            intersection = userAreasUnion.intersection(scopeAreasUnion);
+            response.setCode(3);
+            if (intersection.isEmpty()){
+                intersection = scopeAreasUnion;
+                response.setCode(4);
             }
         }
+        else if(!userAreasUnion.isEmpty()){
+            intersection = userAreasUnion;
+            response.setCode(1);
+        }
+        else if(!scopeAreasUnion.isEmpty()){
+            intersection = scopeAreasUnion;
+            response.setCode(2);
+        }
 
-        List<String> userAreaTables = Lists.transform(userAreaTypes, new Function<String, String>() {
-            @Override
-            public String apply(String areaType) {
-                return areaType2TableName.get(areaType);
-            }
-        });
+        assert intersection != null;
+        if (intersection.getNumPoints() > 20000){
+            intersection = DouglasPeuckerSimplifier.simplify(intersection, 0.5);
+        }
 
-        List<String> scopeAreaTables = Lists.transform(scopeAreaTypes, new Function<String, String>() {
-            @Override
-            public String apply(String areaType) {
-                return areaType2TableName.get(areaType);
-            }
-        });
-
-        // FIXME Oracle problem
-        FilterAreasDto result = repository.filterAreas(userAreaTables, userAreaIds, scopeAreaTables, scopeAreaIds);
-
-        FilterAreasSpatialRS response = new FilterAreasSpatialRS();
-        response.setGeometry(result.getWktgeometry());
-        response.setCode(result.getResultcode());
+        response.setGeometry(new WKTWriter2().write(intersection));
         return response;
 
+    }
+
+    private Geometry union(final Multimap<Long, String> multiMap, final List<AreaIdentifierType> areaTypes) throws ServiceException {
+
+        try {
+
+            for (AreaIdentifierType type : areaTypes){
+                multiMap.put(Long.valueOf(type.getId()), type.getAreaType().value());
+            }
+
+            final StringBuilder sb = new StringBuilder();
+
+            Iterator it = multiMap.entries().iterator();
+            while (it.hasNext()) {
+                Map.Entry pair = (Map.Entry)it.next();
+                sb.append("SELECT geom FROM spatial.").append(pair.getValue()).append(" spatial WHERE spatial.gid = ").append(pair.getKey());
+                it.remove(); // avoids a ConcurrentModificationException
+                if (it.hasNext()) {
+                    sb.append(" UNION ");
+                }
+            }
+
+            Query emNativeQuery = em.createNativeQuery(sb.toString());
+            emNativeQuery.unwrap(SQLQuery.class).addScalar(GEOM, GeometryType.INSTANCE);
+            @SuppressWarnings("unchecked")
+            List<Geometry> resultList = emNativeQuery.getResultList();
+
+            List<Geometry> geometryList = new ArrayList<>();
+            for(Geometry geometry : resultList){
+
+                if (!SpatialUtils.isDefaultCrs(geometry.getSRID())){
+                    Geometry geographic = JTS.toGeographic(geometry, CRS.decode(EPSG + Integer.toString(geometry.getSRID()), true));
+                    geometryList.add(geographic);
+
+                }
+                else {
+                    geometryList.add(geometry);
+                }
+            }
+
+            GeometryFactory geometryFactory = JTSFactoryFinder.getGeometryFactory();
+            // note the following geometry collection may be invalid (say with overlapping polygons)
+            GeometryCollection geometryCollection =
+                    (GeometryCollection) geometryFactory.buildGeometry( geometryList );
+
+            return geometryCollection.union();
+
+        } catch (FactoryException | TransformException ex) {
+            throw new ServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR.toString(), ex);
+        }
     }
 
     @Override
     @Transactional
     public List<SystemAreaDto> getAreasByFilter(final String tableName, final String filter) throws ServiceException {
 
-        try {
-            AreaLocationTypesEntity areaLocationType = repository.findAreaLocationTypeByTypeName(tableName.toUpperCase());
+        AreaLocationTypesEntity areaLocationType = repository.findAreaLocationTypeByTypeName(tableName.toUpperCase());
 
-            if (areaLocationType == null) {
-                throw new SpatialServiceException(SpatialServiceErrors.INVALID_AREA_LOCATION_TYPE, areaLocationType);
-            }
-
-            GisFunction gisFunction = new PostGres();
-            final String toUpperCase = filter.toUpperCase();
-            final String queryString= "SELECT gid, name, code, CAST(" + gisFunction.toWkt("geom") +" AS " + gisFunction.castAsUnlimitedLength() + ")" +
-                    " FROM spatial." + tableName + " WHERE UPPER(name) LIKE '%" + toUpperCase + "%' OR code LIKE '%" + toUpperCase + "%' GROUP BY gid";
-
-            final Query emNativeQuery = em.createNativeQuery(queryString);
-            final List records = emNativeQuery.getResultList();
-            Iterator it = records.iterator();
-
-            final ArrayList<SystemAreaDto> systemAreaByFilterRecords = new ArrayList<>();
-            final WKTReader2 wktReader2 = new WKTReader2();
-            final WKTWriter2 wktWriter2 = new WKTWriter2();
-
-            while (it.hasNext( )) {
-                final Object[] result = (Object[])it.next();
-                final String wkt = result[3].toString();
-                Geometry geometry = wktReader2.read(wkt);
-                final Geometry envelope = geometry.getEnvelope();
-
-                final String wktEnvelope = wktWriter2.write(envelope);
-                systemAreaByFilterRecords.add(
-                        new SystemAreaDto(Integer.valueOf(result[0].toString()),
-                                result[2].toString(), tableName.toUpperCase(), wktEnvelope, result[1].toString()));
-            }
-
-            return systemAreaByFilterRecords;
-
-        } catch (ParseException e) {
-            throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR, e.getMessage());
+        if (areaLocationType == null) {
+            throw new SpatialServiceException(SpatialServiceErrors.INVALID_AREA_LOCATION_TYPE, areaLocationType);
         }
-    }
 
+        final String toUpperCase = filter.toUpperCase();
+        final String queryString= "SELECT gid, name, code, geom FROM spatial." + tableName + " " +
+                "WHERE UPPER(name) LIKE '%" + toUpperCase + "%' OR code LIKE '%" + toUpperCase + "%' GROUP BY gid";
+
+        final Query emNativeQuery = em.createNativeQuery(queryString);
+        emNativeQuery.unwrap(SQLQuery.class)
+                .addScalar(GID, IntegerType.INSTANCE)
+                .addScalar(NAME, StringType.INSTANCE)
+                .addScalar(CODE, StringType.INSTANCE)
+                .addScalar(GEOM, GeometryType.INSTANCE);
+
+        final List records = emNativeQuery.getResultList();
+        Iterator it = records.iterator();
+
+        final ArrayList<SystemAreaDto> systemAreaByFilterRecords = new ArrayList<>();
+        final WKTWriter2 wktWriter2 = new WKTWriter2();
+
+        while (it.hasNext( )) {
+            final Object[] result = (Object[])it.next();
+            final Geometry envelope = ((Geometry)result[3]).getEnvelope();
+            systemAreaByFilterRecords.add(
+                    new SystemAreaDto(Integer.valueOf(result[0].toString()),
+                            result[2].toString(), tableName.toUpperCase(), wktWriter2.write(envelope), result[1].toString()));
+        }
+
+        return systemAreaByFilterRecords;
+
+    }
 
     @Override
     @Transactional
     public LocationDetails getLocationDetails(LocationTypeEntry locationTypeEntry) throws ServiceException {
 
         final GisFunction gisFunction = new PostGres();
-        final WKTReader2 wktReader2 = new WKTReader2();
         final GeodeticCalculator calc = new GeodeticCalculator();
 
         String id = locationTypeEntry.getId();
@@ -425,10 +459,9 @@ public class SpatialServiceBean implements SpatialService {
                     if (closestDistance > orthodromicDistance) {
                         closestDistance = orthodromicDistance;
                         closestLocation = portsEntity;
-
                     }
-
                 }
+
                 if (closestLocation != null){
                     list.add(closestLocation);
                 }
@@ -462,4 +495,6 @@ public class SpatialServiceBean implements SpatialService {
         return locationDetails;
 
     }
+
+
 }
