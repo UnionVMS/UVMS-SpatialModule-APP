@@ -37,20 +37,20 @@ public class ConfigResource extends UnionVMSResource {
     @EJB
     private USMService usmService;
 
-    @GET
+    @POST
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Path("{id}")
     @Interceptors(value = {ExceptionInterceptor.class})
     public Response getReportMapConfig(@Context HttpServletRequest request,
                                        @HeaderParam(AuthConstants.HTTP_HEADER_SCOPE_NAME) String scopeName,
                                        @HeaderParam(AuthConstants.HTTP_HEADER_ROLE_NAME) String roleName,
-                                       @PathParam("id") int id) throws ServiceException {
+                                       @PathParam("id") int id, String timeStamp) throws ServiceException {
         final String username = request.getRemoteUser();
         String applicationName = request.getServletContext().getInitParameter("usmApplication");
         String adminPref = usmService.getOptionDefaultValue(DEFAULT_CONFIG, applicationName);
         String userPref = usmService.getUserPreference(USER_CONFIG, username, applicationName, roleName, scopeName);
         log.info("Getting map configuration for report with id = {}", id);
-        MapConfigDto mapConfig = mapConfigService.getReportConfig(id, userPref, adminPref, username);
+        MapConfigDto mapConfig = mapConfigService.getReportConfig(id, userPref, adminPref, username, scopeName, timeStamp);
         return createSuccessResponse(mapConfig);
     }
 

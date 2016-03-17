@@ -15,6 +15,7 @@ import javax.servlet.ServletContext;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertFalse;
@@ -53,7 +54,7 @@ public class MapConfigServiceIT extends AbstractArquillianIT {
     @Test
     public void testGetMapConfig() throws IOException {
         //given
-        MapConfigDto mapConfigDto = mapConfigService.getReportConfig(1, getConfig("/UserConfig.json"), getConfig("/Config.json"), "rep_power");
+        MapConfigDto mapConfigDto = mapConfigService.getReportConfig(1, getConfig("/UserConfig.json"), getConfig("/Config.json"), "rep_power", "EC", new Date().toString());
 
         //test
         assertNotNull(mapConfigDto.getMap().getProjectionDto());
@@ -64,7 +65,7 @@ public class MapConfigServiceIT extends AbstractArquillianIT {
     @Test
     public void testInvalidMapConfig() throws IOException {
         //given
-        MapConfigDto mapConfigDto = mapConfigService.getReportConfig(1000000, getConfig("/UserConfig.json"), getConfig("/Config.json"), "rep_power");
+        MapConfigDto mapConfigDto = mapConfigService.getReportConfig(1000000, getConfig("/UserConfig.json"), getConfig("/Config.json"), "rep_power", "EC", new Date().toString());
 
         //test
         assertNull(mapConfigDto.getMap().getProjectionDto());
