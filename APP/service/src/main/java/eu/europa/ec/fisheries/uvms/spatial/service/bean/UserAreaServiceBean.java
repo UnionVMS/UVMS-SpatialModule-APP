@@ -306,6 +306,7 @@ public class UserAreaServiceBean implements UserAreaService {
         }
     }
 
+    @Override
     public List<UserAreaDto> searchUserAreasByCriteria(String userName, String scopeName, String searchCriteria, boolean isPowerUser) throws ServiceException {
 
         try {
@@ -315,9 +316,8 @@ public class UserAreaServiceBean implements UserAreaService {
             final String queryString = "SELECT gid, name, area_desc as desc, CAST( " + gisFunction.toWkt("geom") + " AS " + gisFunction.castAsUnlimitedLength()  + ") FROM " +
                     "spatial.user_areas area LEFT JOIN spatial.user_scope scopeSelection"
                     + " ON area.gid = scopeSelection.user_area_id"
-                    + " WHERE ((1 = " + (isPowerUser ? 1 : 0) + ") OR (area.user_name = " + userName + " OR scopeSelection.scope_name = " + scopeName + "))"
+                    + " WHERE ((1 = " + (isPowerUser ? 1 : 0) + ") OR (area.user_name = '" + userName + "' OR scopeSelection.scope_name = '" + scopeName + "'))"
                     + " AND (UPPER(area.name) LIKE(UPPER('%" + searchCriteria + "%')) OR UPPER(area.area_desc) LIKE(UPPER('%" + searchCriteria + "%'))) group by area.gid";
-
 
             List<UserAreaDto> userAreaDtos = newArrayList();
 
