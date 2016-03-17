@@ -19,12 +19,17 @@
             <group>${spatial.name}</group>
         </feature>
 
-
         <feature>
             <name>MANAGE_USER_DEFINED_AREAS</name>
             <description>Allows you to create, view, update and delete user defined areas.</description>
             <group>${spatial.name}</group>
         </feature>
+		
+		<feature>
+			<name>VIEW_AREA_MANAGEMENT_UI</name>
+            <description>Allows you to have access to the user interface of area management.</description>
+            <group>${spatial.name}</group>
+		</feature>
 
         <feature>
             <name>MANAGE_BOOKMARKS</name>
