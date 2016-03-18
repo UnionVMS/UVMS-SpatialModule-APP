@@ -127,8 +127,8 @@ public class AreaResource extends UnionVMSResource {
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/areasbyfilter")
     @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
-    public Response getAreasByFilter(AreaFilterType areaFilterType) throws ServiceException {
-    	return createSuccessResponse(spatialService.getAreasByFilter(areaFilterType.getAreaType(), areaFilterType.getFilter()));
+    public Response searchAreasByNameOrCode(AreaFilterType areaFilterType) throws ServiceException {
+    	return createSuccessResponse(spatialService.searchAreasByNameOrCode(areaFilterType.getAreaType(), areaFilterType.getFilter()));
     }
 
     @GET

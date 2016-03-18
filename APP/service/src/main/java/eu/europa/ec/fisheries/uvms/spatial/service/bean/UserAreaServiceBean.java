@@ -69,7 +69,7 @@ public class UserAreaServiceBean implements UserAreaService {
         userAreasEntity.setUserName(userName);
         userAreasEntity.setCreatedOn(new Date());
 
-        UserAreasEntity persistedEntity = (UserAreasEntity) repository.createEntity(userAreasEntity);
+        UserAreasEntity persistedEntity = (UserAreasEntity) repository.createEntity(userAreasEntity); // TODO use DAO
 
         if (StringUtils.isNotBlank(persistedEntity.getDatasetName())) {
             usmService.createDataset(USMSpatial.APPLICATION_NAME, persistedEntity.getDatasetName(), createDescriminator(persistedEntity), USMSpatial.USM_DATASET_CATEGORY, USMSpatial.USM_DATASET_DESCRIPTION);
@@ -206,8 +206,8 @@ public class UserAreaServiceBean implements UserAreaService {
         List<UserAreasEntity> userAreaDetails = repository.findUserAreaDetailsByLocation(userName, point);
         try {
             List<AreaDetails> areaDetailsList = Lists.newArrayList();
-            for (int i = 0; i < userAreaDetails.size(); i++) {
-                Map<String, Object> properties = getFieldMap(userAreaDetails.get(i));
+            for (UserAreasEntity userAreaDetail : userAreaDetails) {
+                Map<String, Object> properties = getFieldMap(userAreaDetail);
                 addCentroidToProperties(properties);
                 areaDetailsList.add(createAreaDetailsSpatialResponse(properties, areaTypeEntry));
             }
@@ -237,8 +237,8 @@ public class UserAreaServiceBean implements UserAreaService {
             if (CollectionUtils.isNotEmpty(userAreasDetails)) {
 
                 List<AreaDetails> areaDetailsList = Lists.newArrayList();
-                for (int i = 0; i < userAreasDetails.size(); i++) {
-                    Map<String, Object> properties = getFieldMap(userAreasDetails.get(i));
+                for (UserAreasEntity userAreasDetail : userAreasDetails) {
+                    Map<String, Object> properties = getFieldMap(userAreasDetail);
                     addCentroidToProperties(properties);
                     areaDetailsList.add(createAreaDetailsSpatialResponse(properties, areaTypeEntry));
                 }
@@ -317,8 +317,7 @@ public class UserAreaServiceBean implements UserAreaService {
                 + " WHERE ((1 = " + (isPowerUser ? 1 : 0) + ") OR (area.user_name = '" + userName + "' OR scopeSelection.scope_name = '" + scopeName + "'))"
                 + " AND (UPPER(area.name) LIKE(UPPER('%" + searchCriteria + "%')) OR UPPER(area.area_desc) LIKE(UPPER('%" + searchCriteria + "%'))) group by area.gid";// TODO Move to DAO
 
-        List<UserAreaDto> userAreaDtos = new ArrayList<>();
-
+        final List<UserAreaDto> userAreaDtos = new ArrayList<>();
         final Query emNativeQuery = em.createNativeQuery(queryString);
 
         emNativeQuery.unwrap(SQLQuery.class)
@@ -329,8 +328,8 @@ public class UserAreaServiceBean implements UserAreaService {
 
         final List records = emNativeQuery.getResultList();
         Iterator it = records.iterator();
+        final WKTWriter2 wktWriter2 = new WKTWriter2();
 
-        WKTWriter2 wktWriter2 = new WKTWriter2();
         while (it.hasNext( )) {
             final Object[] result = (Object[])it.next();
             it.remove(); // avoids a ConcurrentModificationException

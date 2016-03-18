@@ -6,7 +6,7 @@ import java.util.Map;
 
 import javax.ejb.EJB;
 
-import eu.europa.ec.fisheries.uvms.spatial.model.area.SystemAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.model.area.GenericSystemAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import lombok.SneakyThrows;
 import org.jboss.arquillian.junit.Arquillian;
@@ -29,7 +29,7 @@ public class SearchAreaServiceIT extends AbstractArquillianIT {
     @Test
     @SneakyThrows
 	public void shouldGetAreaByFilter() {
-        List<SystemAreaDto> areaListMap = spatialService.getAreasByFilter("eez", "island");
+        List<GenericSystemAreaDto> areaListMap = spatialService.searchAreasByNameOrCode("eez", "island");
 
         assertNotNull(areaListMap);
 		assertFalse(areaListMap.isEmpty());
@@ -38,7 +38,7 @@ public class SearchAreaServiceIT extends AbstractArquillianIT {
 	@Test
     @SneakyThrows
     public void shouldGetNoResult() {
-        List<SystemAreaDto> areaListMap = spatialService.getAreasByFilter("eez", "INVALID_DATA");
+        List<GenericSystemAreaDto> areaListMap = spatialService.searchAreasByNameOrCode("eez", "INVALID_DATA");
 
         assertNotNull(areaListMap);
 		assertFalse(!areaListMap.isEmpty());
@@ -47,7 +47,7 @@ public class SearchAreaServiceIT extends AbstractArquillianIT {
 	@Test
 	public void shouldThrowException() {
 		try {
-            List<SystemAreaDto> areaListMap = spatialService.getAreasByFilter("invalid", "island");
+            List<GenericSystemAreaDto> areaListMap = spatialService.searchAreasByNameOrCode("invalid", "island");
 
             assertNotNull(areaListMap);
 			assertFalse(!areaListMap.isEmpty());

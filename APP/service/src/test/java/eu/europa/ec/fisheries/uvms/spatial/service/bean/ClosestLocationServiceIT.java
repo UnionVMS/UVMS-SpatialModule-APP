@@ -43,7 +43,7 @@ public class ClosestLocationServiceIT extends AbstractArquillianIT {
         request.setUnit(UnitType.METERS);
 
         // when
-        List<Location> closestLocations = closestLocationService.getClosestLocationByLocationType(request);
+        List<Location> closestLocations = closestLocationService.getClosestPointToPointByType(request);
 
         //then
         assertNotNull(closestLocations);
@@ -74,7 +74,7 @@ public class ClosestLocationServiceIT extends AbstractArquillianIT {
         request.setUnit(UnitType.METERS);
 
         // when
-        List<Location> closestLocations = closestLocationService.getClosestLocationByLocationType(request);
+        List<Location> closestLocations = closestLocationService.getClosestPointToPointByType(request);
 
         //then
         assertNotNull(closestLocations);

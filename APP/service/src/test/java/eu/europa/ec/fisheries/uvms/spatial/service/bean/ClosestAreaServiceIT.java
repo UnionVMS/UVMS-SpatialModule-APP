@@ -44,7 +44,7 @@ public class ClosestAreaServiceIT extends AbstractArquillianIT {
         closestAreaSpatialRQ.setUnit(UnitType.METERS);
         ClosestAreaSpatialRQ request = closestAreaSpatialRQ;
 
-        List<Area> closestAreas = closestAreaService.getClosestAreas(request);
+        List<Area> closestAreas = closestAreaService.getClosestAreasToPointByType(request);
 
         assertNotNull(closestAreas);
         assertFalse(closestAreas.isEmpty());
@@ -76,7 +76,7 @@ public class ClosestAreaServiceIT extends AbstractArquillianIT {
         ClosestAreaSpatialRQ request = closestAreaSpatialRQ;
 
         // when
-        List<Area> closestAreas = closestAreaService.getClosestAreas(request);
+        List<Area> closestAreas = closestAreaService.getClosestAreasToPointByType(request);
 
         //then
         assertNotNull(closestAreas);

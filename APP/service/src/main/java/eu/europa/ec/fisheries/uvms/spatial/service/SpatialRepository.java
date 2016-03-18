@@ -27,8 +27,6 @@ import java.util.Set;
 
 public interface SpatialRepository extends DAO {
 
-    List<ClosestAreaDto> findClosestArea(Point point, MeasurementUnit unit, String areaDbTable);
-
     List findAreaOrLocationByCoordinates(Point point, String nativeQueryString);
 
     List<AreaLayerDto> findSystemAreaLayerMapping();
@@ -66,8 +64,6 @@ public interface SpatialRepository extends DAO {
     String findSystemConfigByName(Map<String, String> parameters) throws ServiceException;
 
     List<SysConfigEntity> findSystemConfigs();
-
-    void deleteBy(List<Long> spatialConnectIds) throws ServiceException;
 
     List<ServiceLayerDto> findServiceLayerBySubType(List<String> subAreaTypes, boolean isWithBing);
 
@@ -113,15 +109,20 @@ public interface SpatialRepository extends DAO {
 
     ReportConnectSpatialEntity findReportConnectSpatialById(Long reportId, Long id) throws ServiceException;
 
-    // AreaRepository
     List<EezEntity> findEezByIntersect(Point point) throws ServiceException;
-    // AreaRepository
+
     List findPortAreaByIntersect(Point point) throws ServiceException;
-    // AreaRepository
+
     List findRfmoByIntersect(Point point) throws ServiceException;
-    // AreaRepository
+
     List findUserAreaByIntersect(Point point) throws ServiceException;
 
     AreaLocationTypesEntity findAreaLocationTypeByTypeName(String typeName) throws ServiceException;
+
+    ServiceLayerEntity getServiceLayerBy(String locationType) throws ServiceException;
+
+    ServiceLayerEntity getServiceLayerBy(Long id) throws ServiceException;
+
+    ServiceLayerEntity getByAreaLocationType(String areaLocationType) throws ServiceException;
 
 }

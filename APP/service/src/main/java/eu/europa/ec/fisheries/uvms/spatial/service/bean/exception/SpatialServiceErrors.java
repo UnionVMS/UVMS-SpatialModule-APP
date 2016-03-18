@@ -13,7 +13,6 @@ public enum SpatialServiceErrors {
     MISSING_LONGITUDE("MISSING_LONGITUDE", 5006, "Invalid parameter. Missing longitude: 'lon='.", "Wrong argument."),
     MISSING_AREA_TYPE("MISSING_AREA_TYPE", 5007, "Invalid parameter. Please specify at least one Area Type: 'type='.", "Wrong argument."),
     MISSING_LOCATION_TYPE("MISSING_LOCATION_TYPE", 5008, "Invalid parameter. Please specify at least one Location Type: 'type='.", "Wrong argument."),
-    INVALID_AREA_LOCATION_TYPE("INVALID_AREA_LOCATION_TYPE", 5009, "Invalid Area or Location Type in Request : {0}"),
     ENTITY_NOT_FOUND("ENTITY_NOT_FOUND", 5010, "Entity Type not found : {0}"),
     WRONG_LOCATION_TYPE("WRONG_LOCATION_TYPE", 5011, "Invalid parameter. Wrong Location Type: '{0}'.", "Wrong argument."),
     INVALID_ID_TYPE("INVALID_ID_TYPE", 5012, "Invalid id in the request : {0}"),
