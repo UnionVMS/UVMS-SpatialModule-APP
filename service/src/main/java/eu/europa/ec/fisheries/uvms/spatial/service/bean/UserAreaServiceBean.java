@@ -221,7 +221,7 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     @Override
-    public List<AreaDetails> getUserAreaDetailsWithExtentById(AreaTypeEntry areaTypeEntry, String userName, String scopeName) throws ServiceException { // FIXME
+    public List<AreaDetails> getUserAreaDetailsWithExtentById(AreaTypeEntry areaTypeEntry, String userName, String scopeName) throws ServiceException {
         return getUserAreaDetailsWithExtentById(areaTypeEntry, userName, false, scopeName);
     }
 
@@ -315,7 +315,7 @@ public class UserAreaServiceBean implements UserAreaService {
         final String queryString = "SELECT gid, name, area_desc, geom FROM spatial.user_areas area LEFT JOIN spatial.user_scope scopeSelection"
                 + " ON area.gid = scopeSelection.user_area_id"
                 + " WHERE ((1 = " + (isPowerUser ? 1 : 0) + ") OR (area.user_name = '" + userName + "' OR scopeSelection.scope_name = '" + scopeName + "'))"
-                + " AND (UPPER(area.name) LIKE(UPPER('%" + searchCriteria + "%')) OR UPPER(area.area_desc) LIKE(UPPER('%" + searchCriteria + "%'))) group by area.gid";
+                + " AND (UPPER(area.name) LIKE(UPPER('%" + searchCriteria + "%')) OR UPPER(area.area_desc) LIKE(UPPER('%" + searchCriteria + "%'))) group by area.gid";// TODO Move to DAO
 
         List<UserAreaDto> userAreaDtos = new ArrayList<>();
 
@@ -335,8 +335,8 @@ public class UserAreaServiceBean implements UserAreaService {
             final Object[] result = (Object[])it.next();
             it.remove(); // avoids a ConcurrentModificationException
             final Geometry envelope = ((Geometry) result[3]).getEnvelope();
-            userAreaDtos.add(new UserAreaDto(Integer.valueOf(result[0].toString()), result[1].toString(),
-                            result[2].toString(), wktWriter2.write(envelope)));
+            userAreaDtos.add(new UserAreaDto(Integer.valueOf(String.valueOf(result[0])), String.valueOf(result[1]),
+                            String.valueOf(result[2]), wktWriter2.write(envelope)));
         }
 
         return userAreaDtos;
