@@ -4,6 +4,8 @@ import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.service.QueryParameter;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
+
 import javax.persistence.EntityManager;
 import java.util.List;
 
@@ -34,4 +36,9 @@ public class AreaLocationTypesDao extends AbstractDAO<AreaLocationTypesEntity> {
         return entity;
     }
 
+
+    public List<AreaLocationTypesEntity> listSystemWide() throws ServiceException {
+        return findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_SYSTEM_AREAS);
+
+    }
 }

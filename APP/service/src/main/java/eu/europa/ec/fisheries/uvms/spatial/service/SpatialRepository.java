@@ -117,6 +117,8 @@ public interface SpatialRepository extends DAO {
 
     AreaLocationTypesEntity findAreaLocationTypeByTypeName(String typeName) throws ServiceException;
 
+    List<AreaLocationTypesEntity> listAllSystemWideAreaLocationType() throws ServiceException;
+
     ServiceLayerEntity getServiceLayerBy(String locationType) throws ServiceException;
 
     ServiceLayerEntity getServiceLayerBy(Long id) throws ServiceException;

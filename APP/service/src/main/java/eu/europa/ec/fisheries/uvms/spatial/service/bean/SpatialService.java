@@ -20,6 +20,8 @@ public interface SpatialService {
 
     List<Area> getClosestAreasToPointByType(ClosestAreaSpatialRQ request) throws ServiceException;
 
+    List<Area> getClosestAreasToPointByTypeGeotools(ClosestAreaSpatialRQ request) throws ServiceException;
+
     List<AreaExtendedIdentifierType> getAreaTypesByLocation(AreaByLocationSpatialRQ request) throws ServiceException;
 
     FilterAreasSpatialRS computeAreaFilter(FilterAreasSpatialRQ filterAreasSpatialRQ) throws ServiceException;

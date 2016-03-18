@@ -1,8 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryCollection;
@@ -91,9 +89,6 @@ public class SpatialServiceBean implements SpatialService {
     private static final String GID = "gid";
     private static final String NAME = "name";
     private static final String CODE = "code";
-    private static final String CRS_ = "crs";
-    private static final String WKT = "wktPoint";
-    private static final String UNIT = "unit";
 
     private @PersistenceContext(unitName = "spatialPU") EntityManager em;
     private @EJB SpatialRepository repository;
@@ -108,10 +103,10 @@ public class SpatialServiceBean implements SpatialService {
         final Integer crs = request.getPoint().getCrs();
         final UnitType unit = request.getUnit();
         final MeasurementUnit measurementUnit = MeasurementUnit.getMeasurement(unit.name());
-                                                                // FIXME DAO
-        List<AreaLocationTypesEntity> locationTypesEntities = repository.findEntityByNamedQuery(AreaLocationTypesEntity.class, AreaLocationTypesEntity.FIND_ALL_LOCATIONS);
 
-        Map<String, String> locationMap = Maps.newHashMap();
+        List<AreaLocationTypesEntity> locationTypesEntities = repository.listAllSystemWideAreaLocationType();
+
+        Map<String, String> locationMap = new HashMap<>();
 
         for (AreaLocationTypesEntity location : locationTypesEntities) {
             locationMap.put(location.getTypeName().toUpperCase(), location.getAreaDbTable());
@@ -224,6 +219,12 @@ public class SpatialServiceBean implements SpatialService {
     }
 
     @Override
+    public List<Area> getClosestAreasToPointByTypeGeotools(ClosestAreaSpatialRQ request) throws ServiceException {
+
+        return null;
+    }
+
+    @Override
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public List<AreaExtendedIdentifierType> getAreaTypesByLocation(final AreaByLocationSpatialRQ request) throws ServiceException {
 
@@ -233,7 +234,7 @@ public class SpatialServiceBean implements SpatialService {
                                                         //FIXME DAO
         List<AreaLocationTypesEntity> systemAreaTypes = repository.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_SYSTEM_AREAS);
 
-        List<AreaExtendedIdentifierType> areaTypes = Lists.newArrayList();
+        List<AreaExtendedIdentifierType> areaTypes = new ArrayList<>();
 
         PostGres function = new PostGres();
 
