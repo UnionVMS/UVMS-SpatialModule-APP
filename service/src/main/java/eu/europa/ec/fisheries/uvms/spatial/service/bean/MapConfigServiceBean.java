@@ -9,8 +9,14 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntit
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.mapper.ReportConnectSpatialMapper;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
-import eu.europa.ec.fisheries.uvms.spatial.service.LayerRepository;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.CoordinatesFormat;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.MapConfigurationType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ScaleBarUnits;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialDeleteMapConfigurationRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialGetMapConfigurationRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialGetMapConfigurationRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveOrUpdateMapConfigurationRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveOrUpdateMapConfigurationRS;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaDto;
@@ -59,9 +65,6 @@ public class MapConfigServiceBean implements MapConfigService {
 
     @EJB
     private SpatialRepository repository;
-
-    @EJB
-    private LayerRepository layer;
 
     @Override
     @SneakyThrows

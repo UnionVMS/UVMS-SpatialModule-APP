@@ -52,9 +52,9 @@ public class XMLResource {
     @Produces(value = {MediaType.APPLICATION_XML})
     @Consumes(value = {MediaType.APPLICATION_XML})
     @Path("/filter-areas")
-    public FilterAreasSpatialRS filterAreas(FilterAreasSpatialRQ request) throws ServiceException {
+    public FilterAreasSpatialRS computeAreaFilter(FilterAreasSpatialRQ request) throws ServiceException {
 
-        return  spatialService.filterAreas(request);
+        return  spatialService.computeAreaFilter(request);
 
     }
 
@@ -62,7 +62,7 @@ public class XMLResource {
     @Produces(value = {MediaType.APPLICATION_XML})
     @Consumes(value = {MediaType.APPLICATION_XML})
     @Path("/areas-by-location")
-    public AreaByLocationSpatialRS getAreasByLocation(AreaByLocationSpatialRQ request) {
+    public AreaByLocationSpatialRS getAreasByLocation(AreaByLocationSpatialRQ request) throws ServiceException {
 
         AreaByLocationSpatialRS response = new AreaByLocationSpatialRS();
         List<AreaExtendedIdentifierType> areaTypesByLocation = spatialService.getAreaTypesByLocation(request);
@@ -81,10 +81,10 @@ public class XMLResource {
     @Produces(value = {MediaType.APPLICATION_XML})
     @Consumes(value = {MediaType.APPLICATION_XML})
     @Path("/closest-areas")
-    public ClosestAreaSpatialRS closestArea(ClosestAreaSpatialRQ request) throws ServiceException {
+    public ClosestAreaSpatialRS getClosestAreasToPointByType(ClosestAreaSpatialRQ request) throws ServiceException {
 
         ClosestAreaSpatialRS response = new ClosestAreaSpatialRS();
-        List<Area> closestAreas = spatialService.getClosestAreas(request);
+        List<Area> closestAreas = spatialService.getClosestAreasToPointByType(request);
 
         if (closestAreas != null) {
             ClosestAreasType closestAreasType = new ClosestAreasType();
@@ -100,10 +100,10 @@ public class XMLResource {
     @Produces(value = {MediaType.APPLICATION_XML})
     @Consumes(value = {MediaType.APPLICATION_XML})
     @Path("/closest-locations")
-    public ClosestLocationSpatialRS closestLocation(ClosestLocationSpatialRQ request) throws ServiceException {
+    public ClosestLocationSpatialRS getClosestPointToPointByType(ClosestLocationSpatialRQ request) throws ServiceException {
 
         ClosestLocationSpatialRS response = new ClosestLocationSpatialRS();
-        List<Location> closestLocations = spatialService.getClosestLocationByLocationType(request);
+        List<Location> closestLocations = spatialService.getClosestPointToPointByType(request);
 
         if (closestLocations != null){
             ClosestLocationsType locationType = new ClosestLocationsType();

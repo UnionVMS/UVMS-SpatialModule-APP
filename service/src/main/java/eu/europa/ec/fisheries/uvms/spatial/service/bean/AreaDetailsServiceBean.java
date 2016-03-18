@@ -2,7 +2,6 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
@@ -16,8 +15,6 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialService
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.geotools.geometry.jts.JTS;
-import org.geotools.referencing.CRS;
 import org.mapstruct.ap.internal.util.Collections;
 import javax.ejb.EJB;
 import javax.ejb.Local;
@@ -53,7 +50,7 @@ public class AreaDetailsServiceBean implements AreaDetailsService {
         AreaType areaType = areaTypeEntry.getAreaType();
 
         if (areaType == null) {
-            throw new SpatialServiceException(SpatialServiceErrors.INVALID_AREA_LOCATION_TYPE, StringUtils.EMPTY);
+            throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR, StringUtils.EMPTY);
         }
 
         if (!StringUtils.isNumeric(areaTypeEntry.getId())) {
@@ -64,7 +61,7 @@ public class AreaDetailsServiceBean implements AreaDetailsService {
         List<AreaLocationTypesEntity> areasLocationTypes = repository.findEntityByNamedQuery(AreaLocationTypesEntity.class, AreaLocationTypesEntity.FIND_TYPE_BY_NAME, parameters, 1); // FIXME greg use daa
 
         if (areasLocationTypes.isEmpty()) {
-            throw new SpatialServiceException(SpatialServiceErrors.INVALID_AREA_LOCATION_TYPE, areasLocationTypes);
+            throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR, areasLocationTypes);
         }
 
         AreaLocationTypesEntity areaLocationTypesEntity = areasLocationTypes.get(0);
@@ -89,14 +86,14 @@ public class AreaDetailsServiceBean implements AreaDetailsService {
         AreaType areaType = areaTypeEntry.getAreaType();
 
         if (areaType == null) {
-            throw new SpatialServiceException(SpatialServiceErrors.INVALID_AREA_LOCATION_TYPE, StringUtils.EMPTY);
+            throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR, StringUtils.EMPTY);
         }
 
         Map<String, String> parameters = ImmutableMap.<String, String>builder().put(TYPE_NAME, areaTypeEntry.getAreaType().value().toUpperCase()).build();
         List<AreaLocationTypesEntity> areasLocationTypes = repository.findEntityByNamedQuery(AreaLocationTypesEntity.class, AreaLocationTypesEntity.FIND_TYPE_BY_NAME, parameters, 1); // FIXME greg replace by dao
 
         if (areasLocationTypes.isEmpty()) {
-            throw new SpatialServiceException(SpatialServiceErrors.INVALID_AREA_LOCATION_TYPE, areasLocationTypes);
+            throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR, areasLocationTypes);
         }
 
         AreaLocationTypesEntity areaLocationTypesEntity = areasLocationTypes.get(0);

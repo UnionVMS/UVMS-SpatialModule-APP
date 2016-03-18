@@ -43,7 +43,7 @@ public class ClosestAreaServiceBeanIT extends AbstractArquillianIT {
         closestAreaSpatialRQ.setUnit(UnitType.METERS);
         closestAreaSpatialRQ.setAreaTypes(areas);
         ClosestAreaSpatialRQ request = closestAreaSpatialRQ;
-        List<Area> closestAreas = closestAreaService.getClosestAreas(request);
+        List<Area> closestAreas = closestAreaService.getClosestAreasToPointByType(request);
         assertNotNull(closestAreas);
         assertFalse(closestAreas.isEmpty());
         Area area = closestAreas.get(0);
@@ -69,7 +69,7 @@ public class ClosestAreaServiceBeanIT extends AbstractArquillianIT {
         closestAreaSpatialRQ.setUnit(UnitType.MILES);
         closestAreaSpatialRQ.setAreaTypes(areas);
         ClosestAreaSpatialRQ request = closestAreaSpatialRQ;
-        List<Area> closestAreas = closestAreaService.getClosestAreas(request);
+        List<Area> closestAreas = closestAreaService.getClosestAreasToPointByType(request);
         assertNotNull(closestAreas);
         assertFalse(closestAreas.isEmpty());
         Area area = closestAreas.get(0);

@@ -78,7 +78,7 @@ public class SpatialEventServiceBean implements SpatialEventService {
     public void getClosestArea(@Observes @GetClosestAreaEvent SpatialMessageEvent message) {
         log.info("Getting closest area.");
         try {
-            List<Area> closestAreas = spatialService.getClosestAreas(message.getClosestAreaSpatialRQ());
+            List<Area> closestAreas = spatialService.getClosestAreasToPointByType(message.getClosestAreaSpatialRQ());
             log.debug("Send back closestAreas response.");
             messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapClosestAreaResponse(closestAreas));
         } catch (Exception e) {
@@ -90,7 +90,7 @@ public class SpatialEventServiceBean implements SpatialEventService {
     public void getClosestLocation(@Observes @GetClosestLocationEvent SpatialMessageEvent message) {
         log.info("Getting closest locations.");
         try {
-            List<Location> closestLocations = spatialService.getClosestLocationByLocationType(message.getClosestLocationSpatialRQ());
+            List<Location> closestLocations = spatialService.getClosestPointToPointByType(message.getClosestLocationSpatialRQ());
             log.debug("Send back closest locations response.");
             messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapClosestLocationResponse(closestLocations));
         } catch (Exception e) {
@@ -128,7 +128,7 @@ public class SpatialEventServiceBean implements SpatialEventService {
         log.info("Getting Filter Areas");
         try {
             FilterAreasSpatialRQ filterAreaSpatialRQ = message.getFilterAreasSpatialRQ();
-            FilterAreasSpatialRS filterAreasSpatialRS = spatialService.filterAreas(filterAreaSpatialRQ);
+            FilterAreasSpatialRS filterAreasSpatialRS = spatialService.computeAreaFilter(filterAreaSpatialRQ);
             log.debug("Send back filtered Areas");
             messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapFilterAreasResponse(filterAreasSpatialRS));
         } catch (Exception e) {

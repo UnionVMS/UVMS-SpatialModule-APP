@@ -12,11 +12,16 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.ClosestAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.util.MeasurementUnit;
+import org.hibernate.SQLQuery;
+import org.hibernate.transform.Transformers;
 
 public class AreaDao extends CommonDao {
 
     private static final String TABLE_NAME_PLACEHOLDER = "{tableName}";
     private static final String SUB_TYPE = "subTypes";
+    private static final String CRS = "crs";
+    private static final String WKT = "wktPoint";
+    private static final String UNIT = "unit";
 
     public AreaDao(EntityManager em) {
     	super(em);
@@ -32,7 +37,12 @@ public class AreaDao extends CommonDao {
         int crs = point.getSRID();
         double unitRatio = unit.getRatio();
 
-        return createSQLQuery(queryString, geometryType.getGeometry(), crs, unitRatio, ClosestAreaDto.class).list();
+        SQLQuery sqlQuery = getSession().createSQLQuery(queryString);
+        sqlQuery.setResultTransformer(Transformers.aliasToBean( ClosestAreaDto.class));
+        sqlQuery.setString(WKT, geometryType.getGeometry());
+        sqlQuery.setInteger(CRS, crs);
+        sqlQuery.setDouble(UNIT, unitRatio);
+        return sqlQuery.list();
 
     }
 

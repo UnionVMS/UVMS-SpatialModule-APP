@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
 import org.hibernate.Query;
-import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.transform.AliasToEntityMapResultTransformer;
 import org.hibernate.transform.Transformers;
@@ -12,30 +11,15 @@ import org.hibernate.transform.Transformers;
 public abstract class CommonDao {
 	
 	protected EntityManager em;
-	
-	private static final String CRS = "crs";
-	private static final String WKT = "wktPoint";
-	private static final String UNIT = "unit";
 	private static final String GID = "gid";
 	
 	public CommonDao(EntityManager em) {
 		this.em = em;
 	}
 
-	@SuppressWarnings("rawtypes")
-	protected SQLQuery createSQLQuery(String queryString, String wktPoint, int crs, double unit, Class resultClass) {
-		SQLQuery sqlQuery = getSession().createSQLQuery(queryString);
-		sqlQuery.setResultTransformer(Transformers.aliasToBean(resultClass));
-		sqlQuery.setString(WKT, wktPoint);
-		sqlQuery.setInteger(CRS, crs);
-		sqlQuery.setDouble(UNIT, unit);
-		return sqlQuery;
-	}
-
 	protected Query createNamedNativeQuery(String nativeQueryString, String wktPoint, int crs) {
 		Query query = getSession().getNamedQuery(nativeQueryString);
 		query.setParameter("shape", "SRID=" + crs + ";" + wktPoint);
-		//query.setParameter(CRS, crs);
 		return query;
 	}
 

@@ -209,7 +209,7 @@ public class UserAreaResource extends UnionVMSResource {
 
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    @Path("/userareaslist") // TODO test with postman
+    @Path("/userareaslist")
     public Response listUserAreas(@Context HttpServletRequest request, @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName) throws ServiceException {
         Response response;
 
@@ -223,7 +223,7 @@ public class UserAreaResource extends UnionVMSResource {
 
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    @Path("/userareaslist/{type}")
+    @Path("/userareaslist/{type}") // TODO test with postman
     public Response listUserAreas(@Context HttpServletRequest request, @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName, @PathParam("type") String userAreaType) throws ServiceException {
         Response response;
         if (request.isUserInRole(SpatialFeaturesEnum.MANAGE_USER_DEFINED_AREAS.toString())) {
