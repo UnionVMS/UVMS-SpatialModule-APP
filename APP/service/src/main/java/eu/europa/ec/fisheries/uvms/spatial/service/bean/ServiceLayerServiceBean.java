@@ -3,7 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.layer.ServiceLayer;
-import eu.europa.ec.fisheries.uvms.spatial.service.LayerRepository;
+import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.ServiceLayerMapper;
 import lombok.extern.slf4j.Slf4j;
 import javax.ejb.EJB;
@@ -17,7 +17,7 @@ import javax.transaction.Transactional;
 public class ServiceLayerServiceBean implements ServiceLayerService {
 
     @EJB
-    private LayerRepository repository;
+    private SpatialRepository repository;
 
     @Override
     public ServiceLayer findBy(final String locationType) throws ServiceException {

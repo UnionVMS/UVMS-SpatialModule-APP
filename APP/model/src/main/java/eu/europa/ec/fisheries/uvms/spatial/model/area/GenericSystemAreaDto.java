@@ -12,7 +12,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class SystemAreaDto {
+public class GenericSystemAreaDto {
 
     @JsonProperty("gid")
     private Integer gid;
@@ -31,7 +31,7 @@ public class SystemAreaDto {
      * No args constructor for use in serialization
      *
      */
-    public SystemAreaDto() {
+    public GenericSystemAreaDto() {
     }
 
     /**
@@ -42,7 +42,7 @@ public class SystemAreaDto {
      * @param gid
      * @param code
      */
-    public SystemAreaDto(Integer gid, String code, String areaType, String extent, String name) {
+    public GenericSystemAreaDto(Integer gid, String code, String areaType, String extent, String name) {
         this.gid = gid;
         this.code = code;
         this.areaType = areaType;
@@ -70,7 +70,7 @@ public class SystemAreaDto {
         this.gid = gid;
     }
 
-    public SystemAreaDto withGid(Integer gid) {
+    public GenericSystemAreaDto withGid(Integer gid) {
         this.gid = gid;
         return this;
     }
@@ -95,7 +95,7 @@ public class SystemAreaDto {
         this.code = code;
     }
 
-    public SystemAreaDto withCode(String code) {
+    public GenericSystemAreaDto withCode(String code) {
         this.code = code;
         return this;
     }
@@ -120,7 +120,7 @@ public class SystemAreaDto {
         this.areaType = areaType;
     }
 
-    public SystemAreaDto withAreaType(String areaType) {
+    public GenericSystemAreaDto withAreaType(String areaType) {
         this.areaType = areaType;
         return this;
     }
@@ -145,7 +145,7 @@ public class SystemAreaDto {
         this.extent = extent;
     }
 
-    public SystemAreaDto withExtent(String extent) {
+    public GenericSystemAreaDto withExtent(String extent) {
         this.extent = extent;
         return this;
     }
@@ -170,7 +170,7 @@ public class SystemAreaDto {
         this.name = name;
     }
 
-    public SystemAreaDto withName(String name) {
+    public GenericSystemAreaDto withName(String name) {
         this.name = name;
         return this;
     }
@@ -190,7 +190,7 @@ public class SystemAreaDto {
         this.additionalProperties.put(name, value);
     }
 
-    public SystemAreaDto withAdditionalProperty(String name, Object value) {
+    public GenericSystemAreaDto withAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
         return this;
     }
@@ -205,10 +205,10 @@ public class SystemAreaDto {
         if (other == this) {
             return true;
         }
-        if ((other instanceof SystemAreaDto) == false) {
+        if ((other instanceof GenericSystemAreaDto) == false) {
             return false;
         }
-        SystemAreaDto rhs = ((SystemAreaDto) other);
+        GenericSystemAreaDto rhs = ((GenericSystemAreaDto) other);
         return new EqualsBuilder().append(gid, rhs.gid).append(code, rhs.code).append(areaType, rhs.areaType).append(extent, rhs.extent).append(name, rhs.name).append(additionalProperties, rhs.additionalProperties).isEquals();
     }
 

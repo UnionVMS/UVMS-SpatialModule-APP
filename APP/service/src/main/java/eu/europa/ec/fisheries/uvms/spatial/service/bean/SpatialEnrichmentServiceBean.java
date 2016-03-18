@@ -44,7 +44,7 @@ public class SpatialEnrichmentServiceBean implements SpatialEnrichmentService {
         closestAreaSpatialRQ.setUnit(request.getUnit());
         closestAreaSpatialRQ.setPoint(request.getPoint());
 
-        List<Area> closestAreas = spatialService.getClosestAreas(closestAreaSpatialRQ);
+        List<Area> closestAreas = spatialService.getClosestAreasToPointByType(closestAreaSpatialRQ);
 
         List<LocationType> locationTypes = request.getLocationTypes().getLocationTypes();
         ClosestLocationSpatialRQ closestLocationSpatialRQ = new ClosestLocationSpatialRQ();
@@ -54,7 +54,7 @@ public class SpatialEnrichmentServiceBean implements SpatialEnrichmentService {
         locationTp.getLocationTypes().addAll(locationTypes);
         closestLocationSpatialRQ.setLocationTypes(locationTp);
 
-        List<Location> closestLocations = spatialService.getClosestLocationByLocationType(closestLocationSpatialRQ);
+        List<Location> closestLocations = spatialService.getClosestPointToPointByType(closestLocationSpatialRQ);
 
         SpatialEnrichmentRS response = new SpatialEnrichmentRS();
 

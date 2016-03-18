@@ -1,6 +1,9 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.CalculateService;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +20,10 @@ public class CalculationServiceBean implements CalculateService {
     @Override
     public String calculateBuffer(final Double latitude, final Double longitude, final Double buffer) {
 
-        return SpatialUtils.calculateBuffer(latitude, longitude, buffer);
+        GeometryFactory gf = new GeometryFactory();
+        Point point = gf.createPoint(new Coordinate(longitude, latitude));
+        Geometry geometry = point.buffer(buffer);
+        return new WKTWriter2().write(geometry);
 
     }
 

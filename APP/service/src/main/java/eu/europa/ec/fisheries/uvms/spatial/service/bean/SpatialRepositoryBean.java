@@ -4,18 +4,7 @@ import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.service.QueryParameter;
-import eu.europa.ec.fisheries.uvms.spatial.dao.AreaDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.AreaLocationTypesDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.BookmarkDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.CountryDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.EezDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.MapConfigDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.PortAreaDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.ProjectionDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.ReportConnectSpatialDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.RfmoDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.SysConfigDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.UserAreaJpaDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.*;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.BookmarkEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
@@ -58,7 +47,7 @@ import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 
 @Stateless
 @Local(value = SpatialRepository.class)
-@TransactionAttribute(TransactionAttributeType.REQUIRED) // TODO why class level?
+//@TransactionAttribute(TransactionAttributeType.REQUIRED) // FIXME transaction must be handled at service level
 public class SpatialRepositoryBean extends AbstractDAO implements SpatialRepository {
 
     private @PersistenceContext(unitName = "spatialPU") EntityManager em;
@@ -75,6 +64,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     private PortAreaDao portAreaDao;
     private RfmoDao rfmoDao;
     private AreaLocationTypesDao areaLocationTypeDao;
+    private ServiceLayerDao serviceLayerDao;
 
     @Override
     public EntityManager getEntityManager() {
@@ -95,12 +85,9 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
         portAreaDao = new PortAreaDao(em);
         rfmoDao = new RfmoDao(em);
         areaLocationTypeDao = new AreaLocationTypesDao(em);
+        serviceLayerDao = new ServiceLayerDao(em);
     }
 
-    @Override
-    public List<ClosestAreaDto> findClosestArea(Point point, MeasurementUnit unit, String areaDbTable) {
-        return areaDao.findClosestArea(point, unit, areaDbTable);
-    }
 
     @Override
     public List findAreaOrLocationByCoordinates(Point point, String nativeQueryString) {
@@ -177,7 +164,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     }
 
     @Override
-    @Transactional
+    //@Transactional // FIXME transaction must be handled at service level
     public ReportConnectSpatialEntity findReportConnectSpatialByConnectId(final Long id) throws ServiceException {
         List<ReportConnectSpatialEntity> list = reportConnectSpatialDao.findReportConnectSpatialByConnectId(id);
         if (list != null && !list.isEmpty()) {
@@ -187,7 +174,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     }
 
     @Override
-    @Transactional
+    //@Transactional // FIXME transaction must be handled at service level
     public boolean saveOrUpdateMapConfiguration(final ReportConnectSpatialEntity mapConfiguration) throws ServiceException {
         validateMapConfiguration(mapConfiguration);
         return reportConnectSpatialDao.saveOrUpdateEntity(mapConfiguration) != null;
@@ -233,12 +220,6 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     public String findSystemConfigByName(Map<String, String> parameters) throws ServiceException {
         List<String> geoServerUrl = findEntityByNamedQuery(String.class, QueryNameConstants.FIND_CONFIG_BY_NAME, parameters, 1);
         return (geoServerUrl != null && !geoServerUrl.isEmpty()) ? geoServerUrl.get(0) : null;
-    }
-
-    @Override
-    @Transactional
-    public void deleteBy(final List<Long> spatialConnectIds) throws ServiceException {
-        reportConnectSpatialDao.deleteById(spatialConnectIds);
     }
 
     public List<ServiceLayerDto> findServiceLayerBySubType(List<String> subAreaTypes, boolean isWithBing) {
@@ -409,5 +390,20 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
             return list.get(0);
         }
         return null;
+    }
+
+    @Override
+    public ServiceLayerEntity getServiceLayerBy(String locationType) throws ServiceException {
+        return serviceLayerDao.getBy(locationType);
+    }
+
+    @Override
+    public ServiceLayerEntity getServiceLayerBy(Long id) throws ServiceException {
+        return serviceLayerDao.findEntityById(ServiceLayerEntity.class, id);
+    }
+
+    @Override
+    public ServiceLayerEntity getByAreaLocationType(String areaLocationType) throws ServiceException {
+        return  serviceLayerDao.getByAreaLocationType(areaLocationType);
     }
 }

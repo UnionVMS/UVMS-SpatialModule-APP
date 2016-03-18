@@ -34,7 +34,7 @@ public class FilterAreasServiceIT extends AbstractArquillianIT {
         FilterAreasSpatialRQ request = createRequest(AreaType.RFMO);
 
         // when
-        FilterAreasSpatialRS filterAreasSpatialRS = filterAreasService.filterAreas(request);
+        FilterAreasSpatialRS filterAreasSpatialRS = filterAreasService.computeAreaFilter(request);
 
         // then
         assertNotNull(filterAreasSpatialRS);
@@ -49,7 +49,7 @@ public class FilterAreasServiceIT extends AbstractArquillianIT {
 
         // when
         try {
-            filterAreasService.filterAreas(request);
+            filterAreasService.computeAreaFilter(request);
             fail("Should throw an excpetion when one or more of given area types are invalid.");
         } catch (Exception e) {
             SpatialServiceException ex = new SpatialServiceException(SpatialServiceErrors.INVALID_AREA_TYPE, NOT_EXISTING_TYPE);
