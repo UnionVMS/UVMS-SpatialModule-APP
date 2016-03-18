@@ -335,8 +335,9 @@ public class UserAreaServiceBean implements UserAreaService {
             final Object[] result = (Object[])it.next();
             it.remove(); // avoids a ConcurrentModificationException
             final Geometry envelope = ((Geometry) result[3]).getEnvelope();
+            String desc = (String) result[2];
             userAreaDtos.add(new UserAreaDto(Integer.valueOf(String.valueOf(result[0])), String.valueOf(result[1]),
-                            String.valueOf(result[2]), wktWriter2.write(envelope)));
+                            StringUtils.isNotBlank(desc) ? desc : StringUtils.EMPTY, wktWriter2.write(envelope)));
         }
 
         return userAreaDtos;
