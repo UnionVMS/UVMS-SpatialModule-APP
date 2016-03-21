@@ -26,7 +26,7 @@ public class PropertiesBean {
 
         try {
             InputStream propsStream =
-                    PropertiesBean.class.getResourceAsStream("/app.properties");
+                    PropertiesBean.class.getResourceAsStream("/config.properties");
             props = new Properties();
 
             props.load(propsStream);
