@@ -24,8 +24,8 @@ import java.util.Date;
 @Entity
 @NamedQueries({
         @NamedQuery(name = PortAreasEntity.PORTAREA_BY_COORDINATE,
-                query = "FROM PortAreasEntity where intersects(geom, :shape) = true) and enabled = 'Y'"),
-        @NamedQuery(name = QueryNameConstants.DISABLE_PORT_AREAS, query = "update PortAreasEntity set enabled = 'N'"),
+                query = "FROM PortAreasEntity WHERE intersects(geom, :shape) = true) AND enabled = 'Y'"),
+        @NamedQuery(name = QueryNameConstants.DISABLE_PORT_AREAS, query = "UPDATE PortAreasEntity SET enabled = 'N'"),
         @NamedQuery(name = QueryNameConstants.FIND_PORT_AREA_BY_ID,
                 query = "SELECT portarea FROM PortAreasEntity portarea WHERE portarea.gid = :portAreaId")
 })
