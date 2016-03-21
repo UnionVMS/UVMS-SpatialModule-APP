@@ -1,12 +1,12 @@
-package eu.europa.ec.fisheries.uvms.spatial.dao;
+package eu.europa.ec.fisheries.uvms.spatial.dao.util;
 
-public interface GisFunction {
-
-    String stIntersects(String wkt, Integer crs);
+public interface SpatialFunction {
 
     String stIntersects(Double latitude, Double longitude,Integer crs);
 
     String stDistance(Double latitude, Double longitude, Integer crs);
+
+    String stClosestPoint(Double latitude, Double longitude, Integer crs);
 
     String castAsUnlimitedLength();
 

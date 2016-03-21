@@ -18,7 +18,7 @@ public class AbstractArquillianIT {
                 .addAsResource("META-INF/orm.xml")
                 .addAsResource("config.properties")
                         //.addAsResource("META-INF/jboss-deployment-structure.xml")
-                .addAsResource("nativeSql.properties")
+                .addAsResource("app.properties")
                 .addAsResource("logback.xml")
                 .addAsResource("Config.json")
                 .addAsResource("UserConfig.json")

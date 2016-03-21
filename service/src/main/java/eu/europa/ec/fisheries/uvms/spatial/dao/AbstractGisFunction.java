@@ -1,5 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.dao;
 
-public abstract class AbstractGisFunction implements GisFunction {
+import eu.europa.ec.fisheries.uvms.spatial.dao.util.SpatialFunction;
+
+public abstract class AbstractGisFunction implements SpatialFunction {
 
 }

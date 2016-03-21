@@ -1,9 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.service.DAO;
-import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.transaction.api.annotation.TransactionMode;
@@ -18,7 +16,6 @@ import org.junit.runner.RunWith;
 
 import javax.ejb.EJB;
 import java.io.File;
-import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
@@ -48,7 +45,7 @@ public class CrudServiceIT {
                 .addAsResource("META-INF/orm.xml")
                 .addAsResource("config.properties")
                 .addAsResource("META-INF/jboss-deployment-structure.xml")
-                .addAsResource("nativeSql.properties")
+                .addAsResource("app.properties")
                 .addAsResource("logback.xml")
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
@@ -90,12 +87,6 @@ public class CrudServiceIT {
         assertEquals(eezEntity.getSovereign(), AUSTRALIA);
     }
 
-    @Test
-    @SuppressWarnings("unchecked")
-    public void testFindEntityByNamedQuery() throws Exception {
-        List<AreaLocationTypesEntity> areas = genericDao.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_ALL_AREAS);
-        assertThat(areas).isNotEmpty();
-    }
 
     private EezEntity createEezEntity() {
         EezEntity eez = new EezEntity();

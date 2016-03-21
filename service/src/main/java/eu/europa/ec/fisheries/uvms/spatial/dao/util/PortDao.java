@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.spatial.dao;
+package eu.europa.ec.fisheries.uvms.spatial.dao.util;
 
 import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;

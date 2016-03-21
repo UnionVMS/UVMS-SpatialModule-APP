@@ -6,11 +6,9 @@ import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.PortLocationDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.PortLocationMapper;
 import lombok.extern.slf4j.Slf4j;
-
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
-import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 @Stateless
@@ -19,15 +17,11 @@ import javax.transaction.Transactional;
 @Slf4j
 public class PortLocationServiceBean implements PortLocationService {
 
-    @EJB
-    private SpatialRepository repository;
-
-    @Inject
-    private PortLocationMapper mapper;
+    private @EJB SpatialRepository repository;
 
     @Override
     public long createPortLocation(PortLocationDto portLocationDto) throws ServiceException {
-        PortsEntity portsEntity = mapper.portLocationDtoToPortsEntity(portLocationDto);
+        PortsEntity portsEntity = PortLocationMapper.INSTANCE.portLocationDtoToPortsEntity(portLocationDto);
         portsEntity = (PortsEntity) repository.createEntity(portsEntity);
         return portsEntity.getGid();
     }

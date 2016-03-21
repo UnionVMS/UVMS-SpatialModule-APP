@@ -1,11 +1,8 @@
-package eu.europa.ec.fisheries.uvms.spatial.dao;
+package eu.europa.ec.fisheries.uvms.spatial.dao.util;
+
+import eu.europa.ec.fisheries.uvms.spatial.dao.AbstractGisFunction;
 
 public class PostGres extends AbstractGisFunction {
-
-    @Override
-    public String stIntersects(String wkt, Integer crs) {
-        return "ST_Intersects(geom, ST_GeomFromText(CAST('" + wkt + "' AS " + castAsUnlimitedLength() +" ), " + crs + "))";
-    }
 
     @Override
     public String stIntersects(Double latitude, Double longitude, Integer crs) {
@@ -15,6 +12,11 @@ public class PostGres extends AbstractGisFunction {
     @Override
     public String stDistance(Double latitude, Double longitude, Integer crs) {
         return "ST_Distance(geom, ST_GeomFromText(CAST('POINT(" + latitude + " " + longitude + ")' AS " + castAsUnlimitedLength() + "), " + crs + "))";
+    }
+
+    @Override
+    public String stClosestPoint(Double latitude, Double longitude, Integer crs) {
+        return "ST_ClosestPoint(geom, ST_GeomFromText(CAST('POINT(" + latitude + " " + longitude + ")' AS " + castAsUnlimitedLength() + "), " + crs + "))";
     }
 
     @Override

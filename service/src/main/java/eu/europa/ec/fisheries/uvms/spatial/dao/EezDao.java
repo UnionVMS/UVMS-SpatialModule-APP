@@ -28,4 +28,8 @@ public class EezDao extends AbstractDAO<EezEntity> {
     public List<EezEntity> intersects(final Geometry shape) throws ServiceException {
         return findEntityByNamedQuery(EezEntity.class, EezEntity.EEZ_BY_COORDINATE, QueryParameter.with("shape", shape).parameters());
     }
+
+    public List<EezEntity> listEmptyGeometries() throws ServiceException {
+        return findEntityByNamedQuery(EezEntity.class, EezEntity.LIST_EMPTY_GEOMETRIES);
+    }
 }

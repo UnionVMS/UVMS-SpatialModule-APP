@@ -27,7 +27,9 @@ import java.util.Date;
 @NamedQueries({
         @NamedQuery(name = EezEntity.EEZ_BY_COORDINATE, query = "FROM EezEntity WHERE intersects(geom, :shape) = true) AND enabled = 'Y'"),
         @NamedQuery(name = QueryNameConstants.EEZ_COLUMNS, query = "SELECT eez.name AS name, eez.code AS code FROM EezEntity AS eez WHERE eez.gid =:gid"),
-        @NamedQuery(name = QueryNameConstants.DISABLE_EEZ_AREAS, query = "UPDATE EezEntity SET enabled = 'N'")
+        @NamedQuery(name = QueryNameConstants.DISABLE_EEZ_AREAS, query = "UPDATE EezEntity SET enabled = 'N'"),
+        @NamedQuery(name = EezEntity.LIST_EMPTY_GEOMETRIES, query = "FROM EezEntity WHERE isEmpty(geom) = false AND enabled = 'Y'")
+
 })
 @Where(clause = "enabled = 'Y'")
 @Table(name = "eez", schema = "spatial")
@@ -35,6 +37,7 @@ import java.util.Date;
 public class EezEntity implements Serializable {
 
     public static final String EEZ_BY_COORDINATE = "eezEntity.ByCoordinate";
+    public static final String LIST_EMPTY_GEOMETRIES = "eezEntity.TEST";
 
     @Id
     @Column(name = "gid")

@@ -9,7 +9,6 @@ import eu.europa.ec.fisheries.uvms.spatial.service.mapper.RfmoMapper;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
-import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 @Stateless
@@ -17,11 +16,7 @@ import javax.transaction.Transactional;
 @Transactional
 public class RfmoServiceBean implements RfmoService {
 
-    @EJB
-    private SpatialRepository repository;
-
-    @Inject
-    private RfmoMapper mapper;
+    private @EJB SpatialRepository repository;
 
     @Override
     public int disableAllAreas() throws ServiceException {
@@ -30,7 +25,7 @@ public class RfmoServiceBean implements RfmoService {
 
     @Override
     public long createRfmo(RfmoDto rfmoDto) throws ServiceException {
-        RfmoEntity rfmoEntity = mapper.rfmoDtoToRfmoEntity(rfmoDto);
+        RfmoEntity rfmoEntity = RfmoMapper.INSTANCE.rfmoDtoToRfmoEntity(rfmoDto);
         rfmoEntity = (RfmoEntity) repository.createEntity(rfmoEntity);
         return rfmoEntity.getGid();
     }

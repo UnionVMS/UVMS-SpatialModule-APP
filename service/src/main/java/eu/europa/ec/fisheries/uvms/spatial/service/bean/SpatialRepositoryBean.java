@@ -54,7 +54,7 @@ import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 
 @Stateless
 @Local(value = SpatialRepository.class)
-//@TransactionAttribute(TransactionAttributeType.REQUIRED) // FIXME transaction must be handled at service level
+//@TransactionAttribute(TransactionAttributeType.REQUIRED) // FIXME @Greg transaction must be handled at service level
 public class SpatialRepositoryBean extends AbstractDAO implements SpatialRepository {
 
     private @PersistenceContext(unitName = "spatialPU") EntityManager em;
@@ -159,7 +159,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
 
         ReportConnectSpatialEntity result = null;
 
-        if (isNotEmpty(list)) {
+        if (isNotEmpty(list)) {  // FIXME @Greg this logic should remain in service layer
             if (list.size() > 1) {
                 throw new IllegalStateException("More than one map configuration has been found for report with id = " + reportId);
             } else {
@@ -171,7 +171,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     }
 
     @Override
-    //@Transactional // FIXME transaction must be handled at service level
+    //@Transactional // FIXME transaction should be handled at service level
     public ReportConnectSpatialEntity findReportConnectSpatialByConnectId(final Long id) throws ServiceException {
         List<ReportConnectSpatialEntity> list = reportConnectSpatialDao.findReportConnectSpatialByConnectId(id);
         if (list != null && !list.isEmpty()) {
@@ -181,7 +181,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     }
 
     @Override
-    //@Transactional // FIXME transaction must be handled at service level
+    //@Transactional // FIXME transaction should be handled at service level
     public boolean saveOrUpdateMapConfiguration(final ReportConnectSpatialEntity mapConfiguration) throws ServiceException {
         validateMapConfiguration(mapConfiguration);
         return reportConnectSpatialDao.saveOrUpdateEntity(mapConfiguration) != null;
@@ -307,7 +307,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     }
 
     @Override
-    public void delete(Long id) throws ServiceException {
+    public void deleteBookmark(Long id) throws ServiceException {
 
         BookmarkEntity entityById = bookmarkDao.findEntityById(BookmarkEntity.class, id);
         if (entityById != null) {
@@ -316,15 +316,12 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     }
 
     @Override
-    public void update(Bookmark bookmark) throws ServiceException {
-        BookmarkEntity entityById = bookmarkDao.findEntityById(BookmarkEntity.class, bookmark.getId());
-        BookmarkMapper.INSTANCE.merge(bookmark, entityById);
-
+    public BookmarkEntity getBookmarkBy(Long id) throws ServiceException {
+        return bookmarkDao.findEntityById(BookmarkEntity.class, id);
     }
 
     @Override
     public ProjectionEntity findProjection(Integer srsCode) throws ServiceException {
-
         return projectionDao.findBySrsCode(srsCode);
     }
 
@@ -377,8 +374,13 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     }
 
     @Override
-    public List<AreaLocationTypesEntity> listAllSystemWideAreaLocationType() throws ServiceException {
-        return areaLocationTypeDao.listSystemWide();
+    public List<AreaLocationTypesEntity> findAllIsPointIsSystemWide(Boolean isLocation, Boolean isSystemWide) throws ServiceException {
+        return areaLocationTypeDao.findAllIsLocationIsSystemWide(isLocation, isSystemWide);
+    }
+
+    @Override
+    public List<AreaLocationTypesEntity> findAllIsLocation(Boolean isLocation) throws ServiceException {
+        return areaLocationTypeDao.findAllIsLocation(isLocation);
     }
 
     @Override
@@ -418,4 +420,5 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     public ServiceLayerEntity getByAreaLocationType(String areaLocationType) throws ServiceException {
         return  serviceLayerDao.getByAreaLocationType(areaLocationType);
     }
+
 }

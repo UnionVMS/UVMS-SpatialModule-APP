@@ -1,7 +1,5 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryCollection;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -9,11 +7,9 @@ import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.interceptors.TracingInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.dao.GisFunction;
-import eu.europa.ec.fisheries.uvms.spatial.dao.PostGres;
+import eu.europa.ec.fisheries.uvms.spatial.dao.util.SpatialFunction;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.PortsEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.area.GenericSystemAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Area;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
@@ -37,6 +33,8 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.util.MeasurementUnit
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.GeometryMapper;
+import eu.europa.ec.fisheries.uvms.spatial.util.SpatialFunctionFactory;
+import eu.europa.ec.fisheries.uvms.spatial.util.PropertiesBean;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.geotools.geometry.jts.JTS;
@@ -46,13 +44,13 @@ import org.geotools.referencing.CRS;
 import org.geotools.referencing.GeodeticCalculator;
 import org.hibernate.SQLQuery;
 import org.hibernate.spatial.GeometryType;
-import org.hibernate.transform.Transformers;
 import org.hibernate.type.DoubleType;
 import org.hibernate.type.IntegerType;
 import org.hibernate.type.StandardBasicTypes;
 import org.hibernate.type.StringType;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.operation.TransformException;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
@@ -89,89 +87,99 @@ public class SpatialServiceBean implements SpatialService {
     private static final String GID = "gid";
     private static final String NAME = "name";
     private static final String CODE = "code";
+    private static final String TYPE = "type";
 
     private @PersistenceContext(unitName = "spatialPU") EntityManager em;
     private @EJB SpatialRepository repository;
+    private @EJB PropertiesBean properties;
+    private SpatialFunction spatialFunction;
+
+    @PostConstruct
+    public void init(){
+        spatialFunction = new SpatialFunctionFactory(properties).getInstance();
+    }
 
     @Override
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public List<Location> getClosestPointToPointByType(final ClosestLocationSpatialRQ request) throws ServiceException {
+        // TODO convert point
 
-        final List<Location> closestLocations = new ArrayList<>();
+        final Map<String, Location> distancePerTypeMap = new HashMap<>();
         final Double latitude = request.getPoint().getLatitude();
         final Double longitude = request.getPoint().getLongitude();
         final Integer crs = request.getPoint().getCrs();
         final UnitType unit = request.getUnit();
         final MeasurementUnit measurementUnit = MeasurementUnit.getMeasurement(unit.name());
-
-        List<AreaLocationTypesEntity> locationTypesEntities = repository.listAllSystemWideAreaLocationType();
-
-        Map<String, String> locationMap = new HashMap<>();
-
-        for (AreaLocationTypesEntity location : locationTypesEntities) {
-            locationMap.put(location.getTypeName().toUpperCase(), location.getAreaDbTable());
-        }
-
-        final GisFunction gisFunction = new PostGres();
         final GeodeticCalculator calc = new GeodeticCalculator();
+        final List<AreaLocationTypesEntity> typeEntities = repository.findAllIsPointIsSystemWide(true, true);
+        final StringBuilder sb = new StringBuilder();
 
-        for (LocationType locationType : request.getLocationTypes().getLocationTypes()) {
-
-            Location closestLocation = null;
-            Double closestDistance = Double.MAX_VALUE;
-
-            final String areaDbTable = locationMap.get(locationType.value());
-
-            final String queryString = "SELECT gid, code, name, geom, " + gisFunction.stDistance(longitude, latitude, crs) + " AS distance " +
-                    "FROM spatial." + areaDbTable + " WHERE enabled = 'Y' ORDER BY distance ASC " + gisFunction.limit(15);
-
-            final Query emNativeQuery = em.createNativeQuery(queryString);
-            final List records = emNativeQuery.getResultList();
-
-            for (Object record : records) {
-
-                final Object[] result = (Object[]) record;
-                final Point centroid = ((Geometry)result[3]).getCentroid();
-                calc.setStartingGeographicPoint(centroid.getX(), centroid.getY());
-                calc.setDestinationGeographicPoint(longitude, latitude);
-                Double orthodromicDistance = calc.getOrthodromicDistance();
-
-                if (closestDistance > orthodromicDistance) {
-                    closestDistance = orthodromicDistance;
-                    closestLocation = new Location();
-                    closestLocation.setDistance(orthodromicDistance);
-                    closestLocation.setId(result[0].toString());
-                    closestLocation.setDistance(orthodromicDistance / measurementUnit.getRatio());
-                    closestLocation.setUnit(unit);
-                    closestLocation.setCode(result[1].toString());
-                    closestLocation.setName(result[2].toString());
-                    closestLocation.setLocationType(locationType);
-                }
-            }
-
-            if (closestLocation != null){
-                closestLocations.add(closestLocation);
+        Iterator<AreaLocationTypesEntity> it = typeEntities.iterator();
+        while (it.hasNext()) {
+            AreaLocationTypesEntity next = it.next();
+            String typeName = next.getTypeName();
+            sb.append("(SELECT '").append(typeName).append("' as type, gid, code, name, geom, ")
+                    .append(spatialFunction.stDistance(longitude, latitude, crs)).append(" AS distance ")
+                    .append("FROM spatial.").append(next.getAreaDbTable())
+                    .append(" WHERE enabled = 'Y' ORDER BY distance ASC ")
+                    .append(spatialFunction.limit(10)).append(")");
+            it.remove(); // avoids a ConcurrentModificationException
+            if (it.hasNext()) {
+                sb.append(" UNION ALL ");
             }
         }
 
-        return closestLocations;
+        final Query emNativeQuery = em.createNativeQuery(sb.toString());
+        emNativeQuery.unwrap(SQLQuery.class).addScalar("type", StringType.INSTANCE).addScalar(GID, IntegerType.INSTANCE)
+                .addScalar(CODE, StringType.INSTANCE).addScalar(NAME, StringType.INSTANCE).addScalar(GEOM, GeometryType.INSTANCE)
+                .addScalar("distance", DoubleType.INSTANCE);
 
+        final List records = emNativeQuery.getResultList();
+
+        for (Object record : records) {
+            final Object[] result = (Object[]) record;
+            final Point centroid = ((Geometry) result[4]).getCentroid();
+            calc.setStartingGeographicPoint(centroid.getX(), centroid.getY());
+            calc.setDestinationGeographicPoint(longitude, latitude);
+            Double orthodromicDistance = calc.getOrthodromicDistance();
+            final String type = result[0].toString();
+            Location closest = distancePerTypeMap.get(type);
+
+            if (closest == null || orthodromicDistance / measurementUnit.getRatio() < closest.getDistance()) {
+
+                if (closest == null) {
+                    closest = new Location();
+                }
+
+                closest.setDistance(orthodromicDistance);
+                closest.setId(result[1].toString());
+                closest.setDistance(orthodromicDistance / measurementUnit.getRatio());
+                closest.setUnit(unit);
+                closest.setCode(result[2].toString());
+                closest.setName(result[3].toString());
+                closest.setLocationType(LocationType.fromValue(type));
+                distancePerTypeMap.put(type, closest);
+            }
+
+        }
+
+        return new ArrayList<>(distancePerTypeMap.values());
     }
 
     @Override
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public List<Area> getClosestAreasToPointByType(final ClosestAreaSpatialRQ request) throws ServiceException {
 
-        Point point = convertToPointInWGS84(request.getPoint());
-        MeasurementUnit measurementUnit = MeasurementUnit.getMeasurement(request.getUnit().name());
-        Map<String, String> areaType2TableName = new HashMap<>();// FIXME DAO
-        List<AreaLocationTypesEntity> areas = repository.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_ALL_AREAS);
+        final Point point = convertToPointInWGS84(request.getPoint());
+
+        final MeasurementUnit measurementUnit = MeasurementUnit.getMeasurement(request.getUnit().name());
+        final Map<String, String> areaType2TableName = new HashMap<>();
+        final List<AreaLocationTypesEntity> areas = repository.findAllIsLocation(false);
+        final List<Area> closestAreas = new ArrayList<>();
 
         for (AreaLocationTypesEntity area : areas) {
             areaType2TableName.put(area.getTypeName().toUpperCase(), area.getAreaDbTable());
         }
-
-        List<Area> closestAreas = new ArrayList<>();
 
         for (AreaType areaType : request.getAreaTypes().getAreaTypes()) {
 
@@ -181,13 +189,13 @@ public class SpatialServiceBean implements SpatialService {
             final Double unitRatio = measurementUnit.getRatio();
 
             // FIXME native query alert
-            String queryString = "WITH prox_query AS (SELECT gid, code, name, st_closestpoint(geom, st_geomfromtext(CAST('" + geometryType.getGeometry() + "' AS text), " + crs + ")) AS closestPoint " +
+            String queryString = "WITH prox_query AS (SELECT gid, code, name, " + spatialFunction.stClosestPoint(point.getY(), point.getX(), crs) + " AS closestPoint " +
                     "FROM spatial." + areaDbTable + " " +
                     "WHERE NOT ST_IsEmpty(geom) AND enabled = 'Y' " +
                     "ORDER BY geom <#> st_geomfromtext(CAST('" + geometryType.getGeometry() + "' AS text), " + crs + ") limit 30) " +
                     "SELECT gid, code, name, st_length_spheroid(st_makeline(closestPoint, st_geomfromtext(CAST('" + geometryType.getGeometry() + "' AS text), " + crs + ")), 'SPHEROID[\"WGS 84\",6378137,298.257223563]') /" + unitRatio + " AS distance " +
                     "FROM prox_query " +
-                    "ORDER BY distance LIMIT 1";
+                    "ORDER BY distance " + spatialFunction.limit(1);
 
             Query emNativeQuery = em.createNativeQuery(queryString);
             emNativeQuery.unwrap(SQLQuery.class)
@@ -212,54 +220,96 @@ public class SpatialServiceBean implements SpatialService {
                 area.setAreaType(areaType);
                 closestAreas.add(area);
             }
-
         }
 
         return closestAreas;
     }
 
     @Override
-    public List<Area> getClosestAreasToPointByTypeGeotools(ClosestAreaSpatialRQ request) throws ServiceException {
+    public List<Area> getClosestAreasToPointByTypeGeneric(final ClosestAreaSpatialRQ request) throws ServiceException {
 
+        final Point point = convertToPointInWGS84(request.getPoint());
+        final MeasurementUnit measurementUnit = MeasurementUnit.getMeasurement(request.getUnit().name());
+        final List<AreaLocationTypesEntity> typesEntities = repository.findAllIsLocation(false);
+        final StringBuilder sb = new StringBuilder();
+        final Map<String, Location> distancePerTypeMap = new HashMap<>();
+
+        Iterator<AreaLocationTypesEntity> it = typesEntities.iterator();
+        while (it.hasNext()) {
+            AreaLocationTypesEntity next = it.next();
+            final String areaDbTable = next.getAreaDbTable();
+            final String typeName = next.getTypeName();
+            sb.append("SELECT '" + typeName + "' AS type, gid, code, name, " + spatialFunction.stClosestPoint(point.getY(), point.getX(), point.getSRID()) + " AS closest " +
+                    "FROM spatial." + areaDbTable + " " +
+                    "WHERE NOT ST_IsEmpty(geom) AND enabled = 'Y' " +
+                    "ORDER BY " + spatialFunction.stDistance(point.getY(), point.getX(), point.getSRID()) + spatialFunction.limit(10));
+            it.remove(); // avoids a ConcurrentModificationException
+            if (it.hasNext()) {
+                sb.append(" UNION ALL ");
+            }
+        }
+
+        Query emNativeQuery = em.createNativeQuery(sb.toString());
+
+        emNativeQuery.unwrap(SQLQuery.class).addScalar(TYPE, StandardBasicTypes.STRING)
+                .addScalar(GID, StandardBasicTypes.INTEGER).addScalar(CODE, StandardBasicTypes.STRING)
+                .addScalar(NAME, StandardBasicTypes.STRING).addScalar("closest", GeometryType.INSTANCE);
+
+        List records = emNativeQuery.getResultList();
+
+        for (Object record : records) {
+            final Object[] result = (Object[]) record;
+
+        }
         return null;
     }
 
     @Override
-    @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public List<AreaExtendedIdentifierType> getAreaTypesByLocation(final AreaByLocationSpatialRQ request) throws ServiceException {
+    public List<AreaExtendedIdentifierType> getAreasByPoint(final AreaByLocationSpatialRQ request) throws ServiceException {
 
+        // TODO convert point
         final Integer crs = request.getPoint().getCrs();
         final double latitude = request.getPoint().getLatitude();
         final double longitude = request.getPoint().getLongitude();
-                                                        //FIXME DAO
-        List<AreaLocationTypesEntity> systemAreaTypes = repository.findEntityByNamedQuery(AreaLocationTypesEntity.class, QueryNameConstants.FIND_SYSTEM_AREAS);
+        final StringBuilder sb = new StringBuilder();
+        final List<AreaLocationTypesEntity> typesEntities = repository.findAllIsPointIsSystemWide(false, true);
+        final List<AreaExtendedIdentifierType> areaTypes = new ArrayList<>();
 
-        List<AreaExtendedIdentifierType> areaTypes = new ArrayList<>();
-
-        PostGres function = new PostGres();
-
-        for (AreaLocationTypesEntity areaType : systemAreaTypes) {
-
-            String areaDbTable = areaType.getAreaDbTable();
-
-            String queryString = "SELECT gid, name, code FROM spatial." + areaDbTable +
-                    " WHERE " + function.stIntersects(latitude, longitude, crs) + " AND enabled = 'Y'";
-
-            Query emNativeQuery = em.createNativeQuery(queryString);
-
-            emNativeQuery.unwrap(SQLQuery.class)
-                    .addScalar(GID, StandardBasicTypes.INTEGER)
-                    .addScalar(CODE, StandardBasicTypes.STRING)
-                    .addScalar(NAME, StandardBasicTypes.STRING)
-                    .setResultTransformer(Transformers.aliasToBean(GenericSystemAreaDto.class));
-
-            List<GenericSystemAreaDto> resultList = emNativeQuery.getResultList();
-
-            for (GenericSystemAreaDto area : resultList) {
-                AreaExtendedIdentifierType areaIdentifier = new AreaExtendedIdentifierType(String.valueOf(area.getGid()), AreaType.valueOf(areaType.getTypeName()), area.getCode(), area.getName());
-                areaTypes.add(areaIdentifier);
+        Iterator<AreaLocationTypesEntity> it = typesEntities.iterator();
+        while (it.hasNext()) {
+            AreaLocationTypesEntity next = it.next();
+            final String areaDbTable = next.getAreaDbTable();
+            final String typeName = next.getTypeName();
+            sb.append("SELECT '").append(typeName).append("' as type, gid, name, code FROM spatial.")
+                    .append(areaDbTable).append(" WHERE ")
+                    .append(spatialFunction.stIntersects(latitude, longitude, crs))
+                    .append(" AND enabled = 'Y'");
+            it.remove(); // avoids a ConcurrentModificationException
+            if (it.hasNext()) {
+                sb.append(" UNION ALL ");
             }
         }
+
+        Query emNativeQuery = em.createNativeQuery(sb.toString());
+
+        emNativeQuery.unwrap(SQLQuery.class)
+                .addScalar(TYPE, StandardBasicTypes.STRING)
+                .addScalar(GID, StandardBasicTypes.INTEGER)
+                .addScalar(CODE, StandardBasicTypes.STRING)
+                .addScalar(NAME, StandardBasicTypes.STRING);
+
+        List records = emNativeQuery.getResultList();
+
+        for (Object record : records) {
+            final Object[] result = (Object[]) record;
+            AreaExtendedIdentifierType area = new AreaExtendedIdentifierType();
+            area.setAreaType(AreaType.valueOf(String.valueOf(result[0])));
+            area.setId(String.valueOf(result[1]));
+            area.setName(String.valueOf(result[2]));
+            area.setCode(String.valueOf(result[3]));
+            areaTypes.add(area);
+        }
+
         return areaTypes;
     }
 
@@ -269,94 +319,97 @@ public class SpatialServiceBean implements SpatialService {
 
         final UserAreasType userAreas = request.getUserAreas();
         final ScopeAreasType scopeAreas = request.getScopeAreas();
+        final StringBuilder sb = new StringBuilder();
 
         if ((userAreas == null || isEmpty(userAreas.getUserAreas()))
                 && (scopeAreas == null || isEmpty(scopeAreas.getScopeAreas()))) {
             throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
         }
 
-        final Multimap<Long, String> userStringLongMap = ArrayListMultimap.create();
-        final Multimap<Long, String> scopeStringLongMap = ArrayListMultimap.create();
-        final Geometry userAreasUnion = union(userStringLongMap, userAreas.getUserAreas());
-        final Geometry scopeAreasUnion = union(scopeStringLongMap, scopeAreas.getScopeAreas());
-
-        FilterAreasSpatialRS response = new FilterAreasSpatialRS(null,0);
-        Geometry intersection = null;
-
-        if (!userAreasUnion.isEmpty() && !scopeAreasUnion.isEmpty()){
-            intersection = userAreasUnion.intersection(scopeAreasUnion);
-            response.setCode(3);
-            if (intersection.isEmpty()){
-                intersection = scopeAreasUnion;
-                response.setCode(4);
-            }
-        }
-        else if(!userAreasUnion.isEmpty()){
-            intersection = userAreasUnion;
-            response.setCode(1);
-        }
-        else if(!scopeAreasUnion.isEmpty()){
-            intersection = scopeAreasUnion;
-            response.setCode(2);
-        }
-
-        assert intersection != null;
-        if (intersection.getNumPoints() > 20000){
-            intersection = DouglasPeuckerSimplifier.simplify(intersection, 0.5);
-        }
-
-        response.setGeometry(new WKTWriter2().write(intersection));
-        return response;
-
-    }
-
-    private Geometry union(final Multimap<Long, String> multiMap, final List<AreaIdentifierType> areaTypes) throws ServiceException {
-
         try {
 
-            for (AreaIdentifierType type : areaTypes){
-                multiMap.put(Long.valueOf(type.getId()), type.getAreaType().value());
+            buildQuery(scopeAreas.getScopeAreas(), sb, "scope");
+            if (StringUtils.isNotEmpty(sb.toString())){
+                sb.append(" UNION ALL ");
             }
-
-            final StringBuilder sb = new StringBuilder();
-
-            Iterator it = multiMap.entries().iterator();
-            while (it.hasNext()) {
-                Map.Entry pair = (Map.Entry)it.next();
-                sb.append("SELECT geom FROM spatial.").append(pair.getValue()).append(" spatial WHERE spatial.gid = ").append(pair.getKey());
-                it.remove(); // avoids a ConcurrentModificationException
-                if (it.hasNext()) {
-                    sb.append(" UNION ");
-                }
-            }
+            buildQuery(userAreas.getUserAreas(), sb, "user");
 
             Query emNativeQuery = em.createNativeQuery(sb.toString());
-            emNativeQuery.unwrap(SQLQuery.class).addScalar(GEOM, GeometryType.INSTANCE);
-            @SuppressWarnings("unchecked")
-            List<Geometry> resultList = emNativeQuery.getResultList();
+            emNativeQuery.unwrap(SQLQuery.class)
+                    .addScalar(TYPE, StringType.INSTANCE)
+                    .addScalar(GEOM, GeometryType.INSTANCE);
+            List records = emNativeQuery.getResultList();
 
-            List<Geometry> geometryList = new ArrayList<>();
-            for(Geometry geometry : resultList){
+            final List<Geometry> scopeGeometryList = new ArrayList<>();
+            final List<Geometry> userGeometryList = new ArrayList<>();
 
+            for (Object record : records) {
+                final Object[] result = (Object[]) record;
+                final String type = (String) result[0];
+                Geometry geometry = (Geometry) result[1];
                 if (!SpatialUtils.isDefaultCrs(geometry.getSRID())){
-                    Geometry geographic = JTS.toGeographic(geometry,
+                    geometry = JTS.toGeographic(geometry,
                             CRS.decode(EPSG + Integer.toString(geometry.getSRID()), true));
-                    geometryList.add(geographic);
-
                 }
-                else {
-                    geometryList.add(geometry);
+                if ("user".equals(type)){
+                    userGeometryList.add(geometry);
+                } else {
+                    scopeGeometryList.add(geometry);
                 }
             }
 
             GeometryFactory geometryFactory = JTSFactoryFinder.getGeometryFactory();
-            GeometryCollection geometryCollection =
-                    (GeometryCollection) geometryFactory.buildGeometry( geometryList );
+            GeometryCollection userUnion = (GeometryCollection) geometryFactory.buildGeometry(userGeometryList).union();
+            GeometryCollection scopeUnion = (GeometryCollection) geometryFactory.buildGeometry(scopeGeometryList).union();
 
-            return geometryCollection.union();
+            FilterAreasSpatialRS response = new FilterAreasSpatialRS(null,0);
+            Geometry intersection = null;
 
-        } catch (FactoryException | TransformException ex) {
+            if (!userUnion.isEmpty() && !scopeUnion.isEmpty()){
+                intersection = userUnion.intersection(scopeUnion);
+                response.setCode(3);
+                if (intersection.isEmpty()){
+                    intersection = scopeUnion;
+                    response.setCode(4);
+                }
+            }
+            else if(!userUnion.isEmpty()){
+                intersection = userUnion;
+                response.setCode(1);
+            }
+            else if(!scopeUnion.isEmpty()){
+                intersection = scopeUnion;
+                response.setCode(2);
+            }
+
+            assert intersection != null;
+            if (intersection.getNumPoints() > 20000){
+                intersection = DouglasPeuckerSimplifier.simplify(intersection, 0.5);
+            }
+
+            response.setGeometry(new WKTWriter2().write(intersection));
+            return response;
+
+        } catch (TransformException | FactoryException ex) {
             throw new ServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR.toString(), ex);
+        }
+
+    }
+
+    private void buildQuery(List<AreaIdentifierType> typeList, StringBuilder sb, String type) {
+
+        Iterator<AreaIdentifierType> it = typeList.iterator();
+
+        while (it.hasNext()) {
+            AreaIdentifierType next = it.next();
+            final String id = next.getId();
+            final AreaType areaType = next.getAreaType();
+            sb.append("SELECT '").append(type).append("' as type ,geom FROM spatial.").append(areaType.value())
+                    .append(" spatial WHERE spatial.gid = ").append(id);
+            it.remove(); // avoids a ConcurrentModificationException
+            if (it.hasNext()) {
+                sb.append(" UNION ALL ");
+            }
         }
     }
 
@@ -364,17 +417,21 @@ public class SpatialServiceBean implements SpatialService {
     @Transactional
     public List<GenericSystemAreaDto> searchAreasByNameOrCode(final String tableName, final String filter) throws ServiceException {
 
-        AreaLocationTypesEntity areaLocationType = repository.findAreaLocationTypeByTypeName(tableName.toUpperCase());
+        final AreaLocationTypesEntity areaLocationType = repository.findAreaLocationTypeByTypeName(tableName.toUpperCase());
+        final String toUpperCase = filter.toUpperCase();
+        final ArrayList<GenericSystemAreaDto> systemAreaByFilterRecords = new ArrayList<>();
+        final WKTWriter2 wktWriter2 = new WKTWriter2();
+        final StringBuilder sb = new StringBuilder();
 
         if (areaLocationType == null) {
             throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR, areaLocationType);
         }
 
-        final String toUpperCase = filter.toUpperCase();
-        final String queryString= "SELECT gid, name, code, geom FROM spatial." + tableName + " " +
-                "WHERE UPPER(name) LIKE '%" + toUpperCase + "%' OR code LIKE '%" + toUpperCase + "%' GROUP BY gid";
+        sb.append("SELECT gid, name, code, geom FROM spatial.")
+                .append(tableName).append(" ").append("WHERE UPPER(name) LIKE '%")
+                .append(toUpperCase).append("%' OR code LIKE '%").append(toUpperCase).append("%' GROUP BY gid");
 
-        final Query emNativeQuery = em.createNativeQuery(queryString);
+        final Query emNativeQuery = em.createNativeQuery(sb.toString());
         emNativeQuery.unwrap(SQLQuery.class)
                 .addScalar(GID, IntegerType.INSTANCE)
                 .addScalar(NAME, StringType.INSTANCE)
@@ -383,9 +440,6 @@ public class SpatialServiceBean implements SpatialService {
 
         final List records = emNativeQuery.getResultList();
         Iterator it = records.iterator();
-
-        final ArrayList<GenericSystemAreaDto> systemAreaByFilterRecords = new ArrayList<>();
-        final WKTWriter2 wktWriter2 = new WKTWriter2();
 
         while (it.hasNext( )) {
             final Object[] result = (Object[])it.next();
@@ -403,23 +457,21 @@ public class SpatialServiceBean implements SpatialService {
     @Override
     @Transactional
     public LocationDetails getLocationDetails(final LocationTypeEntry locationTypeEntry) throws ServiceException {
-
-        final GisFunction gisFunction = new PostGres();
+        // TODO convert point?
         final GeodeticCalculator calc = new GeodeticCalculator();
-
-        String id = locationTypeEntry.getId();
-        String locationType = locationTypeEntry.getLocationType();
-
-        AreaLocationTypesEntity locationTypesEntity = repository.findAreaLocationTypeByTypeName(locationType.toUpperCase());
-
-        Map<String, Object> properties;
+        final Map<String, Object> properties;
+        final String id = locationTypeEntry.getId();
+        final String locationType = locationTypeEntry.getLocationType();
+        final List<LocationProperty> locationProperties = new ArrayList<>();
+        final AreaLocationTypesEntity locationTypesEntity =
+                repository.findAreaLocationTypeByTypeName(locationType.toUpperCase());
 
         if (locationTypeEntry.getId() != null) {
 
             if (!StringUtils.isNumeric(id)) {
                 throw new SpatialServiceException(SpatialServiceErrors.INVALID_ID_TYPE, id);
             }
-
+            // FIXME @Greg DAO
             Object object = repository.findEntityById(getEntityClassByType(locationTypesEntity.getTypeName()), Long.parseLong(locationTypeEntry.getId()));
 
             if (object == null) {
@@ -430,7 +482,7 @@ public class SpatialServiceBean implements SpatialService {
 
         } else {
 
-            Map<String, Object> fieldMap = new HashMap();
+            Map<String, Object> fieldMap = new HashMap<>();
 
             Double longitude = locationTypeEntry.getLongitude();
             Double latitude = locationTypeEntry.getLatitude();
@@ -440,7 +492,7 @@ public class SpatialServiceBean implements SpatialService {
 
             if (locationType.equals("PORT")){
 
-                final String queryString = "SELECT * FROM spatial.port WHERE enabled = 'Y' ORDER BY " + gisFunction.stDistance(longitude, latitude, crs) + " ASC " + gisFunction.limit(15); // FIXME this can and should be replaces by NamedQuery
+                final String queryString = "SELECT * FROM spatial.port WHERE enabled = 'Y' ORDER BY " + spatialFunction.stDistance(longitude, latitude, crs) + " ASC " + spatialFunction.limit(15); // FIXME this can and should be replaces by NamedQuery
                 Query emNativeQuery = em.createNativeQuery(queryString, PortsEntity.class);
                 List<PortsEntity> records = emNativeQuery.getResultList();
 
@@ -476,10 +528,7 @@ public class SpatialServiceBean implements SpatialService {
             properties = fieldMap;
         }
 
-        List<LocationProperty> locationProperties = new ArrayList<>();
-
         for (Map.Entry<String, Object> entry : properties.entrySet()) {
-
             LocationProperty locationProperty = new LocationProperty();
             locationProperty.setPropertyName(entry.getKey());
             locationProperty.setPropertyValue(entry.getValue()!=null?entry.getValue().toString():null);
