@@ -16,7 +16,7 @@ import java.util.List;
  */
 @Local
 @Stateless
-@Slf4j
+@Slf4j // FIXME Dead Code?
 public class SystemConfigServiceBean {
 
 

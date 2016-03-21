@@ -101,10 +101,10 @@ public class UserAreaServiceIT extends AbstractArquillianIT {
 
 
 		// Given
-		userAreaDto = createUserArea("updated name", "updated-" + UUID.randomUUID().toString(), "updated desc", new Long(userAreaId));
+		userAreaDto = createUserArea("updated name", "updated-" + UUID.randomUUID().toString(), "updated desc", userAreaId);
 
 		// When
-		userAreaId = userAreaService.updateUserArea(userAreaDto, "rep_power", null);
+		userAreaId = userAreaService.updateUserArea(userAreaDto, "rep_power", false, null);
 
 		// Then
 		assertNotNull(userAreaId);

@@ -14,14 +14,11 @@ public final class QueryNameConstants {
      */
     public static final String FIND_ALL_AREA_TYPE_NAMES = "AreaLocationType.findAllAreaTypeNames";
     public static final String FIND_ALL_AREA_AND_LOCATION_TYPE_NAMES = "AreaLocationType.findAllAreaAndLocationTypeNames";
-    public static final String FIND_ALL_AREAS = "AreaLocationType.findAllAreas";
     public static final String FIND_ALL_COUNTRY_DESC = "Countries.findAllCountriesDesc";
 
     /**
      * Find System
      */
-    public static final String FIND_SYSTEM_AREAS = "AreaLocationType.findSystemAreas";
-    public static final String FIND_SYSTEM_LOCATIONS = "AreaLocationType.findSystemLocations";
     public static final String FIND_SYSTEM_AREA_LAYER = "AreaLocationType.findSystemAreaLayerMappings";
     public static final String FIND_SYSTEM_AREA_AND_LOCATION_LAYER = "AreaLocationType.findSystemAreaAndLocationLayerMappings";
     public static final String FIND_USER_AREA_LAYER = "AreaLocationType.findUserAreaLayerMappings";
@@ -60,12 +57,6 @@ public final class QueryNameConstants {
      */
     public static final String EEZ_COLUMNS = "eezEntity.findSelectedColumns";
     public static final String RFMO_COLUMNS = "rfmoEntity.findSelectedColumns";
-    public static final String COUNTRY_COLUMNS = "countryEntity.findSelectedColumns";
-    public static final String FAO_COLUMNS = "faoEntity.findSelectedColumns";
-    public static final String GFCM_COLUMNS = "gfcmEntity.findSelectedColumns";
-    public static final String RAC_COLUMNS = "racEntity.findSelectedColumns";
-    public static final String STAT_RECT_COLUMNS = "statRectEntity.findSelectedColumns";
-    public static final String PORT_COLUMNS = "portEntity.findSelectedColumns";
     public static final String USERAREA_COLUMNS = "userAreasEntity.findSelectedColumns";
 
     public static final String DISABLE_EEZ_AREAS = "eezEntity.disableEezAreas";

@@ -21,6 +21,7 @@ public class BookmarkDao extends AbstractDAO<BookmarkEntity> {
     }
 
     public List<BookmarkEntity> findAllByUser(String userName) throws ServiceException {
-        return findEntityByNamedQuery(BookmarkEntity.class, BookmarkEntity.LIST_BY_USERNAME, QueryParameter.with("createdBy", userName).parameters());
+        return findEntityByNamedQuery(BookmarkEntity.class, BookmarkEntity.LIST_BY_USERNAME,
+                QueryParameter.with("createdBy", userName).parameters());
     }
 }

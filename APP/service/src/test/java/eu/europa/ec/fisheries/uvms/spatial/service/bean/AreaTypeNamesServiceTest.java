@@ -1,6 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.google.common.collect.ImmutableList;
+import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import org.junit.Test;
@@ -42,17 +43,4 @@ public class AreaTypeNamesServiceTest {
         assertThat(areaTypeNames).containsOnly(AREA_TYPES.toArray());
     }
 
-    @Test
-    @SuppressWarnings("unchecked")
-    public void shouldNotThrowNullPointerException() throws Exception {
-        // given
-        when(repository.findEntityByNamedQuery(String.class, QueryNameConstants.FIND_ALL_AREAS)).thenReturn(Collections.emptyList());
-
-        // when
-        List<String> areaTypeNames = areaTypeNamesService.listAllAreaTypeNames();
-
-        // then
-        assertNotNull(areaTypeNames);
-        assertThat(areaTypeNames).isEmpty();
-    }
 }

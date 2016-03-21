@@ -40,7 +40,7 @@ public class AreaDetailsServiceBean implements AreaDetailsService {
     @Override
     @Transactional
     public AreaDetails getAreaDetails(AreaDetailsSpatialRequest request) throws ServiceException {
-        return getAreaDetailsById(request.getAreaType()); // FIXME calling another transactional method is bad practice
+        return getAreaDetailsById(request.getAreaType()); // FIXME calling public ejb method from self is considered bad practice and should be avoided
     }
 
     @Override
