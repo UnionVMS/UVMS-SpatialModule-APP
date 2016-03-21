@@ -214,7 +214,7 @@ public class UserAreaResource extends UnionVMSResource {
         Response response;
 
         if (request.isUserInRole(SpatialFeaturesEnum.MANAGE_USER_DEFINED_AREAS.toString())) {
-            response = createSuccessResponse(userAreaService.searchUserAreasByCriteria(request.getRemoteUser(), scopeName, StringUtils.EMPTY, isPowerUser(request)));
+            response = createSuccessResponse(userAreaService. searchUserAreasByCriteria(request.getRemoteUser(), scopeName, StringUtils.EMPTY, isPowerUser(request)));
         } else {
             response = createErrorResponse(ErrorCodes.NOT_AUTHORIZED);
         }

@@ -28,16 +28,9 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.geotools.geometry.jts.WKTReader2;
 import org.geotools.geometry.jts.WKTWriter2;
-import org.hibernate.SQLQuery;
-import org.hibernate.spatial.GeometryType;
-import org.hibernate.type.IntegerType;
-import org.hibernate.type.StringType;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,7 +49,6 @@ import static eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialUtils.conv
 @Slf4j
 public class UserAreaServiceBean implements UserAreaService {
 
-    private @PersistenceContext(unitName = "spatialPU") EntityManager em;
     private @EJB SpatialRepository repository;
     private @EJB AreaTypeNamesService areaTypeNamesService;
     private @EJB USMService usmService;
@@ -298,31 +290,19 @@ public class UserAreaServiceBean implements UserAreaService {
     @Transactional
     public List<UserAreaDto> searchUserAreasByCriteria(String userName, String scopeName, String searchCriteria, boolean isPowerUser) throws ServiceException {
 
-        final String queryString = "SELECT gid, name, area_desc, geom FROM spatial.user_areas area LEFT JOIN spatial.user_scope scopeSelection"
-                + " ON area.gid = scopeSelection.user_area_id"
-                + " WHERE ((1 = " + (isPowerUser ? 1 : 0) + ") OR (area.user_name = '" + userName + "' OR scopeSelection.scope_name = '" + scopeName + "'))"
-                + " AND (UPPER(area.name) LIKE(UPPER('%" + searchCriteria + "%')) OR UPPER(area.area_desc) LIKE(UPPER('%" + searchCriteria + "%'))) group by area.gid";// TODO @Greg Named query  Move to DAO
-
+        List<UserAreasEntity> userAreas = repository.listUserAreaByCriteria(userName, scopeName, searchCriteria, isPowerUser);
         final List<UserAreaDto> userAreaDtos = new ArrayList<>();
-        final Query emNativeQuery = em.createNativeQuery(queryString);
-
-        emNativeQuery.unwrap(SQLQuery.class)
-                .addScalar("gid", IntegerType.INSTANCE)
-                .addScalar("name", StringType.INSTANCE)
-                .addScalar("area_desc", StringType.INSTANCE)
-                .addScalar("geom", GeometryType.INSTANCE);
-
-        final List records = emNativeQuery.getResultList();
-        Iterator it = records.iterator();
+        Iterator it = userAreas.iterator();
         final WKTWriter2 wktWriter2 = new WKTWriter2();
 
         while (it.hasNext( )) {
-            final Object[] result = (Object[])it.next();
+
+            UserAreasEntity next = (UserAreasEntity) it.next();
             it.remove(); // avoids a ConcurrentModificationException
-            final Geometry envelope = ((Geometry) result[3]).getEnvelope(); // FIXME @Greg do this in hql with envelope(Geometry)
-            String desc = (String) result[2];
-            userAreaDtos.add(new UserAreaDto(Integer.valueOf(String.valueOf(result[0])), String.valueOf(result[1]),
-                            StringUtils.isNotBlank(desc) ? desc : StringUtils.EMPTY, wktWriter2.write(envelope)));
+            final Geometry envelope = next.getGeom().getEnvelope();
+
+            userAreaDtos.add(new UserAreaDto(next.getGid(), next.getName(), StringUtils.isNotBlank(next.getAreaDesc())
+                    ? next.getAreaDesc() : StringUtils.EMPTY, wktWriter2.write(envelope)));
         }
 
         return userAreaDtos;

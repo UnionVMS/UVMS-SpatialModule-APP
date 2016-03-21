@@ -26,6 +26,18 @@ import java.util.Set;
 
 @Entity
 @NamedQueries({
+        @NamedQuery(name = UserAreasEntity.SEARCH_BY_CRITERIA,
+                query = "SELECT area " +
+                        "FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection " +
+                        "WHERE ((1=:isPowerUser) OR (area.userName=:userName OR scopeSelection.name=:scopeName)) " +
+                        "AND (UPPER(area.name) LIKE UPPER(:searchCriteria) OR UPPER(area.areaDesc) LIKE UPPER(:searchCriteria))" +
+                        "GROUP BY area.gid"),
+        @NamedQuery(name = QueryNameConstants.FIND_USER_AREA_BY_TYPE,
+                query = "SELECT area " +
+                        "FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection " +
+                        "WHERE area.type = :type " +
+                        "AND ((1=:isPowerUser) OR (area.userName=:userName OR scopeSelection.name=:scopeName)) " +
+                        "GROUP BY area.gid"),
         @NamedQuery(name = UserAreasEntity.USER_AREA_DETAILS_BY_LOCATION,
                 query = "FROM UserAreasEntity userArea WHERE userArea.userName = :userName AND intersects(userArea.geom, :shape) = true) AND userArea.enabled = 'Y' GROUP BY userArea.gid"),
         @NamedQuery(name = UserAreasEntity.USER_AREA_BY_COORDINATE,
@@ -35,16 +47,14 @@ import java.util.Set;
         @NamedQuery(name = QueryNameConstants.FIND_USER_AREA_BY_ID,
                 query = "SELECT area FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection WHERE area.gid = :userAreaId AND ((1=:isPowerUser) OR (area.userName=:userName OR scopeSelection.name=:scopeName))"),
         @NamedQuery(name = QueryNameConstants.USERAREA_COLUMNS,
-				query = "select userArea.name as name, userArea.areaDesc as desc from UserAreasEntity AS userArea WHERE userArea.gid =:gid"),
-		@NamedQuery(name = QueryNameConstants.FIND_ALL_USER_AREAS,
-				query = "SELECT DISTINCT area.gid as gid, area.name as name, area.areaDesc as desc FROM UserAreasEntity area " +
+                query = "SELECT userArea.name as name, userArea.areaDesc as desc FROM UserAreasEntity AS userArea WHERE userArea.gid =:gid"),
+        @NamedQuery(name = QueryNameConstants.FIND_ALL_USER_AREAS,
+                query = "SELECT DISTINCT area.gid as gid, area.name as name, area.areaDesc as desc FROM UserAreasEntity area " +
                         "LEFT JOIN area.scopeSelection scope WHERE area.userName = :userName OR scope.name = :scopeName"),
         @NamedQuery(name = QueryNameConstants.FIND_ALL_USER_AREAS_BY_GIDS,
                 query = "SELECT area.gid as gid, area.name as name, area.areaDesc as desc FROM UserAreasEntity area WHERE area.gid IN (:gids)"),
         @NamedQuery(name = QueryNameConstants.FIND_USER_AREA_TYPES,
                 query = "SELECT DISTINCT area.type FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection WHERE  area.type<>'' AND area.type <> null AND ((1=:isPowerUser) OR (area.userName=:userName OR scopeSelection.name=:scopeName))"),
-        @NamedQuery(name = QueryNameConstants.FIND_USER_AREA_BY_TYPE,
-                query = "SELECT area FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection WHERE area.type = :type AND ((1=:isPowerUser) OR (area.userName=:userName OR scopeSelection.name=:scopeName)) GROUP BY area.gid"),
         @NamedQuery(name = QueryNameConstants.FIND_ALL_USER_AREAS_GROUP,
                 query = "SELECT distinct area.type as name FROM UserAreasEntity area " +
                         "LEFT JOIN area.scopeSelection scope WHERE (area.userName = :userName OR (scope.name = :scopeName AND scope.userAreas = area))"),
@@ -59,6 +69,7 @@ public class UserAreasEntity implements Serializable {
     public static final String USER_AREA_DETAILS_BY_LOCATION = "UserArea.findUserAreaDetailsByLocation";
     public static final String USER_AREA_BY_COORDINATE = "userAreasEntity.ByCoordinate";
     public static final String FIND_GID_FOR_SHARED_AREA = "userAreasEntity.findGidForSharedAreas";
+    public static final String SEARCH_BY_CRITERIA = "userAreasEntity.searchByCriteria";
 
     @Id
     @Column(name = "gid")

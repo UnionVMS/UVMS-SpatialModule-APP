@@ -181,10 +181,12 @@ public class SpatialServiceBean implements SpatialService {
             AreaLocationTypesEntity next = it.next();
             final String areaDbTable = next.getAreaDbTable();
             final String typeName = next.getTypeName();
-            sb.append("(SELECT '" + typeName + "' AS type, gid, code, name, " + spatialFunction.stClosestPoint(incoming.getY(), incoming.getX(), incoming.getSRID()) + " AS closest " +
-                    "FROM spatial." + areaDbTable + " " +
-                    "WHERE NOT ST_IsEmpty(geom) AND enabled = 'Y' " +
-                    "ORDER BY " + spatialFunction.stDistance(incoming.getY(), incoming.getX(), incoming.getSRID()) + spatialFunction.limit(10) + ")");
+            sb.append("(SELECT '").append(typeName).append("' AS type, gid, code, name, ")
+                    .append(spatialFunction.stClosestPoint(incoming.getY(), incoming.getX(), incoming.getSRID()))
+                    .append(" AS closest ").append("FROM spatial.").append(areaDbTable).append(" ")
+                    .append("WHERE NOT ST_IsEmpty(geom) AND enabled = 'Y' ").append("ORDER BY ")
+                    .append(spatialFunction.stDistance(incoming.getY(), incoming.getX(), incoming.getSRID())).append(" ")
+                    .append(spatialFunction.limit(10)).append(")");
             it.remove(); // avoids a ConcurrentModificationException
             if (it.hasNext()) {
                 sb.append(" UNION ALL ");
