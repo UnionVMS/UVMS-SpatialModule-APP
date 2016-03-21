@@ -127,4 +127,5 @@ public interface SpatialRepository extends DAO {
 
     ServiceLayerEntity getByAreaLocationType(String areaLocationType) throws ServiceException;
 
+    List<UserAreasEntity> listUserAreaByCriteria(String userName, String scopeName, String searchCriteria, boolean isPowerUser) throws ServiceException;
 }

@@ -105,4 +105,14 @@ public class UserAreaJpaDao extends AbstractDAO<UserAreasEntity> {
         return em.unwrap(Session.class);
     }
 
+    public List<UserAreasEntity> listByCriteria(String userName, String scopeName, String searchCriteria, Boolean isPowerUser) throws ServiceException {
+
+        Map parameters = QueryParameter.with("isPowerUser", isPowerUser ? 1 : 0)
+                .and("searchCriteria", "%" + searchCriteria + "%")
+                .and("scopeName", scopeName)
+                .and("userName", userName).parameters();
+
+        return findEntityByNamedQuery(UserAreasEntity.class, UserAreasEntity.SEARCH_BY_CRITERIA, parameters);
+
+    }
 }

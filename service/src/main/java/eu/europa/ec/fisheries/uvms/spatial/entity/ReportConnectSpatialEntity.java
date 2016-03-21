@@ -31,13 +31,13 @@ import javax.persistence.Table;
 						"FROM ReportConnectSpatialEntity rcs INNER JOIN rcs.projectionByMapProjId AS projection " +
 						"WHERE rcs.reportId = :reportId"),
 		@NamedQuery(name = QueryNameConstants.FIND_BY_REPORT_ID,
-				query = "from ReportConnectSpatialEntity where reportId = :reportId"),
+				query = "FROM ReportConnectSpatialEntity WHERE reportId = :reportId"),
 		@NamedQuery(name = QueryNameConstants.FIND_BY_ID,
-				query = "from ReportConnectSpatialEntity where reportId = :reportId and id = :id"),
+				query = "FROM ReportConnectSpatialEntity WHERE reportId = :reportId AND id = :id"),
 		@NamedQuery(name = ReportConnectSpatialEntity.FIND_BY_REPORT_CONNECT_ID,
-				query = "from ReportConnectSpatialEntity where id = :id"),
+				query = "FROM ReportConnectSpatialEntity WHERE id = :id"),
         @NamedQuery(name = ReportConnectSpatialEntity.DELETE_BY_ID_LIST,
-                query = "DELETE FROM ReportConnectSpatialEntity where id in :idList")
+                query = "DELETE FROM ReportConnectSpatialEntity WHERE id IN :idList")
 })
 @EqualsAndHashCode(exclude = {"id", "reportConnectServiceAreases"})
 public class ReportConnectSpatialEntity implements Serializable {
