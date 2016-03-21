@@ -239,7 +239,7 @@
             </properties>
         </profile>
         <profile>
-            <id>postgres</id>
+            <id>dialect</id>
             <properties>
                 <database.dialect>postgres</database.dialect>
             </properties>
