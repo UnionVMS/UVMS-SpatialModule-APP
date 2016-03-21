@@ -3,7 +3,9 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
+import eu.europa.ec.fisheries.uvms.common.DateUtils;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.reporting.model.schemas.ReportGetStartAndEndDateRS;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ProjectionEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity;
@@ -17,6 +19,9 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialGetMapConfigurat
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialGetMapConfigurationRS;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveOrUpdateMapConfigurationRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveOrUpdateMapConfigurationRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialException;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
+import eu.europa.ec.fisheries.uvms.spatial.service.LayerRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaDto;
@@ -65,6 +70,9 @@ public class MapConfigServiceBean implements MapConfigService {
 
     @EJB
     private SpatialRepository repository;
+
+    @EJB
+    private ReportingService reportingService;
 
     @Override
     @SneakyThrows
@@ -526,7 +534,7 @@ public class MapConfigServiceBean implements MapConfigService {
         return serviceLayersDto;
     }
 
-    private List<LayerDto> getAreaLayerDtoList(List<LayerAreaDto> layersDtos, String geoServerUrl, String bingApiKey, ProjectionDto projection, boolean isBackground, String userName, String scopeName, String timeStamp, int reportId) {
+    private List<LayerDto> getAreaLayerDtoList(List<LayerAreaDto> layersDtos, String geoServerUrl, String bingApiKey, ProjectionDto projection, boolean isBackground, String userName, String scopeName, String timeStamp, int reportId) throws ServiceException {
         if (layersDtos == null || layersDtos.isEmpty()) {
             return null;
         }
@@ -546,7 +554,7 @@ public class MapConfigServiceBean implements MapConfigService {
                         layerDto.setAreaType(AreaTypeEnum.userarea.getType().toUpperCase());
                     } else if (layerAreaDto.getAreaType().equals(AreaTypeEnum.areagroup)) {
                         layerDto.setCqlAll(getAreaGroupCqlAll(userName, scopeName, layerAreaDto.getAreaGroupName()));
-                        layerDto.setCqlActive(getAreaGroupCqlActive(reportId, timeStamp));
+                        layerDto.setCqlActive(getAreaGroupCqlActive(reportId, userName, scopeName, timeStamp));
                         layerDto.setAreaType(AreaTypeEnum.areagroup.getType().toUpperCase());
                         layerDto.setTitle(layerAreaDto.getAreaGroupName());
                     } else if (layerAreaDto.getAreaType().equals(AreaTypeEnum.sysarea)) {
@@ -569,10 +577,13 @@ public class MapConfigServiceBean implements MapConfigService {
         return cql.toString();
     }
 
-    private String getAreaGroupCqlActive(int reportId, String timeStamp) {
-        // TODO call Reporting to get the start date and end date of the report
-        String startDate = null;
-        String endDate = null;
+    private String getAreaGroupCqlActive(int reportId, String userName, String scopeName, String timeStamp) throws ServiceException {
+        ReportGetStartAndEndDateRS response = reportingService.getReportDates(reportId, userName, scopeName, timeStamp);
+        if (response == null) {
+            return null;
+        }
+        String startDate = response.getStartDate();
+        String endDate = response.getEndDate();
         StringBuilder cql = new StringBuilder();
         if (startDate != null && endDate != null) {
             cql.append("(").
@@ -584,8 +595,9 @@ public class MapConfigServiceBean implements MapConfigService {
         } else if (startDate == null && endDate != null) {
             cql.append("(").append("start_date <= ").append("'").append(endDate).append("'").append(" OR ").append("start_date IS NULL").append(")");
         } else {
-            cql.append("");
+            return null;
         }
+        LOGGER.info("cql Active for geo server : \n" + cql);
         return cql.toString();
     }
 
