@@ -10,23 +10,7 @@ import eu.europa.ec.fisheries.uvms.interceptors.TracingInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.dao.util.SpatialFunction;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.PortsEntity;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Area;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaExtendedIdentifierType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaIdentifierType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestLocationSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRS;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Location;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationDetails;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationProperty;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationTypeEntry;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ScopeAreasType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.UnitType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.UserAreasType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.GenericSystemAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.util.MeasurementUnit;
@@ -167,82 +151,25 @@ public class SpatialServiceBean implements SpatialService {
     }
 
     @Override
-    @Transactional(Transactional.TxType.REQUIRES_NEW)
     public List<Area> getClosestAreasToPointByType(final ClosestAreaSpatialRQ request) throws ServiceException {
 
-        final Point point = convertToPointInWGS84(request.getPoint());
-
+        final Point incoming = convertToPointInWGS84(request.getPoint());
         final MeasurementUnit measurementUnit = MeasurementUnit.getMeasurement(request.getUnit().name());
-        final Map<String, String> areaType2TableName = new HashMap<>();
-        final List<AreaLocationTypesEntity> areas = repository.findAllIsLocation(false);
-        final List<Area> closestAreas = new ArrayList<>();
-
-        for (AreaLocationTypesEntity area : areas) {
-            areaType2TableName.put(area.getTypeName().toUpperCase(), area.getAreaDbTable());
-        }
-
-        for (AreaType areaType : request.getAreaTypes().getAreaTypes()) {
-
-            String areaDbTable = areaType2TableName.get(areaType.value());
-            final eu.europa.ec.fisheries.uvms.spatial.model.schemas.GeometryType geometryType = GeometryMapper.INSTANCE.geometryToWKT(point);
-            final Integer crs = point.getSRID();
-            final Double unitRatio = measurementUnit.getRatio();
-
-            // FIXME native query alert
-            String queryString = "WITH prox_query AS (SELECT gid, code, name, " + spatialFunction.stClosestPoint(point.getY(), point.getX(), crs) + " AS closestPoint " +
-                    "FROM spatial." + areaDbTable + " " +
-                    "WHERE NOT ST_IsEmpty(geom) AND enabled = 'Y' " +
-                    "ORDER BY geom <#> st_geomfromtext(CAST('" + geometryType.getGeometry() + "' AS text), " + crs + ") limit 30) " +
-                    "SELECT gid, code, name, st_length_spheroid(st_makeline(closestPoint, st_geomfromtext(CAST('" + geometryType.getGeometry() + "' AS text), " + crs + ")), 'SPHEROID[\"WGS 84\",6378137,298.257223563]') /" + unitRatio + " AS distance " +
-                    "FROM prox_query " +
-                    "ORDER BY distance " + spatialFunction.limit(1);
-
-            Query emNativeQuery = em.createNativeQuery(queryString);
-            emNativeQuery.unwrap(SQLQuery.class)
-                    .addScalar(GID, IntegerType.INSTANCE)
-                    .addScalar(CODE, StringType.INSTANCE)
-                    .addScalar(NAME, StringType.INSTANCE)
-                    .addScalar("distance", DoubleType.INSTANCE);
-
-            final List records  = emNativeQuery.getResultList();
-            final Iterator it = records.iterator();
-
-            Area area = new Area();
-
-            while (it.hasNext( )) {
-                final Object[] result = (Object[])it.next();
-                it.remove(); // avoids a ConcurrentModificationException
-                area.setId(String.valueOf(result[0]));
-                area.setCode(String.valueOf(result[1]));
-                area.setName(String.valueOf(result[2]));
-                area.setDistance(Double.valueOf(String.valueOf(result[3])));
-                area.setUnit(request.getUnit());
-                area.setAreaType(areaType);
-                closestAreas.add(area);
-            }
-        }
-
-        return closestAreas;
-    }
-
-    @Override
-    public List<Area> getClosestAreasToPointByTypeGeneric(final ClosestAreaSpatialRQ request) throws ServiceException {
-
-        final Point point = convertToPointInWGS84(request.getPoint());
-        final MeasurementUnit measurementUnit = MeasurementUnit.getMeasurement(request.getUnit().name());
-        final List<AreaLocationTypesEntity> typesEntities = repository.findAllIsLocation(false);
+        final UnitType unit = request.getUnit();
+        final List<AreaLocationTypesEntity> typesEntities = repository.findAllIsPointIsSystemWide(false, true);
         final StringBuilder sb = new StringBuilder();
-        final Map<String, Location> distancePerTypeMap = new HashMap<>();
+        final Map<String, Area> distancePerTypeMap = new HashMap<>();
+        final GeodeticCalculator calc = new GeodeticCalculator();
 
         Iterator<AreaLocationTypesEntity> it = typesEntities.iterator();
         while (it.hasNext()) {
             AreaLocationTypesEntity next = it.next();
             final String areaDbTable = next.getAreaDbTable();
             final String typeName = next.getTypeName();
-            sb.append("SELECT '" + typeName + "' AS type, gid, code, name, " + spatialFunction.stClosestPoint(point.getY(), point.getX(), point.getSRID()) + " AS closest " +
+            sb.append("(SELECT '" + typeName + "' AS type, gid, code, name, " + spatialFunction.stClosestPoint(incoming.getY(), incoming.getX(), incoming.getSRID()) + " AS closest " +
                     "FROM spatial." + areaDbTable + " " +
                     "WHERE NOT ST_IsEmpty(geom) AND enabled = 'Y' " +
-                    "ORDER BY " + spatialFunction.stDistance(point.getY(), point.getX(), point.getSRID()) + spatialFunction.limit(10));
+                    "ORDER BY " + spatialFunction.stDistance(incoming.getY(), incoming.getX(), incoming.getSRID()) + spatialFunction.limit(10) + ")");
             it.remove(); // avoids a ConcurrentModificationException
             if (it.hasNext()) {
                 sb.append(" UNION ALL ");
@@ -259,9 +186,32 @@ public class SpatialServiceBean implements SpatialService {
 
         for (Object record : records) {
             final Object[] result = (Object[]) record;
+            final Point closestPoint = (Point) result[4];
+            calc.setStartingGeographicPoint(closestPoint.getX(), closestPoint.getY());
+            calc.setDestinationGeographicPoint(incoming.getX(), incoming.getY());
+            Double orthodromicDistance = calc.getOrthodromicDistance();
+
+            final String type = result[0].toString();
+            Area closest = distancePerTypeMap.get(type);
+
+            if (closest == null || orthodromicDistance / measurementUnit.getRatio() < closest.getDistance()) {
+
+                if (closest == null) {
+                    closest = new Area();
+                }
+
+                closest.setDistance(orthodromicDistance);
+                closest.setId(result[1].toString());
+                closest.setDistance(orthodromicDistance / measurementUnit.getRatio());
+                closest.setUnit(unit);
+                closest.setCode(result[2].toString());
+                closest.setName(result[3].toString());
+                closest.setAreaType(AreaType.valueOf(type));
+                distancePerTypeMap.put(type, closest);
+            }
 
         }
-        return null;
+        return new ArrayList<>(distancePerTypeMap.values());
     }
 
     @Override
