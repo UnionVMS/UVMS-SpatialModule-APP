@@ -8,6 +8,7 @@ import eu.europa.ec.fisheries.uvms.service.interceptor.ValidationInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialFeaturesEnum;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.MapConfigService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ConfigResourceDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.MapConfigDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.ConfigurationDto;
@@ -20,6 +21,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.xml.ws.RequestWrapper;
 import java.io.IOException;
 import java.util.List;
 
@@ -39,18 +41,19 @@ public class ConfigResource extends UnionVMSResource {
 
     @POST
     @Produces(value = {MediaType.APPLICATION_JSON})
+    @Consumes(value = {MediaType.APPLICATION_JSON})
     @Path("{id}")
     @Interceptors(value = {ExceptionInterceptor.class})
     public Response getReportMapConfig(@Context HttpServletRequest request,
                                        @HeaderParam(AuthConstants.HTTP_HEADER_SCOPE_NAME) String scopeName,
                                        @HeaderParam(AuthConstants.HTTP_HEADER_ROLE_NAME) String roleName,
-                                       @PathParam("id") int id, String timeStamp) throws ServiceException {
+                                       @PathParam("id") int id, ConfigResourceDto config) throws ServiceException {
         final String username = request.getRemoteUser();
         String applicationName = request.getServletContext().getInitParameter("usmApplication");
         String adminPref = usmService.getOptionDefaultValue(DEFAULT_CONFIG, applicationName);
         String userPref = usmService.getUserPreference(USER_CONFIG, username, applicationName, roleName, scopeName);
         log.info("Getting map configuration for report with id = {}", id);
-        MapConfigDto mapConfig = mapConfigService.getReportConfig(id, userPref, adminPref, username, scopeName, timeStamp);
+        MapConfigDto mapConfig = mapConfigService.getReportConfig(id, userPref, adminPref, username, scopeName, config.getTimeStamp());
         return createSuccessResponse(mapConfig);
     }
 
