@@ -74,7 +74,7 @@ public class BookmarkServiceBean implements BookmarkService {
             Set<String> features = usmService.getUserFeatures(userName, applicationName, roleName, scopeName);
 
             if (features.contains("MANAGE_BOOKMARKS")){
-                repository.delete(id);
+                repository.deleteBookmark(id);
             }
 
         } catch (ServiceException e) {
@@ -94,7 +94,8 @@ public class BookmarkServiceBean implements BookmarkService {
             Set<String> features = usmService.getUserFeatures(userName, applicationName, roleName, scopeName);
 
             if (features.contains("MANAGE_BOOKMARKS")){
-                repository.update(bookmark);
+                BookmarkEntity entity = repository.getBookmarkBy(bookmark.getId());
+                BookmarkMapper.INSTANCE.merge(bookmark, entity);
             }
 
         } catch (ServiceException e) {

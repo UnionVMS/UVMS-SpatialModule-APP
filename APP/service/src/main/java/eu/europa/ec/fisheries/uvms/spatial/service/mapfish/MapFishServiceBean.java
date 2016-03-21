@@ -18,7 +18,7 @@ public class MapFishServiceBean implements MapFishService{
     public void saveVesselIconsWithColor(List<String> colors) throws Exception {
 
         File path = new File("app/mapfish/");
-        String property = System.getProperty("user.dir");
+
         for (String color :  colors){
             // TODO check hex value
             File file = new File(path, "/vessel.svg");

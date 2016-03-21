@@ -28,7 +28,7 @@ public class EezDaoTest extends BaseSpatialDaoTest {
                 .sovereign("Australia")
                 .sovId(16)
                 .code("CCK")
-                .eezId(new Long(1))
+                .eezId(1L)
                 .mrgid(BigDecimal.valueOf(8398))
                 .areaM2(469065102500D)
                 .longitude(96.853338250294)
@@ -63,6 +63,14 @@ public class EezDaoTest extends BaseSpatialDaoTest {
         List<EezEntity> intersects = dao.intersects(geometry);
 
         System.out.println("");
+
+    }
+
+    @Test
+    @SneakyThrows
+    public void test(){
+
+        List<EezEntity> eezEntities = dao.listEmptyGeometries();
 
     }
 }

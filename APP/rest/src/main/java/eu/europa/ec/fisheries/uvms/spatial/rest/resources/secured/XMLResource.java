@@ -62,10 +62,10 @@ public class XMLResource {
     @Produces(value = {MediaType.APPLICATION_XML})
     @Consumes(value = {MediaType.APPLICATION_XML})
     @Path("/areas-by-location")
-    public AreaByLocationSpatialRS getAreasByLocation(AreaByLocationSpatialRQ request) throws ServiceException {
+    public AreaByLocationSpatialRS getAreasByPoint(AreaByLocationSpatialRQ request) throws ServiceException {
 
         AreaByLocationSpatialRS response = new AreaByLocationSpatialRS();
-        List<AreaExtendedIdentifierType> areaTypesByLocation = spatialService.getAreaTypesByLocation(request);
+        List<AreaExtendedIdentifierType> areaTypesByLocation = spatialService.getAreasByPoint(request);
 
         if(areaTypesByLocation != null){
             AreasByLocationType areasByLocationType = new AreasByLocationType();
@@ -84,7 +84,7 @@ public class XMLResource {
     public ClosestAreaSpatialRS getClosestAreasToPointByType(ClosestAreaSpatialRQ request) throws ServiceException {
 
         ClosestAreaSpatialRS response = new ClosestAreaSpatialRS();
-        List<Area> closestAreas = spatialService.getClosestAreasToPointByType(request);
+        List<Area> closestAreas = spatialService.getClosestAreasToPointByTypeGeneric(request);
 
         if (closestAreas != null) {
             ClosestAreasType closestAreasType = new ClosestAreasType();

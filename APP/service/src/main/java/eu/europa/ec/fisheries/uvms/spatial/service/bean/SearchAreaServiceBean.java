@@ -8,8 +8,6 @@ import java.util.Map;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import com.google.common.collect.ImmutableMap;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
@@ -25,8 +23,6 @@ import org.apache.commons.lang3.StringUtils;
 @Local(SearchAreaService.class)
 @Slf4j
 public class SearchAreaServiceBean implements SearchAreaService {
-
-    private @PersistenceContext(unitName = "spatialPU") EntityManager em;
 
     private static final String GID = "gid";
     private static final String TYPE_NAME = "typeName";

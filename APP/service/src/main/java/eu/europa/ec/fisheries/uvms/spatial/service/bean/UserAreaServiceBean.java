@@ -53,7 +53,6 @@ import static eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialUtils.conv
 
 @Stateless
 @Local(UserAreaService.class)
-@Transactional
 @Slf4j
 public class UserAreaServiceBean implements UserAreaService {
 
@@ -63,13 +62,14 @@ public class UserAreaServiceBean implements UserAreaService {
     private @EJB USMService usmService;
 
     @Override
-    public long storeUserArea(UserAreaGeoJsonDto userAreaDto, String userName) throws ServiceException {
+    @Transactional
+    public Long storeUserArea(UserAreaGeoJsonDto userAreaDto, String userName) throws ServiceException {
 
         UserAreasEntity userAreasEntity = UserAreaMapper.mapper().fromDtoToEntity(userAreaDto);
         userAreasEntity.setUserName(userName);
         userAreasEntity.setCreatedOn(new Date());
 
-        UserAreasEntity persistedEntity = (UserAreasEntity) repository.createEntity(userAreasEntity); // TODO use DAO
+        UserAreasEntity persistedEntity = (UserAreasEntity) repository.createEntity(userAreasEntity); // TODO @Greg use DAO
 
         if (StringUtils.isNotBlank(persistedEntity.getDatasetName())) {
             usmService.createDataset(USMSpatial.APPLICATION_NAME, persistedEntity.getDatasetName(), createDescriminator(persistedEntity), USMSpatial.USM_DATASET_CATEGORY, USMSpatial.USM_DATASET_DESCRIPTION);
@@ -77,27 +77,24 @@ public class UserAreaServiceBean implements UserAreaService {
         return persistedEntity.getGid();
     }
 
-    @Override
-    public long updateUserArea(UserAreaGeoJsonDto userAreaDto, String userName, String scopeName) throws ServiceException {
-        return updateUserArea(userAreaDto, userName, false, scopeName);
-    }
-
-    @Override
-    public void deleteUserArea(Long userAreaId, String userName, String scopeName) throws ServiceException {
-        deleteUserArea(userAreaId, userName, false, scopeName);
-    }
-
     private String createDescriminator(UserAreasEntity persistedEntity) {
         return AreaType.USERAREA.value() + USMSpatial.DELIMITER + persistedEntity.getGid();
     }
 
     @Override
-    public long updateUserArea(UserAreaGeoJsonDto userAreaDto, String userName, boolean isPowerUser, String scopeName) throws ServiceException {
+    @Transactional
+    public Long updateUserArea(UserAreaGeoJsonDto userAreaDto, String userName, boolean isPowerUser, String scopeName) throws ServiceException {
         Long id = userAreaDto.getId();
-        validateGid(id);
+
+        if (id == null) {
+            throw new SpatialServiceException(SpatialServiceErrors.MISSING_USER_AREA_ID);
+        }
 
         List<UserAreasEntity> persistentUserAreas = repository.findUserAreaById(id, userName, isPowerUser, scopeName);
-        validateNotNull(id, persistentUserAreas);
+
+        if (CollectionUtils.isEmpty(persistentUserAreas)) {
+            throw new SpatialServiceException(SpatialServiceErrors.USER_AREA_DOES_NOT_EXIST, persistentUserAreas);
+        }
 
         UserAreasEntity persistentUserArea = persistentUserAreas.get(0);
 
@@ -143,16 +140,14 @@ public class UserAreaServiceBean implements UserAreaService {
         }
     }
 
-    private void validateGid(Long gid) {
-        if (gid == null) {
-            throw new SpatialServiceException(SpatialServiceErrors.MISSING_USER_AREA_ID);
-        }
-    }
-
     @Override
+    @Transactional
     public void deleteUserArea(Long userAreaId, String userName, boolean isPowerUser, String scopeName) throws ServiceException {
         List<UserAreasEntity> persistentUserAreas = repository.findUserAreaById(userAreaId, userName, isPowerUser, scopeName);
-        validateNotNull(userAreaId, persistentUserAreas);
+
+        if (CollectionUtils.isEmpty(persistentUserAreas)) {
+            throw new SpatialServiceException(SpatialServiceErrors.USER_AREA_DOES_NOT_EXIST, userAreaId);
+        }
 
         if (!persistentUserAreas.get(0).getUserName().equals(userName) && !isPowerUser) {
             throw new ServiceException("user_not_authorised");
@@ -162,17 +157,13 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     @Override
+    @Transactional
     public List<String> getUserAreaTypes(String userName, String scopeName, boolean isPowerUser) throws ServiceException {
         return repository.getUserAreaTypes(userName, scopeName, isPowerUser);
     }
 
-    private void validateNotNull(Long userAreaId, List<UserAreasEntity> persistentUserAreas) {
-        if (CollectionUtils.isEmpty(persistentUserAreas)) {
-            throw new SpatialServiceException(SpatialServiceErrors.USER_AREA_DOES_NOT_EXIST, userAreaId);
-        }
-    }
-
     @Override
+    @Transactional
     public UserAreaLayerDto getUserAreaLayerDefination(String userName, String scopeName) {
         List<UserAreaLayerDto> userAreaLayerDtoList = areaTypeNamesService.listUserAreaLayerMapping();
         UserAreaLayerDto userAreaLayerDto = userAreaLayerDtoList.get(0);
@@ -181,6 +172,7 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     @Override
+    @Transactional
     public List<UserAreaDto> getUserAreaDetailsWithExtentByLocation(Coordinate coordinate, String userName) {
         Point point = convertToPointInWGS84(coordinate.getLongitude(), coordinate.getLatitude(), coordinate.getCrs());
 
@@ -201,6 +193,7 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     @Override
+    @Transactional
     public List<AreaDetails> getUserAreaDetailsByLocation(AreaTypeEntry areaTypeEntry, String userName) throws ServiceException {
         Point point = convertToPointInWGS84(areaTypeEntry.getLongitude(), areaTypeEntry.getLatitude(), areaTypeEntry.getCrs());
         List<UserAreasEntity> userAreaDetails = repository.findUserAreaDetailsByLocation(userName, point);
@@ -221,16 +214,7 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     @Override
-    public List<AreaDetails> getUserAreaDetailsWithExtentById(AreaTypeEntry areaTypeEntry, String userName, String scopeName) throws ServiceException {
-        return getUserAreaDetailsWithExtentById(areaTypeEntry, userName, false, scopeName);
-    }
-
-    @Override
-    public List<AreaDetails> getUserAreaDetailsById(AreaTypeEntry areaTypeEntry, String userName, String scopeName) throws ServiceException {
-        return getUserAreaDetailsById(areaTypeEntry, userName, false, scopeName);
-    }
-
-    @Override
+    @Transactional
     public List<AreaDetails> getUserAreaDetailsWithExtentById(AreaTypeEntry areaTypeEntry, String userName, boolean isPowerUser, String scopeName) throws ServiceException {
         List<UserAreasEntity> userAreasDetails = repository.findUserAreaById(Long.parseLong(areaTypeEntry.getId()), userName, isPowerUser, scopeName);
         try {
@@ -257,13 +241,14 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     @Override
+    @Transactional
     public List<AreaDetails> getUserAreaDetailsById(AreaTypeEntry areaTypeEntry, String userName, boolean isPowerUser, String scopeName) throws ServiceException {
         List<UserAreasEntity> userAreaDetails = repository.findUserAreaById(Long.parseLong(areaTypeEntry.getId()), userName, isPowerUser, scopeName);
         try {
 
             List<AreaDetails> areaDetailsList = Lists.newArrayList();
-            for (int i = 0; i < userAreaDetails.size(); i++) {
-                Map<String, Object> properties = getFieldMap(userAreaDetails.get(i));
+            for (UserAreasEntity userAreaDetail : userAreaDetails) {
+                Map<String, Object> properties = getFieldMap(userAreaDetail);
                 addCentroidToProperties(properties);
                 areaDetailsList.add(createAreaDetailsSpatialResponse(properties, areaTypeEntry));
             }
@@ -310,12 +295,13 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     @Override
+    @Transactional
     public List<UserAreaDto> searchUserAreasByCriteria(String userName, String scopeName, String searchCriteria, boolean isPowerUser) throws ServiceException {
 
         final String queryString = "SELECT gid, name, area_desc, geom FROM spatial.user_areas area LEFT JOIN spatial.user_scope scopeSelection"
                 + " ON area.gid = scopeSelection.user_area_id"
                 + " WHERE ((1 = " + (isPowerUser ? 1 : 0) + ") OR (area.user_name = '" + userName + "' OR scopeSelection.scope_name = '" + scopeName + "'))"
-                + " AND (UPPER(area.name) LIKE(UPPER('%" + searchCriteria + "%')) OR UPPER(area.area_desc) LIKE(UPPER('%" + searchCriteria + "%'))) group by area.gid";// TODO Move to DAO
+                + " AND (UPPER(area.name) LIKE(UPPER('%" + searchCriteria + "%')) OR UPPER(area.area_desc) LIKE(UPPER('%" + searchCriteria + "%'))) group by area.gid";// TODO @Greg Named query  Move to DAO
 
         final List<UserAreaDto> userAreaDtos = new ArrayList<>();
         final Query emNativeQuery = em.createNativeQuery(queryString);
@@ -333,7 +319,7 @@ public class UserAreaServiceBean implements UserAreaService {
         while (it.hasNext( )) {
             final Object[] result = (Object[])it.next();
             it.remove(); // avoids a ConcurrentModificationException
-            final Geometry envelope = ((Geometry) result[3]).getEnvelope();
+            final Geometry envelope = ((Geometry) result[3]).getEnvelope(); // FIXME @Greg do this in hql with envelope(Geometry)
             String desc = (String) result[2];
             userAreaDtos.add(new UserAreaDto(Integer.valueOf(String.valueOf(result[0])), String.valueOf(result[1]),
                             StringUtils.isNotBlank(desc) ? desc : StringUtils.EMPTY, wktWriter2.write(envelope)));
@@ -344,6 +330,7 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     @Override
+    @Transactional
     public List<UserAreaGeoJsonDto> searchUserAreasByType(String userName, String scopeName, String type, boolean isPowerUser) throws ServiceException {
         List<UserAreasEntity> userAreas = repository.findUserAreasByType(userName, scopeName, type, isPowerUser);
         return  UserAreaMapper.mapper().fromEntityListToDtoList(userAreas, false);

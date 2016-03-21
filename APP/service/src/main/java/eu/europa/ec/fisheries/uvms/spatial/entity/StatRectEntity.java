@@ -15,8 +15,6 @@ import org.hibernate.annotations.Where;
 @Where(clause = "enabled = 'Y'")
 @Table(name = "stat_rect", schema = "spatial")
 public class StatRectEntity implements Serializable {
-	
-	private static final long serialVersionUID = 6797853213499502872L;
 
 	@Id
 	@Column(name = "gid")

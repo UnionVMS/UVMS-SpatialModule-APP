@@ -91,9 +91,9 @@ public interface SpatialRepository extends DAO {
 
     Set<Bookmark> listBookmarksBy(String userName) throws ServiceException;
 
-    void delete(Long id) throws ServiceException;
+    void deleteBookmark(Long id) throws ServiceException;
 
-    void update(Bookmark bookmark) throws ServiceException;
+    BookmarkEntity getBookmarkBy(Long id) throws ServiceException;
 
     ProjectionEntity findProjection(Integer srsCode) throws ServiceException;
 
@@ -117,7 +117,9 @@ public interface SpatialRepository extends DAO {
 
     AreaLocationTypesEntity findAreaLocationTypeByTypeName(String typeName) throws ServiceException;
 
-    List<AreaLocationTypesEntity> listAllSystemWideAreaLocationType() throws ServiceException;
+    List<AreaLocationTypesEntity> findAllIsPointIsSystemWide(Boolean isLocation, Boolean isSystemWide) throws ServiceException;
+
+    List<AreaLocationTypesEntity> findAllIsLocation(Boolean isLocation) throws ServiceException;
 
     ServiceLayerEntity getServiceLayerBy(String locationType) throws ServiceException;
 
