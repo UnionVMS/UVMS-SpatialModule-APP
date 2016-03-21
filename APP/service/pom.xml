@@ -238,6 +238,12 @@
                 <usm_deployment_descriptor_force_update>true</usm_deployment_descriptor_force_update>
             </properties>
         </profile>
+        <profile>
+            <id>postgres</id>
+            <properties>
+                <database.dialect>postgres</database.dialect>
+            </properties>
+        </profile>
     </profiles>
 
     <build>

@@ -4,17 +4,17 @@ import eu.europa.ec.fisheries.uvms.spatial.dao.Oracle;
 import eu.europa.ec.fisheries.uvms.spatial.dao.util.SpatialFunction;
 import eu.europa.ec.fisheries.uvms.spatial.dao.util.PostGres;
 
-public class SpatialFunctionFactory {
+public class DatabaseDialectFactory {
 
     private PropertiesBean properties;
 
-    public SpatialFunctionFactory(PropertiesBean properties) {
+    public DatabaseDialectFactory(PropertiesBean properties) {
         this.properties = properties;
     }
 
     public SpatialFunction getInstance(){
 
-        if ("ORACLE".equals(properties.getProperty("db"))){
+        if ("oracle".equals(properties.getProperty("database.dialect"))){
             return new Oracle();
         }
         else {
