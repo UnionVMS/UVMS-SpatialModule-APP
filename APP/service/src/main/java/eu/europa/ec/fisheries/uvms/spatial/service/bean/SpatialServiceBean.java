@@ -32,7 +32,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.GenericSystemAreaDto
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.util.MeasurementUnit;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.util.SpatialFunctionFactory;
+import eu.europa.ec.fisheries.uvms.spatial.util.DatabaseDialectFactory;
 import eu.europa.ec.fisheries.uvms.spatial.util.PropertiesBean;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -95,7 +95,7 @@ public class SpatialServiceBean implements SpatialService {
 
     @PostConstruct
     public void init(){
-        spatialFunction = new SpatialFunctionFactory(properties).getInstance();
+        spatialFunction = new DatabaseDialectFactory(properties).getInstance();
     }
 
     @Override

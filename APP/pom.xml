@@ -49,6 +49,7 @@
         <release.branch.name>uvms-1.0.0</release.branch.name>
         <maven.release.plugin.version>2.5.2</maven.release.plugin.version>
         <maven.scm.provider.version>2.1.1</maven.scm.provider.version>
+        <database.dialect>oracle</database.dialect>
     </properties>
 
     <dependencyManagement>
