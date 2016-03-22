@@ -287,6 +287,12 @@ public class SpatialServiceBean implements SpatialService {
         final UserAreasType userAreas = request.getUserAreas();
         final ScopeAreasType scopeAreas = request.getScopeAreas();
         final StringBuilder sb = new StringBuilder();
+        final List<AreaLocationTypesEntity> typesEntities = repository.findAllIsLocation(false);
+        final Map<String, AreaLocationTypesEntity> typesEntityMap = new HashMap<>();
+
+        for (AreaLocationTypesEntity typesEntity : typesEntities){
+            typesEntityMap.put(typesEntity.getTypeName(), typesEntity);
+        }
 
         if ((userAreas == null || isEmpty(userAreas.getUserAreas()))
                 && (scopeAreas == null || isEmpty(scopeAreas.getScopeAreas()))) {
@@ -295,11 +301,11 @@ public class SpatialServiceBean implements SpatialService {
 
         try {
 
-            buildQuery(scopeAreas.getScopeAreas(), sb, "scope");
+            buildQuery(scopeAreas.getScopeAreas(), sb, "scope", typesEntityMap);
             if (StringUtils.isNotEmpty(sb.toString())){
                 sb.append(" UNION ALL ");
             }
-            buildQuery(userAreas.getUserAreas(), sb, "user");
+            buildQuery(userAreas.getUserAreas(), sb, "user", typesEntityMap);
 
             Query emNativeQuery = em.createNativeQuery(sb.toString());
             emNativeQuery.unwrap(SQLQuery.class)
@@ -363,7 +369,7 @@ public class SpatialServiceBean implements SpatialService {
 
     }
 
-    private void buildQuery(List<AreaIdentifierType> typeList, StringBuilder sb, String type) {
+    private void buildQuery(List<AreaIdentifierType> typeList, StringBuilder sb, String type, Map<String, AreaLocationTypesEntity> typesEntityMap ) {
 
         Iterator<AreaIdentifierType> it = typeList.iterator();
 
@@ -371,7 +377,8 @@ public class SpatialServiceBean implements SpatialService {
             AreaIdentifierType next = it.next();
             final String id = next.getId();
             final AreaType areaType = next.getAreaType();
-            sb.append("SELECT '").append(type).append("' as type ,geom FROM spatial.").append(areaType.value())
+            final AreaLocationTypesEntity locationTypesEntity = typesEntityMap.get(areaType.value());
+            sb.append("SELECT '").append(type).append("' as type ,geom FROM spatial.").append(locationTypesEntity.getAreaDbTable())
                     .append(" spatial WHERE spatial.gid = ").append(id);
             it.remove(); // avoids a ConcurrentModificationException
             if (it.hasNext()) {
