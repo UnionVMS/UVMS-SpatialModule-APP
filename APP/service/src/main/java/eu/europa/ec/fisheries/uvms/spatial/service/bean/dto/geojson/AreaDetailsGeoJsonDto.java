@@ -35,12 +35,12 @@ public class AreaDetailsGeoJsonDto extends GeoJsonDto {
     }
 
     public JsonNode convert() throws ParseException, IOException {
-        String convert = new FeatureToGeoJsonMapper().convert(toFeature());
+        String convert = new FeatureToGeoJsonMapper().convert(toFeature());// TODO use mapper2
         return new ObjectMapper().readTree(convert);
     }
 
     public JsonNode convert(Map<String, Object> properties) throws ParseException, IOException {
-        return new ObjectMapper().readTree(new FeatureToGeoJsonMapper().convert(toFeature(properties)));
+        return new ObjectMapper().readTree(new FeatureToGeoJsonMapper().convert(toFeature(properties))); // TODO use mapper2
     }
 
     public List<JsonNode> convertAll() throws IOException, ParseException {

@@ -18,5 +18,5 @@ public class LocationDetailsGeoJsonDto extends GeoJsonDto {
 
     public JsonNode convert() throws ParseException, IOException {
         return new ObjectMapper().readTree(new FeatureToGeoJsonMapper().convert(toFeature()));
-    }
+    } // TODO use mapper2
 }
