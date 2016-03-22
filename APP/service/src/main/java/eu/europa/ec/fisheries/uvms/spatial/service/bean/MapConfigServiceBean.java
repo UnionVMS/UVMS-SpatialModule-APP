@@ -558,10 +558,6 @@ public class MapConfigServiceBean implements MapConfigService {
 
     private String getAreaGroupCqlAll(String userName, String scopeName, String areaGroupName) {
         StringBuilder cql = new StringBuilder("type=" + "'" + areaGroupName + "'");
-        List<Long> gids = repository.getAllSharedGids(userName, scopeName, areaGroupName);
-        if (gids != null && !gids.isEmpty()) {
-            cql.append("OR gid IN (" + StringUtils.join(gids, ",") + ")");
-        }
         LOGGER.info("cql All for geo server : \n" + cql);
         return cql.toString();
     }

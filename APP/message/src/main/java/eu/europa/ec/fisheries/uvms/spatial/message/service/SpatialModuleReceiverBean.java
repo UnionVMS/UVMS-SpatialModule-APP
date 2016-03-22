@@ -1,6 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.message.service;
 
 import eu.europa.ec.fisheries.uvms.message.AbstractConsumer;
+import eu.europa.ec.fisheries.uvms.message.MessageConstants;
 
 import javax.annotation.Resource;
 import javax.ejb.Local;
@@ -14,7 +15,7 @@ import javax.jms.Destination;
 @Local
 public class SpatialModuleReceiverBean extends AbstractConsumer {
 
-    @Resource(mappedName = "java:/jms/queue/UVMSSpatial")
+    @Resource(mappedName = MessageConstants.QUEUE_SPATIAL)
     private Destination destination;
 
     @Override
