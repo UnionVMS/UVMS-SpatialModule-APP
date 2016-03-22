@@ -1,6 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.message.service;
 
 import eu.europa.ec.fisheries.uvms.message.AbstractProducer;
+import eu.europa.ec.fisheries.uvms.message.MessageConstants;
 
 import javax.annotation.Resource;
 import javax.ejb.Local;
@@ -14,7 +15,7 @@ import javax.jms.Destination;
 @Local
 public class ReportingProducerBean extends AbstractProducer {
 
-    @Resource(mappedName = "java:/jms/queue/UVMSReportingEvent")
+    @Resource(mappedName = MessageConstants.QUEUE_REPORTING_EVENT)
     private Destination destination;
 
     @Override
