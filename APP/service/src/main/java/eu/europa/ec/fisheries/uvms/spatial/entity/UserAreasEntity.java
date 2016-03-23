@@ -6,20 +6,8 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.Where;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
@@ -60,16 +48,21 @@ import java.util.Set;
                         "LEFT JOIN area.scopeSelection scope WHERE (area.userName = :userName OR (scope.name = :scopeName AND scope.userAreas = area))"),
         @NamedQuery(name = UserAreasEntity.FIND_GID_FOR_SHARED_AREA,
                 query = "SELECT area.gid FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection WHERE (area.userName <> :userName AND area.type = :type AND scopeSelection.name = :scopeName)"),
+        @NamedQuery(name = UserAreasEntity.FIND_BY_USERNAME_AND_NAME,
+                query = "FROM UserAreasEntity WHERE userName = :userName AND name = :name)"),
 
 })
 @Where(clause = "enabled = 'Y'")
-@Table(name = "user_areas", schema = "spatial")
+@Table(name="user_areas", schema = "spatial", uniqueConstraints = {
+        @UniqueConstraint(columnNames={"name", "user_name"})
+})
 public class UserAreasEntity implements Serializable {
 
     public static final String USER_AREA_DETAILS_BY_LOCATION = "UserArea.findUserAreaDetailsByLocation";
     public static final String USER_AREA_BY_COORDINATE = "userAreasEntity.ByCoordinate";
     public static final String FIND_GID_FOR_SHARED_AREA = "userAreasEntity.findGidForSharedAreas";
     public static final String SEARCH_BY_CRITERIA = "userAreasEntity.searchByCriteria";
+    public static final String FIND_BY_USERNAME_AND_NAME = "userAreasEntity.findByUserNameAndName";
 
     @Id
     @Column(name = "gid")
