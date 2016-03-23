@@ -10,16 +10,10 @@ public class UserAreaDto implements Serializable {
 	private String name;
     private String desc;
 	private String extent;
+    private String userName;
 
-    public UserAreaDto(String areaType, Number gid, String name, String desc, String extent) {
-        this.areaType = areaType;
-        this.gid = gid;
-        this.name = name;
-        this.desc = desc;
-        this.extent = extent;
-    }
-
-    public UserAreaDto(Number gid, String name, String desc, String extent) {
+    public UserAreaDto(Number gid, String name, String desc, String extent, String userName) {
+        this.userName = userName;
         this.gid = gid;
         this.name = name;
         this.desc = desc;
@@ -70,4 +64,14 @@ public class UserAreaDto implements Serializable {
 	public void setExtent(String extent) {
 		this.extent = extent;
 	}
+
+    public String getUserName() {
+
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+
+        this.userName = userName;
+    }
 }
