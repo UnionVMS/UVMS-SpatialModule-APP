@@ -10,10 +10,10 @@ public class UserAreaDto implements Serializable {
 	private String name;
     private String desc;
 	private String extent;
-    private String userName;
+    private String owner;
 
-    public UserAreaDto(Number gid, String name, String desc, String extent, String userName) {
-        this.userName = userName;
+    public UserAreaDto(Number gid, String name, String desc, String extent, String owner) {
+        this.owner = owner;
         this.gid = gid;
         this.name = name;
         this.desc = desc;
@@ -65,13 +65,13 @@ public class UserAreaDto implements Serializable {
 		this.extent = extent;
 	}
 
-    public String getUserName() {
+    public String getOwner() {
 
-        return userName;
+        return owner;
     }
 
-    public void setUserName(String userName) {
+    public void setOwner(String owner) {
 
-        this.userName = userName;
+        this.owner = owner;
     }
 }
