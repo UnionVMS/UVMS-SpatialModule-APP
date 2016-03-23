@@ -57,16 +57,26 @@ public class UserAreaServiceBean implements UserAreaService {
     @Transactional
     public Long storeUserArea(UserAreaGeoJsonDto userAreaDto, String userName) throws ServiceException {
 
-        UserAreasEntity userAreasEntity = UserAreaMapper.mapper().fromDtoToEntity(userAreaDto);
-        userAreasEntity.setUserName(userName);
-        userAreasEntity.setCreatedOn(new Date());
+        UserAreasEntity userAreaByUserNameAndName = repository.getUserAreaByUserNameAndName(userName, userAreaDto.getName());
 
-        UserAreasEntity persistedEntity = (UserAreasEntity) repository.createEntity(userAreasEntity); // TODO @Greg use DAO
-
-        if (StringUtils.isNotBlank(persistedEntity.getDatasetName())) {
-            usmService.createDataset(USMSpatial.APPLICATION_NAME, persistedEntity.getDatasetName(), createDescriminator(persistedEntity), USMSpatial.USM_DATASET_CATEGORY, USMSpatial.USM_DATASET_DESCRIPTION);
+        if (userAreaByUserNameAndName != null){
+            throw new SpatialServiceException(SpatialServiceErrors.WRONG_AREA_TYPE);
         }
-        return persistedEntity.getGid();
+
+        else {
+
+            UserAreasEntity userAreasEntity = UserAreaMapper.mapper().fromDtoToEntity(userAreaDto);
+            userAreasEntity.setUserName(userName);
+            userAreasEntity.setCreatedOn(new Date());
+
+            UserAreasEntity persistedEntity = (UserAreasEntity) repository.createEntity(userAreasEntity); // TODO @Greg use DAO
+
+            if (StringUtils.isNotBlank(persistedEntity.getDatasetName())) {
+                usmService.createDataset(USMSpatial.APPLICATION_NAME, persistedEntity.getDatasetName(), createDescriminator(persistedEntity), USMSpatial.USM_DATASET_CATEGORY, USMSpatial.USM_DATASET_DESCRIPTION);
+            }
+            return persistedEntity.getGid();
+        }
+
     }
 
     private String createDescriminator(UserAreasEntity persistedEntity) {

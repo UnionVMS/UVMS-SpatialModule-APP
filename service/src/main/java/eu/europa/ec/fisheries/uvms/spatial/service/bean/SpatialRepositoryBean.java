@@ -426,4 +426,8 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
         return userAreaDao.listByCriteria(userName, scopeName, searchCriteria, isPowerUser);
     }
 
+    @Override
+    public UserAreasEntity getUserAreaByUserNameAndName(String userName, String name) throws ServiceException {
+        return userAreaDao.getByUserNameAndName(userName, name);
+    }
 }

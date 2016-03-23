@@ -22,7 +22,9 @@ public enum SpatialServiceErrors {
     PORT_AREA_DOES_NOT_EXIST("PORT_AREA_DOES_NOT_EXIST", 5016, "Port area with id: {0} does not exist.", "Wrong argument."),
     MISSING_PORT_AREA_ID("MISSING_PORT_AREA_ID", 5017, "Please specify port area id.", "Wrong argument."),
     INVALID_UPLOAD_AREA_DATA("INVALID_UPLOAD_AREA_DATA", 5018, "Invalid upload area data.", "Wrong argument."),
-    INVALID_USER_AREA_ID("INVALID_USER_AREA_ID", 5019, "Invalid user area id.", "Wrong argument.");
+    INVALID_USER_AREA_ID("INVALID_USER_AREA_ID", 5019, "Invalid user area id.", "Wrong argument."),
+    USER_AREA_ALREADY_EXISTING("USER_AREA_ALREADY_EXISTING", 5020, "Invalid parameter");
+
 
     private final Integer errorCode;
     private final String messagePattern;

@@ -13,6 +13,7 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaDto;
+import org.apache.commons.collections.CollectionUtils;
 import org.geotools.geometry.jts.WKTWriter2;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -113,6 +114,24 @@ public class UserAreaJpaDao extends AbstractDAO<UserAreasEntity> {
                 .and("userName", userName).parameters();
 
         return findEntityByNamedQuery(UserAreasEntity.class, UserAreasEntity.SEARCH_BY_CRITERIA, parameters);
+
+    }
+
+    public UserAreasEntity getByUserNameAndName(String userName, String name) throws ServiceException {
+
+        Map parameters = QueryParameter.with("userName", userName)
+                .and("name", name).parameters();
+
+        UserAreasEntity result = null;
+
+        List<UserAreasEntity> entityByNamedQuery =
+                findEntityByNamedQuery(UserAreasEntity.class, UserAreasEntity.FIND_BY_USERNAME_AND_NAME, parameters);
+
+        if (!CollectionUtils.isEmpty(entityByNamedQuery)){
+            result = entityByNamedQuery.get(0);
+        }
+
+        return result;
 
     }
 }
