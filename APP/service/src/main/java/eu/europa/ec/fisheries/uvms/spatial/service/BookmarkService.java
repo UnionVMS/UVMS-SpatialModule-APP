@@ -6,11 +6,11 @@ import java.util.Set;
 
 public interface BookmarkService {
 
-    Set<Bookmark> listByUsername(String username, String scopeName, String roleName, String applicationName) throws ServiceException;
+    Set<Bookmark> listByUsername(String username) throws ServiceException;
 
-    Bookmark create(Bookmark bookmark, String username, String scopeName, String roleName, String applicationName) throws ServiceException;
+    Bookmark create(Bookmark bookmark, String username) throws ServiceException;
 
-    void delete(Long id, String username, String scopeName, String roleName, String applicationName) throws ServiceException;
+    void delete(Long id, String username) throws ServiceException;
 
-    void update(Bookmark bookmark, String username, String scopeName, String roleName, String applicationName) throws ServiceException;
+    void update(Bookmark bookmark, String username) throws ServiceException;
 }
