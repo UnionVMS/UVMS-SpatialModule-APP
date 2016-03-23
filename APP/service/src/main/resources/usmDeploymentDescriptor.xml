@@ -38,12 +38,6 @@
         </feature>
 
         <feature>
-            <name>USE_SPATIAL_CONFIGURATIONS</name>
-            <description>Allows you to read spatial configurations while creating/running reports</description>
-            <group>${spatial.name}</group>
-        </feature>
-
-        <feature>
             <name>SHARE_USER_DEFINED_AREAS</name>
             <description>Allows you to share your user defined areas within the available to your profile, scopes.</description>
             <group>${spatial.name}</group>
