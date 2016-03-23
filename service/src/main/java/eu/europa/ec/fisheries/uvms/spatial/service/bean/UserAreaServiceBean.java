@@ -302,7 +302,7 @@ public class UserAreaServiceBean implements UserAreaService {
             final Geometry envelope = next.getGeom().getEnvelope();
 
             userAreaDtos.add(new UserAreaDto(next.getGid(), next.getName(), StringUtils.isNotBlank(next.getAreaDesc())
-                    ? next.getAreaDesc() : StringUtils.EMPTY, wktWriter2.write(envelope)));
+                    ? next.getAreaDesc() : StringUtils.EMPTY, wktWriter2.write(envelope), next.getUserName()));
         }
 
         return userAreaDtos;
