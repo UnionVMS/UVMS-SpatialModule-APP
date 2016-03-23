@@ -29,8 +29,6 @@ import java.util.Set;
 @Slf4j
 public class BookmarkResource extends UnionVMSResource {
 
-    public static final String USM_APPLICATION = "usmApplication";
-
     @EJB
     private BookmarkService bookmarkService;
 
@@ -43,11 +41,9 @@ public class BookmarkResource extends UnionVMSResource {
 
         final String username = request.getRemoteUser();
 
-        final String applicationName = request.getServletContext().getInitParameter(USM_APPLICATION);
-
         try {
 
-            Set<Bookmark> bookmarks = bookmarkService.listByUsername(username, scopeName, roleName, applicationName);
+            Set<Bookmark> bookmarks = bookmarkService.listByUsername(username);
             return createSuccessResponse(bookmarks);
 
         }
@@ -67,13 +63,9 @@ public class BookmarkResource extends UnionVMSResource {
 
         final String username = request.getRemoteUser();
 
-        final String applicationName = request.getServletContext().getInitParameter(USM_APPLICATION);
-
         try {
-
-            final Bookmark result = bookmarkService.create(bookmark, username, scopeName, roleName, applicationName);
+            final Bookmark result = bookmarkService.create(bookmark, username);
             return createSuccessResponse(result);
-
         }
         catch (ServiceException e){
             return createErrorResponse("Unable to get user features from USM. Reason: " + e.getMessage());
@@ -92,11 +84,8 @@ public class BookmarkResource extends UnionVMSResource {
 
         final String username = request.getRemoteUser();
 
-        final String applicationName = request.getServletContext().getInitParameter(USM_APPLICATION);
-
         try {
-
-            bookmarkService.delete(id, username, scopeName, roleName, applicationName);
+            bookmarkService.delete(id, username);
             return createSuccessResponse();
 
         }
@@ -118,13 +107,10 @@ public class BookmarkResource extends UnionVMSResource {
 
         final String username = request.getRemoteUser();
 
-        final String applicationName = request.getServletContext().getInitParameter(USM_APPLICATION);
-
         try {
             bookmark.setId(id);
-            bookmarkService.update(bookmark, username, scopeName, roleName, applicationName);
+            bookmarkService.update(bookmark, username);
             return createSuccessResponse();
-
         }
         catch (ServiceException e){
             return createErrorResponse("Unable to get user features from USM. Reason: " + e.getMessage());

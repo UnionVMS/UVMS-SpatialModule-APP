@@ -1,7 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
 import eu.europa.ec.fisheries.uvms.spatial.entity.BookmarkEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.bookmark.Bookmark;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
@@ -20,43 +19,32 @@ import java.util.Set;
 public class BookmarkServiceBean implements BookmarkService {
 
     private @EJB SpatialRepository repository;
-    private @EJB USMService usmService;
 
     @Override
-    public Set<Bookmark> listByUsername(String userName, String scopeName, String roleName, String applicationName) throws ServiceException {
+    public Set<Bookmark> listByUsername(String userName) throws ServiceException {
 
-        log.info("{} is requesting bookmarks(...), with a scopeName={}", userName, scopeName);
+        log.info("{} is requesting bookmarks(...), with a scopeName={}", userName);
 
-        Set<String> features = usmService.getUserFeatures(userName, applicationName, roleName, scopeName);
-
-        if (features.contains("MANAGE_BOOKMARKS")){
+        try {
             return repository.listBookmarksBy(userName);
-        }
-        else {
+
+        } catch (ServiceException e) {
             throw new ServiceException("User doesn't have the right to list bookmarks");
         }
     }
 
     @Override
     @Transactional
-    public Bookmark create(Bookmark bookmark, String userName, String scopeName, String roleName, String applicationName) throws ServiceException {
+    public Bookmark create(Bookmark bookmark, String userName) throws ServiceException {
 
-        log.info("{} is creating bookmark(...), with a scopeName={}", userName, scopeName);
+        log.info("{} is creating bookmark(...), with a scopeName={}", userName);
 
         try {
+            repository.findProjection(bookmark.getSrs());
+            bookmark.setCreatedBy(userName);
+            BookmarkEntity entity = repository.create(BookmarkMapper.INSTANCE.bookmarkToBookmarkEntity(bookmark));
+            return BookmarkMapper.INSTANCE.bookmarkEntityToBookmark(entity);
 
-            Set<String> features  = usmService.getUserFeatures(userName, applicationName, roleName, scopeName);
-
-            if (features.contains("MANAGE_BOOKMARKS")){
-
-                repository.findProjection(bookmark.getSrs());
-                bookmark.setCreatedBy(userName);
-                BookmarkEntity entity = repository.create(BookmarkMapper.INSTANCE.bookmarkToBookmarkEntity(bookmark));
-                return BookmarkMapper.INSTANCE.bookmarkEntityToBookmark(entity);
-            }
-            else {
-                throw new ServiceException("ERROR WHILE CREATING BOOKMARK");
-            }
 
         } catch (ServiceException e) {
             throw new ServiceException(e.getMessage());
@@ -65,39 +53,27 @@ public class BookmarkServiceBean implements BookmarkService {
 
     @Override
     @Transactional
-    public void delete(Long id, String userName, String scopeName, String roleName, String applicationName) throws ServiceException {
+    public void delete(Long id, String userName) throws ServiceException {
 
-        log.info("{} is deleting bookmark(...), with a scopeName={}", userName, scopeName);
+        log.info("{} is deleting bookmark(...), with a scopeName={}", userName);
 
         try {
-
-            Set<String> features = usmService.getUserFeatures(userName, applicationName, roleName, scopeName);
-
-            if (features.contains("MANAGE_BOOKMARKS")){
-                repository.deleteBookmark(id);
-            }
+            repository.deleteBookmark(id);
 
         } catch (ServiceException e) {
             throw new ServiceException("User doesn't have the right to delete bookmarks");
         }
-
     }
 
     @Override
     @Transactional
-    public void update(Bookmark bookmark, String userName, String scopeName, String roleName, String applicationName) throws ServiceException {
+    public void update(Bookmark bookmark, String userName) throws ServiceException {
 
-        log.info("{} is updating bookmark(...), with a scopeName={}", userName, scopeName);
+        log.info("{} is updating bookmark(...), with a scopeName={}", userName);
 
         try {
-
-            Set<String> features = usmService.getUserFeatures(userName, applicationName, roleName, scopeName);
-
-            if (features.contains("MANAGE_BOOKMARKS")){
-                BookmarkEntity entity = repository.getBookmarkBy(bookmark.getId());
-                BookmarkMapper.INSTANCE.merge(bookmark, entity);
-            }
-
+            BookmarkEntity entity = repository.getBookmarkBy(bookmark.getId());
+            BookmarkMapper.INSTANCE.merge(bookmark, entity);
         } catch (ServiceException e) {
             throw new ServiceException("User doesn't have the right to update bookmarks");
         }
