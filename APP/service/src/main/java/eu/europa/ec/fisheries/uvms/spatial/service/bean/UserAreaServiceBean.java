@@ -60,7 +60,7 @@ public class UserAreaServiceBean implements UserAreaService {
         UserAreasEntity userAreaByUserNameAndName = repository.getUserAreaByUserNameAndName(userName, userAreaDto.getName());
 
         if (userAreaByUserNameAndName != null){
-            throw new SpatialServiceException(SpatialServiceErrors.WRONG_AREA_TYPE);
+            throw new SpatialServiceException(SpatialServiceErrors.USER_AREA_ALREADY_EXISTING);
         }
 
         else {
