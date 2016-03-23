@@ -328,7 +328,6 @@
             <xs:enumeration value="MANAGE_SYSTEM_SPATIAL_CONFIGURATIONS"/>
             <xs:enumeration value="MANAGE_USER_DEFINED_AREAS"/>
             <xs:enumeration value="MANAGE_BOOKMARKS"/>
-            <xs:enumeration value="USE_SPATIAL_CONFIGURATIONS"/>
             <xs:enumeration value="SHARE_USER_DEFINED_AREAS"/>
             <xs:enumeration value="CREATE_USER_AREA_DATASET"/>
         </xs:restriction>
