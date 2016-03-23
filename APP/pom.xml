@@ -43,7 +43,7 @@
         <hibernate.version>4.3.5.Final</hibernate.version>
         <hibernate-spatial.version>4.3</hibernate-spatial.version>
         <geotools.version>14-M1</geotools.version>
-        <uvms.commons.version>1.7.2-SNAPSHOT</uvms.commons.version>
+        <uvms.commons.version>1.7.3-SNAPSHOT</uvms.commons.version>
         <hibernate.validator.version>5.2.1.Final</hibernate.validator.version>
         <usm4uvms.version>1.0.2-SNAPSHOT</usm4uvms.version>
         <usm_deployment_descriptor_force_update>false</usm_deployment_descriptor_force_update>
