@@ -389,20 +389,20 @@ public class SpatialServiceBean implements SpatialService {
 
     @Override
     @Transactional
-    public List<GenericSystemAreaDto> searchAreasByNameOrCode(final String tableName, final String filter) throws ServiceException {
+    public List<GenericSystemAreaDto> searchAreasByNameOrCode(final String areaType, final String filter) throws ServiceException {
 
-        final AreaLocationTypesEntity areaLocationType = repository.findAreaLocationTypeByTypeName(tableName.toUpperCase());
+        final AreaLocationTypesEntity areaLocationType = repository.findAreaLocationTypeByTypeName(areaType.toUpperCase());
         final String toUpperCase = filter.toUpperCase();
         final ArrayList<GenericSystemAreaDto> systemAreaByFilterRecords = new ArrayList<>();
         final WKTWriter2 wktWriter2 = new WKTWriter2();
         final StringBuilder sb = new StringBuilder();
 
         if (areaLocationType == null) {
-            throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR, areaLocationType);
+            throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
         }
 
         sb.append("SELECT gid, name, code, geom FROM spatial.")
-                .append(tableName).append(" ").append("WHERE UPPER(name) LIKE '%")
+                .append(areaLocationType.getAreaDbTable()).append(" ").append("WHERE UPPER(name) LIKE '%")
                 .append(toUpperCase).append("%' OR code LIKE '%").append(toUpperCase).append("%' GROUP BY gid");
 
         final Query emNativeQuery = em.createNativeQuery(sb.toString());
@@ -421,7 +421,7 @@ public class SpatialServiceBean implements SpatialService {
             final Geometry envelope = ((Geometry)result[3]).getEnvelope();
             systemAreaByFilterRecords.add(
                     new GenericSystemAreaDto(Integer.valueOf(result[0].toString()),
-                            result[2].toString(), tableName.toUpperCase(), wktWriter2.write(envelope), result[1].toString()));
+                            result[2].toString(), areaType.toUpperCase(), wktWriter2.write(envelope), result[1].toString()));
         }
 
         return systemAreaByFilterRecords;

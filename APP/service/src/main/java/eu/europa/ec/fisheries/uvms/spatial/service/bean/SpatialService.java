@@ -25,7 +25,7 @@ public interface SpatialService {
 
     FilterAreasSpatialRS computeAreaFilter(FilterAreasSpatialRQ filterAreasSpatialRQ) throws ServiceException;
 
-    List<GenericSystemAreaDto> searchAreasByNameOrCode(String tableName, String filter) throws ServiceException;
+    List<GenericSystemAreaDto> searchAreasByNameOrCode(String areaType, String filter) throws ServiceException;
 
     LocationDetails getLocationDetails(LocationTypeEntry locationTypeEntry) throws ServiceException;
 
