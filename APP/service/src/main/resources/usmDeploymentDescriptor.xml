@@ -13,9 +13,22 @@
             <description>Allows you to to list/update/delete any user area, no matter who has created it.</description>
             <group>${spatial.name}</group>
         </feature>
+		
         <feature>
             <name>MANAGE_SYSTEM_SPATIAL_CONFIGURATIONS</name>
             <description>Allows you to view/update spatial configurations located under the Admin tab</description>
+            <group>${spatial.name}</group>
+        </feature>
+		
+		<feature>
+            <name>ALLOW_USER_SPATIAL_CONFIGURATIONS</name>
+            <description>Allows you to override default admin spatial configurations</description>
+            <group>${spatial.name}</group>
+        </feature>
+		
+		<feature>
+            <name>ALLOW_USER_SPATIAL_REPORT_CONFIGURATIONS</name>
+            <description>Allows you to set custom spatial configurations at the report level</description>
             <group>${spatial.name}</group>
         </feature>
 
@@ -30,12 +43,6 @@
             <description>Allows you to have access to the user interface of area management.</description>
             <group>${spatial.name}</group>
 		</feature>
-
-        <feature>
-            <name>MANAGE_BOOKMARKS</name>
-            <description>Allows you to create, view, update and delete bookmarks.</description>
-            <group>${spatial.name}</group>
-        </feature>
 
         <feature>
             <name>SHARE_USER_DEFINED_AREAS</name>
@@ -413,9 +420,6 @@
             },
             {
                 "type": "fullscreen"
-            },
-            {
-                "type": "print"
             }
         ]
     },
