@@ -128,6 +128,8 @@ public class SpatialServiceBean implements SpatialService {
             }
         }
 
+        log.debug("QUERY => {}", sb.toString());
+
         final Query emNativeQuery = em.createNativeQuery(sb.toString());
         emNativeQuery.unwrap(SQLQuery.class).addScalar("type", StringType.INSTANCE).addScalar(GID, IntegerType.INSTANCE)
                 .addScalar(CODE, StringType.INSTANCE).addScalar(NAME, StringType.INSTANCE).addScalar(GEOM, GeometryType.INSTANCE)
