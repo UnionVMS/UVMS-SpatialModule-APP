@@ -57,6 +57,18 @@ public class ConfigResource extends UnionVMSResource {
         return createSuccessResponse(mapConfig);
     }
 
+    @POST
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Path("/fromreport")
+    @Interceptors(value = {ExceptionInterceptor.class})
+    public Response getReportMapConfigWithoutSave(@Context HttpServletRequest request,
+                                                  @HeaderParam(AuthConstants.HTTP_HEADER_SCOPE_NAME) String scopeName,
+                                                  ConfigurationDto configurationDto) throws ServiceException {
+        MapConfigDto mapConfig = mapConfigService.getReportConfigWithoutSave(configurationDto, request.getRemoteUser(), scopeName);
+        return createSuccessResponse(mapConfig);
+    }
+
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Path("/report")

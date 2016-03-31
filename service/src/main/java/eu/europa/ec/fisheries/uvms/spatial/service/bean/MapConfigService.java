@@ -20,6 +20,8 @@ public interface MapConfigService {
 
     MapConfigDto getReportConfig(int reportId, String userPreferences, String adminPreferences, String userName, String scopeName, String timeStamp);
 
+    MapConfigDto getReportConfigWithoutSave(ConfigurationDto configurationDto, String userName, String scopeName);
+
     MapConfigurationType getMapConfigurationType(final Long reportId) throws ServiceException;
 
     SpatialGetMapConfigurationRS getMapConfiguration(SpatialGetMapConfigurationRQ mapConfigurationRQ) throws ServiceException;
