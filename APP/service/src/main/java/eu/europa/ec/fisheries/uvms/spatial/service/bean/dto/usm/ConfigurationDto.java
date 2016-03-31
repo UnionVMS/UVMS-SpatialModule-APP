@@ -34,15 +34,19 @@ public class ConfigurationDto {
     @JsonProperty("visibilitySettings")
     private VisibilitySettingsDto visibilitySettings;
 
+    @JsonProperty("reportProperties")
+    private ReportProperties reportProperties;
+
     public ConfigurationDto() {}
 
-    public ConfigurationDto(ToolSettingsDto toolSettings, StyleSettingsDto stylesSettings, SystemSettingsDto systemSettings, LayerSettingsDto layerSettings, MapSettingsDto mapSettings, VisibilitySettingsDto visibilitySettings) {
+    public ConfigurationDto(ToolSettingsDto toolSettings, StyleSettingsDto stylesSettings, SystemSettingsDto systemSettings, LayerSettingsDto layerSettings, MapSettingsDto mapSettings, VisibilitySettingsDto visibilitySettings, ReportProperties reportProperties) {
         this.toolSettings = toolSettings;
         this.systemSettings = systemSettings;
         this.stylesSettings = stylesSettings;
         this.layerSettings = layerSettings;
         this.mapSettings = mapSettings;
         this.visibilitySettings = visibilitySettings;
+        this.reportProperties = reportProperties;
     }
 
     @JsonProperty("toolSettings")
@@ -103,6 +107,16 @@ public class ConfigurationDto {
     @JsonProperty("visibilitySettings")
     public void setVisibilitySettings(VisibilitySettingsDto visibilitySettings) {
         this.visibilitySettings = visibilitySettings;
+    }
+
+    @JsonProperty("reportProperties")
+    public ReportProperties getReportProperties() {
+        return reportProperties;
+    }
+
+    @JsonProperty("reportProperties")
+    public void setReportProperties(ReportProperties reportProperties) {
+        this.reportProperties = reportProperties;
     }
 
     @Override

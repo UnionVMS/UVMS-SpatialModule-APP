@@ -315,7 +315,17 @@ public class MapConfigServiceBean implements MapConfigService {
     @SneakyThrows
     public MapConfigDto getReportConfig(int reportId, String userPreferences, String adminPreferences, String userName, String scopeName, String timeStamp) {
         ConfigurationDto configurationDto = mergeConfiguration(getUserConfiguration(userPreferences), getAdminConfiguration(adminPreferences)); //Returns merged config object between Admin and User configuration from USM
-        return new MapConfigDto(getMap(configurationDto, reportId, userName, scopeName, timeStamp), getVectorStyles(configurationDto, reportId), getVisibilitySettings(configurationDto, reportId));
+        return new MapConfigDto(getMap(configurationDto, reportId, userName, scopeName, timeStamp),
+                getVectorStyles(configurationDto, reportId),
+                getVisibilitySettings(configurationDto, reportId));
+    }
+
+    @Override
+    @SneakyThrows
+    public MapConfigDto getReportConfigWithoutSave(ConfigurationDto configurationDto, String userName, String scopeName) {
+        return new MapConfigDto(getMap(configurationDto, null, userName, scopeName, null),
+                getVectorStyles(configurationDto, null),
+                getVisibilitySettings(configurationDto, null));
     }
 
     private void updateLayerSettings(LayerSettingsDto layerSettingsDto, String userName, boolean includeUserArea) throws ServiceException {
@@ -403,7 +413,7 @@ public class MapConfigServiceBean implements MapConfigService {
         }
     }
 
-    private MapDto getMap(ConfigurationDto configurationDto, int reportId, String userName, String scopeName, String timeStamp) throws ServiceException {
+    private MapDto getMap(ConfigurationDto configurationDto, Integer reportId, String userName, String scopeName, String timeStamp) throws ServiceException {
         ProjectionDto projection = getMapProjection(reportId, configurationDto);
         List<ControlDto> controls = getControls(reportId, configurationDto);
         List<TbControlDto> tbControls = getTbControls(configurationDto);
@@ -412,17 +422,17 @@ public class MapConfigServiceBean implements MapConfigService {
         return new MapDto(projection, controls, tbControls, layers, refreshDto);
     }
 
-    private ProjectionDto getMapProjection(int reportId, ConfigurationDto configurationDto) {
-        List<ProjectionDto> projectionDtoList = repository.findProjectionByMap(reportId);
-        if (projectionDtoList != null && !projectionDtoList.isEmpty()) { // Get Map Projection for report
-            return projectionDtoList.get(0);
-        } else { // If not available use Map Projection configured in USM
-            int projectionId = configurationDto.getMapSettings().getMapProjectionId();
-            return getProjection(projectionId);
+    private ProjectionDto getMapProjection(Integer reportId, ConfigurationDto configurationDto) {
+        if (reportId != null) {
+            List<ProjectionDto> projectionDtoList = repository.findProjectionByMap(reportId);
+            if (projectionDtoList != null && !projectionDtoList.isEmpty()) { // Get Map Projection for report
+                return projectionDtoList.get(0);
+            }
         }
+        return getProjection(configurationDto.getMapSettings().getMapProjectionId());
     }
 
-    private List<ControlDto> getControls(int reportId, ConfigurationDto configurationDto) throws ServiceException {
+    private List<ControlDto> getControls(Integer reportId, ConfigurationDto configurationDto) throws ServiceException {
         List<ControlDto> controls = MapConfigMapper.INSTANCE.getControls(configurationDto.getToolSettings().getControl());
         DisplayProjectionDto displayProjection = getDisplayProjection(reportId, configurationDto);
         return updateControls(controls, displayProjection.getUnits().value(),
@@ -438,41 +448,50 @@ public class MapConfigServiceBean implements MapConfigService {
         return MapConfigMapper.INSTANCE.getTbControls(configurationDto.getToolSettings().getTbControl());
     }
 
-    private ServiceLayersDto getServiceAreaLayer(int reportId, ConfigurationDto configurationDto, ProjectionDto projection, String userName, String scopeName, String timeStamp) throws ServiceException {
+    private ServiceLayersDto getServiceAreaLayer(Integer reportId, ConfigurationDto configurationDto, ProjectionDto projection, String userName, String scopeName, String timeStamp) throws ServiceException {
         String geoServerUrl = getGeoServerUrl();
         String bingApiKey = getBingApiKey();
-        ReportConnectSpatialEntity entity = repository.findReportConnectSpatialBy((long) reportId);
+
+        ReportConnectSpatialEntity entity = null;
+        if (reportId != null) {
+            entity = repository.findReportConnectSpatialBy(new Long(reportId));
+        }
+
         if (entity != null) {
             Set<ReportConnectServiceAreasEntity> reportConnectServiceAreas = entity.getReportConnectServiceAreases(); // Report is overridden with Layer Settings. Ignore USM layer configuration
             if (reportConnectServiceAreas != null && !reportConnectServiceAreas.isEmpty()) {
                 LayerSettingsDto layerSettingsDto = getLayerSettingsForMap(entity.getReportConnectServiceAreases());
-                return getServiceAreaLayers(layerSettingsDto, geoServerUrl, bingApiKey, projection, userName, scopeName, timeStamp, reportId);
+                return getServiceAreaLayers(layerSettingsDto, geoServerUrl, bingApiKey, projection, userName, scopeName, timeStamp, reportId, configurationDto.getReportProperties());
             } else {
-                return getServiceAreaLayers(configurationDto.getLayerSettings(), geoServerUrl, bingApiKey, projection, userName, scopeName, timeStamp, reportId);
+                return getServiceAreaLayers(configurationDto.getLayerSettings(), geoServerUrl, bingApiKey, projection, userName, scopeName, timeStamp, reportId, configurationDto.getReportProperties());
             }
         } else {
-            return getServiceAreaLayers(configurationDto.getLayerSettings(), geoServerUrl, bingApiKey, projection, userName, scopeName, timeStamp, reportId);
+            return getServiceAreaLayers(configurationDto.getLayerSettings(), geoServerUrl, bingApiKey, projection, userName, scopeName, timeStamp, reportId, configurationDto.getReportProperties());
         }
     }
 
     private VectorStylesDto getVectorStyles(ConfigurationDto configurationDto, Integer reportId) throws ServiceException {
-        ReportConnectSpatialEntity entity = repository.findReportConnectSpatialBy(reportId.longValue());
-        if (entity != null && entity.getStyleSettings() != null) {
-            StyleSettingsDto styleSettingsDto = getStyleSettings(entity.getStyleSettings());
-            if ((styleSettingsDto.getPositions() != null && styleSettingsDto.getPositions().getStyle() != null) ||
-                    (styleSettingsDto.getSegments() != null && styleSettingsDto.getSegments().getStyle() != null)) {
-                return MapConfigMapper.INSTANCE.getStyleDtos(styleSettingsDto); // Style Settings is overridden by Report. Return the report configured style settings
+        if (reportId != null) {
+            ReportConnectSpatialEntity entity = repository.findReportConnectSpatialBy(reportId.longValue());
+            if (entity != null && entity.getStyleSettings() != null) {
+                StyleSettingsDto styleSettingsDto = getStyleSettings(entity.getStyleSettings());
+                if ((styleSettingsDto.getPositions() != null && styleSettingsDto.getPositions().getStyle() != null) ||
+                        (styleSettingsDto.getSegments() != null && styleSettingsDto.getSegments().getStyle() != null)) {
+                    return MapConfigMapper.INSTANCE.getStyleDtos(styleSettingsDto); // Style Settings is overridden by Report. Return the report configured style settings
+                }
             }
         }
         return MapConfigMapper.INSTANCE.getStyleDtos(configurationDto.getStylesSettings()); // Return merged style settings from Admin and User config
     }
 
     private VisibilitySettingsDto getVisibilitySettings(ConfigurationDto configurationDto, Integer reportId) throws ServiceException {
-        ReportConnectSpatialEntity entity = repository.findReportConnectSpatialBy(reportId.longValue());
-        if (entity != null && entity.getVisibilitySettings() != null) {
-            VisibilitySettingsDto visibilitySettingsDto = getVisibilitySettings(entity.getVisibilitySettings());
-            if (isVisibilitySettingsOverriddenByReport(visibilitySettingsDto)) {
-                return visibilitySettingsDto; // VisibilitySettings is overridden by Report. Return the report configured visibility settings
+        if (reportId != null) {
+            ReportConnectSpatialEntity entity = repository.findReportConnectSpatialBy(reportId.longValue());
+            if (entity != null && entity.getVisibilitySettings() != null) {
+                VisibilitySettingsDto visibilitySettingsDto = getVisibilitySettings(entity.getVisibilitySettings());
+                if (isVisibilitySettingsOverriddenByReport(visibilitySettingsDto)) {
+                    return visibilitySettingsDto; // VisibilitySettings is overridden by Report. Return the report configured visibility settings
+                }
             }
         }
         return configurationDto.getVisibilitySettings(); // Return merged visibility settings from Admin and User Config
@@ -514,16 +533,16 @@ public class MapConfigServiceBean implements MapConfigService {
         return new RefreshDto(configurationDto.getMapSettings().getRefreshStatus(), configurationDto.getMapSettings().getRefreshRate());
     }
 
-    private ServiceLayersDto getServiceAreaLayers(LayerSettingsDto layerSettingsDto, String geoServerUrl, String bingApiKey, ProjectionDto projection, String userName, String scopeName, String timeStamp, int reportId) throws ServiceException {
+    private ServiceLayersDto getServiceAreaLayers(LayerSettingsDto layerSettingsDto, String geoServerUrl, String bingApiKey, ProjectionDto projection, String userName, String scopeName, String timeStamp, Integer reportId, ReportProperties properties) throws ServiceException {
         ServiceLayersDto serviceLayersDto = new ServiceLayersDto();
         serviceLayersDto.setPortLayers(getLayerDtoList(layerSettingsDto.getPortLayers(), geoServerUrl, bingApiKey, projection, false)); // Get Service Layers for Port layers
-        serviceLayersDto.setSystemLayers(getAreaLayerDtoList(layerSettingsDto.getAreaLayers(), geoServerUrl, bingApiKey, projection, false, userName, scopeName, timeStamp, reportId)); // // Get Service Layers for system layers and User Layers
+        serviceLayersDto.setSystemLayers(getAreaLayerDtoList(layerSettingsDto.getAreaLayers(), geoServerUrl, bingApiKey, projection, false, userName, scopeName, timeStamp, reportId, properties)); // // Get Service Layers for system layers and User Layers
         serviceLayersDto.setAdditionalLayers(getLayerDtoList(layerSettingsDto.getAdditionalLayers(), geoServerUrl, bingApiKey, projection, false)); // Get Service Layers for Additional layers
         serviceLayersDto.setBaseLayers(getLayerDtoList(layerSettingsDto.getBaseLayers(), geoServerUrl, bingApiKey, projection, true)); // Get Service Layers for base layers
         return serviceLayersDto;
     }
 
-    private List<LayerDto> getAreaLayerDtoList(List<LayerAreaDto> layersDtos, String geoServerUrl, String bingApiKey, ProjectionDto projection, boolean isBackground, String userName, String scopeName, String timeStamp, int reportId) throws ServiceException {
+    private List<LayerDto> getAreaLayerDtoList(List<LayerAreaDto> layersDtos, String geoServerUrl, String bingApiKey, ProjectionDto projection, boolean isBackground, String userName, String scopeName, String timeStamp, Integer reportId, ReportProperties properties) throws ServiceException {
         if (layersDtos == null || layersDtos.isEmpty()) {
             return null;
         }
@@ -543,7 +562,11 @@ public class MapConfigServiceBean implements MapConfigService {
                         layerDto.setAreaType(AreaTypeEnum.userarea.getType().toUpperCase());
                     } else if (layerAreaDto.getAreaType().equals(AreaTypeEnum.areagroup)) {
                         layerDto.setCqlAll(getAreaGroupCqlAll(userName, scopeName, layerAreaDto.getAreaGroupName()));
-                        layerDto.setCqlActive(getAreaGroupCqlActive(reportId, userName, scopeName, timeStamp));
+                        if (reportId != null) {
+                            layerDto.setCqlActive(getAreaGroupCqlActive(reportId, userName, scopeName, timeStamp));
+                        } else {
+                            layerDto.setCqlActive(getAreaGroupCqlActive(properties.getStartDate(), properties.getEndDate()));
+                        }
                         layerDto.setAreaType(AreaTypeEnum.areagroup.getType().toUpperCase());
                         layerDto.setTitle(layerAreaDto.getAreaGroupName());
                     } else if (layerAreaDto.getAreaType().equals(AreaTypeEnum.sysarea)) {
@@ -562,13 +585,7 @@ public class MapConfigServiceBean implements MapConfigService {
         return cql.toString();
     }
 
-    private String getAreaGroupCqlActive(int reportId, String userName, String scopeName, String timeStamp) throws ServiceException {
-        ReportGetStartAndEndDateRS response = reportingService.getReportDates(reportId, userName, scopeName, timeStamp);
-        if (response == null) {
-            return null;
-        }
-        String startDate = response.getStartDate();
-        String endDate = response.getEndDate();
+    private String getAreaGroupCqlActive(String startDate, String endDate) {
         StringBuilder cql = new StringBuilder();
         if (startDate != null && endDate != null) {
             cql.append("(").
@@ -576,7 +593,7 @@ public class MapConfigServiceBean implements MapConfigService {
                     append("(").append("NOT ( ").append("start_date > ").append("'").append(endDate).append("'").append(" OR ").append("end_date < ").append("'").append(startDate).append("'").append(")").append(")").append(" OR ").
                     append("(").append("start_date IS NULL").append(" AND ").append("end_date >= ").append("'").append(startDate).append("'").append(")").append(" OR ").
                     append("(").append("end_date IS NULL").append(" AND ").append("start_date <= ").append("'").append(endDate).append("'").append(")").
-                append(")");
+                    append(")");
         } else if (startDate == null && endDate != null) {
             cql.append("(").append("start_date <= ").append("'").append(endDate).append("'").append(" OR ").append("start_date IS NULL").append(")");
         } else {
@@ -584,6 +601,14 @@ public class MapConfigServiceBean implements MapConfigService {
         }
         LOGGER.info("cql Active for geo server : \n" + cql);
         return cql.toString();
+    }
+
+    private String getAreaGroupCqlActive(int reportId, String userName, String scopeName, String timeStamp) throws ServiceException {
+        ReportGetStartAndEndDateRS response = reportingService.getReportDates(reportId, userName, scopeName, timeStamp);
+        if (response == null) {
+            return null;
+        }
+        return getAreaGroupCqlActive(response.getStartDate(), response.getEndDate());
     }
 
     private List<LayerDto> getLayerDtoList(List<? extends LayersDto> layersDtos, String geoServerUrl, String bingApiKey, ProjectionDto projection, boolean isBackground) {
@@ -676,7 +701,12 @@ public class MapConfigServiceBean implements MapConfigService {
 
     private DisplayProjectionDto getDisplayProjection(Integer reportId, ConfigurationDto configurationDto) throws ServiceException {
         DisplayProjectionDto displayProjectionDto = new DisplayProjectionDto();
-        ReportConnectSpatialEntity entity = repository.findReportConnectSpatialBy(reportId.longValue());
+        ReportConnectSpatialEntity entity;
+        if(reportId != null) {
+            entity = repository.findReportConnectSpatialBy(reportId.longValue());
+        } else {
+            entity =null;
+        }
 
         if (entity != null && entity.getProjectionByDisplayProjId() != null) { // Check value in DB
             displayProjectionDto.setEpsgCode(entity.getProjectionByDisplayProjId().getSrsCode());
