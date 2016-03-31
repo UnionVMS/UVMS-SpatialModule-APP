@@ -109,8 +109,7 @@ public class UserAreaServiceBean implements UserAreaService {
         }
 
         UserAreasEntity userAreasEntityToUpdate = UserAreaMapper.mapper().fromDtoToEntity(userAreaDto);
-        userAreasEntityToUpdate.setUserName(userName);
-        userAreasEntityToUpdate.setCreatedOn(new Date());
+        userAreasEntityToUpdate.setUserName(persistentUserArea.getUserName());
 
         userAreasEntityToUpdate.setCreatedOn(persistentUserArea.getCreatedOn());
         userAreasEntityToUpdate.setGid(persistentUserArea.getGid());
