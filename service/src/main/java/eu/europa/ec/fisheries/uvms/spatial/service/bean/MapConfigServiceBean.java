@@ -15,6 +15,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.*;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.helper.MapConfigHelper;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.MapConfigMapper;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.ProjectionMapper;
 import eu.europa.ec.fisheries.uvms.spatial.util.AreaTypeEnum;
@@ -51,12 +52,6 @@ public class MapConfigServiceBean implements MapConfigService {
 
     private static final String PROVIDER_FORMAT_BING = "BING";
 
-    private static final Integer DEFAULT_EPSG = 3857;
-
-    private static final String USER_AREA = "userarea";
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(MapConfigServiceBean.class.getName());
-
     @EJB
     private SpatialRepository repository;
 
@@ -92,49 +87,15 @@ public class MapConfigServiceBean implements MapConfigService {
             return null;
         }
         MapConfigurationType mapConfigurationType = ReportConnectSpatialMapper.INSTANCE.reportConnectSpatialEntityToMapConfigurationType(entity);
-        VisibilitySettingsDto visibilitySettings = getVisibilitySettings(entity.getVisibilitySettings());
+        VisibilitySettingsDto visibilitySettings = MapConfigHelper.getVisibilitySettings(entity.getVisibilitySettings());
         mapConfigurationType.setVisibilitySettings(MapConfigMapper.INSTANCE.getVisibilitySettingsType(visibilitySettings));
-        StyleSettingsDto styleSettingsDto = getStyleSettings(entity.getStyleSettings());
+        StyleSettingsDto styleSettingsDto = MapConfigHelper.getStyleSettings(entity.getStyleSettings());
         mapConfigurationType.setStyleSettings(MapConfigMapper.INSTANCE.getStyleSettingsType(styleSettingsDto));
-        LayerSettingsDto layerSettingsDto = getLayerSettingsForMap(entity.getReportConnectServiceAreases());
+        LayerSettingsDto layerSettingsDto = MapConfigHelper.getLayerSettingsForMap(entity.getReportConnectServiceAreases());
         updateLayerSettings(layerSettingsDto, null, false);
         mapConfigurationType.setLayerSettings(MapConfigMapper.INSTANCE.getLayerSettingsType(layerSettingsDto));
         return mapConfigurationType;
     }
-
-    private LayerSettingsDto getLayerSettingsForMap(Set<ReportConnectServiceAreasEntity> reportConnectServiceArea) {
-        LayerSettingsDto layerSettingsDto = new LayerSettingsDto();
-        for (ReportConnectServiceAreasEntity layer : reportConnectServiceArea) {
-            LayerTypeEnum layerTypeEnum = LayerTypeEnum.getLayerType(layer.getLayerType());
-            switch (layerTypeEnum) {
-                case BASE:
-                    LayersDto baseLayersDto = new LayersDto(String.valueOf(layer.getServiceLayer().getId()), Long.valueOf(layer.getLayerOrder()));
-                    layerSettingsDto.addBaseLayer(baseLayersDto);
-                    break;
-                case ADDITIONAL:
-                    LayersDto additionalLayersDto = new LayersDto(String.valueOf(layer.getServiceLayer().getId()), Long.valueOf(layer.getLayerOrder()));
-                    layerSettingsDto.addAdditionalLayer(additionalLayersDto);
-                    break;
-                case PORT:
-                    LayersDto portLayersDto = new LayersDto(String.valueOf(layer.getServiceLayer().getId()), Long.valueOf(layer.getLayerOrder()));
-                    layerSettingsDto.addPortLayer(portLayersDto);
-                    break;
-                case AREA:
-                    AreaTypeEnum areaTypeEnum = AreaTypeEnum.valueOf(layer.getAreaType());
-                    LayerAreaDto areaLayersDto = new LayerAreaDto(areaTypeEnum, String.valueOf(layer.getServiceLayer().getId()), Long.valueOf(layer.getLayerOrder()));
-                    if (areaTypeEnum.equals(AreaTypeEnum.userarea)) {
-                        areaLayersDto.setGid(Long.parseLong(layer.getSqlFilter()));
-                    }
-                    if (areaTypeEnum.equals(AreaTypeEnum.areagroup)) {
-                        areaLayersDto.setAreaGroupName(layer.getSqlFilter());
-                    }
-                    layerSettingsDto.addAreaLayer(areaLayersDto);
-                    break;
-            }
-        }
-        return layerSettingsDto;
-    }
-
 
     @Override
     @Transactional(Transactional.TxType.REQUIRES_NEW)
@@ -150,33 +111,110 @@ public class MapConfigServiceBean implements MapConfigService {
         SpatialValidator.validate(request);
         ReportConnectSpatialEntity entity = getReportConnectSpatialEntity(request);
         VisibilitySettingsDto visibilitySettings = MapConfigMapper.INSTANCE.getVisibilitySettingsDto(request.getMapConfiguration().getVisibilitySettings());
-        entity.setVisibilitySettings(getVisibilitySettingsJson(visibilitySettings));
+        entity.setVisibilitySettings(MapConfigHelper.getVisibilitySettingsJson(visibilitySettings));
         StyleSettingsDto styleSettings = MapConfigMapper.INSTANCE.getStyleSettingsDto(request.getMapConfiguration().getStyleSettings());
-        entity.setStyleSettings(getStyleSettingsJson(styleSettings));
+        entity.setStyleSettings(MapConfigHelper.getStyleSettingsJson(styleSettings));
         LayerSettingsDto layerSettingsDto = MapConfigMapper.INSTANCE.getLayerSettingsDto(request.getMapConfiguration().getLayerSettings());
         updateReportConnectServiceAreasEntity(request, entity, layerSettingsDto);
         repository.saveOrUpdateMapConfiguration(entity);
         return createSaveOrUpdateMapConfigurationResponse();
     }
-    
+
+    @Override
+    @SneakyThrows
+    public ConfigurationDto retrieveAdminConfiguration(String config) {
+        ConfigurationDto configurationDto = MapConfigHelper.getAdminConfiguration(config);
+        updateLayerSettings(configurationDto.getLayerSettings(), null, false);
+        configurationDto.setSystemSettings(getConfigSystemSettings());
+        return configurationDto;
+    }
+
+    @Override
+    @SneakyThrows
+    public ConfigurationDto retrieveUserConfiguration(String config, String defaultConfig, String userName) {
+        ConfigurationDto userConfig = MapConfigHelper.getUserConfiguration(config);
+        ConfigurationDto adminConfig = MapConfigHelper.getAdminConfiguration(defaultConfig);
+        ConfigurationDto mergedConfig = mergeUserConfiguration(adminConfig, userConfig);
+        updateLayerSettings(mergedConfig.getLayerSettings(), userName, false);
+        return mergedConfig;
+    }
+
+    @Override
+    @SneakyThrows
+    public String saveAdminJson(ConfigurationDto configurationDto, String defaultConfig) {
+        ConfigurationDto defaultConfigurationDto = retrieveAdminConfiguration(defaultConfig);
+        setConfigSystemSettings(configurationDto.getSystemSettings(), defaultConfigurationDto.getSystemSettings()); // Update system config in spatial DB
+        configurationDto.setSystemSettings(null); // Not saving system settings in USM
+        return MapConfigHelper.getJson(configurationDto);
+    }
+
+    @Override
+    @SneakyThrows
+    public String saveUserJson(ConfigurationDto configurationDto, String userPref) {
+        if(configurationDto == null) {
+            throw new ServiceException("Invalid JSON");
+        }
+        ConfigurationDto userConfig = MapConfigHelper.getUserConfiguration(userPref);
+        return MapConfigHelper.getJson(mergeConfiguration(configurationDto, userConfig));
+    }
+
+    @Override
+    @SneakyThrows
+    public String resetUserJson(ConfigurationDto configurationDto, String userPref) {
+        if(configurationDto == null) {
+            throw new ServiceException("Invalid JSON");
+        }
+        ConfigurationDto userConfig = MapConfigHelper.getUserConfiguration(userPref);
+        ConfigurationDto resetConfig = resetUserConfiguration(configurationDto, userConfig);
+        return MapConfigHelper.getJson(resetConfig);
+    }
+
+    @Override
+    @SneakyThrows
+    public ConfigurationDto getNodeDefaultValue(ConfigurationDto configurationDto, String adminConfig, String userName) {
+        if(configurationDto == null || adminConfig == null) {
+            throw new ServiceException("Invalid JSON");
+        }
+        ConfigurationDto defaultNodeConfig = getDefaultNodeConfiguration(configurationDto, MapConfigHelper.getAdminConfiguration(adminConfig));
+        if (configurationDto.getLayerSettings() != null) {
+            updateLayerSettings(defaultNodeConfig.getLayerSettings(), userName, false);
+        }
+        return defaultNodeConfig;
+    }
+
+    @Override
+    @SneakyThrows
+    public ConfigDto getReportConfigWithoutMap(String userPref, String adminPref) {
+        return mergeNoMapConfiguration(MapConfigHelper.getUserConfiguration(userPref), MapConfigHelper.getAdminConfiguration(adminPref));
+    }
+
+    @Override
+    @SneakyThrows
+    public MapConfigDto getReportConfig(int reportId, String userPreferences, String adminPreferences, String userName, String scopeName, String timeStamp) {
+        ConfigurationDto configurationDto = mergeConfiguration(MapConfigHelper.getUserConfiguration(userPreferences), MapConfigHelper.getAdminConfiguration(adminPreferences)); //Returns merged config object between Admin and User configuration from USM
+        return new MapConfigDto(getMap(configurationDto, reportId, userName, scopeName, timeStamp),
+                getVectorStyles(configurationDto, reportId),
+                getVisibilitySettings(configurationDto, reportId));
+    }
+
+    @Override
+    @SneakyThrows
+    public MapConfigDto getReportConfigWithoutSave(ConfigurationDto configurationDto, String userName, String scopeName) {
+        return new MapConfigDto(getMap(configurationDto, null, userName, scopeName, null),
+                getVectorStyles(configurationDto, null),
+                getVisibilitySettings(configurationDto, null));
+    }
+
     private ReportConnectSpatialEntity getReportConnectSpatialEntity(final SpatialSaveOrUpdateMapConfigurationRQ request) throws ServiceException {
         ReportConnectSpatialEntity entity = repository.findReportConnectSpatialById(request.getMapConfiguration().getReportId(), request.getMapConfiguration().getSpatialConnectId());
         if (entity != null) {
             entity.setScaleBarType(request.getMapConfiguration().getScaleBarUnits());
             entity.setDisplayFormatType(request.getMapConfiguration().getCoordinatesFormat());
-            entity.setProjectionByMapProjId(createProjection(request.getMapConfiguration().getMapProjectionId()));
-            entity.setProjectionByDisplayProjId(createProjection(request.getMapConfiguration().getDisplayProjectionId()));
+            entity.setProjectionByMapProjId(MapConfigHelper.createProjection(request.getMapConfiguration().getMapProjectionId()));
+            entity.setProjectionByDisplayProjId(MapConfigHelper.createProjection(request.getMapConfiguration().getDisplayProjectionId()));
             repository.deleteReportConnectServiceAreas(entity.getReportConnectServiceAreases());
         } else {
             entity = ReportConnectSpatialMapper.INSTANCE.mapConfigurationTypeToReportConnectSpatialEntity(request.getMapConfiguration());
-        }
-        return entity;
-    }
-
-    ProjectionEntity createProjection(Long id) {
-        ProjectionEntity entity = null;
-        if (id != null) {
-            entity = new ProjectionEntity(id);
         }
         return entity;
     }
@@ -243,98 +281,13 @@ public class MapConfigServiceBean implements MapConfigService {
         return new SpatialSaveOrUpdateMapConfigurationRS();
     }
 
-    @Override
-    @SneakyThrows
-    public ConfigurationDto retrieveAdminConfiguration(String config) {
-        ConfigurationDto configurationDto = getAdminConfiguration(config);
-        updateLayerSettings(configurationDto.getLayerSettings(), null, false);
-        configurationDto.setSystemSettings(getConfigSystemSettings());
-        return configurationDto;
-    }
-
-    @Override
-    @SneakyThrows
-    public ConfigurationDto retrieveUserConfiguration(String config, String defaultConfig, String userName) {
-        ConfigurationDto userConfig = getUserConfiguration(config);
-        ConfigurationDto adminConfig = getAdminConfiguration(defaultConfig);
-        ConfigurationDto mergedConfig = mergeUserConfiguration(adminConfig, userConfig);
-        updateLayerSettings(mergedConfig.getLayerSettings(), userName, false);
-        return mergedConfig;
-    }
-
-    @Override
-    @SneakyThrows
-    public String saveAdminJson(ConfigurationDto configurationDto, String defaultConfig) {
-        ConfigurationDto defaultConfigurationDto = retrieveAdminConfiguration(defaultConfig);
-        setConfigSystemSettings(configurationDto.getSystemSettings(), defaultConfigurationDto.getSystemSettings()); // Update system config in spatial DB
-        configurationDto.setSystemSettings(null); // Not saving system settings in USM
-        return getJson(configurationDto);
-    }
-
-    @Override
-    @SneakyThrows
-    public String saveUserJson(ConfigurationDto configurationDto, String userPref) {
-        if(configurationDto == null) {
-            throw new ServiceException("Invalid JSON");
-        }
-        ConfigurationDto userConfig = getUserConfiguration(userPref);
-        return getJson(mergeConfiguration(configurationDto, userConfig));
-    }
-
-    @Override
-    @SneakyThrows
-    public String resetUserJson(ConfigurationDto configurationDto, String userPref) {
-        if(configurationDto == null) {
-            throw new ServiceException("Invalid JSON");
-        }
-        ConfigurationDto userConfig = getUserConfiguration(userPref);
-        ConfigurationDto resetConfig = resetUserConfiguration(configurationDto, userConfig);
-        return getJson(resetConfig);
-    }
-
-    @Override
-    @SneakyThrows
-    public ConfigurationDto getNodeDefaultValue(ConfigurationDto configurationDto, String adminConfig, String userName) {
-        if(configurationDto == null || adminConfig == null) {
-            throw new ServiceException("Invalid JSON");
-        }
-        ConfigurationDto defaultNodeConfig = getDefaultNodeConfiguration(configurationDto, getAdminConfiguration(adminConfig));
-        if (configurationDto.getLayerSettings() != null) {
-            updateLayerSettings(defaultNodeConfig.getLayerSettings(), userName, false);
-        }
-        return defaultNodeConfig;
-    }
-
-    @Override
-    @SneakyThrows
-    public ConfigDto getReportConfigWithoutMap(String userPref, String adminPref) {
-        return mergeNoMapConfiguration(getUserConfiguration(userPref), getAdminConfiguration(adminPref));
-    }
-
-    @Override
-    @SneakyThrows
-    public MapConfigDto getReportConfig(int reportId, String userPreferences, String adminPreferences, String userName, String scopeName, String timeStamp) {
-        ConfigurationDto configurationDto = mergeConfiguration(getUserConfiguration(userPreferences), getAdminConfiguration(adminPreferences)); //Returns merged config object between Admin and User configuration from USM
-        return new MapConfigDto(getMap(configurationDto, reportId, userName, scopeName, timeStamp),
-                getVectorStyles(configurationDto, reportId),
-                getVisibilitySettings(configurationDto, reportId));
-    }
-
-    @Override
-    @SneakyThrows
-    public MapConfigDto getReportConfigWithoutSave(ConfigurationDto configurationDto, String userName, String scopeName) {
-        return new MapConfigDto(getMap(configurationDto, null, userName, scopeName, null),
-                getVectorStyles(configurationDto, null),
-                getVisibilitySettings(configurationDto, null));
-    }
-
     private void updateLayerSettings(LayerSettingsDto layerSettingsDto, String userName, boolean includeUserArea) throws ServiceException {
         String bingApiKey = getBingApiKey();
         List<Long> ids = new ArrayList<>(); // Get All the Ids to query for Service layer all together
-        ids.addAll(getServiceLayerIds(layerSettingsDto.getAdditionalLayers()));
-        ids.addAll(getServiceLayerIds(layerSettingsDto.getBaseLayers()));
-        ids.addAll(getServiceLayerIds(layerSettingsDto.getPortLayers()));
-        ids.addAll(getServiceLayerIds(layerSettingsDto.getAreaLayers()));
+        ids.addAll(MapConfigHelper.getServiceLayerIds(layerSettingsDto.getAdditionalLayers()));
+        ids.addAll(MapConfigHelper.getServiceLayerIds(layerSettingsDto.getBaseLayers()));
+        ids.addAll(MapConfigHelper.getServiceLayerIds(layerSettingsDto.getPortLayers()));
+        ids.addAll(MapConfigHelper.getServiceLayerIds(layerSettingsDto.getAreaLayers()));
 
         if (ids.isEmpty()) {
             return; // There is no Areas in the LayersSettings. Returning the call
@@ -364,21 +317,9 @@ public class MapConfigServiceBean implements MapConfigService {
         }
     }
 
-    private List<Long> getUserAreaIds(List<LayerAreaDto> layers) {
-        if (layers == null || layers.isEmpty()) {
-            return Collections.emptyList();
-        }
-        List<Long> userAreaIds = new ArrayList<>();
-        for (LayerAreaDto layerDto : layers) {
-            if (layerDto.getAreaType().getType().equalsIgnoreCase(USER_AREA)) {
-                userAreaIds.add(layerDto.getGid());
-            }
-        }
-        return userAreaIds;
-    }
 
     private void updateAreaLayer(List<LayerAreaDto> layers, List<ServiceLayerEntity> serviceLayers, String bingApiKey, String userName, boolean includeUserArea) throws ServiceException {
-        List<Long> userAreaIds = getUserAreaIds(layers);
+        List<Long> userAreaIds = MapConfigHelper.getUserAreaIds(layers);
         if (!userAreaIds.isEmpty()) {
             List<AreaDto> areaDtos = repository.findAllUserAreasByGids(userAreaIds);
             for (LayerAreaDto layerDto : layers) {
@@ -391,7 +332,6 @@ public class MapConfigServiceBean implements MapConfigService {
             }
         }
     }
-
 
     private void updateLayer(List<? extends LayersDto> layers, List<ServiceLayerEntity> serviceLayers, String bingApiKey) {
         if (layers != null) {
@@ -460,7 +400,7 @@ public class MapConfigServiceBean implements MapConfigService {
         if (entity != null) {
             Set<ReportConnectServiceAreasEntity> reportConnectServiceAreas = entity.getReportConnectServiceAreases(); // Report is overridden with Layer Settings. Ignore USM layer configuration
             if (reportConnectServiceAreas != null && !reportConnectServiceAreas.isEmpty()) {
-                LayerSettingsDto layerSettingsDto = getLayerSettingsForMap(entity.getReportConnectServiceAreases());
+                LayerSettingsDto layerSettingsDto = MapConfigHelper.getLayerSettingsForMap(entity.getReportConnectServiceAreases());
                 return getServiceAreaLayers(layerSettingsDto, geoServerUrl, bingApiKey, projection, userName, scopeName, timeStamp, reportId, configurationDto.getReportProperties());
             } else {
                 return getServiceAreaLayers(configurationDto.getLayerSettings(), geoServerUrl, bingApiKey, projection, userName, scopeName, timeStamp, reportId, configurationDto.getReportProperties());
@@ -474,7 +414,7 @@ public class MapConfigServiceBean implements MapConfigService {
         if (reportId != null) {
             ReportConnectSpatialEntity entity = repository.findReportConnectSpatialBy(reportId.longValue());
             if (entity != null && entity.getStyleSettings() != null) {
-                StyleSettingsDto styleSettingsDto = getStyleSettings(entity.getStyleSettings());
+                StyleSettingsDto styleSettingsDto = MapConfigHelper.getStyleSettings(entity.getStyleSettings());
                 if ((styleSettingsDto.getPositions() != null && styleSettingsDto.getPositions().getStyle() != null) ||
                         (styleSettingsDto.getSegments() != null && styleSettingsDto.getSegments().getStyle() != null)) {
                     return MapConfigMapper.INSTANCE.getStyleDtos(styleSettingsDto); // Style Settings is overridden by Report. Return the report configured style settings
@@ -488,45 +428,13 @@ public class MapConfigServiceBean implements MapConfigService {
         if (reportId != null) {
             ReportConnectSpatialEntity entity = repository.findReportConnectSpatialBy(reportId.longValue());
             if (entity != null && entity.getVisibilitySettings() != null) {
-                VisibilitySettingsDto visibilitySettingsDto = getVisibilitySettings(entity.getVisibilitySettings());
-                if (isVisibilitySettingsOverriddenByReport(visibilitySettingsDto)) {
+                VisibilitySettingsDto visibilitySettingsDto = MapConfigHelper.getVisibilitySettings(entity.getVisibilitySettings());
+                if (MapConfigHelper.isVisibilitySettingsOverriddenByReport(visibilitySettingsDto)) {
                     return visibilitySettingsDto; // VisibilitySettings is overridden by Report. Return the report configured visibility settings
                 }
             }
         }
         return configurationDto.getVisibilitySettings(); // Return merged visibility settings from Admin and User Config
-    }
-
-    private boolean isVisibilitySettingsOverriddenByReport(VisibilitySettingsDto visibilitySettingsDto) {
-        boolean isOverridden = false;
-        if (visibilitySettingsDto.getVisibilityPositionsDto() != null) {
-            if (visibilitySettingsDto.getVisibilityPositionsDto().getLabels() != null && (visibilitySettingsDto.getVisibilityPositionsDto().getLabels().getOrder() != null || visibilitySettingsDto.getVisibilityPositionsDto().getLabels().getValues() != null)) {
-                isOverridden = true;
-            }
-            if (visibilitySettingsDto.getVisibilityPositionsDto().getPopup() != null && (visibilitySettingsDto.getVisibilityPositionsDto().getPopup().getOrder() != null || visibilitySettingsDto.getVisibilityPositionsDto().getPopup().getValues() != null)) {
-                isOverridden = true;
-            }
-            if (visibilitySettingsDto.getVisibilityPositionsDto().getTable() != null && (visibilitySettingsDto.getVisibilityPositionsDto().getTable().getOrder() != null || visibilitySettingsDto.getVisibilityPositionsDto().getTable().getValues() != null)) {
-                isOverridden = true;
-            }
-        }
-        if (visibilitySettingsDto.getVisibilitySegmentDto() != null) {
-            if (visibilitySettingsDto.getVisibilitySegmentDto().getLabels() != null && (visibilitySettingsDto.getVisibilitySegmentDto().getLabels().getOrder() != null || visibilitySettingsDto.getVisibilitySegmentDto().getLabels().getValues() != null)) {
-                isOverridden = true;
-            }
-            if (visibilitySettingsDto.getVisibilitySegmentDto().getPopup() != null && (visibilitySettingsDto.getVisibilitySegmentDto().getPopup().getOrder() != null || visibilitySettingsDto.getVisibilitySegmentDto().getPopup().getValues() != null)) {
-                isOverridden = true;
-            }
-            if (visibilitySettingsDto.getVisibilitySegmentDto().getTable() != null && (visibilitySettingsDto.getVisibilitySegmentDto().getTable().getOrder() != null || visibilitySettingsDto.getVisibilitySegmentDto().getTable().getValues() != null)) {
-                isOverridden = true;
-            }
-        }
-        if (visibilitySettingsDto.getVisibilityTracksDto() != null) {
-            if (visibilitySettingsDto.getVisibilityTracksDto().getTable() != null && (visibilitySettingsDto.getVisibilityTracksDto().getTable().getOrder() != null || visibilitySettingsDto.getVisibilityTracksDto().getTable().getValues() != null)) {
-                isOverridden = true;
-            }
-        }
-        return isOverridden;
     }
 
     private RefreshDto getRefreshDto(ConfigurationDto configurationDto) {
@@ -561,11 +469,11 @@ public class MapConfigServiceBean implements MapConfigService {
                         layerDto.setTitle((userAreas != null & !userAreas.isEmpty()) ? userAreas.get(0).getName() : null);
                         layerDto.setAreaType(AreaTypeEnum.userarea.getType().toUpperCase());
                     } else if (layerAreaDto.getAreaType().equals(AreaTypeEnum.areagroup)) {
-                        layerDto.setCqlAll(getAreaGroupCqlAll(userName, scopeName, layerAreaDto.getAreaGroupName()));
+                        layerDto.setCqlAll(MapConfigHelper.getAreaGroupCqlAll(userName, scopeName, layerAreaDto.getAreaGroupName()));
                         if (reportId != null) {
                             layerDto.setCqlActive(getAreaGroupCqlActive(reportId, userName, scopeName, timeStamp));
                         } else {
-                            layerDto.setCqlActive(getAreaGroupCqlActive(properties.getStartDate(), properties.getEndDate()));
+                            layerDto.setCqlActive(MapConfigHelper.getAreaGroupCqlActive(properties.getStartDate(), properties.getEndDate()));
                         }
                         layerDto.setAreaType(AreaTypeEnum.areagroup.getType().toUpperCase());
                         layerDto.setTitle(layerAreaDto.getAreaGroupName());
@@ -579,36 +487,12 @@ public class MapConfigServiceBean implements MapConfigService {
         return layerDtoList;
     }
 
-    private String getAreaGroupCqlAll(String userName, String scopeName, String areaGroupName) {
-        StringBuilder cql = new StringBuilder("type=" + "'" + areaGroupName + "'");
-        LOGGER.info("cql All for geo server : \n" + cql);
-        return cql.toString();
-    }
-
-    private String getAreaGroupCqlActive(String startDate, String endDate) {
-        StringBuilder cql = new StringBuilder();
-        if (startDate != null && endDate != null) {
-            cql.append("(").
-                    append("(").append("start_date IS NULL").append(" AND ").append("end_date IS NULL").append(")").append(" OR ").
-                    append("(").append("NOT ( ").append("start_date > ").append("'").append(endDate).append("'").append(" OR ").append("end_date < ").append("'").append(startDate).append("'").append(")").append(")").append(" OR ").
-                    append("(").append("start_date IS NULL").append(" AND ").append("end_date >= ").append("'").append(startDate).append("'").append(")").append(" OR ").
-                    append("(").append("end_date IS NULL").append(" AND ").append("start_date <= ").append("'").append(endDate).append("'").append(")").
-                    append(")");
-        } else if (startDate == null && endDate != null) {
-            cql.append("(").append("start_date <= ").append("'").append(endDate).append("'").append(" OR ").append("start_date IS NULL").append(")");
-        } else {
-            return null;
-        }
-        LOGGER.info("cql Active for geo server : \n" + cql);
-        return cql.toString();
-    }
-
     private String getAreaGroupCqlActive(int reportId, String userName, String scopeName, String timeStamp) throws ServiceException {
         ReportGetStartAndEndDateRS response = reportingService.getReportDates(reportId, userName, scopeName, timeStamp);
         if (response == null) {
             return null;
         }
-        return getAreaGroupCqlActive(response.getStartDate(), response.getEndDate());
+        return MapConfigHelper.getAreaGroupCqlActive(response.getStartDate(), response.getEndDate());
     }
 
     private List<LayerDto> getLayerDtoList(List<? extends LayersDto> layersDtos, String geoServerUrl, String bingApiKey, ProjectionDto projection, boolean isBackground) {
@@ -616,7 +500,7 @@ public class MapConfigServiceBean implements MapConfigService {
             return null;
         }
         Collections.sort(layersDtos);
-        List<Long> serviceLayerIds = getServiceLayerIds(layersDtos);
+        List<Long> serviceLayerIds = MapConfigHelper.getServiceLayerIds(layersDtos);
         List<ServiceLayerEntity> serviceLayerEntities = getServiceLayers(serviceLayerIds, projection, bingApiKey);
         return getLayerDtos(serviceLayerEntities, geoServerUrl, bingApiKey, isBackground);
     }
@@ -639,51 +523,16 @@ public class MapConfigServiceBean implements MapConfigService {
         return repository.findSystemConfigByName(parameters);
     }
 
-    private List<Long> getServiceLayerIds(List<? extends LayersDto> layers) {
-        if(layers == null || layers.isEmpty()) {
-            return Collections.emptyList();
-        }
-        List<Long> ids = new ArrayList<>();
-        for (LayersDto layer : layers) {
-            ids.add(Long.parseLong(layer.getServiceLayerId()));
-        }
-        return ids;
-    }
-
     private List<ServiceLayerEntity> getServiceLayers(List<Long> ids, ProjectionDto projection, String bingApiKey) {
-        List<ServiceLayerEntity> serviceLayers = sortServiceLayers(repository.findServiceLayerEntityByIds(ids), ids);
+        List<ServiceLayerEntity> serviceLayers = MapConfigHelper.sortServiceLayers(repository.findServiceLayerEntityByIds(ids), ids);
         Iterator<ServiceLayerEntity> layerIterator = serviceLayers.iterator();
         while(layerIterator.hasNext()) {
             ServiceLayerEntity serviceLayer = layerIterator.next();
-            if (isRemoveLayer(projection, serviceLayer, bingApiKey)) {
+            if (MapConfigHelper.isRemoveLayer(projection, serviceLayer, bingApiKey)) {
                 layerIterator.remove();
             }
         }
         return serviceLayers;
-    }
-
-    public List<ServiceLayerEntity> sortServiceLayers(List<ServiceLayerEntity> serviceLayers, List<Long> ids) {
-        List<ServiceLayerEntity> sortedServiceLayers = new ArrayList<>();
-        if (serviceLayers!= null && ids != null) {
-            for (Long id : ids) {
-                for (ServiceLayerEntity serviceLayerEntity : serviceLayers) {
-                    if (id == serviceLayerEntity.getId()) {
-                        sortedServiceLayers.add(serviceLayerEntity);
-                    }
-                }
-            }
-        }
-        return sortedServiceLayers;
-    }
-
-    private boolean isRemoveLayer(ProjectionDto projection, ServiceLayerEntity serviceLayer, String bingApiKey) {
-        if(!projection.getEpsgCode().equals(DEFAULT_EPSG) && DEFAULT_EPSG.equals(serviceLayer.getSrsCode())) {
-            return true;
-        }
-        if (serviceLayer.getProviderFormat().getServiceType().equalsIgnoreCase(PROVIDER_FORMAT_BING) && bingApiKey == null) {
-            return true;
-        }
-        return false;
     }
 
     private List<ControlDto> updateControls(List<ControlDto> controls, String scaleBarUnit, int epsgCode, String coordinateFormat) {
@@ -701,11 +550,9 @@ public class MapConfigServiceBean implements MapConfigService {
 
     private DisplayProjectionDto getDisplayProjection(Integer reportId, ConfigurationDto configurationDto) throws ServiceException {
         DisplayProjectionDto displayProjectionDto = new DisplayProjectionDto();
-        ReportConnectSpatialEntity entity;
+        ReportConnectSpatialEntity entity = null;
         if(reportId != null) {
             entity = repository.findReportConnectSpatialBy(reportId.longValue());
-        } else {
-            entity =null;
         }
 
         if (entity != null && entity.getProjectionByDisplayProjId() != null) { // Check value in DB
@@ -728,75 +575,6 @@ public class MapConfigServiceBean implements MapConfigService {
         }
 
         return displayProjectionDto;
-    }
-
-    private ConfigurationDto getAdminConfiguration(String adminPreference) throws IOException {
-        return (adminPreference == null || adminPreference.isEmpty()) ? new ConfigurationDto() : getConfiguration(adminPreference);
-    }
-
-    private ConfigurationDto getUserConfiguration(String userPreference) throws IOException {
-        return (userPreference == null || userPreference.isEmpty()) ? new ConfigurationDto() : getConfiguration(userPreference);
-    }
-
-    private VisibilitySettingsDto getVisibilitySettings(String visibilitySettings) throws ServiceException {
-        if (visibilitySettings == null) {
-            return null;
-        }
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
-            return mapper.readValue(visibilitySettings, VisibilitySettingsDto.class);
-        } catch (IOException e) {
-            throw new ServiceException("Parse Exception from Json to Object", e);
-        }
-    }
-
-    private StyleSettingsDto getStyleSettings(String styleSettings) throws ServiceException {
-        if (styleSettings == null) {
-            return null;
-        }
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
-            return mapper.readValue(styleSettings, StyleSettingsDto.class);
-        } catch (IOException e) {
-            throw new ServiceException("Parse Exception from Json to Object", e);
-        }
-    }
-
-    private ConfigurationDto getConfiguration(String configString) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
-        return mapper.readValue(configString, ConfigurationDto.class);
-    }
-
-    private String getJson(ConfigurationDto config) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(config);
-    }
-
-    private String getVisibilitySettingsJson(VisibilitySettingsDto visibilitySettings) throws ServiceException {
-        if (visibilitySettings == null) {
-            return null;
-        }
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.writeValueAsString(visibilitySettings);
-        } catch (IOException e) {
-            throw new ServiceException("Parse Exception from Object to json", e);
-        }
-    }
-
-    private String getStyleSettingsJson(StyleSettingsDto styleSettings) throws ServiceException {
-        if (styleSettings == null) {
-            return null;
-        }
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.writeValueAsString(styleSettings);
-        } catch (IOException e) {
-            throw new ServiceException("Parse Exception from Object to json", e);
-        }
     }
 
     private SystemSettingsDto getConfigSystemSettings() throws ServiceException {
