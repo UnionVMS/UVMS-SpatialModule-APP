@@ -346,6 +346,13 @@
                 "lineStyle": "solid",
                 "lineWidth": "2"
             }
+        },
+        "alarms": {
+            "size": 4,
+            "open": "#FF0000",
+            "closed": "#008000",
+            "pending": "#FFA500",
+            "none": "#198BAF"
         }
     },
     "layerSettings": {
