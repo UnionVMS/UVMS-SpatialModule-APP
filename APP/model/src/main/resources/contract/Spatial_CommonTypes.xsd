@@ -298,6 +298,17 @@
         <xs:sequence>
             <xs:element name="position" type="PositionType" minOccurs="0"/>
             <xs:element name="segment" type="SegmentType" minOccurs="0"/>
+            <xs:element name="alarm" type="AlarmType" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="AlarmType">
+        <xs:sequence>
+            <xs:element name="size" type="xs:int"/>
+            <xs:element name="open" type="xs:string"/>
+            <xs:element name="closed" type="xs:string"/>
+            <xs:element name="pending" type="xs:string"/>
+            <xs:element name="none" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
 
