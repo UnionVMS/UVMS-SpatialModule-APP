@@ -18,6 +18,9 @@ public class Icons {
     @JsonProperty("positions")
     @Valid
     private Positions positions;
+    @JsonProperty("alarms")
+    @Valid
+    private Alarms alarms;
     @JsonProperty("segments")
     @Valid
     private Segments segments;
@@ -52,6 +55,16 @@ public class Icons {
     }
 
     /**
+     *
+     * @return
+     *     The alarms
+     */
+    @JsonProperty("alarms")
+    public Alarms getAlarms() {
+        return alarms;
+    }
+
+    /**
      * 
      * @param positions
      *     The positions
@@ -61,8 +74,24 @@ public class Icons {
         this.positions = positions;
     }
 
+    /**
+     *
+     * @param alarms
+     *     The alarms
+     */
+    @JsonProperty("alarms")
+    public void setAlarms(Alarms alarms) {
+        this.alarms = alarms;
+    }
+
+
     public Icons withPositions(Positions positions) {
         this.positions = positions;
+        return this;
+    }
+
+    public Icons withAlarms(Alarms alarms) {
+        this.alarms = alarms;
         return this;
     }
 
@@ -113,7 +142,7 @@ public class Icons {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(positions).append(segments).append(additionalProperties).toHashCode();
+        return new HashCodeBuilder().append(positions).append(alarms).append(segments).append(additionalProperties).toHashCode();
     }
 
     @Override
@@ -125,7 +154,7 @@ public class Icons {
             return false;
         }
         Icons rhs = ((Icons) other);
-        return new EqualsBuilder().append(positions, rhs.positions).append(segments, rhs.segments).append(additionalProperties, rhs.additionalProperties).isEquals();
+        return new EqualsBuilder().append(alarms, rhs.alarms).append(positions, rhs.positions).append(segments, rhs.segments).append(additionalProperties, rhs.additionalProperties).isEquals();
     }
 
 }
