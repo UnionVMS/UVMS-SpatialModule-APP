@@ -3,6 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured;
 import lombok.extern.slf4j.Slf4j;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
@@ -30,13 +31,16 @@ public class LegendResource {
 
     });
 
+    @GET
     @Path("/{key}")
     public void getLegendEntry(@PathParam("key") String key,
                                @Context HttpServletResponse response) throws IOException {
         BufferedImage bi = legendEntries.get(key);
-        OutputStream out = response.getOutputStream();
-        ImageIO.write(bi, "png", out);
-        out.close();
+        if (bi != null){
+            OutputStream out = response.getOutputStream();
+            ImageIO.write(bi, "png", out);
+            out.close();
+        }
     }
 
 }
