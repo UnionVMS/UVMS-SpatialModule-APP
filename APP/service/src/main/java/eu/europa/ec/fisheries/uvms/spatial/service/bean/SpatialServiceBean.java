@@ -7,6 +7,7 @@ import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.interceptors.TracingInterceptor;
+import eu.europa.ec.fisheries.uvms.spatial.dao.Oracle;
 import eu.europa.ec.fisheries.uvms.spatial.dao.util.SpatialFunction;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.PortsEntity;
@@ -64,6 +65,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import static eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialUtils.DEFAULT_CRS;
 import static eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialUtils.convertToPointInWGS84;
 import static eu.europa.ec.fisheries.uvms.spatial.util.ColumnAliasNameHelper.getFieldMap;
 import static eu.europa.ec.fisheries.uvms.spatial.util.SpatialTypeEnum.getEntityClassByType;
@@ -101,12 +103,11 @@ public class SpatialServiceBean implements SpatialService {
     @Override
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public List<Location> getClosestPointToPointByType(final ClosestLocationSpatialRQ request) throws ServiceException {
-        // TODO convert point
 
+        final Point incomingPoint = SpatialUtils.convertToPointInWGS84(request.getPoint());
+        final Double incomingLatitude = incomingPoint.getY();
+        final Double incomingLongitude = incomingPoint.getX();
         final Map<String, Location> distancePerTypeMap = new HashMap<>();
-        final Double latitude = request.getPoint().getLatitude();
-        final Double longitude = request.getPoint().getLongitude();
-        final Integer crs = request.getPoint().getCrs();
         final UnitType unit = request.getUnit();
         final MeasurementUnit measurementUnit = MeasurementUnit.getMeasurement(unit.name());
         final GeodeticCalculator calc = new GeodeticCalculator();
@@ -118,17 +119,26 @@ public class SpatialServiceBean implements SpatialService {
             AreaLocationTypesEntity next = it.next();
             String typeName = next.getTypeName();
             sb.append("(SELECT '").append(typeName).append("' as type, gid, code, name, geom, ")
-                    .append(spatialFunction.stDistance(longitude, latitude, crs)).append(" AS distance ")
+                    .append(spatialFunction.stDistance(incomingLatitude, incomingLongitude)).append(" AS distance ")
                     .append("FROM spatial.").append(next.getAreaDbTable())
-                    .append(" WHERE enabled = 'Y' ORDER BY distance ASC ")
-                    .append(spatialFunction.limit(10)).append(")");
+                    .append(" WHERE enabled = 'Y'");
+
+                    if (spatialFunction instanceof Oracle){
+                        sb.append(" AND ");
+                        sb.append(spatialFunction.limit(10)).append(")");
+                        sb.append(" ORDER BY distance ASC ");
+                    } else {
+                        sb.append(" ORDER BY distance ASC ");
+                        sb.append(spatialFunction.limit(10)).append(")");
+                    }
+
             it.remove(); // avoids a ConcurrentModificationException
             if (it.hasNext()) {
                 sb.append(" UNION ALL ");
             }
         }
 
-        log.debug("QUERY => {}", sb.toString());
+        log.debug("{} QUERY => {}", spatialFunction.getClass().getSimpleName().toUpperCase(), sb.toString());
 
         final Query emNativeQuery = em.createNativeQuery(sb.toString());
         emNativeQuery.unwrap(SQLQuery.class).addScalar("type", StringType.INSTANCE).addScalar(GID, IntegerType.INSTANCE)
@@ -141,7 +151,7 @@ public class SpatialServiceBean implements SpatialService {
             final Object[] result = (Object[]) record;
             final Point centroid = ((Geometry) result[4]).getCentroid();
             calc.setStartingGeographicPoint(centroid.getX(), centroid.getY());
-            calc.setDestinationGeographicPoint(longitude, latitude);
+            calc.setDestinationGeographicPoint(incomingLongitude, incomingLatitude);
             Double orthodromicDistance = calc.getOrthodromicDistance();
             final String type = result[0].toString();
             Location closest = distancePerTypeMap.get(type);
@@ -161,16 +171,16 @@ public class SpatialServiceBean implements SpatialService {
                 closest.setLocationType(LocationType.fromValue(type));
                 distancePerTypeMap.put(type, closest);
             }
-
         }
-
         return new ArrayList<>(distancePerTypeMap.values());
     }
 
     @Override
     public List<Area> getClosestAreasToPointByType(final ClosestAreaSpatialRQ request) throws ServiceException {
 
-        final Point incoming = convertToPointInWGS84(request.getPoint());
+        final Point incomingPoint = convertToPointInWGS84(request.getPoint());
+        final Double incomingLatitude = incomingPoint.getY();
+        final Double incomingLongitude = incomingPoint.getX();
         final MeasurementUnit measurementUnit = MeasurementUnit.getMeasurement(request.getUnit().name());
         final UnitType unit = request.getUnit();
         final List<AreaLocationTypesEntity> typesEntities = repository.findAllIsPointIsSystemWide(false, true);
@@ -184,16 +194,18 @@ public class SpatialServiceBean implements SpatialService {
             final String areaDbTable = next.getAreaDbTable();
             final String typeName = next.getTypeName();
             sb.append("(SELECT '").append(typeName).append("' AS type, gid, code, name, ")
-                    .append(spatialFunction.stClosestPoint(incoming.getY(), incoming.getX(), incoming.getSRID()))
+                    .append(spatialFunction.stClosestPoint(incomingLatitude, incomingLongitude))
                     .append(" AS closest ").append("FROM spatial.").append(areaDbTable).append(" ")
-                    .append("WHERE NOT ST_IsEmpty(geom) AND enabled = 'Y' ").append("ORDER BY ")
-                    .append(spatialFunction.stDistance(incoming.getY(), incoming.getX(), incoming.getSRID())).append(" ")
+                    .append("WHERE NOT ST_IsEmpty(geom) AND enabled = 'Y' ").append("ORDER BY ") // TODO check isEmpty in oracl"
+                    .append(spatialFunction.stDistance(incomingLatitude, incomingLongitude)).append(" ")
                     .append(spatialFunction.limit(10)).append(")");
             it.remove(); // avoids a ConcurrentModificationException
             if (it.hasNext()) {
                 sb.append(" UNION ALL ");
             }
         }
+
+        log.debug("{} QUERY => {}", spatialFunction.getClass().getSimpleName().toUpperCase(), sb.toString());
 
         Query emNativeQuery = em.createNativeQuery(sb.toString());
 
@@ -207,7 +219,7 @@ public class SpatialServiceBean implements SpatialService {
             final Object[] result = (Object[]) record;
             final Point closestPoint = (Point) result[4];
             calc.setStartingGeographicPoint(closestPoint.getX(), closestPoint.getY());
-            calc.setDestinationGeographicPoint(incoming.getX(), incoming.getY());
+            calc.setDestinationGeographicPoint(incomingLongitude, incomingLatitude);
             Double orthodromicDistance = calc.getOrthodromicDistance();
 
             final String type = result[0].toString();
@@ -236,10 +248,9 @@ public class SpatialServiceBean implements SpatialService {
     @Override
     public List<AreaExtendedIdentifierType> getAreasByPoint(final AreaByLocationSpatialRQ request) throws ServiceException {
 
-        // TODO convert point
-        final Integer crs = request.getPoint().getCrs();
-        final double latitude = request.getPoint().getLatitude();
-        final double longitude = request.getPoint().getLongitude();
+        final Point incomingPoint = convertToPointInWGS84(request.getPoint());
+        final Double incomingLatitude = incomingPoint.getY();
+        final Double incomingLongitude = incomingPoint.getX();
         final StringBuilder sb = new StringBuilder();
         final List<AreaLocationTypesEntity> typesEntities = repository.findAllIsPointIsSystemWide(false, true);
         final List<AreaExtendedIdentifierType> areaTypes = new ArrayList<>();
@@ -251,7 +262,7 @@ public class SpatialServiceBean implements SpatialService {
             final String typeName = next.getTypeName();
             sb.append("SELECT '").append(typeName).append("' as type, gid, name, code FROM spatial.")
                     .append(areaDbTable).append(" WHERE ")
-                    .append(spatialFunction.stIntersects(latitude, longitude, crs))
+                    .append(spatialFunction.stIntersects(incomingLatitude, incomingLongitude))
                     .append(" AND enabled = 'Y'");
             it.remove(); // avoids a ConcurrentModificationException
             if (it.hasNext()) {
@@ -433,7 +444,7 @@ public class SpatialServiceBean implements SpatialService {
     @Override
     @Transactional
     public LocationDetails getLocationDetails(final LocationTypeEntry locationTypeEntry) throws ServiceException {
-        // TODO convert point?
+
         final GeodeticCalculator calc = new GeodeticCalculator();
         final Map<String, Object> properties;
         final String id = locationTypeEntry.getId();
@@ -460,15 +471,17 @@ public class SpatialServiceBean implements SpatialService {
 
             Map<String, Object> fieldMap = new HashMap<>();
 
-            Double longitude = locationTypeEntry.getLongitude();
-            Double latitude = locationTypeEntry.getLatitude();
-            Integer crs = locationTypeEntry.getCrs();
+            final Point incomingPoint =
+                    convertToPointInWGS84(locationTypeEntry.getLongitude(), locationTypeEntry.getLatitude(), DEFAULT_CRS);
+            final Double incomingLatitude = incomingPoint.getY();
+            final Double incomingLongitude = incomingPoint.getX();
 
             List list = new ArrayList();
 
             if (locationType.equals("PORT")){
 
-                final String queryString = "SELECT * FROM spatial.port WHERE enabled = 'Y' ORDER BY " + spatialFunction.stDistance(longitude, latitude, crs) + " ASC " + spatialFunction.limit(15); // FIXME this can and should be replaces by NamedQuery
+                final String queryString = "SELECT * FROM spatial.port WHERE enabled = 'Y' ORDER BY " +
+                        spatialFunction.stDistance(incomingLongitude, incomingLatitude) + " ASC " + spatialFunction.limit(15); // FIXME this can and should be replaces by NamedQuery
                 Query emNativeQuery = em.createNativeQuery(queryString, PortsEntity.class);
                 List<PortsEntity> records = emNativeQuery.getResultList();
 
@@ -479,7 +492,7 @@ public class SpatialServiceBean implements SpatialService {
                     final Geometry geometry = portsEntity.getGeom();
                     final Point centroid = geometry.getCentroid();
                     calc.setStartingGeographicPoint(centroid.getX(), centroid.getY());
-                    calc.setDestinationGeographicPoint(longitude, latitude);
+                    calc.setDestinationGeographicPoint(incomingLongitude, incomingLatitude);
                     Double orthodromicDistance = calc.getOrthodromicDistance();
 
                     if (closestDistance > orthodromicDistance) {
@@ -493,8 +506,7 @@ public class SpatialServiceBean implements SpatialService {
                 }
             }
             else {
-                Point point = convertToPointInWGS84(longitude, latitude, crs);
-                list = repository.findAreaOrLocationByCoordinates(point, getNativeQueryByType(locationTypesEntity.getTypeName()));
+                list = repository.findAreaOrLocationByCoordinates(incomingPoint, getNativeQueryByType(locationTypesEntity.getTypeName()));
             }
 
             if (isNotEmpty(list)) {
