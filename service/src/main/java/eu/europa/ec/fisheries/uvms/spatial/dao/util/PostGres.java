@@ -5,18 +5,18 @@ import eu.europa.ec.fisheries.uvms.spatial.dao.AbstractGisFunction;
 public class PostGres extends AbstractGisFunction {
 
     @Override
-    public String stIntersects(Double latitude, Double longitude, Integer crs) {
-        return "ST_Intersects(geom, ST_GeomFromText(CAST('POINT(" + latitude + " " + longitude + ")' AS " + castAsUnlimitedLength() + " ), " + crs + "))";
+    public String stIntersects(Double latitude, Double longitude) {
+        return "ST_Intersects(geom, ST_GeomFromText(CAST ('POINT(" + longitude + " " + latitude + ")' AS TEXT), 4326))";
     }
 
     @Override
-    public String stDistance(Double latitude, Double longitude, Integer crs) {
-        return "ST_Distance(geom, ST_GeomFromText(CAST('POINT(" + latitude + " " + longitude + ")' AS " + castAsUnlimitedLength() + "), " + crs + "))";
+    public String stDistance(Double latitude, Double longitude) {
+        return "ST_Distance(geom, ST_GeomFromText(CAST ('POINT(" + longitude + " " + latitude + ")' AS TEXT), 4326))";
     }
 
     @Override
-    public String stClosestPoint(Double latitude, Double longitude, Integer crs) {
-        return "ST_ClosestPoint(geom, ST_GeomFromText(CAST('POINT(" + latitude + " " + longitude + ")' AS " + castAsUnlimitedLength() + "), " + crs + "))";
+    public String stClosestPoint(Double latitude, Double longitude) {
+        return "ST_ClosestPoint(geom, ST_GeomFromText(CAST ('POINT(" + longitude + " " + latitude + ")' AS TEXT), 4326))";
     }
 
     @Override
