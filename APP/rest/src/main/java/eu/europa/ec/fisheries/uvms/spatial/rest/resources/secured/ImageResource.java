@@ -7,10 +7,14 @@ import eu.europa.ec.fisheries.uvms.spatial.model.mapfish.request.Class;
 import eu.europa.ec.fisheries.uvms.spatial.model.mapfish.request.Cluster;
 import eu.europa.ec.fisheries.uvms.spatial.model.mapfish.request.Icons;
 import eu.europa.ec.fisheries.uvms.spatial.model.mapfish.response.ImageResponse;
+import eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured.AlarmResource;
 import eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured.LegendResource;
 import eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured.PositionResource;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ImageEncoderFactory;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.ObjectUtils;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -39,25 +43,51 @@ public class ImageResource extends UnionVMSResource {
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public Response renderImages(@Context HttpServletRequest request, Icons icons) throws Exception {
+    public Response renderImages(@Context HttpServletRequest request, Icons payload) throws Exception {
 
         ImageResponse response = new ImageResponse();
         response.getLegend().withBase("/spatial/image/legend/");
 
-        handlePositions(icons, response);
+        if (payload.getPositions() != null){
+            handlePositions(payload, response);
+        }
 
-        handleSegments(icons, response);
+        if (payload.getSegments() != null) {
+            handleSegments(payload, response);
+        }
+
+        if (payload.getAlarms() != null) {
+            handleAlarms(payload, response);
+        }
 
         return createSuccessResponse(response);
 
     }
 
-    private void handlePositions(Icons icons, ImageResponse response) throws Exception {
+    private void handleAlarms(Icons payload, ImageResponse response)  throws Exception {
+
+        List<ImageEncoderFactory.LegendEntry> temp = new ArrayList<>();
+
+        for (Class clazz : payload.getAlarms().getClasses()) {
+
+            ImageEncoderFactory.LegendEntry legendEntry = new ImageEncoderFactory.LegendEntry();
+            legendEntry.setMsg(clazz.getText());
+            BufferedImage alarmIconForLegend = ImageEncoderFactory.renderAlarm(clazz.getColor());
+            legendEntry.setIcon(alarmIconForLegend);
+            temp.add(legendEntry);
+        }
+
+        String guid = UUID.randomUUID().toString();
+        response.getLegend().withAlarms(guid);
+        LegendResource.legendEntries.put(guid, ImageEncoderFactory.renderLegend(temp, payload.getAlarms().getTitle(), 40));
+    }
+
+    private void handlePositions(Icons payload, ImageResponse response) throws Exception {
 
         response.getMap().getVmspos().withBase("/spatial/image/position/");
         List<ImageEncoderFactory.LegendEntry> temp = new ArrayList<>();
 
-        for (Class clazz : icons.getPositions().getClasses()) { // TODO check hex value
+        for (Class clazz : payload.getPositions().getClasses()) { // TODO check hex value
 
             ImageEncoderFactory.LegendEntry legendEntry = new ImageEncoderFactory.LegendEntry();
             legendEntry.setMsg(clazz.getText());
@@ -74,7 +104,7 @@ public class ImageResource extends UnionVMSResource {
             temp.add(legendEntry);
         }
 
-        Cluster cluster = icons.getPositions().getCluster();
+        Cluster cluster = payload.getPositions().getCluster();
 
         if (cluster != null){
 
@@ -87,15 +117,15 @@ public class ImageResource extends UnionVMSResource {
 
         String guid = UUID.randomUUID().toString();
         response.getLegend().withPositions(guid);
-        LegendResource.legendEntries.put(guid, ImageEncoderFactory.renderLegend(temp, icons.getPositions().getTitle(), 25));
+        LegendResource.legendEntries.put(guid, ImageEncoderFactory.renderLegend(temp, payload.getPositions().getTitle(), 25));
     }
 
-    private void handleSegments(Icons icons, ImageResponse response) throws Exception {
+    private void handleSegments(Icons payload, ImageResponse response) throws Exception {
 
-        String lineStyle = icons.getSegments().getLineStyle();
+        String lineStyle = payload.getSegments().getLineStyle();
         List<ImageEncoderFactory.LegendEntry> temp = new ArrayList<>();
 
-        for (Class clazz : icons.getSegments().getClasses()) {
+        for (Class clazz : payload.getSegments().getClasses()) {
 
             ImageEncoderFactory.LegendEntry legendEntry = new ImageEncoderFactory.LegendEntry();
             legendEntry.setMsg(clazz.getText());
@@ -106,7 +136,7 @@ public class ImageResource extends UnionVMSResource {
 
         String guid = UUID.randomUUID().toString();
         response.getLegend().withSegments(guid);
-        LegendResource.legendEntries.put(guid, ImageEncoderFactory.renderLegend(temp, icons.getSegments().getTitle(), 40));
+        LegendResource.legendEntries.put(guid, ImageEncoderFactory.renderLegend(temp, payload.getSegments().getTitle(), 40));
     }
 
 }

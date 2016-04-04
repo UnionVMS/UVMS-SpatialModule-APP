@@ -30,9 +30,11 @@ public class ImageEncoderFactory {
     private static final String STROKE_DASH_ARRAY = "stroke-dasharray";
     private static final String STROKE = "stroke";
     private static final String POSITION = "position";
+    private static final String ALARM = "alarm";
     private static final String STYLE = "style";
     private static final String LINE = "line";
     private static final String POSITION_SVG = "/position.svg";
+    private static final String ALARM_SVG = "/alarm.svg";
     private static final String SEGMENT_SVG = "/line.svg";
     private static final String CLUSTER_SVG = "/cluster.svg";
     private static final String TRANSFORM = "transform";
@@ -50,7 +52,7 @@ public class ImageEncoderFactory {
 
     public static BufferedImage renderCluster(String backGroundColor, String borderColor) throws TranscoderException, IOException {
 
-        log.debug("Rendering cluster");
+        log.debug("Rendering cluster icon with color {} ", borderColor);
         Document cluster = createDocument(CLUSTER_SVG);
         NamedNodeMap attributes = cluster.getElementById(CIRCLE).getAttributes();
         attributes.getNamedItem("stroke").getFirstChild().setNodeValue(borderColor);
@@ -59,7 +61,7 @@ public class ImageEncoderFactory {
 
     public static BufferedImage renderSegment(String hexColor, String strokeDashArray, String scale) throws TranscoderException, IOException {
 
-        log.debug("Rendering segment");
+        log.debug("Rendering segment icon with color {} ", hexColor);
         Document line = createDocument(SEGMENT_SVG);
         NamedNodeMap attributes = line.getElementById(LINE).getAttributes();
         attributes.getNamedItem(TRANSFORM).getFirstChild().setNodeValue(scale);
@@ -70,7 +72,7 @@ public class ImageEncoderFactory {
 
     public static BufferedImage renderPosition(String hexColor, String scale) throws Exception {
 
-        log.debug("Rendering position");
+        log.debug("Rendering position icon with color {} ", hexColor);
         Document position = createDocument(POSITION_SVG);
         position.getElementById("scale").getAttributes().getNamedItem(TRANSFORM).getFirstChild().setNodeValue(scale);
         position.getElementById(POSITION).getAttributes().getNamedItem(STYLE).getFirstChild().setNodeValue(FILL + hexColor);
@@ -79,10 +81,18 @@ public class ImageEncoderFactory {
 
     public static BufferedImage renderPosition(String hexColor) throws Exception {
 
-        log.debug("Rendering position");
+        log.debug("Rendering position icon with color {} ", hexColor);
         Document position = createDocument(POSITION_SVG);
         position.getElementById(POSITION).getAttributes().getNamedItem(STYLE).getFirstChild().setNodeValue(FILL + hexColor);
         return getBufferedImage(position);
+    }
+
+    public static BufferedImage renderAlarm(String hexColor) throws Exception {
+
+        log.debug("Rendering alarm icon with color {} ", hexColor);
+        Document alarm = createDocument(ALARM_SVG);
+        alarm.getElementById(ALARM).getAttributes().getNamedItem("fill").getFirstChild().setNodeValue(hexColor);
+        return getBufferedImage(alarm);
     }
 
     public static BufferedImage getBufferedImage(Document document) throws TranscoderException, IOException {
@@ -163,12 +173,10 @@ public class ImageEncoderFactory {
         private String msg;
 
         public void setIcon(BufferedImage icon) {
-
             this.icon = icon;
         }
 
         public void setMsg(String msg) {
-
             this.msg = msg;
         }
     }

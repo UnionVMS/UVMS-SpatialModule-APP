@@ -20,6 +20,8 @@ public class Legend {
     private String positions;
     @JsonProperty("segments")
     private String segments;
+    @JsonProperty("alarms")
+    private String alarms;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -103,6 +105,16 @@ public class Legend {
     }
 
     /**
+     *
+     * @return
+     *     The alarms
+     */
+    @JsonProperty("alarms")
+    public String getAlarms() {
+        return alarms;
+    }
+
+    /**
      * 
      * @param segments
      *     The segments
@@ -111,6 +123,17 @@ public class Legend {
     public void setSegments(String segments) {
         this.segments = segments;
     }
+
+    /**
+     *
+     * @param alarms
+     *     The alarms
+     */
+    @JsonProperty("alarms")
+    public void setAlarms(String alarms) {
+        this.alarms = alarms;
+    }
+
 
     public Legend withSegments(String segments) {
         this.segments = segments;
@@ -139,7 +162,7 @@ public class Legend {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(base).append(positions).append(segments).append(additionalProperties).toHashCode();
+        return new HashCodeBuilder().append(base).append(positions).append(alarms).append(segments).append(additionalProperties).toHashCode();
     }
 
     @Override
@@ -151,7 +174,12 @@ public class Legend {
             return false;
         }
         Legend rhs = ((Legend) other);
-        return new EqualsBuilder().append(base, rhs.base).append(positions, rhs.positions).append(segments, rhs.segments).append(additionalProperties, rhs.additionalProperties).isEquals();
+        return new EqualsBuilder().append(base, rhs.base).append(positions, rhs.positions).append(alarms, rhs.alarms).append(segments, rhs.segments).append(additionalProperties, rhs.additionalProperties).isEquals();
     }
 
+    public Legend withAlarms(String alarms) {
+        this.alarms = alarms;
+        return this;
+
+    }
 }
