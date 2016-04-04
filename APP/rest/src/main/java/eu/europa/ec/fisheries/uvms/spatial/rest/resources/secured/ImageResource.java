@@ -79,7 +79,7 @@ public class ImageResource extends UnionVMSResource {
 
         String guid = UUID.randomUUID().toString();
         response.getLegend().withAlarms(guid);
-        LegendResource.legendEntries.put(guid, ImageEncoderFactory.renderLegend(temp, payload.getAlarms().getTitle(), 40));
+        LegendResource.legendEntries.put(guid, ImageEncoderFactory.renderLegend(temp, payload.getAlarms().getTitle(), 25));
     }
 
     private void handlePositions(Icons payload, ImageResponse response) throws Exception {
