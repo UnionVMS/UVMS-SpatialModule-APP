@@ -416,7 +416,8 @@ public class MapConfigServiceBean implements MapConfigService {
             if (entity != null && entity.getStyleSettings() != null) {
                 StyleSettingsDto styleSettingsDto = MapConfigHelper.getStyleSettings(entity.getStyleSettings());
                 if ((styleSettingsDto.getPositions() != null && styleSettingsDto.getPositions().getStyle() != null) ||
-                        (styleSettingsDto.getSegments() != null && styleSettingsDto.getSegments().getStyle() != null)) {
+                        (styleSettingsDto.getSegments() != null && styleSettingsDto.getSegments().getStyle() != null) ||
+                        (styleSettingsDto.getAlarms() != null)) {
                     return MapConfigMapper.INSTANCE.getStyleDtos(styleSettingsDto); // Style Settings is overridden by Report. Return the report configured style settings
                 }
             }
