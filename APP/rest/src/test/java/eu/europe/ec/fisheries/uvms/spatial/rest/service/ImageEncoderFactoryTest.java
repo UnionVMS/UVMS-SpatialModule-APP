@@ -20,6 +20,8 @@ public class ImageEncoderFactoryTest {
     public void test() {
 
         BufferedImage position = getPosition("scale(0.3)");
+        BufferedImage alarms = getAlarms();
+
         BufferedImage line = getLine("scale(1.3)");
         BufferedImage cluster = getCluster();
 
@@ -35,6 +37,11 @@ public class ImageEncoderFactoryTest {
         entries.add(legendEntry);
 
         legendEntry = new ImageEncoderFactory.LegendEntry();
+        legendEntry.setMsg("Hello Alarm");
+        legendEntry.setIcon(alarms);
+        entries.add(legendEntry);
+
+        legendEntry = new ImageEncoderFactory.LegendEntry();
         legendEntry.setMsg("Hello Greg");
         legendEntry.setIcon(position);
         entries.add(legendEntry);
@@ -46,7 +53,7 @@ public class ImageEncoderFactoryTest {
 
         BufferedImage image = ImageEncoderFactory.renderLegend(entries, "TITLE", 40);
 
-        File outputfile = File.createTempFile("test2", ".png");
+        File outputfile = new File("test2.png");
         ImageIO.write(image, "PNG", outputfile);
 
     }
@@ -62,7 +69,7 @@ public class ImageEncoderFactoryTest {
     @SneakyThrows
     public void test3() {
         BufferedImage position = getPosition("scale(1)");
-        File outputfile = File.createTempFile("test3", ".png");
+        File outputfile = new File("test3.png");
         ImageIO.write(position, "PNG", outputfile);
     }
 
@@ -71,6 +78,12 @@ public class ImageEncoderFactoryTest {
         position.getElementById("scale").getAttributes().getNamedItem("transform").getFirstChild().setNodeValue(scale);
         position.getElementById("position").getAttributes().getNamedItem("style").getFirstChild().setNodeValue("fill:" + "#DFSFQS");
         return ImageEncoderFactory.getBufferedImage(position);
+    }
+
+    private BufferedImage getAlarms() throws Exception {
+        Document alarm = ImageEncoderFactory.createDocument("/alarm.svg");
+        alarm.getElementById("alarm").getAttributes().getNamedItem("fill").getFirstChild().setNodeValue("#FFDDAA");
+        return ImageEncoderFactory.getBufferedImage(alarm);
     }
 
     private BufferedImage getLine(String scale) throws IOException, TranscoderException {
