@@ -24,7 +24,7 @@ import java.awt.geom.Point2D;
 public class SpatialUtils {
 
     private static final String EPSG = "EPSG:";
-    private static final int DEFAULT_CRS = 4326;
+    public static final int DEFAULT_CRS = 4326;
 
     private SpatialUtils() {
     }
