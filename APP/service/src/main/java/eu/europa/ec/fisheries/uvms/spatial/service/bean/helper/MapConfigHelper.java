@@ -28,8 +28,6 @@ public class MapConfigHelper {
 
     private static final String PROVIDER_FORMAT_BING = "BING";
 
-    private static final Integer DEFAULT_EPSG = 3857;
-
     private static Logger LOGGER =  LoggerFactory.getLogger(LoggerFactory.class);
 
     public static boolean isVisibilitySettingsOverriddenByReport(VisibilitySettingsDto visibilitySettingsDto) {
@@ -64,10 +62,7 @@ public class MapConfigHelper {
         return isOverridden;
     }
 
-    public static boolean isRemoveLayer(ProjectionDto projection, ServiceLayerEntity serviceLayer, String bingApiKey) {
-        if(!projection.getEpsgCode().equals(DEFAULT_EPSG) && DEFAULT_EPSG.equals(serviceLayer.getSrsCode())) {
-            return true;
-        }
+    public static boolean isRemoveLayer(ServiceLayerEntity serviceLayer, String bingApiKey) {
         if (serviceLayer.getProviderFormat().getServiceType().equalsIgnoreCase(PROVIDER_FORMAT_BING) && bingApiKey == null) {
             return true;
         }

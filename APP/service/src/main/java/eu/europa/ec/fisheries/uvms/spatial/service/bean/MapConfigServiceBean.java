@@ -529,7 +529,7 @@ public class MapConfigServiceBean implements MapConfigService {
         Iterator<ServiceLayerEntity> layerIterator = serviceLayers.iterator();
         while(layerIterator.hasNext()) {
             ServiceLayerEntity serviceLayer = layerIterator.next();
-            if (MapConfigHelper.isRemoveLayer(projection, serviceLayer, bingApiKey)) {
+            if (MapConfigHelper.isRemoveLayer(serviceLayer, bingApiKey)) {
                 layerIterator.remove();
             }
         }
