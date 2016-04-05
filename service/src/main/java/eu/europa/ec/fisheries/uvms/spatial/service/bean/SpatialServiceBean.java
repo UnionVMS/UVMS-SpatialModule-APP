@@ -345,8 +345,9 @@ public class SpatialServiceBean implements SpatialService {
             }
 
             GeometryFactory geometryFactory = JTSFactoryFinder.getGeometryFactory();
-            GeometryCollection userUnion = (GeometryCollection) geometryFactory.buildGeometry(userGeometryList).union();
-            GeometryCollection scopeUnion = (GeometryCollection) geometryFactory.buildGeometry(scopeGeometryList).union();
+
+            Geometry userUnion = geometryFactory.buildGeometry(userGeometryList).union();
+            Geometry scopeUnion = geometryFactory.buildGeometry(scopeGeometryList).union();
 
             FilterAreasSpatialRS response = new FilterAreasSpatialRS(null,0);
             Geometry intersection = null;
