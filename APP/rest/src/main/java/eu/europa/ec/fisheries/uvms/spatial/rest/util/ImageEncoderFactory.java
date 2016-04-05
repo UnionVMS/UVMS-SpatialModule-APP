@@ -46,7 +46,7 @@ public class ImageEncoderFactory {
     private static int OFFSET = 0;
     private static final int LINE_SPACING = 13;
     private static final int TITLE_OFFSET = 10;
-    private static final int WIDTH = 180;
+    private static final int WIDTH = 200;
 
     private ImageEncoderFactory(){}
 
