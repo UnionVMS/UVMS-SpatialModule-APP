@@ -54,7 +54,6 @@ import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 
 @Stateless
 @Local(value = SpatialRepository.class)
-//@TransactionAttribute(TransactionAttributeType.REQUIRED) // FIXME @Greg transaction must be handled at service level
 public class SpatialRepositoryBean extends AbstractDAO implements SpatialRepository {
 
     private @PersistenceContext(unitName = "spatialPU") EntityManager em;
@@ -159,7 +158,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
 
         ReportConnectSpatialEntity result = null;
 
-        if (isNotEmpty(list)) {  // FIXME @Greg this logic should remain in service layer
+        if (isNotEmpty(list)) {  // FIXME @Greg move the logic to service layer
             if (list.size() > 1) {
                 throw new IllegalStateException("More than one map configuration has been found for report with id = " + reportId);
             } else {
@@ -171,17 +170,11 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     }
 
     @Override
-    //@Transactional // FIXME transaction should be handled at service level
-    public ReportConnectSpatialEntity findReportConnectSpatialByConnectId(final Long id) throws ServiceException {
-        List<ReportConnectSpatialEntity> list = reportConnectSpatialDao.findReportConnectSpatialByConnectId(id);
-        if (list != null && !list.isEmpty()) {
-            return list.get(0);
-        }
-        return null;
+    public List<ReportConnectSpatialEntity> findReportConnectSpatialByConnectId(final Long id) throws ServiceException {
+        return reportConnectSpatialDao.findReportConnectSpatialByConnectId(id);
     }
 
     @Override
-    //@Transactional // FIXME transaction should be handled at service level
     public boolean saveOrUpdateMapConfiguration(final ReportConnectSpatialEntity mapConfiguration) throws ServiceException {
         validateMapConfiguration(mapConfiguration);
         return reportConnectSpatialDao.saveOrUpdateEntity(mapConfiguration) != null;

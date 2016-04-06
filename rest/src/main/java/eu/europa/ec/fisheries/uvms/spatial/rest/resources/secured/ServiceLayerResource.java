@@ -2,7 +2,6 @@ package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.spatial.model.layer.ServiceLayer;
 import eu.europa.ec.fisheries.uvms.spatial.model.views.Views;
@@ -24,9 +23,6 @@ import javax.ws.rs.core.Response;
 
 import static eu.europa.ec.fisheries.uvms.spatial.rest.constants.RestConstants.*;
 
-/**
- * TODO autorization
- */
 @Path(SERVICE_LAYER_PATH)
 @Slf4j
 public class ServiceLayerResource extends UnionVMSResource {
