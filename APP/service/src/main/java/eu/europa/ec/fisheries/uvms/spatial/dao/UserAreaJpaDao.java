@@ -57,7 +57,7 @@ public class UserAreaJpaDao extends AbstractDAO<UserAreasEntity> {
         int crs = point.getSRID();
 		Map<String, Object> parameters = ImmutableMap.<String, Object>builder().
                 put(USER_NAME, userName).
-				put("shape", "SRID=" + crs + ";" + wkt).
+				put("shape", "SRID=" + crs + ";" + wkt). // TODO Check on oracle
 				build();
 
         Query query = getSession().getNamedQuery(UserAreasEntity.USER_AREA_DETAILS_BY_LOCATION);
