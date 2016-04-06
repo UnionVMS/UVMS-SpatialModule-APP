@@ -57,6 +57,7 @@ public class SearchAreaServiceIT extends AbstractArquillianIT {
 	}
 	
 	@Test
+    @SneakyThrows
 	public void shouldGetSelectedColumns() {
 		AreaTypeEntry areaTypeEntry = new AreaTypeEntry();
 		areaTypeEntry.setAreaType(AreaType.EEZ);

@@ -102,7 +102,7 @@ public class AreaResource extends UnionVMSResource {
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/areaproperties")
     @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
-    public Response getAreaProperties(List<AreaCoordinateType> areaDtoList) {
+    public Response getAreaProperties(List<AreaCoordinateType> areaDtoList) throws ServiceException {
     	return createSuccessResponse(searchAreaService.getSelectedAreaColumns(mapper.getAreaTypeEntryList(areaDtoList)));
     }
    
