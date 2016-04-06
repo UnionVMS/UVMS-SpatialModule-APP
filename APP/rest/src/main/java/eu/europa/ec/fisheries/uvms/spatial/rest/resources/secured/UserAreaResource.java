@@ -201,7 +201,7 @@ public class UserAreaResource extends UnionVMSResource {
 
     @POST
     @Produces({MediaType.APPLICATION_JSON})
-    @Path("/userareasbyfilter") // TODO test with postman
+    @Path("/userareasbyfilter") // TODO add postman test
     @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
     public Response searchUserAreas(FilterType filter, @Context HttpServletRequest request, @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName) throws ServiceException {
         return createSuccessResponse(userAreaService.searchUserAreasByCriteria(request.getRemoteUser(), scopeName, filter.getFilter(), isPowerUser(request)));
@@ -223,7 +223,7 @@ public class UserAreaResource extends UnionVMSResource {
 
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    @Path("/userareaslist/{type}") // TODO test with postman
+    @Path("/userareaslist/{type}") // TODO add postman test
     public Response listUserAreas(@Context HttpServletRequest request, @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName, @PathParam("type") String userAreaType) throws ServiceException {
         Response response;
         if (request.isUserInRole(SpatialFeaturesEnum.MANAGE_USER_DEFINED_AREAS.toString())) {

@@ -1,7 +1,5 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.reporting.model.schemas.ReportGetStartAndEndDateRS;
@@ -10,7 +8,14 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntit
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.mapper.ReportConnectSpatialMapper;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.CoordinatesFormat;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.MapConfigurationType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ScaleBarUnits;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialDeleteMapConfigurationRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialGetMapConfigurationRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialGetMapConfigurationRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveOrUpdateMapConfigurationRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveOrUpdateMapConfigurationRS;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaDto;
@@ -23,15 +28,18 @@ import eu.europa.ec.fisheries.uvms.spatial.util.LayerTypeEnum;
 import eu.europa.ec.fisheries.uvms.spatial.validator.SpatialValidator;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.transaction.Transactional;
-import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 import static eu.europa.ec.fisheries.uvms.spatial.service.mapper.ConfigurationMapper.*;
 
@@ -41,22 +49,14 @@ import static eu.europa.ec.fisheries.uvms.spatial.service.mapper.ConfigurationMa
 public class MapConfigServiceBean implements MapConfigService {
 
     private static final String SCALE = "scale";
-
     private static final String MOUSECOORDS = "mousecoords";
-
     private static final String NAME = "name";
-
     private static final String GEO_SERVER = "geo_server_url";
-
     private static final String BING_API_KEY = "bing_api_key";
-
     private static final String PROVIDER_FORMAT_BING = "BING";
 
-    @EJB
-    private SpatialRepository repository;
-
-    @EJB
-    private ReportingService reportingService;
+    private @EJB SpatialRepository repository;
+    private @EJB ReportingService reportingService;
 
     @Override
     @SneakyThrows
@@ -67,11 +67,22 @@ public class MapConfigServiceBean implements MapConfigService {
 
     @Override
     @SneakyThrows
-    @Transactional(Transactional.TxType.REQUIRES_NEW) // annotation required to send error response
+    @Transactional(Transactional.TxType.REQUIRES_NEW) // TODO check this // annotation required to send error response
     public void handleDeleteMapConfiguration(SpatialDeleteMapConfigurationRQ request) throws ServiceException {
-        SpatialValidator.validate(request);
+
+        if (request == null) {
+            throw new IllegalArgumentException("ARGUMENT CAN NOT BE NULL");
+        }
+
         for (Long id : request.getSpatialConnectIds()) {
-            ReportConnectSpatialEntity entity = repository.findReportConnectSpatialByConnectId(id);
+            List<ReportConnectSpatialEntity> entityList = repository.findReportConnectSpatialByConnectId(id);
+
+            ReportConnectSpatialEntity entity = null;
+
+            if (entityList != null && !entityList.isEmpty()) {
+                entity = entityList.get(0);
+            }
+
             if (entity != null) {
                 repository.deleteReportConnectServiceAreas(entity.getReportConnectServiceAreases());
                 repository.deleteEntity(entity);
