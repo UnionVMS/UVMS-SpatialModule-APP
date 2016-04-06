@@ -1,7 +1,5 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import static eu.europa.ec.fisheries.uvms.spatial.util.SpatialTypeEnum.getNamedQueryByType;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +14,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.util.SpatialTypeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -61,7 +60,14 @@ public class SearchAreaServiceBean implements SearchAreaService {
 
     private Map<String, String> getSelectedColumnMap(String areaType, String gid) {
 
-        String namedQuery = getNamedQueryByType(areaType);
+        String namedQuery = null;
+
+        for (SpatialTypeEnum type : SpatialTypeEnum.values()) {
+            if(type.getType().equalsIgnoreCase(areaType)) {
+                namedQuery = type.getNamedQuery();
+            }
+        }
+
         List<Map<String, String>> selectedAreaColumns = repository.findSelectedAreaColumns(namedQuery, Long.parseLong(gid));
 
         if (selectedAreaColumns.isEmpty()) {
