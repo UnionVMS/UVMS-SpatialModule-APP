@@ -1,7 +1,5 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
@@ -32,8 +30,6 @@ import static eu.europa.ec.fisheries.uvms.spatial.util.SpatialTypeEnum.getEntity
 @Slf4j
 public class AreaDetailsServiceBean implements AreaDetailsService {
 
-    protected static final String TYPE_NAME = "typeName";
-
     @EJB
     private SpatialRepository repository;
 
@@ -57,8 +53,8 @@ public class AreaDetailsServiceBean implements AreaDetailsService {
             throw new SpatialServiceException(SpatialServiceErrors.INVALID_ID_TYPE, areaTypeEntry.getId());
         }
 
-        Map<String, String> parameters = ImmutableMap.<String, String>builder().put(TYPE_NAME, areaType.value().toUpperCase()).build();
-        List<AreaLocationTypesEntity> areasLocationTypes = repository.findEntityByNamedQuery(AreaLocationTypesEntity.class, AreaLocationTypesEntity.FIND_TYPE_BY_NAME, parameters, 1); // FIXME greg use daa
+        List<AreaLocationTypesEntity> areasLocationTypes =
+                repository.findAreaLocationTypeByTypeName(areaTypeEntry.getAreaType().value().toUpperCase());
 
         if (areasLocationTypes.isEmpty()) {
             throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR, areasLocationTypes);
@@ -68,7 +64,8 @@ public class AreaDetailsServiceBean implements AreaDetailsService {
 
         Integer id = Integer.parseInt(areaTypeEntry.getId());
 
-        Object object = repository.findEntityById(getEntityClassByType(areaLocationTypesEntity.getTypeName()), id.longValue());
+        Class entityClassByType = getEntityClassByType(areaLocationTypesEntity.getTypeName());
+        Object object = repository.findEntityById(entityClassByType, id.longValue()); // TODO @Greg DAO
 
         if (object == null) {
             throw new SpatialServiceException(SpatialServiceErrors.ENTITY_NOT_FOUND, areaLocationTypesEntity.getTypeName());
@@ -89,8 +86,8 @@ public class AreaDetailsServiceBean implements AreaDetailsService {
             throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR, StringUtils.EMPTY);
         }
 
-        Map<String, String> parameters = ImmutableMap.<String, String>builder().put(TYPE_NAME, areaTypeEntry.getAreaType().value().toUpperCase()).build();
-        List<AreaLocationTypesEntity> areasLocationTypes = repository.findEntityByNamedQuery(AreaLocationTypesEntity.class, AreaLocationTypesEntity.FIND_TYPE_BY_NAME, parameters, 1); // FIXME greg replace by dao
+        List<AreaLocationTypesEntity> areasLocationTypes =
+                repository.findAreaLocationTypeByTypeName(areaTypeEntry.getAreaType().value().toUpperCase());
 
         if (areasLocationTypes.isEmpty()) {
             throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR, areasLocationTypes);
@@ -134,7 +131,7 @@ public class AreaDetailsServiceBean implements AreaDetailsService {
     }
 
     private AreaDetails createAreaDetailsSpatialResponse(Map<String, Object> properties, AreaTypeEntry areaTypeEntry) {
-        List<AreaProperty> areaProperties = Lists.newArrayList();
+        List<AreaProperty> areaProperties = new ArrayList<>();
         for (Map.Entry<String, Object> entry : properties.entrySet()) {
             AreaProperty areaProperty = new AreaProperty();
             areaProperty.setPropertyName(entry.getKey());
