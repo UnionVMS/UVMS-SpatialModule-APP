@@ -279,8 +279,8 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     }
 
     @Override
-    public List<PortAreasEntity> findPortAreaById(Long portAreaId) throws ServiceException {
-        return findEntityByNamedQuery(PortAreasEntity.class, QueryNameConstants.FIND_PORT_AREA_BY_ID, with("portAreaId", portAreaId).parameters(), 1);
+    public List<PortAreasEntity> findPortAreaById(Long id) throws ServiceException {
+        return portAreaDao.findOne(id);
     }
 
     @Override
@@ -362,18 +362,18 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     }
 
     @Override
-    public AreaLocationTypesEntity findAreaLocationTypeByTypeName(String typeName) throws ServiceException {
-        return areaLocationTypeDao.findBy(typeName);
+    public List<AreaLocationTypesEntity> findAreaLocationTypeByTypeName(String typeName) throws ServiceException {
+        return areaLocationTypeDao.findByTypeName(typeName);
     }
 
     @Override
     public List<AreaLocationTypesEntity> findAllIsPointIsSystemWide(Boolean isLocation, Boolean isSystemWide) throws ServiceException {
-        return areaLocationTypeDao.findAllIsLocationIsSystemWide(isLocation, isSystemWide);
+        return areaLocationTypeDao.findByIsLocationAndIsSystemWide(isLocation, isSystemWide);
     }
 
     @Override
     public List<AreaLocationTypesEntity> findAllIsLocation(Boolean isLocation) throws ServiceException {
-        return areaLocationTypeDao.findAllIsLocation(isLocation);
+        return areaLocationTypeDao.findByIsLocation(isLocation);
     }
 
     @Override

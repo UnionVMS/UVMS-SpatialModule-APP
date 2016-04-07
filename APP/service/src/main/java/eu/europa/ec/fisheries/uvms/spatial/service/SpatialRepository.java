@@ -115,7 +115,7 @@ public interface SpatialRepository extends DAO {
 
     List findUserAreaByIntersect(Point point) throws ServiceException;
 
-    AreaLocationTypesEntity findAreaLocationTypeByTypeName(String typeName) throws ServiceException;
+    List<AreaLocationTypesEntity> findAreaLocationTypeByTypeName(String typeName) throws ServiceException;
 
     List<AreaLocationTypesEntity> findAllIsPointIsSystemWide(Boolean isLocation, Boolean isSystemWide) throws ServiceException;
 
