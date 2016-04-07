@@ -115,12 +115,10 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
         return userAreaDao.findUserAreaLayerMapping();
     }
 
-
     @Override
     public List<UserAreasEntity> findUserAreaDetailsByLocation(String userName, Point point) {
         return userAreaDao.findUserAreaDetailsWithGeom(userName, point);
     }
-
 
     @Override
     public List<Map<String, String>> findSelectedAreaColumns(String namedQueryString, Number gid) {
