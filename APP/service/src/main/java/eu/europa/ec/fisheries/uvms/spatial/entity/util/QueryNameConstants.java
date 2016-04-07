@@ -30,7 +30,6 @@ public final class QueryNameConstants {
     public static final String FIND_ALL_USER_AREAS = "UserArea.findAllUserAreas";
     public static final String FIND_ALL_USER_AREAS_GROUP = "UserArea.findAllUserAreaGroup";
     public static final String FIND_ALL_USER_AREAS_BY_GIDS = "UserAreas.findAllUserAreasByGid";
-    public static final String FIND_USER_AREA_TYPES = "UserArea.findUserAreaTypes";
 
     /**
      * Find Area By Name

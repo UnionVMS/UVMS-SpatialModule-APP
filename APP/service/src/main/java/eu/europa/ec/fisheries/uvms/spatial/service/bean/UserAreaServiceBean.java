@@ -159,7 +159,15 @@ public class UserAreaServiceBean implements UserAreaService {
     @Override
     @Transactional
     public List<String> getUserAreaTypes(String userName, String scopeName, boolean isPowerUser) throws ServiceException {
-        return repository.getUserAreaTypes(userName, scopeName, isPowerUser);
+
+        List<String> stringList = new ArrayList<>();
+        List<UserAreasEntity> userArea = repository.findUserArea(userName, scopeName, isPowerUser);
+
+        for (UserAreasEntity entity : userArea){
+            stringList.add(entity.getType());
+        }
+
+        return stringList;
     }
 
     @Override

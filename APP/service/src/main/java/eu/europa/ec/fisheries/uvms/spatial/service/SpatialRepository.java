@@ -35,8 +35,6 @@ public interface SpatialRepository extends DAO {
 
     List<Map<String, String>> findSelectedAreaColumns(String namedQueryString, Number gid);
 
-    List<UserAreasEntity> findUserAreaDetailsByLocation(String userName, Point point);
-
     List<Map<String, String>> findAllCountriesDesc();
 
     EezEntity getEezById(Long id) throws ServiceException;
@@ -85,8 +83,6 @@ public interface SpatialRepository extends DAO {
 
     int disableAllPortAreas() throws ServiceException;
 
-    List<String> getUserAreaTypes(String userName, String scopeName, boolean isPowerUser) throws ServiceException;
-
     BookmarkEntity create(BookmarkEntity bookmark) throws ServiceException;
 
     Set<Bookmark> listBookmarksBy(String userName) throws ServiceException;
@@ -97,13 +93,9 @@ public interface SpatialRepository extends DAO {
 
     ProjectionEntity findProjection(Integer srsCode) throws ServiceException;
 
-    List<String> getAreaGroups(String userName, String scopeName, boolean isPowerUser);
-
-    List<UserAreasEntity> findUserAreasByType(String userName, String scopeName, String type, boolean isPowerUser) throws ServiceException;
-
     void deleteReportConnectServiceAreas(Long id);
 
-    void deleteReportConnectServiceAreas(Set<ReportConnectServiceAreasEntity> reportConnectServiceAreases);
+    void deleteReportConnectServiceAreas(Set<ReportConnectServiceAreasEntity> reportConnectServiceAreas);
 
     ReportConnectSpatialEntity findReportConnectSpatialById(Long reportId, Long id) throws ServiceException;
 
@@ -127,7 +119,13 @@ public interface SpatialRepository extends DAO {
 
     ServiceLayerEntity getByAreaLocationType(String areaLocationType) throws ServiceException;
 
+    List<UserAreasEntity> findUserAreasByType(String userName, String scopeName, String type, boolean isPowerUser) throws ServiceException;
+
+    List<UserAreasEntity> findUserArea(String userName, String scopeName, boolean isPowerUser) throws ServiceException;
+
     List<UserAreasEntity> listUserAreaByCriteria(String userName, String scopeName, String searchCriteria, boolean isPowerUser) throws ServiceException;
+
+    List<UserAreasEntity> findUserAreaDetailsByLocation(String userName, Point point);
 
     UserAreasEntity getUserAreaByUserNameAndName(String userName, String name) throws ServiceException;
 

@@ -41,8 +41,8 @@ import java.util.Set;
                         "LEFT JOIN area.scopeSelection scope WHERE area.userName = :userName OR scope.name = :scopeName"),
         @NamedQuery(name = QueryNameConstants.FIND_ALL_USER_AREAS_BY_GIDS,
                 query = "SELECT area.gid as gid, area.name as name, area.areaDesc as desc FROM UserAreasEntity area WHERE area.gid IN (:gids)"),
-        @NamedQuery(name = QueryNameConstants.FIND_USER_AREA_TYPES,
-                query = "SELECT DISTINCT area.type FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection WHERE  area.type<>'' AND area.type <> null AND ((1=:isPowerUser) OR (area.userName=:userName OR scopeSelection.name=:scopeName))"),
+        @NamedQuery(name = UserAreasEntity.FIND_USER_AREA_BY_USER,
+                query = "SELECT DISTINCT area FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection WHERE  area.type<>'' AND area.type <> null AND ((1=:isPowerUser) OR (area.userName=:userName OR scopeSelection.name=:scopeName))"),
         @NamedQuery(name = QueryNameConstants.FIND_ALL_USER_AREAS_GROUP,
                 query = "SELECT distinct area.type as name FROM UserAreasEntity area " +
                         "LEFT JOIN area.scopeSelection scope WHERE (area.userName = :userName OR (scope.name = :scopeName AND scope.userAreas = area))"),
@@ -65,6 +65,7 @@ public class UserAreasEntity implements Serializable {
     public static final String FIND_BY_USERNAME_AND_NAME = "userAreasEntity.findByUserNameAndName";
     public static final String FIND_USER_AREA_BY_ID = "UserArea.findUserAreaById";
     public static final String FIND_USER_AREA_BY_TYPE = "UserArea.findUserAreaByType";
+    public static final String FIND_USER_AREA_BY_USER = "UserArea.findUserAreaTypes";
 
     @Id
     @Column(name = "gid")
