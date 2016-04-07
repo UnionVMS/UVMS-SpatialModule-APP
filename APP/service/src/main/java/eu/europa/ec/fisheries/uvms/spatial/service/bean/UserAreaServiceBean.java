@@ -69,7 +69,7 @@ public class UserAreaServiceBean implements UserAreaService {
             userAreasEntity.setUserName(userName);
             userAreasEntity.setCreatedOn(new Date());
 
-            UserAreasEntity persistedEntity = (UserAreasEntity) repository.createEntity(userAreasEntity); // TODO @Greg use DAO
+            UserAreasEntity persistedEntity = repository.save(userAreasEntity);
 
             if (StringUtils.isNotBlank(persistedEntity.getDatasetName())) {
                 usmService.createDataset(USMSpatial.APPLICATION_NAME, persistedEntity.getDatasetName(), createDescriminator(persistedEntity), USMSpatial.USM_DATASET_CATEGORY, USMSpatial.USM_DATASET_DESCRIPTION);
@@ -115,7 +115,7 @@ public class UserAreaServiceBean implements UserAreaService {
         userAreasEntityToUpdate.setGid(persistentUserArea.getGid());
         userAreasEntityToUpdate.setScopeSelection(createScopeSelection(userAreaDto, persistentUserArea));
 
-        UserAreasEntity persistedUpdatedEntity = (UserAreasEntity) repository.updateEntity(userAreasEntityToUpdate);
+        UserAreasEntity persistedUpdatedEntity = (UserAreasEntity) repository.update(userAreasEntityToUpdate);
 
         return persistedUpdatedEntity.getGid();
     }
