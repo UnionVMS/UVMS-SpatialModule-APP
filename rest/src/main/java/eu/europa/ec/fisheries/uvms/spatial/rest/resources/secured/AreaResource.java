@@ -175,7 +175,8 @@ public class AreaResource extends UnionVMSResource {
     public Response getLocationDetails(LocationCoordinateType locationDto) throws IOException, ParseException, ServiceException {
         LocationDetails locationDetails = spatialService.getLocationDetails(mapper.getLocationTypeEntry(locationDto));
         LocationDetailsGeoJsonDto locationDetailsGeoJsonDto = mapper.getLocationDetailsDto(locationDetails);
-        return createSuccessResponse(locationDetailsGeoJsonDto.convert());
+        ObjectNode nodes = new FeatureToGeoJsonJacksonMapper().convert(locationDetailsGeoJsonDto.toFeature());
+        return createSuccessResponse(nodes);
     }
 
 }
