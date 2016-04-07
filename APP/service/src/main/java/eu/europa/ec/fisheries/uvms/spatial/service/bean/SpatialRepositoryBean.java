@@ -292,25 +292,21 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
        return userAreaDao.findByUserNameAndScopeNameAndTypeAndPowerUser(userName, scopeName, type, isPowerUser);
     }
 
-    // AreaRepository
     @Override
     public List<EezEntity> findEezByIntersect(final Point point) throws ServiceException {
         return eezDao.intersects(point);
     }
 
-    // AreaRepository
     @Override
     public List findPortAreaByIntersect(final Point point) throws ServiceException {
         return portAreaDao.intersects(point);
     }
 
-    // AreaRepository
     @Override
     public List findRfmoByIntersect(final Point point) throws ServiceException {
         return rfmoDao.intersects(point);
     }
 
-    // AreaRepository
     @Override
     public List findUserAreaByIntersect(final Point point) throws ServiceException {
         return userAreaDao.intersects(point);
