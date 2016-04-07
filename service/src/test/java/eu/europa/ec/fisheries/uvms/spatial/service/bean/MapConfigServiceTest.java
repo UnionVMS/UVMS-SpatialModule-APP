@@ -25,8 +25,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 /**
@@ -138,14 +136,14 @@ public class MapConfigServiceTest {
         Mockito.when(repository.findProjectionById(Mockito.any(Long.class))).thenReturn(Arrays.asList(getProjectionDto()));
         Mockito.when(repository.findReportConnectServiceAreas(Mockito.any(Integer.class))).thenReturn(null);
         Mockito.when(repository.findReportConnectSpatialBy(Mockito.any(Long.class))).thenReturn(null);
-        Mockito.when(repository.findSystemConfigByName(Mockito.any(Map.class))).thenReturn("http://localhost:8080/geoserver/");
+        Mockito.when(repository.findSystemConfigByName(Mockito.any(String.class))).thenReturn("http://localhost:8080/geoserver/");
         Mockito.when(repository.findServiceLayerEntityByIds(Mockito.any(List.class))).thenReturn(getServiceLayers());
     }
     private void mockGenMapProjectionWithoutDefaultConfig() throws IOException, ServiceException {
         Mockito.when(repository.findProjectionByMap(Mockito.any(Integer.class))).thenReturn(Arrays.asList(getProjectionDto()));
         Mockito.when(repository.findReportConnectSpatialBy(Mockito.any(Long.class))).thenReturn(getReportConnectSpatialEntity());
         Mockito.when(repository.findReportConnectServiceAreas(Mockito.any(Integer.class))).thenReturn(getReportConnectServiceAreas());
-        Mockito.when(repository.findSystemConfigByName(Mockito.any(Map.class))).thenReturn("http://localhost:8080/geoserver/");
+        Mockito.when(repository.findSystemConfigByName(Mockito.any(String.class))).thenReturn("http://localhost:8080/geoserver/");
     }
 
     private List<ServiceLayerEntity> getServiceLayers() {
