@@ -3,20 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
- import eu.europa.ec.fisheries.uvms.spatial.dao.AreaDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.AreaLocationTypesDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.BookmarkDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.CountryDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.EezDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.MapConfigDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.PortAreaDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.ProjectionDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.ReportConnectServiceAreaDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.ReportConnectSpatialDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.RfmoDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.ServiceLayerDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.SysConfigDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.UserAreaJpaDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.*;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.BookmarkEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
@@ -68,6 +55,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     private AreaLocationTypesDao areaLocationTypeDao;
     private ServiceLayerDao serviceLayerDao;
     private ReportConnectServiceAreaDao connectServiceAreaDao;
+    private PortDao portDao;
 
     @Override
     public EntityManager getEntityManager() {
@@ -90,6 +78,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
         areaLocationTypeDao = new AreaLocationTypesDao(em);
         serviceLayerDao = new ServiceLayerDao(em);
         connectServiceAreaDao = new ReportConnectServiceAreaDao(em);
+        portDao = new PortDao(em);
     }
 
     @Override
@@ -251,7 +240,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
 
     @Override
     public Integer disableAllPortLocations() throws ServiceException {
-        return updateEntityByNamedQuery(QueryNameConstants.DISABLE_PORT_LOCATIONS);
+        return portDao.disable();
     }
 
     @Override

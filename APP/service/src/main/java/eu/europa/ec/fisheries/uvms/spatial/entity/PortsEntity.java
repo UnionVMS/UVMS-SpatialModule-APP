@@ -2,7 +2,6 @@ package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.spatial.entity.converter.CharBooleanConverter;
-import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.GeoJsonDto;
 import org.hibernate.annotations.Type;
@@ -22,18 +21,13 @@ import java.util.Date;
 
 @Entity
 @NamedQueries({
-        @NamedQuery(name = QueryNameConstants.DISABLE_PORT_LOCATIONS, query = "update PortsEntity set enabled = 'N'")
+        @NamedQuery(name = PortsEntity.DISABLE_PORT_LOCATIONS, query = "UPDATE PortsEntity SET enabled = 'N'")
 })
-//@NamedNativeQueries({
-//        @NamedNativeQuery(
-//                name = PortsEntity.PORT_BY_COORDINATE,
-//                query = "select * from port where enabled = 'Y' order by ST_Distance_Spheroid(geom, st_geomfromtext(CAST(:wktPoint as text), :crs), 'SPHEROID[\"WGS 84\",6378137,298.257223563]') limit 1"
-//                , resultSetMapping = "implicit.port")
-//})
 @Table(name = "port", schema = "spatial")
 public class PortsEntity implements Serializable {
 
     public static final String PORT_BY_COORDINATE = "portEntity.ByCoordinate";
+    public static final String DISABLE_PORT_LOCATIONS = "portsEntity.disablePortLocations";
 
     @Id
     @Column(name = "gid")
