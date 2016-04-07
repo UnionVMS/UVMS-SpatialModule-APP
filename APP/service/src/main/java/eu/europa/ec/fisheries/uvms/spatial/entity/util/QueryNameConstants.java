@@ -51,8 +51,6 @@ public final class QueryNameConstants {
     public static final String RFMO_COLUMNS = "rfmoEntity.findSelectedColumns";
     public static final String USERAREA_COLUMNS = "userAreasEntity.findSelectedColumns";
 
-    public static final String DISABLE_PORT_LOCATIONS = "portsEntity.disablePortLocations";
-
     /**
      * MapDto Config queries
      */
