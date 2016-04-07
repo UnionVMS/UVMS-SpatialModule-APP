@@ -598,7 +598,7 @@ public class MapConfigServiceBean implements MapConfigService {
         // Update Geo Server URL
         String geoServerUrl = systemSettingsDto.getGeoserverUrl();
         String defaultGeoServerUrl = defaultSystemSettingsDto.getGeoserverUrl();
-        if (geoServerUrl != null && geoServerUrl != defaultGeoServerUrl) {
+        if (geoServerUrl != null && !geoServerUrl.equals(defaultGeoServerUrl)) {
             Map<String, String> parameters = ImmutableMap.<String, String>builder().put(NAME, GEO_SERVER).build();
             repository.updateSystemConfig(parameters, geoServerUrl);
         }
