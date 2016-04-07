@@ -51,9 +51,6 @@ public final class QueryNameConstants {
     public static final String RFMO_COLUMNS = "rfmoEntity.findSelectedColumns";
     public static final String USERAREA_COLUMNS = "userAreasEntity.findSelectedColumns";
 
-    public static final String DISABLE_EEZ_AREAS = "eezEntity.disableEezAreas";
-    public static final String DISABLE_RFMO_AREAS = "rfmoEntity.disableRfmoAreas";
-    public static final String DISABLE_PORT_AREAS = "portAreasEntity.disablePortAreas";
     public static final String DISABLE_PORT_LOCATIONS = "portsEntity.disablePortLocations";
 
     /**
