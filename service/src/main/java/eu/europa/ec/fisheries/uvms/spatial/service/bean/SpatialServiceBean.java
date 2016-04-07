@@ -404,11 +404,17 @@ public class SpatialServiceBean implements SpatialService {
     @Transactional
     public List<GenericSystemAreaDto> searchAreasByNameOrCode(final String areaType, final String filter) throws ServiceException {
 
-        final AreaLocationTypesEntity areaLocationType = repository.findAreaLocationTypeByTypeName(areaType.toUpperCase());
+        AreaLocationTypesEntity areaLocationType = null;
         final String toUpperCase = filter.toUpperCase();
         final ArrayList<GenericSystemAreaDto> systemAreaByFilterRecords = new ArrayList<>();
         final WKTWriter2 wktWriter2 = new WKTWriter2();
         final StringBuilder sb = new StringBuilder();
+
+        List<AreaLocationTypesEntity> areaLocationTypeByTypeName = repository.findAreaLocationTypeByTypeName(areaType.toUpperCase());
+
+        if (areaLocationTypeByTypeName != null && !areaLocationTypeByTypeName.isEmpty()){
+            areaLocationType = areaLocationTypeByTypeName.get(0);
+        }
 
         if (areaLocationType == null) {
             throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
@@ -450,10 +456,16 @@ public class SpatialServiceBean implements SpatialService {
         final String id = locationTypeEntry.getId();
         final String locationType = locationTypeEntry.getLocationType();
         final List<LocationProperty> locationProperties = new ArrayList<>();
-        final AreaLocationTypesEntity locationTypesEntity =
+        AreaLocationTypesEntity locationTypesEntity = null;
+
+        List<AreaLocationTypesEntity> areaLocationTypeByTypeName =
                 repository.findAreaLocationTypeByTypeName(locationType.toUpperCase());
 
-        if (locationTypeEntry.getId() != null) {
+        if(areaLocationTypeByTypeName != null && !areaLocationTypeByTypeName.isEmpty()){
+            locationTypesEntity = areaLocationTypeByTypeName.get(0);
+        }
+
+        if (locationTypesEntity != null && locationTypeEntry.getId() != null) {
 
             if (!StringUtils.isNumeric(id)) {
                 throw new SpatialServiceException(SpatialServiceErrors.INVALID_ID_TYPE, id);

@@ -35,11 +35,6 @@ public final class QueryNameConstants {
     public static final String FIND_USER_AREA_BY_TYPE = "UserArea.findUserAreaByType";
 
     /**
-     * Find Ports Area
-     */
-    public static final String FIND_PORT_AREA_BY_ID = "PortArea.findPortAreaById";
-
-    /**
      * Find Area By Name
      */
     public static final String FIND_TYPE_BY_NAMES = "AreaLocationType.findAreaByNames";

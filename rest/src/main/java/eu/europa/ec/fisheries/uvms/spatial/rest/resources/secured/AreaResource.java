@@ -2,6 +2,7 @@ package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
@@ -22,6 +23,7 @@ import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.service.interceptor.ValidationInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.model.constants.USMSpatial;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationDetails;
 import eu.europa.ec.fisheries.uvms.spatial.rest.type.geocoordinate.AreaCoordinateType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.type.geocoordinate.LocationCoordinateType;
@@ -103,7 +105,10 @@ public class AreaResource extends UnionVMSResource {
     @Path("/areaproperties")
     @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
     public Response getAreaProperties(List<AreaCoordinateType> areaDtoList) throws ServiceException {
-    	return createSuccessResponse(searchAreaService.getSelectedAreaColumns(mapper.getAreaTypeEntryList(areaDtoList)));
+
+        List<AreaTypeEntry> areaTypeEntryList = mapper.getAreaTypeEntryList(areaDtoList);
+        List<Map<String, String>> selectedAreaColumns = searchAreaService.getSelectedAreaColumns(areaTypeEntryList);
+        return createSuccessResponse(selectedAreaColumns);
     }
    
     @GET

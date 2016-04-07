@@ -7,7 +7,6 @@ import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.transaction.Transactional;
-import com.google.common.collect.ImmutableMap;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
@@ -24,14 +23,14 @@ import org.apache.commons.lang3.StringUtils;
 public class SearchAreaServiceBean implements SearchAreaService {
 
     private static final String GID = "gid";
-    private static final String TYPE_NAME = "typeName";
     private static final String AREA_TYPE = "areaType";
 
     private @EJB SpatialRepository repository;
 
     @Override
     @Transactional
-    public List<Map<String, String>> getSelectedAreaColumns(List<AreaTypeEntry> areaTypes) throws ServiceException {
+    public List<Map<String, String>> getSelectedAreaColumns(final List<AreaTypeEntry> areaTypes) throws ServiceException {
+
         List<Map<String, String>> columnMapList = new ArrayList<>();
 
         for(AreaTypeEntry areaTypeEntry : areaTypes) {
@@ -43,40 +42,35 @@ public class SearchAreaServiceBean implements SearchAreaService {
                 throw new SpatialServiceException(SpatialServiceErrors.INVALID_ID_TYPE, gid);
             }
 
-            Map<String, String> parameters = ImmutableMap.<String, String>builder().put(TYPE_NAME, areaType.toUpperCase()).build();
-
-            List<AreaLocationTypesEntity> areasLocationTypes =
-                    repository.findEntityByNamedQuery(AreaLocationTypesEntity.class, AreaLocationTypesEntity.FIND_TYPE_BY_NAME, parameters, 1); // TODO @Greg Dao
+            List<AreaLocationTypesEntity> areasLocationTypes = repository.findAreaLocationTypeByTypeName(areaType.toUpperCase());
 
             if (areasLocationTypes.isEmpty()) {
                 throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR, areasLocationTypes);
             }
 
-            columnMapList.add(getSelectedColumnMap(areaTypeEntry.getAreaType().value(), areaTypeEntry.getId()));
+            String namedQuery = null;
+
+            for (SpatialTypeEnum type : SpatialTypeEnum.values()) {
+                if(type.getType().equalsIgnoreCase(areaType)) {
+                    namedQuery = type.getNamedQuery();
+                }
+            }
+
+            List<Map<String, String>> selectedAreaColumns = repository.findSelectedAreaColumns(namedQuery, Long.parseLong(gid));
+
+            if (selectedAreaColumns.isEmpty()) {
+                throw new SpatialServiceException(SpatialServiceErrors.ENTITY_NOT_FOUND);
+            }
+
+            Map<String, String> columnMap = selectedAreaColumns.get(0);
+            columnMap.put(GID, gid);
+            columnMap.put(AREA_TYPE, areaType.toUpperCase());
+
+            columnMapList.add(columnMap);
+
         }
 
         return columnMapList;
     }
 
-    private Map<String, String> getSelectedColumnMap(String areaType, String gid) {
-
-        String namedQuery = null;
-
-        for (SpatialTypeEnum type : SpatialTypeEnum.values()) {
-            if(type.getType().equalsIgnoreCase(areaType)) {
-                namedQuery = type.getNamedQuery();
-            }
-        }
-
-        List<Map<String, String>> selectedAreaColumns = repository.findSelectedAreaColumns(namedQuery, Long.parseLong(gid));
-
-        if (selectedAreaColumns.isEmpty()) {
-            throw new SpatialServiceException(SpatialServiceErrors.ENTITY_NOT_FOUND);
-        }
-
-        Map<String, String> columnMap = selectedAreaColumns.get(0);
-        columnMap.put(GID, gid);
-        columnMap.put(AREA_TYPE, areaType.toUpperCase());
-        return columnMap;
-    }
 }
