@@ -3,8 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
-import eu.europa.ec.fisheries.uvms.service.QueryParameter;
-import eu.europa.ec.fisheries.uvms.spatial.dao.AreaDao;
+ import eu.europa.ec.fisheries.uvms.spatial.dao.AreaDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.AreaLocationTypesDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.BookmarkDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.CountryDao;
@@ -12,6 +11,7 @@ import eu.europa.ec.fisheries.uvms.spatial.dao.EezDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.MapConfigDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.PortAreaDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.ProjectionDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.ReportConnectServiceAreaDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.ReportConnectSpatialDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.RfmoDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.ServiceLayerDao;
@@ -29,7 +29,6 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.config.SysConfigEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.bookmark.Bookmark;
-import eu.europa.ec.fisheries.uvms.spatial.model.constants.USMSpatial;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
@@ -43,13 +42,10 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static eu.europa.ec.fisheries.uvms.service.QueryParameter.with;
-import static org.apache.commons.collections.CollectionUtils.isEmpty;
 import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 
 @Stateless
@@ -71,6 +67,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     private RfmoDao rfmoDao;
     private AreaLocationTypesDao areaLocationTypeDao;
     private ServiceLayerDao serviceLayerDao;
+    private ReportConnectServiceAreaDao connectServiceAreaDao;
 
     @Override
     public EntityManager getEntityManager() {
@@ -92,6 +89,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
         rfmoDao = new RfmoDao(em);
         areaLocationTypeDao = new AreaLocationTypesDao(em);
         serviceLayerDao = new ServiceLayerDao(em);
+        connectServiceAreaDao = new ReportConnectServiceAreaDao(em);
     }
 
     @Override
@@ -262,16 +260,6 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     }
 
     @Override
-    public List<String> getUserAreaTypes(String userName, String scopeName, boolean isPowerUser) throws ServiceException {
-        QueryParameter params = with(USMSpatial.USER_NAME, userName).and(USMSpatial.SCOPE_NAME, scopeName).and("isPowerUser", isPowerUser?1:0);
-        List<String> userAreaTypes = findEntityByNamedQuery(String.class, QueryNameConstants.FIND_USER_AREA_TYPES, params.parameters());
-        if (isEmpty(userAreaTypes) || userAreaTypes.get(0) == null) {
-            return Collections.emptyList();
-        }
-        return userAreaTypes;
-    }
-
-    @Override
     public List<PortAreasEntity> findPortAreaById(Long id) throws ServiceException {
         return portAreaDao.findOne(id);
     }
@@ -308,11 +296,6 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     @Override
     public ProjectionEntity findProjection(Integer srsCode) throws ServiceException {
         return projectionDao.findBySrsCode(srsCode);
-    }
-
-    @Override
-    public List<String> getAreaGroups(String userName, String scopeName, boolean isPowerUser) {
-        return areaDao.listAreaGroups(userName, scopeName, isPowerUser);
     }
 
     @Override
@@ -368,7 +351,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     public void deleteReportConnectServiceAreas(Set<ReportConnectServiceAreasEntity> reportConnectServiceAreases) {
         if (!reportConnectServiceAreases.isEmpty()) {
             for (ReportConnectServiceAreasEntity entity : reportConnectServiceAreases) {
-                deleteEntity(entity);
+                connectServiceAreaDao.delete(entity);
             }
         }
     }
@@ -405,6 +388,11 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     @Override
     public UserAreasEntity getUserAreaByUserNameAndName(String userName, String name) throws ServiceException {
         return userAreaDao.getByUserNameAndName(userName, name);
+    }
+
+    @Override
+    public  List<UserAreasEntity> findUserArea(String userName, String scopeName, boolean isPowerUser) throws ServiceException {
+        return userAreaDao.findUserAreasTypes(userName, scopeName, isPowerUser);
     }
 
     @Override

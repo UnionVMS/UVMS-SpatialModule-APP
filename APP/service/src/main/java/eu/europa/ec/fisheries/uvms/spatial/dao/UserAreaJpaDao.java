@@ -175,4 +175,13 @@ public class UserAreaJpaDao extends AbstractDAO<UserAreasEntity> {
 
         return findEntityByNamedQuery(UserAreasEntity.class, UserAreasEntity.FIND_USER_AREA_BY_TYPE, param.parameters());
     }
+
+    public List<UserAreasEntity> findUserAreasTypes(final String userName, final String scopeName, final Boolean isPowerUser) throws ServiceException {
+
+        QueryParameter param = with("userName", userName)
+                .and("isPowerUser", isPowerUser ? 1 : 0)
+                .and("scopeName", scopeName);
+
+        return findEntityByNamedQuery(UserAreasEntity.class, UserAreasEntity.FIND_USER_AREA_BY_USER, param.parameters());
+    }
 }
