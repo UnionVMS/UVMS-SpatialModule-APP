@@ -26,7 +26,7 @@ import java.util.Date;
                 query = "FROM RfmoEntity WHERE intersects(geom, :shape) = true) AND enabled = 'Y'"),
         @NamedQuery(name = QueryNameConstants.RFMO_COLUMNS,
                 query = "SELECT rfmo.name AS name, rfmo.code AS code FROM RfmoEntity AS rfmo WHERE rfmo.gid =:gid"),
-        @NamedQuery(name = QueryNameConstants.DISABLE_RFMO_AREAS,
+        @NamedQuery(name = RfmoEntity.DISABLE_RFMO_AREAS,
                 query = "UPDATE RfmoEntity SET enabled = 'N'")
 })
 @Where(clause = "enabled = 'Y'")
@@ -34,6 +34,7 @@ import java.util.Date;
 public class RfmoEntity implements Serializable {
 
     public static final String RFMO_BY_COORDINATE = "rfmoEntity.ByCoordinate";
+    public static final String DISABLE_RFMO_AREAS = "rfmoEntity.disableRfmoAreas";
 
     @Id
     @Column(name = "gid")

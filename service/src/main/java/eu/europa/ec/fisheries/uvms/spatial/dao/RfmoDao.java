@@ -25,4 +25,8 @@ public class RfmoDao extends AbstractDAO<RfmoEntity> {
     public List<RfmoEntity> intersects(final Geometry shape) throws ServiceException {
         return findEntityByNamedQuery(RfmoEntity.class, RfmoEntity.RFMO_BY_COORDINATE, QueryParameter.with("shape", shape).parameters());
     }
+
+    public Integer disable() throws ServiceException {
+        return updateEntityByNamedQuery(RfmoEntity.DISABLE_RFMO_AREAS);
+    }
 }
