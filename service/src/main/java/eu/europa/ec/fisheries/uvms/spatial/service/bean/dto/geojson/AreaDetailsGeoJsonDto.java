@@ -1,13 +1,8 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.io.ParseException;
-import eu.europa.ec.fisheries.uvms.rest.FeatureToGeoJsonMapper;
 import org.opengis.feature.simple.SimpleFeature;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -32,23 +27,6 @@ public class AreaDetailsGeoJsonDto extends GeoJsonDto {
 
     public void setAllAreaProperties(List<Map<String, Object>> allAreaProperties) {
         this.allAreaProperties = allAreaProperties;
-    }
-
-    public JsonNode convert() throws ParseException, IOException {
-        String convert = new FeatureToGeoJsonMapper().convert(toFeature());// TODO use mapper2
-        return new ObjectMapper().readTree(convert);
-    }
-
-    public JsonNode convert(Map<String, Object> properties) throws ParseException, IOException {
-        return new ObjectMapper().readTree(new FeatureToGeoJsonMapper().convert(toFeature(properties))); // TODO use mapper2
-    }
-
-    public List<JsonNode> convertAll() throws IOException, ParseException {
-        List<JsonNode> nodeList = new ArrayList<JsonNode>();
-        for (Map<String, Object> featureMap : allAreaProperties) {
-            nodeList.add(convert(featureMap));
-        }
-        return nodeList;
     }
 
     public void removeGeometryAllAreas() {

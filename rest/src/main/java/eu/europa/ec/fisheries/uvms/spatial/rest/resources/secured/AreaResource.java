@@ -1,6 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.ejb.EJB;
@@ -17,8 +18,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.vividsolutions.jts.io.ParseException;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.rest.FeatureToGeoJsonJacksonMapper;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.service.interceptor.ValidationInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.model.constants.USMSpatial;
@@ -27,7 +30,11 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationDetails;
 import eu.europa.ec.fisheries.uvms.spatial.rest.type.geocoordinate.AreaCoordinateType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.type.geocoordinate.LocationCoordinateType;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.*;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaDetailsService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.SearchAreaService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.UserAreaService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.AreaDetailsGeoJsonDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.type.AreaFilterType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.type.ResponseCode;
@@ -84,7 +91,8 @@ public class AreaResource extends UnionVMSResource {
                 areaDetailsGeoJsonDto.removeGeometry();
                 return createSuccessResponse(areaDetailsGeoJsonDto.getProperties());
             }
-            response = createSuccessResponse(areaDetailsGeoJsonDto.convert());
+
+            response = createSuccessResponse(new FeatureToGeoJsonJacksonMapper().convert(areaDetailsGeoJsonDto.toFeature()));
 
     	} else {
             List<AreaDetails> areaDetailsList = areaDetailsService.getAreaDetailsByLocation(mapper.getAreaTypeEntry(areaDto));
@@ -93,7 +101,14 @@ public class AreaResource extends UnionVMSResource {
                 areaDetailsGeoJsonDto.removeGeometryAllAreas();
                 return createSuccessResponse(areaDetailsGeoJsonDto.getAllAreaProperties());
             }
-            response = createSuccessResponse(areaDetailsGeoJsonDto.convertAll());
+
+            List<ObjectNode> nodeList = new ArrayList<>();
+
+            for (Map<String, Object> featureMap : areaDetailsGeoJsonDto.getAllAreaProperties()) {
+                ObjectNode convert = new FeatureToGeoJsonJacksonMapper().convert(areaDetailsGeoJsonDto.toFeature(featureMap));
+                nodeList.add(convert);
+            }
+            response = createSuccessResponse(nodeList);
     	}
 
         return response;
