@@ -39,14 +39,14 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
     @SneakyThrows
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public List<String> listAllAreaTypeNames() {
-        return repository.findEntityByNamedQuery(String.class, QueryNameConstants.FIND_ALL_AREA_TYPE_NAMES);
+        return repository.findEntityByNamedQuery(String.class, QueryNameConstants.FIND_ALL_AREA_TYPE_NAMES); // FIXME dao
     }
 
     @Override
     @SneakyThrows
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public List<String> listAllAreaAndLocationTypeNames() {
-        return repository.findEntityByNamedQuery(String.class, QueryNameConstants.FIND_ALL_AREA_AND_LOCATION_TYPE_NAMES);
+        return repository.findEntityByNamedQuery(String.class, QueryNameConstants.FIND_ALL_AREA_AND_LOCATION_TYPE_NAMES); // FIXME dao
     }
 
     @Override
