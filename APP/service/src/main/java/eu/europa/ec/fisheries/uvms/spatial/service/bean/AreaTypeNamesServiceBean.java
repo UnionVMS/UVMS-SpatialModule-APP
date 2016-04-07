@@ -6,11 +6,14 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.*;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaServiceLayerDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaSubTypeEnum;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.LayerSubTypeEnum;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.ServiceLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import lombok.SneakyThrows;
-
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
@@ -93,8 +96,7 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
     }
 
     private String getBingApiKey() throws ServiceException {
-        Map<String, String> parameters = ImmutableMap.<String, String>builder().put(NAME, BING_API_KEY).build();
-        return repository.findSystemConfigByName(parameters);
+        return repository.findSystemConfigByName(BING_API_KEY);
     }
 
     private List<String> constructInParameters(LayerSubTypeEnum layerTypeEnum) {
@@ -143,8 +145,7 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
 
     private String getGeoServerUrl() {
         try {
-            Map<String, String> parameters = ImmutableMap.<String, String>builder().put(NAME, GEO_SERVER).build();
-            String geoServerUrl = repository.findSystemConfigByName(parameters);
+            String geoServerUrl = repository.findSystemConfigByName(GEO_SERVER);
             if (geoServerUrl == null) {
                 throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
             }

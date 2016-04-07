@@ -59,7 +59,7 @@ public interface SpatialRepository extends DAO {
 
     void updateSystemConfig(Map<String, String> parameter, String value) throws ServiceException;
 
-    String findSystemConfigByName(Map<String, String> parameters) throws ServiceException;
+    String findSystemConfigByName(String name) throws ServiceException;
 
     List<SysConfigEntity> findSystemConfigs();
 
