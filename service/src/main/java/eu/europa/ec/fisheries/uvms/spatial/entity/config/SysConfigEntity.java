@@ -1,6 +1,5 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity.config;
 
-import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import lombok.EqualsAndHashCode;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,13 +16,12 @@ import java.io.Serializable;
 @EqualsAndHashCode
 @NamedQueries({
         @NamedQuery(name= SysConfigEntity.FIND_CONFIG_BY_NAME,
-        query = "FROM SysConfigEntity config WHERE config.name = :name"),
-        @NamedQuery(name= QueryNameConstants.FIND_CONFIG,
-                query = "FROM SysConfigEntity config WHERE config.name = :name")
+        query = "FROM SysConfigEntity config WHERE config.name = :name")
 })
 public class SysConfigEntity implements Serializable {
 
     public static final String FIND_CONFIG_BY_NAME = "SysConfig.findConfigById";
+    public static final String FIND_CONFIG = "SysConfig.findConfig";
 
     @Id
     @Column

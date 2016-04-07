@@ -3,18 +3,23 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
-import eu.europa.ec.fisheries.uvms.spatial.dao.*;
-import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.BookmarkEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.PortAreasEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.ProjectionEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.dao.AreaDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.AreaLocationTypesDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.BookmarkDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.CountryDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.EezDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.MapConfigDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.PortAreaDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.PortDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.ProjectionDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.ReportConnectServiceAreaDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.ReportConnectSpatialDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.RfmoDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.ServiceLayerDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.SysConfigDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.UserAreaJpaDao;
+import eu.europa.ec.fisheries.uvms.spatial.entity.*;
 import eu.europa.ec.fisheries.uvms.spatial.entity.config.SysConfigEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.bookmark.Bookmark;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaLayerDto;
@@ -56,11 +61,6 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     private ServiceLayerDao serviceLayerDao;
     private ReportConnectServiceAreaDao connectServiceAreaDao;
     private PortDao portDao;
-
-    @Override
-    public EntityManager getEntityManager() {
-        return em;
-    }
 
     @PostConstruct
     public void init() {
@@ -180,7 +180,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
 
     @Override
     public void updateSystemConfig(Map<String, String> parameters, String value) throws ServiceException {
-        List<SysConfigEntity> configs = findEntityByNamedQuery(SysConfigEntity.class, QueryNameConstants.FIND_CONFIG, parameters);
+        List<SysConfigEntity> configs = sysConfigDao.findSystemConfigByName(value);
         if (configs != null && !configs.isEmpty()) {
             SysConfigEntity sysConfigEntity = configs.get(0);
             sysConfigEntity.setValue(value);
@@ -189,7 +189,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
             String name = new ArrayList<>(parameters.keySet()).get(0);
             sysConfigEntity.setName(name);
             sysConfigEntity.setValue(value);
-            saveOrUpdateEntity(sysConfigEntity);
+            sysConfigDao.saveOrUpdateEntity(sysConfigEntity);
         }
     }
 
@@ -392,5 +392,31 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     @Override
     public UserAreasEntity update(UserAreasEntity entity) throws ServiceException {
         return userAreaDao.update(entity);
+    }
+
+    @Override
+    public PortsEntity createEntity(PortsEntity portsEntity) throws ServiceException {
+        return portDao.createEntity(portsEntity);
+    }
+
+    @Override
+    public EezEntity createEntity(EezEntity eezEntity) throws ServiceException {
+        return eezDao.createEntity(eezEntity);
+    }
+
+    @Override
+    public void deleteEntity(ReportConnectSpatialEntity entity) {
+        reportConnectSpatialDao.deleteEntity(entity);
+    }
+
+    @Override
+    public PortAreasEntity createEntity(PortAreasEntity portAreasEntity) throws ServiceException {
+        return portAreaDao.createEntity(portAreasEntity);
+    }
+
+    @Override
+    public EntityManager getEntityManager() {
+
+        return em;
     }
 }
