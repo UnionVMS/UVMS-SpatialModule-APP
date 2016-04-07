@@ -1,11 +1,15 @@
 package eu.europa.ec.fisheries.uvms.spatial.dao;
 
+import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.spatial.entity.config.SysConfigEntity;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
+
+import static eu.europa.ec.fisheries.uvms.service.QueryParameter.*;
+import static eu.europa.ec.fisheries.uvms.spatial.entity.config.SysConfigEntity.*;
 
 public class SysConfigDao extends AbstractDAO<SysConfigEntity> {
 
@@ -15,8 +19,13 @@ public class SysConfigDao extends AbstractDAO<SysConfigEntity> {
         this.em = em;
     }
 
+    @Override
+    public EntityManager getEntityManager() {
+        return em;
+    }
+
     public List<SysConfigEntity> findSystemConfigs() {
-        TypedQuery<SysConfigEntity> query = em.createQuery("from SysConfigEntity sysConfig", SysConfigEntity.class);
+        TypedQuery<SysConfigEntity> query = em.createQuery("FROM SysConfigEntity sysConfig", SysConfigEntity.class);
         return query.getResultList();
     }
 
@@ -55,8 +64,7 @@ public class SysConfigDao extends AbstractDAO<SysConfigEntity> {
 
     }
 
-    @Override
-    public EntityManager getEntityManager() {
-        return em;
+    public List<SysConfigEntity> findSystemConfigByName(String name) throws ServiceException {
+        return findEntityByNamedQuery(SysConfigEntity.class, FIND_CONFIG_BY_NAME, with("name", name).parameters(), 1);
     }
 }

@@ -526,13 +526,11 @@ public class MapConfigServiceBean implements MapConfigService {
     }
 
     private String getGeoServerUrl() throws ServiceException {
-        Map<String, String> parameters = ImmutableMap.<String, String>builder().put(NAME, GEO_SERVER).build();
-        return repository.findSystemConfigByName(parameters);
+        return repository.findSystemConfigByName(GEO_SERVER);
     }
 
     private String getBingApiKey() throws ServiceException {
-        Map<String, String> parameters = ImmutableMap.<String, String>builder().put(NAME, BING_API_KEY).build();
-        return repository.findSystemConfigByName(parameters);
+        return repository.findSystemConfigByName(BING_API_KEY);
     }
 
     private List<ServiceLayerEntity> getServiceLayers(List<Long> ids, ProjectionDto projection, String bingApiKey) {

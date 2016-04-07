@@ -215,9 +215,9 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     }
 
     @Override
-    public String findSystemConfigByName(Map<String, String> parameters) throws ServiceException {
-        List<String> geoServerUrl = findEntityByNamedQuery(String.class, QueryNameConstants.FIND_CONFIG_BY_NAME, parameters, 1);
-        return (geoServerUrl != null && !geoServerUrl.isEmpty()) ? geoServerUrl.get(0) : null;
+    public String findSystemConfigByName(String name) throws ServiceException {
+        List<SysConfigEntity> entityByNamedQuery = sysConfigDao.findSystemConfigByName(name);
+        return (entityByNamedQuery != null && !entityByNamedQuery.isEmpty()) ? entityByNamedQuery.get(0).getValue() : null;
     }
 
     public List<ServiceLayerDto> findServiceLayerBySubType(List<String> subAreaTypes, boolean isWithBing) {

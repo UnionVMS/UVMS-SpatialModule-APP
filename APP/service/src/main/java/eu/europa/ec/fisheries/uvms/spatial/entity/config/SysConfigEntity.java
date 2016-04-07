@@ -2,24 +2,28 @@ package eu.europa.ec.fisheries.uvms.spatial.entity.config;
 
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import lombok.EqualsAndHashCode;
-
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 import java.io.Serializable;
-
-/**
- * Created by Georgi on 23-Nov-15.
- */
 
 @Entity
 @Table(name = "system_configurations", schema = "spatial")
 @EqualsAndHashCode
 @NamedQueries({
-        @NamedQuery(name= QueryNameConstants.FIND_CONFIG_BY_NAME,
-        query = "SELECT config.value FROM SysConfigEntity config WHERE config.name = :name"),
+        @NamedQuery(name= SysConfigEntity.FIND_CONFIG_BY_NAME,
+        query = "FROM SysConfigEntity config WHERE config.name = :name"),
         @NamedQuery(name= QueryNameConstants.FIND_CONFIG,
                 query = "FROM SysConfigEntity config WHERE config.name = :name")
 })
 public class SysConfigEntity implements Serializable {
+
+    public static final String FIND_CONFIG_BY_NAME = "SysConfig.findConfigById";
 
     @Id
     @Column
