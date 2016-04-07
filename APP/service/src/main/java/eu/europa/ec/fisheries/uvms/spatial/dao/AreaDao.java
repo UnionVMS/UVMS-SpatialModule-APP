@@ -10,6 +10,8 @@ import eu.europa.ec.fisheries.uvms.spatial.service.mapper.GeometryMapper;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaLayerDto;
+import org.hibernate.Query;
+import org.hibernate.transform.AliasToEntityMapResultTransformer;
 
 public class AreaDao extends CommonDao {
 
@@ -37,7 +39,10 @@ public class AreaDao extends CommonDao {
 
     @SuppressWarnings("unchecked")
     public List<Map<String, String>> findSelectedAreaColumns(String namedQueryString, Number gid) {
-        return createNamedQuery(namedQueryString, gid).list();
+        Query query = getSession().getNamedQuery(namedQueryString);
+        query.setParameter("gid", gid);
+        query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
+        return query.list();
     }
 
     public List<ServiceLayerDto> findServiceLayerBySubType(List<String> subAreaTypes, boolean isWithBing) {

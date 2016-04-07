@@ -23,17 +23,17 @@ import java.util.Date;
 
 @Entity
 @NamedQueries({
-        @NamedQuery(name = PortAreasEntity.PORTAREA_BY_COORDINATE,
+        @NamedQuery(name = PortAreasEntity.PORT_AREA_BY_COORDINATE,
                 query = "FROM PortAreasEntity WHERE intersects(geom, :shape) = true) AND enabled = 'Y'"),
         @NamedQuery(name = QueryNameConstants.DISABLE_PORT_AREAS, query = "UPDATE PortAreasEntity SET enabled = 'N'"),
-        @NamedQuery(name = QueryNameConstants.FIND_PORT_AREA_BY_ID,
-                query = "SELECT portarea FROM PortAreasEntity portarea WHERE portarea.gid = :portAreaId")
+        @NamedQuery(name = PortAreasEntity.PORT_AREA_BY_ID, query = "FROM PortAreasEntity WHERE gid = :gid")
 })
 @Where(clause = "enabled = 'Y'")
 @Table(name = "port_area", schema = "spatial")
 public class PortAreasEntity implements Serializable {
 
-    public static final String PORTAREA_BY_COORDINATE = "portEntity.PortAreaByCoordinate";
+    public static final String PORT_AREA_BY_COORDINATE = "portEntity.PortAreaByCoordinate";
+    public static final String PORT_AREA_BY_ID = "PortArea.findPortAreaById";
 
     @Id
     @Column(name = "gid")
