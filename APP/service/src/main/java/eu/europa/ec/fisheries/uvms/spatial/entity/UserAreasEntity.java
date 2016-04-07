@@ -32,7 +32,7 @@ import java.util.Set;
                 query = "FROM UserAreasEntity WHERE intersects(geom, :shape) = true) AND enabled = 'Y'"),
         @NamedQuery(name = QueryNameConstants.FIND_GID_BY_USER,
                 query = "SELECT area.gid FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection WHERE area.userName = :userName OR scopeSelection.name = :scopeName"),
-        @NamedQuery(name = QueryNameConstants.FIND_USER_AREA_BY_ID,
+        @NamedQuery(name = UserAreasEntity.FIND_USER_AREA_BY_ID,
                 query = "SELECT area FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection WHERE area.gid = :userAreaId AND ((1=:isPowerUser) OR (area.userName=:userName OR scopeSelection.name=:scopeName))"),
         @NamedQuery(name = QueryNameConstants.USERAREA_COLUMNS,
                 query = "SELECT userArea.name as name, userArea.areaDesc as desc FROM UserAreasEntity AS userArea WHERE userArea.gid =:gid"),
@@ -63,6 +63,7 @@ public class UserAreasEntity implements Serializable {
     public static final String FIND_GID_FOR_SHARED_AREA = "userAreasEntity.findGidForSharedAreas";
     public static final String SEARCH_BY_CRITERIA = "userAreasEntity.searchByCriteria";
     public static final String FIND_BY_USERNAME_AND_NAME = "userAreasEntity.findByUserNameAndName";
+    public static final String FIND_USER_AREA_BY_ID = "UserArea.findUserAreaById";
 
     @Id
     @Column(name = "gid")
