@@ -134,4 +134,12 @@ public class UserAreaJpaDao extends AbstractDAO<UserAreasEntity> {
         return result;
 
     }
+
+    public UserAreasEntity save(UserAreasEntity userAreasEntity) throws ServiceException {
+        return createEntity(userAreasEntity);
+    }
+
+    public UserAreasEntity update(UserAreasEntity entity) throws ServiceException {
+        return updateEntity(entity);
+    }
 }
