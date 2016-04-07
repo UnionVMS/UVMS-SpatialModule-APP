@@ -11,6 +11,7 @@ import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.service.QueryParameter;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
+import eu.europa.ec.fisheries.uvms.spatial.model.constants.USMSpatial;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaDto;
 import org.apache.commons.collections.CollectionUtils;
@@ -163,5 +164,15 @@ public class UserAreaJpaDao extends AbstractDAO<UserAreasEntity> {
 
     public UserAreasEntity update(UserAreasEntity entity) throws ServiceException {
         return updateEntity(entity);
+    }
+
+    public List<UserAreasEntity> findByUserNameAndScopeNameAndTypeAndPowerUser(String userName, String scopeName, String type, boolean isPowerUser) throws ServiceException {
+
+        QueryParameter param = with("type", type)
+                .and("userName", userName)
+                .and("isPowerUser", isPowerUser ? 1 : 0)
+                .and("scopeName", scopeName);
+
+        return findEntityByNamedQuery(UserAreasEntity.class, UserAreasEntity.FIND_USER_AREA_BY_TYPE, param.parameters());
     }
 }

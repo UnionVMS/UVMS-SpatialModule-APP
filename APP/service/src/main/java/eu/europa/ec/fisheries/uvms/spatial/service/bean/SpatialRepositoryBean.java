@@ -94,7 +94,6 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
         serviceLayerDao = new ServiceLayerDao(em);
     }
 
-
     @Override
     public List findAreaOrLocationByCoordinates(Point point, String nativeQueryString) {
         return areaDao.findAreaOrLocationByCoordinates(point, nativeQueryString);
@@ -174,14 +173,12 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
 
     @Override
     public boolean saveOrUpdateMapConfiguration(final ReportConnectSpatialEntity mapConfiguration) throws ServiceException {
-        validateMapConfiguration(mapConfiguration);
-        return reportConnectSpatialDao.saveOrUpdateEntity(mapConfiguration) != null;
-    }
 
-    private void validateMapConfiguration(ReportConnectSpatialEntity mapConfiguration) {
         if (mapConfiguration == null) {
             throw new IllegalArgumentException("MAP CONFIGURATION CAN NOT BE NULL");
         }
+
+        return reportConnectSpatialDao.saveOrUpdateEntity(mapConfiguration) != null;
     }
 
     @Override
@@ -284,7 +281,6 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
         return userAreaDao.findAllUserAreasByGids(gids);
     }
 
-
     @Override
     public BookmarkEntity create(BookmarkEntity bookmark) throws ServiceException {
         return bookmarkDao.createEntity(bookmark);
@@ -321,16 +317,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
 
     @Override
     public List<UserAreasEntity> findUserAreasByType(String userName, String scopeName, String type, boolean isPowerUser) throws ServiceException {
-        List<UserAreasEntity> userAreasDTOs;
-        QueryParameter params = with(USMSpatial.USER_NAME, userName).and(USMSpatial.SCOPE_NAME, scopeName).and("isPowerUser", isPowerUser?1:0).and("type", type);
-        List<UserAreasEntity>  userAreas = findEntityByNamedQuery(UserAreasEntity.class, QueryNameConstants.FIND_USER_AREA_BY_TYPE, params.parameters());
-        if (isEmpty(userAreas)) {
-            userAreasDTOs = Collections.emptyList();
-        } else {
-            userAreasDTOs = userAreas;
-        }
-
-        return userAreasDTOs;
+       return userAreaDao.findByUserNameAndScopeNameAndTypeAndPowerUser(userName, scopeName, type, isPowerUser);
     }
 
     // AreaRepository

@@ -20,7 +20,7 @@ import java.util.Set;
                         "WHERE ((1=:isPowerUser) OR (area.userName=:userName OR scopeSelection.name=:scopeName)) " +
                         "AND (UPPER(area.name) LIKE UPPER(:searchCriteria) OR UPPER(area.areaDesc) LIKE UPPER(:searchCriteria))" +
                         "GROUP BY area.gid"),
-        @NamedQuery(name = QueryNameConstants.FIND_USER_AREA_BY_TYPE,
+        @NamedQuery(name = UserAreasEntity.FIND_USER_AREA_BY_TYPE,
                 query = "SELECT area " +
                         "FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection " +
                         "WHERE area.type = :type " +
@@ -64,6 +64,7 @@ public class UserAreasEntity implements Serializable {
     public static final String SEARCH_BY_CRITERIA = "userAreasEntity.searchByCriteria";
     public static final String FIND_BY_USERNAME_AND_NAME = "userAreasEntity.findByUserNameAndName";
     public static final String FIND_USER_AREA_BY_ID = "UserArea.findUserAreaById";
+    public static final String FIND_USER_AREA_BY_TYPE = "UserArea.findUserAreaByType";
 
     @Id
     @Column(name = "gid")
