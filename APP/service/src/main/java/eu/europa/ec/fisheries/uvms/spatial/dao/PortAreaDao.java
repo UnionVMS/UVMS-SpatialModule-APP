@@ -34,4 +34,8 @@ public class PortAreaDao extends AbstractDAO<PortAreasEntity> {
     public List<PortAreasEntity> findOne(final Long id) throws ServiceException {
         return findEntityByNamedQuery(PortAreasEntity.class, PORT_AREA_BY_ID, with("gid", id).parameters(), 1);
     }
+
+    public Integer disable() throws ServiceException {
+        return updateEntityByNamedQuery(PortAreasEntity.DISABLE_PORT_AREAS);
+    }
 }
