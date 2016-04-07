@@ -19,6 +19,9 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
 
+import static eu.europa.ec.fisheries.uvms.service.QueryParameter.with;
+import static eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity.*;
+
 public class UserAreaJpaDao extends AbstractDAO<UserAreasEntity> {
 
     private EntityManager em;
@@ -38,11 +41,11 @@ public class UserAreaJpaDao extends AbstractDAO<UserAreasEntity> {
     }
 
     public List<UserAreasEntity> intersects(final Geometry shape, final String userName) throws ServiceException {
-        return findEntityByNamedQuery(UserAreasEntity.class, UserAreasEntity.USER_AREA_DETAILS_BY_LOCATION, QueryParameter.with("shape", shape).and("userName", userName).parameters());
+        return findEntityByNamedQuery(UserAreasEntity.class, USER_AREA_DETAILS_BY_LOCATION, QueryParameter.with("shape", shape).and("userName", userName).parameters());
     }
 
     public List<UserAreasEntity> intersects(final Geometry shape) throws ServiceException {
-        return findEntityByNamedQuery(UserAreasEntity.class, UserAreasEntity.USER_AREA_BY_COORDINATE, QueryParameter.with("shape", shape).parameters());
+        return findEntityByNamedQuery(UserAreasEntity.class, USER_AREA_BY_COORDINATE, QueryParameter.with("shape", shape).parameters());
     }
 
     public List findUserAreaLayerMapping() {
@@ -60,7 +63,7 @@ public class UserAreaJpaDao extends AbstractDAO<UserAreasEntity> {
 				put("shape", "SRID=" + crs + ";" + wkt). // TODO Check on oracle
 				build();
 
-        Query query = getSession().getNamedQuery(UserAreasEntity.USER_AREA_DETAILS_BY_LOCATION);
+        Query query = getSession().getNamedQuery(USER_AREA_DETAILS_BY_LOCATION);
         for (Map.Entry<String, Object> entry : parameters.entrySet()) {
             query.setParameter(entry.getKey(), entry.getValue());
         }
@@ -83,7 +86,7 @@ public class UserAreaJpaDao extends AbstractDAO<UserAreasEntity> {
 
     public List<Long> getAllSharedGids(String userName, String scopeName, String type) {
         Map<String, Object> parameters = ImmutableMap.<String, Object>builder().put(USER_NAME, userName).put(SCOPE_NAME, scopeName).put(TYPE, type).build();
-        Query query = createNamedNativeQuery(UserAreasEntity.FIND_GID_FOR_SHARED_AREA, parameters);
+        Query query = createNamedNativeQuery(FIND_GID_FOR_SHARED_AREA, parameters);
         return query.list();
     }
 
@@ -113,7 +116,7 @@ public class UserAreaJpaDao extends AbstractDAO<UserAreasEntity> {
                 .and("scopeName", scopeName)
                 .and("userName", userName).parameters();
 
-        return findEntityByNamedQuery(UserAreasEntity.class, UserAreasEntity.SEARCH_BY_CRITERIA, parameters);
+        return findEntityByNamedQuery(UserAreasEntity.class, SEARCH_BY_CRITERIA, parameters);
 
     }
 
@@ -125,7 +128,26 @@ public class UserAreaJpaDao extends AbstractDAO<UserAreasEntity> {
         UserAreasEntity result = null;
 
         List<UserAreasEntity> entityByNamedQuery =
-                findEntityByNamedQuery(UserAreasEntity.class, UserAreasEntity.FIND_BY_USERNAME_AND_NAME, parameters);
+                findEntityByNamedQuery(UserAreasEntity.class, FIND_BY_USERNAME_AND_NAME, parameters);
+
+        if (!CollectionUtils.isEmpty(entityByNamedQuery)){
+            result = entityByNamedQuery.get(0);
+        }
+
+        return result;
+
+    }
+
+    public UserAreasEntity findOne(final Long userAreaId, final String userName, final Boolean isPowerUser, final String scopeName) throws ServiceException {
+
+        UserAreasEntity result = null;
+
+        QueryParameter param = with("userAreaId", userAreaId)
+                .and("userName", userName)
+                .and("isPowerUser", isPowerUser ? 1 : 0)
+                .and("scopeName", scopeName);
+
+        List<UserAreasEntity> entityByNamedQuery = findEntityByNamedQuery(UserAreasEntity.class, FIND_USER_AREA_BY_ID, param.parameters(), 1);
 
         if (!CollectionUtils.isEmpty(entityByNamedQuery)){
             result = entityByNamedQuery.get(0);
