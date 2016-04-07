@@ -130,4 +130,9 @@ public interface SpatialRepository extends DAO {
     List<UserAreasEntity> listUserAreaByCriteria(String userName, String scopeName, String searchCriteria, boolean isPowerUser) throws ServiceException;
 
     UserAreasEntity getUserAreaByUserNameAndName(String userName, String name) throws ServiceException;
+
+    UserAreasEntity save(UserAreasEntity userAreasEntity) throws ServiceException;
+
+    UserAreasEntity update(UserAreasEntity userAreasEntity) throws ServiceException;
+
 }

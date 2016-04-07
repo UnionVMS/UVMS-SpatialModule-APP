@@ -423,4 +423,14 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     public UserAreasEntity getUserAreaByUserNameAndName(String userName, String name) throws ServiceException {
         return userAreaDao.getByUserNameAndName(userName, name);
     }
+
+    @Override
+    public UserAreasEntity save(UserAreasEntity userAreasEntity) throws ServiceException {
+        return userAreaDao.save(userAreasEntity);
+    }
+
+    @Override
+    public UserAreasEntity update(UserAreasEntity entity) throws ServiceException {
+        return userAreaDao.update(entity);
+    }
 }
