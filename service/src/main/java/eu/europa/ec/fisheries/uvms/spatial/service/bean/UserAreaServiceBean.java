@@ -24,7 +24,6 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialService
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.UserAreaMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.geotools.geometry.jts.WKTReader2;
 import org.geotools.geometry.jts.WKTWriter2;
@@ -40,7 +39,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static eu.europa.ec.fisheries.uvms.spatial.util.ColumnAliasNameHelper.getFieldMap;
 import static eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialUtils.convertToPointInWGS84;
 
@@ -92,13 +90,13 @@ public class UserAreaServiceBean implements UserAreaService {
             throw new SpatialServiceException(SpatialServiceErrors.MISSING_USER_AREA_ID);
         }
 
-        List<UserAreasEntity> persistentUserAreas = repository.findUserAreaById(id, userName, isPowerUser, scopeName);
+        UserAreasEntity userAreaById = repository.findUserAreaById(id, userName, isPowerUser, scopeName);
 
-        if (CollectionUtils.isEmpty(persistentUserAreas)) {
-            throw new SpatialServiceException(SpatialServiceErrors.USER_AREA_DOES_NOT_EXIST, persistentUserAreas);
+        if (userAreaById == null) {
+            throw new SpatialServiceException(SpatialServiceErrors.USER_AREA_DOES_NOT_EXIST, userAreaById);
         }
 
-        UserAreasEntity persistentUserArea = persistentUserAreas.get(0);
+        UserAreasEntity persistentUserArea = userAreaById;
 
         if (!persistentUserArea.getUserName().equals(userName) && !isPowerUser) {
             throw new ServiceException("user_not_authorised");
@@ -144,17 +142,18 @@ public class UserAreaServiceBean implements UserAreaService {
     @Override
     @Transactional
     public void deleteUserArea(Long userAreaId, String userName, boolean isPowerUser, String scopeName) throws ServiceException {
-        List<UserAreasEntity> persistentUserAreas = repository.findUserAreaById(userAreaId, userName, isPowerUser, scopeName);
 
-        if (CollectionUtils.isEmpty(persistentUserAreas)) {
+        UserAreasEntity userAreaById = repository.findUserAreaById(userAreaId, userName, isPowerUser, scopeName);
+
+        if (userAreaById == null) {
             throw new SpatialServiceException(SpatialServiceErrors.USER_AREA_DOES_NOT_EXIST, userAreaId);
         }
 
-        if (!persistentUserAreas.get(0).getUserName().equals(userName) && !isPowerUser) {
+        if (!userAreaById.getUserName().equals(userName) && !isPowerUser) {
             throw new ServiceException("user_not_authorised");
         }
 
-        repository.deleteEntity(persistentUserAreas.get(0));
+        repository.deleteEntity(userAreaById);
     }
 
     @Override
@@ -179,7 +178,7 @@ public class UserAreaServiceBean implements UserAreaService {
 
         List<UserAreasEntity> userAreaDetailsWithExtentByLocation = repository.findUserAreaDetailsByLocation(userName, point);
 
-        List<UserAreaDto> userAreaDtos = newArrayList();
+        List<UserAreaDto> userAreaDtos = new ArrayList<>();
         for (UserAreasEntity userAreaDetails : userAreaDetailsWithExtentByLocation){
             UserAreaDto userAreaDto = new UserAreaDto();
             userAreaDto.setGid(userAreaDetails.getGid());
@@ -217,16 +216,16 @@ public class UserAreaServiceBean implements UserAreaService {
     @Override
     @Transactional
     public List<AreaDetails> getUserAreaDetailsWithExtentById(AreaTypeEntry areaTypeEntry, String userName, boolean isPowerUser, String scopeName) throws ServiceException {
-        List<UserAreasEntity> userAreasDetails = repository.findUserAreaById(Long.parseLong(areaTypeEntry.getId()), userName, isPowerUser, scopeName);
-        try {
-            if (CollectionUtils.isNotEmpty(userAreasDetails)) {
 
-                List<AreaDetails> areaDetailsList = Lists.newArrayList();
-                for (UserAreasEntity userAreasDetail : userAreasDetails) {
-                    Map<String, Object> properties = getFieldMap(userAreasDetail);
-                    addCentroidToProperties(properties);
-                    areaDetailsList.add(createAreaDetailsSpatialResponse(properties, areaTypeEntry));
-                }
+        UserAreasEntity userAreaById = repository.findUserAreaById(Long.parseLong(areaTypeEntry.getId()), userName, isPowerUser, scopeName);
+
+        try {
+            if (userAreaById != null) {
+
+                List<AreaDetails> areaDetailsList = new ArrayList<>();
+                Map<String, Object> properties = getFieldMap(userAreaById);
+                addCentroidToProperties(properties);
+                areaDetailsList.add(createAreaDetailsSpatialResponse(properties, areaTypeEntry));
                 return areaDetailsList;
 
             } else {
@@ -244,15 +243,15 @@ public class UserAreaServiceBean implements UserAreaService {
     @Override
     @Transactional
     public List<AreaDetails> getUserAreaDetailsById(AreaTypeEntry areaTypeEntry, String userName, boolean isPowerUser, String scopeName) throws ServiceException {
-        List<UserAreasEntity> userAreaDetails = repository.findUserAreaById(Long.parseLong(areaTypeEntry.getId()), userName, isPowerUser, scopeName);
+
+        UserAreasEntity userAreaById = repository.findUserAreaById(Long.parseLong(areaTypeEntry.getId()), userName, isPowerUser, scopeName);
         try {
 
-            List<AreaDetails> areaDetailsList = Lists.newArrayList();
-            for (UserAreasEntity userAreaDetail : userAreaDetails) {
-                Map<String, Object> properties = getFieldMap(userAreaDetail);
-                addCentroidToProperties(properties);
-                areaDetailsList.add(createAreaDetailsSpatialResponse(properties, areaTypeEntry));
-            }
+            List<AreaDetails> areaDetailsList = new ArrayList<>();
+            Map<String, Object> properties = getFieldMap(userAreaById);
+            addCentroidToProperties(properties);
+            areaDetailsList.add(createAreaDetailsSpatialResponse(properties, areaTypeEntry));
+
             return areaDetailsList;
 
         } catch (ParseException e) {
@@ -271,7 +270,7 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     private AreaDetails createAreaDetailsSpatialResponse(Map<String, Object> properties, AreaTypeEntry areaTypeEntry) {
-        List<AreaProperty> areaProperties = newArrayList();
+        List<AreaProperty> areaProperties = new ArrayList<>();
         for (Map.Entry<String, Object> entry : properties.entrySet()) {
             AreaProperty areaProperty = new AreaProperty();
             areaProperty.setPropertyName(entry.getKey());

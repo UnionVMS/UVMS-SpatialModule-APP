@@ -240,10 +240,8 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     }
 
     @Override
-    public List<UserAreasEntity> findUserAreaById(Long userAreaId, String userName, Boolean isPowerUser, String scopeName) throws ServiceException {
-        QueryParameter param = with("userAreaId", userAreaId).and("userName", userName).and("isPowerUser", isPowerUser?1:0).and("scopeName", scopeName);
-
-        return findEntityByNamedQuery(UserAreasEntity.class, QueryNameConstants.FIND_USER_AREA_BY_ID, param.parameters(), 1);
+    public UserAreasEntity findUserAreaById(Long userAreaId, String userName, Boolean isPowerUser, String scopeName) throws ServiceException {
+        return userAreaDao.findOne(userAreaId, userName, isPowerUser, scopeName);
     }
 
     @Override
