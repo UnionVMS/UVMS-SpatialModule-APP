@@ -1,9 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.dao;
 
-import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.spatial.entity.PortAreasEntity;
 import lombok.SneakyThrows;
-import org.geotools.geometry.GeometryBuilder;
 import org.junit.Test;
 
 import java.util.List;
