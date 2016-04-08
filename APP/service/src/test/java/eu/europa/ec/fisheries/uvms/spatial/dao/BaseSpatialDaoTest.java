@@ -38,6 +38,10 @@ public class BaseSpatialDaoTest extends BaseDAOTest {
                     .columns("ID", "APP_VERSION", "REPORT_ID")
                     .values(1L, "1", 123)
                     .values(2L, "2", 1234)
+                    .build(),
+            insertInto("spatial.eez")
+                    .columns("GID", "NAME", "COUNTRY", "SOVEREIGN","REMARKS", "GEOM", "ENABLED")
+                    .values(1L, "Eez with empty geometry", "Belgium", "Belgium", "none", "MULTIPOLYGON EMPTY", "Y")
                     .build()
     );
 
