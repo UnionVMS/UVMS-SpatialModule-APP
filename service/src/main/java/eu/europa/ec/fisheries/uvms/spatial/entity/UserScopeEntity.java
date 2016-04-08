@@ -1,6 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "user_scope", schema = "spatial")
+@EqualsAndHashCode(of = {"name"}, callSuper = true)
 public class UserScopeEntity extends BaseEntity {
 
     @ManyToOne
