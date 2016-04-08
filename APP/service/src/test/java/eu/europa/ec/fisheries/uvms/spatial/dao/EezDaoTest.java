@@ -4,7 +4,6 @@ import com.ninja_squad.dbsetup.DbSetup;
 import com.ninja_squad.dbsetup.destination.DataSourceDestination;
 import com.ninja_squad.dbsetup.operation.Operation;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
-import junit.framework.Assert;
 import lombok.SneakyThrows;
 import org.junit.Before;
 import org.junit.Test;
