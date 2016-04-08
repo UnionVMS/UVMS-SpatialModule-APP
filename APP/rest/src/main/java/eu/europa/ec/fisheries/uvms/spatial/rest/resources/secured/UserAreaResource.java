@@ -1,9 +1,12 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.vividsolutions.jts.io.ParseException;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.rest.FeatureToGeoJsonJacksonMapper;
+import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.FeatureToGeoJsonMapper;
 import eu.europa.ec.fisheries.uvms.rest.constants.ErrorCodes;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.service.interceptor.ValidationInterceptor;
@@ -46,7 +49,7 @@ import java.util.Map;
 @Path("/")
 @Slf4j
 @Stateless
-public class UserAreaResource extends UnionVMSResource {
+public class    UserAreaResource extends UnionVMSResource {
 
     @EJB
     private UserAreaService userAreaService;
@@ -186,11 +189,11 @@ public class UserAreaResource extends UnionVMSResource {
             List<AreaDetails> userAreaDetails = userAreaService.getUserAreaDetailsById(areaTypeEntry, userName, isPowerUser, scopeName);
             AreaDetailsGeoJsonDto areaDetailsGeoJsonDto = areaLocationMapper.getAreaDetailsDtoForAllAreas(userAreaDetails, userAreaTypeDto);
 
-            List<ObjectNode> nodeList = new ArrayList<>();
+            List<JsonNode> nodeList = new ArrayList<>();
 
             for (Map<String, Object> featureMap : areaDetailsGeoJsonDto.getAllAreaProperties()) {
-                ObjectNode convert = new FeatureToGeoJsonJacksonMapper().convert(areaDetailsGeoJsonDto.toFeature(featureMap));
-                nodeList.add(convert);
+                JsonNode jsonNode = new ObjectMapper().readTree(new FeatureToGeoJsonMapper().convert(areaDetailsGeoJsonDto.toFeature(featureMap)));
+                nodeList.add(jsonNode);
             }
 
             return createSuccessResponse(nodeList);
