@@ -4,7 +4,7 @@ import eu.europa.ec.fisheries.uvms.spatial.rest.type.ResponseCode;
 import eu.europa.ec.fisheries.uvms.spatial.rest.type.ResponseDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 
-public final class ErrorHandler {
+public final class ErrorHandler { // TODO @Greg vuilbak
 
     private ErrorHandler(){}
 

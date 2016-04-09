@@ -6,8 +6,21 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.Where;
-
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
@@ -26,12 +39,14 @@ import java.util.Set;
                         "WHERE area.type = :type " +
                         "AND ((1=:isPowerUser) OR (area.userName=:userName OR scopeSelection.name=:scopeName)) " +
                         "GROUP BY area.gid"),
+        @NamedQuery(name = QueryNameConstants.FIND_GID_BY_USER,
+                query = "SELECT area.gid " +
+                        "FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection " +
+                        "WHERE area.userName = :userName OR scopeSelection.name = :scopeName"),
         @NamedQuery(name = UserAreasEntity.USER_AREA_DETAILS_BY_LOCATION,
                 query = "FROM UserAreasEntity userArea WHERE userArea.userName = :userName AND intersects(userArea.geom, :shape) = true) AND userArea.enabled = 'Y' GROUP BY userArea.gid"),
         @NamedQuery(name = UserAreasEntity.USER_AREA_BY_COORDINATE,
                 query = "FROM UserAreasEntity WHERE intersects(geom, :shape) = true) AND enabled = 'Y'"),
-        @NamedQuery(name = QueryNameConstants.FIND_GID_BY_USER,
-                query = "SELECT area.gid FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection WHERE area.userName = :userName OR scopeSelection.name = :scopeName"),
         @NamedQuery(name = UserAreasEntity.FIND_USER_AREA_BY_ID,
                 query = "SELECT area FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection WHERE area.gid = :userAreaId AND ((1=:isPowerUser) OR (area.userName=:userName OR scopeSelection.name=:scopeName))"),
         @NamedQuery(name = QueryNameConstants.USERAREA_COLUMNS,
