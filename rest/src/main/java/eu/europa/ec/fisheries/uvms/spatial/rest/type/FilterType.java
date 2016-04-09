@@ -7,9 +7,7 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotEmpty;
 
 public class FilterType implements Serializable {
-	
-	private static final long serialVersionUID = -3027324059511336094L;
-	
+
 	@NotNull
 	@NotEmpty
 	protected String filter;

@@ -70,7 +70,7 @@ public class AreaResource extends UnionVMSResource {
             return new ResponseDto(areaTypes, ResponseCode.OK);
         } catch (Exception ex) {
             log.error("[ Error when getting area types list. ] ", ex);
-            return ErrorHandler.getFault(ex);
+            return ErrorHandler.getFault(ex); // TODO @Greg used only here
         }
     }
     

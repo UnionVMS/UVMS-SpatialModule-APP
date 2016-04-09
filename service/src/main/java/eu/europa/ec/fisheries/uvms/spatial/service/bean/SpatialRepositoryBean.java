@@ -3,21 +3,8 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
-import eu.europa.ec.fisheries.uvms.spatial.dao.AreaDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.AreaLocationTypesDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.BookmarkDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.CountryDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.EezDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.MapConfigDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.PortAreaDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.PortDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.ProjectionDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.ReportConnectServiceAreaDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.ReportConnectSpatialDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.RfmoDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.ServiceLayerDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.SysConfigDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.UserAreaJpaDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.*;
+import eu.europa.ec.fisheries.uvms.spatial.dao.UserAreaDao;
 import eu.europa.ec.fisheries.uvms.spatial.entity.*;
 import eu.europa.ec.fisheries.uvms.spatial.entity.config.SysConfigEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.bookmark.Bookmark;
@@ -47,7 +34,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     private @PersistenceContext(unitName = "spatialPU") EntityManager em;
 
     private AreaDao areaDao;
-    private UserAreaJpaDao userAreaDao;
+    private UserAreaDao userAreaDao;
     private CountryDao countryDao;
     private MapConfigDao mapConfigDao;
     private EezDao eezDao;
@@ -65,7 +52,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     @PostConstruct
     public void init() {
         areaDao = new AreaDao(em);
-        userAreaDao = new UserAreaJpaDao(em);
+        userAreaDao = new UserAreaDao(em);
         countryDao = new CountryDao(em);
         mapConfigDao = new MapConfigDao(em);
         eezDao = new EezDao(em);
@@ -98,12 +85,12 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
 
     @Override
     public List<UserAreaLayerDto> findUserAreaLayerMapping() {
-        return userAreaDao.findUserAreaLayerMapping();
+        return areaLocationTypeDao.findUserAreaLayerMapping();
     }
 
     @Override
     public List<UserAreasEntity> findUserAreaDetailsByLocation(String userName, Point point) {
-        return userAreaDao.findUserAreaDetailsWithGeom(userName, point);
+        return userAreaDao.findByUserNameAndGeometry(userName, point);
     }
 
     @Override

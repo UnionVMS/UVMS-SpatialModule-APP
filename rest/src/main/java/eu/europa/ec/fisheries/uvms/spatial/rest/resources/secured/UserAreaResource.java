@@ -1,12 +1,10 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.vividsolutions.jts.io.ParseException;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.rest.FeatureToGeoJsonJacksonMapper;
-import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.FeatureToGeoJsonMapper;
 import eu.europa.ec.fisheries.uvms.rest.constants.ErrorCodes;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.service.interceptor.ValidationInterceptor;
@@ -64,22 +62,22 @@ public class    UserAreaResource extends UnionVMSResource {
     public Response storeUserArea(@Context HttpServletRequest request,
                                   UserAreaGeoJsonDto userAreaGeoJsonDto,
                                   @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName) throws ServiceException {
-        if (request.isUserInRole("MANAGE_USER_DEFINED_AREAS")) {
+     //   if (request.isUserInRole("MANAGE_USER_DEFINED_AREAS")) {
             String userName = request.getRemoteUser();
             log.info("{} is requesting storeUserArea(...)", userName);
-            if (StringUtils.isNotBlank(userAreaGeoJsonDto.getDatasetName()) && !request.isUserInRole("CREATE_USER_AREA_DATASET")) {
-                return createErrorResponse("user_area_dataset_creation_not_allowed");
-            }
+            //if (StringUtils.isNotBlank(userAreaGeoJsonDto.getDatasetName()) && !request.isUserInRole("CREATE_USER_AREA_DATASET")) {
+            //    return createErrorResponse("user_area_dataset_creation_not_allowed");
+            //}
 
-            if (userAreaGeoJsonDto.getScopeSelection() != null && !userAreaGeoJsonDto.getScopeSelection().isEmpty() && !request.isUserInRole("SHARE_USER_DEFINED_AREAS")) {
-                return createErrorResponse("user_area_sharing_not_allowed");
-            }
+            //if (userAreaGeoJsonDto.getScopeSelection() != null && !userAreaGeoJsonDto.getScopeSelection().isEmpty() && !request.isUserInRole("SHARE_USER_DEFINED_AREAS")) {
+            //    return createErrorResponse("user_area_sharing_not_allowed");
+            //}
 
             long gid = userAreaService.storeUserArea(userAreaGeoJsonDto, userName);
             return createSuccessResponse(gid);
-        } else {
-            return createErrorResponse("user_areas_management_not_allowed");
-        }
+    //    } else {
+    //        return createErrorResponse("user_areas_management_not_allowed");
+    //    }
     }
 
 
@@ -192,7 +190,7 @@ public class    UserAreaResource extends UnionVMSResource {
             List<JsonNode> nodeList = new ArrayList<>();
 
             for (Map<String, Object> featureMap : areaDetailsGeoJsonDto.getAllAreaProperties()) {
-                JsonNode jsonNode = new ObjectMapper().readTree(new FeatureToGeoJsonMapper().convert(areaDetailsGeoJsonDto.toFeature(featureMap)));
+                JsonNode jsonNode = new FeatureToGeoJsonJacksonMapper().convert(areaDetailsGeoJsonDto.toFeature(featureMap));
                 nodeList.add(jsonNode);
             }
 

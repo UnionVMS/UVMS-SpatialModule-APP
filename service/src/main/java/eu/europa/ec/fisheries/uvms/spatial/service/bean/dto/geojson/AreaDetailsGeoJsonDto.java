@@ -9,8 +9,6 @@ import java.util.Map;
 
 public class AreaDetailsGeoJsonDto extends GeoJsonDto {
 
-    private static final String EXTENT = "extent";
-
     private List<Map<String, Object>> allAreaProperties = new ArrayList<>();
 
     public SimpleFeature toFeature() throws ParseException {

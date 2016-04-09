@@ -31,7 +31,7 @@ public class SpatialRepositoryTest {
     private AreaDao areaDao;
 
     @Mock
-    private UserAreaJpaDao userAreaDao;
+    private UserAreaDao userAreaDao;
 
     @Mock
     private CountryDao countryDao;

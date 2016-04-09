@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
@@ -11,10 +12,9 @@ import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.service.QueryParameter;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
-import eu.europa.ec.fisheries.uvms.spatial.model.constants.USMSpatial;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaDto;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.geotools.geometry.jts.WKTWriter2;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -23,16 +23,16 @@ import org.hibernate.transform.Transformers;
 import static eu.europa.ec.fisheries.uvms.service.QueryParameter.with;
 import static eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity.*;
 
-public class UserAreaJpaDao extends AbstractDAO<UserAreasEntity> {
+public class UserAreaDao extends AbstractDAO<UserAreasEntity> {
 
     private EntityManager em;
 
     private static final String USER_NAME = "userName";
     private static final String SCOPE_NAME = "scopeName";
     private static final String TYPE = "type";
-	private static final String GID_LIST = "gids";
+    private static final String GID_LIST = "gids";
 
-    public UserAreaJpaDao(EntityManager em) {
+    public UserAreaDao(EntityManager em) {
         this.em = em;
     }
 
@@ -42,41 +42,40 @@ public class UserAreaJpaDao extends AbstractDAO<UserAreasEntity> {
     }
 
     public List<UserAreasEntity> intersects(final Geometry shape, final String userName) throws ServiceException {
-        return findEntityByNamedQuery(UserAreasEntity.class, USER_AREA_DETAILS_BY_LOCATION, QueryParameter.with("shape", shape).and("userName", userName).parameters());
+        return findEntityByNamedQuery(UserAreasEntity.class, USER_AREA_DETAILS_BY_LOCATION, with("shape", shape).and("userName", userName).parameters());
     }
 
     public List<UserAreasEntity> intersects(final Geometry shape) throws ServiceException {
-        return findEntityByNamedQuery(UserAreasEntity.class, USER_AREA_BY_COORDINATE, QueryParameter.with("shape", shape).parameters());
+        return findEntityByNamedQuery(UserAreasEntity.class, USER_AREA_BY_COORDINATE, with("shape", shape).parameters());
     }
 
-    public List findUserAreaLayerMapping() {
+    public List<UserAreasEntity> findByUserNameAndGeometry(String userName, Point point) {
 
-        Query query = getSession().getNamedQuery(QueryNameConstants.FIND_USER_AREA_LAYER);
-        query.setResultTransformer(Transformers.aliasToBean(UserAreaLayerDto.class));
-        return query.list();
-    }
+        List<UserAreasEntity> entityList = new ArrayList<>();
 
-	public List<UserAreasEntity> findUserAreaDetailsWithGeom(String userName, Point point) {
-        String wkt = new WKTWriter2().write(point);
-        int crs = point.getSRID();
-		Map<String, Object> parameters = ImmutableMap.<String, Object>builder().
-                put(USER_NAME, userName).
-				put("shape", "SRID=" + crs + ";" + wkt). // TODO Check on oracle
-				build();
+        if(!StringUtils.isBlank(userName) && point != null ){
+            String wkt = new WKTWriter2().write(point);
+            int crs = point.getSRID();
+            Map<String, Object> parameters = ImmutableMap.<String, Object>builder().
+                    put(USER_NAME, userName).
+                    put("shape", "SRID=" + crs + ";" + wkt). // TODO Check on oracle
+                    build();
 
-        Query query = getSession().getNamedQuery(USER_AREA_DETAILS_BY_LOCATION);
-        for (Map.Entry<String, Object> entry : parameters.entrySet()) {
-            query.setParameter(entry.getKey(), entry.getValue());
+            Query query = getSession().getNamedQuery(USER_AREA_DETAILS_BY_LOCATION);
+            for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+                query.setParameter(entry.getKey(), entry.getValue());
+            }
+            entityList = query.list();
         }
-        return query.list();
-	}
+        return entityList;
+    }
 
     public List<AreaDto> getAllUserAreas(String userName, String scopeName) {
-		Map<String, Object> parameters = ImmutableMap.<String, Object>builder().put(USER_NAME, userName).put(SCOPE_NAME, scopeName).build();
+        Map<String, Object> parameters = ImmutableMap.<String, Object>builder().put(USER_NAME, userName).put(SCOPE_NAME, scopeName).build();
         Query query = createNamedNativeQuery(QueryNameConstants.FIND_ALL_USER_AREAS, parameters);
         query.setResultTransformer(Transformers.aliasToBean(AreaDto.class));
         return query.list();
-	}
+    }
 
     public List<AreaDto> getAllUserAreaGroupName(String userName, String scopeName) {
         Map<String, Object> parameters = ImmutableMap.<String, Object>builder().put(USER_NAME, userName).put(SCOPE_NAME, scopeName).build();
@@ -96,7 +95,7 @@ public class UserAreaJpaDao extends AbstractDAO<UserAreasEntity> {
         query.setParameterList(GID_LIST, gids);
         query.setResultTransformer(Transformers.aliasToBean( AreaDto.class));
         return query.list();
-	}
+    }
 
     private Query createNamedNativeQuery(String nativeQueryString, Map<String, Object> parameters) {
         Query query = getSession().getNamedQuery(nativeQueryString);
@@ -112,7 +111,7 @@ public class UserAreaJpaDao extends AbstractDAO<UserAreasEntity> {
 
     public List<UserAreasEntity> listByCriteria(String userName, String scopeName, String searchCriteria, Boolean isPowerUser) throws ServiceException {
 
-        Map parameters = QueryParameter.with("isPowerUser", isPowerUser ? 1 : 0)
+        Map parameters = with("isPowerUser", isPowerUser ? 1 : 0)
                 .and("searchCriteria", "%" + searchCriteria + "%")
                 .and("scopeName", scopeName)
                 .and("userName", userName).parameters();
@@ -123,7 +122,7 @@ public class UserAreaJpaDao extends AbstractDAO<UserAreasEntity> {
 
     public UserAreasEntity getByUserNameAndName(String userName, String name) throws ServiceException {
 
-        Map parameters = QueryParameter.with("userName", userName)
+        Map parameters = with("userName", userName)
                 .and("name", name).parameters();
 
         UserAreasEntity result = null;

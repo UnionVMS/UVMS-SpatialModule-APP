@@ -20,7 +20,7 @@ import javax.ws.rs.core.Response;
 @Path("/ports")
 @Slf4j
 @Stateless
-public class AreaPortResource extends UnionVMSResource {
+public class AreaPortResource extends UnionVMSResource { // TODO @Greg FE
 
     @EJB
     private PortAreaService portAreaService;
