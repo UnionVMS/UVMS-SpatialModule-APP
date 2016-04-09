@@ -3,6 +3,12 @@ package eu.europa.ec.fisheries.uvms.spatial.dao;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.transform.Transformers;
+
 import javax.persistence.EntityManager;
 import java.util.List;
 
@@ -34,5 +40,11 @@ public class AreaLocationTypesDao extends AbstractDAO<AreaLocationTypesEntity> {
     public List<AreaLocationTypesEntity> findByIsLocation(Boolean isLocation) throws ServiceException {
         return findEntityByNamedQuery(AreaLocationTypesEntity.class, FIND_ALL_IS_LOCATION,
                 with("isLocation", isLocation).parameters());
+    }
+
+    public List findUserAreaLayerMapping() {
+        Query query = em.unwrap(Session.class).getNamedQuery(QueryNameConstants.FIND_USER_AREA_LAYER);
+        query.setResultTransformer(Transformers.aliasToBean(UserAreaLayerDto.class));
+        return query.list();
     }
 }
