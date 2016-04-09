@@ -47,7 +47,7 @@ import java.util.Map;
 @Path("/")
 @Slf4j
 @Stateless
-public class    UserAreaResource extends UnionVMSResource {
+public class UserAreaResource extends UnionVMSResource {
 
     @EJB
     private UserAreaService userAreaService;
