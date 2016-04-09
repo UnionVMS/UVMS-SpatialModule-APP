@@ -62,24 +62,23 @@ public class    UserAreaResource extends UnionVMSResource {
     public Response storeUserArea(@Context HttpServletRequest request,
                                   UserAreaGeoJsonDto userAreaGeoJsonDto,
                                   @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName) throws ServiceException {
-     //   if (request.isUserInRole("MANAGE_USER_DEFINED_AREAS")) {
+        if (request.isUserInRole("MANAGE_USER_DEFINED_AREAS")) {
             String userName = request.getRemoteUser();
             log.info("{} is requesting storeUserArea(...)", userName);
-            //if (StringUtils.isNotBlank(userAreaGeoJsonDto.getDatasetName()) && !request.isUserInRole("CREATE_USER_AREA_DATASET")) {
-            //    return createErrorResponse("user_area_dataset_creation_not_allowed");
-            //}
+            if (StringUtils.isNotBlank(userAreaGeoJsonDto.getDatasetName()) && !request.isUserInRole("CREATE_USER_AREA_DATASET")) {
+                return createErrorResponse("user_area_dataset_creation_not_allowed");
+            }
 
-            //if (userAreaGeoJsonDto.getScopeSelection() != null && !userAreaGeoJsonDto.getScopeSelection().isEmpty() && !request.isUserInRole("SHARE_USER_DEFINED_AREAS")) {
-            //    return createErrorResponse("user_area_sharing_not_allowed");
-            //}
+            if (userAreaGeoJsonDto.getScopeSelection() != null && !userAreaGeoJsonDto.getScopeSelection().isEmpty() && !request.isUserInRole("SHARE_USER_DEFINED_AREAS")) {
+                return createErrorResponse("user_area_sharing_not_allowed");
+            }
 
             long gid = userAreaService.storeUserArea(userAreaGeoJsonDto, userName);
             return createSuccessResponse(gid);
-    //    } else {
-    //        return createErrorResponse("user_areas_management_not_allowed");
-    //    }
+        } else {
+            return createErrorResponse("user_areas_management_not_allowed");
+        }
     }
-
 
     @PUT
     @Path("userarea")
