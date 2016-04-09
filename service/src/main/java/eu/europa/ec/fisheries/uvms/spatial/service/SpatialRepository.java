@@ -3,7 +3,17 @@ package eu.europa.ec.fisheries.uvms.spatial.service;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.DAO;
-import eu.europa.ec.fisheries.uvms.spatial.entity.*;
+import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.BookmarkEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.PortAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.PortsEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ProjectionEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.RfmoEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.config.SysConfigEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.bookmark.Bookmark;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaLayerDto;
@@ -15,6 +25,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * // TODO this class should only return entity objects, so we keep al (business) logic in one place the service EJB
+ * // TODO removing the DAO interface as this interface was not designed to extend EJB's
+ */
 public interface SpatialRepository extends DAO {
 
     List findAreaOrLocationByCoordinates(Point point, String nativeQueryString);
@@ -93,11 +107,11 @@ public interface SpatialRepository extends DAO {
 
     List<EezEntity> findEezByIntersect(Point point) throws ServiceException;
 
-    List findPortAreaByIntersect(Point point) throws ServiceException;
+    List<PortAreasEntity> findPortAreaByIntersect(Point point) throws ServiceException;
 
-    List findRfmoByIntersect(Point point) throws ServiceException;
+    List<RfmoEntity> findRfmoByIntersect(Point point) throws ServiceException;
 
-    List findUserAreaByIntersect(Point point) throws ServiceException;
+    List<UserAreasEntity> findUserAreaByIntersect(Point point) throws ServiceException;
 
     List<AreaLocationTypesEntity> findAreaLocationTypeByTypeName(String typeName) throws ServiceException;
 

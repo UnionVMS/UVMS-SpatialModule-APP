@@ -3,9 +3,33 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
-import eu.europa.ec.fisheries.uvms.spatial.dao.*;
+import eu.europa.ec.fisheries.uvms.spatial.dao.AreaDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.AreaLocationTypesDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.BookmarkDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.CountryDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.EezDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.MapConfigDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.PortAreaDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.PortDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.ProjectionDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.ReportConnectServiceAreaDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.ReportConnectSpatialDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.RfmoDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.ServiceLayerDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.SysConfigDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.UserAreaDao;
-import eu.europa.ec.fisheries.uvms.spatial.entity.*;
+import eu.europa.ec.fisheries.uvms.spatial.dao.UserAreaDao;
+import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.BookmarkEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.PortAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.PortsEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ProjectionEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.RfmoEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.config.SysConfigEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.bookmark.Bookmark;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
@@ -285,17 +309,17 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     }
 
     @Override
-    public List findPortAreaByIntersect(final Point point) throws ServiceException {
+    public List<PortAreasEntity> findPortAreaByIntersect(final Point point) throws ServiceException {
         return portAreaDao.intersects(point);
     }
 
     @Override
-    public List findRfmoByIntersect(final Point point) throws ServiceException {
+    public List<RfmoEntity> findRfmoByIntersect(final Point point) throws ServiceException {
         return rfmoDao.intersects(point);
     }
 
     @Override
-    public List findUserAreaByIntersect(final Point point) throws ServiceException {
+    public List<UserAreasEntity> findUserAreaByIntersect(final Point point) throws ServiceException {
         return userAreaDao.intersects(point);
     }
 
