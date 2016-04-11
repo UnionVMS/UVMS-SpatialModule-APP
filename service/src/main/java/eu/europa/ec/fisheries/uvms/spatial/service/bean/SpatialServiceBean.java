@@ -183,36 +183,10 @@ public class SpatialServiceBean implements SpatialService {
         final MeasurementUnit measurementUnit = MeasurementUnit.getMeasurement(request.getUnit().name());
         final UnitType unit = request.getUnit();
         final List<AreaLocationTypesEntity> typesEntities = repository.findAllIsPointIsSystemWide(false, true);
-        final StringBuilder sb = new StringBuilder();
         final Map<String, Area> distancePerTypeMap = new HashMap<>();
         final GeodeticCalculator calc = new GeodeticCalculator();
 
-        Iterator<AreaLocationTypesEntity> it = typesEntities.iterator();
-        while (it.hasNext()) {
-            AreaLocationTypesEntity next = it.next();
-            final String areaDbTable = next.getAreaDbTable();
-            final String typeName = next.getTypeName();
-            sb.append("(SELECT '").append(typeName).append("' AS type, gid, code, name, ")
-                    .append(spatialFunction.stClosestPoint(incomingLatitude, incomingLongitude))
-                    .append(" AS closest ").append("FROM spatial.").append(areaDbTable).append(" ")
-                    .append("WHERE NOT ST_IsEmpty(geom) AND enabled = 'Y' ").append("ORDER BY ") // TODO check isEmpty in oracl"
-                    .append(spatialFunction.stDistance(incomingLatitude, incomingLongitude)).append(" ")
-                    .append(spatialFunction.limit(10)).append(")");
-            it.remove(); // avoids a ConcurrentModificationException
-            if (it.hasNext()) {
-                sb.append(" UNION ALL ");
-            }
-        }
-
-        log.debug("{} QUERY => {}", spatialFunction.getClass().getSimpleName().toUpperCase(), sb.toString());
-
-        Query emNativeQuery = em.createNativeQuery(sb.toString());
-
-        emNativeQuery.unwrap(SQLQuery.class).addScalar(TYPE, StandardBasicTypes.STRING)
-                .addScalar(GID, StandardBasicTypes.INTEGER).addScalar(CODE, StandardBasicTypes.STRING)
-                .addScalar(NAME, StandardBasicTypes.STRING).addScalar("closest", GeometryType.INSTANCE);
-
-        List records = emNativeQuery.getResultList();
+        List records = repository.closestArea(typesEntities, spatialFunction, incomingPoint);
 
         for (Object record : records) {
             final Object[] result = (Object[]) record;

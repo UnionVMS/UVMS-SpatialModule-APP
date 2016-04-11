@@ -18,7 +18,7 @@ import eu.europa.ec.fisheries.uvms.spatial.dao.RfmoDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.ServiceLayerDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.SysConfigDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.UserAreaDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.UserAreaDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.util.SpatialFunction;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.BookmarkEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
@@ -419,6 +419,11 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     @Override
     public PortAreasEntity createEntity(PortAreasEntity portAreasEntity) throws ServiceException {
         return portAreaDao.createEntity(portAreasEntity);
+    }
+
+    @Override
+    public List closestArea(List<AreaLocationTypesEntity> entities, SpatialFunction spatialFunction, Point point) {
+        return areaDao.closestArea(entities, spatialFunction, point);
     }
 
     @Override
