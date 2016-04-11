@@ -9,7 +9,6 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
-
 import javax.persistence.EntityManager;
 import java.util.List;
 
@@ -51,6 +50,11 @@ public class AreaLocationTypesDao extends AbstractDAO<AreaLocationTypesEntity> {
 
     public List<AreaLayerDto> findSystemAreaLayerMapping() {
         Query query = em.unwrap(Session.class).getNamedQuery(AreaLocationTypesEntity.FIND_SYSTEM_AREA_LAYER);
+        return query.setResultTransformer(Transformers.aliasToBean(AreaLayerDto.class)).list();
+    }
+
+    public List<AreaLayerDto> findSystemAreaAndLocationLayerMapping() {
+        Query query = em.unwrap(Session.class).getNamedQuery(AreaLocationTypesEntity.FIND_SYSTEM_AREA_AND_LOCATION_LAYER);
         return query.setResultTransformer(Transformers.aliasToBean(AreaLayerDto.class)).list();
     }
 

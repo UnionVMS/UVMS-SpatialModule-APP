@@ -19,7 +19,6 @@ public final class QueryNameConstants {
     /**
      * Find System
      */
-    public static final String FIND_SYSTEM_AREA_AND_LOCATION_LAYER = "AreaLocationType.findSystemAreaAndLocationLayerMappings";
     public static final String FIND_USER_AREA_LAYER = "AreaLocationType.findUserAreaLayerMappings";
     
     /**

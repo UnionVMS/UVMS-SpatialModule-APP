@@ -104,7 +104,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
 
     @Override
     public List<AreaLayerDto> findSystemAreaAndLocationLayerMapping() {
-        return areaDao.findSystemAreaAndLocationLayerMapping();
+        return areaLocationTypeDao.findSystemAreaAndLocationLayerMapping();
     }
 
     @Override
