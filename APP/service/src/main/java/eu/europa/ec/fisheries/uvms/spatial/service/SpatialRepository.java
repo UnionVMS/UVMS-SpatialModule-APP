@@ -3,6 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.DAO;
+import eu.europa.ec.fisheries.uvms.spatial.dao.util.SpatialFunction;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.BookmarkEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
@@ -145,5 +146,7 @@ public interface SpatialRepository extends DAO {
     void deleteEntity(ReportConnectSpatialEntity entity);
 
     PortAreasEntity createEntity(PortAreasEntity portAreasEntity) throws ServiceException;
+
+    List closestArea(final List<AreaLocationTypesEntity> entities, final SpatialFunction spatialFunction, final Point point);
 
 }
