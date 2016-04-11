@@ -31,6 +31,7 @@ public class UserAreaDao extends AbstractDAO<UserAreasEntity> {
     private static final String SCOPE_NAME = "scopeName";
     private static final String TYPE = "type";
     private static final String GID_LIST = "gids";
+    private static final String IS_POWER_USER = "isPowerUser";
 
     public UserAreaDao(EntityManager em) {
         this.em = em;
@@ -42,30 +43,22 @@ public class UserAreaDao extends AbstractDAO<UserAreasEntity> {
     }
 
     public List<UserAreasEntity> intersects(final Geometry shape, final String userName) throws ServiceException {
-        return findEntityByNamedQuery(UserAreasEntity.class, USER_AREA_DETAILS_BY_LOCATION, with("shape", shape).and("userName", userName).parameters());
+        return findEntityByNamedQuery(UserAreasEntity.class, USER_AREA_DETAILS_BY_LOCATION,
+                with("shape", shape).and(USER_NAME, userName).parameters());
     }
 
     public List<UserAreasEntity> intersects(final Geometry shape) throws ServiceException {
         return findEntityByNamedQuery(UserAreasEntity.class, USER_AREA_BY_COORDINATE, with("shape", shape).parameters());
     }
 
-    public List<UserAreasEntity> findByUserNameAndGeometry(String userName, Point point) {
+    public List<UserAreasEntity> findByUserNameAndGeometry(String userName, Point point) throws ServiceException {
 
         List<UserAreasEntity> entityList = new ArrayList<>();
 
-        if(!StringUtils.isBlank(userName) && point != null ){
+        if (!StringUtils.isBlank(userName) && point != null ){
             String wkt = new WKTWriter2().write(point);
-            int crs = point.getSRID();
-            Map<String, Object> parameters = ImmutableMap.<String, Object>builder().
-                    put(USER_NAME, userName).
-                    put("shape", "SRID=" + crs + ";" + wkt). // TODO Check on oracle
-                    build();
-
-            Query query = getSession().getNamedQuery(USER_AREA_DETAILS_BY_LOCATION);
-            for (Map.Entry<String, Object> entry : parameters.entrySet()) {
-                query.setParameter(entry.getKey(), entry.getValue());
-            }
-            entityList = query.list();
+            entityList = findEntityByNamedQuery(UserAreasEntity.class, USER_AREA_DETAILS_BY_LOCATION,
+                    with("shape", wkt).and(USER_NAME, userName).parameters());
         }
         return entityList;
     }
@@ -111,10 +104,10 @@ public class UserAreaDao extends AbstractDAO<UserAreasEntity> {
 
     public List<UserAreasEntity> listByCriteria(String userName, String scopeName, String searchCriteria, Boolean isPowerUser) throws ServiceException {
 
-        Map parameters = with("isPowerUser", isPowerUser ? 1 : 0)
+        Map parameters = with(IS_POWER_USER, isPowerUser ? 1 : 0)
                 .and("searchCriteria", "%" + searchCriteria + "%")
-                .and("scopeName", scopeName)
-                .and("userName", userName).parameters();
+                .and(SCOPE_NAME, scopeName)
+                .and(USER_NAME, userName).parameters();
 
         return findEntityByNamedQuery(UserAreasEntity.class, SEARCH_BY_CRITERIA, parameters);
 
@@ -122,7 +115,7 @@ public class UserAreaDao extends AbstractDAO<UserAreasEntity> {
 
     public UserAreasEntity getByUserNameAndName(String userName, String name) throws ServiceException {
 
-        Map parameters = with("userName", userName)
+        Map parameters = with(USER_NAME, userName)
                 .and("name", name).parameters();
 
         UserAreasEntity result = null;
@@ -143,9 +136,9 @@ public class UserAreaDao extends AbstractDAO<UserAreasEntity> {
         UserAreasEntity result = null;
 
         QueryParameter param = with("userAreaId", userAreaId)
-                .and("userName", userName)
-                .and("isPowerUser", isPowerUser ? 1 : 0)
-                .and("scopeName", scopeName);
+                .and(USER_NAME, userName)
+                .and(IS_POWER_USER, isPowerUser ? 1 : 0)
+                .and(SCOPE_NAME, scopeName);
 
         List<UserAreasEntity> entityByNamedQuery = findEntityByNamedQuery(UserAreasEntity.class, FIND_USER_AREA_BY_ID, param.parameters(), 1);
 
@@ -168,18 +161,18 @@ public class UserAreaDao extends AbstractDAO<UserAreasEntity> {
     public List<UserAreasEntity> findByUserNameAndScopeNameAndTypeAndPowerUser(String userName, String scopeName, String type, boolean isPowerUser) throws ServiceException {
 
         QueryParameter param = with("type", type)
-                .and("userName", userName)
-                .and("isPowerUser", isPowerUser ? 1 : 0)
-                .and("scopeName", scopeName);
+                .and(USER_NAME, userName)
+                .and(IS_POWER_USER, isPowerUser ? 1 : 0)
+                .and(SCOPE_NAME, scopeName);
 
         return findEntityByNamedQuery(UserAreasEntity.class, UserAreasEntity.FIND_USER_AREA_BY_TYPE, param.parameters());
     }
 
     public List<UserAreasEntity> findUserAreasTypes(final String userName, final String scopeName, final Boolean isPowerUser) throws ServiceException {
 
-        QueryParameter param = with("userName", userName)
-                .and("isPowerUser", isPowerUser ? 1 : 0)
-                .and("scopeName", scopeName);
+        QueryParameter param = with(USER_NAME, userName)
+                .and(IS_POWER_USER, isPowerUser ? 1 : 0)
+                .and(SCOPE_NAME, scopeName);
 
         return findEntityByNamedQuery(UserAreasEntity.class, UserAreasEntity.FIND_USER_AREA_BY_USER, param.parameters());
     }

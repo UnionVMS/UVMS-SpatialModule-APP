@@ -17,7 +17,6 @@ import javax.persistence.UniqueConstraint;
 @Table(name = "area_location_types", schema = "spatial", uniqueConstraints = @UniqueConstraint(columnNames = "type_name"))
 @NamedQueries({
         @NamedQuery(name = QueryNameConstants.FIND_ALL_AREA_AND_LOCATION_TYPE_NAMES, query = "SELECT area.typeName FROM AreaLocationTypesEntity area"),
-        @NamedQuery(name = QueryNameConstants.FIND_ALL_AREA_TYPE_NAMES, query = "SELECT area.typeName FROM AreaLocationTypesEntity area WHERE area.isLocation = 'N'"), // FIXME @ Greg FIND_ALL_IS_LOCATION
         @NamedQuery(name = AreaLocationTypesEntity.FIND_ALL_IS_LOCATION, query = "FROM AreaLocationTypesEntity area WHERE isLocation = :isLocation"),
         @NamedQuery(name = AreaLocationTypesEntity.FIND_ALL_IS_LOCATION_IS_SYSTEM_WIDE, query = "FROM AreaLocationTypesEntity WHERE isLocation = :isLocation AND isSystemWide = :isSystemWide"),
         @NamedQuery(name = AreaLocationTypesEntity.FIND_TYPE_BY_NAME, query = "FROM AreaLocationTypesEntity WHERE typeName= :typeName"),

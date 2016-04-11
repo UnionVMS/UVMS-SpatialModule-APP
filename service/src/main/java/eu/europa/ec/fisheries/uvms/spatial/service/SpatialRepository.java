@@ -99,6 +99,8 @@ public interface SpatialRepository extends DAO {
 
     List<ProjectionEntity> findProjection(Integer srsCode) throws ServiceException;
 
+    List<ProjectionEntity> findProjection() throws ServiceException;
+
     void deleteReportConnectServiceAreas(Long id);
 
     void deleteReportConnectServiceAreas(Set<ReportConnectServiceAreasEntity> reportConnectServiceAreas);
@@ -148,5 +150,9 @@ public interface SpatialRepository extends DAO {
     PortAreasEntity createEntity(PortAreasEntity portAreasEntity) throws ServiceException;
 
     List closestArea(final List<AreaLocationTypesEntity> entities, final SpatialFunction spatialFunction, final Point point);
+
+    List intersectingArea(final List<AreaLocationTypesEntity> entities, final SpatialFunction spatialFunction, final Point point);
+
+    List<AreaLocationTypesEntity> listAllArea() throws ServiceException;
 
 }

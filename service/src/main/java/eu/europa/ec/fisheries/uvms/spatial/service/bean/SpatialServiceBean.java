@@ -45,7 +45,6 @@ import org.hibernate.SQLQuery;
 import org.hibernate.spatial.GeometryType;
 import org.hibernate.type.DoubleType;
 import org.hibernate.type.IntegerType;
-import org.hibernate.type.StandardBasicTypes;
 import org.hibernate.type.StringType;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.operation.TransformException;
@@ -222,36 +221,10 @@ public class SpatialServiceBean implements SpatialService {
     public List<AreaExtendedIdentifierType> getAreasByPoint(final AreaByLocationSpatialRQ request) throws ServiceException {
 
         final Point incomingPoint = convertToPointInWGS84(request.getPoint());
-        final Double incomingLatitude = incomingPoint.getY();
-        final Double incomingLongitude = incomingPoint.getX();
-        final StringBuilder sb = new StringBuilder();
         final List<AreaLocationTypesEntity> typesEntities = repository.findAllIsPointIsSystemWide(false, true);
         final List<AreaExtendedIdentifierType> areaTypes = new ArrayList<>();
 
-        Iterator<AreaLocationTypesEntity> it = typesEntities.iterator();
-        while (it.hasNext()) {
-            AreaLocationTypesEntity next = it.next();
-            final String areaDbTable = next.getAreaDbTable();
-            final String typeName = next.getTypeName();
-            sb.append("SELECT '").append(typeName).append("' as type, gid, name, code FROM spatial.")
-                    .append(areaDbTable).append(" WHERE ")
-                    .append(spatialFunction.stIntersects(incomingLatitude, incomingLongitude))
-                    .append(" AND enabled = 'Y'");
-            it.remove(); // avoids a ConcurrentModificationException
-            if (it.hasNext()) {
-                sb.append(" UNION ALL ");
-            }
-        }
-
-        Query emNativeQuery = em.createNativeQuery(sb.toString());
-
-        emNativeQuery.unwrap(SQLQuery.class)
-                .addScalar(TYPE, StandardBasicTypes.STRING)
-                .addScalar(GID, StandardBasicTypes.INTEGER)
-                .addScalar(CODE, StandardBasicTypes.STRING)
-                .addScalar(NAME, StandardBasicTypes.STRING);
-
-        List records = emNativeQuery.getResultList();
+        List records = repository.intersectingArea(typesEntities, spatialFunction, incomingPoint);
 
         for (Object record : records) {
             final Object[] result = (Object[]) record;
@@ -467,7 +440,7 @@ public class SpatialServiceBean implements SpatialService {
             if (locationType.equals("PORT")){
 
                 final String queryString = "SELECT * FROM spatial.port WHERE enabled = 'Y' ORDER BY " +
-                        spatialFunction.stDistance(incomingLongitude, incomingLatitude) + " ASC " + spatialFunction.limit(15); // FIXME this can and should be replaces by NamedQuery
+                        spatialFunction.stDistance(incomingLongitude, incomingLatitude) + " ASC " + spatialFunction.limit(15); // FIXME this can be replaces by NamedQuery
                 Query emNativeQuery = em.createNativeQuery(queryString, PortsEntity.class);
                 List<PortsEntity> records = emNativeQuery.getResultList();
 

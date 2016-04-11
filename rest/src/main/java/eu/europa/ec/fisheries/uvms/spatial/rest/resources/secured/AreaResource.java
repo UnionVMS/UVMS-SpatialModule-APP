@@ -37,9 +37,6 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.UserAreaService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.AreaDetailsGeoJsonDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.type.AreaFilterType;
-import eu.europa.ec.fisheries.uvms.spatial.rest.type.ResponseCode;
-import eu.europa.ec.fisheries.uvms.spatial.rest.type.ResponseDto;
-import eu.europa.ec.fisheries.uvms.spatial.rest.error.ErrorHandler;
 import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.AreaLocationDtoMapper;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.LocationDetailsGeoJsonDto;
@@ -63,15 +60,19 @@ public class AreaResource extends UnionVMSResource {
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Path("/areatypes")
-    public ResponseDto getAreaTypes() {
+    public Response getAreaTypes() {
+
+        Response response;
+
         try {
             log.info("Getting user areas list");
             List<String> areaTypes = areaTypeService.listAllAreaTypeNames();
-            return new ResponseDto(areaTypes, ResponseCode.OK);
+            response = createSuccessResponse(areaTypes);
         } catch (Exception ex) {
             log.error("[ Error when getting area types list. ] ", ex);
-            return ErrorHandler.getFault(ex); // TODO @Greg used only here
+            return createErrorResponse("[ Error when getting area types list. ] " + ex.getMessage());
         }
+        return response;
     }
     
     @POST
