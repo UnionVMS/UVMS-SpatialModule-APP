@@ -113,7 +113,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     }
 
     @Override
-    public List<UserAreasEntity> findUserAreaDetailsByLocation(String userName, Point point) {
+    public List<UserAreasEntity> findUserAreaDetailsByLocation(final String userName, final Point point) throws ServiceException {
         return userAreaDao.findByUserNameAndGeometry(userName, point);
     }
 
@@ -294,7 +294,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     }
 
     @Override
-    public ProjectionEntity findProjection(Integer srsCode) throws ServiceException {
+    public List<ProjectionEntity> findProjection(Integer srsCode) throws ServiceException {
         return projectionDao.findBySrsCode(srsCode);
     }
 

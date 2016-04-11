@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * // TODO this class should only return entity objects, so we keep al (business) logic in one place the service EJB
  * // TODO removing the DAO interface as this interface was not designed to extend EJB's
  */
 public interface SpatialRepository extends DAO {
@@ -97,7 +96,7 @@ public interface SpatialRepository extends DAO {
 
     BookmarkEntity getBookmarkBy(Long id) throws ServiceException;
 
-    ProjectionEntity findProjection(Integer srsCode) throws ServiceException;
+    List<ProjectionEntity> findProjection(Integer srsCode) throws ServiceException;
 
     void deleteReportConnectServiceAreas(Long id);
 
@@ -131,7 +130,7 @@ public interface SpatialRepository extends DAO {
 
     List<UserAreasEntity> listUserAreaByCriteria(String userName, String scopeName, String searchCriteria, boolean isPowerUser) throws ServiceException;
 
-    List<UserAreasEntity> findUserAreaDetailsByLocation(String userName, Point point);
+    List<UserAreasEntity> findUserAreaDetailsByLocation(String userName, Point point) throws ServiceException;
 
     UserAreasEntity getUserAreaByUserNameAndName(String userName, String name) throws ServiceException;
 
