@@ -1,14 +1,15 @@
 package eu.europa.ec.fisheries.uvms.spatial.dao;
 
-import eu.europa.ec.fisheries.uvms.spatial.util.CountryFactory;
+import com.ninja_squad.dbsetup.DbSetup;
+import com.ninja_squad.dbsetup.destination.DataSourceDestination;
+import com.ninja_squad.dbsetup.operation.Operation;
 import lombok.SneakyThrows;
 import org.junit.Before;
 import org.junit.Test;
-
-import javax.persistence.EntityTransaction;
 import java.util.List;
 import java.util.Map;
 
+import static com.ninja_squad.dbsetup.Operations.sequenceOf;
 import static org.junit.Assert.assertEquals;
 
 public class CountryDaoTest extends BaseSpatialDaoTest {
@@ -16,30 +17,24 @@ public class CountryDaoTest extends BaseSpatialDaoTest {
     private CountryDao dao = new CountryDao(em);
 
     @Before
-    @SneakyThrows
     public void prepare(){
-
-        EntityTransaction t = em.getTransaction();
-        t.begin();
-        em.persist(CountryFactory.getCountry("Austria"));
-        em.persist(CountryFactory.getCountry("Belgium"));
-
-        em.flush();
-        t.commit();
-
+        Operation operation = sequenceOf(DELETE_ALL, INSERT_COUNTRY_REFERENCE_DATA);
+        DbSetup dbSetup = new DbSetup(new DataSourceDestination(ds), operation);
+        dbSetupTracker.launchIfNecessary(dbSetup);
     }
 
     @Test
     @SneakyThrows
-    public void shouldReturnAllCountries() {
+    public void testFindAllCountriesDesc() {
+        dbSetupTracker.skipNextLaunch();
 
         List<Map<String, String>> allCountriesDesc = dao.findAllCountriesDesc();
 
-        assertEquals("Austria", allCountriesDesc.get(0).get("name"));
-        assertEquals("AUT", allCountriesDesc.get(0).get("code"));
+        assertEquals("Portugal", allCountriesDesc.get(0).get("name"));
+        assertEquals("PRT", allCountriesDesc.get(0).get("code"));
 
-        assertEquals("Belgium", allCountriesDesc.get(1).get("name"));
-        assertEquals("BEL", allCountriesDesc.get(1).get("code"));
+        assertEquals("Spain", allCountriesDesc.get(1).get("name"));
+        assertEquals("ESP", allCountriesDesc.get(1).get("code"));
 
     }
 }

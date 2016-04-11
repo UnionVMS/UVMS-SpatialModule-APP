@@ -4,7 +4,6 @@ import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.spatial.entity.converter.CharBooleanConverter;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.Where;
@@ -110,28 +109,6 @@ public class EezEntity implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "enabled_on")
     private Date enabledOn;
-
-    @Builder
-    public EezEntity(Geometry geom, String name, String country, String sovereign, String remarks, Integer sovId,
-                     Long eezId, String code, BigDecimal mrgid, String dateChang, Double areaM2, Double longitude,
-                     Double latitude, Integer mrgidEez, Boolean enabled, Date enabledOn) {
-        this.geom = geom;
-        this.name = name;
-        this.country = country;
-        this.sovereign = sovereign;
-        this.remarks = remarks;
-        this.sovId = sovId;
-        this.eezId = eezId;
-        this.code = code;
-        this.mrgid = mrgid;
-        this.dateChang = dateChang;
-        this.areaM2 = areaM2;
-        this.longitude = longitude;
-        this.latitude = latitude;
-        this.mrgidEez = mrgidEez;
-        this.enabled = enabled;
-        this.enabledOn = enabledOn;
-    }
 
     public EezEntity() {
     }

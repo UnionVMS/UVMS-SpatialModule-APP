@@ -25,12 +25,7 @@ public class ReportConnectSpatialDaoTest extends BaseSpatialDaoTest {
 
     @Before
     public void prepare(){
-
-        Operation operation =
-                sequenceOf(
-                        DELETE_ALL,
-                        INSERT_REFERENCE_DATA);
-
+        Operation operation = sequenceOf(DELETE_ALL, INSERT_REFERENCE_DATA);
         DbSetup dbSetup = new DbSetup(new DataSourceDestination(ds), operation);
         dbSetupTracker.launchIfNecessary(dbSetup);
     }
@@ -38,8 +33,6 @@ public class ReportConnectSpatialDaoTest extends BaseSpatialDaoTest {
     @Test
     @SneakyThrows
     public void shouldCreateReportConnect(){
-
-        dbSetupTracker.skipNextLaunch();
 
         EntityTransaction tx = em.getTransaction();
 
