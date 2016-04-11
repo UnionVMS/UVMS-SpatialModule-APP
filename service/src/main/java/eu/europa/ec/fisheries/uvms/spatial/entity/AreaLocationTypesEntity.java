@@ -27,7 +27,7 @@ import javax.persistence.UniqueConstraint;
                 + " provider.serviceType as serviceType FROM AreaLocationTypesEntity as area INNER JOIN area.serviceLayer as layer"
                 + " INNER JOIN layer.providerFormat as provider WHERE area.isSystemWide = 'Y' AND area.isLocation =  'N'"
                 + " AND area.serviceLayer = layer AND layer.providerFormat = provider"),
-        @NamedQuery(name = QueryNameConstants.FIND_SYSTEM_AREA_AND_LOCATION_LAYER, query = "select area.typeName as typeName, area.areaTypeDesc as areaTypeDesc, area.isLocation as isLocation,"
+        @NamedQuery(name = AreaLocationTypesEntity.FIND_SYSTEM_AREA_AND_LOCATION_LAYER, query = "select area.typeName as typeName, area.areaTypeDesc as areaTypeDesc, area.isLocation as isLocation,"
                 + " layer.geoName as geoName, layer.isInternal as isInternal, layer.styleLabelGeom as style,"
                 + " provider.serviceType as serviceType FROM AreaLocationTypesEntity as area INNER JOIN area.serviceLayer as layer"
                 + " INNER JOIN layer.providerFormat as provider WHERE area.isSystemWide = 'Y'"
@@ -44,6 +44,7 @@ public class AreaLocationTypesEntity extends BaseEntity {
     public static final String FIND_TYPE_BY_NAME = "AreaLocationType.findAreaByName";
     public static final String FIND_ALL_IS_LOCATION_IS_SYSTEM_WIDE = "AreaLocationType.findAllByIsLocationIsSystemWide";
     public static final String FIND_SYSTEM_AREA_LAYER = "AreaLocationType.findSystemAreaLayerMappings";
+    public static final String FIND_SYSTEM_AREA_AND_LOCATION_LAYER = "AreaLocationType.findSystemAreaAndLocationLayerMappings";
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "service_layer_id", nullable = false)

@@ -11,15 +11,12 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GeometryType;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.GeometryMapper;
 import com.vividsolutions.jts.geom.Point;
-import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaLayerDto;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.transform.AliasToEntityMapResultTransformer;
-import org.hibernate.transform.Transformers;
 import org.hibernate.type.StandardBasicTypes;
 
 @Slf4j
@@ -37,26 +34,16 @@ public class AreaDao extends AbstractDAO {
 
     public List findAreaOrLocationByCoordinates(Point point, String nativeQueryString) {
         GeometryType geometryType = GeometryMapper.INSTANCE.geometryToWKT(point);
-        int crs = point.getSRID();
-        return createNamedNativeQuery(nativeQueryString, geometryType.getGeometry(), crs).list();
-    }
-
-    public List<AreaLayerDto> findSystemAreaAndLocationLayerMapping() {
-        Query query = getSession().getNamedQuery(QueryNameConstants.FIND_SYSTEM_AREA_AND_LOCATION_LAYER);
-        return query.setResultTransformer(Transformers.aliasToBean(AreaLayerDto.class)).list();
-    }
-
-    public List<Map<String, String>> findSelectedAreaColumns(String namedQueryString, Number gid) {
-        Query query = getSession().getNamedQuery(namedQueryString);
-        query.setParameter("gid", gid);
-        query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
+        Query query = em.unwrap(Session.class).getNamedQuery(nativeQueryString);
+        query.setParameter("shape", geometryType.getGeometry());
         return query.list();
     }
 
-    private Query createNamedNativeQuery(String nativeQueryString, String wktPoint, int crs) {
-        Query query = getSession().getNamedQuery(nativeQueryString);
-        query.setParameter("shape", "SRID=" + crs + ";" + wktPoint); // FIXME will not work on oracle
-        return query;
+    public List<Map<String, String>> findSelectedAreaColumns(String namedQueryString, Number gid) {
+        Query query = em.unwrap(Session.class).getNamedQuery(namedQueryString);
+        query.setParameter("gid", gid);
+        query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
+        return query.list();
     }
 
     public List closestArea(final List<AreaLocationTypesEntity> entities, final SpatialFunction spatialFunction, final Point point){
@@ -97,10 +84,6 @@ public class AreaDao extends AbstractDAO {
 
         return resultList;
 
-    }
-
-    private Session getSession() {
-        return em.unwrap(Session.class);
     }
 
     @Override
