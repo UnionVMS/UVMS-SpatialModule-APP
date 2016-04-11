@@ -4,13 +4,20 @@ import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.service.QueryParameter;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.ServiceLayerDto;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.transform.Transformers;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 
 @Slf4j
 public class ServiceLayerDao extends AbstractDAO<ServiceLayerEntity> {
+
+    private static final String SUB_TYPE = "subTypes";
 
     private EntityManager em;
 
@@ -54,5 +61,20 @@ public class ServiceLayerDao extends AbstractDAO<ServiceLayerEntity> {
             return serviceLayers.get(0);
         }
         return null;
+    }
+
+    public List<ServiceLayerDto> findServiceLayerBySubType(List<String> subAreaTypes, boolean isWithBing) {
+        if (isWithBing) {
+            return createNamedQueryWithParameterList(QueryNameConstants.FIND_SERVICE_LAYER_BY_SUBTYPE, SUB_TYPE, subAreaTypes, ServiceLayerDto.class).list();
+        } else {
+            return createNamedQueryWithParameterList(QueryNameConstants.FIND_SERVICE_LAYER_BY_SUBTYPE_WITHOUT_BING, SUB_TYPE, subAreaTypes, ServiceLayerDto.class).list();
+        }
+    }
+
+    private <T> Query createNamedQueryWithParameterList(String nativeQuery, String parameterName, List<?> parameters, Class<T> dtoClass) {
+        Query query = em.unwrap(Session.class).getNamedQuery(nativeQuery);
+        query.setParameterList(parameterName, parameters);
+        query.setResultTransformer(Transformers.aliasToBean(dtoClass));
+        return query;
     }
 }

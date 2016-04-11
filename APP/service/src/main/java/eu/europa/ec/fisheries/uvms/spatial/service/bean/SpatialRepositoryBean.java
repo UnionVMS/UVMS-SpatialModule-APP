@@ -99,7 +99,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
 
     @Override
     public List<AreaLayerDto> findSystemAreaLayerMapping() {
-        return areaDao.findSystemAreaLayerMapping();
+        return areaLocationTypeDao.findSystemAreaLayerMapping();
     }
 
     @Override
@@ -216,7 +216,7 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     }
 
     public List<ServiceLayerDto> findServiceLayerBySubType(List<String> subAreaTypes, boolean isWithBing) {
-        return areaDao.findServiceLayerBySubType(subAreaTypes, isWithBing);
+        return serviceLayerDao.findServiceLayerBySubType(subAreaTypes, isWithBing);
     }
 
     @Override
