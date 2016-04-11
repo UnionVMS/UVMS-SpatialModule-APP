@@ -26,7 +26,7 @@ public class RfmoServiceBean implements RfmoService {
     @Override
     public long createRfmo(RfmoDto rfmoDto) throws ServiceException {
         RfmoEntity rfmoEntity = RfmoMapper.INSTANCE.rfmoDtoToRfmoEntity(rfmoDto);
-        rfmoEntity = (RfmoEntity) repository.createEntity(rfmoEntity);
+        rfmoEntity = (RfmoEntity) repository.createEntity(rfmoEntity); // TODO @Greg DAO
         return rfmoEntity.getGid();
     }
 }

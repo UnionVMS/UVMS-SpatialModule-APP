@@ -12,7 +12,6 @@ public final class QueryNameConstants {
     /**
      * Find all
      */
-    public static final String FIND_ALL_AREA_TYPE_NAMES = "AreaLocationType.findAllAreaTypeNames";
     public static final String FIND_ALL_AREA_AND_LOCATION_TYPE_NAMES = "AreaLocationType.findAllAreaAndLocationTypeNames";
     public static final String FIND_ALL_COUNTRY_DESC = "Countries.findAllCountriesDesc";
 

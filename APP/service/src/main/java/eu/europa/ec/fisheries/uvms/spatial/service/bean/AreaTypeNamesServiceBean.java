@@ -2,6 +2,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.google.common.collect.ImmutableMap;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaLayerDto;
@@ -20,7 +21,6 @@ import javax.ejb.Stateless;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Stateless
 @Local(AreaTypeNamesService.class)
@@ -28,7 +28,6 @@ import java.util.Map;
 public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
 
     private static final String WMS_SERVICE_TYPE = "wms";
-    private static final String NAME = "name";
     private static final String GEO_SERVER = "geo_server_url";
     private static final String BING_API_KEY = "bing_api_key";
 
@@ -39,7 +38,12 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
     @SneakyThrows
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public List<String> listAllAreaTypeNames() {
-        return repository.findEntityByNamedQuery(String.class, QueryNameConstants.FIND_ALL_AREA_TYPE_NAMES); // FIXME dao
+        List<String> stringList = new ArrayList<>();
+        List<AreaLocationTypesEntity> typesEntities = repository.listAllArea();
+        for (AreaLocationTypesEntity entity : typesEntities){
+            stringList.add(entity.getTypeName());
+        }
+        return stringList;
     }
 
     @Override

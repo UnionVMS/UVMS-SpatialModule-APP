@@ -153,7 +153,7 @@ public class UserAreaServiceBean implements UserAreaService {
             throw new ServiceException("user_not_authorised");
         }
 
-        repository.deleteEntity(userAreaById);
+        repository.deleteEntity(userAreaById); // TODO @Greg DAO
     }
 
     @Override
@@ -296,7 +296,7 @@ public class UserAreaServiceBean implements UserAreaService {
     private List<Long> getUserAreaGuid(String userName, String scopeName) {
         try {
             Map<String, String> parameters = ImmutableMap.<String, String>builder().put(USMSpatial.USER_NAME, userName).put(USMSpatial.SCOPE_NAME, scopeName).build();
-            return repository.findEntityByNamedQuery(Long.class, QueryNameConstants.FIND_GID_BY_USER, parameters);
+            return repository.findEntityByNamedQuery(Long.class, QueryNameConstants.FIND_GID_BY_USER, parameters); // TODO @Greg DAO
         } catch (ServiceException e) {
             throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
         }

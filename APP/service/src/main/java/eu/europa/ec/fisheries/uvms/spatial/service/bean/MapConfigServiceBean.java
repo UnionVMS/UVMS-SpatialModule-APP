@@ -17,9 +17,26 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialGetMapConfigurat
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveOrUpdateMapConfigurationRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveOrUpdateMapConfigurationRS;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.*;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ConfigDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ControlDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.DisplayProjectionDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.LayerDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.MapConfigDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.MapDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.RefreshDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ServiceLayersDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.TbControlDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.VectorStylesDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.*;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.ConfigurationDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.LayerAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.LayerSettingsDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.LayersDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.ReportProperties;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.StyleSettingsDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.SystemSettingsDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.VisibilitySettingsDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.helper.MapConfigHelper;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.MapConfigMapper;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.ProjectionMapper;
@@ -61,7 +78,7 @@ public class MapConfigServiceBean implements MapConfigService {
     @Override
     @SneakyThrows
     public List<ProjectionDto> getAllProjections() {
-        List<ProjectionEntity> projections = repository.findAllEntity(ProjectionEntity.class); // TODO projectionDAO
+        List<ProjectionEntity> projections = repository.findProjection();
         return ProjectionMapper.INSTANCE.projectionEntityListToProjectionDtoList(projections);
     }
 
