@@ -11,16 +11,9 @@ import org.hibernate.transform.Transformers;
 public abstract class CommonDao {
 	
 	protected EntityManager em;
-	private static final String GID = "gid";
-	
+
 	public CommonDao(EntityManager em) {
 		this.em = em;
-	}
-
-	protected Query createNamedNativeQuery(String nativeQueryString, String wktPoint, int crs) {
-		Query query = getSession().getNamedQuery(nativeQueryString);
-		query.setParameter("shape", "SRID=" + crs + ";" + wktPoint);
-		return query;
 	}
 
 	protected Query createNamedNativeQuery(String nativeQueryString, Map<String, Object> parameters) {
@@ -34,19 +27,6 @@ public abstract class CommonDao {
 	protected <T> Query createNamedNativeQuery(String nativeQueryString, Map<String, Object> parameters, Class<T> dtoClass) {
 		Query query = createNamedNativeQuery(nativeQueryString, parameters);
 		query.setResultTransformer(Transformers.aliasToBean(dtoClass));
-		return query;
-	}
-
-	protected Query createNamedQuery(String namedQueryString, Number gid) {
-		Query query = getSession().getNamedQuery(namedQueryString);
-		query.setParameter(GID, gid);
-		query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
-		return query;
-	}
-
-	protected <T> Query createNamedQuery(String nativeQuery, Class<T> resultTransformer) {
-		Query query = getSession().getNamedQuery(nativeQuery);
-		query.setResultTransformer(Transformers.aliasToBean(resultTransformer));
 		return query;
 	}
 
@@ -69,13 +49,6 @@ public abstract class CommonDao {
 		for (Map.Entry<String, List<Long>> entry : parameters.entrySet()) {
 			query.setParameterList(entry.getKey(), entry.getValue());
 		}
-		return query;
-	}
-
-	protected <T> Query createNamedQueryWithParameterList(String nativeQuery, String parameterName, List<? extends Object> parameters, Class<T> dtoClass) {
-		Query query = getSession().getNamedQuery(nativeQuery);
-		query.setParameterList(parameterName, parameters);
-		query.setResultTransformer(Transformers.aliasToBean(dtoClass));
 		return query;
 	}
 

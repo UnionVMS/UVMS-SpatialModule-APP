@@ -12,6 +12,9 @@ import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EntityResult;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.SqlResultSetMapping;
@@ -19,6 +22,7 @@ import javax.persistence.SqlResultSetMappings;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
@@ -32,8 +36,14 @@ import java.util.Date;
 @Where(clause = "enabled = 'Y'")
 @Table(name = "countries", schema = "spatial")
 @EqualsAndHashCode(callSuper = false)
-public class CountriesEntity extends BaseEntity { // TODO rename to CountryEntity
-	
+public class CountriesEntity implements Serializable { // TODO rename to CountryEntity
+
+    @Id
+    @Column(name = "gid")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @ColumnAliasName(aliasName = "gid")
+    private long gid;
+
     @Column(name = "geom")
     @Type(type = "org.hibernate.spatial.GeometryType")
     @ColumnAliasName(aliasName="geom")
@@ -127,7 +137,15 @@ public class CountriesEntity extends BaseEntity { // TODO rename to CountryEntit
 		this.enabledOn = enabledOn;
     }
 
-	public Geometry getGeom() {
+    public long getGid() {
+        return this.gid;
+    }
+
+    public void setGid(long gid) {
+        this.gid = gid;
+    }
+
+    public Geometry getGeom() {
 		return this.geom;
 	}
 

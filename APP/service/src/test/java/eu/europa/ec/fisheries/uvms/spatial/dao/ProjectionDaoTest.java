@@ -18,12 +18,7 @@ public class ProjectionDaoTest extends BaseSpatialDaoTest {
 
     @Before
     public void prepare(){
-
-        Operation operation =
-                sequenceOf(
-                        DELETE_ALL,
-                        INSERT_REFERENCE_DATA);
-
+        Operation operation = sequenceOf(DELETE_ALL, INSERT_REFERENCE_DATA);
         DbSetup dbSetup = new DbSetup(new DataSourceDestination(ds), operation);
         dbSetupTracker.launchIfNecessary(dbSetup);
     }
@@ -31,12 +26,18 @@ public class ProjectionDaoTest extends BaseSpatialDaoTest {
     @Test
     @SneakyThrows
     public void shouldReturnReferenceData(){
-
         dbSetupTracker.skipNextLaunch();
-
         List<ProjectionEntity> list = dao.findAllEntity(ProjectionEntity.class);
-
         assertEquals(2, list.size());
+    }
+
+    @Test
+    @SneakyThrows
+    public void testFindBySrsCode(){
+        dbSetupTracker.skipNextLaunch();
+        List<ProjectionEntity> bySrsCode = dao.findBySrsCode(3857);
+        assertEquals(1, bySrsCode.size());
+        assertEquals(1L, bySrsCode.get(0).getId().longValue());
 
     }
 }

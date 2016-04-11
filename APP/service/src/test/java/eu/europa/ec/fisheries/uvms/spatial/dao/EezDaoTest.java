@@ -5,13 +5,14 @@ import com.ninja_squad.dbsetup.destination.DataSourceDestination;
 import com.ninja_squad.dbsetup.operation.Operation;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import lombok.SneakyThrows;
+import org.geotools.geometry.jts.GeometryBuilder;
 import org.junit.Before;
 import org.junit.Test;
 import javax.persistence.EntityTransaction;
-import java.math.BigDecimal;
 import java.util.List;
 
 import static com.ninja_squad.dbsetup.Operations.sequenceOf;
+import static junit.framework.Assert.assertNotNull;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
@@ -20,58 +21,28 @@ public class EezDaoTest extends BaseSpatialDaoTest {
 
     private EezDao dao = new EezDao(em);
 
-    private EezEntity expected;
-
     @Before
     @SneakyThrows
     public void prepare(){
-
-        Operation operation =
-                sequenceOf(
-                        DELETE_ALL,
-                        INSERT_REFERENCE_DATA);
-
+        Operation operation = sequenceOf(DELETE_ALL, INSERT_EEZ_REFERENCE_DATA);
         DbSetup dbSetup = new DbSetup(new DataSourceDestination(ds), operation);
         dbSetupTracker.launchIfNecessary(dbSetup);
-
-        expected = EezEntity.builder()
-                .country("Christmas Island")
-                .sovereign("Australia")
-                .sovId(16)
-                .code("CXR")
-                .eezId(2L)
-                .mrgid(BigDecimal.valueOf(8309))
-                .areaM2(329438200300D)
-                .longitude(105.365343191397)
-                .latitude(-11.243213614649)
-                .mrgidEez(8309)
-                .geom(wktReader.read("MULTIPOLYGON(((" +
-                        "106.867924148 -9.16467987999994," +
-                        "108.036593601 -12.9679006599999," +
-                        "103.079231596 -12.82837266," +
-                        "102.56917584 -8.87249927999994," +
-                        "106.867924148 -9.16467987999994)))"))
-                .enabled(true)
-                .build();
-
-        EntityTransaction t = em.getTransaction();
-        t.begin();
-        em.persist(expected);
-        em.flush();
-        t.commit();
     }
 
     @Test
     @SneakyThrows
     public void shouldReturnEez() {
-        assertEquals(expected, dao.getEezById(expected.getGid()));
+        dbSetupTracker.skipNextLaunch();
+
+        assertNotNull(dao.getEezById(2L));
     }
 
     @Test
     @SneakyThrows
     public void shouldReturnIntersectedEez(){
-        List<EezEntity> intersects = dao.intersects(wktReader.read("POINT(103 -12)"));
-        assertEquals(expected, intersects.get(0));
+        dbSetupTracker.skipNextLaunch();
+        List<EezEntity> intersects = dao.intersects(new GeometryBuilder().point(103, -12));
+        assertEquals(3L, intersects.get(0).getGid());
     }
 
     @Test

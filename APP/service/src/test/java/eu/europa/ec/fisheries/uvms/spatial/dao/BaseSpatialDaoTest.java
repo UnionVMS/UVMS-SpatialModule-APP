@@ -1,9 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.dao;
 
 import com.ninja_squad.dbsetup.operation.Operation;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.io.WKTReader;
-import com.vividsolutions.jts.io.WKTWriter;
 import eu.europa.ec.fisheries.uvms.dao.BaseDAOTest;
 import static com.ninja_squad.dbsetup.Operations.deleteAllFrom;
 import static com.ninja_squad.dbsetup.Operations.insertInto;
@@ -11,21 +8,76 @@ import static com.ninja_squad.dbsetup.Operations.sequenceOf;
 
 public class BaseSpatialDaoTest extends BaseDAOTest {
 
-    protected WKTReader wktReader = new WKTReader();
-    protected WKTWriter wktWriter = new WKTWriter();
-
-    protected GeometryFactory geometryFactory = new GeometryFactory();
-
     protected static final Operation DELETE_ALL = sequenceOf(
             deleteAllFrom("spatial.countries"),
             deleteAllFrom("spatial.eez"),
+            deleteAllFrom("spatial.port_area"),
             deleteAllFrom("spatial.projection"),
             deleteAllFrom("spatial.report_connect_service_areas"),
             deleteAllFrom("spatial.report_connect_spatial"),
             deleteAllFrom("spatial.system_configurations"),
             deleteAllFrom("spatial.service_layer"),
-            deleteAllFrom("spatial.user_areas")
+            deleteAllFrom("spatial.user_areas"),
+            deleteAllFrom("spatial.area_location_types")
+    );
 
+    protected static final Operation INSERT_COUNTRY_REFERENCE_DATA = sequenceOf(
+            insertInto("spatial.countries")
+                    .columns("GID", "NAME", "CODE", "GEOM", "ENABLED")
+                    .values(1L, "Portugal", "PRT",
+                            "MULTIPOLYGON(((-8.20401647999992 42.069552104,-6.20594722499993 41.5702802530002," +
+                                    "-8.94603430899986 37.00787995,-8.20401647999992 42.069552104)))", "Y")
+                    .values(2L, "Spain", "ESP",
+                            "MULTIPOLYGON(((-7.69615637899992 43.731512762,3.3177189460001 42.322984117," +
+                                    "-5.6117651029999 36.0064557960001,-7.69615637899992 43.731512762)))", "Y")
+                    .build()
+    );
+
+    protected static final Operation INSERT_PORT_AREA_REFERENCE_DATA = sequenceOf(
+            insertInto("spatial.port_area")
+                    .columns("GID", "NAME", "CODE", "GEOM", "ENABLED")
+                    .values(1L, "Arrifana", "PTARF",
+                            "MULTIPOLYGON(((-8.23435463579409 40.2167886586631,-8.267269511506 40.1919737058521," +
+                                    "-8.29964570193888 40.2172021352306,-8.26673015076074 40.2420261841011," +
+                                    "-8.23435463579409 40.2167886586631)))", "Y")
+                    .values(2L, "Mira", "PTMIR",
+                            "MULTIPOLYGON(((-8.70024797652114 40.4329197209197,-8.73309892535009 40.4079728634524," +
+                                    "-8.76575214762078 40.4330710007415,-8.73290095050793 40.4580270276585," +
+                                    "-8.70024797652114 40.4329197209197)))", "Y")
+                    .values(3L, "Figueira da Foz", "PTFDF",
+                            "MULTIPOLYGON(((-8.82538784978001 40.1419554181509,-8.85805207409343 40.116971405565," +
+                                    "-8.89061221545117 40.1420353977151,-8.85794786067537 40.1670284858648," +
+                                    "-8.82538784978001 40.1419554181509)))", "Y")
+                    .build()
+    );
+
+    protected static final Operation INSERT_RFMO_REFERENCE_DATA = sequenceOf(
+            insertInto("spatial.rfmo")
+                    .columns("GID", "NAME", "CODE", "GEOM", "ENABLED")
+                    .values(1L, "International Commission for the Conservation of Atlantic Tuna", "ICCAT",
+                            "MULTIPOLYGON(((29.9996063400001 83.9331028899001,-70.00000002 -81.1501483101," +
+                                    "-79.9999999199999 77.3216511699,29.9996063400001 83.9331028899001))))", "Y")
+                    .values(2L, "North Atlantic Salmon Conservation Organization", "NASCO",
+                            "MULTIPOLYGON(((29.9996063400001 83.9331028899001,-77.23222344 37.2963867699," +
+                                    "-79.9999999199999 77.3216511699,29.9996063400001 83.9331028899001)))", "Y")
+                    .values(3L, "North-East Atlantic Fisheries Commission", "NEAFC",
+                            "MULTIPOLYGON(((50.9999990373697 84.466325737639,-42.0000008426303 35.9979663616391," +
+                                    "-44.0000008226303 89.9000042416391,50.9999990373697 84.466325737639)))", "Y")
+                    .build()
+    );
+
+    protected static final Operation INSERT_EEZ_REFERENCE_DATA = sequenceOf(
+            insertInto("spatial.eez")
+                    .columns("GID", "NAME", "COUNTRY", "SOVEREIGN", "GEOM", "ENABLED")
+                    .values(1L, "Eez with empty geometry", "Belgium", "Belgium", "MULTIPOLYGON EMPTY", "Y")
+                    .values(2L, "Portuguese Exclusive Economic Zone", "Portugal", "Portugal",
+                            "MULTIPOLYGON(((-8.72722170899993 40.722410075, -12.211019511 34.9460901480001," +
+                                    "-13.3017399999999 41.46626, -8.72722170899993 40.722410075)))", "Y")
+                    .values(3L, "Christmas Island", "Australia", "Australia",
+                            "MULTIPOLYGON(((106.867924148 -9.16467987999994,108.036593601 -12.9679006599999," +
+                                    "103.079231596 -12.82837266, 102.56917584 -8.87249927999994," +
+                                    "106.867924148 -9.16467987999994)))", "Y")
+                    .build()
     );
 
     protected static final Operation INSERT_REFERENCE_DATA = sequenceOf(
@@ -39,9 +91,27 @@ public class BaseSpatialDaoTest extends BaseDAOTest {
                     .values(1L, "1", 123)
                     .values(2L, "2", 1234)
                     .build(),
-            insertInto("spatial.eez")
-                    .columns("GID", "NAME", "COUNTRY", "SOVEREIGN","REMARKS", "GEOM", "ENABLED")
-                    .values(1L, "Eez with empty geometry", "Belgium", "Belgium", "none", "MULTIPOLYGON EMPTY", "Y")
+            insertInto("spatial.provider_format")
+                    .columns("ID", "SERVICE_TYPE")
+                    .values(1L, "WMS")
+                    .build(),
+            insertInto("spatial.service_layer")
+                    .columns("ID", "NAME", "IS_INTERNAL", "PROVIDER_FORMAT_ID")
+                    .values(1L, "EEZ", 'Y', 1)
+                    .values(2L, "RFMO", 'Y', 1)
+                    .values(3L, "Countries", 'Y', 1)
+                    .values(4L, "Ports", 'Y', 1)
+                    .values(5L, "UserAreas", 'Y', 1)
+                    .values(6L, "PortAreas", 'Y', 1)
+                    .build(),
+            insertInto("spatial.area_location_types")
+                    .columns("ID", "TYPE_NAME", "AREA_DB_TABLE", "IS_LOCATION", "IS_SYSTEM_WIDE", "SERVICE_LAYER_ID")
+                    .values(1L, "EEZ", "eez", 'N', 'Y', 1)
+                    .values(2L, "RFMO", "rfmo", 'N', 'Y', 2)
+                    .values(3L, "COUNTRY", "countries", 'N', 'N', 3)
+                    .values(4L, "PORT", "port", 'Y', 'Y', 4)
+                    .values(5L, "USERAREA", "user_areas", 'N', 'Y', 5)
+                    .values(6L, "PORTAREA", "port_area", 'N', 'Y', 6)
                     .build()
     );
 

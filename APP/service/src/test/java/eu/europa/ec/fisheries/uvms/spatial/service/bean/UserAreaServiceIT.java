@@ -46,7 +46,8 @@ public class UserAreaServiceIT extends AbstractArquillianIT {
 	}
 	
 	@Test
-	public void testUserAreaDetails() {
+    @SneakyThrows
+    public void testUserAreaDetails() {
 		//Given
 		Coordinate coordinate = new Coordinate(20.0535983848415, 31.1417484902222, 4326);
 		List<UserAreaDto> userAreas = userAreaService.getUserAreaDetailsWithExtentByLocation(coordinate, "rep_power");
@@ -58,6 +59,7 @@ public class UserAreaServiceIT extends AbstractArquillianIT {
 	}
 	
 	@Test
+    @SneakyThrows
 	public void testUserAreaDetailsForInvalidUserNameAndScopeName() {
 		//Given
 		Coordinate coordinate = new Coordinate(20.0535983848415, 31.1417484902222, 4326);

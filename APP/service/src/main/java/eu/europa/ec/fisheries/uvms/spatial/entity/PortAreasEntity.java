@@ -2,7 +2,6 @@ package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.spatial.entity.converter.CharBooleanConverter;
-import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.GeoJsonDto;
 import org.hibernate.annotations.Type;
@@ -46,6 +45,10 @@ public class PortAreasEntity implements Serializable {
     @Type(type = "org.hibernate.spatial.GeometryType")
     @ColumnAliasName(aliasName = GeoJsonDto.GEOMETRY)
     private Geometry geom;
+
+    @Column(name = "name", length = 200)
+    @ColumnAliasName(aliasName = "name")
+    private String name;
 
     @Column(name = "code", length = 10)
     @ColumnAliasName(aliasName = "code")
@@ -100,6 +103,14 @@ public class PortAreasEntity implements Serializable {
 
     public void setEnabledOn(Date enabledOn) {
         this.enabledOn = enabledOn;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
 }
