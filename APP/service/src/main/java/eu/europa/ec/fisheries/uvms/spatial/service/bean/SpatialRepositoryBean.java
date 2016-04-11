@@ -299,6 +299,11 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     }
 
     @Override
+    public List<ProjectionEntity> findProjection() throws ServiceException {
+        return projectionDao.findAllEntity(ProjectionEntity.class);
+    }
+
+    @Override
     public List<UserAreasEntity> findUserAreasByType(String userName, String scopeName, String type, boolean isPowerUser) throws ServiceException {
        return userAreaDao.findByUserNameAndScopeNameAndTypeAndPowerUser(userName, scopeName, type, isPowerUser);
     }
@@ -424,6 +429,16 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     @Override
     public List closestArea(List<AreaLocationTypesEntity> entities, SpatialFunction spatialFunction, Point point) {
         return areaDao.closestArea(entities, spatialFunction, point);
+    }
+
+    @Override
+    public List intersectingArea(List<AreaLocationTypesEntity> entities, SpatialFunction spatialFunction, Point point) {
+        return areaDao.intersectingArea(entities, spatialFunction, point);
+    }
+
+    @Override
+    public List<AreaLocationTypesEntity> listAllArea() throws ServiceException {
+        return areaLocationTypeDao.findByIsLocation(false);
     }
 
     @Override
