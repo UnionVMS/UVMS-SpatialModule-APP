@@ -80,6 +80,13 @@ public class BaseSpatialDaoTest extends BaseDAOTest {
                     .build()
     );
 
+    protected static final Operation INSERT_USER_AREA_REFERENCE_DATA = sequenceOf(
+            insertInto("spatial.user_areas")
+                    .columns("GID", "USER_NAME", "NAME", "TYPE", "AREA_DESC", "GEOM", "ENABLED", "CREATED_ON")
+                    .values(1L, "userDaoTest", "MyArea", "EEZ", "a simple description", "MULTIPOLYGON EMPTY", "Y", "2015-10-11 13:02:23.0")
+                    .build()
+    );
+
     protected static final Operation INSERT_REFERENCE_DATA = sequenceOf(
             insertInto("spatial.projection")
                     .columns("ID", "NAME", "SRS_CODE", "PROJ_DEF", "FORMATS", "UNITS", "WORLD", "EXTENT", "AXIS")

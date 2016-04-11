@@ -11,7 +11,6 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static com.ninja_squad.dbsetup.Operations.insertInto;
 import static com.ninja_squad.dbsetup.Operations.sequenceOf;
 import static junit.framework.TestCase.assertTrue;
 
@@ -19,17 +18,10 @@ public class UserAreaDaoTest extends BaseSpatialDaoTest {
 
     private UserAreaDao dao = new UserAreaDao(em);
 
-    private final static Operation INSERT = sequenceOf(
-            insertInto("spatial.user_areas")
-                    .columns("GID", "USER_NAME", "NAME", "TYPE", "AREA_DESC", "GEOM", "ENABLED", "CREATED_ON")
-                    .values(1L, "userDaoTest", "MyArea", "EEZ", "a simple description", "MULTIPOLYGON EMPTY", "Y", "2015-10-11 13:02:23.0")
-                    .build()
-    );
-
     @Before
     public void prepare(){
 
-        Operation operation = sequenceOf(DELETE_ALL, INSERT);
+        Operation operation = sequenceOf(DELETE_ALL, INSERT_USER_AREA_REFERENCE_DATA);
         DbSetup dbSetup = new DbSetup(new DataSourceDestination(ds), operation);
         dbSetupTracker.launchIfNecessary(dbSetup);
     }
