@@ -4,6 +4,7 @@ import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -47,4 +48,10 @@ public class AreaLocationTypesDao extends AbstractDAO<AreaLocationTypesEntity> {
         query.setResultTransformer(Transformers.aliasToBean(UserAreaLayerDto.class));
         return query.list();
     }
+
+    public List<AreaLayerDto> findSystemAreaLayerMapping() {
+        Query query = em.unwrap(Session.class).getNamedQuery(AreaLocationTypesEntity.FIND_SYSTEM_AREA_LAYER);
+        return query.setResultTransformer(Transformers.aliasToBean(AreaLayerDto.class)).list();
+    }
+
 }
