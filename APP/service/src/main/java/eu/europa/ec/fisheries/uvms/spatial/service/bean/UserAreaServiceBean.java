@@ -49,7 +49,7 @@ public class UserAreaServiceBean implements UserAreaService {
     @Transactional
     public Long storeUserArea(UserAreaGeoJsonDto userAreaDto, String userName) throws ServiceException {
 
-        UserAreasEntity userAreaByUserNameAndName = repository.getUserAreaByUserNameAndName(userName, userAreaDto.getName());
+        UserAreasEntity userAreaByUserNameAndName = repository.getUserAreaByUserNameAndName(userName, userAreaDto.getName()); //TODO improve the performance by creating DB unique constrain containing the two fields, instead of this search
 
         if (userAreaByUserNameAndName != null){
             throw new SpatialServiceException(SpatialServiceErrors.USER_AREA_ALREADY_EXISTING);
