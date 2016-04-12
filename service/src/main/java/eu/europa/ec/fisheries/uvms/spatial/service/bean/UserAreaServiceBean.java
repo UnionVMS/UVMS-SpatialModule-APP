@@ -31,13 +31,7 @@ import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static eu.europa.ec.fisheries.uvms.spatial.util.ColumnAliasNameHelper.getFieldMap;
 import static eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialUtils.convertToPointInWGS84;
@@ -160,14 +154,14 @@ public class UserAreaServiceBean implements UserAreaService {
     @Transactional
     public List<String> getUserAreaTypes(String userName, String scopeName, boolean isPowerUser) throws ServiceException {
 
-        List<String> stringList = new ArrayList<>();
+        Set<String> stringSet = new LinkedHashSet<>();
         List<UserAreasEntity> userArea = repository.findUserArea(userName, scopeName, isPowerUser);
 
         for (UserAreasEntity entity : userArea){
-            stringList.add(entity.getType());
+            stringSet.add(entity.getType());
         }
 
-        return stringList;
+        return new ArrayList<>(stringSet);
     }
 
     @Override
