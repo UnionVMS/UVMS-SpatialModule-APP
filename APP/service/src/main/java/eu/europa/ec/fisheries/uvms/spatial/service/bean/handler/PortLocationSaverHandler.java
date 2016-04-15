@@ -1,6 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.handler;
 
-import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaDisableService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.PortLocationService;
@@ -27,7 +27,7 @@ public class PortLocationSaverHandler extends AbstractSaverHandler implements Sa
     @Override
     protected void saveNewAreas(Map<String, Object> values, Date enabledOn) throws ServiceException, UnsupportedEncodingException {
         PortLocationDto portLocationDto = new PortLocationDto();
-        portLocationDto.setGeometry((Geometry) values.get("the_geom"));
+        portLocationDto.setGeometry((Point) values.get("the_geom"));
         portLocationDto.setCode(readStringProperty(values, "code"));
         portLocationDto.setName(readStringProperty(values, "name"));
         portLocationDto.setCountryCode(readStringProperty(values, "country_co"));
