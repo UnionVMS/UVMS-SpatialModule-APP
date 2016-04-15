@@ -14,6 +14,7 @@ import java.util.List;
 
 import static com.ninja_squad.dbsetup.Operations.sequenceOf;
 import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 public class UserAreaDaoTest extends BaseSpatialDaoTest {
 
@@ -40,5 +41,13 @@ public class UserAreaDaoTest extends BaseSpatialDaoTest {
         List<UserAreasEntity> entityList = dao.findByUserNameAndGeometry("user", shape);
         assertTrue(entityList.isEmpty());
     }
+
+    @Test
+    @SneakyThrows
+    public void testFindByUserNameAndSCopeName(){
+        List<UserAreasEntity> entityList = dao.findByUserNameAndScopeName("userDaoTest", "EC");
+        assertEquals(1L, entityList.get(0).getGid());
+    }
+
 
 }

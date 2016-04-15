@@ -58,4 +58,7 @@ public class AreaLocationTypesDao extends AbstractDAO<AreaLocationTypesEntity> {
         return query.setResultTransformer(Transformers.aliasToBean(AreaLayerDto.class)).list();
     }
 
+    public List<AreaLocationTypesEntity> findAll() throws ServiceException {
+        return findEntityByNamedQuery(AreaLocationTypesEntity.class, AreaLocationTypesEntity.FIND_ALL_AREA_AND_LOCATION_TYPE_NAMES);
+    }
 }

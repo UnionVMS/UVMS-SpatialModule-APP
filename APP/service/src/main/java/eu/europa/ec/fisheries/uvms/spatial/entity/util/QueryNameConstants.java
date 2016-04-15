@@ -12,7 +12,6 @@ public final class QueryNameConstants {
     /**
      * Find all
      */
-    public static final String FIND_ALL_AREA_AND_LOCATION_TYPE_NAMES = "AreaLocationType.findAllAreaAndLocationTypeNames";
     public static final String FIND_ALL_COUNTRY_DESC = "Countries.findAllCountriesDesc";
 
     /**
@@ -23,7 +22,6 @@ public final class QueryNameConstants {
     /**
      * Find User Area
      */
-    public static final String FIND_GID_BY_USER = "UserArea.findGidByUserNameOrScope";
     public static final String FIND_ALL_USER_AREAS = "UserArea.findAllUserAreas";
     public static final String FIND_ALL_USER_AREAS_GROUP = "UserArea.findAllUserAreaGroup";
     public static final String FIND_ALL_USER_AREAS_BY_GIDS = "UserAreas.findAllUserAreasByGid";
