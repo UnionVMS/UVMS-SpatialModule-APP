@@ -1,14 +1,12 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import com.vividsolutions.jts.geom.Geometry;
-import eu.europa.ec.fisheries.uvms.spatial.entity.converter.CharBooleanConverter;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.Where;
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EntityResult;
 import javax.persistence.NamedQueries;
@@ -16,8 +14,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.SqlResultSetMapping;
 import javax.persistence.SqlResultSetMappings;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import java.util.Date;
 
 @Entity
@@ -48,15 +44,7 @@ public class CountriesEntity extends BaseAreaEntity { // TODO rename to CountryE
     @Column(name = "admin", length = 40)
     @ColumnAliasName(aliasName="admin")
 	private String admin;
-    
-    @Column(name = "code", length = 3)
-    @ColumnAliasName(aliasName="code")
-	private String code;
-    
-    @Column(name = "name", length = 36)
-    @ColumnAliasName(aliasName="name")
-	private String name;
-    
+
     @Column(name = "name_long", length = 40)
     @ColumnAliasName(aliasName="nameLong")
 	private String nameLong;
@@ -88,14 +76,6 @@ public class CountriesEntity extends BaseAreaEntity { // TODO rename to CountryE
     @Column(name = "region_wb", length = 26)
     @ColumnAliasName(aliasName="regionWb")
 	private String regionWb;
-
-	@Convert(converter = CharBooleanConverter.class)
-	@Column(name = "enabled", nullable = false, length = 1)
-	private Boolean enabled = false;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "enabled_on")
-	private Date enabledOn;
 
 	public CountriesEntity() {
 	}
@@ -151,22 +131,6 @@ public class CountriesEntity extends BaseAreaEntity { // TODO rename to CountryE
 
 	public void setAdmin(String admin) {
 		this.admin = admin;
-	}
-
-	public String getCode() {
-		return this.code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	public String getName() {
-		return this.name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public String getNameLong() {

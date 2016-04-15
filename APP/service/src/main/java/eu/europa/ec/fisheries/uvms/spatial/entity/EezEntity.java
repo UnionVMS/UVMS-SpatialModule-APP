@@ -1,20 +1,15 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
-import eu.europa.ec.fisheries.uvms.spatial.entity.converter.CharBooleanConverter;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.Where;
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import java.math.BigDecimal;
-import java.util.Date;
 
 @Entity
 @NamedQueries({
@@ -32,10 +27,6 @@ public class EezEntity extends BaseAreaEntity {
     public static final String EEZ_BY_COORDINATE = "eezEntity.ByCoordinate";
     public static final String LIST_EMPTY_GEOMETRIES = "eezEntity.TEST";
     public static final String DISABLE_EEZ_AREAS = "eezEntity.disableEezAreas";
-
-    @Column(name = "name", length = 200)
-    @ColumnAliasName(aliasName = "name")
-    private String name;
 
     @Column(name = "country", length = 100)
     @ColumnAliasName(aliasName = "country")
@@ -56,10 +47,6 @@ public class EezEntity extends BaseAreaEntity {
     @Column(name = "eez_id")
     @ColumnAliasName(aliasName = "eezId")
     private Long eezId;
-
-    @Column(name = "code", length = 5)
-    @ColumnAliasName(aliasName = "code")
-    private String code;
 
     @Column(name = "mrgid")
     @ColumnAliasName(aliasName = "mrgid")
@@ -85,22 +72,7 @@ public class EezEntity extends BaseAreaEntity {
     @ColumnAliasName(aliasName = "mrgidEez")
     private Integer mrgidEez;
 
-    @Convert(converter = CharBooleanConverter.class)
-    @Column(name = "enabled", nullable = false, length = 1)
-    private Boolean enabled = false;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "enabled_on")
-    private Date enabledOn;
-
     public EezEntity() {
-    }
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getCountry() {
@@ -141,14 +113,6 @@ public class EezEntity extends BaseAreaEntity {
 
     public void setEezId(Long eezId) {
         this.eezId = eezId;
-    }
-
-    public String getCode() {
-        return this.code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
     }
 
     public BigDecimal getMrgid() {
@@ -197,22 +161,6 @@ public class EezEntity extends BaseAreaEntity {
 
     public void setMrgidEez(Integer mrgidEez) {
         this.mrgidEez = mrgidEez;
-    }
-
-    public Boolean getEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public Date getEnabledOn() {
-        return enabledOn;
-    }
-
-    public void setEnabledOn(Date enabledOn) {
-        this.enabledOn = enabledOn;
     }
 
 }
