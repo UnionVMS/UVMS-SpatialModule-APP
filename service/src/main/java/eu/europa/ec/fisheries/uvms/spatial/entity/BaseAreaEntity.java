@@ -5,7 +5,6 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasNa
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.hibernate.annotations.Type;
-import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,7 +16,7 @@ import java.io.Serializable;
 @EqualsAndHashCode
 public class BaseAreaEntity implements Serializable {
 
-    private final @Id @GeneratedValue(strategy = GenerationType.IDENTITY) @ColumnAliasName(aliasName = "gid") Long gid;
+    private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) @ColumnAliasName(aliasName = "gid") Long gid;
     private @Type(type = "org.hibernate.spatial.GeometryType") @ColumnAliasName(aliasName = "geometry") Geometry geom;
 
     protected BaseAreaEntity(){
@@ -34,5 +33,9 @@ public class BaseAreaEntity implements Serializable {
 
     public void setGeom(Geometry geom) {
         this.geom = geom;
+    }
+
+    public void setGid(Long gid) {
+        this.gid = gid;
     }
 }

@@ -220,7 +220,6 @@ public class AreaDetailsServiceTest {
     private RfmoEntity getMockedRfmoEntity() {
         RfmoEntity rfmoEntity = new RfmoEntity();
         rfmoEntity.setGeom(new GeometryBuilder().point());
-        rfmoEntity.setGid(1);
         rfmoEntity.setName("RFMO");
         rfmoEntity.setCode("Test RFMO");
         rfmoEntity.setTuna("no");
