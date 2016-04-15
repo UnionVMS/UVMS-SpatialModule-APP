@@ -1,6 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.spatial.entity.converter.CharBooleanConverter;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.GeoJsonDto;
@@ -38,7 +39,7 @@ public class PortsEntity implements Serializable {
     @Column(name = "geom", nullable = false)
     @Type(type = "org.hibernate.spatial.GeometryType")
     @ColumnAliasName(aliasName = GeoJsonDto.GEOMETRY)
-    private Geometry geom;
+    private Point geom;
 
     @Column(name = "country_code", length = 3)
     @ColumnAliasName(aliasName = "countrycode")
@@ -83,11 +84,11 @@ public class PortsEntity implements Serializable {
         this.gid = gid;
     }
 
-    public Geometry getGeom() {
+    public Point getGeom() {
         return geom;
     }
 
-    public void setGeom(Geometry geom) {
+    public void setGeom(Point geom) {
         this.geom = geom;
     }
 
