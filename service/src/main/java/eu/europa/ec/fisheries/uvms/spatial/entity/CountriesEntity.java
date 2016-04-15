@@ -6,15 +6,11 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.Type;
 import org.hibernate.annotations.Where;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EntityResult;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.SqlResultSetMapping;
@@ -22,7 +18,6 @@ import javax.persistence.SqlResultSetMappings;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import java.io.Serializable;
 import java.util.Date;
 
 @Entity
@@ -36,19 +31,8 @@ import java.util.Date;
 @Where(clause = "enabled = 'Y'")
 @Table(name = "countries", schema = "spatial")
 @EqualsAndHashCode(callSuper = false)
-public class CountriesEntity implements Serializable { // TODO rename to CountryEntity
+public class CountriesEntity extends BaseAreaEntity { // TODO rename to CountryEntity
 
-    @Id
-    @Column(name = "gid")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @ColumnAliasName(aliasName = "gid")
-    private long gid;
-
-    @Column(name = "geom")
-    @Type(type = "org.hibernate.spatial.GeometryType")
-    @ColumnAliasName(aliasName="geom")
-	private Geometry geom;
-    
     @Column(name = "sovereignt", length = 32)
     @ColumnAliasName(aliasName="sovereignt")
 	private String sovereignt;
@@ -136,22 +120,6 @@ public class CountriesEntity implements Serializable { // TODO rename to Country
 		this.enabled = enabled;
 		this.enabledOn = enabledOn;
     }
-
-    public long getGid() {
-        return this.gid;
-    }
-
-    public void setGid(long gid) {
-        this.gid = gid;
-    }
-
-    public Geometry getGeom() {
-		return this.geom;
-	}
-
-	public void setGeom(Geometry geom) {
-		this.geom = geom;
-	}
 
 	public String getSovereignt() {
 		return this.sovereignt;

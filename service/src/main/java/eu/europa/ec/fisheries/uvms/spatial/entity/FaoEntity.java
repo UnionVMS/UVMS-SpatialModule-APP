@@ -15,8 +15,6 @@ import org.hibernate.annotations.Where;
 @Where(clause = "enabled = 'Y'")
 @Table(name = "fao", schema = "spatial")
 public class FaoEntity implements Serializable {
-	
-	private static final long serialVersionUID = 6797853213499502863L;
 
 	@Id
 	@Column(name = "id")
