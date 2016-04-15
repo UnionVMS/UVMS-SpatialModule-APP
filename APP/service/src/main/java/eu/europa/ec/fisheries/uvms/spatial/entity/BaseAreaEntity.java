@@ -30,7 +30,7 @@ public class BaseAreaEntity implements Serializable {
     @ColumnAliasName(aliasName="name")
     protected String name;
 
-    @Column(name = "code", length = 5)
+    @Column(name = "code", length = 20)
     @ColumnAliasName(aliasName = "code")
     protected String code;
 
