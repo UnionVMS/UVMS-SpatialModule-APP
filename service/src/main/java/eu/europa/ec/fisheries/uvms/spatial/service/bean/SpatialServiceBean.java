@@ -9,7 +9,7 @@ import eu.europa.ec.fisheries.uvms.interceptors.TracingInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.dao.Oracle;
 import eu.europa.ec.fisheries.uvms.spatial.dao.util.SpatialFunction;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.PortsEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.PortEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Area;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaExtendedIdentifierType;
@@ -439,12 +439,12 @@ public class SpatialServiceBean implements SpatialService {
 
                 final String queryString = "SELECT * FROM spatial.port WHERE enabled = 'Y' ORDER BY " +
                         spatialFunction.stDistance(incomingLongitude, incomingLatitude) + " ASC " + spatialFunction.limit(15); // FIXME this can be replaces by NamedQuery
-                Query emNativeQuery = em.createNativeQuery(queryString, PortsEntity.class);
-                List<PortsEntity> records = emNativeQuery.getResultList();
+                Query emNativeQuery = em.createNativeQuery(queryString, PortEntity.class);
+                List<PortEntity> records = emNativeQuery.getResultList();
 
-                PortsEntity closestLocation = null;
+                PortEntity closestLocation = null;
                 Double closestDistance = Double.MAX_VALUE;
-                for (PortsEntity portsEntity : records) {
+                for (PortEntity portsEntity : records) {
 
                     final Geometry geometry = portsEntity.getGeom();
                     final Point centroid = geometry.getCentroid();
