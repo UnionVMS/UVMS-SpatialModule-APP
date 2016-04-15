@@ -1,23 +1,17 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
-import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.spatial.entity.converter.CharBooleanConverter;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
-import org.hibernate.annotations.Type;
 import org.hibernate.annotations.Where;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import java.io.Serializable;
 import java.util.Date;
 
 @Entity
@@ -31,21 +25,10 @@ import java.util.Date;
 })
 @Where(clause = "enabled = 'Y'")
 @Table(name = "rfmo", schema = "spatial")
-public class RfmoEntity implements Serializable {
+public class RfmoEntity extends BaseAreaEntity {
 
     public static final String RFMO_BY_COORDINATE = "rfmoEntity.ByCoordinate";
     public static final String DISABLE_RFMO_AREAS = "rfmoEntity.disableRfmoAreas";
-
-    @Id
-    @Column(name = "gid")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @ColumnAliasName(aliasName = "gid")
-    private long gid;
-
-    @Column(name = "geom")
-    @Type(type = "org.hibernate.spatial.GeometryType")
-    @ColumnAliasName(aliasName = "geometry")
-    private Geometry geom;
 
     @Column(name = "code", length = 10)
     @ColumnAliasName(aliasName = "code")
@@ -68,22 +51,6 @@ public class RfmoEntity implements Serializable {
     private Date enabledOn;
 
     public RfmoEntity() {
-    }
-
-    public long getGid() {
-        return this.gid;
-    }
-
-    public void setGid(long gid) {
-        this.gid = gid;
-    }
-
-    public Geometry getGeom() {
-        return this.geom;
-    }
-
-    public void setGeom(Geometry geom) {
-        this.geom = geom;
     }
 
     public String getCode() {
