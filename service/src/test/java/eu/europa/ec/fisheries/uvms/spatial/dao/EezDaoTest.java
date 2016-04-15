@@ -42,7 +42,7 @@ public class EezDaoTest extends BaseSpatialDaoTest {
     public void shouldReturnIntersectedEez(){
         dbSetupTracker.skipNextLaunch();
         List<EezEntity> intersects = dao.intersects(new GeometryBuilder().point(103, -12));
-        assertEquals(3L, intersects.get(0).getGid());
+        assertEquals(3L, intersects.get(0).getGid().longValue());
     }
 
     @Test
@@ -50,7 +50,7 @@ public class EezDaoTest extends BaseSpatialDaoTest {
     public void shouldReturnAnEmptyGeometry(){
         List<EezEntity> eezEntities = dao.listEmptyGeometries();
         assertEquals(1, eezEntities.size());
-        assertEquals(1L, eezEntities.get(0).getGid());
+        assertEquals(1L, eezEntities.get(0).getGid().longValue());
         assertTrue(eezEntities.get(0).getGeom().isEmpty());
     }
 
