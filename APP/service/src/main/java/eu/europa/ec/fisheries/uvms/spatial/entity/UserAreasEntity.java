@@ -57,9 +57,12 @@ import java.util.Set;
         @NamedQuery(name = QueryNameConstants.FIND_ALL_USER_AREAS_BY_GIDS,
                 query = "SELECT area.gid as gid, area.name as name, area.areaDesc as desc FROM UserAreasEntity area WHERE area.gid IN (:gids)"),
         @NamedQuery(name = UserAreasEntity.FIND_USER_AREA_BY_USER,
-                query = "SELECT DISTINCT area FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection WHERE  area.type<>'' AND area.type <> null AND ((1=:isPowerUser) OR (area.userName=:userName OR scopeSelection.name=:scopeName))"),
+                query = "SELECT DISTINCT area " +
+                        "FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection " +
+                        "WHERE area.type<>'' AND area.type <> null AND ((1=:isPowerUser) " +
+                        "OR (area.userName=:userName OR scopeSelection.name=:scopeName))"), // TODO Test distinct (distinct can be deleted in this case)
         @NamedQuery(name = QueryNameConstants.FIND_ALL_USER_AREAS_GROUP,
-                query = "SELECT distinct area.type as name FROM UserAreasEntity area " +
+                query = "SELECT DISTINCT area.type as name FROM UserAreasEntity area " +
                         "LEFT JOIN area.scopeSelection scope WHERE (area.userName = :userName OR (scope.name = :scopeName AND scope.userAreas = area))"),
         @NamedQuery(name = UserAreasEntity.FIND_GID_FOR_SHARED_AREA,
                 query = "SELECT area.gid FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection WHERE (area.userName <> :userName AND area.type = :type AND scopeSelection.name = :scopeName)"),
