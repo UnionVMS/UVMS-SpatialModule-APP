@@ -96,10 +96,6 @@ public class UserAreasEntity extends BaseAreaEntity {
     @Column(name = "user_name", nullable = false, length = 255)
     private String userName;
 
-    @Column(name = "name", nullable = false, length = 255)
-    @ColumnAliasName(aliasName ="name")
-    private String name;
-
     @Column(columnDefinition = "text", name = "area_desc")
     @ColumnAliasName(aliasName ="areaDesc")
     private String areaDesc;
@@ -119,11 +115,6 @@ public class UserAreasEntity extends BaseAreaEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAreas", cascade = CascadeType.ALL, orphanRemoval = true)
     @ColumnAliasName(aliasName ="scopeSelection")
     private Set<UserScopeEntity> scopeSelection;
-
-    @Convert(converter = CharBooleanConverter.class)
-    @Column(name = "enabled", nullable = false, length = 1)
-    @ColumnAliasName(aliasName ="enabled")
-    private Boolean enabled = true;
 
     public UserAreasEntity() {
     }
@@ -150,14 +141,6 @@ public class UserAreasEntity extends BaseAreaEntity {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getAreaDesc() {
@@ -209,16 +192,8 @@ public class UserAreasEntity extends BaseAreaEntity {
         return datasetName;
     }
 
-
     public void setDatasetName(String datasetName) {
         this.datasetName = datasetName;
     }
 
-    public Boolean getEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
-    }
 }
