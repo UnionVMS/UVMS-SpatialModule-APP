@@ -1,6 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.mapper;
 
-import eu.europa.ec.fisheries.uvms.spatial.entity.PortsEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.PortEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.PortLocationDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -15,6 +15,6 @@ public interface PortLocationMapper {
     @Mappings({
             @Mapping(source = "geometry", target = "geom"),
     })
-    PortsEntity portLocationDtoToPortsEntity(PortLocationDto portLocationDto);
+    PortEntity portLocationDtoToPortsEntity(PortLocationDto portLocationDto);
 
 }

@@ -17,7 +17,7 @@
         <class>eu.europa.ec.fisheries.uvms.spatial.entity.RfmoEntity</class>
         <class>eu.europa.ec.fisheries.uvms.spatial.entity.PortAreasEntity</class>
         <class>eu.europa.ec.fisheries.uvms.spatial.entity.FaoEntity</class>
-        <class>eu.europa.ec.fisheries.uvms.spatial.entity.PortsEntity</class>
+        <class>eu.europa.ec.fisheries.uvms.spatial.entity.PortEntity</class>
         <class>eu.europa.ec.fisheries.uvms.spatial.entity.RacEntity</class>
         <class>eu.europa.ec.fisheries.uvms.spatial.entity.GfcmEntity</class>
         <class>eu.europa.ec.fisheries.uvms.spatial.entity.StatRectEntity</class>

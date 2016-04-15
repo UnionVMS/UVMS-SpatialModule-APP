@@ -2,11 +2,11 @@ package eu.europa.ec.fisheries.uvms.spatial.dao;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
-import eu.europa.ec.fisheries.uvms.spatial.entity.PortsEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.PortEntity;
 
 import javax.persistence.EntityManager;
 
-public class PortDao extends AbstractDAO<PortsEntity> {
+public class PortDao extends AbstractDAO<PortEntity> {
 
     private EntityManager em;
 
@@ -20,6 +20,6 @@ public class PortDao extends AbstractDAO<PortsEntity> {
     }
 
     public Integer disable() throws ServiceException {
-        return updateEntityByNamedQuery(PortsEntity.DISABLE_PORT_LOCATIONS);
+        return updateEntityByNamedQuery(PortEntity.DISABLE);
     }
 }

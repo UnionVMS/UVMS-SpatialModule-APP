@@ -1,14 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.util;
 
-import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.FaoEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.GfcmEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.PortAreasEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.PortsEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.RacEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.RfmoEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.StatRectEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.*;
+import eu.europa.ec.fisheries.uvms.spatial.entity.PortEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 
 public enum SpatialTypeEnum {
@@ -19,7 +12,7 @@ public enum SpatialTypeEnum {
 	RAC("RAC", QueryNameConstants.RAC_BY_COORDINATE, RacEntity.class),// Not used yet
 	S_TAT_RECT("STatRect", QueryNameConstants.STAT_RECT_BY_COORDINATE, StatRectEntity.class),// Not used yet
 	FAO("FAO", QueryNameConstants.FAO_BY_COORDINATE, FaoEntity.class), // Not used yet
-	PORT("PORT", PortsEntity.PORT_BY_COORDINATE, PortsEntity.class),
+	PORT("PORT", PortEntity.PORT_BY_COORDINATE, PortEntity.class),
 	PORTAREA("PORTAREA", PortAreasEntity.PORT_AREA_BY_COORDINATE, PortAreasEntity.PORT_AREA_BY_ID, PortAreasEntity.class),
 	USERAREA("USERAREA", UserAreasEntity.USER_AREA_BY_COORDINATE, QueryNameConstants.USERAREA_COLUMNS, UserAreasEntity.class);
 	
