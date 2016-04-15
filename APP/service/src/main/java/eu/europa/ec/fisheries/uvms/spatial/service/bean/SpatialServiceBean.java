@@ -66,7 +66,6 @@ import java.util.Map;
 import static eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialUtils.DEFAULT_CRS;
 import static eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialUtils.convertToPointInWGS84;
 import static eu.europa.ec.fisheries.uvms.spatial.util.ColumnAliasNameHelper.getFieldMap;
-import static eu.europa.ec.fisheries.uvms.spatial.util.SpatialTypeEnum.getEntityClassByType;
 import static eu.europa.ec.fisheries.uvms.spatial.util.SpatialTypeEnum.getNativeQueryByType;
 import static org.apache.commons.collections.CollectionUtils.isEmpty;
 import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
@@ -417,8 +416,7 @@ public class SpatialServiceBean implements SpatialService {
             if (!StringUtils.isNumeric(id)) {
                 throw new SpatialServiceException(SpatialServiceErrors.INVALID_ID_TYPE, id);
             }
-            // FIXME @Greg DAO
-            Object object = repository.findEntityById(getEntityClassByType(locationTypesEntity.getTypeName()), Long.parseLong(locationTypeEntry.getId()));
+            Object object = repository.findAreaByTypeAndId(locationTypesEntity.getTypeName(), Long.parseLong(locationTypeEntry.getId()));
 
             if (object == null) {
                 throw new SpatialServiceException(SpatialServiceErrors.ENTITY_NOT_FOUND, locationTypesEntity.getTypeName());

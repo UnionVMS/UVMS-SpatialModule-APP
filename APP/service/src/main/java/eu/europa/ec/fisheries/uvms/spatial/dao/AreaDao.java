@@ -5,12 +5,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
+
+import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.spatial.dao.util.SpatialFunction;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GeometryType;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.GeometryMapper;
 import com.vividsolutions.jts.geom.Point;
+import eu.europa.ec.fisheries.uvms.spatial.util.SpatialTypeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.hibernate.Query;
@@ -18,6 +21,8 @@ import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.transform.AliasToEntityMapResultTransformer;
 import org.hibernate.type.StandardBasicTypes;
+
+import static eu.europa.ec.fisheries.uvms.spatial.util.SpatialTypeEnum.getEntityClassByType;
 
 @Slf4j
 public class AreaDao extends AbstractDAO {
@@ -46,6 +51,20 @@ public class AreaDao extends AbstractDAO {
         query.setParameter("gid", gid);
         query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
         return query.list();
+    }
+
+    public Object findOneByTypeNameAndId(final String typeName, final Long id) throws ServiceException { // FIXME this needs improvement
+        final Class entityClassByType = getEntityClassByType(typeName);
+        return findEntityById(entityClassByType, id);
+    }
+
+    private Class getEntityClassByType(String value) {
+        for (SpatialTypeEnum areaType : SpatialTypeEnum.values()) {
+            if(areaType.getType().equalsIgnoreCase(value)) {
+                return areaType.getEntityClass();
+            }
+        }
+        throw new IllegalArgumentException(value);
     }
 
     public List closestArea(final List<AreaLocationTypesEntity> entities, final SpatialFunction spatialFunction, final Point point){
@@ -136,4 +155,5 @@ public class AreaDao extends AbstractDAO {
     public EntityManager getEntityManager() {
         return em;
     }
+
 }

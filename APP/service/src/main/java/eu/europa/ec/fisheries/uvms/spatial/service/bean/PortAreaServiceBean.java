@@ -46,7 +46,7 @@ public class PortAreaServiceBean implements PortAreaService {
         PortAreasEntity persistentPortArea = persistentPortAreas.get(0);
         persistentPortArea.setGeom(geometry);
 
-        PortAreasEntity persistedUpdatedEntity = (PortAreasEntity) repository.updateEntity(persistentPortArea);
+        PortAreasEntity persistedUpdatedEntity = repository.update(persistentPortArea);
         return persistedUpdatedEntity.getGid();
     }
 
@@ -58,7 +58,7 @@ public class PortAreaServiceBean implements PortAreaService {
     @Override
     public long createPortArea(PortAreaDto portAreaDto) throws ServiceException {
         PortAreasEntity portAreasEntity = mapper.portAreaDtoToPortAreasEntity(portAreaDto);
-        portAreasEntity = (PortAreasEntity) repository.createEntity(portAreasEntity);
+        portAreasEntity = repository.createEntity(portAreasEntity);
         return portAreasEntity.getGid();
     }
 

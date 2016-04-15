@@ -16,7 +16,7 @@ import javax.persistence.UniqueConstraint;
 @Entity
 @Table(name = "area_location_types", schema = "spatial", uniqueConstraints = @UniqueConstraint(columnNames = "type_name"))
 @NamedQueries({
-        @NamedQuery(name = QueryNameConstants.FIND_ALL_AREA_AND_LOCATION_TYPE_NAMES, query = "SELECT area.typeName FROM AreaLocationTypesEntity area"),
+        @NamedQuery(name = AreaLocationTypesEntity.FIND_ALL_AREA_AND_LOCATION_TYPE_NAMES, query = "FROM AreaLocationTypesEntity area"),
         @NamedQuery(name = AreaLocationTypesEntity.FIND_ALL_IS_LOCATION, query = "FROM AreaLocationTypesEntity area WHERE isLocation = :isLocation"),
         @NamedQuery(name = AreaLocationTypesEntity.FIND_ALL_IS_LOCATION_IS_SYSTEM_WIDE, query = "FROM AreaLocationTypesEntity WHERE isLocation = :isLocation AND isSystemWide = :isSystemWide"),
         @NamedQuery(name = AreaLocationTypesEntity.FIND_TYPE_BY_NAME, query = "FROM AreaLocationTypesEntity WHERE typeName= :typeName"),
@@ -44,6 +44,7 @@ public class AreaLocationTypesEntity extends BaseEntity {
     public static final String FIND_ALL_IS_LOCATION_IS_SYSTEM_WIDE = "AreaLocationType.findAllByIsLocationIsSystemWide";
     public static final String FIND_SYSTEM_AREA_LAYER = "AreaLocationType.findSystemAreaLayerMappings";
     public static final String FIND_SYSTEM_AREA_AND_LOCATION_LAYER = "AreaLocationType.findSystemAreaAndLocationLayerMappings";
+    public static final String FIND_ALL_AREA_AND_LOCATION_TYPE_NAMES = "AreaLocationType.findAllAreaAndLocationTypeNames";
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "service_layer_id", nullable = false)

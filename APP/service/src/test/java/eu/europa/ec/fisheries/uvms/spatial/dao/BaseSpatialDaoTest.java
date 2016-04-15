@@ -18,6 +18,7 @@ public class BaseSpatialDaoTest extends BaseDAOTest {
             deleteAllFrom("spatial.system_configurations"),
             deleteAllFrom("spatial.service_layer"),
             deleteAllFrom("spatial.user_areas"),
+            deleteAllFrom("spatial.user_scope"),
             deleteAllFrom("spatial.area_location_types")
     );
 
@@ -84,6 +85,10 @@ public class BaseSpatialDaoTest extends BaseDAOTest {
             insertInto("spatial.user_areas")
                     .columns("GID", "USER_NAME", "NAME", "TYPE", "AREA_DESC", "GEOM", "ENABLED", "CREATED_ON")
                     .values(1L, "userDaoTest", "MyArea", "EEZ", "a simple description", "MULTIPOLYGON EMPTY", "Y", "2015-10-11 13:02:23.0")
+                    .build(),
+            insertInto("spatial.user_scope")
+                    .columns("ID", "SCOPE_NAME", "USER_AREA_ID")
+                    .values(1L, "EC", 1L)
                     .build()
     );
 

@@ -165,7 +165,7 @@ public class UserAreaDao extends AbstractDAO<UserAreasEntity> {
                 .and(IS_POWER_USER, isPowerUser ? 1 : 0)
                 .and(SCOPE_NAME, scopeName);
 
-        return findEntityByNamedQuery(UserAreasEntity.class, UserAreasEntity.FIND_USER_AREA_BY_TYPE, param.parameters());
+        return findEntityByNamedQuery(UserAreasEntity.class, FIND_USER_AREA_BY_TYPE, param.parameters());
     }
 
     public List<UserAreasEntity> findUserAreasTypes(final String userName, final String scopeName, final Boolean isPowerUser) throws ServiceException {
@@ -174,6 +174,11 @@ public class UserAreaDao extends AbstractDAO<UserAreasEntity> {
                 .and(IS_POWER_USER, isPowerUser ? 1 : 0)
                 .and(SCOPE_NAME, scopeName);
 
-        return findEntityByNamedQuery(UserAreasEntity.class, UserAreasEntity.FIND_USER_AREA_BY_USER, param.parameters());
+        return findEntityByNamedQuery(UserAreasEntity.class, FIND_USER_AREA_BY_USER, param.parameters());
+    }
+
+    public List<UserAreasEntity> findByUserNameAndScopeName(String userName, String scopeName) throws ServiceException {
+        return findEntityByNamedQuery(UserAreasEntity.class, FIND_BY_USER_NAME_AND_SCOPE_NAME,
+                with(USER_NAME, userName).and(SCOPE_NAME, scopeName).parameters());
     }
 }

@@ -64,8 +64,7 @@ public class AreaDetailsServiceBean implements AreaDetailsService {
 
         Integer id = Integer.parseInt(areaTypeEntry.getId());
 
-        Class entityClassByType = getEntityClassByType(areaLocationTypesEntity.getTypeName());
-        Object object = repository.findEntityById(entityClassByType, id.longValue()); // TODO @Greg DAO
+        Object object = repository.findAreaByTypeAndId(areaLocationTypesEntity.getTypeName(), id.longValue());
 
         if (object == null) {
             throw new SpatialServiceException(SpatialServiceErrors.ENTITY_NOT_FOUND, areaLocationTypesEntity.getTypeName());

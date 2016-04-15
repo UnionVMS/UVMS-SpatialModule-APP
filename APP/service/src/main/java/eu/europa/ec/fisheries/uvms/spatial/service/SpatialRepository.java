@@ -2,7 +2,6 @@ package eu.europa.ec.fisheries.uvms.spatial.service;
 
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.service.DAO;
 import eu.europa.ec.fisheries.uvms.spatial.dao.util.SpatialFunction;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.BookmarkEntity;
@@ -26,10 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * // TODO removing the DAO interface as this interface was not designed to extend EJB's
- */
-public interface SpatialRepository extends DAO {
+public interface SpatialRepository {
 
     List findAreaOrLocationByCoordinates(Point point, String nativeQueryString);
 
@@ -155,4 +151,15 @@ public interface SpatialRepository extends DAO {
 
     List<AreaLocationTypesEntity> listAllArea() throws ServiceException;
 
+    List<AreaLocationTypesEntity> listAllAreaAndLocation() throws ServiceException;
+
+    Object findAreaByTypeAndId(String typeName, Long id) throws ServiceException;
+
+    void deleteUserArea(UserAreasEntity userAreaById);
+
+    PortAreasEntity update(PortAreasEntity persistentPortArea) throws ServiceException;
+
+    RfmoEntity create(RfmoEntity rfmoEntity) throws ServiceException;
+
+    List<UserAreasEntity> findUserAreaByUserNameAndScopeName(String userName, String scopeName) throws ServiceException;
 }

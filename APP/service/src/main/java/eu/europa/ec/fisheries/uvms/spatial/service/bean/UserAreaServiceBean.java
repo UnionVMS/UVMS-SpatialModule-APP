@@ -1,6 +1,5 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
@@ -9,7 +8,6 @@ import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserScopeEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.constants.USMSpatial;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
@@ -147,7 +145,7 @@ public class UserAreaServiceBean implements UserAreaService {
             throw new ServiceException("user_not_authorised");
         }
 
-        repository.deleteEntity(userAreaById); // TODO @Greg DAO
+        repository.deleteUserArea(userAreaById);
     }
 
     @Override
@@ -289,8 +287,16 @@ public class UserAreaServiceBean implements UserAreaService {
     @SuppressWarnings("unchecked")
     private List<Long> getUserAreaGuid(String userName, String scopeName) {
         try {
-            Map<String, String> parameters = ImmutableMap.<String, String>builder().put(USMSpatial.USER_NAME, userName).put(USMSpatial.SCOPE_NAME, scopeName).build();
-            return repository.findEntityByNamedQuery(Long.class, QueryNameConstants.FIND_GID_BY_USER, parameters); // TODO @Greg DAO
+
+            List<Long> longList = new ArrayList<>();
+
+            List<UserAreasEntity> userAreaByUserNameAndScopeName = repository.findUserAreaByUserNameAndScopeName(userName, scopeName);
+            for (UserAreasEntity entity : userAreaByUserNameAndScopeName){
+                longList.add(entity.getGid());
+            }
+            return longList;
+
+
         } catch (ServiceException e) {
             throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
         }
