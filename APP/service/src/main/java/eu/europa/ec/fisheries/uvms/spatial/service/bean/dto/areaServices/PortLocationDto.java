@@ -1,13 +1,13 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices;
 
-import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.Geometry;
 
 import java.util.Date;
 
 public class PortLocationDto {
     private String name;
     private String code;
-    private Point geometry;
+    private Geometry geometry;
     private String countryCode;
     private String fishingPort;
     private String landingPlace;
@@ -15,11 +15,11 @@ public class PortLocationDto {
     private Boolean enabled;
     private Date enabledOn;
 
-    public Point getGeometry() {
+    public Geometry getGeometry() {
         return geometry;
     }
 
-    public void setGeometry(Point geometry) {
+    public void setGeometry(Geometry geometry) {
         this.geometry = geometry;
     }
 

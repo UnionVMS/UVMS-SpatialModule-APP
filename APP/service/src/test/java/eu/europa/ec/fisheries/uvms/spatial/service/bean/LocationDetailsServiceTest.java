@@ -6,6 +6,8 @@ import static org.junit.Assert.assertNotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import eu.europa.ec.fisheries.uvms.spatial.entity.PortEntity;
 import lombok.SneakyThrows;
 import org.geotools.geometry.jts.GeometryBuilder;
 import org.junit.Before;
@@ -21,7 +23,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import com.vividsolutions.jts.geom.Point;
 
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.PortsEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationProperty;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationType;
@@ -146,7 +147,7 @@ public class LocationDetailsServiceTest {
         locationDetailsServiceBean.getLocationDetails(locationEntry);
 	}
 	
-	private void setMocks(PortsEntity portsEntity) {
+	private void setMocks(PortEntity portsEntity) {
 		List<AreaLocationTypesEntity> locationEntities = new ArrayList<AreaLocationTypesEntity>();
 		locationEntities.add(getMockAreaTypeEntity(LocationType.PORT.value()));
 		mockCrudServiceBean(locationEntities, portsEntity);
@@ -169,9 +170,9 @@ public class LocationDetailsServiceTest {
 		return areaEntity;
 	}
 	
-	private PortsEntity getMockedPortsEntity() {
-		PortsEntity portsEntity = new PortsEntity();
-		portsEntity.setGid(1);
+	private PortEntity getMockedPortsEntity() {
+		PortEntity portsEntity = new PortEntity();
+		portsEntity.setGid(1L);
 		portsEntity.setName("TEST");
 		portsEntity.setCode("Code");
 		portsEntity.setGeom(new GeometryBuilder().point());
