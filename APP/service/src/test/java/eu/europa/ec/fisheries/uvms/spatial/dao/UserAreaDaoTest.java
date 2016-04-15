@@ -46,7 +46,7 @@ public class UserAreaDaoTest extends BaseSpatialDaoTest {
     @SneakyThrows
     public void testFindByUserNameAndSCopeName(){
         List<UserAreasEntity> entityList = dao.findByUserNameAndScopeName("userDaoTest", "EC");
-        assertEquals(1L, entityList.get(0).getGid());
+        assertEquals(1L, entityList.get(0).getGid().longValue());
     }
 
 

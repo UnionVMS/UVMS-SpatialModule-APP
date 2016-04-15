@@ -73,7 +73,7 @@ import java.util.Set;
 @Table(name="user_areas", schema = "spatial", uniqueConstraints = {
         @UniqueConstraint(columnNames={"name", "user_name"})
 })
-public class UserAreasEntity implements Serializable {
+public class UserAreasEntity extends BaseAreaEntity {
 
     public static final String USER_AREA_DETAILS_BY_LOCATION = "UserArea.findUserAreaDetailsByLocation";
     public static final String USER_AREA_BY_COORDINATE = "userAreasEntity.ByCoordinate";
@@ -84,12 +84,6 @@ public class UserAreasEntity implements Serializable {
     public static final String FIND_USER_AREA_BY_TYPE = "UserArea.findUserAreaByType";
     public static final String FIND_USER_AREA_BY_USER = "UserArea.findUserAreaTypes";
     public static final String FIND_BY_USER_NAME_AND_SCOPE_NAME = "UserArea.findGidByUserNameOrScope";
-
-    @Id
-    @Column(name = "gid")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @ColumnAliasName(aliasName ="id")
-    private long gid;
 
     @Column(name = "type", length = 255)
     @ColumnAliasName(aliasName ="subType")
@@ -120,11 +114,6 @@ public class UserAreasEntity implements Serializable {
     @ColumnAliasName(aliasName ="datasetName")
     private String datasetName;
 
-    @Column(name = "geom", nullable = false)
-    @Type(type = "org.hibernate.spatial.GeometryType")
-    @ColumnAliasName(aliasName ="geometry")
-    private Geometry geom;
-
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_on", nullable = false)
     @ColumnAliasName(aliasName ="createdOn")
@@ -143,14 +132,6 @@ public class UserAreasEntity implements Serializable {
     private Boolean enabled = true;
 
     public UserAreasEntity() {
-    }
-
-    public long getGid() {
-        return this.gid;
-    }
-
-    public void setGid(long gid) {
-        this.gid = gid;
     }
 
     public String getType() {
@@ -191,14 +172,6 @@ public class UserAreasEntity implements Serializable {
 
     public void setAreaDesc(String areaDesc) {
         this.areaDesc = areaDesc;
-    }
-
-    public Geometry getGeom() {
-        return this.geom;
-    }
-
-    public void setGeom(Geometry geom) {
-        this.geom = geom;
     }
 
     public Date getCreatedOn() {

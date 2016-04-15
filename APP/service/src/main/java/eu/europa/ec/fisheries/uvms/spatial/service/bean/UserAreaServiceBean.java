@@ -29,7 +29,14 @@ import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.transaction.Transactional;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static eu.europa.ec.fisheries.uvms.spatial.util.ColumnAliasNameHelper.getFieldMap;
 import static eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialUtils.convertToPointInWGS84;
@@ -105,7 +112,7 @@ public class UserAreaServiceBean implements UserAreaService {
         userAreasEntityToUpdate.setGid(persistentUserArea.getGid());
         userAreasEntityToUpdate.setScopeSelection(createScopeSelection(userAreaDto, persistentUserArea));
 
-        UserAreasEntity persistedUpdatedEntity = (UserAreasEntity) repository.update(userAreasEntityToUpdate);
+        UserAreasEntity persistedUpdatedEntity = repository.update(userAreasEntityToUpdate);
 
         return persistedUpdatedEntity.getGid();
     }
