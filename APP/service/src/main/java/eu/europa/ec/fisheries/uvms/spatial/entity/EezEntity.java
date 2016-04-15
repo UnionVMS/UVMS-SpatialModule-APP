@@ -1,24 +1,18 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
-import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.spatial.entity.converter.CharBooleanConverter;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.Type;
 import org.hibernate.annotations.Where;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -32,23 +26,12 @@ import java.util.Date;
 })
 @Where(clause = "enabled = 'Y'")
 @Table(name = "eez", schema = "spatial")
-@EqualsAndHashCode
-public class EezEntity implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+public class EezEntity extends BaseAreaEntity {
 
     public static final String EEZ_BY_COORDINATE = "eezEntity.ByCoordinate";
     public static final String LIST_EMPTY_GEOMETRIES = "eezEntity.TEST";
     public static final String DISABLE_EEZ_AREAS = "eezEntity.disableEezAreas";
-
-    @Id
-    @Column(name = "gid")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @ColumnAliasName(aliasName = "gid")
-    private long gid;
-
-    @Column(name = "geom")
-    @Type(type = "org.hibernate.spatial.GeometryType")
-    @ColumnAliasName(aliasName = "geometry")
-    private Geometry geom;
 
     @Column(name = "name", length = 200)
     @ColumnAliasName(aliasName = "name")
@@ -112,23 +95,6 @@ public class EezEntity implements Serializable {
 
     public EezEntity() {
     }
-
-    public long getGid() {
-        return this.gid;
-    }
-
-    public void setGid(long gid) {
-        this.gid = gid;
-    }
-
-    public Geometry getGeom() {
-        return this.geom;
-    }
-
-    public void setGeom(Geometry geom) {
-        this.geom = geom;
-    }
-
     public String getName() {
         return this.name;
     }

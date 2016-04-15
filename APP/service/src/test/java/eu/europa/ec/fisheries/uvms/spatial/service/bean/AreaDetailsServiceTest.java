@@ -206,7 +206,6 @@ public class AreaDetailsServiceTest {
         eezEntity.setName(AreaType.EEZ.value());
         eezEntity.setEezId((long) 123);
         eezEntity.setGeom(new GeometryBuilder().point());
-        eezEntity.setGid(1);
         eezEntity.setCode("iso3digit");
         eezEntity.setLatitude(345.60);
         eezEntity.setLongitude(234.54);
