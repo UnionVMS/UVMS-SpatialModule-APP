@@ -1,11 +1,9 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
-import eu.europa.ec.fisheries.uvms.spatial.entity.converter.CharBooleanConverter;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 import org.hibernate.annotations.Where;
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -30,43 +28,10 @@ public class RfmoEntity extends BaseAreaEntity {
     public static final String RFMO_BY_COORDINATE = "rfmoEntity.ByCoordinate";
     public static final String DISABLE_RFMO_AREAS = "rfmoEntity.disableRfmoAreas";
 
-    @Column(name = "code", length = 10)
-    @ColumnAliasName(aliasName = "code")
-    private String code;
-
-    @Column(name = "name", length = 125)
-    @ColumnAliasName(aliasName = "name")
-    private String name;
-
     @Column(name = "tuna", length = 10)
     @ColumnAliasName(aliasName = "tuna")
     private String tuna;
-
-    @Convert(converter = CharBooleanConverter.class)
-    @Column(name = "enabled", nullable = false, length = 1)
-    private Boolean enabled = false;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "enabled_on")
-    private Date enabledOn;
-
     public RfmoEntity() {
-    }
-
-    public String getCode() {
-        return this.code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getTuna() {
@@ -77,19 +42,4 @@ public class RfmoEntity extends BaseAreaEntity {
         this.tuna = tuna;
     }
 
-    public Boolean getEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public Date getEnabledOn() {
-        return enabledOn;
-    }
-
-    public void setEnabledOn(Date enabledOn) {
-        this.enabledOn = enabledOn;
-    }
 }
