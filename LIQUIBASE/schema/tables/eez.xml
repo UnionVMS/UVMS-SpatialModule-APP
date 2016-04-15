@@ -14,13 +14,13 @@
                 <constraints primaryKey="true" primaryKeyName="eez_pkey"/>
             </column>
             <column name="geom" type="geometry(Multipolygon, 4326)"/>
-            <column name="name" type="VARCHAR(200)"/>
+            <column name="name" type="VARCHAR(255)"/>
             <column name="country" type="VARCHAR(100)"/>
             <column name="sovereign" type="VARCHAR(100)"/>
             <column name="remarks" type="VARCHAR(150)"/>
             <column name="sov_id" type="INT"/>
             <column name="eez_id" type="INT"/>
-            <column name="code" type="VARCHAR(5)"/>
+            <column name="code" type="VARCHAR(20)"/>
             <column name="mrgid" type="numeric"/>
             <column name="date_chang" type="VARCHAR(50)"/>
             <column name="area_m2" type="FLOAT8"/>
@@ -34,18 +34,4 @@
         </createTable>
          <sql>create index eez_geom_index on spatial.eez using gist(geom)</sql>
     </changeSet>
-    
-    
-<!--     <changeSet author="padhyad" id="1439890745706-66">
-      <preConditions>
-         <tableExists tableName="eez" />
-         <not>
-            <spatial:spatialIndexExists tableName="eez" columnNames="geom"/>
-         </not>
-      </preConditions>
-      <spatial:createSpatialIndex tableName="eez"  schemaName="spatial" indexName="eez_geom_index" geometryType="Multipolygon" srid="4326">
-         <column name="geom" />
-      </spatial:createSpatialIndex> 
-   </changeSet> -->
-
 </databaseChangeLog>
