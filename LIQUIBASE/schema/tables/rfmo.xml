@@ -14,8 +14,8 @@
                 <constraints primaryKey="true" primaryKeyName="rfmo_pkey"/>
             </column>
             <column name="geom" type="geometry(Multipolygon, 4326)"/>
-            <column name="code" type="VARCHAR(10)"/>
-            <column name="name" type="VARCHAR(125)"/>
+            <column name="code" type="VARCHAR(20)"/>
+            <column name="name" type="VARCHAR(255)"/>
             <column name="tuna" type="VARCHAR(10)"/>
 			<column name="enabled" type="BPCHAR(1)">
                 <constraints nullable="false"/>
@@ -24,17 +24,5 @@
         </createTable>
         <sql>create index rfmo_geom_index on spatial.rfmo using gist(geom)</sql>
     </changeSet>
-    
-   <!--<changeSet author="padhyad" id="1439890745706-67">
-      <preConditions>
-         <tableExists tableName="rfmo" />
-         <not>
-            <spatial:spatialIndexExists tableName="rfmo" columnNames="geom" />
-         </not>
-      </preConditions>
-      <spatial:createSpatialIndex tableName="rfmo" indexName="rfmo_geom_index" geometryType="Multipolygon" srid="4326">
-         <column name="geom" />
-      </spatial:createSpatialIndex>
-   </changeSet> -->
 
 </databaseChangeLog>
