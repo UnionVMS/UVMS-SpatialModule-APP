@@ -17,7 +17,8 @@ import java.io.Serializable;
 public class BaseAreaEntity implements Serializable {
 
     private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) @ColumnAliasName(aliasName = "gid") Long gid;
-    private @Type(type = "org.hibernate.spatial.GeometryType") @ColumnAliasName(aliasName = "geometry") Geometry geom;
+    @Type(type = "org.hibernate.spatial.GeometryType") @ColumnAliasName(aliasName = "geometry")
+    protected Geometry geom;
 
     protected BaseAreaEntity(){
         this.gid = null;
