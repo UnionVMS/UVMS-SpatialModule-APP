@@ -26,16 +26,16 @@ public class BaseAreaEntity implements Serializable {
     @Type(type = "org.hibernate.spatial.GeometryType") @ColumnAliasName(aliasName = "geometry")
     protected Geometry geom;
 
-    @Column(name = "name", length = 255)
+    @Column(length = 255)
     @ColumnAliasName(aliasName="name")
     protected String name;
 
-    @Column(name = "code", length = 20)
+    @Column(length = 20)
     @ColumnAliasName(aliasName = "code")
     protected String code;
 
     @Convert(converter = CharBooleanConverter.class)
-    @Column(name = "enabled", nullable = false, length = 1)
+    @Column(nullable = false, length = 1)
     @ColumnAliasName(aliasName ="enabled")
     protected Boolean enabled = true;
 
