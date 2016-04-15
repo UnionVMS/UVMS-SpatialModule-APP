@@ -2,7 +2,6 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.spatial.dao.AreaDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.AreaLocationTypesDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.BookmarkDao;
@@ -53,7 +52,7 @@ import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 
 @Stateless
 @Local(value = SpatialRepository.class)
-public class SpatialRepositoryBean extends AbstractDAO implements SpatialRepository {
+public class SpatialRepositoryBean implements SpatialRepository {
 
     private @PersistenceContext(unitName = "spatialPU") EntityManager em;
 
@@ -442,8 +441,33 @@ public class SpatialRepositoryBean extends AbstractDAO implements SpatialReposit
     }
 
     @Override
-    public EntityManager getEntityManager() {
-
-        return em;
+    public List<AreaLocationTypesEntity> listAllAreaAndLocation() throws ServiceException {
+        return areaLocationTypeDao.findAll();
     }
+
+    @Override
+    public Object findAreaByTypeAndId(String typeName, Long id) throws ServiceException {
+        return areaDao.findOneByTypeNameAndId(typeName, id);
+    }
+
+    @Override
+    public void deleteUserArea(UserAreasEntity userAreaById) {
+        userAreaDao.deleteEntity(UserAreasEntity.class, userAreaById);
+    }
+
+    @Override
+    public PortAreasEntity update(PortAreasEntity entity) throws ServiceException {
+        return portAreaDao.updateEntity(entity);
+    }
+
+    @Override
+    public RfmoEntity create(RfmoEntity rfmoEntity) throws ServiceException {
+        return rfmoDao.createEntity(rfmoEntity);
+    }
+
+    @Override
+    public List<UserAreasEntity> findUserAreaByUserNameAndScopeName(String userName, String scopeName) throws ServiceException {
+        return userAreaDao.findByUserNameAndScopeName(userName, scopeName);
+    }
+
 }

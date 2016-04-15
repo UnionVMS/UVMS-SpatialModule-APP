@@ -87,7 +87,7 @@ public class ImageResource extends UnionVMSResource {
         response.getMap().getVmspos().withBase("/spatial/image/position/");
         List<ImageEncoderFactory.LegendEntry> temp = new ArrayList<>();
 
-        for (Class clazz : payload.getPositions().getClasses()) { // TODO check hex value
+        for (Class clazz : payload.getPositions().getClasses()) { // TODO validate hex value
 
             ImageEncoderFactory.LegendEntry legendEntry = new ImageEncoderFactory.LegendEntry();
             legendEntry.setMsg(clazz.getText());
