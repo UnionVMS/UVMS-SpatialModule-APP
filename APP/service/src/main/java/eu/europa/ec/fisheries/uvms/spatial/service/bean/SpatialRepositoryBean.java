@@ -18,8 +18,19 @@ import eu.europa.ec.fisheries.uvms.spatial.dao.ServiceLayerDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.SysConfigDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.UserAreaDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.util.SpatialFunction;
-import eu.europa.ec.fisheries.uvms.spatial.entity.*;
+import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.BaseAreaEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.BookmarkEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.PortAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.PortEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.PortEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ProjectionEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.RfmoEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.config.SysConfigEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.bookmark.Bookmark;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
@@ -29,6 +40,8 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.ServiceLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.BookmarkMapper;
+import org.opengis.feature.Property;
+
 import javax.annotation.PostConstruct;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
@@ -227,26 +240,6 @@ public class SpatialRepositoryBean implements SpatialRepository {
     @Override
     public UserAreasEntity findUserAreaById(Long userAreaId, String userName, Boolean isPowerUser, String scopeName) throws ServiceException {
         return userAreaDao.findOne(userAreaId, userName, isPowerUser, scopeName);
-    }
-
-    @Override
-    public Integer disableAllEezAreas() throws ServiceException {
-        return eezDao.disable();
-    }
-
-    @Override
-    public Integer disableAllRfmoAreas() throws ServiceException {
-        return rfmoDao.disable();
-    }
-
-    @Override
-    public Integer disableAllPortLocations() throws ServiceException {
-        return portDao.disable();
-    }
-
-    @Override
-    public Integer disableAllPortAreas() throws ServiceException {
-        return portAreaDao.disable();
     }
 
     @Override
@@ -459,6 +452,26 @@ public class SpatialRepositoryBean implements SpatialRepository {
     @Override
     public List<UserAreasEntity> findUserAreaByUserNameAndScopeName(String userName, String scopeName) throws ServiceException {
         return userAreaDao.findByUserNameAndScopeName(userName, scopeName);
+    }
+
+    @Override
+    public void replaceEez(Map<String, List<Property>> features) throws ServiceException {
+        eezDao.bulkInsert(features);
+    }
+
+    @Override
+    public void replaceRfmo(Map<String, List<Property>> features) throws ServiceException {
+        rfmoDao.bulkInsert(features);
+    }
+
+    @Override
+    public void replacePort(Map<String, List<Property>> features) throws ServiceException {
+        portDao.bulkInsert(features);
+    }
+
+    @Override
+    public void replacePortArea(Map<String, List<Property>> features) throws ServiceException {
+        portAreaDao.bulkInsert(features);
     }
 
 }

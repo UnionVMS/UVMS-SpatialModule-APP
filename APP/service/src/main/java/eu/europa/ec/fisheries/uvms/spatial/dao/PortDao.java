@@ -1,12 +1,13 @@
 package eu.europa.ec.fisheries.uvms.spatial.dao;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.spatial.entity.PortEntity;
-
+import lombok.extern.slf4j.Slf4j;
 import javax.persistence.EntityManager;
+import java.util.Map;
 
-public class PortDao extends AbstractDAO<PortEntity> {
+@Slf4j
+public class PortDao extends AbstractAreaDao<PortEntity> {
 
     private EntityManager em;
 
@@ -19,7 +20,13 @@ public class PortDao extends AbstractDAO<PortEntity> {
         return em;
     }
 
-    public Integer disable() throws ServiceException {
-        return updateEntityByNamedQuery(PortEntity.DISABLE);
+    @Override
+    protected PortEntity createEntity(Map<String, Object> values) throws ServiceException {
+        return new PortEntity(values);
+    }
+
+    @Override
+    protected String getDisableAreaNamedQuery() {
+        return PortEntity.DISABLE;
     }
 }

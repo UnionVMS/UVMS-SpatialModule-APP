@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTWriter;
 import eu.europa.ec.fisheries.uvms.common.DateUtils;
+import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.converter.CharBooleanConverter;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
@@ -67,7 +68,7 @@ public class BaseAreaEntity implements Serializable {
     @Column(name = "enabled_on")
     private Date enabledOn;
 
-    public BaseAreaEntity(Map<String, Object> values) throws UnsupportedEncodingException {
+    public BaseAreaEntity(Map<String, Object> values) throws ServiceException {
         setGeom((Geometry) values.get(THE_GEOM));
         setCode(readStringProperty(values, CODE));
         setName(readStringProperty(values, NAME));
@@ -127,8 +128,12 @@ public class BaseAreaEntity implements Serializable {
         this.enabledOn = enabledOn;
     }
 
-    protected String readStringProperty(Map<String, Object> values, String propertyName) throws UnsupportedEncodingException {
-        return new String(((String) values.get(propertyName)).getBytes(ISO_8859_1), UTF_8);
+    protected String readStringProperty(Map<String, Object> values, String propertyName) throws ServiceException {
+        try {
+            return new String(((String) values.get(propertyName)).getBytes(ISO_8859_1), UTF_8);
+        } catch (UnsupportedEncodingException e) {
+            throw new ServiceException("Area upload media not supported", e);
+        }
     }
 
     public static Map<String, Object> createAttributesMap(List<Property> properties) {
