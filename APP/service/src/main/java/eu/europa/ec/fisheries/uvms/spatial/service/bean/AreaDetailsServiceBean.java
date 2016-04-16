@@ -3,6 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.BaseAreaEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetailsSpatialRequest;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
@@ -21,9 +22,6 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import static eu.europa.ec.fisheries.uvms.spatial.util.ColumnAliasNameHelper.getFieldMap;
-import static eu.europa.ec.fisheries.uvms.spatial.util.SpatialTypeEnum.getEntityClassByType;
 
 @Stateless
 @Local(AreaDetailsService.class)
@@ -64,12 +62,12 @@ public class AreaDetailsServiceBean implements AreaDetailsService {
 
         Integer id = Integer.parseInt(areaTypeEntry.getId());
 
-        Object object = repository.findAreaByTypeAndId(areaLocationTypesEntity.getTypeName(), id.longValue());
+        BaseAreaEntity areaEntity = repository.findAreaByTypeAndId(areaLocationTypesEntity.getTypeName(), id.longValue());
 
-        if (object == null) {
+        if (areaEntity == null) {
             throw new SpatialServiceException(SpatialServiceErrors.ENTITY_NOT_FOUND, areaLocationTypesEntity.getTypeName());
         }
-        Map<String, Object> properties = getFieldMap(object);
+        Map<String, Object> properties = areaEntity.getFieldMap();
 
         return createAreaDetailsSpatialResponse(properties, areaTypeEntry);
 
@@ -122,7 +120,7 @@ public class AreaDetailsServiceBean implements AreaDetailsService {
         List<AreaDetails> areaDetailsList = new ArrayList<>();
 
         for (Object allArea : allAreas) {
-            Map<String, Object> properties = getFieldMap(allArea);
+            Map<String, Object> properties = ((BaseAreaEntity)allArea).getFieldMap();
             areaDetailsList.add(createAreaDetailsSpatialResponse(properties, areaTypeEntry));
         }
         return areaDetailsList;

@@ -1,11 +1,18 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.io.WKTWriter;
+import eu.europa.ec.fisheries.uvms.common.DateUtils;
 import eu.europa.ec.fisheries.uvms.spatial.entity.converter.CharBooleanConverter;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
 import org.hibernate.annotations.Type;
+import org.joda.time.DateTime;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.GeneratedValue;
@@ -15,35 +22,41 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @MappedSuperclass
 @ToString
 @EqualsAndHashCode
+@Slf4j
 public class BaseAreaEntity implements Serializable {
 
     private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) @ColumnAliasName(aliasName = "gid") Long gid;
-    @Type(type = "org.hibernate.spatial.GeometryType") @ColumnAliasName(aliasName = "geometry")
-    protected Geometry geom;
+
+    @Type(type = "org.hibernate.spatial.GeometryType")
+    @ColumnAliasName(aliasName = "geometry")
+    private Geometry geom;
 
     @Column(length = 255)
     @ColumnAliasName(aliasName="name")
-    protected String name;
+    private String name;
 
     @Column(length = 20)
     @ColumnAliasName(aliasName = "code")
-    protected String code;
+    private String code;
 
     @Convert(converter = CharBooleanConverter.class)
     @Column(nullable = false, length = 1)
     @ColumnAliasName(aliasName ="enabled")
-    protected Boolean enabled = true;
+    private Boolean enabled = true;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "enabled_on")
-    protected Date enabledOn;
+    private Date enabledOn;
 
-    protected BaseAreaEntity(){
+    public BaseAreaEntity(){
         this.gid = null;
     }
 
@@ -93,5 +106,43 @@ public class BaseAreaEntity implements Serializable {
 
     public void setEnabledOn(Date enabledOn) {
         this.enabledOn = enabledOn;
+    }
+
+    public Map<String, Object> getFieldMap(){
+        Map<String, Object> map = new HashMap<>();
+
+        try {
+            Field[] declaredFields = this.getClass().getDeclaredFields();
+            Field[] superDeclaredFields = this.getClass().getSuperclass().getDeclaredFields();
+            Field[] fields = ArrayUtils.addAll(declaredFields, superDeclaredFields);
+            for (Field field : fields) {
+                field.setAccessible(true);
+                if (field.isAnnotationPresent(ColumnAliasName.class)) {
+                    String aliasName = field.getAnnotation(ColumnAliasName.class).aliasName();
+
+                    log.info("Alias Name : " + aliasName);
+                    Object value;
+                    if ((field.get(this) instanceof Number)) {
+                        Number numberVal = (Number) field.get(this);
+                        value = String.valueOf(numberVal);
+                    } else if ((field.get(this) instanceof Geometry)) {
+                        Geometry geometry = ((Geometry) field.get(this));
+                        value = new WKTWriter().write(geometry);
+                    } else if ((field.get(this) instanceof Date)) {
+                        value = DateUtils.UI_FORMATTER.print(new DateTime(field.get(this)));
+                    } else if ((field.get(this) instanceof Boolean)) {
+                        value = Boolean.toString((Boolean) field.get(this));
+                    } else {
+                        value = field.get(this);
+                    }
+                    map.put(aliasName, value);
+                    log.info("Value is : " + value);
+                }
+            }
+        } catch (IllegalAccessException e) {
+            log.error("Illegal access exception : ", e);
+            throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
+        }
+        return map;
     }
 }
