@@ -27,4 +27,9 @@ public interface SpatialService {
 
     List<AreaDetails> getUserAreaDetailsByLocation(AreaTypeEntry areaTypeEntry, String userName) throws ServiceException;
 
+    String calculateBuffer(Double latitude, Double longitude, Double buffer);
+
+    String translate(Double tx, Double ty, String wkt) throws ServiceException;
+
+
 }

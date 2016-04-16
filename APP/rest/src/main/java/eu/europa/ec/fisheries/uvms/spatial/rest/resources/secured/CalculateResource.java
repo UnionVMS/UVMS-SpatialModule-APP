@@ -1,7 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
-import eu.europa.ec.fisheries.uvms.spatial.service.CalculateService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialService;
 import lombok.extern.slf4j.Slf4j;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
@@ -17,7 +17,7 @@ import java.util.Map;
 public class CalculateResource extends UnionVMSResource {
 
     @EJB
-    private CalculateService service;
+    private SpatialService service;
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
