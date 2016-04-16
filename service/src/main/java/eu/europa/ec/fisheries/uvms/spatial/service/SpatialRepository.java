@@ -130,7 +130,7 @@ public interface SpatialRepository {
 
     PortEntity createEntity(PortEntity portsEntity) throws ServiceException;
 
-    EezEntity createEntity(EezEntity eezEntity) throws ServiceException;
+    EezEntity create(EezEntity eezEntity) throws ServiceException;
 
     void deleteEntity(ReportConnectSpatialEntity entity);
 

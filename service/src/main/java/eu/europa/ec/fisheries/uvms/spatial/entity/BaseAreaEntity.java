@@ -40,6 +40,9 @@ public class BaseAreaEntity implements Serializable {
 
     private static final String ISO_8859_1 = "ISO-8859-1";
     private static final String UTF_8 = "UTF-8";
+    protected static final String NAME = "name";
+    protected static final String CODE = "code";
+    protected static final String THE_GEOM = "the_geom";
 
     private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) @ColumnAliasName(aliasName = "gid") Long gid;
 
