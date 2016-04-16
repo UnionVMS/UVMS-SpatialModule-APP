@@ -1,12 +1,10 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.interceptors.SimpleTracingInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.BaseAreaEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.PortAreasEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.PortEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.RfmoEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
@@ -29,13 +27,12 @@ import org.geotools.referencing.CRS;
 import org.opengis.feature.Property;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
-
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
+import javax.interceptor.Interceptors;
 import javax.transaction.Transactional;
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -68,34 +65,6 @@ public class AreaServiceBean implements AreaService {
             countries.put(country.get(CODE), country.get(NAME));
         }
         return countries;
-    }
-
-    @Override
-    @Transactional
-    public void replaceEez(Map<String, List<Property>> features) {
-        try {
-            repository.disableAllEezAreas();
-            for (List<Property> properties : features.values()) {
-                Map<String, Object> values = BaseAreaEntity.createAttributesMap(properties);
-                repository.create(new EezEntity(values));
-            }
-        } catch (Exception e) {
-            throw new SpatialServiceException(SpatialServiceErrors.INVALID_UPLOAD_AREA_DATA, e);
-        }
-    }
-
-    @Override
-    @Transactional
-    public void replaceRfmo(Map<String, List<Property>> features) {
-        try {
-            repository.disableAllRfmoAreas();
-            for (List<Property> properties : features.values()) {
-                Map<String, Object> values = BaseAreaEntity.createAttributesMap(properties);
-                repository.create(new RfmoEntity(values));
-            }
-        } catch (Exception e) {
-            throw new SpatialServiceException(SpatialServiceErrors.INVALID_UPLOAD_AREA_DATA, e);
-        }
     }
 
     @Override
@@ -133,12 +102,14 @@ public class AreaServiceBean implements AreaService {
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
+    @Interceptors(SimpleTracingInterceptor.class)
     public void uploadArea(byte[] content, String areaTypeString, int crsCode) {
         try {
             AreaType areaType = AreaType.fromValue(areaTypeString);
             CoordinateReferenceSystem sourceCRS = validate(content, areaTypeString, crsCode);
 
-            Path absolutePath = getTempPath();
+            Path absolutePath = Files.createTempDirectory(PREFIX);
             Path zipFilePath = Paths.get(absolutePath + File.separator + AREA_ZIP_FILE);
 
             FileSaver fileSaver = new FileSaver();
@@ -152,16 +123,16 @@ public class AreaServiceBean implements AreaService {
 
             switch (areaType) {
                 case EEZ:
-                    areaService.replaceEez(features);
+                    repository.replaceEez(features);
                     break;
                 case RFMO:
-                    areaService.replaceRfmo(features);
+                    repository.replaceRfmo(features);
                     break;
                 case PORT:
-                    areaService.replacePort(features);
+                    repository.replacePort(features);
                     break;
                 case PORTAREA:
-                    areaService.replacePortArea(features);
+                    repository.replacePortArea(features);
                     break;
                 default:
                     throw new IllegalArgumentException("Unsupported area type.");
@@ -169,9 +140,8 @@ public class AreaServiceBean implements AreaService {
 
             FileUtils.deleteDirectory(new File(absolutePath.toString()));
 
-            log.debug("Finished areas upload.");
-        } catch (IOException ex) {
-            throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
+        } catch (Exception ex) {
+            throw new SpatialServiceException(SpatialServiceErrors.INVALID_UPLOAD_AREA_DATA, ex);
         }
     }
 
@@ -190,10 +160,6 @@ public class AreaServiceBean implements AreaService {
             throw new IllegalArgumentException("Unsupported area type.");
         }
         return sourceCRS;
-    }
-
-    private Path getTempPath() throws IOException {
-        return Files.createTempDirectory(PREFIX);
     }
 
     private enum AreaType {
@@ -217,34 +183,6 @@ public class AreaServiceBean implements AreaService {
             throw new IllegalArgumentException("Unsupported area type");
         }
 
-    }
-
-    @Override
-    @Transactional
-    public void replacePort(Map<String, List<Property>> features) {
-        try {
-            repository.disableAllPortLocations();
-            for (List<Property> properties : features.values()) {
-                Map<String, Object> values = BaseAreaEntity.createAttributesMap(properties);
-                repository.create(new PortEntity(values));
-            }
-        } catch (Exception e) {
-            throw new SpatialServiceException(SpatialServiceErrors.INVALID_UPLOAD_AREA_DATA, e);
-        }
-    }
-
-    @Override
-    @Transactional
-    public void replacePortArea(Map<String, List<Property>> features) {
-        try {
-            repository.disableAllPortAreas();
-            for (List<Property> properties : features.values()) {
-                Map<String, Object> values = BaseAreaEntity.createAttributesMap(properties);
-                repository.create(new PortAreasEntity(values));
-            }
-        } catch (Exception e) {
-            throw new SpatialServiceException(SpatialServiceErrors.INVALID_UPLOAD_AREA_DATA, e);
-        }
     }
 
     @Override

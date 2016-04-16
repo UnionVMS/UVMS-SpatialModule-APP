@@ -2,14 +2,15 @@ package eu.europa.ec.fisheries.uvms.spatial.dao;
 
 import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.service.QueryParameter;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
-
+import lombok.extern.slf4j.Slf4j;
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Map;
 
-public class EezDao extends AbstractDAO<EezEntity> {
+@Slf4j
+public class EezDao extends AbstractAreaDao<EezEntity> {
 
     private EntityManager em;
 
@@ -34,7 +35,13 @@ public class EezDao extends AbstractDAO<EezEntity> {
         return findEntityByNamedQuery(EezEntity.class, EezEntity.LIST_EMPTY_GEOMETRIES);
     }
 
-    public Integer disable() throws ServiceException {
-        return updateEntityByNamedQuery(EezEntity.DISABLE_EEZ_AREAS);
+    @Override
+    protected EezEntity createEntity(Map<String, Object> values) throws ServiceException {
+        return new EezEntity(values);
+    }
+
+    @Override
+    protected String getDisableAreaNamedQuery() {
+        return EezEntity.DISABLE_EEZ_AREAS;
     }
 }

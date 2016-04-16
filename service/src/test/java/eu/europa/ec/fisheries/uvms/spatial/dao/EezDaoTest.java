@@ -54,23 +54,4 @@ public class EezDaoTest extends BaseSpatialDaoTest {
         assertTrue(eezEntities.get(0).getGeom().isEmpty());
     }
 
-    @Test
-    @SneakyThrows
-    public void shouldDisableAreas(){
-
-        List<EezEntity> allEntity = dao.findAllEntity(EezEntity.class);
-        assertFalse(allEntity.isEmpty());
-
-        EntityTransaction t = em.getTransaction();
-        t.begin();
-
-        dao.disable();
-
-        em.flush();
-        t.commit();
-
-        allEntity = dao.findAllEntity(EezEntity.class);
-        assertTrue(allEntity.isEmpty());
-
-    }
 }

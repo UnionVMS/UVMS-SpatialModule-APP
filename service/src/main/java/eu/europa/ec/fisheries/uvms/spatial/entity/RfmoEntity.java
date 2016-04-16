@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
+import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 import org.hibernate.annotations.Where;
@@ -8,7 +9,6 @@ import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 @Entity
@@ -35,7 +35,7 @@ public class RfmoEntity extends BaseAreaEntity {
     public RfmoEntity() {
     }
 
-    public RfmoEntity(Map<String, Object> values) throws UnsupportedEncodingException {
+    public RfmoEntity(Map<String, Object> values) throws ServiceException {
         super(values);
         setTuna(readStringProperty(values, TUNA));
     }
