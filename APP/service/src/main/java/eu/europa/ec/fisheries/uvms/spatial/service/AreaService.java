@@ -4,7 +4,6 @@ import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.PortAreaGeoJsonDto;
-import org.opengis.feature.Property;
 
 import java.util.List;
 import java.util.Map;
@@ -22,13 +21,5 @@ public interface AreaService {
     AreaDetails getAreaDetailsById(AreaTypeEntry areaTypeEntry) throws ServiceException;
 
     public Map<String, String> getAllCountriesDesc();
-
-    void replaceEez(Map<String, List<Property>> features);
-
-    void replaceRfmo(Map<String, List<Property>> features);
-
-    void replacePort(Map<String, List<Property>> features);
-
-    void replacePortArea(Map<String, List<Property>> features);
 
 }

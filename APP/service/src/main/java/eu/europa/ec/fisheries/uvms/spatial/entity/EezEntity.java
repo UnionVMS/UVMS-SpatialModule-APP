@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
+import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 import lombok.EqualsAndHashCode;
@@ -9,7 +10,6 @@ import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.Map;
 
@@ -88,7 +88,7 @@ public class EezEntity extends BaseAreaEntity {
     public EezEntity() {
     }
 
-    public EezEntity(Map<String, Object> values) throws UnsupportedEncodingException {
+    public EezEntity(Map<String, Object> values) throws ServiceException {
         super(values);
         setCountry(readStringProperty(values, COUNTRY));
         setSovereign(readStringProperty(values, SOVEREIGN));

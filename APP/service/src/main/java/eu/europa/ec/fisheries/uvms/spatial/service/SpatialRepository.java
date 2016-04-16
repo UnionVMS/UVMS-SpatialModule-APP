@@ -3,8 +3,18 @@ package eu.europa.ec.fisheries.uvms.spatial.service;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.dao.util.SpatialFunction;
-import eu.europa.ec.fisheries.uvms.spatial.entity.*;
+import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.BaseAreaEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.BookmarkEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.PortAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.PortEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ProjectionEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.RfmoEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.config.SysConfigEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.bookmark.Bookmark;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaLayerDto;
@@ -12,6 +22,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.ServiceLayerDto;
+import org.opengis.feature.Property;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -67,14 +78,6 @@ public interface SpatialRepository {
     UserAreasEntity findUserAreaById(Long userAreaId, String userName, Boolean isPowerUser, String scopeName) throws ServiceException;
 
     List<PortAreasEntity> findPortAreaById(Long id) throws ServiceException;
-
-    Integer disableAllEezAreas() throws ServiceException;
-
-    Integer disableAllRfmoAreas() throws ServiceException;
-
-    Integer disableAllPortLocations() throws ServiceException;
-
-    Integer disableAllPortAreas() throws ServiceException;
 
     BookmarkEntity create(BookmarkEntity bookmark) throws ServiceException;
 
@@ -153,4 +156,12 @@ public interface SpatialRepository {
     RfmoEntity create(RfmoEntity rfmoEntity) throws ServiceException;
 
     List<UserAreasEntity> findUserAreaByUserNameAndScopeName(String userName, String scopeName) throws ServiceException;
+
+    void replaceEez(Map<String, List<Property>> features) throws ServiceException;
+
+    void replaceRfmo(Map<String, List<Property>> features) throws ServiceException;
+
+    void replacePort(Map<String, List<Property>> features) throws ServiceException;
+
+    void replacePortArea(Map<String, List<Property>> features) throws ServiceException;
 }

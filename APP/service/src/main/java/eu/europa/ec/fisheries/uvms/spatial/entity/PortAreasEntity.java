@@ -1,11 +1,11 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
+import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import org.hibernate.annotations.Where;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 @Entity
@@ -26,7 +26,7 @@ public class PortAreasEntity extends BaseAreaEntity {
     public PortAreasEntity() {
     }
 
-    public PortAreasEntity(Map<String, Object> values) throws UnsupportedEncodingException {
+    public PortAreasEntity(Map<String, Object> values) throws ServiceException {
         super(values);
     }
 }

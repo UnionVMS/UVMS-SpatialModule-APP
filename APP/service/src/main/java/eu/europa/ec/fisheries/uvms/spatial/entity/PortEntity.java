@@ -1,12 +1,12 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
+import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 @Entity
@@ -18,6 +18,7 @@ public class PortEntity extends BaseAreaEntity {
 
     public static final String PORT_BY_COORDINATE = "portEntity.ByCoordinate";
     public static final String DISABLE = "portsEntity.disable";
+
     private static final String COUNTRY_CO = "country_co";
     private static final String FISHING_PO = "fishing_po";
     private static final String LANDING_PL = "landing_pl";
@@ -42,7 +43,7 @@ public class PortEntity extends BaseAreaEntity {
     public PortEntity() {
     }
 
-    public PortEntity(Map<String, Object> values) throws UnsupportedEncodingException {
+    public PortEntity(Map<String, Object> values) throws ServiceException {
         super(values);
         setCountryCode(readStringProperty(values, COUNTRY_CO));
         setFishingPort(readStringProperty(values, FISHING_PO));
