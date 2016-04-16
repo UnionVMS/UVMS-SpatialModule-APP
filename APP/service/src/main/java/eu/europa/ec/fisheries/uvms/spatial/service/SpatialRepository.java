@@ -128,7 +128,7 @@ public interface SpatialRepository {
 
     UserAreasEntity update(UserAreasEntity userAreasEntity) throws ServiceException;
 
-    PortEntity createEntity(PortEntity portsEntity) throws ServiceException;
+    PortEntity create(PortEntity portsEntity) throws ServiceException;
 
     EezEntity create(EezEntity eezEntity) throws ServiceException;
 
