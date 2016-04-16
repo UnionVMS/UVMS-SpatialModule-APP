@@ -18,7 +18,7 @@ import static org.junit.Assert.assertNotNull;
 public class CountryServiceIT extends AbstractArquillianIT {
 
     @EJB
-    private CountryService countryService;
+    private AreaService countryService;
 
     @Test
     public void TestGetAllCountries() {

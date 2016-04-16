@@ -1,8 +1,10 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
+import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.interceptors.TracingInterceptor;
@@ -11,28 +13,11 @@ import eu.europa.ec.fisheries.uvms.spatial.dao.util.SpatialFunction;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.BaseAreaEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.PortEntity;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Area;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaExtendedIdentifierType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaIdentifierType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestLocationSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRS;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Location;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationDetails;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationProperty;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationTypeEntry;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ScopeAreasType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.UnitType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.UserAreasType;
+import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.GenericSystemAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.UserAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.util.MeasurementUnit;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
@@ -43,6 +28,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.JTSFactoryFinder;
+import org.geotools.geometry.jts.WKTReader2;
 import org.geotools.geometry.jts.WKTWriter2;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.GeodeticCalculator;
@@ -225,27 +211,85 @@ public class SpatialServiceBean implements SpatialService {
 
         for (Object allArea : allAreas) {
             Map<String, Object> properties = ((BaseAreaEntity)allArea).getFieldMap();
-            areaDetailsList.add(createAreaDetailsSpatialResponse(properties, areaTypeEntry));
+
+            List<AreaProperty> areaProperties = new ArrayList<>();
+            for (Map.Entry<String, Object> entry : properties.entrySet()) {
+                AreaProperty areaProperty = new AreaProperty();
+                areaProperty.setPropertyName(entry.getKey());
+                areaProperty.setPropertyValue(entry.getValue());
+                areaProperties.add(areaProperty);
+            }
+
+            AreaDetails areaDetails = new AreaDetails();
+            areaDetails.setAreaType(areaTypeEntry);
+            areaDetails.getAreaProperties().addAll(areaProperties);
+            areaDetailsList.add(areaDetails);
         }
         return areaDetailsList;
 
     }
 
-    private AreaDetails createAreaDetailsSpatialResponse(Map<String, Object> properties, AreaTypeEntry areaTypeEntry) {
-        List<AreaProperty> areaProperties = new ArrayList<>();
-        for (Map.Entry<String, Object> entry : properties.entrySet()) {
-            AreaProperty areaProperty = new AreaProperty();
-            areaProperty.setPropertyName(entry.getKey());
-            areaProperty.setPropertyValue(entry.getValue());
-            areaProperties.add(areaProperty);
+    @Override
+    @Transactional
+    public List<UserAreaDto> getUserAreaDetailsWithExtentByLocation(Coordinate coordinate, String userName) throws ServiceException {
+        Point point = convertToPointInWGS84(coordinate.getLongitude(), coordinate.getLatitude(), coordinate.getCrs());
+
+        List<UserAreasEntity> userAreaDetailsWithExtentByLocation = repository.findUserAreaDetailsByLocation(userName, point);
+
+        List<UserAreaDto> userAreaDtos = new ArrayList<>();
+        for (UserAreasEntity userAreaDetails : userAreaDetailsWithExtentByLocation){
+            UserAreaDto userAreaDto = new UserAreaDto();
+            userAreaDto.setGid(userAreaDetails.getGid());
+            userAreaDto.setDesc(userAreaDetails.getAreaDesc());
+            userAreaDto.setExtent(new WKTWriter2().write(userAreaDetails.getGeom().getEnvelope()));
+            userAreaDto.setName(userAreaDetails.getName());
+            userAreaDto.setAreaType(userAreaDetails.getType());
+            userAreaDtos.add(userAreaDto);
         }
 
-        AreaDetails areaDetails = new AreaDetails();
-        areaDetails.setAreaType(areaTypeEntry);
-        areaDetails.getAreaProperties().addAll(areaProperties);
-        return areaDetails;
+        return userAreaDtos;
     }
 
+    @Override
+    @Transactional
+    public List<AreaDetails> getUserAreaDetailsByLocation(AreaTypeEntry areaTypeEntry, String userName) throws ServiceException {
+        Point point = convertToPointInWGS84(areaTypeEntry.getLongitude(), areaTypeEntry.getLatitude(), areaTypeEntry.getCrs());
+        List<UserAreasEntity> userAreaDetails = repository.findUserAreaDetailsByLocation(userName, point);
+        try {
+            List<AreaDetails> areaDetailsList = Lists.newArrayList();
+            for (UserAreasEntity userAreaDetail : userAreaDetails) {
+                Map<String, Object> properties = userAreaDetail.getFieldMap();
+                addCentroidToProperties(properties);
+
+                List<AreaProperty> areaProperties = new ArrayList<>();
+                for (Map.Entry<String, Object> entry : properties.entrySet()) {
+                    AreaProperty areaProperty = new AreaProperty();
+                    areaProperty.setPropertyName(entry.getKey());
+                    areaProperty.setPropertyValue(entry.getValue());
+                    areaProperties.add(areaProperty);
+                }
+
+                AreaDetails areaDetails = new AreaDetails();
+                areaDetails.setAreaType(areaTypeEntry);
+                areaDetails.getAreaProperties().addAll(areaProperties);
+                areaDetailsList.add(areaDetails);
+            }
+            return areaDetailsList;
+
+        } catch (ParseException e) {
+            String error = "Error while trying to parse geometry";
+            log.error(error);
+            throw new ServiceException(error);
+        }
+    }
+
+    private void addCentroidToProperties(Map<String, Object> properties) throws ParseException {
+        Object geometry = properties.get("geometry");
+        if(geometry != null){
+            Geometry centroid = new WKTReader2().read(String.valueOf(geometry)).getCentroid();
+            properties.put("centroid", new WKTWriter2().write(centroid));
+        }
+    }
 
     @Override
     public List<Area> getClosestAreasToPointByType(final ClosestAreaSpatialRQ request) throws ServiceException {

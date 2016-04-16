@@ -28,7 +28,7 @@ public class CountryServiceTest {
     private SpatialRepository repository;
 
     @InjectMocks
-    private CountryServiceBean countryServiceBean;
+    private AreaServiceBean countryServiceBean;
 
     @Before
     public void initMocks() {
