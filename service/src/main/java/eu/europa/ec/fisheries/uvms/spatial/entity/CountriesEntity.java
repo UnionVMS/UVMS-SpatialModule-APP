@@ -1,9 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
-import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.Where;
 import javax.persistence.Column;
@@ -14,7 +12,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.SqlResultSetMapping;
 import javax.persistence.SqlResultSetMappings;
 import javax.persistence.Table;
-import java.util.Date;
 
 @Entity
 @SqlResultSetMappings({
@@ -79,27 +76,6 @@ public class CountriesEntity extends BaseAreaEntity { // TODO rename to CountryE
 
 	public CountriesEntity() {
 	}
-
-    @Builder
-    public CountriesEntity(Geometry geom, String sovereignt, String sovA3, String type, String admin, String code, String name, String nameLong, Double popEst, Double gdpMdEst, String incomeGrp, String continent, String regionUn, String subregion, String regionWb, Boolean enabled, Date enabledOn) {
-        this.geom = geom;
-        this.sovereignt = sovereignt;
-        this.sovA3 = sovA3;
-        this.type = type;
-        this.admin = admin;
-        this.code = code;
-        this.name = name;
-        this.nameLong = nameLong;
-        this.popEst = popEst;
-        this.gdpMdEst = gdpMdEst;
-        this.incomeGrp = incomeGrp;
-        this.continent = continent;
-        this.regionUn = regionUn;
-        this.subregion = subregion;
-        this.regionWb = regionWb;
-		this.enabled = enabled;
-		this.enabledOn = enabledOn;
-    }
 
 	public String getSovereignt() {
 		return this.sovereignt;

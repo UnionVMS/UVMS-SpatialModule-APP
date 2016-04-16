@@ -9,6 +9,7 @@ import eu.europa.ec.fisheries.uvms.interceptors.TracingInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.dao.Oracle;
 import eu.europa.ec.fisheries.uvms.spatial.dao.util.SpatialFunction;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.BaseAreaEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.PortEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Area;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
@@ -35,6 +36,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialService
 import eu.europa.ec.fisheries.uvms.spatial.util.DatabaseDialectFactory;
 import eu.europa.ec.fisheries.uvms.spatial.util.PropertiesBean;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.JTSFactoryFinder;
@@ -65,7 +67,6 @@ import java.util.Map;
 
 import static eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialUtils.DEFAULT_CRS;
 import static eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialUtils.convertToPointInWGS84;
-import static eu.europa.ec.fisheries.uvms.spatial.util.ColumnAliasNameHelper.getFieldMap;
 import static eu.europa.ec.fisheries.uvms.spatial.util.SpatialTypeEnum.getNativeQueryByType;
 import static org.apache.commons.collections.CollectionUtils.isEmpty;
 import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
@@ -404,25 +405,26 @@ public class SpatialServiceBean implements SpatialService {
         final List<LocationProperty> locationProperties = new ArrayList<>();
         AreaLocationTypesEntity locationTypesEntity = null;
 
+        if (id != null && !StringUtils.isNumeric(id)) {
+            throw new SpatialServiceException(SpatialServiceErrors.INVALID_ID_TYPE, id);
+        }
+
         List<AreaLocationTypesEntity> areaLocationTypeByTypeName =
                 repository.findAreaLocationTypeByTypeName(locationType.toUpperCase());
 
-        if(areaLocationTypeByTypeName != null && !areaLocationTypeByTypeName.isEmpty()){
-            locationTypesEntity = areaLocationTypeByTypeName.get(0);
+        if(CollectionUtils.isNotEmpty(areaLocationTypeByTypeName)){
+            locationTypesEntity = areaLocationTypeByTypeName.iterator().next();
         }
 
         if (locationTypesEntity != null && locationTypeEntry.getId() != null) {
 
-            if (!StringUtils.isNumeric(id)) {
-                throw new SpatialServiceException(SpatialServiceErrors.INVALID_ID_TYPE, id);
-            }
-            Object object = repository.findAreaByTypeAndId(locationTypesEntity.getTypeName(), Long.parseLong(locationTypeEntry.getId()));
+            BaseAreaEntity areaEntity = repository.findAreaByTypeAndId(locationTypesEntity.getTypeName(), Long.parseLong(locationTypeEntry.getId()));
 
-            if (object == null) {
+            if (areaEntity == null) {
                 throw new SpatialServiceException(SpatialServiceErrors.ENTITY_NOT_FOUND, locationTypesEntity.getTypeName());
             }
 
-            properties = getFieldMap(object);
+            properties = areaEntity.getFieldMap();
 
         } else {
 
@@ -463,11 +465,11 @@ public class SpatialServiceBean implements SpatialService {
                 }
             }
             else {
-                list = repository.findAreaOrLocationByCoordinates(incomingPoint, getNativeQueryByType(locationTypesEntity.getTypeName()));
+                list = repository.findAreaByCoordinates(incomingPoint, getNativeQueryByType(locationTypesEntity.getTypeName()));
             }
 
             if (isNotEmpty(list)) {
-                fieldMap = getFieldMap(list.get(0));
+                fieldMap = ((BaseAreaEntity)list.iterator().next()).getFieldMap();
             }
 
             properties = fieldMap;

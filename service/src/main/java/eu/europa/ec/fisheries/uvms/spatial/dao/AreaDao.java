@@ -5,11 +5,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
-
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.spatial.dao.util.SpatialFunction;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.BaseAreaEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GeometryType;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.GeometryMapper;
 import com.vividsolutions.jts.geom.Point;
@@ -22,10 +22,8 @@ import org.hibernate.Session;
 import org.hibernate.transform.AliasToEntityMapResultTransformer;
 import org.hibernate.type.StandardBasicTypes;
 
-import static eu.europa.ec.fisheries.uvms.spatial.util.SpatialTypeEnum.getEntityClassByType;
-
 @Slf4j
-public class AreaDao extends AbstractDAO {
+public class AreaDao extends AbstractDAO<BaseAreaEntity> {
 
     private static final String GID = "gid";
     private static final String NAME = "name";
@@ -39,7 +37,7 @@ public class AreaDao extends AbstractDAO {
         this.em = em;
     }
 
-    public List findAreaOrLocationByCoordinates(Point point, String nativeQueryString) {
+    public List findAreaByCoordinates(Point point, String nativeQueryString) {
         GeometryType geometryType = GeometryMapper.INSTANCE.geometryToWKT(point);
         Query query = em.unwrap(Session.class).getNamedQuery(nativeQueryString);
         query.setParameter("shape", geometryType.getGeometry());

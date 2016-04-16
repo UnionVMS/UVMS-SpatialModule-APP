@@ -83,8 +83,8 @@ public class SpatialRepositoryBean implements SpatialRepository {
     }
 
     @Override
-    public List findAreaOrLocationByCoordinates(Point point, String nativeQueryString) {
-        return areaDao.findAreaOrLocationByCoordinates(point, nativeQueryString);
+    public List findAreaByCoordinates(Point point, String nativeQueryString) {
+        return areaDao.findAreaByCoordinates(point, nativeQueryString);
     }
 
     @Override
@@ -437,8 +437,8 @@ public class SpatialRepositoryBean implements SpatialRepository {
     }
 
     @Override
-    public Object findAreaByTypeAndId(String typeName, Long id) throws ServiceException {
-        return areaDao.findOneByTypeNameAndId(typeName, id);
+    public BaseAreaEntity findAreaByTypeAndId(String typeName, Long id) throws ServiceException {
+        return (BaseAreaEntity) areaDao.findOneByTypeNameAndId(typeName, id); // TODO typing
     }
 
     @Override
