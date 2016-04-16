@@ -30,9 +30,11 @@ public class AreaDetailsServiceIT extends AbstractArquillianIT {
 	
 	@EJB
 	private AreaDetailsService areaDetailsService;
-	
+    @EJB
+    private SpatialService spatialService;
 
-	@Test
+
+    @Test
     @SneakyThrows
 	public void getEezAreaDetailsByCoordinates() {
 		AreaTypeEntry areaCoordinate = new AreaTypeEntry();
@@ -40,7 +42,7 @@ public class AreaDetailsServiceIT extends AbstractArquillianIT {
 		areaCoordinate.setLatitude(41.0);
 		areaCoordinate.setLongitude(-9.5);
 		areaCoordinate.setCrs(4326);
-		List<AreaDetails> areaDetails = areaDetailsService.getAreaDetailsByLocation(areaCoordinate);
+		List<AreaDetails> areaDetails = spatialService.getAreaDetailsByLocation(areaCoordinate);
 		assertFalse(areaDetails.isEmpty());
 		assertNotNull(areaDetails.get(0).getAreaProperties());
 		assertEquals(areaDetails.get(0).getAreaProperties().isEmpty(), false);
@@ -54,7 +56,7 @@ public class AreaDetailsServiceIT extends AbstractArquillianIT {
 			areaCoordinate.setLatitude(410.0);
 			areaCoordinate.setLongitude(-90.5);
 			areaCoordinate.setCrs(4326);
-			areaDetailsService.getAreaDetailsByLocation(areaCoordinate);
+            spatialService.getAreaDetailsByLocation(areaCoordinate);
 		} catch (Exception e) {
 			assertEquals(5010, ((SpatialServiceException)((EJBException) e).getCausedByException()).getError().getErrorCode().intValue());
 		}
@@ -68,7 +70,7 @@ public class AreaDetailsServiceIT extends AbstractArquillianIT {
 			areaCoordinate.setLatitude(41.0);
 			areaCoordinate.setLongitude(-9.5);
 			areaCoordinate.setCrs(43260);
-			areaDetailsService.getAreaDetailsByLocation(areaCoordinate);
+            spatialService.getAreaDetailsByLocation(areaCoordinate);
 		} catch (Exception e) {
 			assertEquals(5002, ((SpatialServiceException)((EJBException) e).getCausedByException()).getError().getErrorCode().intValue());
 		}
@@ -85,7 +87,7 @@ public class AreaDetailsServiceIT extends AbstractArquillianIT {
         areaTypeEntry.setAreaType(AreaType.EEZ);
         areaTypeEntry.setId("1");
         areaDetailsSpatialRequest.setAreaType(areaTypeEntry);
-        AreaDetails areaDetails = areaDetailsService.getAreaDetails(areaDetailsSpatialRequest);
+        AreaDetails areaDetails = areaDetailsService.getAreaDetailsById(areaDetailsSpatialRequest.getAreaType());
 		assertNotNull(areaDetails.getAreaProperties());
 		assertEquals(areaDetails.getAreaProperties().isEmpty(), false);
 	}
@@ -101,7 +103,7 @@ public class AreaDetailsServiceIT extends AbstractArquillianIT {
         areaTypeEntry.setAreaType(AreaType.RFMO);
         areaTypeEntry.setId("1");
         areaDetailsSpatialRequest.setAreaType(areaTypeEntry);
-        AreaDetails areaDetails = areaDetailsService.getAreaDetails(areaDetailsSpatialRequest);
+        AreaDetails areaDetails = areaDetailsService.getAreaDetailsById(areaDetailsSpatialRequest.getAreaType());
         assertNotNull(areaDetails.getAreaProperties());
 		assertEquals(areaDetails.getAreaProperties().isEmpty(), false);
 	}
@@ -118,7 +120,7 @@ public class AreaDetailsServiceIT extends AbstractArquillianIT {
             areaTypeEntry.setAreaType(AreaType.EEZ);
             areaTypeEntry.setId("invalid");
             areaDetailsSpatialRequest.setAreaType(areaTypeEntry);
-            areaDetailsService.getAreaDetails(areaDetailsSpatialRequest);
+            areaDetailsService.getAreaDetailsById(areaDetailsSpatialRequest.getAreaType());
             fail("Test should throw exception");
         } catch (Exception e){
             assertEquals(5012, ((SpatialServiceException)((EJBException) e).getCausedByException()).getError().getErrorCode().intValue());
@@ -137,7 +139,7 @@ public class AreaDetailsServiceIT extends AbstractArquillianIT {
             areaTypeEntry.setAreaType(null);
             areaTypeEntry.setId("1");
             areaDetailsSpatialRequest.setAreaType(areaTypeEntry);
-            areaDetailsService.getAreaDetails(areaDetailsSpatialRequest);
+            areaDetailsService.getAreaDetailsById(areaDetailsSpatialRequest.getAreaType());
             fail("Test should throw exception");
         } catch (Exception e){
             assertEquals(5009, ((SpatialServiceException)((EJBException) e).getCausedByException()).getError().getErrorCode().intValue());
@@ -156,7 +158,7 @@ public class AreaDetailsServiceIT extends AbstractArquillianIT {
             areaTypeEntry.setAreaType(AreaType.EEZ);
             areaTypeEntry.setId("10000000");
             areaDetailsSpatialRequest.setAreaType(areaTypeEntry);
-            areaDetailsService.getAreaDetails(areaDetailsSpatialRequest);
+            areaDetailsService.getAreaDetailsById(areaDetailsSpatialRequest.getAreaType());
             fail("Test should throw exception");
         } catch (Exception e){
             assertEquals(5010, ((SpatialServiceException)((EJBException) e).getCausedByException()).getError().getErrorCode().intValue());

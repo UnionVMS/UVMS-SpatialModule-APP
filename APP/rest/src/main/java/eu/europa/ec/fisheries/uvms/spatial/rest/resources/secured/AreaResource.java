@@ -96,7 +96,7 @@ public class AreaResource extends UnionVMSResource {
             response = createSuccessResponse(new FeatureToGeoJsonJacksonMapper().convert(areaDetailsGeoJsonDto.toFeature()));
 
     	} else {
-            List<AreaDetails> areaDetailsList = areaDetailsService.getAreaDetailsByLocation(mapper.getAreaTypeEntry(areaDto));
+            List<AreaDetails> areaDetailsList = spatialService.getAreaDetailsByLocation(mapper.getAreaTypeEntry(areaDto));
             AreaDetailsGeoJsonDto areaDetailsGeoJsonDto = mapper.getAreaDetailsDtoForAllAreas(areaDetailsList, areaDto);
             if (!areaDto.getIsGeom()) {
                 areaDetailsGeoJsonDto.removeGeometryAllAreas();
