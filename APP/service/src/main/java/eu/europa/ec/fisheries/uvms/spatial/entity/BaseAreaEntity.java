@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
+import com.google.common.collect.Maps;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTWriter;
 import eu.europa.ec.fisheries.uvms.common.DateUtils;
@@ -13,6 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
+import org.opengis.feature.Property;
+
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.GeneratedValue;
@@ -22,9 +25,11 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @MappedSuperclass
@@ -32,6 +37,9 @@ import java.util.Map;
 @EqualsAndHashCode
 @Slf4j
 public class BaseAreaEntity implements Serializable {
+
+    private static final String ISO_8859_1 = "ISO-8859-1";
+    private static final String UTF_8 = "UTF-8";
 
     private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) @ColumnAliasName(aliasName = "gid") Long gid;
 
@@ -106,6 +114,20 @@ public class BaseAreaEntity implements Serializable {
 
     public void setEnabledOn(Date enabledOn) {
         this.enabledOn = enabledOn;
+    }
+
+    protected String readStringProperty(Map<String, Object> values, String propertyName) throws UnsupportedEncodingException {
+        return new String(((String) values.get(propertyName)).getBytes(ISO_8859_1), UTF_8);
+    }
+
+    protected Map<String, Object> createAttributesMap(List<Property> properties) {
+        Map<String, Object> resultMap = Maps.newHashMap();
+        for (Property property : properties) {
+            String name = property.getName().toString();
+            Object value = property.getValue();
+            resultMap.put(name, value);
+        }
+        return resultMap;
     }
 
     public Map<String, Object> getFieldMap(){

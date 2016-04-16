@@ -213,10 +213,10 @@ public class AreaDetailsServiceTest {
         eezEntity.setLatitude(345.60);
         eezEntity.setLongitude(234.54);
         eezEntity.setMrgid(new BigDecimal("100"));
-        eezEntity.setMrgidEez(123);
+        eezEntity.setMrgidEez(123L);
         eezEntity.setRemarks("This is Test");
         eezEntity.setSovereign("Test");
-        eezEntity.setSovId(555);
+        eezEntity.setSovId(555L);
         return eezEntity;
     }
 

@@ -15,18 +15,20 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.service.AreaService;
 import eu.europa.ec.fisheries.uvms.spatial.service.AreaTypeNamesService;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.EezDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.PortAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.PortLocationDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.RfmoDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.PortAreaGeoJsonDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.service.mapper.EezMapper;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.PortAreaMapper;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.PortLocationMapper;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.RfmoMapper;
-import eu.europa.ec.fisheries.uvms.spatial.util.*;
+import eu.europa.ec.fisheries.uvms.spatial.util.FileSaver;
+import eu.europa.ec.fisheries.uvms.spatial.util.ShapeFileReader;
+import eu.europa.ec.fisheries.uvms.spatial.util.SpatialTypeEnum;
+import eu.europa.ec.fisheries.uvms.spatial.util.SupportedFileExtensions;
+import eu.europa.ec.fisheries.uvms.spatial.util.ZipExtractor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
@@ -43,7 +45,6 @@ import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -72,7 +73,7 @@ public class AreaServiceBean implements AreaService {
 
     @Override
     public Map<String, String> getAllCountriesDesc() {
-        Map<String, String> countries = new HashMap<String, String>();
+        Map<String, String> countries = new HashMap<>();
         List<Map<String, String>> countryList = repository.findAllCountriesDesc();
         for (Map<String, String> country : countryList) {
             countries.put(country.get(CODE), country.get(NAME));
@@ -82,34 +83,11 @@ public class AreaServiceBean implements AreaService {
 
     @Override
     @Transactional
-    public void replaceEezArea(Map<String, List<Property>> features) {
+    public void replaceEez(Map<String, List<Property>> features) {
         try {
             repository.disableAllEezAreas();
-
-            Date enabledOn = new Date();
             for (List<Property> properties : features.values()) {
-                Map<String, Object> values = createAttributesMap(properties);
-
-                EezDto eezDto = new EezDto();
-                eezDto.setName(readStringProperty(values, "name"));
-                eezDto.setCountry(readStringProperty(values, "country"));
-                eezDto.setSovereign(readStringProperty(values, "sovereign"));
-                eezDto.setRemarks(readStringProperty(values, "remarks"));
-                eezDto.setSovId((Long) values.get("sov_id"));
-                eezDto.setEezId((Long) values.get("eez_id"));
-                eezDto.setCode(readStringProperty(values, "code"));
-                eezDto.setMrgid(BigInteger.valueOf(((Double) values.get("mrgid")).longValue()));
-                eezDto.setDateChang(readStringProperty(values, "date_chang"));
-                eezDto.setAreaM2((Double) values.get("area_m2"));
-                eezDto.setLongitude((Double) values.get("longitude"));
-                eezDto.setLatitude((Double) values.get("latitude"));
-                eezDto.setMrgidEez((Long) values.get("mrgid_eez"));
-                eezDto.setGeometry((Geometry) values.get("the_geom"));
-                eezDto.setEnabledOn(enabledOn);
-                eezDto.setEnabled(true);
-
-                EezEntity eezEntity = EezMapper.INSTANCE.eezDtoToEezEntity(eezDto);
-                repository.createEntity(eezEntity);
+                repository.createEntity(new EezEntity(properties));
             }
         } catch (Exception e) {
             throw new SpatialServiceException(SpatialServiceErrors.INVALID_UPLOAD_AREA_DATA, e);
@@ -147,44 +125,32 @@ public class AreaServiceBean implements AreaService {
     public List<Map<String, String>> getSelectedAreaColumns(final List<AreaTypeEntry> areaTypes) throws ServiceException {
 
         List<Map<String, String>> columnMapList = new ArrayList<>();
-
         for(AreaTypeEntry areaTypeEntry : areaTypes) {
-
             String gid = areaTypeEntry.getId();
             String areaType = areaTypeEntry.getAreaType().value();
-
             if (!StringUtils.isNumeric(gid)) {
                 throw new SpatialServiceException(SpatialServiceErrors.INVALID_ID_TYPE, gid);
             }
-
             List<AreaLocationTypesEntity> areasLocationTypes = repository.findAreaLocationTypeByTypeName(areaType.toUpperCase());
 
             if (areasLocationTypes.isEmpty()) {
                 throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR, areasLocationTypes);
             }
-
             String namedQuery = null;
-
             for (SpatialTypeEnum type : SpatialTypeEnum.values()) {
                 if(type.getType().equalsIgnoreCase(areaType)) {
                     namedQuery = type.getNamedQuery();
                 }
             }
-
             List<Map<String, String>> selectedAreaColumns = repository.findSelectedAreaColumns(namedQuery, Long.parseLong(gid));
-
             if (selectedAreaColumns.isEmpty()) {
                 throw new SpatialServiceException(SpatialServiceErrors.ENTITY_NOT_FOUND);
             }
-
             Map<String, String> columnMap = selectedAreaColumns.get(0);
             columnMap.put(GID, gid);
             columnMap.put(AREA_TYPE, areaType.toUpperCase());
-
             columnMapList.add(columnMap);
-
         }
-
         return columnMapList;
     }
 
@@ -208,7 +174,7 @@ public class AreaServiceBean implements AreaService {
 
             switch (areaType) {
                 case EEZ:
-                    areaService.replaceEezArea(features);
+                    areaService.replaceEez(features);
                     break;
                 case RFMO:
                     areaService.replaceRfmo(features);
