@@ -22,7 +22,7 @@ import static org.junit.Assert.assertFalse;
 public class SearchAreaServiceIT extends AbstractArquillianIT {
 	
 	@EJB
-	private SearchAreaService searchAreaService;
+	private AreaService searchAreaService;
     private @EJB SpatialService spatialService;
 
 
