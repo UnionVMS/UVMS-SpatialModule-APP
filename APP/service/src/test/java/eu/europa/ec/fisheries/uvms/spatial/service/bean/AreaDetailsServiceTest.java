@@ -36,7 +36,7 @@ public class AreaDetailsServiceTest {
     private SpatialRepository repository;
 
     @InjectMocks
-    private AreaDetailsServiceBean areaDetailsServiceBean;
+    private AreaServiceBean areaDetailsServiceBean;
 
     @InjectMocks
     private SpatialServiceBean spatialServiceBean;

@@ -29,7 +29,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialService
 public class AreaDetailsServiceIT extends AbstractArquillianIT {
 	
 	@EJB
-	private AreaDetailsService areaDetailsService;
+	private AreaService areaDetailsService;
     @EJB
     private SpatialService spatialService;
 

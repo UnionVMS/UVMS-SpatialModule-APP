@@ -17,6 +17,7 @@ import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.AreaLocationDtoMapper;
 import eu.europa.ec.fisheries.uvms.spatial.rest.type.FilterType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.type.geocoordinate.UserAreaCoordinateType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.UserAreaService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.UserAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.AreaDetailsGeoJsonDto;
@@ -51,6 +52,9 @@ public class UserAreaResource extends UnionVMSResource {
 
     @EJB
     private UserAreaService userAreaService;
+
+    @EJB
+    private SpatialService spatialService;
 
     private AreaLocationDtoMapper areaLocationMapper = AreaLocationDtoMapper.mapper();
 
@@ -201,11 +205,11 @@ public class UserAreaResource extends UnionVMSResource {
 
         if (!userAreaTypeDto.getIsGeom()) {
             Coordinate coordinate = areaLocationMapper.getCoordinateFromDto(userAreaTypeDto);
-            List<UserAreaDto> userAreaDetails = userAreaService.getUserAreaDetailsWithExtentByLocation(coordinate, userName);
+            List<UserAreaDto> userAreaDetails = spatialService.getUserAreaDetailsWithExtentByLocation(coordinate, userName);
             return createSuccessResponse(userAreaDetails);
         } else {
             AreaTypeEntry areaTypeEntry = AreaLocationDtoMapper.mapper().getAreaTypeEntry(userAreaTypeDto);
-            List<AreaDetails> userAreaDetails = userAreaService.getUserAreaDetailsByLocation(areaTypeEntry, userName);
+            List<AreaDetails> userAreaDetails = spatialService.getUserAreaDetailsByLocation(areaTypeEntry, userName);
             AreaDetailsGeoJsonDto areaDetailsGeoJsonDto = areaLocationMapper.getAreaDetailsDtoForAllAreas(userAreaDetails, userAreaTypeDto);
 
             List<ObjectNode> nodeList = new ArrayList<>();
