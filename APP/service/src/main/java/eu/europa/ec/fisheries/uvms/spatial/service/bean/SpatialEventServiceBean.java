@@ -26,6 +26,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialDeleteMapConfigu
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRS;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialGetMapConfigurationRS;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveOrUpdateMapConfigurationRS;
+import eu.europa.ec.fisheries.uvms.spatial.service.*;
 import lombok.extern.slf4j.Slf4j;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -39,10 +40,14 @@ import java.util.List;
 public class SpatialEventServiceBean implements SpatialEventService {
 
     @Inject @SpatialMessageErrorEvent Event<SpatialMessageEvent> spatialErrorEvent;
-    private @EJB SpatialService spatialService;
-    private @EJB SpatialEnrichmentService enrichmentService;
-    private @EJB MapConfigService mapConfigService;
-    private @EJB AreaTypeNamesService areaTypeNamesService;
+    private @EJB
+    SpatialService spatialService;
+    private @EJB
+    SpatialEnrichmentService enrichmentService;
+    private @EJB
+    MapConfigService mapConfigService;
+    private @EJB
+    AreaTypeNamesService areaTypeNamesService;
     private @EJB SpatialMessageServiceBean messageProducer;
 
     @Override

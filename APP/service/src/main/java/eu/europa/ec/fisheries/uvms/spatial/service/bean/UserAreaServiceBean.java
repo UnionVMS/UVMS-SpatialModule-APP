@@ -11,7 +11,9 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
+import eu.europa.ec.fisheries.uvms.spatial.service.AreaTypeNamesService;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
+import eu.europa.ec.fisheries.uvms.spatial.service.UserAreaService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.UserAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.UserAreaGeoJsonDto;
@@ -41,7 +43,8 @@ import java.util.Set;
 public class UserAreaServiceBean implements UserAreaService {
 
     private @EJB SpatialRepository repository;
-    private @EJB AreaTypeNamesService areaTypeNamesService;
+    private @EJB
+    AreaTypeNamesService areaTypeNamesService;
     private @EJB USMService usmService;
 
     @Override

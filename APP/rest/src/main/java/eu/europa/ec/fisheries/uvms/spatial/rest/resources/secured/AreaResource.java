@@ -30,8 +30,10 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationDetails;
 import eu.europa.ec.fisheries.uvms.spatial.rest.type.geocoordinate.AreaCoordinateType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.type.geocoordinate.LocationCoordinateType;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.*;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
+import eu.europa.ec.fisheries.uvms.spatial.service.AreaTypeNamesService;
+import eu.europa.ec.fisheries.uvms.spatial.service.SpatialService;
+import eu.europa.ec.fisheries.uvms.spatial.service.UserAreaService;
+import eu.europa.ec.fisheries.uvms.spatial.service.AreaService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.AreaDetailsGeoJsonDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.type.AreaFilterType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.AreaLocationDtoMapper;
@@ -46,10 +48,13 @@ import lombok.extern.slf4j.Slf4j;
 @Stateless
 public class AreaResource extends UnionVMSResource {
 
-    private @EJB AreaTypeNamesService areaTypeService;
+    private @EJB
+    AreaTypeNamesService areaTypeService;
     private @EJB AreaService areaService;
-    private @EJB UserAreaService userAreaService;
-    private @EJB SpatialService spatialService;
+    private @EJB
+    UserAreaService userAreaService;
+    private @EJB
+    SpatialService spatialService;
 
     private AreaLocationDtoMapper mapper = AreaLocationDtoMapper.mapper();
 

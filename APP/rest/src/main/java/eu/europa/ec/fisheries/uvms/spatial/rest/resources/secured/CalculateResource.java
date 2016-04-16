@@ -1,7 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialService;
+import eu.europa.ec.fisheries.uvms.spatial.service.SpatialService;
 import lombok.extern.slf4j.Slf4j;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;

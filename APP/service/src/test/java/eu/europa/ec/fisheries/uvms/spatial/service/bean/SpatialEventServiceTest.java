@@ -4,11 +4,13 @@ import eu.europa.ec.fisheries.uvms.spatial.message.bean.SpatialMessageServiceBea
 import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageEvent;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMarshallException;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AllAreaTypesRequest;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRS;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.PingRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRS;
+import eu.europa.ec.fisheries.uvms.spatial.service.AreaTypeNamesService;
+import eu.europa.ec.fisheries.uvms.spatial.service.SpatialEnrichmentService;
+import eu.europa.ec.fisheries.uvms.spatial.service.SpatialEventService;
+import eu.europa.ec.fisheries.uvms.spatial.service.SpatialService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import lombok.SneakyThrows;
 import org.junit.Test;
