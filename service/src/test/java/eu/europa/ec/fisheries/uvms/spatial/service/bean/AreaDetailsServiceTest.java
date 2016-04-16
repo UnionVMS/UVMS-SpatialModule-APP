@@ -38,6 +38,9 @@ public class AreaDetailsServiceTest {
     @InjectMocks
     private AreaDetailsServiceBean areaDetailsServiceBean;
 
+    @InjectMocks
+    private SpatialServiceBean spatialServiceBean;
+
     @Before
     public void initMocks() {
         MockitoAnnotations.initMocks(this);
@@ -57,7 +60,7 @@ public class AreaDetailsServiceTest {
         request.setLatitude(41.0);
         request.setLongitude(-9.5);
         request.setCrs(4326);
-        List<AreaDetails> areaDetails = areaDetailsServiceBean.getAreaDetailsByLocation(request);
+        List<AreaDetails> areaDetails = spatialServiceBean.getAreaDetailsByLocation(request);
         assertNotNull(areaDetails.get(0).getAreaProperties());
         assertEquals(areaDetails.get(0).getAreaProperties().isEmpty(), false);
     }
@@ -70,7 +73,7 @@ public class AreaDetailsServiceTest {
         AreaTypeEntry areaTypeEntry = createAreaTypeEntry();
 
         //when
-        List<AreaDetails> areaDetailsByLocation = areaDetailsServiceBean.getAreaDetailsByLocation(areaTypeEntry);
+        List<AreaDetails> areaDetailsByLocation = spatialServiceBean.getAreaDetailsByLocation(areaTypeEntry);
 
         // then
 		assertNotNull(areaDetailsByLocation);
@@ -108,7 +111,7 @@ public class AreaDetailsServiceTest {
         areaTypeEntry.setId("1");
         areaDetailsSpatialRequest.setAreaType(areaTypeEntry);
         AreaDetailsSpatialRequest request = areaDetailsSpatialRequest;
-        AreaDetails areaDetails = areaDetailsServiceBean.getAreaDetails(request);
+        AreaDetails areaDetails = areaDetailsServiceBean.getAreaDetailsById(request.getAreaType());
         assertNotNull(areaDetails);
         List<AreaProperty> list = areaDetails.getAreaProperties();
         assertEquals(list.isEmpty(), false);
@@ -131,7 +134,7 @@ public class AreaDetailsServiceTest {
         areaTypeEntry.setId("1");
         areaDetailsSpatialRequest.setAreaType(areaTypeEntry);
         AreaDetailsSpatialRequest request = areaDetailsSpatialRequest;
-        AreaDetails areaDetails = areaDetailsServiceBean.getAreaDetails(request);
+        AreaDetails areaDetails = areaDetailsServiceBean.getAreaDetailsById(request.getAreaType());
         assertNotNull(areaDetails);
         List<AreaProperty> list = areaDetails.getAreaProperties();
         assertEquals(list.isEmpty(), false);
@@ -149,7 +152,7 @@ public class AreaDetailsServiceTest {
         areaTypeEntry.setId("1");
         areaDetailsSpatialRequest.setAreaType(areaTypeEntry);
         AreaDetailsSpatialRequest request = areaDetailsSpatialRequest;
-        areaDetailsServiceBean.getAreaDetails(request);
+        areaDetailsServiceBean.getAreaDetailsById(request.getAreaType());
     }
 
     /**
@@ -163,7 +166,7 @@ public class AreaDetailsServiceTest {
         areaTypeEntry.setAreaType(AreaType.EEZ);
         areaTypeEntry.setId("INVALID_ROW");
         areaDetailsSpatialRequest.setAreaType(areaTypeEntry);
-        areaDetailsServiceBean.getAreaDetails(areaDetailsSpatialRequest);
+        areaDetailsServiceBean.getAreaDetailsById(areaDetailsSpatialRequest.getAreaType());
     }
 
     /**
@@ -177,7 +180,7 @@ public class AreaDetailsServiceTest {
         areaTypeEntry.setAreaType(AreaType.EEZ);
         areaTypeEntry.setId("100000");
         areaDetailsSpatialRequest.setAreaType(areaTypeEntry);
-        areaDetailsServiceBean.getAreaDetails(areaDetailsSpatialRequest);
+        areaDetailsServiceBean.getAreaDetailsById(areaDetailsSpatialRequest.getAreaType());
     }
 
     private void mockEntityByCoordinate(List list) {
