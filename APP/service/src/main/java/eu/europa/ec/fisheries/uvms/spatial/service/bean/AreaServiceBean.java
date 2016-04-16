@@ -17,13 +17,11 @@ import eu.europa.ec.fisheries.uvms.spatial.service.AreaTypeNamesService;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.PortAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.PortLocationDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.RfmoDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.PortAreaGeoJsonDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.PortAreaMapper;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.PortLocationMapper;
-import eu.europa.ec.fisheries.uvms.spatial.service.mapper.RfmoMapper;
 import eu.europa.ec.fisheries.uvms.spatial.util.FileSaver;
 import eu.europa.ec.fisheries.uvms.spatial.util.ShapeFileReader;
 import eu.europa.ec.fisheries.uvms.spatial.util.SpatialTypeEnum;
@@ -66,8 +64,7 @@ public class AreaServiceBean implements AreaService {
     private static final String GID = "gid";
     private static final String AREA_TYPE = "areaType";
 
-    private @EJB
-    AreaTypeNamesService areaTypeService;
+    private @EJB AreaTypeNamesService areaTypeService;
     private @EJB AreaService areaService;
     private @EJB SpatialRepository repository;
 
@@ -87,7 +84,7 @@ public class AreaServiceBean implements AreaService {
         try {
             repository.disableAllEezAreas();
             for (List<Property> properties : features.values()) {
-                repository.createEntity(new EezEntity(properties));
+                repository.create(new EezEntity(properties));
             }
         } catch (Exception e) {
             throw new SpatialServiceException(SpatialServiceErrors.INVALID_UPLOAD_AREA_DATA, e);
@@ -99,21 +96,8 @@ public class AreaServiceBean implements AreaService {
     public void replaceRfmo(Map<String, List<Property>> features) {
         try {
             repository.disableAllRfmoAreas();
-
-            Date enabledOn = new Date();
             for (List<Property> properties : features.values()) {
-                Map<String, Object> values = createAttributesMap(properties);
-
-                RfmoDto rfmoDto = new RfmoDto();
-                rfmoDto.setGeometry((Geometry) values.get("the_geom"));
-                rfmoDto.setCode(readStringProperty(values, "code"));
-                rfmoDto.setName(readStringProperty(values, "name"));
-                rfmoDto.setTuna(readStringProperty(values, "tuna"));
-                rfmoDto.setEnabled(true);
-                rfmoDto.setEnabledOn(enabledOn);
-
-                RfmoEntity rfmoEntity = RfmoMapper.INSTANCE.rfmoDtoToRfmoEntity(rfmoDto);
-                repository.create(rfmoEntity);
+                repository.create(new RfmoEntity(properties));
             }
         } catch (Exception e) {
             throw new SpatialServiceException(SpatialServiceErrors.INVALID_UPLOAD_AREA_DATA, e);
@@ -247,7 +231,7 @@ public class AreaServiceBean implements AreaService {
         try {
             repository.disableAllPortLocations();
 
-            Date enabledOn = new Date();
+            Date enabledOn = new Date();// TODO move code to entity like eez
             for (List<Property> properties : features.values()) {
                 Map<String, Object> values = createAttributesMap(properties);
                 PortLocationDto portLocationDto = new PortLocationDto();
@@ -274,7 +258,7 @@ public class AreaServiceBean implements AreaService {
     public void replacePortArea(Map<String, List<Property>> features) {
         try {
             repository.disableAllPortAreas();
-            Date enabledOn = new Date();
+            Date enabledOn = new Date();// TODO move code to entity like eez
             for (List<Property> properties : features.values()) {
                 Map<String, Object> values = createAttributesMap(properties);
                 PortAreaDto portAreaDto = new PortAreaDto();
@@ -292,7 +276,7 @@ public class AreaServiceBean implements AreaService {
         }
     }
 
-    private Map<String, Object> createAttributesMap(List<Property> properties) {
+    private Map<String, Object> createAttributesMap(List<Property> properties) { // TODO move code to entity like eez
         Map<String, Object> resultMap = Maps.newHashMap();
         for (Property property : properties) {
             String name = property.getName().toString();
@@ -302,7 +286,7 @@ public class AreaServiceBean implements AreaService {
         return resultMap;
     }
 
-    private String readStringProperty(Map<String, Object> values, String propertyName) throws UnsupportedEncodingException {
+    private String readStringProperty(Map<String, Object> values, String propertyName) throws UnsupportedEncodingException { // TODO move code to entity like eez
         return new String(((String) values.get(propertyName)).getBytes("ISO-8859-1"), "UTF-8");
     }
 
