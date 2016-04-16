@@ -124,7 +124,6 @@ public class UserAreaServiceBean implements UserAreaService {
         if (StringUtils.isNotBlank(oldDatasetName.getDatasetName())) {
             usmService.deleteDataset(USMSpatial.APPLICATION_NAME, oldDatasetName.getDatasetName());
         }
-
         //and if it is a renaming action
         if (StringUtils.isNotBlank(newDatasetName)) {
             //create the new dataset
@@ -137,15 +136,12 @@ public class UserAreaServiceBean implements UserAreaService {
     public void deleteUserArea(Long userAreaId, String userName, boolean isPowerUser, String scopeName) throws ServiceException {
 
         UserAreasEntity userAreaById = repository.findUserAreaById(userAreaId, userName, isPowerUser, scopeName);
-
         if (userAreaById == null) {
             throw new SpatialServiceException(SpatialServiceErrors.USER_AREA_DOES_NOT_EXIST, userAreaId);
         }
-
         if (!userAreaById.getUserName().equals(userName) && !isPowerUser) {
             throw new ServiceException("user_not_authorised");
         }
-
         repository.deleteUserArea(userAreaById);
     }
 
@@ -172,16 +168,13 @@ public class UserAreaServiceBean implements UserAreaService {
         return userAreaLayerDto;
     }
 
-
     @Override
     @Transactional
     public List<AreaDetails> getUserAreaDetailsWithExtentById(AreaTypeEntry areaTypeEntry, String userName, boolean isPowerUser, String scopeName) throws ServiceException {
 
         UserAreasEntity userAreaById = repository.findUserAreaById(Long.parseLong(areaTypeEntry.getId()), userName, isPowerUser, scopeName);
-
         try {
             if (userAreaById != null) {
-
                 List<AreaDetails> areaDetailsList = new ArrayList<>();
                 Map<String, Object> properties = userAreaById.getFieldMap();
                 addCentroidToProperties(properties);
@@ -206,12 +199,10 @@ public class UserAreaServiceBean implements UserAreaService {
 
         UserAreasEntity userAreaById = repository.findUserAreaById(Long.parseLong(areaTypeEntry.getId()), userName, isPowerUser, scopeName);
         try {
-
             List<AreaDetails> areaDetailsList = new ArrayList<>();
             Map<String, Object> properties = userAreaById.getFieldMap();
             addCentroidToProperties(properties);
             areaDetailsList.add(createAreaDetailsSpatialResponse(properties, areaTypeEntry));
-
             return areaDetailsList;
 
         } catch (ParseException e) {
@@ -237,7 +228,6 @@ public class UserAreaServiceBean implements UserAreaService {
             areaProperty.setPropertyValue(entry.getValue());
             areaProperties.add(areaProperty);
         }
-
         AreaDetails areaDetails = new AreaDetails();
         areaDetails.setAreaType(areaTypeEntry);
         areaDetails.getAreaProperties().addAll(areaProperties);
@@ -247,16 +237,12 @@ public class UserAreaServiceBean implements UserAreaService {
     @SuppressWarnings("unchecked")
     private List<Long> getUserAreaGuid(String userName, String scopeName) {
         try {
-
             List<Long> longList = new ArrayList<>();
-
             List<UserAreasEntity> userAreaByUserNameAndScopeName = repository.findUserAreaByUserNameAndScopeName(userName, scopeName);
             for (UserAreasEntity entity : userAreaByUserNameAndScopeName){
                 longList.add(entity.getGid());
             }
             return longList;
-
-
         } catch (ServiceException e) {
             throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
         }
@@ -272,7 +258,6 @@ public class UserAreaServiceBean implements UserAreaService {
         final WKTWriter2 wktWriter2 = new WKTWriter2();
 
         while (it.hasNext( )) {
-
             UserAreasEntity next = (UserAreasEntity) it.next();
             it.remove(); // avoids a ConcurrentModificationException
             final Geometry envelope = next.getGeom().getEnvelope();
@@ -280,9 +265,7 @@ public class UserAreaServiceBean implements UserAreaService {
             userAreaDtos.add(new UserAreaDto(next.getGid(), next.getName(), StringUtils.isNotBlank(next.getAreaDesc())
                     ? next.getAreaDesc() : StringUtils.EMPTY, wktWriter2.write(envelope), next.getUserName()));
         }
-
         return userAreaDtos;
-
     }
 
     @Override

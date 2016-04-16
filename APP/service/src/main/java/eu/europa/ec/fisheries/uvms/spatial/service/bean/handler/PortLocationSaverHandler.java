@@ -2,7 +2,6 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean.handler;
 
 import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaDisableService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.PortLocationService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.PortLocationDto;
 import lombok.extern.slf4j.Slf4j;
@@ -39,8 +38,4 @@ public class PortLocationSaverHandler extends AbstractSaverHandler implements Sa
         portLocationService.createPortLocation(portLocationDto);
     }
 
-    @Override
-    protected AreaDisableService getAreaDisableService() {
-        return portLocationService;
-    }
 }
