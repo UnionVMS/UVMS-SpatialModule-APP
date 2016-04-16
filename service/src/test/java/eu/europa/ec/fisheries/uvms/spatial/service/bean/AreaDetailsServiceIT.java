@@ -11,6 +11,8 @@ import javax.ejb.EJB;
 import javax.ejb.EJBException;
 
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
+import eu.europa.ec.fisheries.uvms.spatial.service.AreaService;
+import eu.europa.ec.fisheries.uvms.spatial.service.SpatialService;
 import lombok.SneakyThrows;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;

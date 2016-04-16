@@ -16,6 +16,8 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialGetMapConfigurat
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialGetMapConfigurationRS;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveOrUpdateMapConfigurationRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveOrUpdateMapConfigurationRS;
+import eu.europa.ec.fisheries.uvms.spatial.service.MapConfigService;
+import eu.europa.ec.fisheries.uvms.spatial.service.ReportingService;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ConfigDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ControlDto;
@@ -73,7 +75,8 @@ public class MapConfigServiceBean implements MapConfigService {
     private static final String PROVIDER_FORMAT_BING = "BING";
 
     private @EJB SpatialRepository repository;
-    private @EJB ReportingService reportingService;
+    private @EJB
+    ReportingService reportingService;
 
     @Override
     @SneakyThrows

@@ -12,6 +12,8 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.RfmoEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
+import eu.europa.ec.fisheries.uvms.spatial.service.AreaService;
+import eu.europa.ec.fisheries.uvms.spatial.service.AreaTypeNamesService;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.EezDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.PortAreaDto;
@@ -63,7 +65,8 @@ public class AreaServiceBean implements AreaService {
     private static final String GID = "gid";
     private static final String AREA_TYPE = "areaType";
 
-    private @EJB AreaTypeNamesService areaTypeService;
+    private @EJB
+    AreaTypeNamesService areaTypeService;
     private @EJB AreaService areaService;
     private @EJB SpatialRepository repository;
 

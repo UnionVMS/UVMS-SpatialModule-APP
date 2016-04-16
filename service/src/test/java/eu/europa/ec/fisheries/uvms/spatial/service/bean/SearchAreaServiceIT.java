@@ -7,6 +7,8 @@ import java.util.Map;
 import javax.ejb.EJB;
 
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
+import eu.europa.ec.fisheries.uvms.spatial.service.AreaService;
+import eu.europa.ec.fisheries.uvms.spatial.service.SpatialService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.GenericSystemAreaDto;
 import lombok.SneakyThrows;
 import org.jboss.arquillian.junit.Arquillian;
@@ -23,7 +25,8 @@ public class SearchAreaServiceIT extends AbstractArquillianIT {
 	
 	@EJB
 	private AreaService searchAreaService;
-    private @EJB SpatialService spatialService;
+    private @EJB
+    SpatialService spatialService;
 
 
     @Test

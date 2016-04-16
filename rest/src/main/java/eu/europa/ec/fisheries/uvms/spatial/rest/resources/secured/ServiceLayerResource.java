@@ -7,7 +7,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.layer.ServiceLayer;
 import eu.europa.ec.fisheries.uvms.spatial.model.views.Views;
 import eu.europa.ec.fisheries.uvms.spatial.rest.constants.RestConstants;
 import eu.europa.ec.fisheries.uvms.spatial.rest.constants.View;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.ServiceLayerService;
+import eu.europa.ec.fisheries.uvms.spatial.service.ServiceLayerService;
 import lombok.extern.slf4j.Slf4j;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
