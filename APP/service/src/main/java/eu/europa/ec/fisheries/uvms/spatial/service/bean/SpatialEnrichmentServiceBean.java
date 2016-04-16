@@ -14,6 +14,8 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Location;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRS;
+import eu.europa.ec.fisheries.uvms.spatial.service.SpatialEnrichmentService;
+import eu.europa.ec.fisheries.uvms.spatial.service.SpatialService;
 import lombok.extern.slf4j.Slf4j;
 import javax.ejb.EJB;
 import javax.ejb.Local;
@@ -26,7 +28,8 @@ import java.util.List;
 @Slf4j
 public class SpatialEnrichmentServiceBean implements SpatialEnrichmentService {
 
-    private @EJB SpatialService spatialService;
+    private @EJB
+    SpatialService spatialService;
 
     @Override
     @Transactional(Transactional.TxType.REQUIRES_NEW)

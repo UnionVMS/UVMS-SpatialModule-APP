@@ -8,6 +8,7 @@ import eu.europa.ec.fisheries.uvms.reporting.model.mappper.ReportingModuleRespon
 import eu.europa.ec.fisheries.uvms.reporting.model.schemas.ReportGetStartAndEndDateRS;
 import eu.europa.ec.fisheries.uvms.spatial.message.service.ReportingProducerBean;
 import eu.europa.ec.fisheries.uvms.spatial.message.service.SpatialModuleReceiverBean;
+import eu.europa.ec.fisheries.uvms.spatial.service.ReportingService;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.ejb.EJB;
