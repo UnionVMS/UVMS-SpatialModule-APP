@@ -40,9 +40,9 @@ public class BaseAreaEntity implements Serializable {
 
     private static final String ISO_8859_1 = "ISO-8859-1";
     private static final String UTF_8 = "UTF-8";
-    protected static final String NAME = "name";
-    protected static final String CODE = "code";
-    protected static final String THE_GEOM = "the_geom";
+    private static final String NAME = "name";
+    private static final String CODE = "code";
+    private static final String THE_GEOM = "the_geom";
 
     private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) @ColumnAliasName(aliasName = "gid") Long gid;
 
@@ -66,6 +66,14 @@ public class BaseAreaEntity implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "enabled_on")
     private Date enabledOn;
+
+    public BaseAreaEntity(Map<String, Object> values) throws UnsupportedEncodingException {
+        setGeom((Geometry) values.get(THE_GEOM));
+        setCode(readStringProperty(values, CODE));
+        setName(readStringProperty(values, NAME));
+        setEnabled(true);
+        setEnabledOn(new Date());
+    }
 
     public BaseAreaEntity(){
         this.gid = null;
@@ -123,7 +131,7 @@ public class BaseAreaEntity implements Serializable {
         return new String(((String) values.get(propertyName)).getBytes(ISO_8859_1), UTF_8);
     }
 
-    protected Map<String, Object> createAttributesMap(List<Property> properties) {
+    public static Map<String, Object> createAttributesMap(List<Property> properties) {
         Map<String, Object> resultMap = Maps.newHashMap();
         for (Property property : properties) {
             String name = property.getName().toString();

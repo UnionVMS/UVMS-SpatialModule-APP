@@ -1,11 +1,9 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
-import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.Where;
-import org.opengis.feature.Property;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
@@ -13,8 +11,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 @Entity
@@ -92,24 +88,19 @@ public class EezEntity extends BaseAreaEntity {
     public EezEntity() {
     }
 
-    public EezEntity(List<Property> properties) throws UnsupportedEncodingException {
-        Map<String, Object> values = createAttributesMap(properties);
-        setName(readStringProperty(values, NAME));
+    public EezEntity(Map<String, Object> values) throws UnsupportedEncodingException {
+        super(values);
         setCountry(readStringProperty(values, COUNTRY));
         setSovereign(readStringProperty(values, SOVEREIGN));
         setRemarks(readStringProperty(values, REMARKS));
         setSovId((Long) values.get(SOV_ID));
         setEezId((Long) values.get(EEZ_ID));
-        setCode(readStringProperty(values, CODE));
         setMrgid(BigDecimal.valueOf(((Double) values.get(MRGID)).longValue()));
         setDateChang(readStringProperty(values, DATE_CHANG));
         setAreaM2((Double) values.get(AREA_M_2));
         setLongitude((Double) values.get(LONGITUDE));
         setLatitude((Double) values.get(LATITUDE));
         setMrgidEez((Long) values.get(MRGID_EEZ));
-        setGeom((Geometry) values.get(THE_GEOM));
-        setEnabledOn(new Date());
-        setEnabled(true);
     }
 
     public String getCountry() {

@@ -1,16 +1,12 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
-import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
-import org.opengis.feature.Property;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import java.io.UnsupportedEncodingException;
-import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 @Entity
@@ -46,17 +42,12 @@ public class PortEntity extends BaseAreaEntity {
     public PortEntity() {
     }
 
-    public PortEntity(List<Property> properties) throws UnsupportedEncodingException {
-        Map<String, Object> values = createAttributesMap(properties);
-        setGeom((Geometry) values.get(THE_GEOM));
-        setCode(readStringProperty(values, CODE));
-        setName(readStringProperty(values, NAME));
+    public PortEntity(Map<String, Object> values) throws UnsupportedEncodingException {
+        super(values);
         setCountryCode(readStringProperty(values, COUNTRY_CO));
         setFishingPort(readStringProperty(values, FISHING_PO));
         setLandingPlace(readStringProperty(values, LANDING_PL));
         setCommercialPort(readStringProperty(values, COMMERCIAL));
-        setEnabled(true);
-        setEnabledOn(new Date());
     }
 
     public String getCountryCode() {

@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import java.io.UnsupportedEncodingException;
+import java.util.Map;
 
 @Entity
 @NamedQueries({
@@ -22,5 +24,9 @@ public class PortAreasEntity extends BaseAreaEntity {
     public static final String DISABLE_PORT_AREAS = "portAreasEntity.disablePortAreas";
 
     public PortAreasEntity() {
+    }
+
+    public PortAreasEntity(Map<String, Object> values) throws UnsupportedEncodingException {
+        super(values);
     }
 }
