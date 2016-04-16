@@ -402,7 +402,7 @@ public class SpatialRepositoryBean implements SpatialRepository {
     }
 
     @Override
-    public EezEntity createEntity(EezEntity eezEntity) throws ServiceException {
+    public EezEntity create(EezEntity eezEntity) throws ServiceException {
         return eezDao.createEntity(eezEntity);
     }
 

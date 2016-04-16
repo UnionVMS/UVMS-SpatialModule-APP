@@ -33,20 +33,17 @@ public class EezEntity extends BaseAreaEntity {
     public static final String LIST_EMPTY_GEOMETRIES = "eezEntity.TEST";
     public static final String DISABLE_EEZ_AREAS = "eezEntity.disableEezAreas";
 
-    private static final String NAME = "name";
     private static final String COUNTRY = "country";
     private static final String SOVEREIGN = "sovereign";
     private static final String REMARKS = "remarks";
     private static final String SOV_ID = "sov_id";
     private static final String EEZ_ID = "eez_id";
-    private static final String CODE = "code";
     private static final String MRGID = "mrgid";
     private static final String DATE_CHANG = "date_chang";
     private static final String AREA_M_2 = "area_m2";
     private static final String LONGITUDE = "longitude";
     private static final String LATITUDE = "latitude";
     private static final String MRGID_EEZ = "mrgid_eez";
-    private static final String THE_GEOM = "the_geom";
 
     @Column(length = 100)
     @ColumnAliasName(aliasName = COUNTRY)
