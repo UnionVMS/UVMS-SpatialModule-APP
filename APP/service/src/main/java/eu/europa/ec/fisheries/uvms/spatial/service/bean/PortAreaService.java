@@ -9,5 +9,4 @@ public interface PortAreaService {
 
     void deletePortArea(Long portAreaId) throws ServiceException;
 
-    long createPortArea(PortAreaDto portAreaDto) throws ServiceException;
 }
