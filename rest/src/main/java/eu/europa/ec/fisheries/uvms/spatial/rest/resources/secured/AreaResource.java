@@ -47,9 +47,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AreaResource extends UnionVMSResource {
 
     private @EJB AreaTypeNamesService areaTypeService;
-    private @EJB
-    AreaService areaDetailsService;
-	private @EJB SearchAreaService searchAreaService;
+    private @EJB AreaService areaService;
     private @EJB UserAreaService userAreaService;
     private @EJB SpatialService spatialService;
 
@@ -84,7 +82,7 @@ public class AreaResource extends UnionVMSResource {
 
         if (areaDto.getId() != null) {
 
-            AreaDetails areaDetails = areaDetailsService.getAreaDetailsById(mapper.getAreaTypeEntry(areaDto));
+            AreaDetails areaDetails = areaService.getAreaDetailsById(mapper.getAreaTypeEntry(areaDto));
             AreaDetailsGeoJsonDto areaDetailsGeoJsonDto = mapper.getAreaDetailsDto(areaDetails);
             if (!areaDto.getIsGeom()) {
                 areaDetailsGeoJsonDto.removeGeometry();
@@ -121,7 +119,7 @@ public class AreaResource extends UnionVMSResource {
     public Response getAreaProperties(List<AreaCoordinateType> areaDtoList) throws ServiceException {
 
         List<AreaTypeEntry> areaTypeEntryList = mapper.getAreaTypeEntryList(areaDtoList);
-        List<Map<String, String>> selectedAreaColumns = searchAreaService.getSelectedAreaColumns(areaTypeEntryList);
+        List<Map<String, String>> selectedAreaColumns = areaService.getSelectedAreaColumns(areaTypeEntryList);
         return createSuccessResponse(selectedAreaColumns);
     }
    

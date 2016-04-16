@@ -4,15 +4,20 @@ import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.spatial.model.constants.USMSpatial;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.PortAreaService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.PortAreaGeoJsonDto;
 import lombok.extern.slf4j.Slf4j;
-
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -23,7 +28,7 @@ import javax.ws.rs.core.Response;
 public class AreaPortResource extends UnionVMSResource {
 
     @EJB
-    private PortAreaService portAreaService;
+    private AreaService areaService;
 
     @PUT
     @Path("/portarea")
@@ -35,7 +40,7 @@ public class AreaPortResource extends UnionVMSResource {
                                    @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName) throws ServiceException {
         String userName = request.getRemoteUser();
         log.info("{} is requesting updatePortArea(...)", userName);
-        long gid = portAreaService.updatePortArea(portAreaGeoJsonDto);
+        long gid = areaService.updatePortArea(portAreaGeoJsonDto);
         return createSuccessResponse(gid);
     }
 
@@ -48,7 +53,7 @@ public class AreaPortResource extends UnionVMSResource {
                                    @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName) throws ServiceException {
         String userName = request.getRemoteUser();
         log.info("{} is requesting deletePortArea(...), with a ID={}", userName, portAreaId);
-        portAreaService.deletePortArea(portAreaId);
+        areaService.deletePortArea(portAreaId);
         return createSuccessResponse();
     }
 
