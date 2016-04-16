@@ -1,8 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.io.ParseException;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
@@ -13,7 +11,6 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Coordinate;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.UserAreaDto;
@@ -37,8 +34,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import static eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialUtils.convertToPointInWGS84;
 
 @Stateless
 @Local(UserAreaService.class)
@@ -177,47 +172,6 @@ public class UserAreaServiceBean implements UserAreaService {
         return userAreaLayerDto;
     }
 
-    @Override
-    @Transactional
-    public List<UserAreaDto> getUserAreaDetailsWithExtentByLocation(Coordinate coordinate, String userName) throws ServiceException {
-        Point point = convertToPointInWGS84(coordinate.getLongitude(), coordinate.getLatitude(), coordinate.getCrs());
-
-        List<UserAreasEntity> userAreaDetailsWithExtentByLocation = repository.findUserAreaDetailsByLocation(userName, point);
-
-        List<UserAreaDto> userAreaDtos = new ArrayList<>();
-        for (UserAreasEntity userAreaDetails : userAreaDetailsWithExtentByLocation){
-            UserAreaDto userAreaDto = new UserAreaDto();
-            userAreaDto.setGid(userAreaDetails.getGid());
-            userAreaDto.setDesc(userAreaDetails.getAreaDesc());
-            userAreaDto.setExtent(new WKTWriter2().write(userAreaDetails.getGeom().getEnvelope()));
-            userAreaDto.setName(userAreaDetails.getName());
-            userAreaDto.setAreaType(userAreaDetails.getType());
-            userAreaDtos.add(userAreaDto);
-        }
-
-        return userAreaDtos;
-    }
-
-    @Override
-    @Transactional
-    public List<AreaDetails> getUserAreaDetailsByLocation(AreaTypeEntry areaTypeEntry, String userName) throws ServiceException {
-        Point point = convertToPointInWGS84(areaTypeEntry.getLongitude(), areaTypeEntry.getLatitude(), areaTypeEntry.getCrs());
-        List<UserAreasEntity> userAreaDetails = repository.findUserAreaDetailsByLocation(userName, point);
-        try {
-            List<AreaDetails> areaDetailsList = Lists.newArrayList();
-            for (UserAreasEntity userAreaDetail : userAreaDetails) {
-                Map<String, Object> properties = userAreaDetail.getFieldMap();
-                addCentroidToProperties(properties);
-                areaDetailsList.add(createAreaDetailsSpatialResponse(properties, areaTypeEntry));
-            }
-            return areaDetailsList;
-
-        } catch (ParseException e) {
-            String error = "Error while trying to parse geometry";
-            log.error(error);
-            throw new ServiceException(error);
-        }
-    }
 
     @Override
     @Transactional

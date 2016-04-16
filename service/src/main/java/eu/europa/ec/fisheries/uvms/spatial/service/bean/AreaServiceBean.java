@@ -17,15 +17,29 @@ import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Stateless
-@Local(AreaDetailsService.class)
+@Local(AreaService.class)
 @Slf4j
-public class AreaDetailsServiceBean implements AreaDetailsService {
+public class AreaServiceBean implements AreaService {
+
+    private static final String CODE = "code";
+    private static final String NAME = "name";
 
     private @EJB SpatialRepository repository;
+
+    @Override
+    public Map<String, String> getAllCountriesDesc() {
+        Map<String, String> countries = new HashMap<String, String>();
+        List<Map<String, String>> countryList = repository.findAllCountriesDesc();
+        for (Map<String, String> country : countryList) {
+            countries.put(country.get(CODE), country.get(NAME));
+        }
+        return countries;
+    }
 
     @Override
     @Transactional

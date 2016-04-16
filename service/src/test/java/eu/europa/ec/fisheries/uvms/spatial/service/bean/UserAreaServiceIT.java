@@ -24,8 +24,12 @@ public class UserAreaServiceIT extends AbstractArquillianIT {
 	
 	@EJB
 	private UserAreaService userAreaService;
-	
-	@Test
+
+
+    @EJB
+    private SpatialService spatialService;
+
+    @Test
     @SneakyThrows
     public void testSearchUserAreaByFilter() {
 		//Given
@@ -50,7 +54,7 @@ public class UserAreaServiceIT extends AbstractArquillianIT {
     public void testUserAreaDetails() {
 		//Given
 		Coordinate coordinate = new Coordinate(20.0535983848415, 31.1417484902222, 4326);
-		List<UserAreaDto> userAreas = userAreaService.getUserAreaDetailsWithExtentByLocation(coordinate, "rep_power");
+		List<UserAreaDto> userAreas = spatialService.getUserAreaDetailsWithExtentByLocation(coordinate, "rep_power");
 		
 		//Test
 		assertNotNull(userAreas);
@@ -63,7 +67,7 @@ public class UserAreaServiceIT extends AbstractArquillianIT {
 	public void testUserAreaDetailsForInvalidUserNameAndScopeName() {
 		//Given
 		Coordinate coordinate = new Coordinate(20.0535983848415, 31.1417484902222, 4326);
-		List<UserAreaDto> userAreas = userAreaService.getUserAreaDetailsWithExtentByLocation(coordinate, "00000");
+		List<UserAreaDto> userAreas = spatialService.getUserAreaDetailsWithExtentByLocation(coordinate, "00000");
 		
 		//Test
 		assertNotNull(userAreas);
