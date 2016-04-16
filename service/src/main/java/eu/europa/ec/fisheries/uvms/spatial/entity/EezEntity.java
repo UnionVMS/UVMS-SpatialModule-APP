@@ -1,15 +1,21 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
+import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.Where;
+import org.opengis.feature.Property;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @Entity
 @NamedQueries({
@@ -27,23 +33,38 @@ public class EezEntity extends BaseAreaEntity {
     public static final String LIST_EMPTY_GEOMETRIES = "eezEntity.TEST";
     public static final String DISABLE_EEZ_AREAS = "eezEntity.disableEezAreas";
 
-    @Column(name = "country", length = 100)
-    @ColumnAliasName(aliasName = "country")
+    private static final String NAME = "name";
+    private static final String COUNTRY = "country";
+    private static final String SOVEREIGN = "sovereign";
+    private static final String REMARKS = "remarks";
+    private static final String SOV_ID = "sov_id";
+    private static final String EEZ_ID = "eez_id";
+    private static final String CODE = "code";
+    private static final String MRGID = "mrgid";
+    private static final String DATE_CHANG = "date_chang";
+    private static final String AREA_M_2 = "area_m2";
+    private static final String LONGITUDE = "longitude";
+    private static final String LATITUDE = "latitude";
+    private static final String MRGID_EEZ = "mrgid_eez";
+    private static final String THE_GEOM = "the_geom";
+
+    @Column(length = 100)
+    @ColumnAliasName(aliasName = COUNTRY)
     private String country;
 
-    @Column(name = "sovereign", length = 100)
-    @ColumnAliasName(aliasName = "sovereign")
+    @Column(length = 100)
+    @ColumnAliasName(aliasName = SOVEREIGN)
     private String sovereign;
 
-    @Column(name = "remarks", length = 150)
-    @ColumnAliasName(aliasName = "remarks")
+    @Column(length = 150)
+    @ColumnAliasName(aliasName = REMARKS)
     private String remarks;
 
-    @Column(name = "sov_id")
+    @Column(name = SOV_ID)
     @ColumnAliasName(aliasName = "sovId")
-    private Integer sovId;
+    private Long sovId;
 
-    @Column(name = "eez_id")
+    @Column(name = EEZ_ID)
     @ColumnAliasName(aliasName = "eezId")
     private Long eezId;
 
@@ -59,19 +80,39 @@ public class EezEntity extends BaseAreaEntity {
     @ColumnAliasName(aliasName = "areaM2")
     private Double areaM2;
 
-    @Column(name = "longitude")
-    @ColumnAliasName(aliasName = "longitude")
+    @Column(name = LONGITUDE)
+    @ColumnAliasName(aliasName = LONGITUDE)
     private Double longitude;
 
-    @Column(name = "latitude")
-    @ColumnAliasName(aliasName = "latitude")
+    @Column(name = LATITUDE)
+    @ColumnAliasName(aliasName = LATITUDE)
     private Double latitude;
 
     @Column(name = "mrgid_eez")
     @ColumnAliasName(aliasName = "mrgidEez")
-    private Integer mrgidEez;
+    private Long mrgidEez;
 
     public EezEntity() {
+    }
+
+    public EezEntity(List<Property> properties) throws UnsupportedEncodingException {
+        Map<String, Object> values = createAttributesMap(properties);
+        setName(readStringProperty(values, NAME));
+        setCountry(readStringProperty(values, COUNTRY));
+        setSovereign(readStringProperty(values, SOVEREIGN));
+        setRemarks(readStringProperty(values, REMARKS));
+        setSovId((Long) values.get(SOV_ID));
+        setEezId((Long) values.get(EEZ_ID));
+        setCode(readStringProperty(values, CODE));
+        setMrgid(BigDecimal.valueOf(((Double) values.get(MRGID)).longValue()));
+        setDateChang(readStringProperty(values, DATE_CHANG));
+        setAreaM2((Double) values.get(AREA_M_2));
+        setLongitude((Double) values.get(LONGITUDE));
+        setLatitude((Double) values.get(LATITUDE));
+        setMrgidEez((Long) values.get(MRGID_EEZ));
+        setGeom((Geometry) values.get(THE_GEOM));
+        setEnabledOn(new Date());
+        setEnabled(true);
     }
 
     public String getCountry() {
@@ -98,11 +139,11 @@ public class EezEntity extends BaseAreaEntity {
         this.remarks = remarks;
     }
 
-    public Integer getSovId() {
+    public Long getSovId() {
         return this.sovId;
     }
 
-    public void setSovId(Integer sovId) {
+    public void setSovId(Long sovId) {
         this.sovId = sovId;
     }
 
@@ -154,11 +195,11 @@ public class EezEntity extends BaseAreaEntity {
         this.latitude = latitude;
     }
 
-    public Integer getMrgidEez() {
+    public Long getMrgidEez() {
         return this.mrgidEez;
     }
 
-    public void setMrgidEez(Integer mrgidEez) {
+    public void setMrgidEez(Long mrgidEez) {
         this.mrgidEez = mrgidEez;
     }
 

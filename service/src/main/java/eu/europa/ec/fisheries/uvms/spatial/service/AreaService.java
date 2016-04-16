@@ -23,7 +23,7 @@ public interface AreaService {
 
     public Map<String, String> getAllCountriesDesc();
 
-    void replaceEezArea(Map<String, List<Property>> features);
+    void replaceEez(Map<String, List<Property>> features);
 
     void replaceRfmo(Map<String, List<Property>> features);
 
