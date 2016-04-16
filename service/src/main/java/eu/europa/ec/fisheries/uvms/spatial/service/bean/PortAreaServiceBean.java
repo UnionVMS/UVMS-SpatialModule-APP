@@ -55,13 +55,6 @@ public class PortAreaServiceBean implements PortAreaService {
         update(portAreaId, null);
     }
 
-    @Override
-    public long createPortArea(PortAreaDto portAreaDto) throws ServiceException {
-        PortAreasEntity portAreasEntity = mapper.portAreaDtoToPortAreasEntity(portAreaDto);
-        portAreasEntity = repository.createEntity(portAreasEntity);
-        return portAreasEntity.getGid();
-    }
-
     private void validateGid(Long gid) {
         if (gid == null) {
             throw new SpatialServiceException(SpatialServiceErrors.MISSING_PORT_AREA_ID);
