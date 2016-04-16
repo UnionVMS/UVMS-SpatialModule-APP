@@ -3,7 +3,12 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 import com.google.common.collect.Maps;
 import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.entity.*;
+import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.BaseAreaEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.PortAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.PortEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.RfmoEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
@@ -22,7 +27,6 @@ import eu.europa.ec.fisheries.uvms.spatial.service.mapper.RfmoMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.opengis.feature.Property;
-
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
@@ -181,7 +185,6 @@ public class AreaServiceBean implements AreaService {
     private String readStringProperty(Map<String, Object> values, String propertyName) throws UnsupportedEncodingException {
         return new String(((String) values.get(propertyName)).getBytes("ISO-8859-1"), "UTF-8");
     }
-
 
     @Override
     @Transactional
