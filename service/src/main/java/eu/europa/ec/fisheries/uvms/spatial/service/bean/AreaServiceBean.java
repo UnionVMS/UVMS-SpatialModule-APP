@@ -16,12 +16,10 @@ import eu.europa.ec.fisheries.uvms.spatial.service.AreaService;
 import eu.europa.ec.fisheries.uvms.spatial.service.AreaTypeNamesService;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.PortAreaDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.PortLocationDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.PortAreaGeoJsonDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.PortAreaMapper;
-import eu.europa.ec.fisheries.uvms.spatial.service.mapper.PortLocationMapper;
 import eu.europa.ec.fisheries.uvms.spatial.util.FileSaver;
 import eu.europa.ec.fisheries.uvms.spatial.util.ShapeFileReader;
 import eu.europa.ec.fisheries.uvms.spatial.util.SpatialTypeEnum;
@@ -230,23 +228,8 @@ public class AreaServiceBean implements AreaService {
     public void replacePort(Map<String, List<Property>> features) {
         try {
             repository.disableAllPortLocations();
-
-            Date enabledOn = new Date();// TODO move code to entity like eez
             for (List<Property> properties : features.values()) {
-                Map<String, Object> values = createAttributesMap(properties);
-                PortLocationDto portLocationDto = new PortLocationDto();
-                portLocationDto.setGeometry((Geometry) values.get("the_geom"));
-                portLocationDto.setCode(readStringProperty(values, "code"));
-                portLocationDto.setName(readStringProperty(values, "name"));
-                portLocationDto.setCountryCode(readStringProperty(values, "country_co"));
-                portLocationDto.setFishingPort(readStringProperty(values, "fishing_po"));
-                portLocationDto.setLandingPlace(readStringProperty(values, "landing_pl"));
-                portLocationDto.setCommercialPort(readStringProperty(values, "commercial"));
-                portLocationDto.setEnabled(true);
-                portLocationDto.setEnabledOn(enabledOn);
-
-                PortEntity portsEntity = PortLocationMapper.INSTANCE.portLocationDtoToPortsEntity(portLocationDto);
-                repository.createEntity(portsEntity);
+                repository.create(new PortEntity(properties));
             }
         } catch (Exception e) {
             throw new SpatialServiceException(SpatialServiceErrors.INVALID_UPLOAD_AREA_DATA, e);

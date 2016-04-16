@@ -397,7 +397,7 @@ public class SpatialRepositoryBean implements SpatialRepository {
     }
 
     @Override
-    public PortEntity createEntity(PortEntity portsEntity) throws ServiceException {
+    public PortEntity create(PortEntity portsEntity) throws ServiceException {
         return portDao.createEntity(portsEntity);
     }
 
