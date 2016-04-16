@@ -38,7 +38,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static eu.europa.ec.fisheries.uvms.spatial.util.ColumnAliasNameHelper.getFieldMap;
 import static eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialUtils.convertToPointInWGS84;
 
 @Stateless
@@ -207,7 +206,7 @@ public class UserAreaServiceBean implements UserAreaService {
         try {
             List<AreaDetails> areaDetailsList = Lists.newArrayList();
             for (UserAreasEntity userAreaDetail : userAreaDetails) {
-                Map<String, Object> properties = getFieldMap(userAreaDetail);
+                Map<String, Object> properties = userAreaDetail.getFieldMap();
                 addCentroidToProperties(properties);
                 areaDetailsList.add(createAreaDetailsSpatialResponse(properties, areaTypeEntry));
             }
@@ -230,7 +229,7 @@ public class UserAreaServiceBean implements UserAreaService {
             if (userAreaById != null) {
 
                 List<AreaDetails> areaDetailsList = new ArrayList<>();
-                Map<String, Object> properties = getFieldMap(userAreaById);
+                Map<String, Object> properties = userAreaById.getFieldMap();
                 addCentroidToProperties(properties);
                 areaDetailsList.add(createAreaDetailsSpatialResponse(properties, areaTypeEntry));
                 return areaDetailsList;
@@ -255,7 +254,7 @@ public class UserAreaServiceBean implements UserAreaService {
         try {
 
             List<AreaDetails> areaDetailsList = new ArrayList<>();
-            Map<String, Object> properties = getFieldMap(userAreaById);
+            Map<String, Object> properties = userAreaById.getFieldMap();
             addCentroidToProperties(properties);
             areaDetailsList.add(createAreaDetailsSpatialResponse(properties, areaTypeEntry));
 

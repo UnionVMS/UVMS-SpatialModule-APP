@@ -18,7 +18,7 @@ import java.util.Set;
 
 public interface SpatialRepository {
 
-    List findAreaOrLocationByCoordinates(Point point, String nativeQueryString);
+    List findAreaByCoordinates(Point point, String nativeQueryString);
 
     List<AreaLayerDto> findSystemAreaLayerMapping();
 
@@ -144,7 +144,7 @@ public interface SpatialRepository {
 
     List<AreaLocationTypesEntity> listAllAreaAndLocation() throws ServiceException;
 
-    Object findAreaByTypeAndId(String typeName, Long id) throws ServiceException;
+    BaseAreaEntity findAreaByTypeAndId(String typeName, Long id) throws ServiceException;
 
     void deleteUserArea(UserAreasEntity userAreaById);
 
