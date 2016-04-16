@@ -1,7 +1,5 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import com.google.common.collect.Maps;
-import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.BaseAreaEntity;
@@ -15,11 +13,9 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.service.AreaService;
 import eu.europa.ec.fisheries.uvms.spatial.service.AreaTypeNamesService;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.PortAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.PortAreaGeoJsonDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.service.mapper.PortAreaMapper;
 import eu.europa.ec.fisheries.uvms.spatial.util.FileSaver;
 import eu.europa.ec.fisheries.uvms.spatial.util.ShapeFileReader;
 import eu.europa.ec.fisheries.uvms.spatial.util.SpatialTypeEnum;
@@ -40,12 +36,10 @@ import javax.ejb.Stateless;
 import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,7 +76,8 @@ public class AreaServiceBean implements AreaService {
         try {
             repository.disableAllEezAreas();
             for (List<Property> properties : features.values()) {
-                repository.create(new EezEntity(properties));
+                Map<String, Object> values = BaseAreaEntity.createAttributesMap(properties);
+                repository.create(new EezEntity(values));
             }
         } catch (Exception e) {
             throw new SpatialServiceException(SpatialServiceErrors.INVALID_UPLOAD_AREA_DATA, e);
@@ -95,7 +90,8 @@ public class AreaServiceBean implements AreaService {
         try {
             repository.disableAllRfmoAreas();
             for (List<Property> properties : features.values()) {
-                repository.create(new RfmoEntity(properties));
+                Map<String, Object> values = BaseAreaEntity.createAttributesMap(properties);
+                repository.create(new RfmoEntity(values));
             }
         } catch (Exception e) {
             throw new SpatialServiceException(SpatialServiceErrors.INVALID_UPLOAD_AREA_DATA, e);
@@ -229,7 +225,8 @@ public class AreaServiceBean implements AreaService {
         try {
             repository.disableAllPortLocations();
             for (List<Property> properties : features.values()) {
-                repository.create(new PortEntity(properties));
+                Map<String, Object> values = BaseAreaEntity.createAttributesMap(properties);
+                repository.create(new PortEntity(values));
             }
         } catch (Exception e) {
             throw new SpatialServiceException(SpatialServiceErrors.INVALID_UPLOAD_AREA_DATA, e);
@@ -241,36 +238,13 @@ public class AreaServiceBean implements AreaService {
     public void replacePortArea(Map<String, List<Property>> features) {
         try {
             repository.disableAllPortAreas();
-            Date enabledOn = new Date();// TODO move code to entity like eez
             for (List<Property> properties : features.values()) {
-                Map<String, Object> values = createAttributesMap(properties);
-                PortAreaDto portAreaDto = new PortAreaDto();
-                portAreaDto.setGeometry((Geometry) values.get("the_geom"));
-                portAreaDto.setCode(readStringProperty(values, "code"));
-                portAreaDto.setName(readStringProperty(values, "name"));
-                portAreaDto.setEnabled(true);
-                portAreaDto.setEnabledOn(enabledOn);
-
-                PortAreasEntity portAreasEntity = PortAreaMapper.INSTANCE.portAreaDtoToPortAreasEntity(portAreaDto);
-                repository.createEntity(portAreasEntity);
+                Map<String, Object> values = BaseAreaEntity.createAttributesMap(properties);
+                repository.create(new PortAreasEntity(values));
             }
         } catch (Exception e) {
             throw new SpatialServiceException(SpatialServiceErrors.INVALID_UPLOAD_AREA_DATA, e);
         }
-    }
-
-    private Map<String, Object> createAttributesMap(List<Property> properties) { // TODO move code to entity like eez
-        Map<String, Object> resultMap = Maps.newHashMap();
-        for (Property property : properties) {
-            String name = property.getName().toString();
-            Object value = property.getValue();
-            resultMap.put(name, value);
-        }
-        return resultMap;
-    }
-
-    private String readStringProperty(Map<String, Object> values, String propertyName) throws UnsupportedEncodingException { // TODO move code to entity like eez
-        return new String(((String) values.get(propertyName)).getBytes("ISO-8859-1"), "UTF-8");
     }
 
     @Override
