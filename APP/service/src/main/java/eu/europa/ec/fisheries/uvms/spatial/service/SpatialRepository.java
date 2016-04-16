@@ -134,7 +134,7 @@ public interface SpatialRepository {
 
     void deleteEntity(ReportConnectSpatialEntity entity);
 
-    PortAreasEntity createEntity(PortAreasEntity portAreasEntity) throws ServiceException;
+    PortAreasEntity create(PortAreasEntity portAreasEntity) throws ServiceException;
 
     List closestArea(final List<AreaLocationTypesEntity> entities, final SpatialFunction spatialFunction, final Point point);
 

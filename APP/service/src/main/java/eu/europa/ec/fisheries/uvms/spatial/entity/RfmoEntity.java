@@ -1,18 +1,14 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
-import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 import org.hibernate.annotations.Where;
-import org.opengis.feature.Property;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import java.io.UnsupportedEncodingException;
-import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 @Entity
@@ -39,14 +35,9 @@ public class RfmoEntity extends BaseAreaEntity {
     public RfmoEntity() {
     }
 
-    public RfmoEntity(List<Property> properties) throws UnsupportedEncodingException {
-        Map<String, Object> values = createAttributesMap(properties);
-        setName(readStringProperty(values, NAME));
-        setCode(readStringProperty(values, CODE));
+    public RfmoEntity(Map<String, Object> values) throws UnsupportedEncodingException {
+        super(values);
         setTuna(readStringProperty(values, TUNA));
-        setEnabled(true);
-        setEnabledOn(new Date());
-        setGeom((Geometry) values.get(THE_GEOM));
     }
 
     public String getTuna() {
