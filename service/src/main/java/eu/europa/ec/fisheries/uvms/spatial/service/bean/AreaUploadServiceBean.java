@@ -1,10 +1,8 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.handler.*;
 import eu.europa.ec.fisheries.uvms.spatial.util.FileSaver;
 import eu.europa.ec.fisheries.uvms.spatial.util.ShapeFileReader;
 import eu.europa.ec.fisheries.uvms.spatial.util.SupportedFileExtensions;
@@ -15,7 +13,6 @@ import org.geotools.referencing.CRS;
 import org.opengis.feature.Property;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
-
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
@@ -37,23 +34,9 @@ public class AreaUploadServiceBean implements AreaUploadService {
     private static final String AREA_ZIP_FILE = "AreaFile.zip";
     private static final String PREFIX = "temp";
 
-    @EJB
-    private AreaTypeNamesService areaTypeService;
-
-    @EJB
-    private SpatialRepository repository;
-
-    @EJB
-    private EezSaverHandler eezSaverHandler;
-
-    @EJB
-    private RfmoSaverHandler rmfoSaverHandler;
-
-    @EJB
-    private PortAreaSaverHandler portAreaSaverHandler;
-
-    @EJB
-    private PortLocationSaverHandler portLocationSaverHandler;
+    private @EJB AreaTypeNamesService areaTypeService;
+    private @EJB SpatialRepository repository;
+    private @EJB AreaService areaService;
 
     @Override
     public void uploadArea(byte[] content, String areaTypeString, int crsCode) {
@@ -75,44 +58,26 @@ public class AreaUploadServiceBean implements AreaUploadService {
 
             switch (areaType) {
                 case EEZ:
-                    repository.disableAllEezAreas();
+                    areaService.replaceEezArea(features);
                     break;
                 case RFMO:
-                    repository.disableAllRfmoAreas();
+                    areaService.replaceRfmo(features);
                     break;
                 case PORT:
-                    repository.disableAllPortLocations();
+                    areaService.replacePort(features);
                     break;
                 case PORTAREA:
-                    repository.disableAllPortAreas();
+                    areaService.replacePortArea(features);
                     break;
                 default:
                     throw new IllegalArgumentException("Unsupported area type.");
-
             }
-
-            getHandler(areaType).replaceAreas(features); // FIXME not good
 
             FileUtils.deleteDirectory(new File(absolutePath.toString()));
 
             log.debug("Finished areas upload.");
-        } catch (IOException | ServiceException ex) {
+        } catch (IOException ex) {
             throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
-        }
-    }
-
-    private SaverHandler getHandler(AreaType areaType) { // FIXME not good
-        switch (areaType) {
-            case EEZ:
-                return eezSaverHandler;
-            case RFMO:
-                return rmfoSaverHandler;
-            case PORT:
-                return portLocationSaverHandler;
-            case PORTAREA:
-                return portAreaSaverHandler;
-            default:
-                throw new IllegalArgumentException("Unsupported area type.");
         }
     }
 
