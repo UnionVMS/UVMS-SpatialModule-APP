@@ -13,9 +13,12 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.BaseAreaEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.PortEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Area;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaExtendedIdentifierType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaIdentifierType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestLocationSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRQ;
@@ -48,6 +51,7 @@ import org.hibernate.spatial.GeometryType;
 import org.hibernate.type.DoubleType;
 import org.hibernate.type.IntegerType;
 import org.hibernate.type.StringType;
+import org.mapstruct.ap.internal.util.Collections;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.operation.TransformException;
 import javax.annotation.PostConstruct;
@@ -172,6 +176,76 @@ public class SpatialServiceBean implements SpatialService {
         }
         return new ArrayList<>(distancePerTypeMap.values());
     }
+
+    @Override
+    @Transactional
+    public List<AreaDetails> getAreaDetailsByLocation(AreaTypeEntry areaTypeEntry) throws ServiceException {
+
+        AreaType areaType = areaTypeEntry.getAreaType();
+
+        if (areaType == null) {
+            throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR, StringUtils.EMPTY);
+        }
+
+        List<AreaLocationTypesEntity> areasLocationTypes =
+                repository.findAreaLocationTypeByTypeName(areaTypeEntry.getAreaType().value().toUpperCase());
+
+        if (areasLocationTypes.isEmpty()) {
+            throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR, areasLocationTypes);
+        }
+
+        AreaLocationTypesEntity areaLocationTypesEntity = areasLocationTypes.iterator().next();
+
+        Point point = SpatialUtils.convertToPointInWGS84(areaTypeEntry.getLongitude(), areaTypeEntry.getLatitude(), areaTypeEntry.getCrs());
+
+        List allAreas = Collections.newArrayList();
+
+        switch (areaLocationTypesEntity.getTypeName().toUpperCase()){
+            case "EEZ" :
+                allAreas = repository.findEezByIntersect(point);
+                break;
+            case "PORTAREA" :
+                allAreas = repository.findPortAreaByIntersect(point);
+                break;
+            case "RFMO" :
+                allAreas = repository.findRfmoByIntersect(point);
+                break;
+            case "USERAREA" :
+                allAreas = repository.findUserAreaByIntersect(point);
+                break;
+            case "PORT" :
+                allAreas = repository.findUserAreaByIntersect(point);
+                break;
+            default:
+                break;
+        }
+        // more areas here
+
+        List<AreaDetails> areaDetailsList = new ArrayList<>();
+
+        for (Object allArea : allAreas) {
+            Map<String, Object> properties = ((BaseAreaEntity)allArea).getFieldMap();
+            areaDetailsList.add(createAreaDetailsSpatialResponse(properties, areaTypeEntry));
+        }
+        return areaDetailsList;
+
+    }
+
+    private AreaDetails createAreaDetailsSpatialResponse(Map<String, Object> properties, AreaTypeEntry areaTypeEntry) {
+        List<AreaProperty> areaProperties = new ArrayList<>();
+        for (Map.Entry<String, Object> entry : properties.entrySet()) {
+            AreaProperty areaProperty = new AreaProperty();
+            areaProperty.setPropertyName(entry.getKey());
+            areaProperty.setPropertyValue(entry.getValue());
+            areaProperties.add(areaProperty);
+        }
+
+        AreaDetails areaDetails = new AreaDetails();
+        areaDetails.setAreaType(areaTypeEntry);
+        areaDetails.getAreaProperties().addAll(areaProperties);
+        return areaDetails;
+    }
+
 
     @Override
     public List<Area> getClosestAreasToPointByType(final ClosestAreaSpatialRQ request) throws ServiceException {
