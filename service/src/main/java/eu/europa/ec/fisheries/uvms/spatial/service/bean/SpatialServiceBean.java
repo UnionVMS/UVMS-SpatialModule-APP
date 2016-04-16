@@ -1,9 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.google.common.collect.Lists;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.*;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
@@ -15,6 +13,8 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.BaseAreaEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.PortEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Coordinate;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Location;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.GenericSystemAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.UserAreaDto;
@@ -606,6 +606,30 @@ public class SpatialServiceBean implements SpatialService {
 
         return locationDetails;
 
+    }
+
+    @Override
+    public String calculateBuffer(final Double latitude, final Double longitude, final Double buffer) {
+
+        GeometryFactory gf = new GeometryFactory();
+        Point point = gf.createPoint(new com.vividsolutions.jts.geom.Coordinate(longitude, latitude));
+        Geometry geometry = point.buffer(buffer);
+        return new WKTWriter2().write(geometry);
+
+    }
+
+    @Override
+    public String translate(final Double tx, final Double ty, final String wkt) throws ServiceException {
+
+        try {
+
+            Geometry geometry = new WKTReader2().read(wkt);
+            Geometry translate = SpatialUtils.translate(tx, ty, geometry);
+            return new WKTWriter2().write(translate);
+
+        } catch (Exception ex) {
+            throw new ServiceException(ex.getMessage());
+        }
     }
 
 }
