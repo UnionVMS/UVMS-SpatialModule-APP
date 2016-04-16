@@ -4,7 +4,7 @@ import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.service.interceptor.ValidationInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaUploadService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 import javax.ejb.EJB;
@@ -21,7 +21,7 @@ import java.io.IOException;
 public class FileUploadResource extends UnionVMSResource {
 
     @EJB
-    private AreaUploadService areaUploadService;
+    private AreaService areaService;
 
     @POST
     @Consumes("multipart/form-data")
@@ -30,7 +30,7 @@ public class FileUploadResource extends UnionVMSResource {
     @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
     public Response uploadAreaFile(@MultipartForm FileUploadForm form) throws IOException, ServiceException {
 
-        areaUploadService.uploadArea(form.getData(), form.getAreaType(), form.getCrsCode());
+        areaService.uploadArea(form.getData(), form.getAreaType(), form.getCrsCode());
 
         return createSuccessResponse();
     }
