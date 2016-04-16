@@ -19,11 +19,6 @@ public class RfmoServiceBean implements RfmoService {
     private @EJB SpatialRepository repository;
 
     @Override
-    public int disableAllAreas() throws ServiceException {
-        return repository.disableAllRfmoAreas();
-    }
-
-    @Override
     public long createRfmo(RfmoDto rfmoDto) throws ServiceException {
         RfmoEntity rfmoEntity = RfmoMapper.INSTANCE.rfmoDtoToRfmoEntity(rfmoDto);
         rfmoEntity = repository.create(rfmoEntity);

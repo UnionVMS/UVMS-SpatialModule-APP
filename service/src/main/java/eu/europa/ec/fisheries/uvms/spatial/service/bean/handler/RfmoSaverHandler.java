@@ -2,11 +2,9 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean.handler;
 
 import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaDisableService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.RfmoService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.RfmoDto;
 import lombok.extern.slf4j.Slf4j;
-
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -35,11 +33,6 @@ public class RfmoSaverHandler extends AbstractSaverHandler implements SaverHandl
         rfmoDto.setEnabledOn(enabledOn);
 
         rfmoService.createRfmo(rfmoDto);
-    }
-
-    @Override
-    protected AreaDisableService getAreaDisableService() {
-        return rfmoService;
     }
 
 }

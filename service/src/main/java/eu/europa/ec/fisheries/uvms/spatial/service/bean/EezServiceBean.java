@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
+import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.EezSpatialRQ;
@@ -13,6 +14,10 @@ import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.util.Date;
+import java.util.Map;
 
 @Stateless
 @Local(EezService.class)
@@ -39,8 +44,4 @@ public class EezServiceBean implements EezService {
         return eezEntity.getGid();
     }
 
-    @Override
-    public int disableAllAreas() throws ServiceException {
-        return repository.disableAllEezAreas();
-    }
 }
