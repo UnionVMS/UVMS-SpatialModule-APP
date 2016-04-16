@@ -1,6 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.handler.*;
@@ -40,6 +41,9 @@ public class AreaUploadServiceBean implements AreaUploadService {
     private AreaTypeNamesService areaTypeService;
 
     @EJB
+    private SpatialRepository repository;
+
+    @EJB
     private EezSaverHandler eezSaverHandler;
 
     @EJB
@@ -69,8 +73,25 @@ public class AreaUploadServiceBean implements AreaUploadService {
             ShapeFileReader shapeFileReader = new ShapeFileReader();
             Map<String, List<Property>> features = shapeFileReader.readShapeFile(fileNames.get(SupportedFileExtensions.SHP), sourceCRS);
 
-            SaverHandler saverHandler = getHandler(areaType);
-            saverHandler.replaceAreas(features); // FIXME not good
+            switch (areaType) {
+                case EEZ:
+                    repository.disableAllEezAreas();
+                    break;
+                case RFMO:
+                    repository.disableAllRfmoAreas();
+                    break;
+                case PORT:
+                    repository.disableAllPortLocations();
+                    break;
+                case PORTAREA:
+                    repository.disableAllPortAreas();
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unsupported area type.");
+
+            }
+
+            getHandler(areaType).replaceAreas(features); // FIXME not good
 
             FileUtils.deleteDirectory(new File(absolutePath.toString()));
 

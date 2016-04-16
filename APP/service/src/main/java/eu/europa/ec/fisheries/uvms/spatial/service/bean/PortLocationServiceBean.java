@@ -26,9 +26,4 @@ public class PortLocationServiceBean implements PortLocationService {
         return portsEntity.getGid();
     }
 
-    @Override
-    public int disableAllAreas() throws ServiceException {
-        return repository.disableAllPortLocations();
-    }
-
 }

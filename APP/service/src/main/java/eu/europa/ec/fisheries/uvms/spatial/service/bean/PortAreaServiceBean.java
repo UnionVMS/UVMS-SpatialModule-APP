@@ -62,11 +62,6 @@ public class PortAreaServiceBean implements PortAreaService {
         return portAreasEntity.getGid();
     }
 
-    @Override
-    public int disableAllAreas() throws ServiceException {
-        return repository.disableAllPortAreas();
-    }
-
     private void validateGid(Long gid) {
         if (gid == null) {
             throw new SpatialServiceException(SpatialServiceErrors.MISSING_PORT_AREA_ID);
