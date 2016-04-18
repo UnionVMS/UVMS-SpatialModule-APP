@@ -45,8 +45,4 @@ public class PortAreaDao extends AbstractSystemAreaDao<PortAreasEntity> {
         return PortEntity.DISABLE;
     }
 
-    public List<PortAreasEntity> findOne(final Long id) throws ServiceException {
-        return findEntityByNamedQuery(PortAreasEntity.class, PORT_AREA_BY_ID, with("gid", id).parameters(), 1);
-    }
-
 }

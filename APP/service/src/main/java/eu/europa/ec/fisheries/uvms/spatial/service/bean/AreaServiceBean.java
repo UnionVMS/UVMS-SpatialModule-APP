@@ -210,7 +210,23 @@ public class AreaServiceBean implements AreaService {
 
         Integer id = Integer.parseInt(areaTypeEntry.getId());
 
-        BaseAreaEntity areaEntity = repository.findAreaByTypeAndId(areaLocationTypesEntity.getTypeName(), id.longValue());
+        BaseAreaEntity areaEntity;
+        switch (areaLocationTypesEntity.getTypeName().toUpperCase()){
+            case "EEZ":
+                areaEntity = repository.findEezById(id.longValue());
+                break;
+            case "RFMO":
+                areaEntity = repository.findRfmoById(id.longValue());
+                break;
+            case "USERAREA":
+                areaEntity = repository.findUserAreaById(id.longValue());
+                break;
+            case "PORTAREA":
+                areaEntity = repository.findPortAreaById(id.longValue());
+                break;
+            default:
+                throw new IllegalArgumentException("Unsupported area type.");
+        }
 
         if (areaEntity == null) {
             throw new SpatialServiceException(SpatialServiceErrors.ENTITY_NOT_FOUND, areaLocationTypesEntity.getTypeName());
@@ -244,15 +260,8 @@ public class AreaServiceBean implements AreaService {
             throw new SpatialServiceException(SpatialServiceErrors.MISSING_PORT_AREA_ID);
         }
 
-        List<PortAreasEntity> persistentPortAreas = repository.findPortAreaById(id);
-
-        if (CollectionUtils.isEmpty(persistentPortAreas)) {
-            throw new SpatialServiceException(SpatialServiceErrors.PORT_AREA_DOES_NOT_EXIST, id);
-        }
-
-        PortAreasEntity persistentPortArea = persistentPortAreas.get(0);
+        PortAreasEntity persistentPortArea = repository.findPortAreaById(id);
         persistentPortArea.setGeom( portAreaGeoJsonDto.getGeometry());
-
         PortAreasEntity persistedUpdatedEntity = repository.update(persistentPortArea);
         return persistedUpdatedEntity.getGid();
 
@@ -260,16 +269,8 @@ public class AreaServiceBean implements AreaService {
 
     @Override
     public void deletePortArea(Long portAreaId) throws ServiceException {
-
-        List<PortAreasEntity> persistentPortAreas = repository.findPortAreaById(portAreaId);
-
-        if (CollectionUtils.isEmpty(persistentPortAreas)) {
-            throw new SpatialServiceException(SpatialServiceErrors.PORT_AREA_DOES_NOT_EXIST, portAreaId);
-        }
-
-        PortAreasEntity persistentPortArea = persistentPortAreas.get(0);
+        PortAreasEntity persistentPortArea = repository.findPortAreaById(portAreaId);
         persistentPortArea.setGeom(null);
-
         PortAreasEntity persistedUpdatedEntity = repository.update(persistentPortArea);
         persistedUpdatedEntity.getGid();
     }

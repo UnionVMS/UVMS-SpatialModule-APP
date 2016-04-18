@@ -232,8 +232,8 @@ public class SpatialRepositoryBean implements SpatialRepository {
     }
 
     @Override
-    public List<PortAreasEntity> findPortAreaById(Long id) throws ServiceException {
-        return portAreaDao.findOne(id);
+    public PortAreasEntity findPortAreaById(Long id) throws ServiceException {
+        return portAreaDao.findEntityById(PortAreasEntity.class, id);
     }
 
     @Override
