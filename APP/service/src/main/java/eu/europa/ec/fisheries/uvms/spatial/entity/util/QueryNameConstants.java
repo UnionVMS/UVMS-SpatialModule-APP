@@ -27,14 +27,6 @@ public final class QueryNameConstants {
     public static final String FIND_TYPE_BY_NAMES = "AreaLocationType.findAreaByNames";
 
     /**
-     * Named Native queries
-     */
-    public static final String FAO_BY_COORDINATE = "faoEntity.ByCoordinate";
-    public static final String GFCM_BY_COORDINATE = "gfcmEntity.ByCoordinate";
-    public static final String RAC_BY_COORDINATE = "racEntity.ByCoordinate";
-    public static final String STAT_RECT_BY_COORDINATE = "statRectEntity.ByCoordinate";
-
-    /**
      * Native Queries
      */
     public static final String EEZ_COLUMNS = "eezEntity.findSelectedColumns";
