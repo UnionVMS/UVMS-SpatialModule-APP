@@ -463,4 +463,24 @@ public class SpatialRepositoryBean implements SpatialRepository {
         portAreaDao.bulkInsert(features);
     }
 
+    @Override
+    public BaseAreaEntity findEezById(Long id) throws ServiceException {
+        return eezDao.findEntityById(EezEntity.class, id);
+    }
+
+    @Override
+    public BaseAreaEntity findPortById(Long id) throws ServiceException {
+        return portDao.findEntityById(PortEntity.class, id);
+    }
+
+    @Override
+    public BaseAreaEntity findRfmoById(Long id) throws ServiceException {
+        return rfmoDao.findEntityById(RfmoEntity.class, id);
+    }
+
+    @Override
+    public BaseAreaEntity findUserAreaById(Long id) throws ServiceException {
+        return userAreaDao.findEntityById(UserAreasEntity.class, id);
+    }
+
 }
