@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static junit.framework.TestCase.assertTrue;
+import static junit.framework.Assert.assertNull;
 
 public class PortAreaDaoTest extends BaseSpatialDaoTest {
 
@@ -22,7 +22,7 @@ public class PortAreaDaoTest extends BaseSpatialDaoTest {
     @Test
     @SneakyThrows
     public void testFindOne(){
-        List<PortAreasEntity> one = dao.findOne(1L);
-        assertTrue(one.isEmpty());
+        PortAreasEntity one = dao.findEntityById(PortAreasEntity.class, 1L);
+        assertNull(one);
     }
 }

@@ -75,7 +75,7 @@ public interface SpatialRepository {
 
     UserAreasEntity findUserAreaById(Long userAreaId, String userName, Boolean isPowerUser, String scopeName) throws ServiceException;
 
-    List<PortAreasEntity> findPortAreaById(Long id) throws ServiceException;
+    PortAreasEntity findPortAreaById(Long id) throws ServiceException;
 
     BookmarkEntity create(BookmarkEntity bookmark) throws ServiceException;
 
