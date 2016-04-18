@@ -58,7 +58,6 @@ import java.util.Map;
 
 import static eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialUtils.DEFAULT_CRS;
 import static eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialUtils.convertToPointInWGS84;
-import static eu.europa.ec.fisheries.uvms.spatial.util.SpatialTypeEnum.getNativeQueryByType;
 import static org.apache.commons.collections.CollectionUtils.isEmpty;
 import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 
