@@ -173,11 +173,6 @@ public class SpatialRepositoryBean implements SpatialRepository {
 
     @Override
     public boolean saveOrUpdateMapConfiguration(final ReportConnectSpatialEntity mapConfiguration) throws ServiceException {
-
-        if (mapConfiguration == null) {
-            throw new IllegalArgumentException("MAP CONFIGURATION CAN NOT BE NULL");
-        }
-
         return reportConnectSpatialDao.saveOrUpdateEntity(mapConfiguration) != null;
     }
 
