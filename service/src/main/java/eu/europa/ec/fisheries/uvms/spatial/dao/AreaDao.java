@@ -42,20 +42,6 @@ public class AreaDao extends AbstractDAO<BaseAreaEntity> {
         return query.list();
     }
 
-    public Object findOneByTypeNameAndId(final String typeName, final Long id) throws ServiceException { // FIXME this needs improvement
-        final Class entityClassByType = getEntityClassByType(typeName);
-        return findEntityById(entityClassByType, id);
-    }
-
-    private Class getEntityClassByType(String value) {
-        for (SpatialTypeEnum areaType : SpatialTypeEnum.values()) {
-            if(areaType.getType().equalsIgnoreCase(value)) {
-                return areaType.getEntityClass();
-            }
-        }
-        throw new IllegalArgumentException(value);
-    }
-
     public List closestArea(final List<AreaLocationTypesEntity> entities, final SpatialFunction spatialFunction, final Point point){
 
         List resultList = new ArrayList();

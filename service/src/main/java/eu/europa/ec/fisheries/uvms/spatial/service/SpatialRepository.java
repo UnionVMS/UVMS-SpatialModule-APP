@@ -145,8 +145,6 @@ public interface SpatialRepository {
 
     List<AreaLocationTypesEntity> listAllAreaAndLocation() throws ServiceException;
 
-    BaseAreaEntity findAreaByTypeAndId(String typeName, Long id) throws ServiceException;
-
     void deleteUserArea(UserAreasEntity userAreaById);
 
     PortAreasEntity update(PortAreasEntity persistentPortArea) throws ServiceException;
