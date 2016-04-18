@@ -16,7 +16,6 @@ public enum SpatialTypeEnum {
 	USERAREA("USERAREA", UserAreasEntity.USER_AREA_BY_COORDINATE, QueryNameConstants.USERAREA_COLUMNS, UserAreasEntity.class);
 	
 	private String type;
-	private String nativeQuery;
 	private Class entityClass;
 	private String namedQuery;
 	
@@ -26,7 +25,6 @@ public enum SpatialTypeEnum {
 	
 	private SpatialTypeEnum(String type, String nativeQuery, String namedQuery, Class entityClass) {
 		this.type = type;
-		this.nativeQuery = nativeQuery;
 		this.entityClass = entityClass;
 		this.namedQuery = namedQuery;
 	}
@@ -34,26 +32,13 @@ public enum SpatialTypeEnum {
 	public String getType() {
 		return this.type;
 	}
-	
-	public String getNativeQuery() {
-		return this.nativeQuery;
-	}
-	
+
 	public String getNamedQuery() {
 		return this.namedQuery;
 	}
 	
 	public Class getEntityClass() {
 		return this.entityClass;
-	}
-	
-	public static String getNativeQueryByType(String value) {
-		for (SpatialTypeEnum areaType : SpatialTypeEnum.values()) {
-			if(areaType.getType().equalsIgnoreCase(value)) {
-				return areaType.getNativeQuery();
-			}
-		}
-		throw new IllegalArgumentException(value);
 	}
 
 }
