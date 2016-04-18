@@ -1,6 +1,5 @@
 package eu.europa.ec.fisheries.uvms.spatial.dao;
 
-import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.PortAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.PortEntity;
@@ -13,7 +12,7 @@ import static eu.europa.ec.fisheries.uvms.service.QueryParameter.with;
 import static eu.europa.ec.fisheries.uvms.spatial.entity.PortAreasEntity.*;
 
 @Slf4j
-public class PortAreaDao extends AbstractAreaDao<PortAreasEntity> {
+public class PortAreaDao extends AbstractSystemAreaDao<PortAreasEntity> {
 
     private EntityManager em;
 
@@ -26,8 +25,14 @@ public class PortAreaDao extends AbstractAreaDao<PortAreasEntity> {
         return em;
     }
 
-    public List<PortAreasEntity> intersects(final Geometry shape) throws ServiceException {
-        return findEntityByNamedQuery(PortAreasEntity.class, PORT_AREA_BY_COORDINATE, with("shape", shape).parameters());
+    @Override
+    protected String getIntersectNamedQuery() {
+        return PORT_AREA_BY_COORDINATE;
+    }
+
+    @Override
+    protected Class<PortAreasEntity> getEntity() {
+        return PortAreasEntity.class;
     }
 
     @Override

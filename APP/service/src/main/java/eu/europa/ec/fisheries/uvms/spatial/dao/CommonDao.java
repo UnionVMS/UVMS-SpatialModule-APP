@@ -5,7 +5,6 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.transform.AliasToEntityMapResultTransformer;
 import org.hibernate.transform.Transformers;
 
 public abstract class CommonDao {
@@ -27,12 +26,6 @@ public abstract class CommonDao {
 	protected <T> Query createNamedNativeQuery(String nativeQueryString, Map<String, Object> parameters, Class<T> dtoClass) {
 		Query query = createNamedNativeQuery(nativeQueryString, parameters);
 		query.setResultTransformer(Transformers.aliasToBean(dtoClass));
-		return query;
-	}
-
-	protected Query createNamedQuery(String nativeQuery) {
-		Query query = getSession().getNamedQuery(nativeQuery);
-		query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
 		return query;
 	}
 

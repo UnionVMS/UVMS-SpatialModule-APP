@@ -8,12 +8,10 @@ import lombok.SneakyThrows;
 import org.geotools.geometry.jts.GeometryBuilder;
 import org.junit.Before;
 import org.junit.Test;
-import javax.persistence.EntityTransaction;
 import java.util.List;
 
 import static com.ninja_squad.dbsetup.Operations.sequenceOf;
 import static junit.framework.Assert.assertNotNull;
-import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 

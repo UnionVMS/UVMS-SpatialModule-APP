@@ -26,7 +26,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "report_connect_spatial", schema = "spatial")
 @NamedQueries({
-		@NamedQuery(name = QueryNameConstants.FIND_MAP_PROJ_BY_ID,
+		@NamedQuery(name = ReportConnectSpatialEntity.FIND_MAP_PROJ_BY_ID,
 				query = "SELECT projection.srsCode AS epsgCode, projection.units AS units, projection.isWorld AS global, projection.extent as extent, projection.axis as axis " +
 						"FROM ReportConnectSpatialEntity rcs INNER JOIN rcs.projectionByMapProjId AS projection " +
 						"WHERE rcs.reportId = :reportId"),
@@ -42,6 +42,7 @@ import javax.persistence.Table;
 @EqualsAndHashCode(exclude = {"id", "reportConnectServiceAreases"})
 public class ReportConnectSpatialEntity implements Serializable {
 
+    public static final String FIND_MAP_PROJ_BY_ID = "ReportLayerConfig.findMapProjectionById";
     public static final String DELETE_BY_ID_LIST = "reportConnectSpatialEntity.deleteByIdList";
 	public static final String FIND_BY_REPORT_CONNECT_ID = "reportConnectSpatialEntity.findByReportConnectId";
 

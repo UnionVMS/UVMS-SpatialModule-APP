@@ -17,14 +17,17 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "report_connect_service_areas", schema = "spatial")
 @NamedQueries({
-		@NamedQuery(name = QueryNameConstants.FIND_REPORT_SERVICE_AREAS,
+		@NamedQuery(name = ReportConnectServiceAreasEntity.FIND_REPORT_SERVICE_AREAS,
 				query = "SELECT rcsa FROM ReportConnectServiceAreasEntity rcsa WHERE rcsa.reportConnectSpatial.reportId = :reportId"),
-		@NamedQuery(name = QueryNameConstants.DELETE_BY_REPORT_CONNECT_SPATIAL_ID,
+		@NamedQuery(name = ReportConnectServiceAreasEntity.DELETE_BY_REPORT_CONNECT_SPATIAL_ID,
 				query = "DELETE FROM ReportConnectServiceAreasEntity rcsa WHERE rcsa.id = :id")
 })
 public class ReportConnectServiceAreasEntity implements Serializable, Comparable<ReportConnectServiceAreasEntity> {
 
-	@Id
+    public static final String DELETE_BY_REPORT_CONNECT_SPATIAL_ID = "ReportLayerConfig.deleteByReportConnectSpatialId";
+    public static final String FIND_REPORT_SERVICE_AREAS = "ReportLayerConfig.findReportConnectServiceAreas";
+
+    @Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;

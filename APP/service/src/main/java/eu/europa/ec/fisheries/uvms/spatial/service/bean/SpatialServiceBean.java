@@ -6,7 +6,7 @@ import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.interceptors.TracingInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.dao.Oracle;
+import eu.europa.ec.fisheries.uvms.spatial.dao.util.Oracle;
 import eu.europa.ec.fisheries.uvms.spatial.dao.util.SpatialFunction;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.BaseAreaEntity;
@@ -22,7 +22,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.UserAre
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.util.MeasurementUnit;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.util.DatabaseDialectFactory;
+import eu.europa.ec.fisheries.uvms.spatial.dao.util.DatabaseDialectFactory;
 import eu.europa.ec.fisheries.uvms.spatial.util.PropertiesBean;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;

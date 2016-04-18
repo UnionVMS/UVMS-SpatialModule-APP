@@ -6,7 +6,6 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import com.google.common.collect.ImmutableMap;
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.service.QueryParameter;
@@ -15,7 +14,6 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaDto;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.geotools.geometry.jts.WKTWriter2;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
@@ -51,14 +49,13 @@ public class UserAreaDao extends AbstractDAO<UserAreasEntity> {
         return findEntityByNamedQuery(UserAreasEntity.class, USER_AREA_BY_COORDINATE, with("shape", shape).parameters());
     }
 
-    public List<UserAreasEntity> findByUserNameAndGeometry(String userName, Point point) throws ServiceException {
+    public List<UserAreasEntity> findByUserNameAndGeometry(String userName, Geometry shape) throws ServiceException {
 
         List<UserAreasEntity> entityList = new ArrayList<>();
 
-        if (!StringUtils.isBlank(userName) && point != null ){
-            String wkt = new WKTWriter2().write(point);
+        if (!StringUtils.isBlank(userName) && shape != null ){
             entityList = findEntityByNamedQuery(UserAreasEntity.class, USER_AREA_DETAILS_BY_LOCATION,
-                    with("shape", wkt).and(USER_NAME, userName).parameters());
+                    with("shape", shape).and(USER_NAME, userName).parameters());
         }
         return entityList;
     }
