@@ -16,7 +16,6 @@ public enum SpatialTypeEnum {
 	USERAREA("USERAREA", UserAreasEntity.USER_AREA_BY_COORDINATE, QueryNameConstants.USERAREA_COLUMNS, UserAreasEntity.class);
 	
 	private String type;
-	private Class entityClass;
 	private String namedQuery;
 	
 	private SpatialTypeEnum(String type, String nativeQuery, Class entityClass) {
@@ -25,7 +24,6 @@ public enum SpatialTypeEnum {
 	
 	private SpatialTypeEnum(String type, String nativeQuery, String namedQuery, Class entityClass) {
 		this.type = type;
-		this.entityClass = entityClass;
 		this.namedQuery = namedQuery;
 	}
 	
@@ -35,10 +33,6 @@ public enum SpatialTypeEnum {
 
 	public String getNamedQuery() {
 		return this.namedQuery;
-	}
-	
-	public Class getEntityClass() {
-		return this.entityClass;
 	}
 
 }
