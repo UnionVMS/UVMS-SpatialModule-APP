@@ -84,7 +84,8 @@ public class BaseSpatialDaoTest extends BaseDAOTest {
     protected static final Operation INSERT_USER_AREA_REFERENCE_DATA = sequenceOf(
             insertInto("spatial.user_areas")
                     .columns("GID", "USER_NAME", "NAME", "TYPE", "AREA_DESC", "GEOM", "ENABLED", "CREATED_ON")
-                    .values(1L, "userDaoTest", "MyArea", "EEZ", "a simple description", "MULTIPOLYGON EMPTY", "Y", "2015-10-11 13:02:23.0")
+                    .values(1L, "userDaoTest", "MyArea", "EEZ", "a simple description", "MULTIPOLYGON(((-109.028 36.985,-109.028 40.979,-102.062 40.979,-102.062 37.002,-109.028 36.985)))" +
+                            "106.867924148 -9.16467987999994)))", "Y", "2015-10-11 13:02:23.0")
                     .build(),
             insertInto("spatial.user_scope")
                     .columns("ID", "SCOPE_NAME", "USER_AREA_ID")

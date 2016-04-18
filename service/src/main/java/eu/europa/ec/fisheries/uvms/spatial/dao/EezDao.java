@@ -1,16 +1,16 @@
 package eu.europa.ec.fisheries.uvms.spatial.dao;
 
-import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.service.QueryParameter;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import lombok.extern.slf4j.Slf4j;
 import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Map;
 
+import static eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity.*;
+
 @Slf4j
-public class EezDao extends AbstractAreaDao<EezEntity> {
+public class EezDao extends AbstractSystemAreaDao<EezEntity> {
 
     private EntityManager em;
 
@@ -27,12 +27,18 @@ public class EezDao extends AbstractAreaDao<EezEntity> {
         return em;
     }
 
-    public List<EezEntity> intersects(final Geometry shape) throws ServiceException {
-        return findEntityByNamedQuery(EezEntity.class, EezEntity.EEZ_BY_COORDINATE, QueryParameter.with("shape", shape).parameters());
+    public List<EezEntity> listEmptyGeometries() throws ServiceException {
+        return findEntityByNamedQuery(EezEntity.class, LIST_EMPTY_GEOMETRIES);
     }
 
-    public List<EezEntity> listEmptyGeometries() throws ServiceException {
-        return findEntityByNamedQuery(EezEntity.class, EezEntity.LIST_EMPTY_GEOMETRIES);
+    @Override
+    protected String getIntersectNamedQuery() {
+        return EEZ_BY_COORDINATE;
+    }
+
+    @Override
+    protected Class<EezEntity> getEntity() {
+        return EezEntity.class;
     }
 
     @Override
@@ -42,6 +48,6 @@ public class EezDao extends AbstractAreaDao<EezEntity> {
 
     @Override
     protected String getDisableAreaNamedQuery() {
-        return EezEntity.DISABLE_EEZ_AREAS;
+        return DISABLE_EEZ_AREAS;
     }
 }

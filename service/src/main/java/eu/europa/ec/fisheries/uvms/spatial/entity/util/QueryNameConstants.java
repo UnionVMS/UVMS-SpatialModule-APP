@@ -10,11 +10,6 @@ public final class QueryNameConstants {
     private QueryNameConstants() {}
 
     /**
-     * Find all
-     */
-    public static final String FIND_ALL_COUNTRY_DESC = "Countries.findAllCountriesDesc";
-
-    /**
      * Find System
      */
     public static final String FIND_USER_AREA_LAYER = "AreaLocationType.findUserAreaLayerMappings";
@@ -49,11 +44,6 @@ public final class QueryNameConstants {
     /**
      * MapDto Config queries
      */
-    public static final String FIND_MAP_PROJ_BY_ID = "ReportLayerConfig.findMapProjectionById";
-    public static final String FIND_REPORT_SERVICE_AREAS = "ReportLayerConfig.findReportConnectServiceAreas";
-    public static final String DELETE_BY_REPORT_CONNECT_SPATIAL_ID = "ReportLayerConfig.deleteByReportConnectSpatialId";
-    public static final String FIND_PROJECTION_BY_ID = "ReportLayerConfig.findProjectionById";
-    public static final String FIND_SERVICE_LAYERS_BY_ID ="ReportLayerConfig.findServiceLayerById";
     public static final String FIND_BY_REPORT_ID = "ReportLayerConfig.findByReportId";
     public static final String FIND_BY_ID = "ReportLayerConfig.findById";
     public static final String FIND_SERVICE_LAYER_BY_SUBTYPE = "ServiceLayer.findServiceLayerBySubType";

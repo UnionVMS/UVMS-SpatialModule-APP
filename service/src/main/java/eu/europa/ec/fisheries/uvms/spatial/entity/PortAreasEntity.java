@@ -11,7 +11,7 @@ import java.util.Map;
 @Entity
 @NamedQueries({
         @NamedQuery(name = PortAreasEntity.PORT_AREA_BY_COORDINATE,
-                query = "FROM PortAreasEntity WHERE intersects(geom, :shape) = true) AND enabled = 'Y'"),
+                query = "FROM PortAreasEntity WHERE intersects(geom, :shape) = true AND enabled = 'Y'"),
         @NamedQuery(name = PortAreasEntity.DISABLE_PORT_AREAS, query = "UPDATE PortAreasEntity SET enabled = 'N'"),
         @NamedQuery(name = PortAreasEntity.PORT_AREA_BY_ID, query = "FROM PortAreasEntity WHERE gid = :gid")
 })
