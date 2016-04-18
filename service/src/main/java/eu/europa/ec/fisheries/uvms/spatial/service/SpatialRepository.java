@@ -29,8 +29,6 @@ import java.util.Set;
 
 public interface SpatialRepository {
 
-    List findAreaByCoordinates(Point point, String nativeQueryString);
-
     List<AreaLayerDto> findSystemAreaLayerMapping();
 
     List<AreaLayerDto> findSystemAreaAndLocationLayerMapping();

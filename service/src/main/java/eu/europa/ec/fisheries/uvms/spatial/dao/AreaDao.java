@@ -10,8 +10,6 @@ import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.spatial.dao.util.SpatialFunction;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.BaseAreaEntity;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GeometryType;
-import eu.europa.ec.fisheries.uvms.spatial.service.mapper.GeometryMapper;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.spatial.util.SpatialTypeEnum;
 import lombok.extern.slf4j.Slf4j;
@@ -35,13 +33,6 @@ public class AreaDao extends AbstractDAO<BaseAreaEntity> {
 
     public AreaDao(EntityManager em) {
         this.em = em;
-    }
-
-    public List findAreaByCoordinates(Point point, String nativeQueryString) {
-        GeometryType geometryType = GeometryMapper.INSTANCE.geometryToWKT(point);
-        Query query = em.unwrap(Session.class).getNamedQuery(nativeQueryString);
-        query.setParameter("shape", geometryType.getGeometry());
-        return query.list();
     }
 
     public List<Map<String, String>> findSelectedAreaColumns(String namedQueryString, Number gid) {
