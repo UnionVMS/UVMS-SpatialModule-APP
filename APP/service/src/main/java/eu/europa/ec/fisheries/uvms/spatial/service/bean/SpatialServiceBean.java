@@ -204,7 +204,7 @@ public class SpatialServiceBean implements SpatialService {
                 allAreas = repository.findUserAreaByIntersect(point);
                 break;
             default:
-                break;
+                throw new IllegalArgumentException("Unsupported area type.");
         }
         // more areas here
 
@@ -584,7 +584,24 @@ public class SpatialServiceBean implements SpatialService {
                 }
             }
             else {
-                list = repository.findAreaByCoordinates(incomingPoint, getNativeQueryByType(locationTypesEntity.getTypeName()));
+
+                assert locationTypesEntity != null;
+                switch (locationTypesEntity.getTypeName().toUpperCase()){
+                    case "EEZ":
+                        list = repository.findEezByIntersect(incomingPoint);
+                    break;
+                    case "RFMO":
+                        list = repository.findRfmoByIntersect(incomingPoint);
+                        break;
+                    case "USERAREA":
+                        list = repository.findUserAreaByIntersect(incomingPoint);
+                        break;
+                    case "PORTAREA":
+                        list = repository.findPortAreaByIntersect(incomingPoint);
+                        break;
+                    default:
+                        throw new IllegalArgumentException("Unsupported area type.");
+                }
             }
 
             if (isNotEmpty(list)) {

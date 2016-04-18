@@ -161,7 +161,7 @@ public class LocationDetailsServiceTest {
 	}
 	
 	private void mockEntityByCoordinate(List list) {
-		Mockito.when(repository.findAreaByCoordinates(Mockito.any(Point.class), Mockito.any(String.class))).thenReturn(list);
+		//Mockito.when(repository.findAreaByCoordinates(Mockito.any(Point.class), Mockito.any(String.class))).thenReturn(list);
 	}
 	
 	private AreaLocationTypesEntity getMockAreaTypeEntity(String typeName) {
