@@ -12,15 +12,13 @@ import java.util.Map;
 @NamedQueries({
         @NamedQuery(name = PortAreasEntity.PORT_AREA_BY_COORDINATE,
                 query = "FROM PortAreasEntity WHERE intersects(geom, :shape) = true AND enabled = 'Y'"),
-        @NamedQuery(name = PortAreasEntity.DISABLE_PORT_AREAS, query = "UPDATE PortAreasEntity SET enabled = 'N'"),
-        @NamedQuery(name = PortAreasEntity.PORT_AREA_BY_ID, query = "FROM PortAreasEntity WHERE gid = :gid")
+        @NamedQuery(name = PortAreasEntity.DISABLE_PORT_AREAS, query = "UPDATE PortAreasEntity SET enabled = 'N'")
 })
 @Where(clause = "enabled = 'Y'")
 @Table(name = "port_area", schema = "spatial")
 public class PortAreasEntity extends BaseAreaEntity {
 
     public static final String PORT_AREA_BY_COORDINATE = "portEntity.PortAreaByCoordinate";
-    public static final String PORT_AREA_BY_ID = "PortArea.findPortAreaById";
     public static final String DISABLE_PORT_AREAS = "portAreasEntity.disablePortAreas";
 
     public PortAreasEntity() {

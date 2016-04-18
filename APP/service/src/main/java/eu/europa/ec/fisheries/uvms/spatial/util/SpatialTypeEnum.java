@@ -12,7 +12,7 @@ public enum SpatialTypeEnum {
 	EEZ("EEZ", EezEntity.EEZ_BY_COORDINATE, QueryNameConstants.EEZ_COLUMNS, EezEntity.class),
 	RFMO("RFMO", RfmoEntity.RFMO_BY_COORDINATE, QueryNameConstants.RFMO_COLUMNS, RfmoEntity.class),
 	PORT("PORT", PortEntity.PORT_BY_COORDINATE, PortEntity.class),
-	PORTAREA("PORTAREA", PortAreasEntity.PORT_AREA_BY_COORDINATE, PortAreasEntity.PORT_AREA_BY_ID, PortAreasEntity.class),
+	PORTAREA("PORTAREA", PortAreasEntity.PORT_AREA_BY_COORDINATE, null, PortAreasEntity.class),
 	USERAREA("USERAREA", UserAreasEntity.USER_AREA_BY_COORDINATE, QueryNameConstants.USERAREA_COLUMNS, UserAreasEntity.class);
 	
 	private String type;
