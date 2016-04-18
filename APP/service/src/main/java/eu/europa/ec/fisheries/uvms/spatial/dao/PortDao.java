@@ -1,12 +1,9 @@
 package eu.europa.ec.fisheries.uvms.spatial.dao;
 
-import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.service.QueryParameter;
 import eu.europa.ec.fisheries.uvms.spatial.entity.PortEntity;
 import lombok.extern.slf4j.Slf4j;
 import javax.persistence.EntityManager;
-import java.util.List;
 import java.util.Map;
 
 import static eu.europa.ec.fisheries.uvms.spatial.entity.PortEntity.*;
@@ -23,10 +20,6 @@ public class PortDao extends AbstractSystemAreaDao<PortEntity> {
     @Override
     public EntityManager getEntityManager() {
         return em;
-    }
-
-    public List<PortEntity> intersects(final Geometry shape) throws ServiceException {
-        return findEntityByNamedQuery(PortEntity.class, PORT_BY_COORDINATE, QueryParameter.with("shape", shape).parameters());
     }
 
     @Override
