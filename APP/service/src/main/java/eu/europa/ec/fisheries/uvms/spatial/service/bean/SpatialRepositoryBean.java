@@ -419,11 +419,6 @@ public class SpatialRepositoryBean implements SpatialRepository {
     }
 
     @Override
-    public BaseAreaEntity findAreaByTypeAndId(String typeName, Long id) throws ServiceException {
-        return (BaseAreaEntity) areaDao.findOneByTypeNameAndId(typeName, id); // TODO typing
-    }
-
-    @Override
     public void deleteUserArea(UserAreasEntity userAreaById) {
         userAreaDao.deleteEntity(UserAreasEntity.class, userAreaById);
     }

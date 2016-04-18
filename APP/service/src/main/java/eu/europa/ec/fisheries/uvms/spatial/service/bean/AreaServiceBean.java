@@ -224,6 +224,9 @@ public class AreaServiceBean implements AreaService {
             case "PORTAREA":
                 areaEntity = repository.findPortAreaById(id.longValue());
                 break;
+            case "PORT":
+                areaEntity = repository.findPortById(id.longValue());
+                break;
             default:
                 throw new IllegalArgumentException("Unsupported area type.");
         }

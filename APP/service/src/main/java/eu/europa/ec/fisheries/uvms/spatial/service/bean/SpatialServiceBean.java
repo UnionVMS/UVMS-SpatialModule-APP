@@ -536,7 +536,26 @@ public class SpatialServiceBean implements SpatialService {
 
         if (locationTypesEntity != null && locationTypeEntry.getId() != null) {
 
-            BaseAreaEntity areaEntity = repository.findAreaByTypeAndId(locationTypesEntity.getTypeName(), Long.parseLong(locationTypeEntry.getId()));
+            BaseAreaEntity areaEntity;
+            switch (locationTypesEntity.getTypeName().toUpperCase()){
+                case "EEZ":
+                    areaEntity = repository.findEezById(Long.parseLong(locationTypeEntry.getId()));
+                    break;
+                case "RFMO":
+                    areaEntity = repository.findRfmoById(Long.parseLong(locationTypeEntry.getId()));
+                    break;
+                case "USERAREA":
+                    areaEntity = repository.findUserAreaById(Long.parseLong(locationTypeEntry.getId()));
+                    break;
+                case "PORTAREA":
+                    areaEntity = repository.findPortAreaById(Long.parseLong(locationTypeEntry.getId()));
+                    break;
+                case "PORT":
+                    areaEntity = repository.findPortById(Long.parseLong(locationTypeEntry.getId()));
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unsupported area type.");
+            }
 
             if (areaEntity == null) {
                 throw new SpatialServiceException(SpatialServiceErrors.ENTITY_NOT_FOUND, locationTypesEntity.getTypeName());
