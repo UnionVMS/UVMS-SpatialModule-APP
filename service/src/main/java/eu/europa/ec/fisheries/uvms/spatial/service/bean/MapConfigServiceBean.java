@@ -141,6 +141,11 @@ public class MapConfigServiceBean implements MapConfigService {
     public SpatialSaveOrUpdateMapConfigurationRS handleSaveOrUpdateSpatialMapConfiguration(final SpatialSaveOrUpdateMapConfigurationRQ request) {
         SpatialValidator.validate(request);
         ReportConnectSpatialEntity entity = getReportConnectSpatialEntity(request);
+
+        if (entity == null) {
+            throw new IllegalArgumentException("MAP CONFIGURATION CAN NOT BE NULL");
+        }
+
         VisibilitySettingsDto visibilitySettings = MapConfigMapper.INSTANCE.getVisibilitySettingsDto(request.getMapConfiguration().getVisibilitySettings());
         entity.setVisibilitySettings(MapConfigHelper.getVisibilitySettingsJson(visibilitySettings));
         StyleSettingsDto styleSettings = MapConfigMapper.INSTANCE.getStyleSettingsDto(request.getMapConfiguration().getStyleSettings());

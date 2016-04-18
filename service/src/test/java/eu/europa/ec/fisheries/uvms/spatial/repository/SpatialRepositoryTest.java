@@ -1,7 +1,11 @@
 package eu.europa.ec.fisheries.uvms.spatial.repository;
 
 import com.google.common.collect.ImmutableMap;
-import eu.europa.ec.fisheries.uvms.spatial.dao.*;
+import eu.europa.ec.fisheries.uvms.spatial.dao.AreaDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.CountryDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.MapConfigDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.ReportConnectSpatialDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.UserAreaDao;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialRepositoryBean;
 import lombok.SneakyThrows;
@@ -68,13 +72,6 @@ public class SpatialRepositoryTest {
         spatialRepositoryBean.saveOrUpdateMapConfiguration(reportConnectSpatialEntity);
 
         Mockito.verify(reportConnectSpatialDao, Mockito.times(1)).saveOrUpdateEntity(reportConnectSpatialEntity);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    @SneakyThrows
-    public void shouldThrowExceptionWhenSavingMapConfigurationIsNull() {
-        spatialRepositoryBean.saveOrUpdateMapConfiguration(null);
-
     }
 
     private void mockCountries() {
