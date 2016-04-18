@@ -162,4 +162,13 @@ public interface SpatialRepository {
     void replacePort(Map<String, List<Property>> features) throws ServiceException;
 
     void replacePortArea(Map<String, List<Property>> features) throws ServiceException;
+
+    BaseAreaEntity findEezById(Long id) throws ServiceException;
+
+    BaseAreaEntity findPortById(Long id) throws ServiceException;
+
+    BaseAreaEntity findRfmoById(Long id) throws ServiceException;
+
+    BaseAreaEntity findUserAreaById(Long id) throws ServiceException;
+
 }
