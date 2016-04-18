@@ -14,7 +14,7 @@ import java.util.Map;
 @Entity
 @NamedQueries({
         @NamedQuery(name = RfmoEntity.RFMO_BY_COORDINATE,
-                query = "FROM RfmoEntity WHERE intersects(geom, :shape) = true) AND enabled = 'Y'"),
+                query = "FROM RfmoEntity WHERE intersects(geom, :shape) = true AND enabled = 'Y'"),
         @NamedQuery(name = QueryNameConstants.RFMO_COLUMNS,
                 query = "SELECT rfmo.name AS name, rfmo.code AS code FROM RfmoEntity AS rfmo WHERE rfmo.gid =:gid"),
         @NamedQuery(name = RfmoEntity.DISABLE_RFMO_AREAS,

@@ -1,4 +1,6 @@
-package eu.europa.ec.fisheries.uvms.spatial.dao;
+package eu.europa.ec.fisheries.uvms.spatial.dao.util;
+
+import eu.europa.ec.fisheries.uvms.spatial.dao.AbstractGisFunction;
 
 public class Oracle extends AbstractGisFunction {
 

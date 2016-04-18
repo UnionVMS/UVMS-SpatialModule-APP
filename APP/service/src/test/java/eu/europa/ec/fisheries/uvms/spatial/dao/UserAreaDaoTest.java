@@ -13,6 +13,7 @@ import org.junit.Test;
 import java.util.List;
 
 import static com.ninja_squad.dbsetup.Operations.sequenceOf;
+import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 
@@ -37,9 +38,9 @@ public class UserAreaDaoTest extends BaseSpatialDaoTest {
     @Test
     @SneakyThrows
     public void testFindByUserNameAndGeometryIfShapeIntersectsGeometry(){
-        Point shape = new GeometryBuilder().point(12L, 23L);
-        List<UserAreasEntity> entityList = dao.findByUserNameAndGeometry("user", shape);
-        assertTrue(entityList.isEmpty());
+        Point shape = new GeometryBuilder().point(-108L, 37L);
+        List<UserAreasEntity> entityList = dao.findByUserNameAndGeometry("userDaoTest", shape);
+        assertFalse(entityList.isEmpty());
     }
 
     @Test

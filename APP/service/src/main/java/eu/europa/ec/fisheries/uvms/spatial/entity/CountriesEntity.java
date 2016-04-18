@@ -1,6 +1,5 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
-import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.Where;
@@ -18,13 +17,15 @@ import javax.persistence.Table;
 	@SqlResultSetMapping(name = "implicit.country", entities = @EntityResult(entityClass = CountriesEntity.class))
 })
 @NamedQueries({
-		@NamedQuery(name = QueryNameConstants.FIND_ALL_COUNTRY_DESC,
+		@NamedQuery(name = CountriesEntity.FIND_ALL_COUNTRY_DESC,
 		query = "SELECT country.code AS code, country.name AS name FROM CountriesEntity country WHERE country.code IN (SELECT DISTINCT c.code FROM CountriesEntity c)")
 })
 @Where(clause = "enabled = 'Y'")
 @Table(name = "countries", schema = "spatial")
 @EqualsAndHashCode(callSuper = false)
 public class CountriesEntity extends BaseAreaEntity { // TODO rename to CountryEntity
+
+    public static final String FIND_ALL_COUNTRY_DESC = "Countries.findAllCountriesDesc";
 
     @Column(name = "sovereignt", length = 32)
     @ColumnAliasName(aliasName="sovereignt")

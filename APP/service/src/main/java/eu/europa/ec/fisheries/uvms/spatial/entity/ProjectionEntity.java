@@ -24,12 +24,13 @@ import javax.persistence.Table;
 @EqualsAndHashCode(exclude = { "reportConnectSpatialsForMapProjId", "reportConnectSpatialsForDisplayProjId"})
 @NamedQueries({
         @NamedQuery(name = ProjectionEntity.FIND_BY_SRS_CODE, query = "FROM ProjectionEntity p WHERE p.srsCode = :srsCode"),
-        @NamedQuery(name = QueryNameConstants.FIND_PROJECTION_BY_ID,
+        @NamedQuery(name = ProjectionEntity.FIND_PROJECTION_BY_ID,
 				query = "SELECT projection.srsCode AS epsgCode, projection.units AS units, projection.isWorld AS global, projection.extent as extent, projection.axis as axis " +
 						"FROM ProjectionEntity projection WHERE projection.id = :id")
 })
 public class ProjectionEntity implements Serializable {
 
+    public static final String FIND_PROJECTION_BY_ID = "ReportLayerConfig.findProjectionById";
     public static final String FIND_BY_SRS_CODE = "Projection.findBySrsCode";
 
 	@Id

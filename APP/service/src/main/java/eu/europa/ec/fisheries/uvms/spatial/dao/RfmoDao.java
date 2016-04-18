@@ -9,8 +9,10 @@ import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Map;
 
+import static eu.europa.ec.fisheries.uvms.spatial.entity.RfmoEntity.*;
+
 @Slf4j
-public class RfmoDao extends AbstractAreaDao<RfmoEntity> {
+public class RfmoDao extends AbstractSystemAreaDao<RfmoEntity> {
 
     private EntityManager em;
 
@@ -24,7 +26,17 @@ public class RfmoDao extends AbstractAreaDao<RfmoEntity> {
     }
 
     public List<RfmoEntity> intersects(final Geometry shape) throws ServiceException {
-        return findEntityByNamedQuery(RfmoEntity.class, RfmoEntity.RFMO_BY_COORDINATE, QueryParameter.with("shape", shape).parameters());
+        return findEntityByNamedQuery(RfmoEntity.class, RFMO_BY_COORDINATE, QueryParameter.with("shape", shape).parameters());
+    }
+
+    @Override
+    protected String getIntersectNamedQuery() {
+        return RFMO_BY_COORDINATE;
+    }
+
+    @Override
+    protected Class<RfmoEntity> getEntity() {
+        return RfmoEntity.class;
     }
 
     @Override
@@ -34,6 +46,6 @@ public class RfmoDao extends AbstractAreaDao<RfmoEntity> {
 
     @Override
     protected String getDisableAreaNamedQuery() {
-        return RfmoEntity.DISABLE_RFMO_AREAS;
+        return DISABLE_RFMO_AREAS;
     }
 }
