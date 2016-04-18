@@ -95,11 +95,6 @@ public class SpatialRepositoryBean implements SpatialRepository {
     }
 
     @Override
-    public List findAreaByCoordinates(Point point, String nativeQueryString) {
-        return areaDao.findAreaByCoordinates(point, nativeQueryString);
-    }
-
-    @Override
     public List<AreaLayerDto> findSystemAreaLayerMapping() {
         return areaLocationTypeDao.findSystemAreaLayerMapping();
     }
