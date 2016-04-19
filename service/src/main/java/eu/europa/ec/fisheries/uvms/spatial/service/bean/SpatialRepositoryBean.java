@@ -182,14 +182,13 @@ public class SpatialRepositoryBean implements SpatialRepository {
     }
 
     @Override
-    public void updateSystemConfig(Map<String, String> parameters, String value) throws ServiceException {
-        List<SysConfigEntity> configs = sysConfigDao.findSystemConfigByName(value);
+    public void updateSystemConfig(String name, String value) throws ServiceException {
+        List<SysConfigEntity> configs = sysConfigDao.findSystemConfigByName(name);
         if (configs != null && !configs.isEmpty()) {
             SysConfigEntity sysConfigEntity = configs.get(0);
             sysConfigEntity.setValue(value);
         } else {
             SysConfigEntity sysConfigEntity = new SysConfigEntity();
-            String name = new ArrayList<>(parameters.keySet()).get(0);
             sysConfigEntity.setName(name);
             sysConfigEntity.setValue(value);
             sysConfigDao.saveOrUpdateEntity(sysConfigEntity);
