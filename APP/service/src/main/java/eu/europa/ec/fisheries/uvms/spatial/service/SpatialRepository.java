@@ -57,7 +57,7 @@ public interface SpatialRepository {
 
     void updateSystemConfigs(List<SysConfigEntity> sysConfigs);
 
-    void updateSystemConfig(Map<String, String> parameter, String value) throws ServiceException;
+    void updateSystemConfig(String name, String value) throws ServiceException;
 
     String findSystemConfigByName(String name) throws ServiceException;
 

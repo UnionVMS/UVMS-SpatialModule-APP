@@ -624,15 +624,13 @@ public class MapConfigServiceBean implements MapConfigService {
         String geoServerUrl = systemSettingsDto.getGeoserverUrl();
         String defaultGeoServerUrl = defaultSystemSettingsDto.getGeoserverUrl();
         if (geoServerUrl != null && !geoServerUrl.equals(defaultGeoServerUrl)) {
-            Map<String, String> parameters = ImmutableMap.<String, String>builder().put(NAME, GEO_SERVER).build();
-            repository.updateSystemConfig(parameters, geoServerUrl);
+            repository.updateSystemConfig(GEO_SERVER, geoServerUrl);
         }
 
         // Update Bing API Key
         String bingApiKey = systemSettingsDto.getBingApiKey();
         if (bingApiKey != null) {
-            Map<String, String> parameters = ImmutableMap.<String, String>builder().put(NAME, BING_API_KEY).build();
-            repository.updateSystemConfig(parameters, bingApiKey);
+            repository.updateSystemConfig(BING_API_KEY, bingApiKey);
         }
     }
 }
