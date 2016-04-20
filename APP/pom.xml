@@ -513,6 +513,15 @@
             <url>https://repository.jboss.org/nexus/content/repositories/releases/</url>
         </repository>
     </repositories>
+	
+	<profiles>
+		<profile>
+            <id>postgres</id>
+            <properties>
+                <database.dialect>postgres</database.dialect> <!-- the record -->
+            </properties>
+        </profile>
+	</profiles>
 
     <modules>
         <module>rest</module>
