@@ -20,7 +20,7 @@ public abstract class AbstractSystemAreaDao<E extends BaseAreaEntity> extends Ab
 
     protected static final String SHAPE = "shape";
 
-    public void bulkInsert(Map<String, List<Property>> features) {
+    public void bulkInsert(Map<String, List<Property>> features) throws ServiceException {
         StatelessSession session = (getEntityManager().unwrap(Session.class)).getSessionFactory().openStatelessSession();
         Transaction tx = session.beginTransaction();
         try {
@@ -30,13 +30,12 @@ public abstract class AbstractSystemAreaDao<E extends BaseAreaEntity> extends Ab
                 Map<String, Object> values = BaseAreaEntity.createAttributesMap(properties);
                 session.insert(createEntity(values));
             }
-            log.debug("Commit session");
+            log.debug("Commit transaction");
             tx.commit();
         }
-        catch (Exception e){
-            log.debug("Rollback session");
-            log.warn(e.getMessage(), e.getStackTrace());
+        catch (ServiceException e){
             tx.rollback();
+            throw new ServiceException("Rollback transaction", e);
         }
         finally {
             log.debug("Closing session");
