@@ -35,11 +35,11 @@ public abstract class AbstractSystemAreaDao<E extends BaseAreaEntity> extends Ab
         }
         catch (Exception e){
             log.debug("Rollback session");
-            log.error(e.getMessage());
+            log.warn(e.getMessage(), e.getStackTrace());
             tx.rollback();
         }
         finally {
-            log.debug("Close session");
+            log.debug("Closing session");
             session.close();
         }
     }
