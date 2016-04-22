@@ -35,7 +35,7 @@ public class SysConfigDao extends AbstractDAO<SysConfigEntity> {
         List<SysConfigEntity> mergedConfigs = new ArrayList<>();
 
         //the following while loop is updating the already existing configurations
-        while ( oldConfigs.size() > 0 ) {
+        while (!oldConfigs.isEmpty()) {
             SysConfigEntity oldEntity = oldConfigs.remove(0);
 
             for(SysConfigEntity sysConfig: sysConfigs) {
