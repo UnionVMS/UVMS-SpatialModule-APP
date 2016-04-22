@@ -1,7 +1,8 @@
 package eu.europa.ec.fisheries.uvms.spatial.dao;
 
 import com.ninja_squad.dbsetup.operation.Operation;
-import eu.europa.ec.fisheries.uvms.dao.BaseDAOTest;
+import eu.europa.ec.fisheries.uvms.BaseDAOTest;
+
 import static com.ninja_squad.dbsetup.Operations.deleteAllFrom;
 import static com.ninja_squad.dbsetup.Operations.insertInto;
 import static com.ninja_squad.dbsetup.Operations.sequenceOf;
