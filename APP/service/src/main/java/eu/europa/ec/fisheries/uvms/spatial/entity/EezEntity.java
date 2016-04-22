@@ -86,6 +86,7 @@ public class EezEntity extends BaseAreaEntity {
     private Long mrgidEez;
 
     public EezEntity() {
+        // No args constructor for use in serialization
     }
 
     public EezEntity(Map<String, Object> values) throws ServiceException {

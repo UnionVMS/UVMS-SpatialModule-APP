@@ -92,6 +92,7 @@ public class ReportConnectSpatialEntity implements Serializable {
 	private Set<ReportConnectServiceAreasEntity> reportConnectServiceAreases;
 
     public ReportConnectSpatialEntity() {
+        // No args constructor for use in serialization
     }
 
     @Builder

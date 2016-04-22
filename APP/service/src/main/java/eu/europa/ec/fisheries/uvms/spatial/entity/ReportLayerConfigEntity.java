@@ -32,7 +32,8 @@ public class ReportLayerConfigEntity implements Serializable {
 	private String sld;
 
 	public ReportLayerConfigEntity() {
-	}
+        // No args constructor for use in serialization
+    }
 
 	public long getId() {
 		return this.id;

@@ -10,6 +10,7 @@ import org.hibernate.annotations.Where;
 public class GfcmEntity extends BaseAreaEntity {
 
 	public GfcmEntity() {
-	}
+        // No args constructor for use in serialization
+    }
 
 }

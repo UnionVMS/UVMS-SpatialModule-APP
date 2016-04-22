@@ -32,7 +32,8 @@ public class AreaStatusEntity extends BaseEntity {
 	private Boolean isVisible = false;
 
 	public AreaStatusEntity() {
-	}
+        // No args constructor for use in serialization
+    }
 
 	public UserAreasEntity getUserAreas() {
 		return this.userAreas;

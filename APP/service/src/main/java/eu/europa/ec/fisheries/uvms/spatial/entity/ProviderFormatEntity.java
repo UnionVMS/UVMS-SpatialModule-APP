@@ -28,7 +28,8 @@ public class ProviderFormatEntity implements Serializable {
 	private Set<ServiceLayerEntity> serviceLayers;
 
 	public ProviderFormatEntity() {
-	}
+        // No args constructor for use in serialization
+    }
 
 	public int getId() {
 		return this.id;
