@@ -10,6 +10,7 @@ import org.hibernate.annotations.Where;
 public class StatRectEntity extends BaseAreaEntity {
 
 	public StatRectEntity() {
-	}
+        // No args constructor for use in serialization
+    }
 
 }

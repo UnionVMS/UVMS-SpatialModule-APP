@@ -76,7 +76,8 @@ public class CountriesEntity extends BaseAreaEntity { // TODO rename to CountryE
 	private String regionWb;
 
 	public CountriesEntity() {
-	}
+        // No args constructor for use in serialization
+    }
 
 	public String getSovereignt() {
 		return this.sovereignt;

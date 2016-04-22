@@ -23,7 +23,8 @@ public class FaoEntity implements Serializable {
 	private long id;
 
 	public FaoEntity() {
-	}
+        // No args constructor for use in serialization
+    }
 
 	public long getId() {
 		return this.id;

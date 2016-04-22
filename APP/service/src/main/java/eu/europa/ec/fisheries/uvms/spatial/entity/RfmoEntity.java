@@ -33,6 +33,7 @@ public class RfmoEntity extends BaseAreaEntity {
     private String tuna;
 
     public RfmoEntity() {
+        // No args constructor for use in serialization
     }
 
     public RfmoEntity(Map<String, Object> values) throws ServiceException {
