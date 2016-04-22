@@ -2,6 +2,9 @@ package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import eu.europa.ec.fisheries.uvms.spatial.entity.converter.CharBooleanConverter;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -37,6 +40,8 @@ import javax.persistence.UniqueConstraint;
                 + " AND area.serviceLayer = layer AND area.areaDbTable = 'user_areas' AND layer.providerFormat = provider")
 })
 
+@ToString
+@EqualsAndHashCode(callSuper = true)
 public class AreaLocationTypesEntity extends BaseEntity {
 
     public static final String FIND_ALL_IS_LOCATION  = "AreaLocationType.findAllIsLocation";
