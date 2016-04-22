@@ -72,7 +72,12 @@ public class AreaLocationTypesEntity extends BaseEntity {
     @Column(name = "is_location", nullable = false, length = 1)
     private Boolean isLocation = false;
 
+    /**
+     * No args constructor for use in serialization
+     *
+     */
     public AreaLocationTypesEntity() {
+
     }
 
     public ServiceLayerEntity getServiceLayer() {
