@@ -94,6 +94,7 @@ public class ServiceLayerEntity extends BaseEntity {
     private Set<ReportConnectServiceAreasEntity> reportConnectServiceAreas;
 
     public ServiceLayerEntity() {
+        // No args constructor for use in serialization
     }
 
     public ProviderFormatEntity getProviderFormat() {

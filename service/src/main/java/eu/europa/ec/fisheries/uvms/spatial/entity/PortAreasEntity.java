@@ -22,6 +22,7 @@ public class PortAreasEntity extends BaseAreaEntity {
     public static final String DISABLE_PORT_AREAS = "portAreasEntity.disablePortAreas";
 
     public PortAreasEntity() {
+        // No args constructor for use in serialization
     }
 
     public PortAreasEntity(Map<String, Object> values) throws ServiceException {
