@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
+import eu.europa.ec.fisheries.uvms.AbstractArquillianTest;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.AreaTypeNamesService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaServiceLayerDto;
@@ -17,11 +18,8 @@ import java.util.List;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
-/**
- * Created by kopyczmi on 04-Aug-15.
- */
 @RunWith(Arquillian.class)
-public class AreaTypeNamesServiceIT extends AbstractArquillianIT {
+public class AreaTypeNamesServiceIT extends AbstractArquillianTest {
 
     @EJB
     private AreaTypeNamesService areaTypeNamesService;
