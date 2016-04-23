@@ -1,6 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.google.common.collect.ImmutableMap;
+import eu.europa.ec.fisheries.uvms.BaseTest;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +23,7 @@ import static org.junit.Assert.assertNotNull;
  * Created by padhyad on 11/18/2015.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class CountryServiceTest {
+public class CountryServiceTest extends BaseTest {
 
     @Mock
     private SpatialRepository repository;

@@ -3,6 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import eu.europa.ec.fisheries.uvms.BaseTest;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -32,7 +33,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialService
 
 @RunWith(MockitoJUnitRunner.class)
 @Ignore("WILL FIX LATER")
-public class LocationDetailsServiceTest {
+public class LocationDetailsServiceTest extends BaseTest {
 
 	@Mock
 	private SpatialRepository repository;
