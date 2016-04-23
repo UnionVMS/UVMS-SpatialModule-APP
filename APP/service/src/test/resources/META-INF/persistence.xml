@@ -26,6 +26,7 @@
         <class>eu.europa.ec.fisheries.uvms.spatial.entity.ReportLayerConfigEntity</class>
         <class> eu.europa.ec.fisheries.uvms.spatial.entity.config.SysConfigEntity</class>
         <properties>
+            <property name="hibernate.default_schema" value="spatial"/>
             <property name="javax.persistence.schema-generation.scripts.action" value="create"/>
             <property name="javax.persistence.schema-generation.create-source" value="metadata"/>
             <property name="javax.persistence.schema-generation.scripts.create-target" value="target/jpa/sql/create-schema.sql"/>

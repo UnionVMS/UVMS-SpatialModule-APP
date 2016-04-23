@@ -12,7 +12,7 @@ import javax.persistence.TemporalType;
 import java.util.Date;
 
 @Entity
-@Table(name = "area_status", schema = "spatial")
+@Table(name = "area_status")
 public class AreaStatusEntity extends BaseEntity {
 
 	@ManyToOne

@@ -10,7 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "user_scope", schema = "spatial")
+@Table(name = "user_scope")
 @EqualsAndHashCode(of = {"name"}, callSuper = true)
 public class UserScopeEntity extends BaseEntity {
 
