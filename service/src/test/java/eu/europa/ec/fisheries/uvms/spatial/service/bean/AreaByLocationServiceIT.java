@@ -1,6 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import eu.europa.ec.fisheries.uvms.AbstractArquillianTest;
+import eu.europa.ec.fisheries.uvms.BaseArquillianTest;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaExtendedIdentifierType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.PointType;
@@ -15,7 +15,7 @@ import java.util.List;
 import static junit.framework.TestCase.assertNotNull;
 
 @RunWith(Arquillian.class)
-public class AreaByLocationServiceIT extends AbstractArquillianTest {
+public class AreaByLocationServiceIT extends BaseArquillianTest {
 
     private static final double LATITUDE = 32.85615;
     private static final double LONGITUDE = -10.74118;

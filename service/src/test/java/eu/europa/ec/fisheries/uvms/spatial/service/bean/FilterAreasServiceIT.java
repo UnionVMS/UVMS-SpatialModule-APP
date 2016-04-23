@@ -1,7 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.google.common.collect.Lists;
-import eu.europa.ec.fisheries.uvms.AbstractArquillianTest;
+import eu.europa.ec.fisheries.uvms.BaseArquillianTest;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
@@ -22,7 +22,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 @RunWith(Arquillian.class)
-public class FilterAreasServiceIT extends AbstractArquillianTest {
+public class FilterAreasServiceIT extends BaseArquillianTest {
 
     private static final String NOT_EXISTING_TYPE = "NOT_EXISTING_TYPE";
 

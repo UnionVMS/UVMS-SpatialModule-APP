@@ -3,7 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
-import eu.europa.ec.fisheries.uvms.AbstractArquillianTest;
+import eu.europa.ec.fisheries.uvms.BaseArquillianTest;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Coordinate;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialService;
@@ -23,7 +23,7 @@ import java.util.UUID;
 import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
-public class UserAreaServiceIT extends AbstractArquillianTest {
+public class UserAreaServiceIT extends BaseArquillianTest {
 	
 	@EJB
 	private UserAreaService userAreaService;
