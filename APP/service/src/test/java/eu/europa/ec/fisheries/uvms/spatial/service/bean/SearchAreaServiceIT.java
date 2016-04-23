@@ -1,6 +1,5 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import eu.europa.ec.fisheries.uvms.BaseArquillianTest;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +21,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertFalse;
 
 @RunWith(Arquillian.class)
-public class SearchAreaServiceIT extends BaseArquillianTest {
+public class SearchAreaServiceIT extends BaseSpatialArquillianTest {
 	
 	@EJB
 	private AreaService searchAreaService;
