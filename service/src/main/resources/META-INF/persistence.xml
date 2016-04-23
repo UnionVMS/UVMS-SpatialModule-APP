@@ -9,8 +9,8 @@
     <jta-data-source>java:jboss/datasources/uvms_spatial</jta-data-source>
     <properties>
         <property name="hibernate.dialect" value="org.hibernate.spatial.dialect.postgis.PostgisDialect"/>
+        <property name="hibernate.default_schema" value="spatial"/>
         <property name="show_sql" value="false" />
-
         <property name="format_sql" value="false" />
         <property name="use_sql_comments" value="true" />
     </properties>

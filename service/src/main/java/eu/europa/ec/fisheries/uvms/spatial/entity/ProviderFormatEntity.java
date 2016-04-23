@@ -13,7 +13,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "provider_format", schema = "spatial")
+@Table(name = "provider_format")
 public class ProviderFormatEntity implements Serializable { 
 
 	@Id

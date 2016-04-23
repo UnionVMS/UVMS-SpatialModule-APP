@@ -6,7 +6,7 @@ import org.hibernate.annotations.Where;
 
 @Entity
 @Where(clause = "enabled = 'Y'")
-@Table(name = "stat_rect", schema = "spatial")
+@Table(name = "stat_rect")
 public class StatRectEntity extends BaseAreaEntity {
 
 	public StatRectEntity() {

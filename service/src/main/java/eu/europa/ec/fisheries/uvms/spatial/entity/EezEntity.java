@@ -21,7 +21,7 @@ import java.util.Map;
         @NamedQuery(name = EezEntity.LIST_EMPTY_GEOMETRIES, query = "FROM EezEntity WHERE isEmpty(geom) = true AND enabled = 'Y'")
 })
 @Where(clause = "enabled = 'Y'")
-@Table(name = "eez", schema = "spatial")
+@Table(name = "eez")
 @EqualsAndHashCode(callSuper = true)
 public class EezEntity extends BaseAreaEntity {
 

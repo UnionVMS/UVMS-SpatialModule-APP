@@ -6,7 +6,7 @@ import org.hibernate.annotations.Where;
 
 @Entity
 @Where(clause = "enabled = 'Y'")
-@Table(name = "gfcm", schema = "spatial")
+@Table(name = "gfcm")
 public class GfcmEntity extends BaseAreaEntity {
 
 	public GfcmEntity() {

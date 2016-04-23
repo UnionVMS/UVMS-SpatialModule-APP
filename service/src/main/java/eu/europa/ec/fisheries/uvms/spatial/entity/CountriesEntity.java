@@ -21,7 +21,7 @@ import javax.persistence.Table;
 		query = "SELECT country.code AS code, country.name AS name FROM CountriesEntity country WHERE country.code IN (SELECT DISTINCT c.code FROM CountriesEntity c)")
 })
 @Where(clause = "enabled = 'Y'")
-@Table(name = "countries", schema = "spatial")
+@Table(name = "countries")
 @EqualsAndHashCode(callSuper = false)
 public class CountriesEntity extends BaseAreaEntity { // TODO rename to CountryEntity
 

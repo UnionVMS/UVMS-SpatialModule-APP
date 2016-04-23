@@ -15,7 +15,7 @@ import java.util.Map;
         @NamedQuery(name = PortAreasEntity.DISABLE_PORT_AREAS, query = "UPDATE PortAreasEntity SET enabled = 'N'")
 })
 @Where(clause = "enabled = 'Y'")
-@Table(name = "port_area", schema = "spatial")
+@Table(name = "port_area")
 public class PortAreasEntity extends BaseAreaEntity {
 
     public static final String PORT_AREA_BY_COORDINATE = "portEntity.PortAreaByCoordinate";
