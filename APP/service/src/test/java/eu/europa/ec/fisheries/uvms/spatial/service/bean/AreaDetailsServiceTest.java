@@ -1,6 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.vividsolutions.jts.geom.Point;
+import eu.europa.ec.fisheries.uvms.BaseTest;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.RfmoEntity;
@@ -31,7 +32,7 @@ import static org.junit.Assert.assertNotNull;
  */
 @RunWith(MockitoJUnitRunner.class)
 @Ignore
-public class AreaDetailsServiceTest {
+public class AreaDetailsServiceTest extends BaseTest {
 
     @Mock
     private SpatialRepository repository;
