@@ -76,7 +76,7 @@ public class CountriesEntity extends BaseAreaEntity { // TODO rename to CountryE
 	private String regionWb;
 
 	public CountriesEntity() {
-        // No args constructor for use in serialization
+        // why JPA why
     }
 
 	public String getSovereignt() {

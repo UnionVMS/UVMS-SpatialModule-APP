@@ -41,7 +41,7 @@ public class PortEntity extends BaseAreaEntity {
     private String commercialPort;
 
     public PortEntity() {
-        // No args constructor for use in serialization
+        // why JPA why
     }
 
     public PortEntity(Map<String, Object> values) throws ServiceException {

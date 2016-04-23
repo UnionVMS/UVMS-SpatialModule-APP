@@ -32,7 +32,7 @@ public class ReportLayerConfigEntity implements Serializable {
 	private String sld;
 
 	public ReportLayerConfigEntity() {
-        // No args constructor for use in serialization
+        // why JPA why
     }
 
 	public long getId() {

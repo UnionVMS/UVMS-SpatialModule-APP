@@ -117,7 +117,7 @@ public class UserAreasEntity extends BaseAreaEntity {
     private Set<UserScopeEntity> scopeSelection;
 
     public UserAreasEntity() {
-        // No args constructor for use in serialization
+        // why JPA why
     }
 
     public String getType() {

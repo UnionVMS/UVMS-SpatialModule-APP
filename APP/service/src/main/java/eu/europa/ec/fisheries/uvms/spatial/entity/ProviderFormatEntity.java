@@ -28,7 +28,7 @@ public class ProviderFormatEntity implements Serializable {
 	private Set<ServiceLayerEntity> serviceLayers;
 
 	public ProviderFormatEntity() {
-        // No args constructor for use in serialization
+        // why JPA why
     }
 
 	public int getId() {

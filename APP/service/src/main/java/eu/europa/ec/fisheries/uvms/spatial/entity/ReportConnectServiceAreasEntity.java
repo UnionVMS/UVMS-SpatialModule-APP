@@ -53,7 +53,7 @@ public class ReportConnectServiceAreasEntity implements Serializable, Comparable
 	private String areaType;
 
 	public ReportConnectServiceAreasEntity() {
-        // No args constructor for use in serialization
+        // why JPA why
     }
 	
 	public long getId() {
