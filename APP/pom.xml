@@ -21,9 +21,8 @@
 
     <properties>
         <!-- The spatial name is used as a common point to rename the application alias visible in USM-->
-        <!-- The spatial name is used as a common point to rename the application alias visible in USM-->
         <spatial.name>Spatial</spatial.name>
-        <spatial.model>0.5.0</spatial.model>
+        <spatial.model>0.5.1-SNAPSHOT</spatial.model>
         <reporting.model>0.5.0</reporting.model>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -472,9 +471,9 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.codehaus.sonar-plugins.java</groupId>
-                <artifactId>sonar-java-plugin</artifactId>
-                <version>3.2</version>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>3.0.1</version>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>

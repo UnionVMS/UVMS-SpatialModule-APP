@@ -70,7 +70,7 @@ public class ProjectionEntity implements Serializable {
 	private Set<ReportConnectSpatialEntity> reportConnectSpatialsForDisplayProjId;
 
 	public ProjectionEntity() {
-        // No args constructor for use in serialization
+        // why JPA why
     }
 
     public ProjectionEntity(Long id){
