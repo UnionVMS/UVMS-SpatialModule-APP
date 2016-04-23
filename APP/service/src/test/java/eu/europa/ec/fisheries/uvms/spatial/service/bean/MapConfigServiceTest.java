@@ -2,6 +2,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import eu.europa.ec.fisheries.uvms.BaseTest;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.*;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.CoordinatesFormat;
@@ -31,7 +32,7 @@ import static org.junit.Assert.assertNotNull;
  * Created by padhyad on 11/23/2015.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class MapConfigServiceTest {
+public class MapConfigServiceTest extends BaseTest {
 
     @Mock
     private SpatialRepository repository;

@@ -1,6 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.repository;
 
 import com.google.common.collect.ImmutableMap;
+import eu.europa.ec.fisheries.uvms.BaseTest;
 import eu.europa.ec.fisheries.uvms.spatial.dao.AreaDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.CountryDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.MapConfigDao;
@@ -26,7 +27,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(MockitoJUnitRunner.class)
-public class SpatialRepositoryTest {
+public class SpatialRepositoryTest extends BaseTest {
 
     @Mock
     private EntityManager em;
