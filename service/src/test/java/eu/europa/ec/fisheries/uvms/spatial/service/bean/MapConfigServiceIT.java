@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
+import eu.europa.ec.fisheries.uvms.AbstractArquillianTest;
 import eu.europa.ec.fisheries.uvms.spatial.service.MapConfigService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.MapConfigDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ServiceLayersDto;
@@ -23,7 +24,7 @@ import static org.junit.Assert.assertNull;
  * Created by padhyad on 11/20/2015.
  */
 @RunWith(Arquillian.class)
-public class MapConfigServiceIT extends AbstractArquillianIT {
+public class MapConfigServiceIT extends AbstractArquillianTest {
 
     @EJB
     private MapConfigService mapConfigService;
