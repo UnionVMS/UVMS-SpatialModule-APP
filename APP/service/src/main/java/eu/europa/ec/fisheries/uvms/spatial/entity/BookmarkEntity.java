@@ -8,7 +8,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "bookmark", schema = "spatial")
+@Table(name = "bookmark")
 @NamedQuery(name = BookmarkEntity.LIST_BY_USERNAME, query = "FROM BookmarkEntity b WHERE b.createdBy = :createdBy")
 @ToString
 public class BookmarkEntity extends BaseEntity {

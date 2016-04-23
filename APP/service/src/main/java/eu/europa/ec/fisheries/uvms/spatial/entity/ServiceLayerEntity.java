@@ -20,7 +20,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.StylesDto;
 import org.apache.commons.lang3.StringUtils;
 
 @Entity
-@Table(name = "service_layer", schema = "spatial")
+@Table(name = "service_layer")
 @NamedQueries({
         @NamedQuery(name = ServiceLayerEntity.BY_LOCATION_TYPE,
                 query = "FROM ServiceLayerEntity s JOIN FETCH s.areaType a WHERE a.isSystemWide = 'Y' AND upper(s.areaType.typeName) = upper(:locationType)"),

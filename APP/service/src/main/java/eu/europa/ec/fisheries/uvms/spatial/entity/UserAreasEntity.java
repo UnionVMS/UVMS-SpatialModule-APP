@@ -64,7 +64,7 @@ import java.util.Set;
 
 })
 @Where(clause = "enabled = 'Y'")
-@Table(name="user_areas", schema = "spatial", uniqueConstraints = {
+@Table(name="user_areas", uniqueConstraints = {
         @UniqueConstraint(columnNames={"name", "user_name"})
 })
 public class UserAreasEntity extends BaseAreaEntity {

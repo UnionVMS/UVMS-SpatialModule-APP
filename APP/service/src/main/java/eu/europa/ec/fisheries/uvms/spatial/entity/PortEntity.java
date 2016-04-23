@@ -13,7 +13,7 @@ import java.util.Map;
 @NamedQueries({
         @NamedQuery(name = PortEntity.DISABLE, query = "UPDATE PortEntity SET enabled = 'N'")
 })
-@Table(name = "port", schema = "spatial")
+@Table(name = "port")
 public class PortEntity extends BaseAreaEntity {
 
     public static final String PORT_BY_COORDINATE = "portEntity.ByCoordinate";

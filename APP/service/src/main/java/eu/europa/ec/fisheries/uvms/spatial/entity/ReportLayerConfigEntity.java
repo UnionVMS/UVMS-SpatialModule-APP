@@ -12,7 +12,7 @@ import javax.persistence.Table;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "report_layer_config", schema = "spatial")
+@Table(name = "report_layer_config")
 public class ReportLayerConfigEntity implements Serializable {
 
 	@Id

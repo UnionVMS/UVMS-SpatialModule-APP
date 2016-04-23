@@ -1,6 +1,5 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
-import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.LayerDto;
 import java.io.Serializable;
 import javax.persistence.Column;
@@ -15,7 +14,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "report_connect_service_areas", schema = "spatial")
+@Table(name = "report_connect_service_areas")
 @NamedQueries({
 		@NamedQuery(name = ReportConnectServiceAreasEntity.FIND_REPORT_SERVICE_AREAS,
 				query = "SELECT rcsa FROM ReportConnectServiceAreasEntity rcsa WHERE rcsa.reportConnectSpatial.reportId = :reportId"),

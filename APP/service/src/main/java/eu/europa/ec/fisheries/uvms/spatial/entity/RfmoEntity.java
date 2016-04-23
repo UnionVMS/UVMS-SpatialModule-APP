@@ -21,7 +21,7 @@ import java.util.Map;
                 query = "UPDATE RfmoEntity SET enabled = 'N'")
 })
 @Where(clause = "enabled = 'Y'")
-@Table(name = "rfmo", schema = "spatial")
+@Table(name = "rfmo")
 public class RfmoEntity extends BaseAreaEntity {
 
     public static final String RFMO_BY_COORDINATE = "rfmoEntity.ByCoordinate";

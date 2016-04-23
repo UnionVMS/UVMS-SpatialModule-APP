@@ -13,7 +13,7 @@ import org.hibernate.annotations.Where;
 
 @Entity
 @Where(clause = "enabled = 'Y'")
-@Table(name = "fao", schema = "spatial")
+@Table(name = "fao")
 public class FaoEntity implements Serializable {
 
 	@Id
