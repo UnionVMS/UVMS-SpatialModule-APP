@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
-import eu.europa.ec.fisheries.uvms.BaseArquillianTest;
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
 
@@ -19,7 +18,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 
 @RunWith(Arquillian.class)
-public class LocationDetailsServiceIT extends BaseArquillianTest {
+public class LocationDetailsServiceIT extends BaseSpatialArquillianTest {
 	
 	@EJB
 	private SpatialService locationDetailsService;

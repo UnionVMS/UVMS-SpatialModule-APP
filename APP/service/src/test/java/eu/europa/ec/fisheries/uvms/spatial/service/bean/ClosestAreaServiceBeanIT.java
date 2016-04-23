@@ -1,8 +1,11 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import eu.europa.ec.fisheries.uvms.BaseArquillianTest;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Area;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialRQ.AreaTypes;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.PointType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.UnitType;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialService;
 import lombok.SneakyThrows;
 import org.jboss.arquillian.junit.Arquillian;
@@ -18,7 +21,7 @@ import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(Arquillian.class)
-public class ClosestAreaServiceBeanIT extends BaseArquillianTest {
+public class ClosestAreaServiceBeanIT extends BaseSpatialArquillianTest {
 
     private static final double LATITUDE = 32.85615;
     private static final double LATITUDE_2 = 45.11557;
