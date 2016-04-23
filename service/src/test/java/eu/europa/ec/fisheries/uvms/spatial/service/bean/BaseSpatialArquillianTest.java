@@ -18,7 +18,6 @@ public class BaseSpatialArquillianTest extends BaseArquillianTest {
                 .addAsResource("META-INF/test-persistence.xml", "META-INF/persistence.xml")
                 .addAsResource("META-INF/orm.xml")
                 .addAsResource("config.properties")
-                .addAsResource("app.properties")
                 .addAsResource("logback.xml")
                 .addAsResource("Config.json")
                 .addAsResource("UserConfig.json")
@@ -26,8 +25,6 @@ public class BaseSpatialArquillianTest extends BaseArquillianTest {
 
         File[] libs = Maven.resolver().loadPomFromFile("pom.xml").importDependencies(ScopeType.COMPILE, ScopeType.RUNTIME, ScopeType.TEST).resolve().withTransitivity().asFile();
         webArchive = webArchive.addAsLibraries(libs);
-
-        System.out.println(webArchive.toString(true));
 
         return webArchive;
     }
