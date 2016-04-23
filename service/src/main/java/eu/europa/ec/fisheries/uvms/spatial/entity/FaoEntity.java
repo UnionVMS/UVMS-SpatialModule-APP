@@ -23,7 +23,7 @@ public class FaoEntity implements Serializable {
 	private long id;
 
 	public FaoEntity() {
-        // No args constructor for use in serialization
+        // why JPA why
     }
 
 	public long getId() {

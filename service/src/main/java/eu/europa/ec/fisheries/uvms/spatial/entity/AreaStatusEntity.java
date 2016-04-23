@@ -32,7 +32,7 @@ public class AreaStatusEntity extends BaseEntity {
 	private Boolean isVisible = false;
 
 	public AreaStatusEntity() {
-        // No args constructor for use in serialization
+        // why JPA why
     }
 
 	public UserAreasEntity getUserAreas() {

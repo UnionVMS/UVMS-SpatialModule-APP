@@ -73,7 +73,7 @@ public class AreaLocationTypesEntity extends BaseEntity {
     private Boolean isLocation = false;
 
     public AreaLocationTypesEntity() {
-        // No args constructor for use in serialization
+        // why JPA why
     }
 
     public ServiceLayerEntity getServiceLayer() {
