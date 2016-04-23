@@ -5,7 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
-import eu.europa.ec.fisheries.uvms.AbstractArquillianTest;
+import eu.europa.ec.fisheries.uvms.BaseArquillianTest;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -29,7 +29,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialService
  * Arquillian integration test for GetAreaDetails API
  */
 @RunWith(Arquillian.class)
-public class AreaDetailsServiceIT extends AbstractArquillianTest {
+public class AreaDetailsServiceIT extends BaseArquillianTest {
 	
 	@EJB
 	private AreaService areaDetailsService;
