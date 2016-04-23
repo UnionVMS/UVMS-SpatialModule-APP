@@ -125,12 +125,6 @@
 			</dependency>
 
             <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-databind</artifactId>
-                <version>${jackson.version}</version>
-            </dependency>
-
-            <dependency>
                 <groupId>org.mapstruct</groupId>
                 <artifactId>mapstruct</artifactId>
                 <version>${mapstruct.version}</version>
@@ -185,13 +179,6 @@
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-spatial</artifactId>
                 <version>4.3</version>
-                <scope>provided</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>com.vividsolutions</groupId>
-                <artifactId>jts</artifactId>
-                <version>1.13</version>
                 <scope>provided</scope>
             </dependency>
 
@@ -263,13 +250,6 @@
             </dependency>
 
             <dependency>
-                <groupId>org.jboss.resteasy</groupId>
-                <artifactId>resteasy-jackson-provider</artifactId>
-                <version>3.0.10.Final</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
             	<groupId>org.jboss.resteasy</groupId>
 			    <artifactId>resteasy-jaxb-provider</artifactId>
 			  	<version>3.0.11.Final</version>
@@ -286,13 +266,6 @@
 			    <artifactId>jaxrs-api</artifactId>
 			    <version>3.0.11.Final</version>
 			</dependency>
-
-            <dependency>
-                <groupId>org.jboss.resteasy</groupId>
-                <artifactId>resteasy-client</artifactId>
-                <version>3.0.11.Final</version>
-                <scope>test</scope>
-            </dependency>
 
         </dependencies>
 

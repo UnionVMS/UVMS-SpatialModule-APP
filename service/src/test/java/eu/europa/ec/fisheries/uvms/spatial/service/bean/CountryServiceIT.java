@@ -1,6 +1,5 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import eu.europa.ec.fisheries.uvms.BaseArquillianTest;
 import eu.europa.ec.fisheries.uvms.spatial.service.AreaService;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
@@ -12,11 +11,8 @@ import java.util.Map;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
-/**
- * Created by padhyad on 11/18/2015.
- */
 @RunWith(Arquillian.class)
-public class CountryServiceIT extends BaseArquillianTest {
+public class CountryServiceIT extends BaseSpatialArquillianTest {
 
     @EJB
     private AreaService countryService;
