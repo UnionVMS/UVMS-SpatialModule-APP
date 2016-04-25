@@ -46,7 +46,6 @@ import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -145,25 +144,13 @@ public class SpatialRepositoryBean implements SpatialRepository {
     }
 
     @Override
-    public ReportConnectSpatialEntity findReportConnectSpatialBy(final Long reportId) throws ServiceException {
-        List<ReportConnectSpatialEntity> list = reportConnectSpatialDao.findReportConnectSpatialBy(reportId);
-
-        ReportConnectSpatialEntity result = null;
-
-        if (isNotEmpty(list)) {  // FIXME @Greg move the logic to service layer
-            if (list.size() > 1) {
-                throw new IllegalStateException("More than one map configuration has been found for report with id = " + reportId);
-            } else {
-                result = list.get(0);
-            }
-        }
-
-        return result;
+    public ReportConnectSpatialEntity findReportConnectSpatialByReportId(final Long reportId) throws ServiceException {
+        return reportConnectSpatialDao.findByReportId(reportId);
     }
 
     @Override
     public List<ReportConnectSpatialEntity> findReportConnectSpatialByConnectId(final Long id) throws ServiceException {
-        return reportConnectSpatialDao.findReportConnectSpatialByConnectId(id);
+        return reportConnectSpatialDao.findByConnectId(id);
     }
 
     @Override
@@ -182,7 +169,7 @@ public class SpatialRepositoryBean implements SpatialRepository {
     }
 
     @Override
-    public void updateSystemConfig(String name, String value) throws ServiceException {
+    public void updateSystemConfig(String name, String value) throws ServiceException { // TODO move logic to service or dao please
         List<SysConfigEntity> configs = sysConfigDao.findSystemConfigByName(name);
         if (configs != null && !configs.isEmpty()) {
             SysConfigEntity sysConfigEntity = configs.get(0);
@@ -329,8 +316,8 @@ public class SpatialRepositoryBean implements SpatialRepository {
     }
 
     @Override
-    public ReportConnectSpatialEntity findReportConnectSpatialById(final Long reportId, final Long id) throws ServiceException {
-        List<ReportConnectSpatialEntity> list = reportConnectSpatialDao.findReportConnectSpatialById(reportId, id);
+    public ReportConnectSpatialEntity findReportConnectSpatialByReportIdAndConnectId(final Long reportId, final Long id) throws ServiceException {
+        List<ReportConnectSpatialEntity> list = reportConnectSpatialDao.findByReportIdAndConnectId(reportId, id);
         if (isNotEmpty(list)) {
             return list.get(0);
         }

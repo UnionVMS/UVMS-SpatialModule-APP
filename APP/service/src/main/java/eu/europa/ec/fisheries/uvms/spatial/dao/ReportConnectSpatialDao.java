@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import java.util.List;
 
 import static eu.europa.ec.fisheries.uvms.service.QueryParameter.*;
+import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 
 public class ReportConnectSpatialDao extends AbstractDAO<ReportConnectSpatialEntity> {
 
@@ -23,18 +24,21 @@ public class ReportConnectSpatialDao extends AbstractDAO<ReportConnectSpatialEnt
     }
 
 
-    public List<ReportConnectSpatialEntity> findReportConnectSpatialBy(Long reportId) throws ServiceException {
-        return findEntityByNamedQuery(
-                ReportConnectSpatialEntity.class, QueryNameConstants.FIND_BY_REPORT_ID,
-                with("reportId", reportId).parameters(), 1
-        );
+    public ReportConnectSpatialEntity findByReportId(Long reportId) throws ServiceException {
+
+        List<ReportConnectSpatialEntity> list =
+                findEntityByNamedQuery(ReportConnectSpatialEntity.class,
+                        ReportConnectSpatialEntity.FIND_BY_REPORT_ID, with("reportId", reportId).parameters(), 1);
+
+        return list.get(0);
+
     }
 
-    public List<ReportConnectSpatialEntity> findReportConnectSpatialByConnectId(Long id) throws ServiceException {
+    public List<ReportConnectSpatialEntity> findByConnectId(Long id) throws ServiceException {
         return findEntityByNamedQuery(ReportConnectSpatialEntity.class, ReportConnectSpatialEntity.FIND_BY_REPORT_CONNECT_ID, with("id", id).parameters(), 1);
     }
 
-    public List<ReportConnectSpatialEntity> findReportConnectSpatialById(Long reportId, Long id) throws ServiceException {
+    public List<ReportConnectSpatialEntity> findByReportIdAndConnectId(Long reportId, Long id) throws ServiceException {
         return findEntityByNamedQuery(
                 ReportConnectSpatialEntity.class, QueryNameConstants.FIND_BY_ID,
                 with("reportId", reportId).and("id", id).parameters(), 1

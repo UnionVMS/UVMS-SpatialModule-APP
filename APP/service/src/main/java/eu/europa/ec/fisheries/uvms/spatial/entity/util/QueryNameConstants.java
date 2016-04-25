@@ -36,7 +36,6 @@ public final class QueryNameConstants {
     /**
      * MapDto Config queries
      */
-    public static final String FIND_BY_REPORT_ID = "ReportLayerConfig.findByReportId";
     public static final String FIND_BY_ID = "ReportLayerConfig.findById";
     public static final String FIND_SERVICE_LAYER_BY_SUBTYPE = "ServiceLayer.findServiceLayerBySubType";
     public static final String FIND_SERVICE_LAYER_BY_SUBTYPE_WITHOUT_BING = "ServiceLayer.findServiceLayerBySubTypeWithoutBing";

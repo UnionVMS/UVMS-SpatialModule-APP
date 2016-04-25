@@ -49,7 +49,7 @@ public interface SpatialRepository {
 
     List<ServiceLayerEntity> findServiceLayerEntityByIds(List<Long> ids);
 
-    ReportConnectSpatialEntity findReportConnectSpatialBy(Long reportId) throws ServiceException;
+    ReportConnectSpatialEntity findReportConnectSpatialByReportId(Long reportId) throws ServiceException;
 
     List<ReportConnectSpatialEntity> findReportConnectSpatialByConnectId(final Long id) throws ServiceException;
 
@@ -93,7 +93,7 @@ public interface SpatialRepository {
 
     void deleteReportConnectServiceAreas(Set<ReportConnectServiceAreasEntity> reportConnectServiceAreas);
 
-    ReportConnectSpatialEntity findReportConnectSpatialById(Long reportId, Long id) throws ServiceException;
+    ReportConnectSpatialEntity findReportConnectSpatialByReportIdAndConnectId(Long reportId, Long id) throws ServiceException;
 
     List<EezEntity> findEezByIntersect(Point point) throws ServiceException;
 
