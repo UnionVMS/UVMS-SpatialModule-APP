@@ -45,7 +45,10 @@ public class BaseAreaEntity implements Serializable {
     private static final String CODE = "code";
     private static final String THE_GEOM = "the_geom";
 
-    private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) @ColumnAliasName(aliasName = "gid") Long gid;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @ColumnAliasName(aliasName = "gid")
+    private Long gid;
 
     @Type(type = "org.hibernate.spatial.GeometryType")
     @ColumnAliasName(aliasName = "geometry")
