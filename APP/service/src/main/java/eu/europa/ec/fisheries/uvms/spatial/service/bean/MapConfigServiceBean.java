@@ -430,7 +430,7 @@ public class MapConfigServiceBean implements MapConfigService {
 
         ReportConnectSpatialEntity entity = null;
         if (reportId != null) {
-            entity = repository.findReportConnectSpatialBy(new Long(reportId));
+            entity = repository.findReportConnectSpatialBy((long) reportId);
         }
 
         if (entity != null) {
