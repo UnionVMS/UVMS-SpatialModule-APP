@@ -30,7 +30,7 @@ import javax.persistence.Table;
 				query = "SELECT projection.srsCode AS epsgCode, projection.units AS units, projection.isWorld AS global, projection.extent as extent, projection.axis as axis " +
 						"FROM ReportConnectSpatialEntity rcs INNER JOIN rcs.projectionByMapProjId AS projection " +
 						"WHERE rcs.reportId = :reportId"),
-		@NamedQuery(name = QueryNameConstants.FIND_BY_REPORT_ID,
+		@NamedQuery(name = ReportConnectSpatialEntity.FIND_BY_REPORT_ID,
 				query = "FROM ReportConnectSpatialEntity WHERE reportId = :reportId"),
 		@NamedQuery(name = QueryNameConstants.FIND_BY_ID,
 				query = "FROM ReportConnectSpatialEntity WHERE reportId = :reportId AND id = :id"),
@@ -45,6 +45,7 @@ public class ReportConnectSpatialEntity implements Serializable {
     public static final String FIND_MAP_PROJ_BY_ID = "ReportLayerConfig.findMapProjectionById";
     public static final String DELETE_BY_ID_LIST = "reportConnectSpatialEntity.deleteByIdList";
 	public static final String FIND_BY_REPORT_CONNECT_ID = "reportConnectSpatialEntity.findByReportConnectId";
+    public static final String FIND_BY_REPORT_ID = "ReportLayerConfig.findByReportId";
 
     @Id
 	@Column(name = "id")

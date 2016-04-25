@@ -113,7 +113,7 @@ public class MapConfigServiceBean implements MapConfigService {
     @Override
     public MapConfigurationType getMapConfigurationType(final Long reportId) throws ServiceException {
         SpatialValidator.validate(reportId);
-        ReportConnectSpatialEntity entity = repository.findReportConnectSpatialBy(reportId);
+        ReportConnectSpatialEntity entity = repository.findReportConnectSpatialByReportId(reportId);
         if (entity == null) {
             return null;
         }
@@ -242,7 +242,7 @@ public class MapConfigServiceBean implements MapConfigService {
     }
 
     private ReportConnectSpatialEntity getReportConnectSpatialEntity(final SpatialSaveOrUpdateMapConfigurationRQ request) throws ServiceException {
-        ReportConnectSpatialEntity entity = repository.findReportConnectSpatialById(request.getMapConfiguration().getReportId(), request.getMapConfiguration().getSpatialConnectId());
+        ReportConnectSpatialEntity entity = repository.findReportConnectSpatialByReportIdAndConnectId(request.getMapConfiguration().getReportId(), request.getMapConfiguration().getSpatialConnectId());
         if (entity != null) {
             entity.setScaleBarType(request.getMapConfiguration().getScaleBarUnits());
             entity.setDisplayFormatType(request.getMapConfiguration().getCoordinatesFormat());
@@ -430,7 +430,7 @@ public class MapConfigServiceBean implements MapConfigService {
 
         ReportConnectSpatialEntity entity = null;
         if (reportId != null) {
-            entity = repository.findReportConnectSpatialBy((long) reportId);
+            entity = repository.findReportConnectSpatialByReportId((long) reportId);
         }
 
         if (entity != null) {
@@ -448,7 +448,7 @@ public class MapConfigServiceBean implements MapConfigService {
 
     private VectorStylesDto getVectorStyles(ConfigurationDto configurationDto, Integer reportId) throws ServiceException {
         if (reportId != null) {
-            ReportConnectSpatialEntity entity = repository.findReportConnectSpatialBy(reportId.longValue());
+            ReportConnectSpatialEntity entity = repository.findReportConnectSpatialByReportId(reportId.longValue());
             if (entity != null && entity.getStyleSettings() != null) {
                 StyleSettingsDto styleSettingsDto = MapConfigHelper.getStyleSettings(entity.getStyleSettings());
                 if ((styleSettingsDto.getPositions() != null && styleSettingsDto.getPositions().getStyle() != null) ||
@@ -463,7 +463,7 @@ public class MapConfigServiceBean implements MapConfigService {
 
     private VisibilitySettingsDto getVisibilitySettings(ConfigurationDto configurationDto, Integer reportId) throws ServiceException {
         if (reportId != null) {
-            ReportConnectSpatialEntity entity = repository.findReportConnectSpatialBy(reportId.longValue());
+            ReportConnectSpatialEntity entity = repository.findReportConnectSpatialByReportId(reportId.longValue());
             if (entity != null && entity.getVisibilitySettings() != null) {
                 VisibilitySettingsDto visibilitySettingsDto = MapConfigHelper.getVisibilitySettings(entity.getVisibilitySettings());
                 if (MapConfigHelper.isVisibilitySettingsOverriddenByReport(visibilitySettingsDto)) {
@@ -587,7 +587,7 @@ public class MapConfigServiceBean implements MapConfigService {
         DisplayProjectionDto displayProjectionDto = new DisplayProjectionDto();
         ReportConnectSpatialEntity entity = null;
         if(reportId != null) {
-            entity = repository.findReportConnectSpatialBy(reportId.longValue());
+            entity = repository.findReportConnectSpatialByReportId(reportId.longValue());
         }
 
         if (entity != null && entity.getProjectionByDisplayProjId() != null) { // Check value in DB
