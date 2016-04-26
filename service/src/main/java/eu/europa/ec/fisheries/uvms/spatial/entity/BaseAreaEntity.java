@@ -41,9 +41,6 @@ public class BaseAreaEntity implements Serializable {
 
     private static final String ISO_8859_1 = "ISO-8859-1";
     private static final String UTF_8 = "UTF-8";
-    private static final String NAME = "name";
-    private static final String CODE = "code";
-    private static final String THE_GEOM = "the_geom";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -64,7 +61,7 @@ public class BaseAreaEntity implements Serializable {
 
     @Convert(converter = CharBooleanConverter.class)
     @Column(nullable = false, length = 1)
-    @ColumnAliasName(aliasName ="enabled")
+    @ColumnAliasName(aliasName = "enabled")
     private Boolean enabled = true;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -72,11 +69,11 @@ public class BaseAreaEntity implements Serializable {
     private Date enabledOn;
 
     public BaseAreaEntity(Map<String, Object> values) throws ServiceException {
-        setGeom((Geometry) values.get(THE_GEOM));
-        setCode(readStringProperty(values, CODE));
-        setName(readStringProperty(values, NAME));
-        setEnabled(true);
-        setEnabledOn(new Date());
+        geom = ((Geometry) values.get("the_geom"));
+        code = (readStringProperty(values, "code"));
+        name = (readStringProperty(values, "name"));
+        enabled = true;
+        enabledOn = new Date();
     }
 
     public BaseAreaEntity(){
