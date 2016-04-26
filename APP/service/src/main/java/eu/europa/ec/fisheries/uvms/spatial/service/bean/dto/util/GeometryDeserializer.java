@@ -11,7 +11,7 @@ import org.wololo.jts2geojson.GeoJSONReader;
 
 import java.io.IOException;
 
-public class GeometryDeserializer extends JsonDeserializer<Geometry> {
+public class GeometryDeserializer extends JsonDeserializer<Geometry> { // TODO @Greg try to get rid of dependency on wololo
 
     private static final int DEFAULT_SRID = 4326;
 
