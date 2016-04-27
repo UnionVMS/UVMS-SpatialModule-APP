@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
+import eu.europa.ec.fisheries.uvms.domain.BaseEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 import lombok.EqualsAndHashCode;
 
