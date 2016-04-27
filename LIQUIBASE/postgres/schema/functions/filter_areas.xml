@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+		   
+	<preConditions>
+		<dbms type="postgresql" />
+    </preConditions>	   
+		   
+    <changeSet author="mkopyczok" id="filter_areas_func">
+        <createProcedure>
+			CREATE OR REPLACE FUNCTION spatial.filter_geom(IN user_area_tables text, IN user_area_ids text, IN scope_area_tables text, IN scope_area_ids text, OUT wkt_geometry text, OUT result_code integer) AS
+			$BODY$
+				DECLARE
+				   i integer;
+				   union_user_geom geometry := ST_GeomFromText('POLYGON EMPTY');
+				   union_scope_geom geometry := ST_GeomFromText('POLYGON EMPTY');
+				   tmp_geom geometry;
+				   result_geom geometry;
+				   
+				   user_tables text[];
+				   user_ids text[];
+				   
+				   scope_tables text[];
+				   scope_ids text[];  
+				BEGIN
+					-- Merging User Areas
+					IF (length(user_area_tables) > 0) AND (length(user_area_ids) > 0) THEN
+						user_tables := string_to_array(user_area_tables, ',');
+						user_ids := string_to_array(user_area_ids, ',');
+						
+						FOR i IN 1 .. array_length(user_tables, 1)
+						LOOP
+						   EXECUTE format('select geom from spatial.%s t where t.gid = %s', user_tables[i], user_ids[i]) INTO tmp_geom; 
+						   IF tmp_geom IS NOT NULL THEN
+							select ST_Union(union_user_geom::geometry, tmp_geom::geometry) INTO union_user_geom;
+							RAISE NOTICE 'User area: % %', user_tables[i], user_ids[i];
+						   END IF;
+						END LOOP;
+					END IF;
+					
+					-- Merging Scope Areas
+					IF (length(scope_area_tables) > 0) AND (length(scope_area_ids) > 0) THEN
+						scope_tables := string_to_array(scope_area_tables, ',');
+						scope_ids := string_to_array(scope_area_ids, ',');
+						
+						FOR i IN 1 .. array_length(scope_tables, 1)
+						LOOP
+						   EXECUTE format('select geom from spatial.%s t where t.gid = %s', scope_tables[i], scope_ids[i]) INTO tmp_geom; 
+						   IF tmp_geom IS NOT NULL THEN
+							select ST_Union(union_scope_geom::geometry, tmp_geom::geometry) INTO union_scope_geom;
+							RAISE NOTICE 'Scope area: % %', scope_tables[i], scope_ids[i];
+						   END IF;
+						END LOOP;
+					END IF;
+					
+					-- Intersection of User and Scope areas
+					IF (NOT ST_IsEmpty(union_user_geom) AND NOT ST_IsEmpty(union_scope_geom)) THEN
+						result_geom := ST_Intersection(union_user_geom::geometry, union_scope_geom::geometry);
+						result_code := 3;
+						IF (ST_IsEmpty(result_geom)) THEN
+							result_geom := union_scope_geom;
+							result_code := 4;
+						END IF;
+					ELSEIF (NOT ST_IsEmpty(union_user_geom)) THEN
+						result_geom := union_user_geom;
+						result_code := 1;
+					ELSEIF (NOT ST_IsEmpty(union_scope_geom)) THEN
+						result_geom := union_scope_geom;
+						result_code := 2;
+					ELSEIF (ST_IsEmpty(union_user_geom) AND ST_IsEmpty(union_scope_geom)) THEN
+						result_geom := NULL;
+						result_code := 0;
+					END IF;
+					
+					-- Simplying the geometry
+					IF (NOT ST_IsEmpty(result_geom) AND st_npoints(result_geom) > 20000) THEN
+						result_geom := st_simplify(result_geom, 0.5);
+					END IF;
+
+					wkt_geometry := ST_AsText(result_geom);
+					
+					RAISE NOTICE 'Code: %', result_code; 
+					RAISE NOTICE 'Geometry: %', wkt_geometry; 
+				END
+			$BODY$
+			LANGUAGE plpgsql;
+		</createProcedure>
+		<rollback>
+			DROP FUNCTION CREATE OR REPLACE FUNCTION spatial.filter_geom(tables_name varchar, area_ids varchar);
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

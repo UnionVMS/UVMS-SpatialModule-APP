@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:spatial="http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-spatial"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-spatial 
+      http://lonnyj.github.com/liquibase-spatial/liquibase-spatial.xsd">
+
+	<changeSet author="padhyad" id="1439890745706-65">
+		<insert tableName="provider_format">
+			<column name="id" valueNumeric="1" />
+			<column name="service_type" value="OSM" />
+		</insert>
+		<insert tableName="provider_format">
+			<column name="id" valueNumeric="2" />
+			<column name="service_type" value="WMS" />
+		</insert>
+		<insert tableName="provider_format">
+			<column name="id" valueNumeric="3" />
+			<column name="service_type" value="OSEA" />
+		</insert>
+		<insert tableName="provider_format">
+			<column name="id" valueNumeric="4" />
+			<column name="service_type" value="TMS" />
+		</insert>
+		<insert tableName="provider_format">
+			<column name="id" valueNumeric="5" />
+			<column name="service_type" value="BING" />
+		</insert>
+	</changeSet>
+</databaseChangeLog>

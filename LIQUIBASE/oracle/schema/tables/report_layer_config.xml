@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet author="padhyad (generated)" id="1461666113417-18">
+        <createSequence cacheSize="20" cycle="false" incrementBy="1" maxValue="9999999999999999999999999999" minValue="1" ordered="false" sequenceName="report_layer_config_id_seq" startValue="1"/>
+    </changeSet>
+
+    <changeSet author="padhyad (generated)" id="1461666113417-41">
+        <createTable tableName="report_layer_config">
+            <column name="id" valueComputed="report_layer_config_id_seq.NEXTVAL" type="NUMBER(20, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="report_connect_service_id" type="NUMBER(20, 0)"/>
+            <column name="area_connect_group_id" type="NUMBER(20, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="layer_order" type="NUMBER(20, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sld" type="NCLOB"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="padhyad (generated)" id="1461666113417-64">
+        <addPrimaryKey columnNames="id" constraintName="report_layer_config_pkey" tableName="report_layer_config"/>
+    </changeSet>
+
+</databaseChangeLog>

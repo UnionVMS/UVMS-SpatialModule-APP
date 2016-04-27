@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+     <changeSet author="padhyad" id="1439890745706-46">
+        <createTable tableName="service_layer">
+            <column autoIncrement="true" name="id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="layer_pkey"/>
+            </column>
+            <column name="user_id" type="BIGINT"/>
+            <column name="name" remarks="Name of the layer to be displayed at the front-end" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="layer_desc" remarks="Description of the layer" type="VARCHAR(255)"/>
+            <column name="provider_format_id" remarks="link to PROVIDER_FORMAT table" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="service_url" remarks="if service type is WMS than this field is mandatory" type="TEXT"/>
+            <column name="geo_name" remarks="GeoServer layer name" type="VARCHAR(255)"/>
+            <column name="srs_code" remarks="Spatial reference system which might be prefixed with EPSG or SRID for the front-end.&#10;&#10;This is only to be used if the layer is limited to one and only one EPSG code" type="INT"/>
+            <column name="short_copyright" type="VARCHAR(255)"/>
+            <column name="long_copyright" type="TEXT"/>
+            <column name="is_internal" type="BPCHAR(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="style_geom" type="VARCHAR(255)"/>
+            <column name="style_label" type="VARCHAR(255)"/>
+            <column name="style_label_geom" type="VARCHAR(255)"/>
+            <column name="subtype" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    
+    <changeSet author="padhyad" id="1439890745706-56">
+        <addForeignKeyConstraint baseColumnNames="service_layer_id" baseTableName="area_location_types" constraintName="area_types_service_layer_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="service_layer"/>
+    </changeSet>
+    
+    <changeSet author="padhyad" id="1439890745706-59">
+        <addForeignKeyConstraint baseColumnNames="service_layer_id" baseTableName="report_connect_service_areas" constraintName="report_connect_service_areas_service_layer_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="service_layer"/>
+    </changeSet>
+    
+</databaseChangeLog>

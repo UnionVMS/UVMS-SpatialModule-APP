@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <!-- Including tables -->
+    <include file="\postgres\schema\tables\report_layer_config.xml"/>
+    <include file="\postgres\schema\tables\report_connect_service_areas.xml"/>
+    <include file="\postgres\schema\tables\report_connect_spatial.xml"/>
+    <include file="\postgres\schema\tables\area_status.xml"/>
+    <include file="\postgres\schema\tables\area_location_types.xml"/>
+    <include file="\postgres\schema\tables\bookmark.xml"/>
+    <include file="\postgres\schema\tables\eez.xml"/>
+    <include file="\postgres\schema\tables\fao.xml"/>
+    <include file="\postgres\schema\tables\gfcm.xml"/>
+    <include file="\postgres\schema\tables\port.xml"/>
+	<include file="\postgres\schema\tables\port_area.xml"/>
+    <include file="\postgres\schema\tables\projection.xml"/>
+    <include file="\postgres\schema\tables\service_layer.xml"/>
+    <include file="\postgres\schema\tables\provider_format.xml"/>
+    <include file="\postgres\schema\tables\rac.xml"/>
+    <include file="\postgres\schema\tables\rfmo.xml"/>
+    <include file="\postgres\schema\tables\stat_rect.xml"/>
+    <include file="\postgres\schema\tables\user_areas.xml"/>
+    <include file="\postgres\schema\tables\custom_areas.xml"/>
+    <include file="\postgres\schema\tables\custom_area_properties.xml"/>
+    <include file="\postgres\schema\tables\system_configurations.xml"/>
+	<include file="\postgres\schema\tables\user_scope.xml"/>
+
+
+</databaseChangeLog>
