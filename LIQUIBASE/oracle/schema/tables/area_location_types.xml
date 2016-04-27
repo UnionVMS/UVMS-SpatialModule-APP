@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet author="padhyad (generated)" id="1461666113417-1">
+        <createSequence cacheSize="20" cycle="false" incrementBy="1" maxValue="9999999999999999999999999999" minValue="1" ordered="false" sequenceName="area_location_types_id_seq" startValue="1"/>
+    </changeSet>
+
+    <changeSet author="padhyad (generated)" id="1461666113417-25">
+        <createTable tableName="area_location_types">
+            <column name="id" valueComputed="area_location_types_id_seq.NEXTVAL" type="NUMBER(11, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="service_layer_id" type="NUMBER(11, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type_name" type="NVARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="area_type_desc" type="NVARCHAR2(255)"/>
+            <column name="area_db_table" type="NVARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_system_wide" type="NCHAR(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_location" type="NCHAR(1)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="padhyad (generated)" id="1461666113417-49">
+        <addPrimaryKey columnNames="id" constraintName="area_types_pkey" tableName="area_location_types"/>
+    </changeSet>
+    
+    <changeSet author="padhyad" id="1439890745706-50">
+        <addUniqueConstraint columnNames="type_name" constraintName="area_location_types_name_key" tableName="area_location_types"/>
+    </changeSet>
+    
+</databaseChangeLog>

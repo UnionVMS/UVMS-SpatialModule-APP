@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:spatial="http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-spatial"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd   http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-spatial
+      http://lonnyj.github.com/liquibase-spatial/liquibase-spatial.xsd">
+
+    <changeSet author="padhyad (generated)" id="1461666113417-12">
+        <createSequence cacheSize="20" cycle="false" incrementBy="1" maxValue="9999999999999999999999999999" minValue="1" ordered="false" sequenceName="port_gid_seq" startValue="1"/>
+    </changeSet>
+
+    <changeSet author="padhyad (generated)" id="1461666113417-34">
+        <preConditions>
+            <spatial:spatialSupported/>
+        </preConditions>
+        <createTable tableName="port">
+            <column name="gid" valueComputed="port_gid_seq.NEXTVAL" type="NUMBER(11, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="geom" type="SDO_GEOMETRY"/>
+            <column name="country_code" type="NVARCHAR2(3)"/>
+            <column name="code" type="NVARCHAR2(10)"/>
+            <column name="name" type="NVARCHAR2(100)"/>
+            <column name="fishing_port" type="NVARCHAR2(1)"/>
+            <column name="landing_place" type="NVARCHAR2(1)"/>
+            <column name="commercial_port" type="NVARCHAR2(1)"/>
+            <column name="enabled" type="NCHAR(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enabled_on" type="date"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="padhyad (generated)" id="1461666113487-31">
+        <spatial:createSpatialIndex tableName="port" indexName="port_spatial_idx" geometryType="Point" srid="4326">
+            <column name="geom" />
+        </spatial:createSpatialIndex>
+    </changeSet>
+
+    <changeSet author="padhyad (generated)" id="1461666113417-59">
+        <addPrimaryKey columnNames="gid" constraintName="port_pkey" tableName="port"/>
+    </changeSet>
+
+</databaseChangeLog>

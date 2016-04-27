@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet author="padhyad" id="1439890745706-32">
+        <createTable tableName="area_status">
+            <column autoIncrement="true" name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" primaryKeyName="area_status_pkey"/>
+            </column>
+            <column name="user_area_id" remarks="Unique primary key of the user defined areas" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="start_date" remarks="Starting date/time of the active/inactive status." type="TIMESTAMP(29) WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="end_date" remarks="End date/time of the active/inactive status." type="TIMESTAMP(29) WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_visible" remarks="If the table is visible to other users or not (true for visible)" type="BPCHAR(1)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

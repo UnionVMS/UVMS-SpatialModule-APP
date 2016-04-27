@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:spatial="http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-spatial"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd   http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-spatial
+      http://lonnyj.github.com/liquibase-spatial/liquibase-spatial.xsd">
+
+    <changeSet author="padhyad" id="1439890745706-38">
+	    <preConditions>
+            <spatial:spatialSupported/>
+        </preConditions>
+        <createTable tableName="port">
+            <column autoIncrement="true" name="gid" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="port_pkey"/>
+            </column>
+            <column name="geom" type="geometry(MultiPoint, 4326)"/>
+			<column name="country_code" type="VARCHAR(3)"/>
+			<column name="code" type="VARCHAR(10)"/>
+			<column name="name" type="VARCHAR(100)"/>
+            <column name="fishing_port" type="VARCHAR(1)"/>
+            <column name="landing_place" type="VARCHAR(1)"/>        
+            <column name="commercial_port" type="VARCHAR(1)"/>	
+			<column name="enabled" type="BPCHAR(1)">
+                <constraints nullable="false"/>
+            </column>
+			<column name="enabled_on" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>			
+        </createTable>
+		<sql>create index port_geom_index on spatial.port using gist(geom)</sql>
+    </changeSet>
+
+</databaseChangeLog>

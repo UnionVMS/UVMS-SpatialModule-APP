@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet author="padhyad" id="1439890745706-36">
+        <createTable tableName="fao">
+            <column autoIncrement="true" name="id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="fao_pkey"/>
+            </column>
+            <column name="geom" type="geometry(Multipolygon, 4326)"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="code" type="VARCHAR(20)"/>
+			<column name="enabled" type="BPCHAR(1)">
+                <constraints nullable="false"/>
+            </column>
+			<column name="enabled_on" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
