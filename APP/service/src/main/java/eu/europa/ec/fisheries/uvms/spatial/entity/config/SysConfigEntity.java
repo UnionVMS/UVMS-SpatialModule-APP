@@ -1,6 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity.config;
 
-import eu.europa.ec.fisheries.uvms.spatial.entity.BaseEntity;
+import eu.europa.ec.fisheries.uvms.domain.BaseEntity;
 import lombok.EqualsAndHashCode;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;

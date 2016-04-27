@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
+import eu.europa.ec.fisheries.uvms.domain.BaseEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.converter.CharBooleanConverter;
 import javax.persistence.Column;
 import javax.persistence.Convert;
