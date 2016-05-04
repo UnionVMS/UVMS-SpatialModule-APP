@@ -18,6 +18,6 @@ public class ReportConnectServiceAreaDao extends AbstractDAO<ReportConnectServic
     }
 
     public void delete(ReportConnectServiceAreasEntity entity) {
-        deleteEntity(entity);
+        deleteEntity(ReportConnectServiceAreasEntity.class, entity.getId());
     }
 }
