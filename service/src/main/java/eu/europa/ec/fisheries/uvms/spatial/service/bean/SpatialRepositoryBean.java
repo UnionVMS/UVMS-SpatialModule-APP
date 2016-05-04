@@ -242,7 +242,7 @@ public class SpatialRepositoryBean implements SpatialRepository {
 
         BookmarkEntity entityById = bookmarkDao.findEntityById(BookmarkEntity.class, id);
         if (entityById != null) {
-            bookmarkDao.deleteEntity(entityById);
+            bookmarkDao.deleteEntity(BookmarkEntity.class, entityById.getId());
         }
     }
 
@@ -376,7 +376,7 @@ public class SpatialRepositoryBean implements SpatialRepository {
 
     @Override
     public void deleteEntity(ReportConnectSpatialEntity entity) {
-        reportConnectSpatialDao.deleteEntity(entity);
+        reportConnectSpatialDao.deleteEntity(ReportConnectSpatialEntity.class, entity.getId());
     }
 
     @Override
@@ -406,7 +406,7 @@ public class SpatialRepositoryBean implements SpatialRepository {
 
     @Override
     public void deleteUserArea(UserAreasEntity userAreaById) {
-        userAreaDao.deleteEntity(UserAreasEntity.class, userAreaById);
+        userAreaDao.deleteEntity(UserAreasEntity.class, userAreaById.getGid());
     }
 
     @Override
