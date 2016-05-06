@@ -3,7 +3,7 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 	
-	<changeSet author="martinhu (generated)" id="1462540272744-20">
+	<changeSet author="martinhu" id="1462540272744-20">
         <createTable tableName="stat_rect">
             <column autoIncrement="true" name="gid" remarks="ID" type="SERIAL">
                 <constraints primaryKey="true" primaryKeyName="stat_rect_pkey"/>
