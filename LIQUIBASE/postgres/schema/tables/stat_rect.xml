@@ -20,6 +20,7 @@
             </column>
             <column name="enabled_on" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
         </createTable>
+		<sql>create index stat_rect_geom_index on spatial.stat_rect using gist(geom);</sql>
     </changeSet>
 
 </databaseChangeLog>
