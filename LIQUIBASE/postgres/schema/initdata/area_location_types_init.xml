@@ -79,5 +79,14 @@
 			<column name="area_type_desc" value="Port area" />
 			<column name="is_location" value="N" />
 		</insert>
+		<insert tableName="area_location_types">
+			<column name="id" valueNumeric="9" />
+			<column name="service_layer_id" valueNumeric="12" />
+			<column name="type_name" value="STATRECT" />
+			<column name="area_db_table" value="stat_rect" />
+			<column name="is_system_wide" value="Y" />
+			<column name="area_type_desc" value="Statistical rectangles" />
+			<column name="is_location" value="N" />
+		</insert>
 	</changeSet>
 </databaseChangeLog>

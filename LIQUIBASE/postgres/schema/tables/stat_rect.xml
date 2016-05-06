@@ -2,19 +2,23 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
-
-    <changeSet author="padhyad" id="1439890745706-47">
+	
+	<changeSet author="martinhu (generated)" id="1462540272744-20">
         <createTable tableName="stat_rect">
             <column autoIncrement="true" name="gid" remarks="ID" type="SERIAL">
                 <constraints primaryKey="true" primaryKeyName="stat_rect_pkey"/>
             </column>
             <column name="geom" type="geometry(Multipolygon, 4326)"/>
-            <column name="name" type="VARCHAR(255)"/>
+            <column name="north" type="FLOAT8"/>
+            <column name="south" type="FLOAT8"/>
+            <column name="east" type="FLOAT8"/>
+            <column name="west" type="FLOAT8"/>
             <column name="code" type="VARCHAR(20)"/>
-			<column name="enabled" type="BPCHAR(1)">
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="enabled" type="BPCHAR(1)">
                 <constraints nullable="false"/>
             </column>
-			<column name="enabled_on" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="enabled_on" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
         </createTable>
     </changeSet>
 
