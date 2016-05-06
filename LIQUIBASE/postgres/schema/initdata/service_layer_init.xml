@@ -138,5 +138,20 @@
             <column name="style_label_geom" value="port_area_label_geom"/>
 			<column name="subtype" value="portarea"/>
 		</insert>
+		<insert tableName="service_layer">
+			<column name="id" valueNumeric="12" />
+			<column name="name" value="Statistical Rectangles" />
+			<column name="layer_desc" value="Statistical rectangles" />
+			<column name="provider_format_id" valueNumeric="2" />
+			<column name="geo_name" value="uvms:stat_rect" />
+			<column name="srs_code" valueNumeric="4326" />
+			<column name="short_copyright" value="Statistical rectangles by UnionVMS" />
+			<column name="long_copyright" value="Long copyright Statistical rectangles by UnionVMS" />
+			<column name="is_internal" value="Y" />
+			<column name="style_geom" value="stat_rect"/>
+			<column name="style_label" value="stat_rect_label"/>
+            <column name="style_label_geom" value="stat_rect_label_geom"/>
+			<column name="subtype" value="sysarea"/>
+		</insert>
 	</changeSet>
 </databaseChangeLog>
