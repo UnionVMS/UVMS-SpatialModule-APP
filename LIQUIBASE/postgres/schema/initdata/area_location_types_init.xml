@@ -97,5 +97,14 @@
 			<column name="area_type_desc" value="GFCM areas" />
 			<column name="is_location" value="N" />
 		</insert>
+		<insert tableName="area_location_types">
+			<column name="id" valueNumeric="11" />
+			<column name="service_layer_id" valueNumeric="14" />
+			<column name="type_name" value="FAO" />
+			<column name="area_db_table" value="fao" />
+			<column name="is_system_wide" value="Y" />
+			<column name="area_type_desc" value="FAO areas" />
+			<column name="is_location" value="N" />
+		</insert>
 	</changeSet>
 </databaseChangeLog>

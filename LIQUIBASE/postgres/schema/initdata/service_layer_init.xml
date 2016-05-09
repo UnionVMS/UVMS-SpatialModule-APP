@@ -168,5 +168,20 @@
             <column name="style_label_geom" value="gfcm_label_geom"/>
 			<column name="subtype" value="sysarea"/>
 		</insert>
+		<insert tableName="service_layer">
+			<column name="id" valueNumeric="14" />
+			<column name="name" value="FAO" />
+			<column name="layer_desc" value="FAO areas" />
+			<column name="provider_format_id" valueNumeric="2" />
+			<column name="geo_name" value="uvms:fao" />
+			<column name="srs_code" valueNumeric="4326" />
+			<column name="short_copyright" value="FAO areas by UnionVMS" />
+			<column name="long_copyright" value="Long copyright FAO areas by UnionVMS" />
+			<column name="is_internal" value="Y" />
+			<column name="style_geom" value="fao"/>
+			<column name="style_label" value="fao_label"/>
+            <column name="style_label_geom" value="fao_label_geom"/>
+			<column name="subtype" value="sysarea"/>
+		</insert>
 	</changeSet>
 </databaseChangeLog>
