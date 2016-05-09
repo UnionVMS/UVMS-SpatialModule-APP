@@ -20,7 +20,6 @@ import eu.europa.ec.fisheries.uvms.spatial.util.SpatialTypeEnum;
 import eu.europa.ec.fisheries.uvms.spatial.util.SupportedFileExtensions;
 import eu.europa.ec.fisheries.uvms.spatial.util.ZipExtractor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.geotools.referencing.CRS;
@@ -90,13 +89,16 @@ public class AreaServiceBean implements AreaService {
                 }
             }
             List<Map<String, String>> selectedAreaColumns = repository.findSelectedAreaColumns(namedQuery, Long.parseLong(gid));
-            if (selectedAreaColumns.isEmpty()) {
-                throw new SpatialServiceException(SpatialServiceErrors.ENTITY_NOT_FOUND);
+
+            Map<String, String> columnMap;
+
+            if (!selectedAreaColumns.isEmpty()) {
+                columnMap = selectedAreaColumns.get(0);
+                columnMap.put(GID, gid);
+                columnMap.put(AREA_TYPE, areaType.toUpperCase());
+                columnMapList.add(columnMap);
             }
-            Map<String, String> columnMap = selectedAreaColumns.get(0);
-            columnMap.put(GID, gid);
-            columnMap.put(AREA_TYPE, areaType.toUpperCase());
-            columnMapList.add(columnMap);
+
         }
         return columnMapList;
     }
