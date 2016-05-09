@@ -15,4 +15,5 @@
     <include file="postgres\schema\initdata\system_configurations_init.xml"/>
 	<include file="postgres\schema\initdata\stat_rect_init.xml"/>
 	<include file="postgres\schema\initdata\gfcm_init.xml"/>
+	<include file="postgres\schema\initdata\fao_init.xml"/>
 </databaseChangeLog>
