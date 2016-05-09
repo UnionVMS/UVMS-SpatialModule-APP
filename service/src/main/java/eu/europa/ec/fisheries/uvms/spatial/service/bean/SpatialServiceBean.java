@@ -433,8 +433,7 @@ public class SpatialServiceBean implements SpatialService {
                 response.setCode(2);
             }
 
-            assert intersection != null;
-            if (intersection.getNumPoints() > 20000){
+            if (intersection != null && intersection.getNumPoints() > 20000){
                 intersection = DouglasPeuckerSimplifier.simplify(intersection, 0.5);
             }
 
