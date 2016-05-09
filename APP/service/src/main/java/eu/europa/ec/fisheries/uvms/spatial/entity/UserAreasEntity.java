@@ -110,7 +110,7 @@ public class UserAreasEntity extends BaseAreaEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAreas", cascade = CascadeType.ALL)
     private Set<AreaStatusEntity> areaStatuses;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAreas", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAreas", cascade = CascadeType.MERGE, orphanRemoval = true)
     @ColumnAliasName(aliasName ="scopeSelection")
     private Set<UserScopeEntity> scopeSelection;
 
