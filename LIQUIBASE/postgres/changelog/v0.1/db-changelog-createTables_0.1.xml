@@ -14,6 +14,7 @@
     <include file="\postgres\schema\tables\eez.xml"/>
     <include file="\postgres\schema\tables\fao.xml"/>
     <include file="\postgres\schema\tables\gfcm.xml"/>
+	<include file="\postgres\schema\tables\fmz.xml"/>
     <include file="\postgres\schema\tables\port.xml"/>
 	<include file="\postgres\schema\tables\port_area.xml"/>
     <include file="\postgres\schema\tables\projection.xml"/>

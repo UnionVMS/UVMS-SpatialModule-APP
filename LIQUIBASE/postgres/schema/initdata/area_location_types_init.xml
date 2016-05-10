@@ -106,5 +106,14 @@
 			<column name="area_type_desc" value="FAO areas" />
 			<column name="is_location" value="N" />
 		</insert>
+		<insert tableName="area_location_types">
+			<column name="id" valueNumeric="12" />
+			<column name="service_layer_id" valueNumeric="15" />
+			<column name="type_name" value="FMZ" />
+			<column name="area_db_table" value="fmz" />
+			<column name="is_system_wide" value="Y" />
+			<column name="area_type_desc" value="FMZ areas" />
+			<column name="is_location" value="N" />
+		</insert>
 	</changeSet>
 </databaseChangeLog>
