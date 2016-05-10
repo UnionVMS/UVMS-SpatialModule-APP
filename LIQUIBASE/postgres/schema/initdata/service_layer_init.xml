@@ -183,5 +183,20 @@
             <column name="style_label_geom" value="fao_label_geom"/>
 			<column name="subtype" value="sysarea"/>
 		</insert>
+		<insert tableName="service_layer">
+			<column name="id" valueNumeric="15" />
+			<column name="name" value="FMZ" />
+			<column name="layer_desc" value="FMZ areas" />
+			<column name="provider_format_id" valueNumeric="2" />
+			<column name="geo_name" value="uvms:fmz" />
+			<column name="srs_code" valueNumeric="4326" />
+			<column name="short_copyright" value="FMZ areas by UnionVMS" />
+			<column name="long_copyright" value="Long copyright FMZ areas by UnionVMS" />
+			<column name="is_internal" value="Y" />
+			<column name="style_geom" value="fmz"/>
+			<column name="style_label" value="fmz_label"/>
+            <column name="style_label_geom" value="fmz_label_geom"/>
+			<column name="subtype" value="sysarea"/>
+		</insert>
 	</changeSet>
 </databaseChangeLog>

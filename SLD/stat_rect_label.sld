@@ -19,6 +19,7 @@
 							<ogc:Literal>Y</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
+					<sld:MaxScaleDenominator>9500000</sld:MaxScaleDenominator>
 					<sld:TextSymbolizer>
 						<sld:Geometry>
 							<ogc:Function name="centroid">
