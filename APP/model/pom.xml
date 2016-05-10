@@ -148,6 +148,8 @@
                                 <arg>-Xvalue-constructor</arg>
                                 <arg>-Xsetters-mode=direct</arg>
                                 <arg>-Xannotate</arg>
+                                <arg>-Xequals</arg>
+                                <arg>-XhashCode</arg>
                             </args>
 
                             <plugins>
