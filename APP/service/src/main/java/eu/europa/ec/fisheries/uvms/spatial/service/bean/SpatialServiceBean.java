@@ -371,15 +371,10 @@ public class SpatialServiceBean implements SpatialService {
             typesEntityMap.put(typesEntity.getTypeName(), typesEntity);
         }
 
-        if ((userAreas == null || isEmpty(userAreas.getUserAreas()))
-                && (scopeAreas == null || isEmpty(scopeAreas.getScopeAreas()))) {
-            throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
-        }
-
         try {
 
             buildQuery(scopeAreas.getScopeAreas(), sb, "scope", typesEntityMap);
-            if (StringUtils.isNotEmpty(sb.toString())){
+            if (CollectionUtils.isNotEmpty(userAreas.getUserAreas()) && StringUtils.isNotEmpty(sb.toString())){
                 sb.append(" UNION ALL ");
             }
             buildQuery(userAreas.getUserAreas(), sb, "user", typesEntityMap);
@@ -433,11 +428,13 @@ public class SpatialServiceBean implements SpatialService {
                 response.setCode(2);
             }
 
-            if (intersection != null && intersection.getNumPoints() > 20000){
-                intersection = DouglasPeuckerSimplifier.simplify(intersection, 0.5);
+            if (intersection != null){
+                if (intersection.getNumPoints() > 20000){
+                    intersection = DouglasPeuckerSimplifier.simplify(intersection, 0.5);
+                }
+                response.setGeometry(new WKTWriter2().write(intersection));
             }
 
-            response.setGeometry(new WKTWriter2().write(intersection));
             return response;
 
         } catch (TransformException | FactoryException ex) {

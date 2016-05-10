@@ -8,9 +8,5 @@ public interface SpatialFunction {
 
     String stClosestPoint(Double latitude, Double longitude);
 
-    String castAsUnlimitedLength();
-
-    String toWkt(String value);
-
     String limit(int i);
 }

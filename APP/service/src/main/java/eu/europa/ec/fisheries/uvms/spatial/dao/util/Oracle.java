@@ -23,17 +23,6 @@ public class Oracle extends AbstractGisFunction {
     }
 
     @Override
-    public String castAsUnlimitedLength() {
-        return "CLOB";
-    }
-
-    @Override
-    public String toWkt(String value) {
-
-        return null;
-    }
-
-    @Override
     public String limit(int i) {
 
         return "ROWNUM <= " + i;

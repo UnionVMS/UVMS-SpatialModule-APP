@@ -20,16 +20,6 @@ public class PostGres extends AbstractGisFunction {
     }
 
     @Override
-    public String castAsUnlimitedLength() {
-        return "TEXT";
-    }
-
-    @Override
-    public String toWkt(String value) {
-        return "ST_AsText(" + value + ")";
-    }
-
-    @Override
     public String limit(int i) {
         return "LIMIT " + i;
     }
