@@ -47,6 +47,9 @@
 			<column name="short_copyright" value="COUNTRIES by UnionVMS" />
 			<column name="long_copyright" value="Long copyright COUNTRIES by UnionVMS" />
 			<column name="is_internal" value="Y" />
+			<column name="style_geom" value="countries" />
+            <column name="style_label" value="countries_label" />
+            <column name="style_label_geom" value="countries_label_geom" />
 			<column name="subtype" value="others"/>
 		</insert>
 		<insert tableName="service_layer">
