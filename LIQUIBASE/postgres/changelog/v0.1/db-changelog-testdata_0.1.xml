@@ -5,7 +5,7 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd   http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-spatial
       http://lonnyj.github.com/liquibase-spatial/liquibase-spatial.xsd">
 
-    <changeSet author="kopyczmi" id="1437740656371-23">
+    <!--changeSet author="kopyczmi" id="1437740656371-23">
         <preConditions>
             <spatial:spatialSupported/>
         </preConditions>
@@ -39,7 +39,7 @@
     <changeSet author="kopyczmi" id="countries">
         <loadData file="test/csv/countries.csv" tableName="countries"/>
         <comment>Data</comment>
-    </changeSet>
+    </changeSet-->
     
     <changeSet author="padhyad" id="customAreas">
         <loadData file="test/csv/customAreas.csv" tableName="custom_areas"/>

@@ -17,4 +17,5 @@
 	<include file="postgres\schema\initdata\gfcm_init.xml"/>
 	<include file="postgres\schema\initdata\fao_init.xml"/>
 	<include file="postgres\schema\initdata\fmz_init.xml"/>
+	<include file="postgres\schema\initdata\countries_init.xml"/>
 </databaseChangeLog>
