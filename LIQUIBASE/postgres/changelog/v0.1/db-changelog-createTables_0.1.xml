@@ -11,6 +11,7 @@
     <include file="\postgres\schema\tables\area_status.xml"/>
     <include file="\postgres\schema\tables\area_location_types.xml"/>
     <include file="\postgres\schema\tables\bookmark.xml"/>
+	<include file="\postgres\schema\tables\countries.xml"/>
     <include file="\postgres\schema\tables\eez.xml"/>
     <include file="\postgres\schema\tables\fao.xml"/>
     <include file="\postgres\schema\tables\gfcm.xml"/>
