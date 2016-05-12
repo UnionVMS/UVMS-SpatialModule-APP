@@ -23,9 +23,9 @@
             </activation>
             <properties>
                 <db.driver>oracle.jdbc.driver.OracleDriver</db.driver>
-                <db.url>jdbc:oracle:thin:@localhost:1521:xe</db.url>
-                <db.user>system</db.user>
-                <db.passwd>manager</db.passwd>
+                <db.url>jdbc:oracle:thin:@10.10.10.9:1521:db12102</db.url>
+                <db.user>sys as sysdba</db.user>
+                <db.passwd>oracle</db.passwd>
                 <db.defaultSchema>SPATIAL</db.defaultSchema>
                 <db.changeLogFile>oracle/changelog/db-changelog-master.xml</db.changeLogFile>
                 <db.outputFile>oracle/changelog/generatedChangelog.xml</db.outputFile>
@@ -116,9 +116,10 @@
 
         <dependency>
             <groupId>com.oracle</groupId>
-            <artifactId>ojdbc14</artifactId>
-            <version>10.2.0.4</version>
+    		<artifactId>ojdbc6</artifactId>
+    		<version>11.2.0.4</version>
         </dependency>
+
     </dependencies>
 
     <build>
