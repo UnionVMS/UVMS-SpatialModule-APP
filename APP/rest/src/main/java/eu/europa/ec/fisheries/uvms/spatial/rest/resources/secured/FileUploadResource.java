@@ -24,7 +24,7 @@ public class FileUploadResource extends UnionVMSResource {
     private AreaService areaService;
 
     @POST
-    @Consumes("multipart/form-data")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Path("/upload")
     @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})

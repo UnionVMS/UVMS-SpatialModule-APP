@@ -8,13 +8,7 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -23,6 +17,7 @@ import com.vividsolutions.jts.io.ParseException;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.rest.FeatureToGeoJsonJacksonMapper;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
+import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
 import eu.europa.ec.fisheries.uvms.service.interceptor.ValidationInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.model.constants.USMSpatial;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
@@ -41,7 +36,9 @@ import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.LocationDetailsGeoJsonDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaServiceLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.LayerSubTypeEnum;
+import eu.europa.ec.fisheries.wsdl.user.types.DatasetExtension;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 
 @Path("/")
 @Slf4j
@@ -55,6 +52,8 @@ public class AreaResource extends UnionVMSResource {
     UserAreaService userAreaService;
     private @EJB
     SpatialService spatialService;
+    @EJB
+    private USMService usmService;
 
     private AreaLocationDtoMapper mapper = AreaLocationDtoMapper.mapper();
 
@@ -179,6 +178,37 @@ public class AreaResource extends UnionVMSResource {
         LocationDetailsGeoJsonDto locationDetailsGeoJsonDto = mapper.getLocationDetailsDto(locationDetails);
         ObjectNode nodes = new FeatureToGeoJsonJacksonMapper().convert(locationDetailsGeoJsonDto.toFeature());
         return createSuccessResponse(nodes);
+    }
+
+    @POST
+    @Consumes((MediaType.APPLICATION_JSON))
+    @Produces((MediaType.APPLICATION_JSON))
+    @Path("/area/datasets/{areaType}/{areaGid}/{datasetName}")
+    @Interceptors(value = {ExceptionInterceptor.class})
+        public Response createDataset(@PathParam("areaType") String areaType,
+                                      @PathParam("areaGid") String  areaGid,
+                                      @PathParam("datasetName") String   datasetName,
+                                      @Context HttpServletRequest request ) throws ServiceException {
+        if (!request.isUserInRole("CREATE_USER_AREA_DATASET")) {
+            return createErrorResponse("user_area_dataset_creation_not_allowed");
+        }
+
+        if (StringUtils.isNotBlank(datasetName)) {
+            usmService.createDataset(USMSpatial.APPLICATION_NAME, datasetName,  areaType + USMSpatial.DELIMITER + areaGid, USMSpatial.USM_DATASET_CATEGORY, USMSpatial.USM_DATASET_DESCRIPTION);
+        } else {
+            throw new IllegalArgumentException("datasetName is missing");
+        }
+        return createSuccessResponse();
+    }
+
+    @GET
+    @Produces((MediaType.APPLICATION_JSON))
+    @Path("/area/datasets/{areaType}/{areaGid}")
+    @Interceptors(value = { ExceptionInterceptor.class})
+    public Response findDatasets(@PathParam("areaType") String areaType, @PathParam("areaGid") String areaGid,@Context HttpServletRequest request ) throws ServiceException {
+
+       List<DatasetExtension> datasets = usmService.findDatasetsByDiscriminator(USMSpatial.APPLICATION_NAME,  areaType + USMSpatial.DELIMITER + areaGid);
+       return createSuccessResponse(datasets);
     }
 
 }
