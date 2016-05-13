@@ -15,8 +15,12 @@ import org.apache.commons.collections.CollectionUtils;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
+import org.hibernate.spatial.GeometryType;
 import org.hibernate.transform.AliasToEntityMapResultTransformer;
+import org.hibernate.type.DoubleType;
+import org.hibernate.type.IntegerType;
 import org.hibernate.type.StandardBasicTypes;
+import org.hibernate.type.StringType;
 
 @Slf4j
 public class AreaDao extends AbstractDAO<BaseAreaEntity> {
@@ -26,6 +30,7 @@ public class AreaDao extends AbstractDAO<BaseAreaEntity> {
     private static final String CODE = "code";
     private static final String TYPE = "type";
     private static final String CLOSEST = "closest";
+    private static final String GEOM = "geom";
 
     private EntityManager em;
 
@@ -38,6 +43,40 @@ public class AreaDao extends AbstractDAO<BaseAreaEntity> {
         query.setParameter("gid", gid);
         query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
         return query.list();
+    }
+
+    public List closestPoint(final List<AreaLocationTypesEntity> entities, final SpatialFunction spatialFunction, final Point point){
+
+        List resultList = new ArrayList();
+
+        if (spatialFunction != null && CollectionUtils.isNotEmpty(entities) && (point != null && !point.isEmpty())) {
+
+            final StringBuilder sb = new StringBuilder();
+            final Double longitude = point.getX();
+            final Double latitude = point.getY();
+
+            Iterator<AreaLocationTypesEntity> it = entities.iterator();
+
+        while (it.hasNext()) {
+            AreaLocationTypesEntity next = it.next();
+            String typeName = next.getTypeName();
+            sb.append(spatialFunction.closestPointToPoint(typeName, next.getAreaDbTable(), longitude, latitude, 10));
+            it.remove(); // avoids a ConcurrentModificationException
+            if (it.hasNext()) {
+                sb.append(" UNION ALL ");
+            }
+        }
+
+        log.debug("{} QUERY => {}", spatialFunction.getClass().getSimpleName().toUpperCase(), sb.toString());
+
+        final javax.persistence.Query emNativeQuery = em.createNativeQuery(sb.toString());
+        emNativeQuery.unwrap(SQLQuery.class).addScalar("type", StringType.INSTANCE).addScalar(GID, IntegerType.INSTANCE)
+                .addScalar(CODE, StringType.INSTANCE).addScalar(NAME, StringType.INSTANCE).addScalar(GEOM, GeometryType.INSTANCE)
+                .addScalar("distance", DoubleType.INSTANCE);
+
+            resultList = emNativeQuery.getResultList();
+        }
+        return resultList;
     }
 
     public List closestArea(final List<AreaLocationTypesEntity> entities, final SpatialFunction spatialFunction, final Point point){
