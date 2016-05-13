@@ -2,6 +2,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.service.QueryParameter;
 import eu.europa.ec.fisheries.uvms.spatial.dao.AreaDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.AreaLocationTypesDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.BookmarkDao;
@@ -39,6 +40,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.ServiceLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.BookmarkMapper;
+import org.geotools.geometry.jts.GeometryBuilder;
 import org.opengis.feature.Property;
 
 import javax.annotation.PostConstruct;
@@ -462,6 +464,13 @@ public class SpatialRepositoryBean implements SpatialRepository {
     @Override
     public BaseAreaEntity findUserAreaById(Long id) throws ServiceException {
         return userAreaDao.findEntityById(UserAreasEntity.class, id);
+    }
+
+    @Override
+    public List<PortEntity> listClosestPorts(Double longitude, Double latitude, Integer limit) throws ServiceException {
+        Point point = new GeometryBuilder().point(longitude, latitude);
+        final Map parameters = QueryParameter.with("shape", point).parameters();
+        return portDao.findEntityByNamedQuery(PortEntity.class, PortEntity.LIST_ORDERED_BY_DISTANCE, parameters, 10);
     }
 
 }

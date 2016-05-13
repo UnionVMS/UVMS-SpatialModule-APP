@@ -11,13 +11,15 @@ import java.util.Map;
 
 @Entity
 @NamedQueries({
-        @NamedQuery(name = PortEntity.DISABLE, query = "UPDATE PortEntity SET enabled = 'N'")
+        @NamedQuery(name = PortEntity.DISABLE, query = "UPDATE PortEntity SET enabled = 'N'"),
+        @NamedQuery(name = PortEntity.LIST_ORDERED_BY_DISTANCE, query ="FROM PortEntity WHERE enabled = 'Y' ORDER BY distance(geom, :shape) ASC") /// TODO create dao test
 })
 @Table(name = "port")
 public class PortEntity extends BaseAreaEntity {
 
     public static final String PORT_BY_COORDINATE = "portEntity.ByCoordinate";
     public static final String DISABLE = "portsEntity.disable";
+    public static final String LIST_ORDERED_BY_DISTANCE = "portsEntity.listOrderedByDistance";
 
     private static final String COUNTRY_CO = "country_co";
     private static final String FISHING_PO = "fishing_po";

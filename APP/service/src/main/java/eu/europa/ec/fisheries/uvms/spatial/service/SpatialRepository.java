@@ -169,4 +169,5 @@ public interface SpatialRepository {
 
     BaseAreaEntity findUserAreaById(Long id) throws ServiceException;
 
+    List<PortEntity> listClosestPorts(Double incomingLongitude, Double incomingLatitude, Integer limit) throws ServiceException;
 }

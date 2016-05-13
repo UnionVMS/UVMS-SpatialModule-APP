@@ -6,25 +6,24 @@ public class Oracle extends AbstractGisFunction {
 
     @Override
     public String stIntersects(Double latitude, Double longitude) {
+        return "SDO_GEOM.SDO_INTERSECTION('geom', SDO_UTIL.FROM_WKTGEOMETRY('POINT(" + longitude + " " + latitude + ")'), 0.005)'";
+    }
 
+    private String stDistance(Double latitude, Double longitude) {
+        return "SDO_GEOM.SDO_DISTANCE('geom', SDO_UTIL.FROM_WKTGEOMETRY('POINT(" + longitude + " " + latitude + ")'), 0.005)'";
+    }
+
+    @Override
+    public String closestAreaToPoint(String typeName, String tableName, Double latitude, Double longitude) {
         return null;
     }
 
     @Override
-    public String stDistance(Double latitude, Double longitude) {
+    public String closestPointToPoint(String typeName, String tableName, Double latitude, Double longitude, Integer limit) {
 
-        return "SDO_GEOM.SDO_DISTANCE('geom', SDO_UTIL.FROM_WKTGEOMETRY('POINT(" + longitude + " " + latitude + "), 0.005)'";
-    }
-
-    @Override
-    public String stClosestPoint(Double latitude, Double longitude) {
-
-        return null;
-    }
-
-    @Override
-    public String limit(int i) {
-
-        return "ROWNUM <= " + i;
+        return "(SELECT '" + typeName + "' as type, gid, code, name, geom, "
+                + stDistance(latitude, longitude) + " AS distance " +
+                "FROM spatial." + tableName + " WHERE enabled = 'Y' AND ROWNUM <= " + limit +
+                " ORDER BY distance ASC)";
     }
 }
