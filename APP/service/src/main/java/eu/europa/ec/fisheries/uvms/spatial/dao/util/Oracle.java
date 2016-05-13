@@ -6,7 +6,8 @@ public class Oracle extends AbstractGisFunction {
 
     @Override
     public String stIntersects(Double latitude, Double longitude) {
-        return "SDO_GEOM.SDO_INTERSECTION('geom', SDO_UTIL.FROM_WKTGEOMETRY('POINT(" + longitude + " " + latitude + ")'), 0.005)'";
+        return "SDO_GEOM.SDO_OVERLAPBDYINTERSECT('geom'," +
+               "SDO_UTIL.FROM_WKTGEOMETRY('POINT(" + longitude + " " + latitude + ")')) = 'TRUE' ";
     }
 
     private String stDistance(Double latitude, Double longitude) {

@@ -6,11 +6,11 @@ public class PostGres extends AbstractGisFunction {
 
     @Override
     public String stIntersects(Double latitude, Double longitude) {
-        return "ST_Intersects(geom, ST_GeomFromText(CAST ('POINT(" + longitude + " " + latitude + ")' AS TEXT), 4326))";
+        return "ST_Intersects(geom, ST_GeomFromText(CAST ('POINT(" + longitude + " " + latitude + ")' AS TEXT), 4326)) ";
     }
 
     private String stDistance(Double latitude, Double longitude) {
-        return "ST_Distance(geom, ST_GeomFromText(CAST ('POINT(" + longitude + " " + latitude + ")' AS TEXT), 4326))";
+        return "ST_Distance(geom, ST_GeomFromText(CAST ('POINT(" + longitude + " " + latitude + ")' AS TEXT), 4326)) ";
     }
 
     @Override
