@@ -4,9 +4,8 @@ public interface SpatialFunction {
 
     String stIntersects(Double latitude, Double longitude);
 
-    String stDistance(Double latitude, Double longitude);
+    String closestAreaToPoint(String typeName, String tableName, Double latitude, Double longitude);
 
-    String stClosestPoint(Double latitude, Double longitude);
+    String closestPointToPoint(String typeName, String tableName, Double latitude, Double longitude, Integer limit);
 
-    String limit(int i);
 }

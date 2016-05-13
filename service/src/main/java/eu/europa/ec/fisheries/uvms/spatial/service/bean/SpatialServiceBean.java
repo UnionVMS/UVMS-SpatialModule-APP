@@ -1,20 +1,39 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.google.common.collect.Lists;
-import com.vividsolutions.jts.geom.*;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.interceptors.TracingInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.dao.util.Oracle;
 import eu.europa.ec.fisheries.uvms.spatial.dao.util.SpatialFunction;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.BaseAreaEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.PortEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Area;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaExtendedIdentifierType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaIdentifierType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestLocationSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Coordinate;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRS;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Location;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationDetails;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationProperty;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationTypeEntry;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ScopeAreasType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.UnitType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.UserAreasType;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.GenericSystemAreaDto;
@@ -38,7 +57,6 @@ import org.hibernate.spatial.GeometryType;
 import org.hibernate.type.DoubleType;
 import org.hibernate.type.IntegerType;
 import org.hibernate.type.StringType;
-import org.mapstruct.ap.internal.util.Collections;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.operation.TransformException;
 import javax.annotation.PostConstruct;
@@ -58,7 +76,6 @@ import java.util.Map;
 
 import static eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialUtils.DEFAULT_CRS;
 import static eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialUtils.convertToPointInWGS84;
-import static org.apache.commons.collections.CollectionUtils.isEmpty;
 import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 
 /**
@@ -106,20 +123,7 @@ public class SpatialServiceBean implements SpatialService {
         while (it.hasNext()) {
             AreaLocationTypesEntity next = it.next();
             String typeName = next.getTypeName();
-            sb.append("(SELECT '").append(typeName).append("' as type, gid, code, name, geom, ")
-                    .append(spatialFunction.stDistance(incomingLatitude, incomingLongitude)).append(" AS distance ")
-                    .append("FROM spatial.").append(next.getAreaDbTable())
-                    .append(" WHERE enabled = 'Y'");
-
-                    if (spatialFunction instanceof Oracle){
-                        sb.append(" AND ");
-                        sb.append(spatialFunction.limit(10)).append(")");
-                        sb.append(" ORDER BY distance ASC ");
-                    } else {
-                        sb.append(" ORDER BY distance ASC ");
-                        sb.append(spatialFunction.limit(10)).append(")");
-                    }
-
+            sb.append(spatialFunction.closestPointToPoint(typeName, next.getAreaDbTable(), incomingLongitude, incomingLatitude, 10));
             it.remove(); // avoids a ConcurrentModificationException
             if (it.hasNext()) {
                 sb.append(" UNION ALL ");
@@ -184,7 +188,7 @@ public class SpatialServiceBean implements SpatialService {
 
         Point point = SpatialUtils.convertToPointInWGS84(areaTypeEntry.getLongitude(), areaTypeEntry.getLatitude(), areaTypeEntry.getCrs());
 
-        List allAreas = Collections.newArrayList();
+        List allAreas;
 
         switch (areaLocationTypesEntity.getTypeName().toUpperCase()){
             case "EEZ" :
@@ -572,11 +576,7 @@ public class SpatialServiceBean implements SpatialService {
 
             if (locationType.equals("PORT")){
 
-                final String queryString = "SELECT * FROM spatial.port WHERE enabled = 'Y' ORDER BY " +
-                        spatialFunction.stDistance(incomingLongitude, incomingLatitude) + " ASC " + spatialFunction.limit(15); // FIXME this can be replaces by NamedQuery
-                Query emNativeQuery = em.createNativeQuery(queryString, PortEntity.class);
-                List<PortEntity> records = emNativeQuery.getResultList();
-
+                List<PortEntity> records = repository.listClosestPorts(incomingLongitude, incomingLatitude, 15);
                 PortEntity closestLocation = null;
                 Double closestDistance = Double.MAX_VALUE;
                 for (PortEntity portsEntity : records) {

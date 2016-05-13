@@ -193,21 +193,18 @@ public class MapConfigServiceTest extends BaseTest {
 
         //first object
         ReportConnectServiceAreasEntity entityOne = new ReportConnectServiceAreasEntity();
-        entityOne.setId(1);
         entityOne.setLayerOrder(3);
         entityOne.setSqlFilter("Test filter");
         entityOne.setServiceLayer(getServiceLayerEntity("OSM", 4));
 
         // second object
         ReportConnectServiceAreasEntity entityTwo = new ReportConnectServiceAreasEntity();
-        entityTwo.setId(2);
         entityTwo.setLayerOrder(1);
         entityTwo.setSqlFilter("Test filter");
         entityTwo.setServiceLayer(getServiceLayerEntity("WMS",  1));
 
         //third object
         ReportConnectServiceAreasEntity entityThree = new ReportConnectServiceAreasEntity();
-        entityThree.setId(3);
         entityThree.setLayerOrder(2);
         entityThree.setSqlFilter("Test filter");
         entityThree.setServiceLayer(getServiceLayerEntity("OSM",2));

@@ -1,26 +1,18 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
-import java.io.Serializable;
+import eu.europa.ec.fisheries.uvms.domain.BaseEntity;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "provider_format")
-public class ProviderFormatEntity implements Serializable { 
+public class ProviderFormatEntity extends BaseEntity {
 
-	@Id
-	@Column(name = "id")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
-	
 	@Column(name = "service_type", nullable = false, length = 10)
 	private String serviceType;
 	
@@ -30,14 +22,6 @@ public class ProviderFormatEntity implements Serializable {
 	public ProviderFormatEntity() {
         // why JPA why
     }
-
-	public int getId() {
-		return this.id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
 
 	public String getServiceType() {
 		return this.serviceType;

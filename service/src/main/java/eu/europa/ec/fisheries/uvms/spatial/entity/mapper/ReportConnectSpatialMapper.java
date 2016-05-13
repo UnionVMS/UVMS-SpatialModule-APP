@@ -36,7 +36,7 @@ public abstract class ReportConnectSpatialMapper {
     })
     public abstract MapConfigurationType reportConnectSpatialEntityToMapConfigurationType(ReportConnectSpatialEntity entity);
 
-    ProjectionEntity createProjection(Long id) {
+    ProjectionEntity createProjection(Long id) { // FIXME NOT GOOD
 
         ProjectionEntity entity = null;
 
