@@ -84,7 +84,7 @@
 			<column name="service_layer_id" valueNumeric="12" />
 			<column name="type_name" value="STATRECT" />
 			<column name="area_db_table" value="stat_rect" />
-			<column name="is_system_wide" value="Y" />
+			<column name="is_system_wide" value="N" />
 			<column name="area_type_desc" value="Statistical rectangles" />
 			<column name="is_location" value="N" />
 		</insert>
@@ -93,7 +93,7 @@
 			<column name="service_layer_id" valueNumeric="13" />
 			<column name="type_name" value="GFCM" />
 			<column name="area_db_table" value="gfcm" />
-			<column name="is_system_wide" value="Y" />
+			<column name="is_system_wide" value="N" />
 			<column name="area_type_desc" value="GFCM areas" />
 			<column name="is_location" value="N" />
 		</insert>
@@ -111,7 +111,7 @@
 			<column name="service_layer_id" valueNumeric="15" />
 			<column name="type_name" value="FMZ" />
 			<column name="area_db_table" value="fmz" />
-			<column name="is_system_wide" value="Y" />
+			<column name="is_system_wide" value="N" />
 			<column name="area_type_desc" value="FMZ areas" />
 			<column name="is_location" value="N" />
 		</insert>
