@@ -2,7 +2,7 @@
 mvn liquibase:update -Dverbose=true -P postgres-local
 
 ## To clean and RE-install database locally on postgres you can run:
-mvn clean liquibase:update -P'local,postgres'
+mvn clean liquibase:update -P'local,postgres,oracle-local'
 
 ## Check status
 mvn clean liquibase:status -Plocal
@@ -12,3 +12,7 @@ mvn liquibase:generateChangeLog
 
 ## generate SQL changes from changelog table
 mvn liquibase:updateSQL
+
+## build ojdbc6 jar to your local m2
+mvn install:install-file -Dfile=C:\Users\RINALDGR\Downloads\ojdbc6.jar -DgroupId=com.oracle -DartifactId=ojdbc6 -Dversion=11.2.0.4 -Dpackaging=jar
+
