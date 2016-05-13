@@ -143,6 +143,8 @@ public class AreaDao extends AbstractDAO<BaseAreaEntity> {
                 }
             }
 
+            log.debug("{} QUERY => {}", spatialFunction.getClass().getSimpleName().toUpperCase(), sb.toString());
+
             javax.persistence.Query emNativeQuery = em.createNativeQuery(sb.toString());
 
             emNativeQuery.unwrap(SQLQuery.class)
