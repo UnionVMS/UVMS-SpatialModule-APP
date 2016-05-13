@@ -392,6 +392,11 @@ public class SpatialRepositoryBean implements SpatialRepository {
     }
 
     @Override
+    public List closestPoint(List<AreaLocationTypesEntity> entities, SpatialFunction spatialFunction, Point incomingPoint) {
+        return areaDao.closestPoint(entities, spatialFunction, incomingPoint);
+    }
+
+    @Override
     public List intersectingArea(List<AreaLocationTypesEntity> entities, SpatialFunction spatialFunction, Point point) {
         return areaDao.intersectingArea(entities, spatialFunction, point);
     }

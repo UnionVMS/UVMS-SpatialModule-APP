@@ -137,9 +137,11 @@ public interface SpatialRepository {
 
     PortAreasEntity create(PortAreasEntity portAreasEntity) throws ServiceException;
 
-    List closestArea(final List<AreaLocationTypesEntity> entities, final SpatialFunction spatialFunction, final Point point);
+    List closestArea(List<AreaLocationTypesEntity> entities, SpatialFunction spatialFunction, Point point);
 
-    List intersectingArea(final List<AreaLocationTypesEntity> entities, final SpatialFunction spatialFunction, final Point point);
+    List closestPoint(List<AreaLocationTypesEntity> typeEntities, SpatialFunction spatialFunction, Point incomingPoint);
+
+    List intersectingArea( List<AreaLocationTypesEntity> entities, SpatialFunction spatialFunction, Point point);
 
     List<AreaLocationTypesEntity> listAllArea() throws ServiceException;
 
@@ -170,4 +172,5 @@ public interface SpatialRepository {
     BaseAreaEntity findUserAreaById(Long id) throws ServiceException;
 
     List<PortEntity> listClosestPorts(Double incomingLongitude, Double incomingLatitude, Integer limit) throws ServiceException;
+
 }
