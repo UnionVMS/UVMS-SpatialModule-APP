@@ -13,6 +13,7 @@ public class BaseSpatialDaoTest extends BaseDAOTest {
             deleteAllFrom("spatial.countries"),
             deleteAllFrom("spatial.eez"),
             deleteAllFrom("spatial.port_area"),
+            deleteAllFrom("spatial.port"),
             deleteAllFrom("spatial.projection"),
             deleteAllFrom("spatial.report_connect_service_areas"),
             deleteAllFrom("spatial.report_connect_spatial"),
@@ -34,6 +35,17 @@ public class BaseSpatialDaoTest extends BaseDAOTest {
                                     "-5.6117651029999 36.0064557960001,-7.69615637899992 43.731512762)))", "Y")
                     .build()
     );
+
+    protected static final Operation INSERT_PORT_REFERENCE_DATA = sequenceOf(
+            insertInto("spatial.port")
+                    .columns("GID", "NAME", "CODE", "GEOM", "ENABLED")
+                    .values(1L, "Luanda", "AGO", "MULTIPOINT(13.234 -8.838)", "Y")
+                    .values(2L, "Lobito", "AOLOB", "MULTIPOINT(13.533 -12.367)", "Y")
+                    .values(3L, "Namibe", "AOMSZ", "MULTIPOINT(12.158 -15.195)", "Y")
+                    .values(4L, "San Pedro", "ARSPD", "MULTIPOINT(-59.167 -33.683)", "N")
+                    .build()
+    );
+
 
     protected static final Operation INSERT_PORT_AREA_REFERENCE_DATA = sequenceOf(
             insertInto("spatial.port_area")

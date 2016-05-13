@@ -3,16 +3,17 @@ package eu.europa.ec.fisheries.uvms.spatial.entity;
 import eu.europa.ec.fisheries.uvms.domain.BaseEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 import lombok.EqualsAndHashCode;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import lombok.ToString;
 
 @Entity
 @Table(name = "user_scope")
 @EqualsAndHashCode(of = {"name"}, callSuper = true)
+@ToString(of = "name")
 public class UserScopeEntity extends BaseEntity {
 
     @ManyToOne
@@ -39,8 +40,4 @@ public class UserScopeEntity extends BaseEntity {
         this.name = name;
     }
 
-    @Override
-    public String toString() {
-        return name;
-    }
 }
