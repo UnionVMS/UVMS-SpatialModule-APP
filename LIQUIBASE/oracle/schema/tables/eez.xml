@@ -32,9 +32,7 @@
             <column name="latitude" type="NUMBER"/>
             <column name="mrgid_eez" type="NUMBER(11, 0)"/>
             <column name="enabled" type="NCHAR(1)"/>
-            <column name="enabled_on" type="date">
-                <constraints nullable="false"/>
-            </column>
+            <column name="enabled_on" type="date"/>
         </createTable>
     </changeSet>
 
