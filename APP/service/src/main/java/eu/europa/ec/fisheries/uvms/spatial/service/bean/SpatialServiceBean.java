@@ -54,7 +54,6 @@ import org.geotools.referencing.CRS;
 import org.geotools.referencing.GeodeticCalculator;
 import org.hibernate.SQLQuery;
 import org.hibernate.spatial.GeometryType;
-import org.hibernate.type.DoubleType;
 import org.hibernate.type.IntegerType;
 import org.hibernate.type.StringType;
 import org.opengis.referencing.FactoryException;
@@ -89,11 +88,11 @@ import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 public class SpatialServiceBean implements SpatialService {
 
     private static final String EPSG = "EPSG:";
-    private static final String GEOM = "geom";
     private static final String GID = "gid";
     private static final String NAME = "name";
     private static final String CODE = "code";
     private static final String TYPE = "type";
+    private static final String GEOM = "geom";
 
     private @PersistenceContext(unitName = "spatialPU") EntityManager em;
     private @EJB SpatialRepository repository;
@@ -117,27 +116,8 @@ public class SpatialServiceBean implements SpatialService {
         final MeasurementUnit measurementUnit = MeasurementUnit.getMeasurement(unit.name());
         final GeodeticCalculator calc = new GeodeticCalculator();
         final List<AreaLocationTypesEntity> typeEntities = repository.findAllIsPointIsSystemWide(true, true);
-        final StringBuilder sb = new StringBuilder();
 
-        Iterator<AreaLocationTypesEntity> it = typeEntities.iterator();
-        while (it.hasNext()) {
-            AreaLocationTypesEntity next = it.next();
-            String typeName = next.getTypeName();
-            sb.append(spatialFunction.closestPointToPoint(typeName, next.getAreaDbTable(), incomingLongitude, incomingLatitude, 10));
-            it.remove(); // avoids a ConcurrentModificationException
-            if (it.hasNext()) {
-                sb.append(" UNION ALL ");
-            }
-        }
-
-        log.debug("{} QUERY => {}", spatialFunction.getClass().getSimpleName().toUpperCase(), sb.toString());
-
-        final Query emNativeQuery = em.createNativeQuery(sb.toString());
-        emNativeQuery.unwrap(SQLQuery.class).addScalar("type", StringType.INSTANCE).addScalar(GID, IntegerType.INSTANCE)
-                .addScalar(CODE, StringType.INSTANCE).addScalar(NAME, StringType.INSTANCE).addScalar(GEOM, GeometryType.INSTANCE)
-                .addScalar("distance", DoubleType.INSTANCE);
-
-        final List records = emNativeQuery.getResultList();
+        List records = repository.closestPoint(typeEntities, spatialFunction, incomingPoint);
 
         for (Object record : records) {
             final Object[] result = (Object[]) record;
