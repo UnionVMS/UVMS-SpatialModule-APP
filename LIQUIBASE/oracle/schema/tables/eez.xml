@@ -17,8 +17,24 @@
             <column name="gid" valueComputed="eez_gid_seq.NEXTVAL" type="NUMBER(11, 0)">
                 <constraints nullable="false"/>
             </column>
-            <column name="geom" type="geometry"/>
-       
+            <column name="geom" type="SDO_GEOMETRY"/>
+            <column name="name" type="NVARCHAR2(255)"/>
+            <column name="country" type="NVARCHAR2(100)"/>
+            <column name="sovereign" type="NVARCHAR2(100)"/>
+            <column name="remarks" type="NVARCHAR2(150)"/>
+            <column name="sov_id" type="NUMBER(11, 0)"/>
+            <column name="eez_id" type="NUMBER(11, 0)"/>
+            <column name="code" type="NVARCHAR2(20)"/>
+            <column name="mrgid" type="NUMBER"/>
+            <column name="date_chang" type="NVARCHAR2(50)"/>
+            <column name="area_m2" type="NUMBER"/>
+            <column name="longitude" type="NUMBER"/>
+            <column name="latitude" type="NUMBER"/>
+            <column name="mrgid_eez" type="NUMBER(11, 0)"/>
+            <column name="enabled" type="NCHAR(1)"/>
+            <column name="enabled_on" type="date">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
     </changeSet>
 
