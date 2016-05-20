@@ -3,11 +3,14 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean.helper;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.entity.ProjectionEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.*;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.ConfigurationDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.LayerAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.LayerSettingsDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.LayersDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.StyleSettingsDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.VisibilitySettingsDto;
 import eu.europa.ec.fisheries.uvms.spatial.util.AreaTypeEnum;
 import eu.europa.ec.fisheries.uvms.spatial.util.LayerTypeEnum;
 import org.slf4j.Logger;
@@ -207,14 +210,6 @@ public class MapConfigHelper {
             }
         }
         return layerSettingsDto;
-    }
-
-    public static ProjectionEntity createProjection(Long id) {
-        ProjectionEntity entity = null;
-        if (id != null) {
-            entity = new ProjectionEntity(id);
-        }
-        return entity;
     }
 
     public static List<Long> getServiceLayerIds(List<? extends LayersDto> layers) {

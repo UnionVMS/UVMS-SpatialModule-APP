@@ -10,16 +10,12 @@ import java.util.Map;
 import static eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity.*;
 
 @Slf4j
-public class EezDao extends AbstractSystemAreaDao<EezEntity> {
+public class EezDao extends AbstractSpatialDao<EezEntity> {
 
     private EntityManager em;
 
     public EezDao(EntityManager em) {
         this.em = em;
-    }
-
-    public EezEntity getEezById(final Long id) throws ServiceException {
-        return findEntityById(EezEntity.class, id);
     }
 
     @Override
@@ -37,7 +33,7 @@ public class EezDao extends AbstractSystemAreaDao<EezEntity> {
     }
 
     @Override
-    protected Class<EezEntity> getEntity() {
+    protected Class<EezEntity> getClazz() {
         return EezEntity.class;
     }
 
@@ -50,4 +46,5 @@ public class EezDao extends AbstractSystemAreaDao<EezEntity> {
     protected String getDisableAreaNamedQuery() {
         return DISABLE_EEZ_AREAS;
     }
+
 }

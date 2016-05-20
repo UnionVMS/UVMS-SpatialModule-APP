@@ -23,6 +23,8 @@ public class ReportConnectSpatialDaoTest extends BaseSpatialDaoTest {
 
     private ReportConnectSpatialDao dao = new ReportConnectSpatialDao(em);
 
+    private ProjectionDao projectionDao = new ProjectionDao(em);
+
     @Before
     public void prepare(){
         Operation operation = sequenceOf(DELETE_ALL, INSERT_REFERENCE_DATA);
@@ -40,8 +42,8 @@ public class ReportConnectSpatialDaoTest extends BaseSpatialDaoTest {
                 .appVersion("2.6")
                 .displayFormatType(CoordinatesFormat.DDM)
                 .scaleBarType(ScaleBarUnits.IMPERIAL)
-                .projectionByMapProjId(new ProjectionEntity(1L))
-                .projectionByMapProjId(new ProjectionEntity(2L))
+                .projectionByDisplayProjId(projectionDao.findEntityById(ProjectionEntity.class, 1L))
+                .projectionByMapProjId(projectionDao.findEntityById(ProjectionEntity.class, 2L))
                 .mapCenter("mandatory")
                 .build();
 

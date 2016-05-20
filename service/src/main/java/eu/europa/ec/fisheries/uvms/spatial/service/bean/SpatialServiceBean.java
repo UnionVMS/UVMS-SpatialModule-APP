@@ -8,9 +8,11 @@ import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.interceptors.TracingInterceptor;
+import eu.europa.ec.fisheries.uvms.spatial.dao.AbstractSpatialDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.util.DAOFactory;
 import eu.europa.ec.fisheries.uvms.spatial.dao.util.SpatialFunction;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.BaseAreaEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.BaseSpatialEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.PortEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Area;
@@ -157,44 +159,15 @@ public class SpatialServiceBean implements SpatialService {
             throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR, StringUtils.EMPTY);
         }
 
-        List<AreaLocationTypesEntity> areasLocationTypes =
-                repository.findAreaLocationTypeByTypeName(areaTypeEntry.getAreaType().value().toUpperCase());
-
-        if (areasLocationTypes.isEmpty()) {
-            throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR, areasLocationTypes);
-        }
-
-        AreaLocationTypesEntity areaLocationTypesEntity = areasLocationTypes.iterator().next();
+        AreaLocationTypesEntity areaLocationTypesEntity = repository.findAreaLocationTypeByTypeName(areaTypeEntry.getAreaType().value().toUpperCase());
 
         Point point = SpatialUtils.convertToPointInWGS84(areaTypeEntry.getLongitude(), areaTypeEntry.getLatitude(), areaTypeEntry.getCrs());
 
-        List allAreas;
-
-        switch (areaLocationTypesEntity.getTypeName().toUpperCase()){
-            case "EEZ" :
-                allAreas = repository.findEezByIntersect(point);
-                break;
-            case "PORTAREA" :
-                allAreas = repository.findPortAreaByIntersect(point);
-                break;
-            case "RFMO" :
-                allAreas = repository.findRfmoByIntersect(point);
-                break;
-            case "USERAREA" :
-                allAreas = repository.findUserAreaByIntersect(point);
-                break;
-            case "PORT" :
-                allAreas = repository.findUserAreaByIntersect(point);
-                break;
-            default:
-                throw new IllegalArgumentException("Unsupported area type.");
-        }
-        // more areas here
-
+        List list = DAOFactory.getAbstractSpatialDao(em, areaLocationTypesEntity.getTypeName()).findByIntersect(point);
         List<AreaDetails> areaDetailsList = new ArrayList<>();
 
-        for (Object allArea : allAreas) {
-            Map<String, Object> properties = ((BaseAreaEntity)allArea).getFieldMap();
+        for (Object area : list) {
+            Map<String, Object> properties = ((BaseSpatialEntity)area).getFieldMap();
 
             List<AreaProperty> areaProperties = new ArrayList<>();
             for (Map.Entry<String, Object> entry : properties.entrySet()) {
@@ -223,7 +196,7 @@ public class SpatialServiceBean implements SpatialService {
         List<UserAreaDto> userAreaDtos = new ArrayList<>();
         for (UserAreasEntity userAreaDetails : userAreaDetailsWithExtentByLocation){
             UserAreaDto userAreaDto = new UserAreaDto();
-            userAreaDto.setGid(userAreaDetails.getGid());
+            userAreaDto.setGid(userAreaDetails.getId());
             userAreaDto.setDesc(userAreaDetails.getAreaDesc());
             userAreaDto.setExtent(new WKTWriter2().write(userAreaDetails.getGeom().getEnvelope()));
             userAreaDto.setName(userAreaDetails.getName());
@@ -309,8 +282,8 @@ public class SpatialServiceBean implements SpatialService {
                 closest.setId(result[1].toString());
                 closest.setDistance(orthodromicDistance / measurementUnit.getRatio());
                 closest.setUnit(unit);
-                closest.setCode(result[2].toString());
-                closest.setName(result[3].toString());
+                closest.setCode(result[2] != null ? result[2].toString() : null);
+                closest.setName(result[3] != null ? result[3].toString() : null);
                 closest.setAreaType(AreaType.valueOf(type));
                 distancePerTypeMap.put(type, closest);
             }
@@ -424,7 +397,6 @@ public class SpatialServiceBean implements SpatialService {
         } catch (TransformException | FactoryException ex) {
             throw new ServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR.toString(), ex);
         }
-
     }
 
     private void buildQuery(List<AreaIdentifierType> typeList, StringBuilder sb, String type, Map<String, AreaLocationTypesEntity> typesEntityMap ) {
@@ -437,7 +409,7 @@ public class SpatialServiceBean implements SpatialService {
             final AreaType areaType = next.getAreaType();
             final AreaLocationTypesEntity locationTypesEntity = typesEntityMap.get(areaType.value());
             sb.append("SELECT '").append(type).append("' as type ,geom FROM spatial.").append(locationTypesEntity.getAreaDbTable())
-                    .append(" spatial WHERE spatial.gid = ").append(id);
+                    .append(" spatial WHERE spatial.gid = ").append(id).append(" AND enabled = 'Y' ");
             it.remove(); // avoids a ConcurrentModificationException
             if (it.hasNext()) {
                 sb.append(" UNION ALL ");
@@ -446,30 +418,28 @@ public class SpatialServiceBean implements SpatialService {
     }
 
     @Override
-    @Transactional
     public List<GenericSystemAreaDto> searchAreasByNameOrCode(final String areaType, final String filter) throws ServiceException {
 
-        AreaLocationTypesEntity areaLocationType = null;
+        AreaLocationTypesEntity areaLocationType;
         final String toUpperCase = filter.toUpperCase();
         final ArrayList<GenericSystemAreaDto> systemAreaByFilterRecords = new ArrayList<>();
         final WKTWriter2 wktWriter2 = new WKTWriter2();
         final StringBuilder sb = new StringBuilder();
 
-        List<AreaLocationTypesEntity> areaLocationTypeByTypeName = repository.findAreaLocationTypeByTypeName(areaType.toUpperCase());
-
-        if (areaLocationTypeByTypeName != null && !areaLocationTypeByTypeName.isEmpty()){
-            areaLocationType = areaLocationTypeByTypeName.get(0);
-        }
+        areaLocationType = repository.findAreaLocationTypeByTypeName(areaType.toUpperCase());
 
         if (areaLocationType == null) {
             throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
         }
 
         sb.append("SELECT gid, name, code, geom FROM spatial.")
-                .append(areaLocationType.getAreaDbTable()).append(" ").append("WHERE UPPER(name) LIKE '%")
-                .append(toUpperCase).append("%' OR code LIKE '%").append(toUpperCase).append("%' GROUP BY gid");
+                .append(areaLocationType.getAreaDbTable()).append(" ").append("WHERE (UPPER(name) LIKE '%")
+                .append(toUpperCase).append("%' OR code LIKE '%").append(toUpperCase).append("%') AND enabled='Y' GROUP BY gid");
+
+        log.debug("{} QUERY => {}", spatialFunction.getClass().getSimpleName().toUpperCase(), sb.toString());
 
         final Query emNativeQuery = em.createNativeQuery(sb.toString());
+
         emNativeQuery.unwrap(SQLQuery.class)
                 .addScalar(GID, IntegerType.INSTANCE)
                 .addScalar(NAME, StringType.INSTANCE)
@@ -501,41 +471,18 @@ public class SpatialServiceBean implements SpatialService {
         final String id = locationTypeEntry.getId();
         final String locationType = locationTypeEntry.getLocationType();
         final List<LocationProperty> locationProperties = new ArrayList<>();
-        AreaLocationTypesEntity locationTypesEntity = null;
+        AreaLocationTypesEntity locationTypesEntity;
 
         if (id != null && !StringUtils.isNumeric(id)) {
             throw new SpatialServiceException(SpatialServiceErrors.INVALID_ID_TYPE, id);
         }
 
-        List<AreaLocationTypesEntity> areaLocationTypeByTypeName =
-                repository.findAreaLocationTypeByTypeName(locationType.toUpperCase());
-
-        if(CollectionUtils.isNotEmpty(areaLocationTypeByTypeName)){
-            locationTypesEntity = areaLocationTypeByTypeName.iterator().next();
-        }
+        locationTypesEntity = repository.findAreaLocationTypeByTypeName(locationType.toUpperCase());
 
         if (locationTypesEntity != null && locationTypeEntry.getId() != null) {
 
-            BaseAreaEntity areaEntity;
-            switch (locationTypesEntity.getTypeName().toUpperCase()){
-                case "EEZ":
-                    areaEntity = repository.findEezById(Long.parseLong(locationTypeEntry.getId()));
-                    break;
-                case "RFMO":
-                    areaEntity = repository.findRfmoById(Long.parseLong(locationTypeEntry.getId()));
-                    break;
-                case "USERAREA":
-                    areaEntity = repository.findUserAreaById(Long.parseLong(locationTypeEntry.getId()));
-                    break;
-                case "PORTAREA":
-                    areaEntity = repository.findPortAreaById(Long.parseLong(locationTypeEntry.getId()));
-                    break;
-                case "PORT":
-                    areaEntity = repository.findPortById(Long.parseLong(locationTypeEntry.getId()));
-                    break;
-                default:
-                    throw new IllegalArgumentException("Unsupported area type.");
-            }
+            AbstractSpatialDao dao = DAOFactory.getAbstractSpatialDao(em, locationTypesEntity.getTypeName());
+            BaseSpatialEntity areaEntity = dao.findOne(Long.parseLong(locationTypeEntry.getId()));
 
             if (areaEntity == null) {
                 throw new SpatialServiceException(SpatialServiceErrors.ENTITY_NOT_FOUND, locationTypesEntity.getTypeName());
@@ -579,27 +526,11 @@ public class SpatialServiceBean implements SpatialService {
             }
             else {
 
-                assert locationTypesEntity != null;
-                switch (locationTypesEntity.getTypeName().toUpperCase()){
-                    case "EEZ":
-                        list = repository.findEezByIntersect(incomingPoint);
-                    break;
-                    case "RFMO":
-                        list = repository.findRfmoByIntersect(incomingPoint);
-                        break;
-                    case "USERAREA":
-                        list = repository.findUserAreaByIntersect(incomingPoint);
-                        break;
-                    case "PORTAREA":
-                        list = repository.findPortAreaByIntersect(incomingPoint);
-                        break;
-                    default:
-                        throw new IllegalArgumentException("Unsupported area type.");
-                }
+                list = DAOFactory.getAbstractSpatialDao(em, locationTypesEntity.getTypeName()).findByIntersect(incomingPoint);
             }
 
             if (isNotEmpty(list)) {
-                fieldMap = ((BaseAreaEntity)list.iterator().next()).getFieldMap();
+                fieldMap = ((BaseSpatialEntity)list.iterator().next()).getFieldMap();
             }
 
             properties = fieldMap;

@@ -1,10 +1,10 @@
 package eu.europa.ec.fisheries.uvms.spatial.dao;
 
-import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.service.QueryParameter;
-import eu.europa.ec.fisheries.uvms.spatial.entity.BaseAreaEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.BaseSpatialEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
-public abstract class AbstractSystemAreaDao<E extends BaseAreaEntity> extends AbstractDAO<E> {
+public abstract class AbstractSpatialDao<E extends BaseSpatialEntity> extends AbstractDAO<E> {
 
     protected static final String SHAPE = "shape";
 
@@ -27,13 +27,13 @@ public abstract class AbstractSystemAreaDao<E extends BaseAreaEntity> extends Ab
             Query query = session.getNamedQuery(getDisableAreaNamedQuery());
             query.executeUpdate();
             for (List<Property> properties : features.values()) {
-                Map<String, Object> values = BaseAreaEntity.createAttributesMap(properties);
+                Map<String, Object> values = BaseSpatialEntity.createAttributesMap(properties);
                 session.insert(createEntity(values));
             }
             log.debug("Commit transaction");
             tx.commit();
         }
-        catch (ServiceException e){
+        catch (Exception e){
             tx.rollback();
             throw new ServiceException("Rollback transaction", e);
         }
@@ -43,16 +43,19 @@ public abstract class AbstractSystemAreaDao<E extends BaseAreaEntity> extends Ab
         }
     }
 
-    public List<E> intersects(final Geometry shape) throws ServiceException {
-        return findEntityByNamedQuery(getEntity(), getIntersectNamedQuery(), QueryParameter.with(SHAPE, shape).parameters());
-    }
-
     protected abstract String getIntersectNamedQuery();
 
-    protected abstract Class<E> getEntity();
+    protected abstract Class<E> getClazz();
 
-    protected abstract E createEntity(Map<String, Object> values) throws ServiceException;
+    protected abstract BaseSpatialEntity createEntity(Map<String, Object> values) throws ServiceException;
 
     protected abstract String getDisableAreaNamedQuery();
 
+    public BaseSpatialEntity findOne(final Long id) throws ServiceException {
+        return findEntityById(getClazz(), id);
+    }
+
+    public List findByIntersect(Point point) throws ServiceException {
+        return findEntityByNamedQuery(getClazz(), getIntersectNamedQuery(), QueryParameter.with(SHAPE, point).parameters());
+    }
 }

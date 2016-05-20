@@ -9,7 +9,7 @@ import java.util.Map;
 import static eu.europa.ec.fisheries.uvms.spatial.entity.RfmoEntity.*;
 
 @Slf4j
-public class RfmoDao extends AbstractSystemAreaDao<RfmoEntity> {
+public class RfmoDao extends AbstractSpatialDao<RfmoEntity> {
 
     private EntityManager em;
 
@@ -28,7 +28,7 @@ public class RfmoDao extends AbstractSystemAreaDao<RfmoEntity> {
     }
 
     @Override
-    protected Class<RfmoEntity> getEntity() {
+    protected Class<RfmoEntity> getClazz() {
         return RfmoEntity.class;
     }
 
@@ -41,4 +41,5 @@ public class RfmoDao extends AbstractSystemAreaDao<RfmoEntity> {
     protected String getDisableAreaNamedQuery() {
         return DISABLE_RFMO_AREAS;
     }
+
 }

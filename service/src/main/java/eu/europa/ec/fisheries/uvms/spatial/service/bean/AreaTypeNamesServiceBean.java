@@ -45,18 +45,6 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
     }
 
     @Override
-    @SneakyThrows
-    @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public List<String> listAllAreaAndLocationTypeNames() {
-        List<String> stringList = new ArrayList<>();
-        List<AreaLocationTypesEntity> typesEntities = repository.listAllAreaAndLocation();
-        for(AreaLocationTypesEntity entity : typesEntities){
-            stringList.add(entity.getTypeName());
-        }
-        return stringList;
-    }
-
-    @Override
     public List<AreaLayerDto> listSystemAreaLayerMapping() {
         List<AreaLayerDto> systemAreaLayerMapping = repository.findSystemAreaLayerMapping();
         addServiceUrlForInternalWMSLayers(systemAreaLayerMapping);

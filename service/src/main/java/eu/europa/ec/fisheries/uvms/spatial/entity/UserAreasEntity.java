@@ -1,7 +1,9 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
+import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
+import java.util.Map;
 import org.hibernate.annotations.Where;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -24,29 +26,29 @@ import java.util.Set;
                         "FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection " +
                         "WHERE ((1=:isPowerUser) OR (area.userName=:userName OR scopeSelection.name=:scopeName)) " +
                         "AND (UPPER(area.name) LIKE UPPER(:searchCriteria) OR UPPER(area.areaDesc) LIKE UPPER(:searchCriteria))" +
-                        "GROUP BY area.gid"),
+                        "GROUP BY area.id"),
         @NamedQuery(name = UserAreasEntity.FIND_USER_AREA_BY_TYPE,
                 query = "SELECT area " +
                         "FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection " +
                         "WHERE area.type = :type " +
                         "AND ((1=:isPowerUser) OR (area.userName=:userName OR scopeSelection.name=:scopeName)) " +
-                        "GROUP BY area.gid"),
+                        "GROUP BY area.id"),
         @NamedQuery(name = UserAreasEntity.FIND_BY_USER_NAME_AND_SCOPE_NAME,
                 query = "SELECT area FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection " +
                         "WHERE area.userName = :userName OR scopeSelection.name = :scopeName"),
         @NamedQuery(name = UserAreasEntity.USER_AREA_DETAILS_BY_LOCATION,
-                query = "FROM UserAreasEntity userArea WHERE userArea.userName = :userName AND intersects(userArea.geom, :shape) = true AND userArea.enabled = 'Y' GROUP BY userArea.gid"),
+                query = "FROM UserAreasEntity userArea WHERE userArea.userName = :userName AND intersects(userArea.geom, :shape) = true AND userArea.enabled = 'Y' GROUP BY userArea.id"),
         @NamedQuery(name = UserAreasEntity.USER_AREA_BY_COORDINATE,
                 query = "FROM UserAreasEntity WHERE intersects(geom, :shape) = true AND enabled = 'Y'"),
         @NamedQuery(name = UserAreasEntity.FIND_USER_AREA_BY_ID,
-                query = "SELECT area FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection WHERE area.gid = :userAreaId AND ((1=:isPowerUser) OR (area.userName=:userName OR scopeSelection.name=:scopeName))"),
+                query = "SELECT area FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection WHERE area.id = :userAreaId AND ((1=:isPowerUser) OR (area.userName=:userName OR scopeSelection.name=:scopeName))"),
         @NamedQuery(name = QueryNameConstants.USERAREA_COLUMNS,
-                query = "SELECT userArea.name as name, userArea.areaDesc as desc FROM UserAreasEntity AS userArea WHERE userArea.gid =:gid"),
+                query = "SELECT userArea.name as name, userArea.areaDesc as desc FROM UserAreasEntity AS userArea WHERE userArea.id =:gid"),
         @NamedQuery(name = QueryNameConstants.FIND_ALL_USER_AREAS,
-                query = "SELECT DISTINCT area.gid as gid, area.name as name, area.areaDesc as desc FROM UserAreasEntity area " +
+                query = "SELECT DISTINCT area.id as gid, area.name as name, area.areaDesc as desc FROM UserAreasEntity area " +
                         "LEFT JOIN area.scopeSelection scope WHERE area.userName = :userName OR scope.name = :scopeName"),
         @NamedQuery(name = QueryNameConstants.FIND_ALL_USER_AREAS_BY_GIDS,
-                query = "SELECT area.gid as gid, area.name as name, area.areaDesc as desc FROM UserAreasEntity area WHERE area.gid IN (:gids)"),
+                query = "SELECT area.id as gid, area.name as name, area.areaDesc as desc FROM UserAreasEntity area WHERE area.id IN (:gids)"),
         @NamedQuery(name = UserAreasEntity.FIND_USER_AREA_BY_USER,
                 query = "SELECT DISTINCT area " +
                         "FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection " +
@@ -56,16 +58,17 @@ import java.util.Set;
                 query = "SELECT DISTINCT area.type as name FROM UserAreasEntity area " +
                         "LEFT JOIN area.scopeSelection scope WHERE (area.userName = :userName OR (scope.name = :scopeName AND scope.userAreas = area))"),
         @NamedQuery(name = UserAreasEntity.FIND_GID_FOR_SHARED_AREA,
-                query = "SELECT area.gid FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection WHERE (area.userName <> :userName AND area.type = :type AND scopeSelection.name = :scopeName)"),
+                query = "SELECT area.id FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection WHERE (area.userName <> :userName AND area.type = :type AND scopeSelection.name = :scopeName)"),
         @NamedQuery(name = UserAreasEntity.FIND_BY_USERNAME_AND_NAME,
                 query = "FROM UserAreasEntity WHERE userName = :userName AND name = :name)"),
-
+        @NamedQuery(name = UserAreasEntity.DISABLE, query = "UPDATE UserAreasEntity SET enabled = 'N'"),
+        @NamedQuery(name = UserAreasEntity.BY_INTERSECT, query = "FROM UserAreasEntity WHERE intersects(geom, :shape) = true AND enabled = 'Y'"),
 })
 @Where(clause = "enabled = 'Y'")
 @Table(name="user_areas", uniqueConstraints = {
         @UniqueConstraint(columnNames={"name", "user_name"})
 })
-public class UserAreasEntity extends BaseAreaEntity {
+public class UserAreasEntity extends BaseSpatialEntity {
 
     public static final String USER_AREA_DETAILS_BY_LOCATION = "UserArea.findUserAreaDetailsByLocation";
     public static final String USER_AREA_BY_COORDINATE = "userAreasEntity.ByCoordinate";
@@ -76,8 +79,10 @@ public class UserAreasEntity extends BaseAreaEntity {
     public static final String FIND_USER_AREA_BY_TYPE = "UserArea.findUserAreaByType";
     public static final String FIND_USER_AREA_BY_USER = "UserArea.findUserAreaTypes";
     public static final String FIND_BY_USER_NAME_AND_SCOPE_NAME = "UserArea.findGidByUserNameOrScope";
+    public static final String DISABLE = "userArea.disable";
+    public static final String BY_INTERSECT = "userArea.byIntersect";
 
-    @Column(name = "type", length = 255)
+    @Column(length = 255)
     @ColumnAliasName(aliasName ="subType")
     private String type;
 
@@ -107,15 +112,16 @@ public class UserAreasEntity extends BaseAreaEntity {
     @ColumnAliasName(aliasName ="createdOn")
     private Date createdOn;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAreas", cascade = CascadeType.ALL)
-    private Set<AreaStatusEntity> areaStatuses;
-
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAreas", cascade = CascadeType.MERGE, orphanRemoval = true)
     @ColumnAliasName(aliasName ="scopeSelection")
     private Set<UserScopeEntity> scopeSelection;
 
     public UserAreasEntity() {
         // why JPA why
+    }
+
+    public UserAreasEntity(Map<String, Object> values) throws ServiceException {
+        super(values);
     }
 
     public String getType() {
@@ -156,14 +162,6 @@ public class UserAreasEntity extends BaseAreaEntity {
 
     public void setCreatedOn(Date createdOn) {
         this.createdOn = createdOn;
-    }
-
-    public Set<AreaStatusEntity> getAreaStatuses() {
-        return this.areaStatuses;
-    }
-
-    public void setAreaStatuses(Set<AreaStatusEntity> areaStatuses) {
-        this.areaStatuses = areaStatuses;
     }
 
     public String getUserName() {

@@ -7,7 +7,6 @@ import javax.persistence.EntityManager;
 import com.google.common.collect.ImmutableMap;
 import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.service.QueryParameter;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
@@ -21,7 +20,7 @@ import org.hibernate.transform.Transformers;
 import static eu.europa.ec.fisheries.uvms.service.QueryParameter.with;
 import static eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity.*;
 
-public class UserAreaDao extends AbstractDAO<UserAreasEntity> {
+public class UserAreaDao extends AbstractSpatialDao<UserAreasEntity> {
 
     private EntityManager em;
 
@@ -47,6 +46,26 @@ public class UserAreaDao extends AbstractDAO<UserAreasEntity> {
 
     public List<UserAreasEntity> intersects(final Geometry shape) throws ServiceException {
         return findEntityByNamedQuery(UserAreasEntity.class, USER_AREA_BY_COORDINATE, with("shape", shape).parameters());
+    }
+
+    @Override
+    protected String getIntersectNamedQuery() {
+        return BY_INTERSECT;
+    }
+
+    @Override
+    protected Class<UserAreasEntity> getClazz() {
+        return UserAreasEntity.class;
+    }
+
+    @Override
+    protected UserAreasEntity createEntity(Map<String, Object> values) throws ServiceException {
+        return new UserAreasEntity(values);
+    }
+
+    @Override
+    protected String getDisableAreaNamedQuery() {
+        return DISABLE;
     }
 
     public List<UserAreasEntity> findByUserNameAndGeometry(String userName, Geometry shape) throws ServiceException {

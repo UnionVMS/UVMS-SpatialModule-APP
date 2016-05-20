@@ -16,16 +16,16 @@ public class BookmarkEntity extends BaseEntity {
 
     public static final String LIST_BY_USERNAME = "Bookmark.listByUsername";
 
-    @Column(name = "srs", nullable = false)
+    @Column(nullable = false)
 	private Integer srs;
 	
-	@Column(name = "name", nullable = false)
+	@Column(nullable = false)
 	private String name;
 
     @Column(name = "created_by", nullable = false)
     private String createdBy;
 
-    @Column(name = "extent", nullable = false)
+    @Column(nullable = false)
     private String extent;
 
     public Integer getSrs() {

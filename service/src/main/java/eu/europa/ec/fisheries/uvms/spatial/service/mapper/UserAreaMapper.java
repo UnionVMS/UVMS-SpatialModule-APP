@@ -2,18 +2,14 @@ package eu.europa.ec.fisheries.uvms.spatial.service.mapper;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserScopeEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.UserAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.UserAreaGeoJsonDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
-
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -80,7 +76,7 @@ public abstract class UserAreaMapper {
         dto.setName(userAreaEntity.getName());
         dto.setDatasetName(userAreaEntity.getDatasetName());
         dto.setDesc(userAreaEntity.getAreaDesc());
-        dto.setId(userAreaEntity.getGid());
+        dto.setId(userAreaEntity.getId());
         dto.setType(userAreaEntity.getType());
         dto.setScopeSelection(fromEntityToScopeArray(userAreaEntity.getScopeSelection()));
         Geometry geometry = userAreaEntity.getGeom();
@@ -95,7 +91,6 @@ public abstract class UserAreaMapper {
         return dto;
     }
 
-
     public List<UserAreaGeoJsonDto> fromEntityListToDtoList(List<UserAreasEntity> userAreas, boolean isGeometryNeeded) {
         List<UserAreaGeoJsonDto> listAreas = Lists.newArrayList();
         for(UserAreasEntity entity : userAreas) {
@@ -103,20 +98,6 @@ public abstract class UserAreaMapper {
         }
 
         return listAreas;
-    }
-
-
-    public List<Double> computeEnvelope(Geometry geometry) {
-        List<Double> extent = new ArrayList<>();
-        if (geometry != null && geometry.getEnvelopeInternal() != null) {
-            Envelope internal = geometry.getEnvelopeInternal();
-            extent.add(internal.getMinX());
-            extent.add(internal.getMinY());
-            extent.add(internal.getMaxX());
-            extent.add(internal.getMaxY());
-        }
-
-        return extent;
     }
 
 }

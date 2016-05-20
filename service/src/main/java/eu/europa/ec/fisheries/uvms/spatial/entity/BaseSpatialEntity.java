@@ -4,11 +4,13 @@ import com.google.common.collect.Maps;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTWriter;
 import eu.europa.ec.fisheries.uvms.common.DateUtils;
+import eu.europa.ec.fisheries.uvms.domain.BaseEntity;
+import eu.europa.ec.fisheries.uvms.domain.CharBooleanConverter;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.entity.converter.CharBooleanConverter;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
+import javax.persistence.AttributeOverride;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -16,16 +18,11 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import org.opengis.feature.Property;
-
 import javax.persistence.Column;
 import javax.persistence.Convert;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.util.Date;
@@ -35,17 +32,13 @@ import java.util.Map;
 
 @MappedSuperclass
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @Slf4j
-public class BaseAreaEntity implements Serializable {
+@AttributeOverride(name = "id", column = @Column(name = "GID"))
+public class BaseSpatialEntity extends BaseEntity {
 
     private static final String ISO_8859_1 = "ISO-8859-1";
     private static final String UTF_8 = "UTF-8";
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @ColumnAliasName(aliasName = "gid")
-    private Long gid;
 
     @Type(type = "org.hibernate.spatial.GeometryType")
     @ColumnAliasName(aliasName = "geometry")
@@ -68,7 +61,7 @@ public class BaseAreaEntity implements Serializable {
     @Column(name = "enabled_on")
     private Date enabledOn;
 
-    public BaseAreaEntity(Map<String, Object> values) throws ServiceException {
+    public BaseSpatialEntity(Map<String, Object> values) throws ServiceException {
         geom = ((Geometry) values.get("the_geom"));
         code = (readStringProperty(values, "code"));
         name = (readStringProperty(values, "name"));
@@ -76,12 +69,8 @@ public class BaseAreaEntity implements Serializable {
         enabledOn = new Date();
     }
 
-    public BaseAreaEntity(){
-        this.gid = null;
-    }
-
-    public Long getGid() {
-        return gid;
+    public BaseSpatialEntity() {
+        // why JPA why
     }
 
     public Geometry getGeom() {
@@ -90,10 +79,6 @@ public class BaseAreaEntity implements Serializable {
 
     public void setGeom(Geometry geom) {
         this.geom = geom;
-    }
-
-    public void setGid(Long gid) {
-        this.gid = gid;
     }
 
     public String getName() {

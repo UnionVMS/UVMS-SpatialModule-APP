@@ -1,11 +1,13 @@
 package eu.europa.ec.fisheries.uvms.spatial.dao;
 
+import com.google.common.collect.ImmutableMap;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.service.QueryParameter;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.ServiceLayerDto;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -76,5 +78,16 @@ public class ServiceLayerDao extends AbstractDAO<ServiceLayerEntity> {
         query.setParameterList(parameterName, parameters);
         query.setResultTransformer(Transformers.aliasToBean(dtoClass));
         return query;
+    }
+
+
+    public List<ServiceLayerEntity> findServiceLayerEntityByIds(List<Long> ids) {
+        Map<String, List<Long>> parameters = ImmutableMap.<String, List<Long>>builder().put("ids", ids).build();
+
+        Query query = em.unwrap(Session.class).getNamedQuery(ServiceLayerEntity.FIND_SERVICE_LAYERS_BY_ID);
+        for (Map.Entry<String, List<Long>> entry : parameters.entrySet()) {
+            query.setParameterList(entry.getKey(), entry.getValue());
+        }
+        return query.list();
     }
 }
