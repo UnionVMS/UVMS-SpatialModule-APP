@@ -1,7 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import eu.europa.ec.fisheries.uvms.domain.BaseEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.converter.CharBooleanConverter;
+import eu.europa.ec.fisheries.uvms.domain.CharBooleanConverter;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

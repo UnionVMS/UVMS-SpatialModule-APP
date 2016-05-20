@@ -16,7 +16,7 @@ public class PortAreaDaoTest extends BaseSpatialDaoTest {
     @Test
     @SneakyThrows
     public void shouldReturnIntersectedPortArea(){
-        List<PortAreasEntity> intersects = dao.intersects(new GeometryBuilder().point(1, 1));
+        List intersects = dao.findByIntersect(new GeometryBuilder().point(1, 1));
     }
 
     @Test

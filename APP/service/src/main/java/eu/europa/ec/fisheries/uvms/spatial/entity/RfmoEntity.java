@@ -16,13 +16,12 @@ import java.util.Map;
         @NamedQuery(name = RfmoEntity.RFMO_BY_COORDINATE,
                 query = "FROM RfmoEntity WHERE intersects(geom, :shape) = true AND enabled = 'Y'"),
         @NamedQuery(name = QueryNameConstants.RFMO_COLUMNS,
-                query = "SELECT rfmo.name AS name, rfmo.code AS code FROM RfmoEntity AS rfmo WHERE rfmo.gid =:gid"),
+                query = "SELECT rfmo.name AS name, rfmo.code AS code FROM RfmoEntity AS rfmo WHERE rfmo.id =:gid"),
         @NamedQuery(name = RfmoEntity.DISABLE_RFMO_AREAS,
                 query = "UPDATE RfmoEntity SET enabled = 'N'")
 })
-@Where(clause = "enabled = 'Y'")
 @Table(name = "rfmo")
-public class RfmoEntity extends BaseAreaEntity {
+public class RfmoEntity extends BaseSpatialEntity {
 
     public static final String RFMO_BY_COORDINATE = "rfmoEntity.ByCoordinate";
     public static final String DISABLE_RFMO_AREAS = "rfmoEntity.disableRfmoAreas";

@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.dao;
 
+import eu.europa.ec.fisheries.uvms.spatial.entity.BaseSpatialEntity;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -8,7 +9,6 @@ import javax.persistence.EntityManager;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.spatial.dao.util.SpatialFunction;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.BaseAreaEntity;
 import com.vividsolutions.jts.geom.Point;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
@@ -23,7 +23,7 @@ import org.hibernate.type.StandardBasicTypes;
 import org.hibernate.type.StringType;
 
 @Slf4j
-public class AreaDao extends AbstractDAO<BaseAreaEntity> {
+public class AreaDao extends AbstractDAO<BaseSpatialEntity> {
 
     private static final String GID = "gid";
     private static final String NAME = "name";

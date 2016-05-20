@@ -43,8 +43,7 @@ import java.util.Set;
 public class UserAreaServiceBean implements UserAreaService {
 
     private @EJB SpatialRepository repository;
-    private @EJB
-    AreaTypeNamesService areaTypeNamesService;
+    private @EJB AreaTypeNamesService areaTypeNamesService;
     private @EJB USMService usmService;
 
     @Override
@@ -68,13 +67,13 @@ public class UserAreaServiceBean implements UserAreaService {
             if (StringUtils.isNotBlank(persistedEntity.getDatasetName())) {
                 usmService.createDataset(USMSpatial.APPLICATION_NAME, persistedEntity.getDatasetName(), createDescriminator(persistedEntity), USMSpatial.USM_DATASET_CATEGORY, USMSpatial.USM_DATASET_DESCRIPTION);
             }
-            return persistedEntity.getGid();
+            return persistedEntity.getId();
         }
 
     }
 
     private String createDescriminator(UserAreasEntity persistedEntity) {
-        return AreaType.USERAREA.value() + USMSpatial.DELIMITER + persistedEntity.getGid();
+        return AreaType.USERAREA.value() + USMSpatial.DELIMITER + persistedEntity.getId();
     }
 
     @Override
@@ -106,12 +105,11 @@ public class UserAreaServiceBean implements UserAreaService {
         userAreasEntityToUpdate.setUserName(persistentUserArea.getUserName());
 
         userAreasEntityToUpdate.setCreatedOn(persistentUserArea.getCreatedOn());
-        userAreasEntityToUpdate.setGid(persistentUserArea.getGid());
         userAreasEntityToUpdate.setScopeSelection(createScopeSelection(userAreaDto, persistentUserArea));
 
         UserAreasEntity persistedUpdatedEntity = repository.update(userAreasEntityToUpdate);
 
-        return persistedUpdatedEntity.getGid();
+        return persistedUpdatedEntity.getId();
     }
 
     //BUG FIX: Caused by: org.hibernate.HibernateException: A collection with cascade="all-delete-orphan" was no longer referenced by the owning entity instance: eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity.scopeSelection
@@ -203,9 +201,13 @@ public class UserAreaServiceBean implements UserAreaService {
         UserAreasEntity userAreaById = repository.findUserAreaById(Long.parseLong(areaTypeEntry.getId()), userName, isPowerUser, scopeName);
         try {
             List<AreaDetails> areaDetailsList = new ArrayList<>();
-            Map<String, Object> properties = userAreaById.getFieldMap();
-            addCentroidToProperties(properties);
-            areaDetailsList.add(createAreaDetailsSpatialResponse(properties, areaTypeEntry));
+
+            if (userAreaById != null){
+                Map<String, Object> properties = userAreaById.getFieldMap();
+                addCentroidToProperties(properties);
+                areaDetailsList.add(createAreaDetailsSpatialResponse(properties, areaTypeEntry));
+            }
+
             return areaDetailsList;
 
         } catch (ParseException e) {
@@ -243,7 +245,7 @@ public class UserAreaServiceBean implements UserAreaService {
             List<Long> longList = new ArrayList<>();
             List<UserAreasEntity> userAreaByUserNameAndScopeName = repository.findUserAreaByUserNameAndScopeName(userName, scopeName);
             for (UserAreasEntity entity : userAreaByUserNameAndScopeName){
-                longList.add(entity.getGid());
+                longList.add(entity.getId());
             }
             return longList;
         } catch (ServiceException e) {
@@ -265,7 +267,7 @@ public class UserAreaServiceBean implements UserAreaService {
             it.remove(); // avoids a ConcurrentModificationException
             final Geometry envelope = next.getGeom().getEnvelope();
 
-            userAreaDtos.add(new UserAreaDto(next.getGid(), next.getName(), StringUtils.isNotBlank(next.getAreaDesc())
+            userAreaDtos.add(new UserAreaDto(next.getId(), next.getName(), StringUtils.isNotBlank(next.getAreaDesc())
                     ? next.getAreaDesc() : StringUtils.EMPTY, wktWriter2.write(envelope), next.getUserName()));
         }
         return userAreaDtos;

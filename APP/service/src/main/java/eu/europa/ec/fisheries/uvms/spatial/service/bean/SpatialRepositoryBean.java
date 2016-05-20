@@ -6,29 +6,20 @@ import eu.europa.ec.fisheries.uvms.service.QueryParameter;
 import eu.europa.ec.fisheries.uvms.spatial.dao.AreaDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.AreaLocationTypesDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.BookmarkDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.CountryDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.EezDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.MapConfigDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.PortAreaDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.PortDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.ProjectionDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.ReportConnectServiceAreaDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.ReportConnectSpatialDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.RfmoDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.ServiceLayerDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.SysConfigDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.UserAreaDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.util.SpatialFunction;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.BaseAreaEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.BookmarkEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.PortAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.PortEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ProjectionEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.RfmoEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.config.SysConfigEntity;
@@ -41,8 +32,6 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.ServiceLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.BookmarkMapper;
 import org.geotools.geometry.jts.GeometryBuilder;
-import org.opengis.feature.Property;
-
 import javax.annotation.PostConstruct;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
@@ -62,15 +51,10 @@ public class SpatialRepositoryBean implements SpatialRepository {
 
     private AreaDao areaDao;
     private UserAreaDao userAreaDao;
-    private CountryDao countryDao;
-    private MapConfigDao mapConfigDao;
-    private EezDao eezDao;
     private SysConfigDao sysConfigDao;
     private ReportConnectSpatialDao reportConnectSpatialDao;
     private BookmarkDao bookmarkDao;
     private ProjectionDao projectionDao;
-    private PortAreaDao portAreaDao;
-    private RfmoDao rfmoDao;
     private AreaLocationTypesDao areaLocationTypeDao;
     private ServiceLayerDao serviceLayerDao;
     private ReportConnectServiceAreaDao connectServiceAreaDao;
@@ -80,15 +64,10 @@ public class SpatialRepositoryBean implements SpatialRepository {
     public void init() {
         areaDao = new AreaDao(em);
         userAreaDao = new UserAreaDao(em);
-        countryDao = new CountryDao(em);
-        mapConfigDao = new MapConfigDao(em);
-        eezDao = new EezDao(em);
         sysConfigDao = new SysConfigDao(em);
         reportConnectSpatialDao = new ReportConnectSpatialDao(em);
         bookmarkDao = new BookmarkDao(em);
         projectionDao = new ProjectionDao(em);
-        portAreaDao = new PortAreaDao(em);
-        rfmoDao = new RfmoDao(em);
         areaLocationTypeDao = new AreaLocationTypesDao(em);
         serviceLayerDao = new ServiceLayerDao(em);
         connectServiceAreaDao = new ReportConnectServiceAreaDao(em);
@@ -121,28 +100,28 @@ public class SpatialRepositoryBean implements SpatialRepository {
     }
 
     @Override
-    public List<Map<String, String>> findAllCountriesDesc() {
-        return countryDao.findAllCountriesDesc();
-    }
-
-    @Override
     public List<ProjectionDto> findProjectionByMap(long reportId) {
-        return mapConfigDao.findProjectionByMap(reportId);
+        return reportConnectSpatialDao.findProjectionByMap(reportId);
     }
 
     @Override
     public List<ProjectionDto> findProjectionById(Long id) {
-        return mapConfigDao.findProjectionById(id);
+        return projectionDao.findProjectionById(id);
+    }
+
+    @Override
+    public ProjectionEntity findProjectionEntityById(Long id) throws ServiceException {
+        return projectionDao.findEntityById(ProjectionEntity.class, id);
     }
 
     @Override
     public List<ReportConnectServiceAreasEntity> findReportConnectServiceAreas(long reportId) {
-        return mapConfigDao.findReportConnectServiceAreas(reportId);
+        return connectServiceAreaDao.findReportConnectServiceAreas(reportId);
     }
 
     @Override
     public List<ServiceLayerEntity> findServiceLayerEntityByIds(List<Long> ids) {
-        return mapConfigDao.findServiceLayerEntityByIds(ids);
+        return serviceLayerDao.findServiceLayerEntityByIds(ids);
     }
 
     @Override
@@ -158,11 +137,6 @@ public class SpatialRepositoryBean implements SpatialRepository {
     @Override
     public boolean saveOrUpdateMapConfiguration(final ReportConnectSpatialEntity mapConfiguration) throws ServiceException {
         return reportConnectSpatialDao.saveOrUpdateEntity(mapConfiguration) != null;
-    }
-
-    @Override
-    public EezEntity getEezById(final Long id) throws ServiceException {
-        return eezDao.getEezById(id);
     }
 
     @Override
@@ -220,11 +194,6 @@ public class SpatialRepositoryBean implements SpatialRepository {
     }
 
     @Override
-    public PortAreasEntity findPortAreaById(Long id) throws ServiceException {
-        return portAreaDao.findEntityById(PortAreasEntity.class, id);
-    }
-
-    @Override
     public List<AreaDto> findAllUserAreasByGids(List<Long> gids) {
         return userAreaDao.findAllUserAreasByGids(gids);
     }
@@ -269,28 +238,8 @@ public class SpatialRepositoryBean implements SpatialRepository {
     }
 
     @Override
-    public List<EezEntity> findEezByIntersect(final Point point) throws ServiceException {
-        return eezDao.intersects(point);
-    }
-
-    @Override
-    public List<PortAreasEntity> findPortAreaByIntersect(final Point point) throws ServiceException {
-        return portAreaDao.intersects(point);
-    }
-
-    @Override
-    public List<RfmoEntity> findRfmoByIntersect(final Point point) throws ServiceException {
-        return rfmoDao.intersects(point);
-    }
-
-    @Override
-    public List<UserAreasEntity> findUserAreaByIntersect(final Point point) throws ServiceException {
-        return userAreaDao.intersects(point);
-    }
-
-    @Override
-    public List<AreaLocationTypesEntity> findAreaLocationTypeByTypeName(String typeName) throws ServiceException {
-        return areaLocationTypeDao.findByTypeName(typeName);
+    public AreaLocationTypesEntity findAreaLocationTypeByTypeName(final String typeName) throws ServiceException {
+        return areaLocationTypeDao.findOneByTypeName(typeName);
     }
 
     @Override
@@ -305,7 +254,7 @@ public class SpatialRepositoryBean implements SpatialRepository {
 
     @Override
     public void deleteReportConnectServiceAreas(Long id) {
-        mapConfigDao.deleteReportConnectServiceAreas(id);
+        connectServiceAreaDao.deleteReportConnectServiceAreas(id);
     }
 
     @Override
@@ -367,23 +316,8 @@ public class SpatialRepositoryBean implements SpatialRepository {
     }
 
     @Override
-    public PortEntity create(PortEntity portsEntity) throws ServiceException {
-        return portDao.createEntity(portsEntity);
-    }
-
-    @Override
-    public EezEntity create(EezEntity eezEntity) throws ServiceException {
-        return eezDao.createEntity(eezEntity);
-    }
-
-    @Override
     public void deleteEntity(ReportConnectSpatialEntity entity) {
         reportConnectSpatialDao.deleteEntity(ReportConnectSpatialEntity.class, entity.getId());
-    }
-
-    @Override
-    public PortAreasEntity create(PortAreasEntity portAreasEntity) throws ServiceException {
-        return portAreaDao.createEntity(portAreasEntity);
     }
 
     @Override
@@ -407,68 +341,13 @@ public class SpatialRepositoryBean implements SpatialRepository {
     }
 
     @Override
-    public List<AreaLocationTypesEntity> listAllAreaAndLocation() throws ServiceException {
-        return areaLocationTypeDao.findAll();
-    }
-
-    @Override
     public void deleteUserArea(UserAreasEntity userAreaById) {
-        userAreaDao.deleteEntity(UserAreasEntity.class, userAreaById.getGid());
-    }
-
-    @Override
-    public PortAreasEntity update(PortAreasEntity entity) throws ServiceException {
-        return portAreaDao.updateEntity(entity);
-    }
-
-    @Override
-    public RfmoEntity create(RfmoEntity rfmoEntity) throws ServiceException {
-        return rfmoDao.createEntity(rfmoEntity);
+        userAreaDao.deleteEntity(UserAreasEntity.class, userAreaById.getId());
     }
 
     @Override
     public List<UserAreasEntity> findUserAreaByUserNameAndScopeName(String userName, String scopeName) throws ServiceException {
         return userAreaDao.findByUserNameAndScopeName(userName, scopeName);
-    }
-
-    @Override
-    public void replaceEez(Map<String, List<Property>> features) throws ServiceException {
-        eezDao.bulkInsert(features);
-    }
-
-    @Override
-    public void replaceRfmo(Map<String, List<Property>> features) throws ServiceException {
-        rfmoDao.bulkInsert(features);
-    }
-
-    @Override
-    public void replacePort(Map<String, List<Property>> features) throws ServiceException {
-        portDao.bulkInsert(features);
-    }
-
-    @Override
-    public void replacePortArea(Map<String, List<Property>> features) throws ServiceException {
-        portAreaDao.bulkInsert(features);
-    }
-
-    @Override
-    public BaseAreaEntity findEezById(Long id) throws ServiceException {
-        return eezDao.findEntityById(EezEntity.class, id);
-    }
-
-    @Override
-    public BaseAreaEntity findPortById(Long id) throws ServiceException {
-        return portDao.findEntityById(PortEntity.class, id);
-    }
-
-    @Override
-    public BaseAreaEntity findRfmoById(Long id) throws ServiceException {
-        return rfmoDao.findEntityById(RfmoEntity.class, id);
-    }
-
-    @Override
-    public BaseAreaEntity findUserAreaById(Long id) throws ServiceException {
-        return userAreaDao.findEntityById(UserAreasEntity.class, id);
     }
 
     @Override

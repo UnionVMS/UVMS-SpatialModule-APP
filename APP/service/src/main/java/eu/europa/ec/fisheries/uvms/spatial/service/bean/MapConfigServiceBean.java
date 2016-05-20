@@ -243,15 +243,17 @@ public class MapConfigServiceBean implements MapConfigService {
 
     private ReportConnectSpatialEntity getReportConnectSpatialEntity(final SpatialSaveOrUpdateMapConfigurationRQ request) throws ServiceException {
         ReportConnectSpatialEntity entity = repository.findReportConnectSpatialByReportIdAndConnectId(request.getMapConfiguration().getReportId(), request.getMapConfiguration().getSpatialConnectId());
+        ProjectionEntity mapProjection = repository.findProjectionEntityById(request.getMapConfiguration().getMapProjectionId());
+        ProjectionEntity displayProjection = repository.findProjectionEntityById(request.getMapConfiguration().getDisplayProjectionId());
         if (entity != null) {
             entity.setScaleBarType(request.getMapConfiguration().getScaleBarUnits());
             entity.setDisplayFormatType(request.getMapConfiguration().getCoordinatesFormat());
-            entity.setProjectionByMapProjId(MapConfigHelper.createProjection(request.getMapConfiguration().getMapProjectionId()));
-            entity.setProjectionByDisplayProjId(MapConfigHelper.createProjection(request.getMapConfiguration().getDisplayProjectionId()));
             repository.deleteReportConnectServiceAreas(entity.getReportConnectServiceAreases());
         } else {
             entity = ReportConnectSpatialMapper.INSTANCE.mapConfigurationTypeToReportConnectSpatialEntity(request.getMapConfiguration());
         }
+        entity.setProjectionByDisplayProjId(displayProjection);
+        entity.setProjectionByMapProjId(mapProjection);
         return entity;
     }
 

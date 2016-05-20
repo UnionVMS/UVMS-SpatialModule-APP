@@ -5,14 +5,12 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.PortAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.PortEntity;
 import lombok.extern.slf4j.Slf4j;
 import javax.persistence.EntityManager;
-import java.util.List;
 import java.util.Map;
 
-import static eu.europa.ec.fisheries.uvms.service.QueryParameter.with;
 import static eu.europa.ec.fisheries.uvms.spatial.entity.PortAreasEntity.*;
 
 @Slf4j
-public class PortAreaDao extends AbstractSystemAreaDao<PortAreasEntity> {
+public class PortAreaDao extends AbstractSpatialDao<PortAreasEntity> {
 
     private EntityManager em;
 
@@ -31,7 +29,7 @@ public class PortAreaDao extends AbstractSystemAreaDao<PortAreasEntity> {
     }
 
     @Override
-    protected Class<PortAreasEntity> getEntity() {
+    protected Class<PortAreasEntity> getClazz() {
         return PortAreasEntity.class;
     }
 

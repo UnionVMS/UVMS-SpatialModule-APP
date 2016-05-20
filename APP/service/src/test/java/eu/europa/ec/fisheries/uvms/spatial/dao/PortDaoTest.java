@@ -34,9 +34,9 @@ public class PortDaoTest extends BaseSpatialDaoTest {
         List<PortEntity> entityByNamedQuery =
                 dao.findEntityByNamedQuery(PortEntity.class, PortEntity.LIST_ORDERED_BY_DISTANCE, parameters, 10);
         dao.findAllEntity(PortEntity.class);
-        assertEquals(3L, entityByNamedQuery.get(0).getGid().longValue());
-        assertEquals(2L, entityByNamedQuery.get(1).getGid().longValue());
-        assertEquals(1L, entityByNamedQuery.get(2).getGid().longValue());
+        assertEquals(3L, entityByNamedQuery.get(0).getId().longValue());
+        assertEquals(2L, entityByNamedQuery.get(1).getId().longValue());
+        assertEquals(1L, entityByNamedQuery.get(2).getId().longValue());
 
     }
 }

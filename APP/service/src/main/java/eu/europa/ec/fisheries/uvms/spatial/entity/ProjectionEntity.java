@@ -1,17 +1,14 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
-import eu.europa.ec.fisheries.uvms.spatial.entity.converter.CharBooleanConverter;
+import eu.europa.ec.fisheries.uvms.domain.BaseEntity;
+import eu.europa.ec.fisheries.uvms.domain.CharBooleanConverter;
 import lombok.EqualsAndHashCode;
-import java.io.Serializable;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -19,22 +16,17 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "projection")
-@EqualsAndHashCode(exclude = { "reportConnectSpatialsForMapProjId", "reportConnectSpatialsForDisplayProjId"})
+@EqualsAndHashCode(callSuper = true, exclude = { "reportConnectSpatialsForMapProjId", "reportConnectSpatialsForDisplayProjId"})
 @NamedQueries({
         @NamedQuery(name = ProjectionEntity.FIND_BY_SRS_CODE, query = "FROM ProjectionEntity p WHERE p.srsCode = :srsCode"),
         @NamedQuery(name = ProjectionEntity.FIND_PROJECTION_BY_ID,
 				query = "SELECT projection.srsCode AS epsgCode, projection.units AS units, projection.isWorld AS global, projection.extent as extent, projection.axis as axis " +
 						"FROM ProjectionEntity projection WHERE projection.id = :id")
 })
-public class ProjectionEntity implements Serializable {
+public class ProjectionEntity extends BaseEntity {
 
     public static final String FIND_PROJECTION_BY_ID = "ReportLayerConfig.findProjectionById";
     public static final String FIND_BY_SRS_CODE = "Projection.findBySrsCode";
-
-	@Id
-	@Column(name = "id")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
 	
 	@Column(unique = true, nullable = false, length = 255)
 	private String name;
@@ -71,19 +63,7 @@ public class ProjectionEntity implements Serializable {
         // why JPA why
     }
 
-    public ProjectionEntity(Long id){// FIXME NOT GOOD SHOULD BE HANDLED BY HIBERNATE NOT MANUALLY
-        this.id = id;
-    }
-
-    public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getName() {
+    public String getName() {
 		return name;
 	}
 
