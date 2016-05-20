@@ -4,7 +4,6 @@ import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.Where;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
@@ -16,14 +15,13 @@ import java.util.Map;
 @Entity
 @NamedQueries({
         @NamedQuery(name = EezEntity.EEZ_BY_COORDINATE, query = "FROM EezEntity WHERE intersects(geom, :shape) = true AND enabled = 'Y'"),
-        @NamedQuery(name = QueryNameConstants.EEZ_COLUMNS, query = "SELECT eez.name AS name, eez.code AS code FROM EezEntity AS eez WHERE eez.gid =:gid"),
+        @NamedQuery(name = QueryNameConstants.EEZ_COLUMNS, query = "SELECT eez.name AS name, eez.code AS code FROM EezEntity AS eez WHERE eez.id =:gid"),
         @NamedQuery(name = EezEntity.DISABLE_EEZ_AREAS, query = "UPDATE EezEntity SET enabled = 'N'"),
         @NamedQuery(name = EezEntity.LIST_EMPTY_GEOMETRIES, query = "FROM EezEntity WHERE isEmpty(geom) = true AND enabled = 'Y'")
 })
-@Where(clause = "enabled = 'Y'")
 @Table(name = "eez")
 @EqualsAndHashCode(callSuper = true)
-public class EezEntity extends BaseAreaEntity {
+public class EezEntity extends BaseSpatialEntity {
 
     public static final String EEZ_BY_COORDINATE = "eezEntity.ByCoordinate";
     public static final String LIST_EMPTY_GEOMETRIES = "eezEntity.TEST";

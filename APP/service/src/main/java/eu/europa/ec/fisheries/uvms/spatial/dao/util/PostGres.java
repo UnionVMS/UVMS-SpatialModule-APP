@@ -1,7 +1,5 @@
 package eu.europa.ec.fisheries.uvms.spatial.dao.util;
 
-import eu.europa.ec.fisheries.uvms.spatial.dao.AbstractGisFunction;
-
 public class PostGres extends AbstractGisFunction {
 
     @Override

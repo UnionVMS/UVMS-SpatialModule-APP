@@ -20,7 +20,7 @@ import javax.persistence.Table;
 		@NamedQuery(name = ReportConnectServiceAreasEntity.DELETE_BY_REPORT_CONNECT_SPATIAL_ID,
 				query = "DELETE FROM ReportConnectServiceAreasEntity rcsa WHERE rcsa.id = :id")
 })
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 public class ReportConnectServiceAreasEntity extends BaseEntity implements Comparable<ReportConnectServiceAreasEntity> {
 
     public static final String DELETE_BY_REPORT_CONNECT_SPATIAL_ID = "ReportLayerConfig.deleteByReportConnectSpatialId";

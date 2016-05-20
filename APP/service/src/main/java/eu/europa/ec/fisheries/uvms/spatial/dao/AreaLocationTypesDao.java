@@ -6,6 +6,7 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
+import org.apache.commons.collections.CollectionUtils;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
@@ -28,8 +29,15 @@ public class AreaLocationTypesDao extends AbstractDAO<AreaLocationTypesEntity> {
         return em;
     }
 
-    public List<AreaLocationTypesEntity> findByTypeName(final String typeName) throws ServiceException {
-        return findEntityByNamedQuery(AreaLocationTypesEntity.class,FIND_TYPE_BY_NAME,with("typeName", typeName).parameters());
+    public AreaLocationTypesEntity findOneByTypeName(final String typeName) throws ServiceException {
+        AreaLocationTypesEntity result = null;
+        List<AreaLocationTypesEntity> resultList =
+                findEntityByNamedQuery(AreaLocationTypesEntity.class, FIND_TYPE_BY_NAME,
+                        with("typeName", typeName).parameters(), 1);
+        if(CollectionUtils.isNotEmpty(resultList)){
+            result = resultList.get(0);
+        }
+        return result;
     }
 
     public List<AreaLocationTypesEntity> findByIsLocationAndIsSystemWide(Boolean isLocation, Boolean isSystemWide ) throws ServiceException {
@@ -58,7 +66,4 @@ public class AreaLocationTypesDao extends AbstractDAO<AreaLocationTypesEntity> {
         return query.setResultTransformer(Transformers.aliasToBean(AreaLayerDto.class)).list();
     }
 
-    public List<AreaLocationTypesEntity> findAll() throws ServiceException {
-        return findEntityByNamedQuery(AreaLocationTypesEntity.class, AreaLocationTypesEntity.FIND_ALL_AREA_AND_LOCATION_TYPE_NAMES);
-    }
 }

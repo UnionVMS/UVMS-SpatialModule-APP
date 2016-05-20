@@ -1,7 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured.config;
 
 import eu.europa.ec.fisheries.uvms.spatial.rest.constants.RestConstants;
-import eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured.AreaPortResource;
 import eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured.AreaResource;
 import eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured.BookmarkResource;
 import eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured.CalculateResource;
@@ -33,7 +32,6 @@ public class RestActivator extends Application {
         set.add(XMLResource.class);
         set.add(ConfigResource.class);
         set.add(UserAreaResource.class);
-        set.add(AreaPortResource.class);
         set.add(CountryResource.class);
         set.add(MapConfigResource.class);
         set.add(FileUploadResource.class);

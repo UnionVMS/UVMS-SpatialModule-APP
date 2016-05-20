@@ -1,36 +1,29 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
-import java.io.Serializable;
-
-import javax.persistence.Column;
+import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import java.util.Map;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
-import org.hibernate.annotations.Where;
 
 @Entity
-@Where(clause = "enabled = 'Y'")
 @Table(name = "fao")
-public class FaoEntity implements Serializable {
+@NamedQueries({
+        @NamedQuery(name = FaoEntity.DISABLE_FAO_AREAS, query = "UPDATE FaoEntity SET enabled = 'N'"),
+        @NamedQuery(name = FaoEntity.FAO_BY_INTERSECT,
+                query = "FROM FaoEntity WHERE intersects(geom, :shape) = true AND enabled = 'Y'")
+})
+public class FaoEntity extends BaseSpatialEntity {
 
-	@Id
-	@Column(name = "id")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@ColumnAliasName(aliasName="id")
-	private long id;
+    public static final String DISABLE_FAO_AREAS = "faoEntity.disableFaoAreas";
+    public static final String FAO_BY_INTERSECT = "faoEntity.faoByIntersect";
 
-	public FaoEntity() {
+    public FaoEntity() {
         // why JPA why
     }
 
-	public long getId() {
-		return this.id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
+    public FaoEntity(Map<String, Object> values) throws ServiceException {
+        super(values);
+    }
 }

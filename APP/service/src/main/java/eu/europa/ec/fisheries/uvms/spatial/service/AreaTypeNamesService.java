@@ -10,13 +10,17 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.ServiceLayerD
 
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
 
-
 public interface AreaTypeNamesService {
+
     List<String> listAllAreaTypeNames();
-    List<String> listAllAreaAndLocationTypeNames();
+
     List<AreaLayerDto> listSystemAreaLayerMapping();
+
     List<AreaLayerDto> listSystemAreaAndLocationLayerMapping();
+
     List<ServiceLayerDto> getAreaLayerDescription(LayerSubTypeEnum layerTypeEnum) throws ServiceException;
+
     List<AreaServiceLayerDto> getAllAreasLayerDescription(LayerSubTypeEnum layerTypeEnum, String userName, String scopeName) throws ServiceException;
+
     List<UserAreaLayerDto> listUserAreaLayerMapping();
 }

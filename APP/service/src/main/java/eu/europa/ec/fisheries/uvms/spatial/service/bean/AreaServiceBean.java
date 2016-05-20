@@ -2,16 +2,16 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.interceptors.SimpleTracingInterceptor;
+import eu.europa.ec.fisheries.uvms.spatial.dao.CountryDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.util.DAOFactory;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.BaseAreaEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.PortAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.BaseSpatialEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.service.AreaService;
 import eu.europa.ec.fisheries.uvms.spatial.service.AreaTypeNamesService;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.PortAreaGeoJsonDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.util.FileSaver;
@@ -19,6 +19,9 @@ import eu.europa.ec.fisheries.uvms.spatial.util.ShapeFileReader;
 import eu.europa.ec.fisheries.uvms.spatial.util.SpatialTypeEnum;
 import eu.europa.ec.fisheries.uvms.spatial.util.SupportedFileExtensions;
 import eu.europa.ec.fisheries.uvms.spatial.util.ZipExtractor;
+import javax.annotation.PostConstruct;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -45,6 +48,8 @@ import java.util.Map;
 @Slf4j
 public class AreaServiceBean implements AreaService {
 
+    private @PersistenceContext(unitName = "spatialPU") EntityManager em;
+
     private static final String CODE = "code";
     private static final String NAME = "name";
     private static final String AREA_ZIP_FILE = "AreaFile.zip";
@@ -56,10 +61,17 @@ public class AreaServiceBean implements AreaService {
     private @EJB AreaService areaService;
     private @EJB SpatialRepository repository;
 
+    private CountryDao countryDao;
+
+    @PostConstruct
+    public void init() {
+        countryDao = new CountryDao(em);
+    }
+
     @Override
     public Map<String, String> getAllCountriesDesc() {
         Map<String, String> countries = new HashMap<>();
-        List<Map<String, String>> countryList = repository.findAllCountriesDesc();
+        List<Map<String, String>> countryList = countryDao.findAllCountriesDesc();
         for (Map<String, String> country : countryList) {
             countries.put(country.get(CODE), country.get(NAME));
         }
@@ -74,14 +86,11 @@ public class AreaServiceBean implements AreaService {
         for(AreaTypeEntry areaTypeEntry : areaTypes) {
             String gid = areaTypeEntry.getId();
             String areaType = areaTypeEntry.getAreaType().value();
+
             if (!StringUtils.isNumeric(gid)) {
                 throw new SpatialServiceException(SpatialServiceErrors.INVALID_ID_TYPE, gid);
             }
-            List<AreaLocationTypesEntity> areasLocationTypes = repository.findAreaLocationTypeByTypeName(areaType.toUpperCase());
 
-            if (areasLocationTypes.isEmpty()) {
-                throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR, areasLocationTypes);
-            }
             String namedQuery = null;
             for (SpatialTypeEnum type : SpatialTypeEnum.values()) {
                 if(type.getType().equalsIgnoreCase(areaType)) {
@@ -98,7 +107,6 @@ public class AreaServiceBean implements AreaService {
                 columnMap.put(AREA_TYPE, areaType.toUpperCase());
                 columnMapList.add(columnMap);
             }
-
         }
         return columnMapList;
     }
@@ -107,39 +115,21 @@ public class AreaServiceBean implements AreaService {
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     @Interceptors(SimpleTracingInterceptor.class)
     public void uploadArea(byte[] content, String areaTypeString, int crsCode) {
-        try {
-            AreaType areaType = AreaType.fromValue(areaTypeString);
-            CoordinateReferenceSystem sourceCRS = validate(content, areaTypeString, crsCode);
 
+        try {
+
+            CoordinateReferenceSystem sourceCRS = validate(content, crsCode);
+
+            AreaLocationTypesEntity typeName = repository.findAreaLocationTypeByTypeName(areaTypeString.toUpperCase());
             Path absolutePath = Files.createTempDirectory(PREFIX);
             Path zipFilePath = Paths.get(absolutePath + File.separator + AREA_ZIP_FILE);
-
             FileSaver fileSaver = new FileSaver();
             fileSaver.saveContentToFile(content, zipFilePath);
-
             ZipExtractor zipExtractor = new ZipExtractor();
             Map<SupportedFileExtensions, Path> fileNames = zipExtractor.unZipFile(zipFilePath, absolutePath);
-
             ShapeFileReader shapeFileReader = new ShapeFileReader();
             Map<String, List<Property>> features = shapeFileReader.readShapeFile(fileNames.get(SupportedFileExtensions.SHP), sourceCRS);
-
-            switch (areaType) {
-                case EEZ:
-                    repository.replaceEez(features);
-                    break;
-                case RFMO:
-                    repository.replaceRfmo(features);
-                    break;
-                case PORT:
-                    repository.replacePort(features);
-                    break;
-                case PORTAREA:
-                    repository.replacePortArea(features);
-                    break;
-                default:
-                    throw new IllegalArgumentException("Unsupported area type.");
-            }
-
+            DAOFactory.getAbstractSpatialDao(em, typeName.getTypeName()).bulkInsert(features);
             FileUtils.deleteDirectory(new File(absolutePath.toString()));
 
         } catch (Exception ex) {
@@ -147,53 +137,30 @@ public class AreaServiceBean implements AreaService {
         }
     }
 
-    private CoordinateReferenceSystem validate(byte[] content, String areaType, int crsCode) {
-        if (content.length == 0) {
-            throw new IllegalArgumentException("File is empty.");
-        }
+    private CoordinateReferenceSystem validate(byte[] content, int crsCode) {
+
         CoordinateReferenceSystem sourceCRS;
+
         try {
+
+            if (content.length == 0) {
+                throw new IllegalArgumentException("File is empty.");
+            }
+
             sourceCRS = CRS.decode(ShapeFileReader.EPSG + crsCode);
+
         } catch (FactoryException e) {
             throw new IllegalArgumentException("CrsCode is wrong.");
         }
-        List<String> areaTypes = areaTypeService.listAllAreaAndLocationTypeNames();
-        if (!areaTypes.contains(areaType.toUpperCase())) {
-            throw new IllegalArgumentException("Unsupported area type.");
-        }
+
         return sourceCRS;
-    }
-
-    private enum AreaType {
-        EEZ("eez"),
-        RFMO("rfmo"),
-        PORT("port"),
-        PORTAREA("portarea");
-
-        private final String value;
-
-        AreaType(String value) {
-            this.value = value;
-        }
-
-        public static AreaType fromValue(String value) {
-            for (AreaType areaType : values()) {
-                if (areaType.value.equalsIgnoreCase(value)) {
-                    return areaType;
-                }
-            }
-            throw new IllegalArgumentException("Unsupported area type");
-        }
-
     }
 
     @Override
     @Transactional
     public AreaDetails getAreaDetailsById(AreaTypeEntry areaTypeEntry) throws ServiceException {
 
-        eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType areaType = areaTypeEntry.getAreaType();
-
-        if (areaType == null) {
+        if (areaTypeEntry.getAreaType() == null) {
             throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR, StringUtils.EMPTY);
         }
 
@@ -201,48 +168,18 @@ public class AreaServiceBean implements AreaService {
             throw new SpatialServiceException(SpatialServiceErrors.INVALID_ID_TYPE, areaTypeEntry.getId());
         }
 
-        List<AreaLocationTypesEntity> areasLocationTypes =
+        AreaLocationTypesEntity areaLocationTypesEntity =
                 repository.findAreaLocationTypeByTypeName(areaTypeEntry.getAreaType().value().toUpperCase());
 
-        if (areasLocationTypes.isEmpty()) {
-            throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR, areasLocationTypes);
-        }
+        Long id = Long.parseLong(areaTypeEntry.getId());
+        BaseSpatialEntity area = DAOFactory.getAbstractSpatialDao(em, areaLocationTypesEntity.getTypeName()).findOne(id);
 
-        AreaLocationTypesEntity areaLocationTypesEntity = areasLocationTypes.get(0);
-
-        Integer id = Integer.parseInt(areaTypeEntry.getId());
-
-        BaseAreaEntity areaEntity;
-        switch (areaLocationTypesEntity.getTypeName().toUpperCase()){
-            case "EEZ":
-                areaEntity = repository.findEezById(id.longValue());
-                break;
-            case "RFMO":
-                areaEntity = repository.findRfmoById(id.longValue());
-                break;
-            case "USERAREA":
-                areaEntity = repository.findUserAreaById(id.longValue());
-                break;
-            case "PORTAREA":
-                areaEntity = repository.findPortAreaById(id.longValue());
-                break;
-            case "PORT":
-                areaEntity = repository.findPortById(id.longValue());
-                break;
-            default:
-                throw new IllegalArgumentException("Unsupported area type.");
-        }
-
-        if (areaEntity == null) {
+        if (area == null) {
             throw new SpatialServiceException(SpatialServiceErrors.ENTITY_NOT_FOUND, areaLocationTypesEntity.getTypeName());
         }
-        Map<String, Object> properties = areaEntity.getFieldMap();
 
-        return createAreaDetailsSpatialResponse(properties, areaTypeEntry);
+        Map<String, Object> properties = area.getFieldMap();
 
-    }
-
-    private AreaDetails createAreaDetailsSpatialResponse(Map<String, Object> properties, AreaTypeEntry areaTypeEntry) {
         List<AreaProperty> areaProperties = new ArrayList<>();
         for (Map.Entry<String, Object> entry : properties.entrySet()) {
             AreaProperty areaProperty = new AreaProperty();
@@ -255,28 +192,7 @@ public class AreaServiceBean implements AreaService {
         areaDetails.setAreaType(areaTypeEntry);
         areaDetails.getAreaProperties().addAll(areaProperties);
         return areaDetails;
-    }
-
-    @Override
-    public Long updatePortArea(PortAreaGeoJsonDto portAreaGeoJsonDto) throws ServiceException {
-        Long id = portAreaGeoJsonDto.getId();
-
-        if (id == null) {
-            throw new SpatialServiceException(SpatialServiceErrors.MISSING_PORT_AREA_ID);
-        }
-
-        PortAreasEntity persistentPortArea = repository.findPortAreaById(id);
-        persistentPortArea.setGeom( portAreaGeoJsonDto.getGeometry());
-        PortAreasEntity persistedUpdatedEntity = repository.update(persistentPortArea);
-        return persistedUpdatedEntity.getGid();
 
     }
 
-    @Override
-    public void deletePortArea(Long portAreaId) throws ServiceException {
-        PortAreasEntity persistentPortArea = repository.findPortAreaById(portAreaId);
-        persistentPortArea.setGeom(null);
-        PortAreasEntity persistedUpdatedEntity = repository.update(persistentPortArea);
-        persistedUpdatedEntity.getGid();
-    }
 }

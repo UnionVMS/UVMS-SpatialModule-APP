@@ -173,7 +173,6 @@ public class LocationDetailsServiceTest extends BaseTest {
 	
 	private PortEntity getMockedPortsEntity() {
 		PortEntity portsEntity = new PortEntity();
-		portsEntity.setGid(1L);
 		portsEntity.setName("TEST");
 		portsEntity.setCode("Code");
 		portsEntity.setGeom(new GeometryBuilder().point());

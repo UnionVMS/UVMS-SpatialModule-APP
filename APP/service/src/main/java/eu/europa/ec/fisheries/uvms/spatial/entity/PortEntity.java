@@ -15,7 +15,7 @@ import java.util.Map;
         @NamedQuery(name = PortEntity.LIST_ORDERED_BY_DISTANCE, query ="FROM PortEntity WHERE enabled = 'Y' ORDER BY distance(geom, :shape) ASC") /// TODO create dao test
 })
 @Table(name = "port")
-public class PortEntity extends BaseAreaEntity {
+public class PortEntity extends BaseSpatialEntity {
 
     public static final String PORT_BY_COORDINATE = "portEntity.ByCoordinate";
     public static final String DISABLE = "portsEntity.disable";

@@ -2,7 +2,6 @@ package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.Where;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityResult;
@@ -20,14 +19,13 @@ import javax.persistence.Table;
 		@NamedQuery(name = CountriesEntity.FIND_ALL_COUNTRY_DESC,
 		query = "SELECT country.code AS code, country.name AS name FROM CountriesEntity country WHERE country.code IN (SELECT DISTINCT c.code FROM CountriesEntity c)")
 })
-@Where(clause = "enabled = 'Y'")
 @Table(name = "countries")
 @EqualsAndHashCode(callSuper = false)
-public class CountriesEntity extends BaseAreaEntity { // TODO rename to CountryEntity
+public class CountriesEntity extends BaseSpatialEntity { // TODO rename to CountryEntity
 
     public static final String FIND_ALL_COUNTRY_DESC = "Countries.findAllCountriesDesc";
 
-    @Column(name = "sovereignt", length = 32)
+    @Column(length = 32)
     @ColumnAliasName(aliasName="sovereignt")
 	private String sovereignt;
     
@@ -35,11 +33,11 @@ public class CountriesEntity extends BaseAreaEntity { // TODO rename to CountryE
     @ColumnAliasName(aliasName="sovA3")
 	private String sovA3;
     
-    @Column(name = "type", length = 17)
+    @Column(length = 17)
     @ColumnAliasName(aliasName="type")
 	private String type;
     
-    @Column(name = "admin", length = 40)
+    @Column(length = 40)
     @ColumnAliasName(aliasName="admin")
 	private String admin;
 
@@ -67,17 +65,13 @@ public class CountriesEntity extends BaseAreaEntity { // TODO rename to CountryE
     @ColumnAliasName(aliasName="regionUn")
 	private String regionUn;
     
-    @Column(name = "subregion", length = 25)
+    @Column(length = 25)
     @ColumnAliasName(aliasName="subregion")
 	private String subregion;
     
     @Column(name = "region_wb", length = 26)
     @ColumnAliasName(aliasName="regionWb")
 	private String regionWb;
-
-	public CountriesEntity() {
-        // why JPA why
-    }
 
 	public String getSovereignt() {
 		return this.sovereignt;

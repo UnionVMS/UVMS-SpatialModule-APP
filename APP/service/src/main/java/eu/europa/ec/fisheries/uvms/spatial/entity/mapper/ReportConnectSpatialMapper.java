@@ -14,11 +14,8 @@ public abstract class ReportConnectSpatialMapper {
     public static ReportConnectSpatialMapper INSTANCE = Mappers.getMapper(ReportConnectSpatialMapper.class);
 
     @Mappings({
-            @Mapping(source = "spatialConnectId", target = "id"),
             @Mapping(source = "scaleBarUnits", target = "scaleBarType"),
             @Mapping(source = "coordinatesFormat", target = "displayFormatType"),
-            @Mapping(target = "projectionByMapProjId", expression = "java(createProjection(map.getMapProjectionId()))"),
-            @Mapping(target = "projectionByDisplayProjId", expression = "java(createProjection(map.getDisplayProjectionId()))"),
             @Mapping(target = "styleSettings", ignore = true),
             @Mapping(target = "visibilitySettings", ignore = true)
     })
@@ -36,14 +33,4 @@ public abstract class ReportConnectSpatialMapper {
     })
     public abstract MapConfigurationType reportConnectSpatialEntityToMapConfigurationType(ReportConnectSpatialEntity entity);
 
-    ProjectionEntity createProjection(Long id) { // FIXME NOT GOOD
-
-        ProjectionEntity entity = null;
-
-        if (id != null) {
-            entity = new ProjectionEntity(id);
-        }
-
-        return entity;
-    }
 }

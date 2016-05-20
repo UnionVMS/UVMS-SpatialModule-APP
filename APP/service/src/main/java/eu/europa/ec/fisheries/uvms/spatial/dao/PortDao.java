@@ -9,7 +9,7 @@ import java.util.Map;
 import static eu.europa.ec.fisheries.uvms.spatial.entity.PortEntity.*;
 
 @Slf4j
-public class PortDao extends AbstractSystemAreaDao<PortEntity> {
+public class PortDao extends AbstractSpatialDao<PortEntity> {
 
     private EntityManager em;
 
@@ -28,7 +28,7 @@ public class PortDao extends AbstractSystemAreaDao<PortEntity> {
     }
 
     @Override
-    protected Class<PortEntity> getEntity() {
+    protected Class<PortEntity> getClazz() {
         return PortEntity.class;
     }
 
