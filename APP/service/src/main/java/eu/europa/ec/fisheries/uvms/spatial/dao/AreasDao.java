@@ -1,7 +1,10 @@
 package eu.europa.ec.fisheries.uvms.spatial.dao;
 
 import eu.europa.ec.fisheries.uvms.spatial.entity.BaseSpatialEntity;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +26,7 @@ import org.hibernate.type.StandardBasicTypes;
 import org.hibernate.type.StringType;
 
 @Slf4j
-public class GenericSpatialDao extends AbstractDAO<BaseSpatialEntity> {
+public class AreasDao extends AbstractDAO<BaseSpatialEntity> {
 
     private static final String GID = "gid";
     private static final String NAME = "name";
@@ -34,9 +37,41 @@ public class GenericSpatialDao extends AbstractDAO<BaseSpatialEntity> {
 
     private EntityManager em;
 
-    public GenericSpatialDao(EntityManager em) {
+    public AreasDao(EntityManager em) {
         this.em = em;
     }
+
+    public List getNameAndCode(final List<AreaLocationTypesEntity> entities, List<AreaTypeEntry> areaTypes) {
+
+        List resultList;
+        final StringBuilder sb = new StringBuilder();
+        Iterator<AreaTypeEntry> it = areaTypes.iterator();
+
+        Map<String, AreaLocationTypesEntity> typesEntityMap = new HashMap<>();
+        for(AreaLocationTypesEntity entity : entities){
+            typesEntityMap.put(entity.getTypeName(), entity);
+        }
+
+        while (it.hasNext()) {
+            AreaTypeEntry next = it.next();
+            AreaType areaType = next.getAreaType();
+            Long id = Long.valueOf(next.getId());
+            sb.append("(SELECT '").append(areaType.value()).append("' as type, area.name AS name, area.code AS code FROM spatial."
+                    + typesEntityMap.get(areaType.value()).getAreaDbTable() + " AS area WHERE area.gid = " + id + ")");
+            it.remove(); // avoids a ConcurrentModificationException
+            if (it.hasNext()) {
+                sb.append(" UNION ALL ");
+            }
+        }
+
+        log.debug("{} QUERY => {}", sb.toString());
+
+        final javax.persistence.Query emNativeQuery = em.createNativeQuery(sb.toString());
+        emNativeQuery.unwrap(SQLQuery.class).addScalar("type", StringType.INSTANCE).addScalar("name", StringType.INSTANCE).addScalar("code", StringType.INSTANCE);
+        resultList = emNativeQuery.getResultList();
+
+        return resultList;
+      }
 
     public List<Map<String, String>> findSelectedAreaColumns(String namedQueryString, Number gid) {
         Query query = em.unwrap(Session.class).getNamedQuery(namedQueryString);

@@ -5,6 +5,9 @@ import com.ninja_squad.dbsetup.destination.DataSourceDestination;
 import com.ninja_squad.dbsetup.operation.Operation;
 import eu.europa.ec.fisheries.uvms.spatial.dao.util.PostGres;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
+import junit.framework.Assert;
 import org.geotools.geometry.jts.GeometryBuilder;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,12 +16,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.ninja_squad.dbsetup.Operations.sequenceOf;
+import static junit.framework.Assert.*;
+import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 
-public class AreaDaoTest extends BaseSpatialDaoTest {
+public class AreasDaoTest extends BaseSpatialDaoTest {
 
-    private GenericSpatialDao dao = new GenericSpatialDao(em);
+    private AreasDao dao = new AreasDao(em);
 
     @Before
     public void prepare(){
@@ -26,7 +31,8 @@ public class AreaDaoTest extends BaseSpatialDaoTest {
         Operation operation = sequenceOf(DELETE_ALL,
                 INSERT_EEZ_REFERENCE_DATA,
                 INSERT_RFMO_REFERENCE_DATA ,
-                INSERT_PORT_AREA_REFERENCE_DATA);
+                INSERT_PORT_AREA_REFERENCE_DATA,
+                INSERT_COUNTRY_REFERENCE_DATA);
         DbSetup dbSetup = new DbSetup(new DataSourceDestination(ds), operation);
         dbSetupTracker.launchIfNecessary(dbSetup);
     }
@@ -36,6 +42,35 @@ public class AreaDaoTest extends BaseSpatialDaoTest {
         dbSetupTracker.skipNextLaunch();
         List list = dao.closestArea(null, null, null);
         assertTrue(list.isEmpty());
+    }
+
+    @Test
+    public void testGetNameAndCode(){
+        dbSetupTracker.skipNextLaunch();
+        List<AreaTypeEntry> areaTypeEntries = new ArrayList<>();
+        AreaTypeEntry eez = new AreaTypeEntry();
+        eez.setId("1");
+        eez.setAreaType(AreaType.EEZ);
+        areaTypeEntries.add(eez);
+        AreaTypeEntry country = new AreaTypeEntry();
+        country.setId("1");
+        country.setAreaType(AreaType.COUNTRY);
+        areaTypeEntries.add(country);
+
+        List<AreaLocationTypesEntity> locationTypesEntities = new ArrayList<>();
+
+        AreaLocationTypesEntity entity = new AreaLocationTypesEntity();
+        entity.setTypeName("EEZ");
+        entity.setAreaDbTable("eez");
+        locationTypesEntities.add(entity);
+
+        AreaLocationTypesEntity entity1 = new AreaLocationTypesEntity();
+        entity1.setTypeName("COUNTRY");
+        entity1.setAreaDbTable("countries");
+        locationTypesEntities.add(entity1);
+
+        List list = dao.getNameAndCode(locationTypesEntities, areaTypeEntries);
+        assertEquals(2, list.size());
     }
 
     @Test
