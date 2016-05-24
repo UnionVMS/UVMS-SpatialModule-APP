@@ -23,7 +23,7 @@ import org.hibernate.type.StandardBasicTypes;
 import org.hibernate.type.StringType;
 
 @Slf4j
-public class SpatialDao extends AbstractDAO<BaseSpatialEntity> {
+public class GenericSpatialDao extends AbstractDAO<BaseSpatialEntity> {
 
     private static final String GID = "gid";
     private static final String NAME = "name";
@@ -34,7 +34,7 @@ public class SpatialDao extends AbstractDAO<BaseSpatialEntity> {
 
     private EntityManager em;
 
-    public SpatialDao(EntityManager em) {
+    public GenericSpatialDao(EntityManager em) {
         this.em = em;
     }
 
