@@ -23,7 +23,7 @@ import org.hibernate.type.StandardBasicTypes;
 import org.hibernate.type.StringType;
 
 @Slf4j
-public class AreaDao extends AbstractDAO<BaseSpatialEntity> {
+public class SpatialDao extends AbstractDAO<BaseSpatialEntity> {
 
     private static final String GID = "gid";
     private static final String NAME = "name";
@@ -34,7 +34,7 @@ public class AreaDao extends AbstractDAO<BaseSpatialEntity> {
 
     private EntityManager em;
 
-    public AreaDao(EntityManager em) {
+    public SpatialDao(EntityManager em) {
         this.em = em;
     }
 
@@ -45,7 +45,7 @@ public class AreaDao extends AbstractDAO<BaseSpatialEntity> {
         return query.list();
     }
 
-    public List closestPoint(final List<AreaLocationTypesEntity> entities, final SpatialFunction spatialFunction, final Point point){
+    public List<BaseSpatialEntity> closestPoint(final List<AreaLocationTypesEntity> entities, final SpatialFunction spatialFunction, final Point point){
 
         List resultList = new ArrayList();
 
@@ -79,7 +79,7 @@ public class AreaDao extends AbstractDAO<BaseSpatialEntity> {
         return resultList;
     }
 
-    public List closestArea(final List<AreaLocationTypesEntity> entities, final SpatialFunction spatialFunction, final Point point){
+    public List<BaseSpatialEntity> closestArea(final List<AreaLocationTypesEntity> entities, final SpatialFunction spatialFunction, final Point point){
 
         List resultList = new ArrayList();
 
@@ -119,7 +119,7 @@ public class AreaDao extends AbstractDAO<BaseSpatialEntity> {
 
     }
 
-    public List intersectingArea(final List<AreaLocationTypesEntity> entities, final SpatialFunction spatialFunction, final Point point){
+    public List<BaseSpatialEntity> intersectingArea(final List<AreaLocationTypesEntity> entities, final SpatialFunction spatialFunction, final Point point){
 
         List resultList = new ArrayList();
 

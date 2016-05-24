@@ -15,6 +15,6 @@ public interface AreaService {
 
     AreaDetails getAreaDetailsById(AreaTypeEntry areaTypeEntry) throws ServiceException;
 
-    public Map<String, String> getAllCountriesDesc();
+    public Map<String, String> getAllCountriesDesc() throws ServiceException;
 
 }
