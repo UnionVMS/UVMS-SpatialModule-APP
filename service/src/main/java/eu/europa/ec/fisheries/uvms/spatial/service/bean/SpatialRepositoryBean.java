@@ -3,9 +3,10 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.QueryParameter;
-import eu.europa.ec.fisheries.uvms.spatial.dao.AreaDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.SpatialDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.AreaLocationTypesDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.BookmarkDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.CountryDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.PortDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.ProjectionDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.ReportConnectServiceAreaDao;
@@ -16,6 +17,7 @@ import eu.europa.ec.fisheries.uvms.spatial.dao.UserAreaDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.util.SpatialFunction;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.BookmarkEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.CountryEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.PortEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ProjectionEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
@@ -49,7 +51,7 @@ public class SpatialRepositoryBean implements SpatialRepository {
 
     private @PersistenceContext(unitName = "spatialPU") EntityManager em;
 
-    private AreaDao areaDao;
+    private SpatialDao areaDao;
     private UserAreaDao userAreaDao;
     private SysConfigDao sysConfigDao;
     private ReportConnectSpatialDao reportConnectSpatialDao;
@@ -59,10 +61,11 @@ public class SpatialRepositoryBean implements SpatialRepository {
     private ServiceLayerDao serviceLayerDao;
     private ReportConnectServiceAreaDao connectServiceAreaDao;
     private PortDao portDao;
+    private CountryDao countryDao;
 
     @PostConstruct
     public void init() {
-        areaDao = new AreaDao(em);
+        areaDao = new SpatialDao(em);
         userAreaDao = new UserAreaDao(em);
         sysConfigDao = new SysConfigDao(em);
         reportConnectSpatialDao = new ReportConnectSpatialDao(em);
@@ -72,6 +75,7 @@ public class SpatialRepositoryBean implements SpatialRepository {
         serviceLayerDao = new ServiceLayerDao(em);
         connectServiceAreaDao = new ReportConnectServiceAreaDao(em);
         portDao = new PortDao(em);
+        countryDao = new CountryDao(em);
     }
 
     @Override
@@ -355,6 +359,11 @@ public class SpatialRepositoryBean implements SpatialRepository {
         Point point = new GeometryBuilder().point(longitude, latitude);
         final Map parameters = QueryParameter.with("shape", point).parameters();
         return portDao.findEntityByNamedQuery(PortEntity.class, PortEntity.LIST_ORDERED_BY_DISTANCE, parameters, 10);
+    }
+
+    @Override
+    public List<CountryEntity> findAllCountries() throws ServiceException {
+        return countryDao.findEntityByNamedQuery(CountryEntity.class, CountryEntity.FIND_ALL);
     }
 
 }

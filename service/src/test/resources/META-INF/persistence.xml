@@ -10,9 +10,8 @@
         <class>eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity</class>
         <class>eu.europa.ec.fisheries.uvms.spatial.entity.ProviderFormatEntity</class>
         <class>eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity</class>
-        <class>eu.europa.ec.fisheries.uvms.spatial.entity.AreaStatusEntity</class>
         <class>eu.europa.ec.fisheries.uvms.spatial.entity.BookmarkEntity</class>
-        <class>eu.europa.ec.fisheries.uvms.spatial.entity.CountriesEntity</class>
+        <class>eu.europa.ec.fisheries.uvms.spatial.entity.CountryEntity</class>
         <class>eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity</class>
         <class>eu.europa.ec.fisheries.uvms.spatial.entity.RfmoEntity</class>
         <class>eu.europa.ec.fisheries.uvms.spatial.entity.PortAreasEntity</class>
@@ -23,7 +22,6 @@
         <class>eu.europa.ec.fisheries.uvms.spatial.entity.StatRectEntity</class>
         <class>eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity</class>
         <class>eu.europa.ec.fisheries.uvms.spatial.entity.UserScopeEntity</class>
-        <class>eu.europa.ec.fisheries.uvms.spatial.entity.ReportLayerConfigEntity</class>
         <class> eu.europa.ec.fisheries.uvms.spatial.entity.config.SysConfigEntity</class>
         <properties>
             <property name="hibernate.default_schema" value="spatial"/>
