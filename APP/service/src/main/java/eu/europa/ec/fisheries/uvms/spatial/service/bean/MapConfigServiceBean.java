@@ -243,8 +243,7 @@ public class MapConfigServiceBean implements MapConfigService {
 
     private ReportConnectSpatialEntity getReportConnectSpatialEntity(final SpatialSaveOrUpdateMapConfigurationRQ request) throws ServiceException {
         ReportConnectSpatialEntity entity = repository.findReportConnectSpatialByReportIdAndConnectId(request.getMapConfiguration().getReportId(), request.getMapConfiguration().getSpatialConnectId());
-        ProjectionEntity mapProjection = repository.findProjectionEntityById(request.getMapConfiguration().getMapProjectionId());
-        ProjectionEntity displayProjection = repository.findProjectionEntityById(request.getMapConfiguration().getDisplayProjectionId());
+
         if (entity != null) {
             entity.setScaleBarType(request.getMapConfiguration().getScaleBarUnits());
             entity.setDisplayFormatType(request.getMapConfiguration().getCoordinatesFormat());
@@ -252,8 +251,18 @@ public class MapConfigServiceBean implements MapConfigService {
         } else {
             entity = ReportConnectSpatialMapper.INSTANCE.mapConfigurationTypeToReportConnectSpatialEntity(request.getMapConfiguration());
         }
-        entity.setProjectionByDisplayProjId(displayProjection);
-        entity.setProjectionByMapProjId(mapProjection);
+
+        Long mapProjectionId = request.getMapConfiguration().getMapProjectionId();
+        if (mapProjectionId != null){
+            ProjectionEntity mapProjection = repository.findProjectionEntityById(mapProjectionId);
+            entity.setProjectionByMapProjId(mapProjection);
+        }
+        Long displayProjectionId = request.getMapConfiguration().getDisplayProjectionId();
+        if (displayProjectionId != null){
+            ProjectionEntity displayProjection = repository.findProjectionEntityById(displayProjectionId);
+            entity.setProjectionByDisplayProjId(displayProjection);
+        }
+
         return entity;
     }
 
