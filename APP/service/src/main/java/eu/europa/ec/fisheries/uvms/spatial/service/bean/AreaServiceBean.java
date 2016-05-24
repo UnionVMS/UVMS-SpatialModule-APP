@@ -2,10 +2,10 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.interceptors.SimpleTracingInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.dao.CountryDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.util.DAOFactory;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.BaseSpatialEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.CountryEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
@@ -19,7 +19,6 @@ import eu.europa.ec.fisheries.uvms.spatial.util.ShapeFileReader;
 import eu.europa.ec.fisheries.uvms.spatial.util.SpatialTypeEnum;
 import eu.europa.ec.fisheries.uvms.spatial.util.SupportedFileExtensions;
 import eu.europa.ec.fisheries.uvms.spatial.util.ZipExtractor;
-import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import lombok.extern.slf4j.Slf4j;
@@ -50,8 +49,6 @@ public class AreaServiceBean implements AreaService {
 
     private @PersistenceContext(unitName = "spatialPU") EntityManager em;
 
-    private static final String CODE = "code";
-    private static final String NAME = "name";
     private static final String AREA_ZIP_FILE = "AreaFile.zip";
     private static final String PREFIX = "temp";
     private static final String GID = "gid";
@@ -61,21 +58,14 @@ public class AreaServiceBean implements AreaService {
     private @EJB AreaService areaService;
     private @EJB SpatialRepository repository;
 
-    private CountryDao countryDao;
-
-    @PostConstruct
-    public void init() {
-        countryDao = new CountryDao(em);
-    }
-
     @Override
-    public Map<String, String> getAllCountriesDesc() {
-        Map<String, String> countries = new HashMap<>();
-        List<Map<String, String>> countryList = countryDao.findAllCountriesDesc();
-        for (Map<String, String> country : countryList) {
-            countries.put(country.get(CODE), country.get(NAME));
+    public Map<String, String> getAllCountriesDesc() throws ServiceException {
+        Map<String, String> stringStringMap = new HashMap<>();
+        List<CountryEntity> entityByNamedQuery = repository.findAllCountries();
+        for (CountryEntity country : entityByNamedQuery){
+            stringStringMap.put(country.getCode(), country.getName());
         }
-        return countries;
+        return stringStringMap;
     }
 
     @Override

@@ -3,11 +3,11 @@ package eu.europa.ec.fisheries.uvms.spatial.dao;
 import com.ninja_squad.dbsetup.DbSetup;
 import com.ninja_squad.dbsetup.destination.DataSourceDestination;
 import com.ninja_squad.dbsetup.operation.Operation;
+import eu.europa.ec.fisheries.uvms.spatial.entity.CountryEntity;
 import lombok.SneakyThrows;
 import org.junit.Before;
 import org.junit.Test;
 import java.util.List;
-import java.util.Map;
 
 import static com.ninja_squad.dbsetup.Operations.sequenceOf;
 import static org.junit.Assert.assertEquals;
@@ -28,13 +28,13 @@ public class CountryDaoTest extends BaseSpatialDaoTest {
     public void testFindAllCountriesDesc() {
         dbSetupTracker.skipNextLaunch();
 
-        List<Map<String, String>> allCountriesDesc = dao.findAllCountriesDesc();
+        List<CountryEntity> entityByNamedQuery = dao.findEntityByNamedQuery(CountryEntity.class, CountryEntity.FIND_ALL);
 
-        assertEquals("Portugal", allCountriesDesc.get(0).get("name"));
-        assertEquals("PRT", allCountriesDesc.get(0).get("code"));
+        assertEquals("Portugal", entityByNamedQuery.get(0).getName());
+        assertEquals("PRT", entityByNamedQuery.get(0).getCode());
 
-        assertEquals("Spain", allCountriesDesc.get(1).get("name"));
-        assertEquals("ESP", allCountriesDesc.get(1).get("code"));
+        assertEquals("Spain", entityByNamedQuery.get(1).getName());
+        assertEquals("ESP", entityByNamedQuery.get(1).getCode());
 
     }
 }

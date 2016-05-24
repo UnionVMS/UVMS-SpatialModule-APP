@@ -1,14 +1,16 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
+import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.AreaService;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import lombok.extern.slf4j.Slf4j;
-
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
-import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -24,6 +26,12 @@ public class CountryResource extends UnionVMSResource {
     @Produces({MediaType.APPLICATION_JSON})
     @Interceptors(value = {ExceptionInterceptor.class})
     public Response getAllCountriesDesc() {
-        return createSuccessResponse(areaService.getAllCountriesDesc());
+        Response response;
+        try {
+            response = createSuccessResponse(areaService.getAllCountriesDesc());
+        } catch (ServiceException e) {
+            response = createErrorResponse();
+        }
+        return response;
     }
 }

@@ -18,7 +18,7 @@ import static org.junit.Assert.assertEquals;
 
 public class AreaDaoTest extends BaseSpatialDaoTest {
 
-    private AreaDao dao = new AreaDao(em);
+    private SpatialDao dao = new SpatialDao(em);
 
     @Before
     public void prepare(){

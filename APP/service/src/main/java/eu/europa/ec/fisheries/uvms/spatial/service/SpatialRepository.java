@@ -5,6 +5,7 @@ import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.dao.util.SpatialFunction;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.BookmarkEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.CountryEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.PortEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ProjectionEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
@@ -128,4 +129,5 @@ public interface SpatialRepository {
 
     List<PortEntity> listClosestPorts(Double incomingLongitude, Double incomingLatitude, Integer limit) throws ServiceException;
 
+    List<CountryEntity> findAllCountries() throws ServiceException;
 }
