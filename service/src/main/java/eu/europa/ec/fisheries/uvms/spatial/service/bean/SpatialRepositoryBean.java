@@ -3,7 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.QueryParameter;
-import eu.europa.ec.fisheries.uvms.spatial.dao.GenericSpatialDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.AreasDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.AreaLocationTypesDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.BookmarkDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.CountryDao;
@@ -51,7 +51,7 @@ public class SpatialRepositoryBean implements SpatialRepository {
 
     private @PersistenceContext(unitName = "spatialPU") EntityManager em;
 
-    private GenericSpatialDao areaDao;
+    private AreasDao areaDao;
     private UserAreaDao userAreaDao;
     private SysConfigDao sysConfigDao;
     private ReportConnectSpatialDao reportConnectSpatialDao;
@@ -65,7 +65,7 @@ public class SpatialRepositoryBean implements SpatialRepository {
 
     @PostConstruct
     public void init() {
-        areaDao = new GenericSpatialDao(em);
+        areaDao = new AreasDao(em);
         userAreaDao = new UserAreaDao(em);
         sysConfigDao = new SysConfigDao(em);
         reportConnectSpatialDao = new ReportConnectSpatialDao(em);
