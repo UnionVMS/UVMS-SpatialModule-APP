@@ -73,7 +73,7 @@ public class AreaServiceBean implements AreaService {
     public List<Map<String, String>> getSelectedAreaColumns(final List<AreaTypeEntry> areaTypes) throws ServiceException {
 
         List<Map<String, String>> columnMapList = new ArrayList<>();
-        for(AreaTypeEntry areaTypeEntry : areaTypes) {
+        for(AreaTypeEntry areaTypeEntry : areaTypes) { // TODO @Greg get rid of the loop
             String gid = areaTypeEntry.getId();
             String areaType = areaTypeEntry.getAreaType().value();
 

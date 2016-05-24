@@ -22,11 +22,6 @@ public final class QueryNameConstants {
     public static final String FIND_ALL_USER_AREAS_BY_GIDS = "UserAreas.findAllUserAreasByGid";
 
     /**
-     * Find Area By Name
-     */
-    public static final String FIND_TYPE_BY_NAMES = "AreaLocationType.findAreaByNames";
-
-    /**
      * Native Queries
      */
     public static final String EEZ_COLUMNS = "eezEntity.findSelectedColumns";
