@@ -11,17 +11,17 @@
             <column name="name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="srs_code" remarks="epsg code" type="INT">
+            <column name="srs_code" remarks="epsg code" type="TINYINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="proj_def" remarks="proj4js definition" type="TEXT" />
+            <column name="proj_def" remarks="proj4js definition" type="CLOB" />
             <column name="formats" remarks="dd;dms;ddm&#10;m" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
             <column name="units" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="world" type="BPCHAR(1)">
+            <column name="world" type="VARCHAR(1)">
                 <constraints nullable="false"/>
             </column>
             <column name="extent" type="VARCHAR(255)">

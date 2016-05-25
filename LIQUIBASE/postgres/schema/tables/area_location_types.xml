@@ -8,7 +8,7 @@
             <column autoIncrement="true" name="id" type="SERIAL">
                 <constraints primaryKey="true" primaryKeyName="area_types_pkey"/>
             </column>
-            <column name="service_layer_id" type="INT">
+            <column name="service_layer_id" type="TINYINT">
                 <constraints nullable="false"/>
             </column>
             <column name="type_name" remarks="Area type" type="VARCHAR(255)">
@@ -18,10 +18,10 @@
             <column name="area_db_table" remarks="This will keep the name of the table of the particular area type. For instance, user defined maps are stored in USER_AREA." type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="is_system_wide" type="BPCHAR(1)">
+            <column name="is_system_wide" type="VARCHAR(1)">
                 <constraints nullable="false"/>
             </column>
-			<column name="is_location" type="BPCHAR(1)">
+			<column name="is_location" type="VARCHAR(1)">
                 <constraints nullable="false"/>
             </column>
         </createTable>

@@ -8,7 +8,7 @@
             <column autoIncrement="true" name="id" type="BIGSERIAL">
                 <constraints primaryKey="true" primaryKeyName="bookmark_pkey"/>
             </column>
-             <column name="srs" type="INT">
+             <column name="srs" type="TINYINT">
                 <constraints nullable="false"/>
             </column>
             <column name="name" type="VARCHAR(255)">

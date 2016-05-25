@@ -8,10 +8,10 @@
             <column autoIncrement="true" name="id" type="BIGSERIAL">
                 <constraints primaryKey="true" primaryKeyName="area_connect_group_pkey"/>
             </column>
-            <column name="area_type_id" type="INT">
+            <column name="area_type_id" type="TINYINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="area_group_id" type="INT">
+            <column name="area_group_id" type="TINYINT">
                 <constraints nullable="false"/>
             </column>
             <column name="area_id" remarks="It is not nullable because we are not sure that selection within the predefine areas will be supported (for instance EEZ feature 1)" type="BIGINT">

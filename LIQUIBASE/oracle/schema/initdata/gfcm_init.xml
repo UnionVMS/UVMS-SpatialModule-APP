@@ -4,17 +4,12 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd   http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-spatial
       http://lonnyj.github.com/liquibase-spatial/liquibase-spatial.xsd">
-      
-    <changeSet author="padhyad" id="1443103928545-29">
+
+    <changeSet author="martinhu" id="1462540272744-20">
         <preConditions>
             <spatial:spatialSupported/>
         </preConditions>
-        <createTable tableName="custom_areas">
-            <column autoIncrement="true" name="gid" type="SERIAL">
-                <constraints primaryKey="true" primaryKeyName="custom_areas_pkey"/>
-            </column>
-            <column name="geom" type="geometry(Multipolygon, 4326)"/>
-        </createTable>
-        <sql>create index custom_areas_geom_index on spatial.custom_areas using gist(geom)</sql>
+        <loadData
+                file="postgres/schema/initdata/csv/gfcm.csv" tableName="gfcm"/>
     </changeSet>
 </databaseChangeLog>

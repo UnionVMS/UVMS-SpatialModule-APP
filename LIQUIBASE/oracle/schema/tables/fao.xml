@@ -12,7 +12,7 @@
             <column name="id" valueComputed="fao_id_seq.NEXTVAL" type="NUMBER(11, 0)">
                 <constraints nullable="false"/>
             </column>
-            <column name="geom" type="SDO_GEOMETRY"/>
+            <column name="geom" type="GEOMETRY(Multipolygon, 4326)"/>
             <column name="name" type="NVARCHAR2(255)"/>
             <column name="code" type="NVARCHAR2(20)"/>
             <column name="enabled" type="NCHAR(1)">

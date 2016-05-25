@@ -8,7 +8,6 @@
     <include file="\oracle\schema\tables\report_layer_config.xml"/>
     <include file="\oracle\schema\tables\report_connect_service_areas.xml"/>
     <include file="\oracle\schema\tables\report_connect_spatial.xml"/>
-    <include file="\oracle\schema\tables\area_status.xml"/>
     <include file="\oracle\schema\tables\area_location_types.xml"/>
     <include file="\oracle\schema\tables\bookmark.xml"/>
     <include file="\oracle\schema\tables\eez.xml"/>
@@ -23,9 +22,8 @@
     <include file="\oracle\schema\tables\rfmo.xml"/>
     <include file="\oracle\schema\tables\stat_rect.xml"/>
     <include file="\oracle\schema\tables\user_areas.xml"/>
-    <include file="\oracle\schema\tables\custom_areas.xml"/>
-    <include file="\oracle\schema\tables\custom_area_properties.xml"/>
     <include file="\oracle\schema\tables\system_configurations.xml"/>
 	<include file="\oracle\schema\tables\user_scope.xml"/>
+    <include file="\oracle\schema\initdata\countries_init.xml"/>
 
 </databaseChangeLog>

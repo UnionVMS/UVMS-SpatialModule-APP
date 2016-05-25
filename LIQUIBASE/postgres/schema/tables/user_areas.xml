@@ -21,39 +21,38 @@
             </column>
             <column name="code" type="VARCHAR(20)"/>
             <column name="type" type="VARCHAR(255)"/>
-            <column name="area_desc" remarks="Description of the area" type="TEXT"/>
-            <column name="geom" remarks="Geometry of the area" type="geometry(Multipolygon, 4326)">
+            <column name="area_desc" remarks="Description of the area" type="CLOB"/>
+            <column name="geom" remarks="Geometry of the area" type="GEOMETRY(Multipolygon, 4326)">
                 <constraints nullable="false"/>
             </column>
-              <column name="enabled_on" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
-            <column name="created_on" type="TIMESTAMP(29) WITHOUT TIME ZONE">
+              <column name="enabled_on" type="TIMESTAMP"/>
+            <column name="created_on" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
-            <column name="start_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
-            <column name="end_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
-<column name="dataset_name" type="VARCHAR(255)"/><column name="enabled" type="BPCHAR(1)">
+            <column name="start_date" type="TIMESTAMP"/>
+            <column name="end_date" type="TIMESTAMP"/>
+            <column name="dataset_name" type="VARCHAR(255)"/><column name="enabled" type="VARCHAR(1)">
                 <constraints nullable="false"/>
-            </column>	        </createTable>
+            </column>
+        </createTable>
 
-        <sql>create index user_areas_geom_index on spatial.user_areas using gist(geom);
-			ALTER TABLE spatial.user_areas  ADD CONSTRAINT dataset_name_ukey UNIQUE (dataset_name);
-		</sql>
     </changeSet>
-    
-   <!-- <changeSet author="padhyad" id="1439890745706-68">
-      <preConditions>
-         <tableExists tableName="user_areas" />
-         <not>
-            <spatial:spatialIndexExists tableName="user_areas" columnNames="geom" />
-         </not>
-      </preConditions>
-      <spatial:createSpatialIndex tableName="user_areas" indexName="user_areas_geom_index" geometryType="Multipolygon" srid="4326">
-         <column name="geom" />
-      </spatial:createSpatialIndex>
-   </changeSet> -->
-    
-    <changeSet author="padhyad" id="1439890745706-55">
-        <addForeignKeyConstraint baseColumnNames="user_area_id" baseTableName="area_status" constraintName="area_status_user_area_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="gid" referencedTableName="user_areas"/>
+
+    <changeSet author="emrinalgr" id="2">
+        <addUniqueConstraint catalogName="spatial"
+                             columnNames="dataset_name"
+                             constraintName="const_dataset_name"
+                             deferrable="true"
+                             disabled="true"
+                             initiallyDeferred="true"
+                             schemaName="spatial"
+                             tableName="user_areas"/>
+    </changeSet>
+
+    <changeSet id="1" author="emrinalgr">
+        <spatial:createSpatialIndex tableName="user_areas" indexName="user_areas_geom_index" geometryType="Multipolygon" srid="4326">
+            <column name="geom" />
+        </spatial:createSpatialIndex>
     </changeSet>
 
 </databaseChangeLog>

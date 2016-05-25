@@ -62,9 +62,9 @@ public class BaseSpatialEntity extends BaseEntity {
     private Date enabledOn;
 
     public BaseSpatialEntity(Map<String, Object> values) throws ServiceException {
-        geom = ((Geometry) values.get("the_geom"));
-        code = (readStringProperty(values, "code"));
-        name = (readStringProperty(values, "name"));
+        geom = (Geometry) values.get("the_geom");
+        code = readStringProperty(values, "code");
+        name = readStringProperty(values, "name");
         enabled = true;
         enabledOn = new Date();
     }

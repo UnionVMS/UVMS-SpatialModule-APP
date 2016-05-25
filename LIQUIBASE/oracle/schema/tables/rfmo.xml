@@ -17,7 +17,7 @@
             <column name="gid" valueComputed="rfmo_gid_seq.NEXTVAL" type="NUMBER(11, 0)">
                 <constraints nullable="false"/>
             </column>
-            <column name="geom" type="SDO_GEOMETRY"/>
+            <column name="geom" type="GEOMETRY(Multipolygon, 4326)"/>
             <column name="code" type="NVARCHAR2(20)"/>
             <column name="name" type="NVARCHAR2(255)"/>
             <column name="tuna" type="NVARCHAR2(10)"/>

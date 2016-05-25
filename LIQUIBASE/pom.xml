@@ -24,8 +24,8 @@
             <properties>
                 <db.driver>oracle.jdbc.driver.OracleDriver</db.driver>
                 <db.url>jdbc:oracle:thin:@10.10.10.9:1521:db12102</db.url>
-                <db.user>sys as sysdba</db.user>
-                <db.passwd>oracle</db.passwd>
+                <db.user>SPATIAL</db.user>
+                <db.passwd>SPATIAL</db.passwd>
                 <db.defaultSchema>SPATIAL</db.defaultSchema>
                 <db.changeLogFile>oracle/changelog/db-changelog-master.xml</db.changeLogFile>
                 <db.outputFile>oracle/changelog/generatedChangelog.xml</db.outputFile>
@@ -109,12 +109,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.github.lonnyj</groupId>
-            <artifactId>liquibase-spatial</artifactId>
-            <version>1.2.1</version>
-        </dependency>
-
-        <dependency>
             <groupId>com.oracle</groupId>
     		<artifactId>ojdbc6</artifactId>
     		<version>11.2.0.4</version>
@@ -129,6 +123,13 @@
                     <groupId>org.liquibase</groupId>
                     <artifactId>liquibase-maven-plugin</artifactId>
                     <version>3.3.2</version>
+                    <dependencies>
+                  <dependency>
+            <groupId>com.github.lonnyj</groupId>
+            <artifactId>liquibase-spatial</artifactId>
+            <version>1.2.1</version>
+        </dependency>
+            </dependencies>
                     <configuration>
                         <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
                         <changeLogFile>${db.changeLogFile}</changeLogFile>

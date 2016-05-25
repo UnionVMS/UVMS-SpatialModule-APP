@@ -15,7 +15,7 @@
             <column name="layer_order" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="sld" type="TEXT"/>
+            <column name="sld" type="CLOB"/>
         </createTable>
     </changeSet>
 

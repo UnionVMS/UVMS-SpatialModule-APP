@@ -5,12 +5,11 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd   http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-spatial
       http://lonnyj.github.com/liquibase-spatial/liquibase-spatial.xsd">
 
-    <changeSet author="kopyczmi" id="1436863739768-1">
-    	<preConditions>
+    <changeSet author="martinhu" id="1462540272744-20">
+        <preConditions>
             <spatial:spatialSupported/>
         </preConditions>
-        <loadData file="oracle/schema/initdata/csv/eez.csv" tableName="eez">
-        	
-        </loadData>
+        <loadData
+                file="postgres/schema/initdata/csv/fmz.csv" tableName="fmz"/>
     </changeSet>
 </databaseChangeLog>

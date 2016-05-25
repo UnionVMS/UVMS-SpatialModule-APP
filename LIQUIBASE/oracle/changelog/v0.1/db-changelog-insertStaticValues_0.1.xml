@@ -9,9 +9,9 @@
 	<include file="oracle\schema\initdata\area_location_types_init.xml"/>
 	<include file="oracle\schema\initdata\projection_init.xml"/>
 	<include file="oracle\schema\initdata\system_configurations_init.xml"/>
-  <!--  <include file="oracle\schema\initdata\eez_init.xml"/>
- 	<include file="oracle\schema\initdata\rfmo_init.xml"/>
-	<include file="oracle\schema\initdata\port_init.xml"/>
-	<include file="oracle\schema\initdata\port_area_init.xml"/>-->
+<include file="oracle\schema\initdata\eez_init.xml"/>
+    <!--  	<include file="oracle\schema\initdata\rfmo_init.xml"/>
+     <include file="oracle\schema\initdata\port_init.xml"/>
+     <include file="oracle\schema\initdata\port_area_init.xml"/>-->
 	
 </databaseChangeLog>
