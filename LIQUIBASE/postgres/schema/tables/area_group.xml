@@ -10,8 +10,8 @@
 
     <changeSet author="padhyad" id="1439890745706-31">
         <createTable tableName="area_group">
-            <column autoIncrement="true" name="id" type="SERIAL">
-                <constraints primaryKey="true" primaryKeyName="area_group_pkey"/>
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="area_group_pkey" defaultValueSequenceNext="area_group_seq"/>
             </column>
             <column name="user_id" type="VARCHAR(255)">
                 <constraints nullable="false"/>

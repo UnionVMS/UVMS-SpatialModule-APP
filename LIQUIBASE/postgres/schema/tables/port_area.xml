@@ -15,7 +15,7 @@
             <spatial:spatialSupported/>
         </preConditions>
         <createTable tableName="port_area">
-            <column autoIncrement="true" name="gid" type="SERIAL">
+            <column name="gid" type="BIGINT" defaultValueSequenceNext="port_area_seq">
                 <constraints primaryKey="true" primaryKeyName="port_area_pkey"/>
             </column>
             <column name="geom" type="GEOMETRY(Multipolygon, 4326)"/>

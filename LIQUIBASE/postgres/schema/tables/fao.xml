@@ -12,7 +12,7 @@
 
 	<changeSet author="martinhu" id="1462799386763-8">
         <createTable tableName="fao">
-            <column autoIncrement="true" name="gid" type="SERIAL">
+            <column name="gid" type="BIGINT" defaultValueSequenceNext="fao_seq">
                 <constraints primaryKey="true" primaryKeyName="fao_pkey"/>
             </column>
             <column name="geom" type="GEOMETRY(Multipolygon, 4326)"/>

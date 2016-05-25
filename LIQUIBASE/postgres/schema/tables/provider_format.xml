@@ -10,7 +10,7 @@
 
    <changeSet author="padhyad" id="1439890745706-40">
         <createTable tableName="provider_format">
-            <column autoIncrement="true" name="id" type="SERIAL">
+            <column name="id" type="BIGINT" defaultValueSequenceNext="provider_format_seq">
                 <constraints primaryKey="true" primaryKeyName="provider_format_pkey"/>
             </column>
             <column name="service_type" type="VARCHAR(10)">

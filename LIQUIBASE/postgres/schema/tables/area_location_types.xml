@@ -12,7 +12,7 @@
 
 <changeSet author="padhyad" id="1439890745706-33">
         <createTable tableName="area_location_types">
-            <column autoIncrement="true" name="id" type="SERIAL">
+            <column name="id" type="BIGINT" defaultValueSequenceNext="area_location_types_seq">
                 <constraints primaryKey="true" primaryKeyName="area_types_pkey"/>
             </column>
             <column name="service_layer_id" type="TINYINT">

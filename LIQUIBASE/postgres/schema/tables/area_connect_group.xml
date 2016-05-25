@@ -10,7 +10,7 @@
 
     <changeSet author="padhyad" id="1439890745706-30">
         <createTable tableName="area_connect_group">
-            <column autoIncrement="true" name="id" type="BIGSERIAL">
+            <column name="id" type="BIGINT" defaultValueSequenceNext="area_connect_group_seq">
                 <constraints primaryKey="true" primaryKeyName="area_connect_group_pkey"/>
             </column>
             <column name="area_type_id" type="TINYINT">

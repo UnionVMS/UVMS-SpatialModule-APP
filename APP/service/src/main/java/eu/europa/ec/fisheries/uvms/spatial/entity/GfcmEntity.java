@@ -14,7 +14,6 @@ import javax.persistence.Table;
         @NamedQuery(name = GfcmEntity.GFMC_BY_INTERSECT,
                 query = "FROM GfcmEntity WHERE intersects(geom, :shape) = true AND enabled = 'Y'")
 })
-//@SequenceGenerator(name = "default_gen", sequenceName = "gfcm_seq", allocationSize = 1)
 public class GfcmEntity extends BaseSpatialEntity {
 
     public static final String DISABLE_GFMC_AREAS = "gfmcEntity.disable";

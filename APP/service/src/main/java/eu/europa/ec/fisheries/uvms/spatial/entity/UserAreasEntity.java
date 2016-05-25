@@ -68,7 +68,6 @@ import java.util.Set;
 @Table(name="user_areas", uniqueConstraints = {
         @UniqueConstraint(columnNames={"name", "user_name"})
 })
-//@SequenceGenerator(name = "default_gen", sequenceName = "user_areas_seq", allocationSize = 1)
 public class UserAreasEntity extends BaseSpatialEntity {
 
     public static final String USER_AREA_DETAILS_BY_LOCATION = "UserArea.findUserAreaDetailsByLocation";

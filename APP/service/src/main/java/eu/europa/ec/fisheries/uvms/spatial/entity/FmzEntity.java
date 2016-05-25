@@ -22,7 +22,6 @@ import org.joda.time.format.DateTimeFormatter;
         @NamedQuery(name = FmzEntity.BY_INTERSECT,
                 query = "FROM FaoEntity WHERE intersects(geom, :shape) = true AND enabled = 'Y'")
 })
-//@SequenceGenerator(name = "default_gen", sequenceName = "fmz_seq", allocationSize = 1)
 public class FmzEntity extends BaseSpatialEntity {
 
     public static final String DISABLE = "fmzEntity.disable";

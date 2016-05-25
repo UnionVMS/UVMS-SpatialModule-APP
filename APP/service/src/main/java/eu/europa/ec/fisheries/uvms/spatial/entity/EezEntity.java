@@ -22,7 +22,6 @@ import java.util.Map;
 })
 @Table(name = "eez")
 @EqualsAndHashCode(callSuper = true)
-//@SequenceGenerator(name = "default_gen", sequenceName = "eez_seq", allocationSize = 1)
 public class EezEntity extends BaseSpatialEntity {
 
     public static final String EEZ_BY_COORDINATE = "eezEntity.ByCoordinate";
