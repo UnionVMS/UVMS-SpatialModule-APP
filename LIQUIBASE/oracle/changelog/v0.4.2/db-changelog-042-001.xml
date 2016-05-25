@@ -2,15 +2,15 @@
   xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
   xsi:schemaLocation='http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd'>
   <changeSet id="001" author="Greg">
-    <sql>
-      create view spatial.user_areas_v as
-  select * from spatial.user_areas as areas LEFT JOIN
-    (select a.user_area_id as id, string_agg(a.scope, '|') as scopes from
-      (select user_area_id, '#'||scope_name||'#' as scope from spatial.user_scope group by scope, user_area_id) as a
-    group by a.user_area_id) as area_scopes ON areas.gid = area_scopes.id;
 
-ALTER TABLE spatial.user_areas_v
-OWNER TO spatial;
-    </sql>
+        <createView catalogName="spatial"
+                    replaceIfExists="true"
+                    schemaName="spatial"
+                    viewName="user_areas_v">select * from spatial.user_areas as areas LEFT JOIN
+            (select a.user_area_id as id, string_agg(a.scope, '|') as scopes from
+            (select user_area_id, '#'||scope_name||'#' as scope from spatial.user_scope group by scope, user_area_id) as a
+            group by a.user_area_id) as area_scopes ON areas.gid = area_scopes.id
+        </createView>
+
   </changeSet>
 </databaseChangeLog>
