@@ -27,8 +27,8 @@
                 <db.user>SPATIAL</db.user>
                 <db.passwd>SPATIAL</db.passwd>
                 <db.defaultSchema>SPATIAL</db.defaultSchema>
-                <db.changeLogFile>oracle/changelog/db-changelog-master.xml</db.changeLogFile>
-                <db.outputFile>oracle/changelog/generatedChangelog.xml</db.outputFile>
+                <db.changeLogFile>postgres/changelog/db-changelog-master.xml</db.changeLogFile>
+                <db.outputFile>postgres/changelog/generatedChangelog.xml</db.outputFile>
             </properties>
         </profile>
         
@@ -125,12 +125,12 @@
                     <artifactId>liquibase-maven-plugin</artifactId>
                     <version>3.5.1</version>
                     <dependencies>
-                  <dependency>
-                    <groupId>com.github.lonnyj</groupId>
-                    <artifactId>liquibase-spatial</artifactId>
-                    <version>1.2.1</version>
-        </dependency>
-            </dependencies>
+                      <dependency>
+                        <groupId>com.github.lonnyj</groupId>
+                        <artifactId>liquibase-spatial</artifactId>
+                        <version>1.2.1</version>
+                      </dependency>
+                    </dependencies>
                     <configuration>
                         <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
                         <changeLogFile>${db.changeLogFile}</changeLogFile>
@@ -140,7 +140,6 @@
                         <password>${db.passwd}</password>
                         <defaultSchemaName>${db.defaultSchema}</defaultSchemaName>
                         <outputChangeLogFile>${db.outputFile}</outputChangeLogFile>
-                        <!--<diffTypes>data</diffTypes>-->
                     </configuration>
                     <executions>
                         <execution>

@@ -5,6 +5,11 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd
         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
+    <changeSet author="emrinalgr" id="1439890745706-51">
+        <createSequence cycle="false" incrementBy="1" maxValue="9223372036854775807" minValue="1"
+                        sequenceName="area_location_types_seq" startValue="1"/>
+    </changeSet>
+
 <changeSet author="padhyad" id="1439890745706-33">
         <createTable tableName="area_location_types">
             <column autoIncrement="true" name="id" type="SERIAL">
@@ -31,11 +36,6 @@
     
     <changeSet author="padhyad" id="1439890745706-50">
         <addUniqueConstraint columnNames="type_name" constraintName="area_location_types_type_name_key" tableName="area_location_types"/>
-    </changeSet>
-
-    <changeSet author="emrinalgr" id="1439890745706-51">
-        <createSequence cycle="false" incrementBy="1" maxValue="9223372036854775807" minValue="1"
-                        sequenceName="area_location_types_seq" startValue="1"/>
     </changeSet>
 
 </databaseChangeLog>
