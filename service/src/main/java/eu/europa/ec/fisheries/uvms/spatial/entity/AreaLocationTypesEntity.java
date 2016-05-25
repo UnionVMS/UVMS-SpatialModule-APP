@@ -18,7 +18,6 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "area_location_types", uniqueConstraints = @UniqueConstraint(columnNames = "type_name"))
 @NamedQueries({
         @NamedQuery(name = AreaLocationTypesEntity.FIND_ALL_AREA_AND_LOCATION_TYPE_NAMES, query = "FROM AreaLocationTypesEntity area"),
         @NamedQuery(name = AreaLocationTypesEntity.FIND_ALL_IS_LOCATION, query = "FROM AreaLocationTypesEntity area WHERE isLocation = :isLocation"),
@@ -43,6 +42,8 @@ import javax.persistence.UniqueConstraint;
 
 @ToString
 @EqualsAndHashCode(callSuper = true)
+//@SequenceGenerator(name = "default_gen", sequenceName = "area_location_types_seq", allocationSize = 1)
+@Table(name = "area_location_types", uniqueConstraints = @UniqueConstraint(columnNames = "type_name"))
 public class AreaLocationTypesEntity extends BaseEntity {
 
     public static final String FIND_ALL_IS_LOCATION  = "AreaLocationType.findAllIsLocation";

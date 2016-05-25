@@ -21,6 +21,7 @@ import java.util.Map;
                 query = "UPDATE RfmoEntity SET enabled = 'N'")
 })
 @Table(name = "rfmo")
+//@SequenceGenerator(name = "default_gen", sequenceName = "rfmo_seq", allocationSize = 1)
 public class RfmoEntity extends BaseSpatialEntity {
 
     public static final String RFMO_BY_COORDINATE = "rfmoEntity.ByCoordinate";

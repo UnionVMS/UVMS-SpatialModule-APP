@@ -13,6 +13,7 @@ import javax.persistence.Table;
         @NamedQuery(name = RacEntity.DISABLE_RAC, query = "UPDATE RacEntity SET enabled = 'N'"),
         @NamedQuery(name = RacEntity.RAC_BY_INTERSECT, query = "FROM RacEntity WHERE intersects(geom, :shape) = true AND enabled = 'Y'"),
 })
+//@SequenceGenerator(name = "default_gen", sequenceName = "rac_seq", allocationSize = 1)
 public class RacEntity extends BaseSpatialEntity {
 
     public static final String RAC_BY_INTERSECT = "racEntity.byIntersect";

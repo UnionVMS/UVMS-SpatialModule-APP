@@ -3,6 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.entity;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
+import javax.persistence.SequenceGenerator;
 import lombok.EqualsAndHashCode;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,6 +22,7 @@ import java.util.Map;
 })
 @Table(name = "eez")
 @EqualsAndHashCode(callSuper = true)
+//@SequenceGenerator(name = "default_gen", sequenceName = "eez_seq", allocationSize = 1)
 public class EezEntity extends BaseSpatialEntity {
 
     public static final String EEZ_BY_COORDINATE = "eezEntity.ByCoordinate";

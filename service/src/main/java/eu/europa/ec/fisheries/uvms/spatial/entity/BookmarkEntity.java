@@ -12,6 +12,7 @@ import javax.persistence.Table;
 @Table(name = "bookmark")
 @NamedQuery(name = BookmarkEntity.LIST_BY_USERNAME, query = "FROM BookmarkEntity b WHERE b.createdBy = :createdBy")
 @ToString
+//@SequenceGenerator(name = "default_gen", sequenceName = "bookmark_seq", allocationSize = 1)
 public class BookmarkEntity extends BaseEntity {
 
     public static final String LIST_BY_USERNAME = "Bookmark.listByUsername";
