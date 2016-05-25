@@ -5,7 +5,7 @@
     <changeSet id="001" author="Greg">
 
         <preConditions>
-            <dbms type=" postgresql" />
+            <dbms type="postgresql" />
             <runningAs username="SPATIAL" />
         </preConditions>
 
