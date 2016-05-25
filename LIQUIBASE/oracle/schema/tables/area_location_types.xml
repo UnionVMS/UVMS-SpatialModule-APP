@@ -15,17 +15,17 @@
             <column name="service_layer_id" type="NUMBER(11, 0)">
                 <constraints nullable="false"/>
             </column>
-            <column name="type_name" type="NVARCHAR2(255)">
+            <column name="type_name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="area_type_desc" type="NVARCHAR2(255)"/>
-            <column name="area_db_table" type="NVARCHAR2(255)">
+            <column name="area_type_desc" type="VARCHAR(255)"/>
+            <column name="area_db_table" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="is_system_wide" type="NCHAR(1)">
+            <column name="is_system_wide" type="VARCHAR(1)">
                 <constraints nullable="false"/>
             </column>
-            <column name="is_location" type="NCHAR(1)">
+            <column name="is_location" type="VARCHAR(1)">
                 <constraints nullable="false"/>
             </column>
         </createTable>

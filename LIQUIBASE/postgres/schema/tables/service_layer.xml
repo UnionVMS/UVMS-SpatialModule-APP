@@ -13,15 +13,15 @@
                 <constraints nullable="false"/>
             </column>
             <column name="layer_desc" remarks="Description of the layer" type="VARCHAR(255)"/>
-            <column name="provider_format_id" remarks="link to PROVIDER_FORMAT table" type="INT">
+            <column name="provider_format_id" remarks="link to PROVIDER_FORMAT table" type="TINYINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="service_url" remarks="if service type is WMS than this field is mandatory" type="TEXT"/>
+            <column name="service_url" remarks="if service type is WMS than this field is mandatory" type="CLOB"/>
             <column name="geo_name" remarks="GeoServer layer name" type="VARCHAR(255)"/>
-            <column name="srs_code" remarks="Spatial reference system which might be prefixed with EPSG or SRID for the front-end.&#10;&#10;This is only to be used if the layer is limited to one and only one EPSG code" type="INT"/>
+            <column name="srs_code" remarks="Spatial reference system which might be prefixed with EPSG or SRID for the front-end.&#10;&#10;This is only to be used if the layer is limited to one and only one EPSG code" type="TINYINT"/>
             <column name="short_copyright" type="VARCHAR(255)"/>
-            <column name="long_copyright" type="TEXT"/>
-            <column name="is_internal" type="BPCHAR(1)">
+            <column name="long_copyright" type="CLOB"/>
+            <column name="is_internal" type="VARCHAR(1)">
                 <constraints nullable="false"/>
             </column>
             <column name="style_geom" type="VARCHAR(255)"/>

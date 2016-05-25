@@ -15,9 +15,9 @@
                 <constraints nullable="false"/>
             </column>
             <column name="group_name" type="VARCHAR(255)" />
-            <column name="bookmark_definition" type="TEXT" />
-            <column name="description" type="TEXT"/>
-            <column name="created_on" type="TIMESTAMP(29) WITHOUT TIME ZONE">
+            <column name="bookmark_definition" type="CLOB" />
+            <column name="description" type="CLOB"/>
+            <column name="created_on" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
         </createTable>

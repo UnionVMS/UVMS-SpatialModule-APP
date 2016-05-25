@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:spatial="http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-spatial"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd   http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-spatial
+      http://lonnyj.github.com/liquibase-spatial/liquibase-spatial.xsd">
+
+<changeSet author="martinhu" id="1462540272744-20">
+    <preConditions>
+        <spatial:spatialSupported/>
+    </preConditions>
+        <loadData
+                file="postgres/schema/initdata/csv/stat_rect.csv" tableName="stat_rect"/>
+    </changeSet>
+</databaseChangeLog>

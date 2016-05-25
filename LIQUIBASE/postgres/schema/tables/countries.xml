@@ -5,10 +5,14 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd   http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-spatial
       http://lonnyj.github.com/liquibase-spatial/liquibase-spatial.xsd">
 
+   <changeSet author="emrinalgr" id="1462896361922-4">
+        <createSequence cacheSize="20" cycle="false" incrementBy="1" maxValue="99999999999" minValue="1" ordered="false" sequenceName="country_gid_seq" startValue="1"/>
+   </changeSet>
+
 	<changeSet author="martinhu" id="1462896361922-5">
         <createTable tableName="countries">
-            <column autoIncrement="true" name="gid" type="SERIAL">
-                <constraints primaryKey="true" primaryKeyName="countries_pkey"/>
+              <column name="gid" type="BIGSERIAL">
+                <constraints nullable="false"/>
             </column>
             <column name="geom" type="GEOMETRY(Multipolygon, 4326)"/>
 			<column name="geom_20" type="GEOMETRY(Multipolygon, 4326)"/>
@@ -17,23 +21,30 @@
             <column name="name_asci" type="VARCHAR(150)"/>
             <column name="name" type="VARCHAR(254)"/>
             <column name="name_fren" type="VARCHAR(254)"/>
-            <column name="poli_org_c" type="INT4"/>
+            <column name="poli_org_c" type="TINYINT"/>
             <column name="name_gaul" type="VARCHAR(150)"/>
             <column name="code" type="VARCHAR(3)"/>
             <column name="svrg_un" type="VARCHAR(60)"/>
             <column name="capt" type="VARCHAR(30)"/>
-            <column name="cent_meri" type="numeric"/>
-            <column name="lat_orig" type="numeric"/>
+            <column name="cent_meri" type="DOUBLE"/>
+            <column name="lat_orig" type="DOUBLE"/>
             <column name="efta_terr" type="VARCHAR(1)"/>
             <column name="cc_terr" type="VARCHAR(1)"/>
             <column name="cntr_code_" type="VARCHAR(2)"/>
             <column name="eu_terr" type="VARCHAR(5)"/>
-            <column name="enabled" type="BPCHAR(1)">
+            <column name="enabled" type="VARCHAR(1)">
                 <constraints nullable="false"/>
             </column>
             <column name="enabled_on" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
         </createTable>
-		<sql>create index countries_geom_index on spatial.countries using gist(geom)</sql>
-		<sql>create index countries_geom_20_index on spatial.countries using gist(geom_20)</sql>
+    </changeSet>
+
+    <changeSet id="1" author="emrinalgr">
+        <spatial:createSpatialIndex tableName="countries" indexName="countries_geom_index" geometryType="Multipolygon" srid="4326">
+            <column name="geom" />
+        </spatial:createSpatialIndex>
+        <spatial:createSpatialIndex tableName="countries" indexName="countries_geom_20_index" geometryType="Multipolygon" srid="4326">
+            <column name="geom_20" />
+        </spatial:createSpatialIndex>
     </changeSet>
 </databaseChangeLog>
