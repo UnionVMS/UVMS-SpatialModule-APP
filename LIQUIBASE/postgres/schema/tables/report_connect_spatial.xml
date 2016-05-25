@@ -10,7 +10,7 @@
 
     <changeSet author="padhyad" id="1439890745706-43">
         <createTable tableName="report_connect_spatial">
-            <column autoIncrement="true" name="id" type="BIGSERIAL">
+            <column name="id" type="BIGINT" defaultValueSequenceNext="report_connect_spatial_seq">
                 <constraints primaryKey="true" primaryKeyName="report_connect_spatial_pkey"/>
             </column>
             <column name="report_id" type="BIGINT">

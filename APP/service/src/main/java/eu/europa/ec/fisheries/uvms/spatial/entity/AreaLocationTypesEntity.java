@@ -5,7 +5,6 @@ import eu.europa.ec.fisheries.uvms.domain.CharBooleanConverter;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -42,7 +41,6 @@ import javax.persistence.UniqueConstraint;
 
 @ToString
 @EqualsAndHashCode(callSuper = true)
-//@SequenceGenerator(name = "default_gen", sequenceName = "area_location_types_seq", allocationSize = 1)
 @Table(name = "area_location_types", uniqueConstraints = @UniqueConstraint(columnNames = "type_name"))
 public class AreaLocationTypesEntity extends BaseEntity {
 

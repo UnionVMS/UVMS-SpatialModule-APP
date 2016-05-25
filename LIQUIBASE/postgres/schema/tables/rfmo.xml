@@ -15,7 +15,7 @@
             <spatial:spatialSupported/>
         </preConditions>    
         <createTable tableName="rfmo">
-            <column autoIncrement="true" name="gid" remarks="ID" type="SERIAL">
+            <column name="gid" type="BIGINT" defaultValueSequenceNext="rfmo_seq">
                 <constraints primaryKey="true" primaryKeyName="rfmo_pkey"/>
             </column>
             <column name="geom" type="GEOMETRY(Multipolygon, 4326)"/>

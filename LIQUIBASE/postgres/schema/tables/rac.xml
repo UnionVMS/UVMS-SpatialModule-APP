@@ -12,7 +12,7 @@
 
     <changeSet author="padhyad" id="1439890745706-41">
         <createTable tableName="rac">
-            <column autoIncrement="true" name="gid" remarks="ID" type="SERIAL">
+            <column name="gid" type="BIGINT" defaultValueSequenceNext="rac_seq">
                 <constraints primaryKey="true" primaryKeyName="rac_pkey"/>
             </column>
 			<column name="enabled" type="VARCHAR(1)">

@@ -15,7 +15,7 @@
             <spatial:spatialSupported/>
         </preConditions>
         <createTable tableName="port">
-            <column autoIncrement="true" name="gid" type="SERIAL">
+            <column name="gid" type="BIGINT" defaultValueSequenceNext="port_seq">
                 <constraints primaryKey="true" primaryKeyName="port_pkey"/>
             </column>
             <column name="geom" type="GEOMETRY(MultiPoint, 4326)"/>

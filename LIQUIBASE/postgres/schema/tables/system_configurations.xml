@@ -10,7 +10,7 @@
 
     <changeSet author="georgige (generated)" id="1448362466453-1">
         <createTable tableName="system_configurations">
-            <column autoIncrement="true" name="id" type="SERIAL">
+            <column name="id" type="BIGINT" defaultValueSequenceNext="system_configurations_seq">
                 <constraints primaryKey="true" primaryKeyName="system_configurations_pkey"/>
             </column>
             <column name="name" type="VARCHAR(255)">

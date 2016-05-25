@@ -10,7 +10,7 @@
 
     <changeSet author="padhyad" id="1439890745706-34">
         <createTable tableName="bookmark">
-            <column autoIncrement="true" name="id" type="BIGSERIAL">
+            <column name="id" type="BIGINT" defaultValueSequenceNext="bookmark_seq">
                 <constraints primaryKey="true" primaryKeyName="bookmark_pkey"/>
             </column>
              <column name="srs" type="TINYINT">

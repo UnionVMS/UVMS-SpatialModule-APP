@@ -15,7 +15,7 @@
             <spatial:spatialSupported/>
         </preConditions>
 		<createTable tableName="user_areas">
-            <column autoIncrement="true" name="gid" remarks="Unique primary key of the user defined areas" type="BIGSERIAL">
+            <column name="gid" type="BIGINT" defaultValueSequenceNext="user_areas_seq">
                 <constraints primaryKey="true" primaryKeyName="user_areas_pkey"/>
             </column>
             <column name="user_name" type="VARCHAR(255)">

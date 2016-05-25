@@ -10,7 +10,7 @@
 
     <changeSet author="padhyad" id="1439890745706-39">
         <createTable tableName="projection">
-            <column name="id" type="BIGINT">
+            <column name="id" type="BIGINT" defaultValueSequenceNext="projection_seq">
                 <constraints nullable="false"/>
             </column>
             <column name="name" type="VARCHAR(255)">

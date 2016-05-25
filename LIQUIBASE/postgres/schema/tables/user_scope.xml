@@ -18,7 +18,7 @@
             <column name="user_area_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column autoIncrement="true" name="id" type="BIGSERIAL">
+            <column name="id" type="BIGINT" defaultValueSequenceNext="user_scope_seq">
                 <constraints primaryKey="true" primaryKeyName="user_scope_id_pk"/>
             </column>
         </createTable>

@@ -15,7 +15,7 @@
             <spatial:spatialSupported/>
         </preConditions>
         <createTable tableName="eez">
-            <column autoIncrement="true" name="gid" type="SERIAL">
+            <column name="gid" type="BIGINT" defaultValueSequenceNext="eez_seq">
                 <constraints primaryKey="true" primaryKeyName="eez_pkey"/>
             </column>
             <column name="geom" type="GEOMETRY(Multipolygon, 4326)"/>
