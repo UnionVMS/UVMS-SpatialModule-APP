@@ -15,7 +15,6 @@ import java.util.Map;
         @NamedQuery(name = PortEntity.LIST_ORDERED_BY_DISTANCE, query ="FROM PortEntity WHERE enabled = 'Y' ORDER BY distance(geom, :shape) ASC") /// TODO create dao test
 })
 @Table(name = "port")
-//@SequenceGenerator(name = "default_gen", sequenceName = "port_seq", allocationSize = 1)
 public class PortEntity extends BaseSpatialEntity {
 
     public static final String PORT_BY_COORDINATE = "portEntity.ByCoordinate";

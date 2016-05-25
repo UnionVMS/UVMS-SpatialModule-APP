@@ -14,7 +14,6 @@ import lombok.ToString;
 @Table(name = "user_scope")
 @EqualsAndHashCode(of = {"name"}, callSuper = true)
 @ToString(of = "name")
-//@SequenceGenerator(name = "default_gen", sequenceName = "user_scope_seq", allocationSize = 1)
 public class UserScopeEntity extends BaseEntity {
 
     @ManyToOne

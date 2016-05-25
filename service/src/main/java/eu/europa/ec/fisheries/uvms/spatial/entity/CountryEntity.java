@@ -13,7 +13,6 @@ import javax.persistence.Table;
 })
 @Table(name = "countries")
 @EqualsAndHashCode(callSuper = true)
-//@SequenceGenerator(name = "default_gen", sequenceName = "countries_seq", allocationSize = 1)
 public class CountryEntity extends BaseSpatialEntity {
 
     public static final String FIND_ALL = "countryEntity.findAll";

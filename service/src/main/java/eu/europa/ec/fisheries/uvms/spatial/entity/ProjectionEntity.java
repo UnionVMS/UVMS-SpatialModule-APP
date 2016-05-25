@@ -23,7 +23,6 @@ import javax.persistence.Table;
 				query = "SELECT projection.srsCode AS epsgCode, projection.units AS units, projection.isWorld AS global, projection.extent as extent, projection.axis as axis " +
 						"FROM ProjectionEntity projection WHERE projection.id = :id")
 })
-//@SequenceGenerator(name = "default_gen", sequenceName = "projection_seq", allocationSize = 1)
 public class ProjectionEntity extends BaseEntity {
 
     public static final String FIND_PROJECTION_BY_ID = "ReportLayerConfig.findProjectionById";

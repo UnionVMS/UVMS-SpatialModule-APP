@@ -40,7 +40,6 @@ import javax.persistence.Table;
                 query = "DELETE FROM ReportConnectSpatialEntity WHERE id IN :idList")
 })
 @EqualsAndHashCode(exclude = {"id", "reportConnectServiceAreases"})
-//@SequenceGenerator(name = "default_gen", sequenceName = "report_connect_spatial_seq", allocationSize = 1)
 public class ReportConnectSpatialEntity implements Serializable {
 
     public static final String FIND_MAP_PROJ_BY_ID = "ReportLayerConfig.findMapProjectionById";
