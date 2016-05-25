@@ -14,6 +14,7 @@ import javax.persistence.Table;
         @NamedQuery(name = FaoEntity.FAO_BY_INTERSECT,
                 query = "FROM FaoEntity WHERE intersects(geom, :shape) = true AND enabled = 'Y'")
 })
+//@SequenceGenerator(name = "default_gen", sequenceName = "fao_seq", allocationSize = 1)
 public class FaoEntity extends BaseSpatialEntity {
 
     public static final String DISABLE_FAO_AREAS = "faoEntity.disableFaoAreas";
