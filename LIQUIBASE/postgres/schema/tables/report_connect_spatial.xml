@@ -3,6 +3,11 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
+    <changeSet author="emrinalgr" id="1462896361922-4">
+        <createSequence cacheSize="20" cycle="false" incrementBy="1" maxValue="9223372036854775807" minValue="1" ordered="false"
+                        sequenceName="report_connect_spatial_seq" startValue="1"/>
+    </changeSet>
+
     <changeSet author="padhyad" id="1439890745706-43">
         <createTable tableName="report_connect_spatial">
             <column autoIncrement="true" name="id" type="BIGSERIAL">

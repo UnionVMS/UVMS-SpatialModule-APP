@@ -5,7 +5,12 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd   http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-spatial
       http://lonnyj.github.com/liquibase-spatial/liquibase-spatial.xsd">
 
-     <changeSet author="georgige (generated)" id="1455203156574-24">
+    <changeSet author="emrinalgr" id="1462896361922-4">
+        <createSequence cacheSize="20" cycle="false" incrementBy="1" maxValue="9223372036854775807" minValue="1" ordered="false"
+                        sequenceName="user_scope_seq" startValue="1"/>
+    </changeSet>
+
+    <changeSet author="georgige (generated)" id="1455203156574-24">
         <createTable tableName="user_scope">
             <column name="scope_name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
