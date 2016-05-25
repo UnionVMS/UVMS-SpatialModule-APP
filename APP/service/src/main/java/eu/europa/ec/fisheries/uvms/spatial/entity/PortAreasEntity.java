@@ -14,6 +14,7 @@ import java.util.Map;
         @NamedQuery(name = PortAreasEntity.DISABLE_PORT_AREAS, query = "UPDATE PortAreasEntity SET enabled = 'N'")
 })
 @Table(name = "port_area")
+//@SequenceGenerator(name = "default_gen", sequenceName = "port_area_seq", allocationSize = 1)
 public class PortAreasEntity extends BaseSpatialEntity {
 
     public static final String PORT_AREA_BY_COORDINATE = "portEntity.PortAreaByCoordinate";

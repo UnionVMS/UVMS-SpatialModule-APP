@@ -37,6 +37,7 @@ import org.apache.commons.lang3.StringUtils;
         @NamedQuery(name = ServiceLayerEntity.BY_AREA_LOCATION_TYPE,
                 query = "FROM ServiceLayerEntity serviceLayer WHERE upper(serviceLayer.areaType.typeName) = upper(:typeName)")
 })
+//@SequenceGenerator(name = "default_gen", sequenceName = "service_layer_seq", allocationSize = 1)
 public class ServiceLayerEntity extends BaseEntity {
 
     public static final String BY_LOCATION_TYPE = "ServiceLayer.byLocationType";

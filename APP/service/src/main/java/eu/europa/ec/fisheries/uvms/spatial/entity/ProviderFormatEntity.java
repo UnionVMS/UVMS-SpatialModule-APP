@@ -11,6 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "provider_format")
+//@SequenceGenerator(name = "default_gen", sequenceName = "provider_format_seq", allocationSize = 1)
 public class ProviderFormatEntity extends BaseEntity {
 
 	@Column(name = "service_type", nullable = false, length = 10)
