@@ -336,6 +336,8 @@ public class SpatialServiceBean implements SpatialService {
             }
             buildQuery(userAreas.getUserAreas(), sb, "user", typesEntityMap);
 
+            log.debug("{} QUERY => {}", spatialFunction.getClass().getSimpleName().toUpperCase(), sb.toString());
+
             Query emNativeQuery = em.createNativeQuery(sb.toString());
             emNativeQuery.unwrap(SQLQuery.class)
                     .addScalar(TYPE, StringType.INSTANCE)
