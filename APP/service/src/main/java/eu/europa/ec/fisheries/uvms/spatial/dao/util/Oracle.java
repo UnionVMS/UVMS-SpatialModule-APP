@@ -18,7 +18,7 @@ public class Oracle extends AbstractGisFunction {
      return "(SELECT '" + typeName + "' AS type, gid, code, name," + " SDO_NN_DISTANCE(1) AS dist, " +
              "geom AS closest FROM spatial." + tableName + " WHERE NOT ST_IsEmpty(geom) AND enabled = 'Y' " +
              "AND SDO_NN(c.shape, SDO_GEOMETRY(2001, NULL, sdo_point_type(10,7,NULL), NULL,  NULL), " +
-             "'sdo_num_res=2', 1) = 'TRUE' ORDER BY dist";
+             "'sdo_num_res=2', 1) = 'TRUE' ORDER BY dist)";
     }
 
     @Override
