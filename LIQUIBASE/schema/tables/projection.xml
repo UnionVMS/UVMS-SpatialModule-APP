@@ -51,11 +51,22 @@
     </changeSet>
     
     <changeSet author="padhyad" id="1439890745706-60">
-        <addForeignKeyConstraint baseColumnNames="display_proj_id" baseTableName="report_connect_spatial" constraintName="display_proj_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="projection"/>
+        <addForeignKeyConstraint baseColumnNames="display_proj_id" baseTableName="report_connect_spatial"
+                                 constraintName="display_proj_id_fkey" deferrable="false"
+                                 initiallyDeferred="false" onDelete="RESTRICT"
+                                 onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="projection"/>
     </changeSet>
     
     <changeSet author="padhyad" id="1439890745706-61">
-        <addForeignKeyConstraint baseColumnNames="map_proj_id" baseTableName="report_connect_spatial" constraintName="map_proj_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="projection"/>
+        <addForeignKeyConstraint baseColumnNames="map_proj_id"
+                                 baseTableName="report_connect_spatial"
+                                 constraintName="map_proj_id_fkey"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 onDelete="RESTRICT"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="projection"/>
     </changeSet>
     
 </databaseChangeLog>

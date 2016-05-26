@@ -34,7 +34,15 @@
     </changeSet>
     
      <changeSet author="padhyad" id="1439890745706-54">
-        <addForeignKeyConstraint baseColumnNames="area_type_id" baseTableName="area_connect_group" constraintName="area_connect_group_area_type_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="area_types"/>
+        <addForeignKeyConstraint baseColumnNames="area_type_id"
+                                 baseTableName="area_connect_group"
+                                 constraintName="area_connect_group_area_type_id_fkey"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 onDelete="RESTRICT"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="area_types"/>
     </changeSet>
 
 </databaseChangeLog>

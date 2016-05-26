@@ -1,8 +1,0 @@
-prop_name,prop_value,custom_areas_id,view_ref
-longitude,-9.5,1,view1
-latitude,41,1,view1
-longitude,-15,2,view1
-latitude,45,2,view1
-name,custom_area_1,3,view2
-country,unknown,3,view2
-remark,na,3,view2

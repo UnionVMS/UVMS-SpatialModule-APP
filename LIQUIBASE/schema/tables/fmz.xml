@@ -19,7 +19,7 @@
             <column name="fmz_id" type="VARCHAR(8)"/>
             <column name="name" type="VARCHAR(254)"/>
             <column name="code" type="VARCHAR(254)"/>
-            <column name="edited" type="TIMESTAMP"/>
+            <column name="edited" type="VARCHAR(10)"/>
             <column name="enabled" type="VARCHAR(1)">
                 <constraints nullable="false"/>
             </column>
