@@ -9,7 +9,7 @@ public class Oracle extends AbstractGisFunction {
     }
 
     private String stDistance(Double latitude, Double longitude) {
-        return "SDO_GEOM.SDO_DISTANCE('geom', SDO_UTIL.FROM_WKTGEOMETRY('POINT(" + longitude + " " + latitude + ")'), 0.005)'";
+        return "SDO_GEOM.SDO_DISTANCE('geom', SDO_UTIL.FROM_WKTGEOMETRY('POINT(" + longitude + " " + latitude + ")'), 0.005)";
     }
 
     @Override
