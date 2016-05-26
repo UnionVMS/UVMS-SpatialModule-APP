@@ -169,9 +169,9 @@ public class AreasDao extends AbstractDAO<BaseSpatialEntity> {
                 AreaLocationTypesEntity next = it.next();
                 final String areaDbTable = next.getAreaDbTable();
                 final String typeName = next.getTypeName();
-                sb.append("SELECT '").append(typeName).append("' as type, gid, code, name FROM spatial.").
+                sb.append("(SELECT '").append(typeName).append("' as type, gid, code, name FROM spatial.").
                         append(areaDbTable).append(" WHERE ").
-                        append(spatialFunction.stIntersects(latitude, longitude)).append(" AND enabled = 'Y'");
+                        append(spatialFunction.stIntersects(latitude, longitude)).append(" AND enabled = 'Y')");
                 it.remove(); // avoids a ConcurrentModificationException
                 if (it.hasNext()) {
                     sb.append(" UNION ALL ");
