@@ -20,7 +20,15 @@
     </changeSet>
     
     <changeSet author="padhyad" id="1439890745706-64">
-        <addForeignKeyConstraint baseColumnNames="provider_format_id" baseTableName="service_layer" constraintName="provider_format_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="provider_format"/>
+        <addForeignKeyConstraint baseColumnNames="provider_format_id"
+                                 baseTableName="service_layer"
+                                 constraintName="provider_format_id_fkey"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 onDelete="RESTRICT"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="provider_format"/>
     </changeSet>
     
 </databaseChangeLog>

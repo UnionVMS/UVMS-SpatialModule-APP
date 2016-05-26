@@ -29,7 +29,15 @@
     </changeSet>
     
     <changeSet author="padhyad" id="1439890745706-63">
-        <addForeignKeyConstraint baseColumnNames="report_connect_service_area_id" baseTableName="report_layer_config" constraintName="r_lay_conf_r_conn_ser_ar_fkey" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="report_connect_service_area"/>
+        <addForeignKeyConstraint baseColumnNames="report_connect_service_area_id"
+                                 baseTableName="report_layer_config"
+                                 constraintName="r_lay_conf_r_conn_ser_ar_fkey"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 onDelete="RESTRICT"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="report_connect_service_area"/>
     </changeSet>
 
 </databaseChangeLog>

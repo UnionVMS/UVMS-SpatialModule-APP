@@ -19,7 +19,8 @@
             <column name="area_group_id" type="TINYINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="area_id" remarks="It is not nullable because we are not sure that selection within the predefine areas will be supported (for instance EEZ feature 1)" type="BIGINT">
+            <column name="area_id" remarks="It is not nullable because we are not sure that selection
+            within the predefine areas will be supported (for instance EEZ feature 1)" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
         </createTable>
