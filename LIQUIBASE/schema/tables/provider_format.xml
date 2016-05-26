@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet author="emrinalgr" id="1">
+        <createSequence cycle="false" incrementBy="1" maxValue="9223372036854775807" minValue="1"
+                        sequenceName="provider_format_seq" startValue="1"/>
+    </changeSet>
+
+   <changeSet author="padhyad" id="1439890745706-40">
+        <createTable tableName="provider_format">
+            <column name="id" type="BIGINT" defaultValueSequenceNext="provider_format_seq">
+                <constraints primaryKey="true" primaryKeyName="provider_format_pkey"/>
+            </column>
+            <column name="service_type" type="VARCHAR(10)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    
+    <changeSet author="padhyad" id="1439890745706-64">
+        <addForeignKeyConstraint baseColumnNames="provider_format_id" baseTableName="service_layer" constraintName="provider_format_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="provider_format"/>
+    </changeSet>
+    
+</databaseChangeLog>
+ 
+ 
