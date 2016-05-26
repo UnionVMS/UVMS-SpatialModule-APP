@@ -15,7 +15,7 @@ public class BaseSpatialDaoTest extends BaseDAOTest {
             deleteAllFrom("spatial.port_area"),
             deleteAllFrom("spatial.port"),
             deleteAllFrom("spatial.projection"),
-            deleteAllFrom("spatial.report_connect_service_areas"),
+            deleteAllFrom("spatial.report_connect_service_area"),
             deleteAllFrom("spatial.report_connect_spatial"),
             deleteAllFrom("spatial.system_configurations"),
             deleteAllFrom("spatial.service_layer"),
