@@ -27,8 +27,8 @@
                 <db.user>SPATIAL</db.user>
                 <db.passwd>SPATIAL</db.passwd>
                 <db.defaultSchema>SPATIAL</db.defaultSchema>
-                <db.changeLogFile>postgres/changelog/db-changelog-master.xml</db.changeLogFile>
-                <db.outputFile>postgres/changelog/generatedChangelog.xml</db.outputFile>
+                <db.changeLogFile>changelog/db-changelog-master.xml</db.changeLogFile>
+                <db.outputFile>changelog/generatedChangelog.xml</db.outputFile>
             </properties>
         </profile>
         
@@ -43,8 +43,8 @@
                 <db.user>spatial</db.user>
                 <db.passwd>spatial</db.passwd>
                 <db.defaultSchema>spatial</db.defaultSchema>
-                <db.changeLogFile>postgres/changelog/db-changelog-master.xml</db.changeLogFile>
-                <db.outputFile>postgres/changelog/generatedChangelog.xml</db.outputFile>
+                <db.changeLogFile>changelog/db-changelog-master.xml</db.changeLogFile>
+                <db.outputFile>changelog/generatedChangelog.xml</db.outputFile>
             </properties>
         </profile>
 
@@ -59,7 +59,7 @@
                 <db.user>spatial</db.user>
                 <db.passwd>spatial</db.passwd>
                 <db.defaultSchema>spatial</db.defaultSchema>
-                <db.changeLogFile>postgres/changelog/db-changelog-master.xml</db.changeLogFile>
+                <db.changeLogFile>changelog/db-changelog-master.xml</db.changeLogFile>
             </properties>
         </profile>
         
@@ -74,7 +74,7 @@
                 <db.user>spatial</db.user>
                 <db.passwd>postgres</db.passwd>
                 <db.defaultSchema>spatial</db.defaultSchema>
-                <db.changeLogFile>postgres/changelog/db-changelog-master.xml</db.changeLogFile>
+                <db.changeLogFile>changelog/db-changelog-master.xml</db.changeLogFile>
             </properties>
         </profile>
 
@@ -89,7 +89,7 @@
                 <db.user>spatial</db.user>
                 <db.passwd>spatial</db.passwd>
                 <db.defaultSchema>spatial</db.defaultSchema>
-                <db.changeLogFile>postgres/changelog/db-changelog-master.xml</db.changeLogFile>
+                <db.changeLogFile>changelog/db-changelog-master.xml</db.changeLogFile>
             </properties>
         </profile>
         
@@ -113,6 +113,12 @@
             <groupId>com.oracle</groupId>
     		<artifactId>ojdbc6</artifactId>
     		<version>11.2.0.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.lonnyj</groupId>
+            <artifactId>liquibase-spatial</artifactId>
+            <version>1.2.1</version>
         </dependency>
 
     </dependencies>

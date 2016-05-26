@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <include file="schema\initdata\provider_format_init.xml"/>
+	<include file="schema\initdata\port_init.xml"/>
+	<include file="schema\initdata\port_area_init.xml"/>
+	<include file="schema\initdata\service_layer_init.xml"/>
+	<include file="schema\initdata\area_location_types_init.xml"/>
+	<include file="schema\initdata\projection_init.xml"/>
+    <include file="schema\initdata\system_configurations_init.xml"/>
+    <include file="schema\initdata\eez_init.xml"/>
+    <include file="schema\initdata\rfmo_init.xml"/>
+	<include file="schema\initdata\stat_rect_init.xml"/>
+	<include file="schema\initdata\gfcm_init.xml"/>
+	<include file="schema\initdata\fao_init.xml"/>
+	<include file="schema\initdata\fmz_init.xml"/>
+	<include file="schema\initdata\countries_init.xml"/>
+</databaseChangeLog>

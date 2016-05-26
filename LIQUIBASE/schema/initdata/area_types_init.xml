@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:spatial="http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-spatial"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-spatial 
+      http://lonnyj.github.com/liquibase-spatial/liquibase-spatial.xsd">
+
+	<changeSet author="mkopyczok" id="1439890745706-88">
+		<insert tableName="area_types">
+			<column name="service_layer_id" valueNumeric="1" />
+			<column name="type_name" value="EEZ" />
+			<column name="area_db_table" value="eez" />
+			<column name="is_system_area" value="Y" />
+			<column name="area_type_desc" value="Exclusive Economic Zone" />
+		</insert>
+		<insert tableName="area_types">
+			<column name="service_layer_id" valueNumeric="2" />
+			<column name="type_name" value="RFMO" />
+			<column name="area_db_table" value="rfmo" />
+			<column name="is_system_area" value="Y" />
+			<column name="area_type_desc" value="Regional Fisheries Management Organisation" />
+		</insert>
+		<insert tableName="area_types">
+			<column name="service_layer_id" valueNumeric="3" />
+			<column name="type_name" value="COUNTRY" />
+			<column name="area_db_table" value="countries" />
+			<column name="is_system_area" value="N" />
+			<column name="area_type_desc" value="Country" />
+		</insert>
+	</changeSet>
+</databaseChangeLog>
