@@ -8,7 +8,6 @@ import eu.europa.ec.fisheries.uvms.spatial.dao.FmzDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.GfcmDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.PortAreaDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.PortDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.RacDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.RfmoDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.StatRectDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.UserAreaDao;
@@ -60,11 +59,6 @@ public abstract class DAOFactory {
             case "GFCM":
             case "Gfcm":
                 dao = new GfcmDao(em);
-                break;
-            case "rac":
-            case "RAC":
-            case "Rac":
-                dao = new RacDao(em);
                 break;
             case "statrect":
             case "STATRECT":
