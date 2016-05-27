@@ -14,7 +14,7 @@ import eu.europa.ec.fisheries.uvms.spatial.dao.ReportConnectSpatialDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.ServiceLayerDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.SysConfigDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.UserAreaDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.util.SpatialFunction;
+import eu.europa.ec.fisheries.uvms.spatial.dao.util.DatabaseDialect;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.BookmarkEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.CountryEntity;
@@ -325,17 +325,17 @@ public class SpatialRepositoryBean implements SpatialRepository {
     }
 
     @Override
-    public List closestArea(List<AreaLocationTypesEntity> entities, SpatialFunction spatialFunction, Point point) {
+    public List closestArea(List<AreaLocationTypesEntity> entities, DatabaseDialect spatialFunction, Point point) {
         return areaDao.closestArea(entities, spatialFunction, point);
     }
 
     @Override
-    public List closestPoint(List<AreaLocationTypesEntity> entities, SpatialFunction spatialFunction, Point incomingPoint) {
+    public List closestPoint(List<AreaLocationTypesEntity> entities, DatabaseDialect spatialFunction, Point incomingPoint) {
         return areaDao.closestPoint(entities, spatialFunction, incomingPoint);
     }
 
     @Override
-    public List intersectingArea(List<AreaLocationTypesEntity> entities, SpatialFunction spatialFunction, Point point) {
+    public List intersectingArea(List<AreaLocationTypesEntity> entities, DatabaseDialect spatialFunction, Point point) {
         return areaDao.intersectingArea(entities, spatialFunction, point);
     }
 
