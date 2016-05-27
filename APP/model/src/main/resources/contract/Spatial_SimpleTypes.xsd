@@ -556,7 +556,6 @@
             <xs:enumeration value="GFCM" />
             <xs:enumeration value="COUNTRY" />
             <xs:enumeration value="RFMO" />
-            <xs:enumeration value="RAC" />
             <xs:enumeration value="STATRECT" />
             <xs:enumeration value="USERAREA" />
             <xs:enumeration value="PORT" />

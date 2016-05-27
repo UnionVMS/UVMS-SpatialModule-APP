@@ -3,6 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.rest.mapper;
 import java.util.*;
 
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserScopeEntity;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.rest.type.geocoordinate.AreaCoordinateType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.type.geocoordinate.GeoCoordinateType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.AreaDetailsGeoJsonDto;
@@ -12,13 +13,6 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
 
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Coordinate;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationDetails;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationProperty;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.LocationDetailsGeoJsonDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.type.geocoordinate.LocationCoordinateType;
 
@@ -34,7 +28,10 @@ public abstract class AreaLocationDtoMapper {
 	public static AreaLocationDtoMapper mapper() {
 		return INSTANCE;
 	}
-	
+
+	@Mappings( {
+			@Mapping(target = "areaType", expression = "java(getAreaTypeEnum(areaDto.getAreaType()))")
+	})
 	public abstract AreaTypeEntry getAreaTypeEntry(AreaCoordinateType areaDto);
 
 	public abstract LocationTypeEntry getLocationTypeEntry(LocationCoordinateType locationDto);
@@ -61,6 +58,13 @@ public abstract class AreaLocationDtoMapper {
 	}
 	
 	public abstract Coordinate getCoordinateFromDto(GeoCoordinateType geoCoordinateType);
+
+	protected AreaType getAreaTypeEnum(String areaType) {
+		if ( areaType == null ) {
+			return null;
+		}
+		return Enum.valueOf( AreaType.class, areaType.toUpperCase());
+	}
 	
 	protected Map<String, Object> extractProperties(AreaDetails areaDetails) {
 		Map<String, Object> propertyMap = new HashMap<>();
