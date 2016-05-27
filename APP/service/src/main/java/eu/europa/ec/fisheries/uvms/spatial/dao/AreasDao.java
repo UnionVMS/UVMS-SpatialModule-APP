@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.dao;
 
+import eu.europa.ec.fisheries.uvms.spatial.dao.util.DatabaseDialect;
 import eu.europa.ec.fisheries.uvms.spatial.entity.BaseSpatialEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
@@ -10,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
-import eu.europa.ec.fisheries.uvms.spatial.dao.util.SpatialFunction;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import com.vividsolutions.jts.geom.Point;
 import lombok.extern.slf4j.Slf4j;
@@ -80,7 +80,7 @@ public class AreasDao extends AbstractDAO<BaseSpatialEntity> {
         return query.list();
     }
 
-    public List<BaseSpatialEntity> closestPoint(final List<AreaLocationTypesEntity> entities, final SpatialFunction spatialFunction, final Point point){
+    public List<BaseSpatialEntity> closestPoint(final List<AreaLocationTypesEntity> entities, final DatabaseDialect spatialFunction, final Point point){
 
         List resultList = new ArrayList();
 
@@ -114,11 +114,11 @@ public class AreasDao extends AbstractDAO<BaseSpatialEntity> {
         return resultList;
     }
 
-    public List<BaseSpatialEntity> closestArea(final List<AreaLocationTypesEntity> entities, final SpatialFunction spatialFunction, final Point point){
+    public List<BaseSpatialEntity> closestArea(final List<AreaLocationTypesEntity> entities, final DatabaseDialect dialect, final Point point){
 
         List resultList = new ArrayList();
 
-        if (spatialFunction != null && CollectionUtils.isNotEmpty(entities) && (point != null && !point.isEmpty())) {
+        if (dialect != null && CollectionUtils.isNotEmpty(entities) && (point != null && !point.isEmpty())) {
 
             final StringBuilder sb = new StringBuilder();
             final Double longitude = point.getX();
@@ -129,14 +129,14 @@ public class AreasDao extends AbstractDAO<BaseSpatialEntity> {
                 AreaLocationTypesEntity next = it.next();
                 final String areaDbTable = next.getAreaDbTable();
                 final String typeName = next.getTypeName();
-                sb.append(spatialFunction.closestAreaToPoint(typeName, areaDbTable, latitude, longitude));
+                sb.append(dialect.closestAreaToPoint(typeName, areaDbTable, latitude, longitude, 10));
                 it.remove(); // avoids a ConcurrentModificationException
                 if (it.hasNext()) {
                     sb.append(" UNION ALL ");
                 }
             }
 
-            log.debug("{} QUERY => {}", spatialFunction.getClass().getSimpleName().toUpperCase(), sb.toString());
+            log.debug("{} QUERY => {}", dialect.getClass().getSimpleName().toUpperCase(), sb.toString());
 
             javax.persistence.Query emNativeQuery = em.createNativeQuery(sb.toString());
 
@@ -154,11 +154,11 @@ public class AreasDao extends AbstractDAO<BaseSpatialEntity> {
 
     }
 
-    public List<BaseSpatialEntity> intersectingArea(final List<AreaLocationTypesEntity> entities, final SpatialFunction spatialFunction, final Point point){
+    public List<BaseSpatialEntity> intersectingArea(final List<AreaLocationTypesEntity> entities, final DatabaseDialect dialect, final Point point){
 
         List resultList = new ArrayList();
 
-        if (spatialFunction != null && CollectionUtils.isNotEmpty(entities) && (point != null && !point.isEmpty())) {
+        if (dialect != null && CollectionUtils.isNotEmpty(entities) && (point != null && !point.isEmpty())) {
 
             final StringBuilder sb = new StringBuilder();
             final Double longitude = point.getX();
@@ -171,14 +171,14 @@ public class AreasDao extends AbstractDAO<BaseSpatialEntity> {
                 final String typeName = next.getTypeName();
                 sb.append("(SELECT '").append(typeName).append("' as type, gid, code, name FROM spatial.").
                         append(areaDbTable).append(" WHERE ").
-                        append(spatialFunction.stIntersects(latitude, longitude)).append(" AND enabled = 'Y')");
+                        append(dialect.stIntersects(latitude, longitude)).append(" AND enabled = 'Y')");
                 it.remove(); // avoids a ConcurrentModificationException
                 if (it.hasNext()) {
                     sb.append(" UNION ALL ");
                 }
             }
 
-            log.debug("{} QUERY => {}", spatialFunction.getClass().getSimpleName().toUpperCase(), sb.toString());
+            log.debug("{} QUERY => {}", dialect.getClass().getSimpleName().toUpperCase(), sb.toString());
 
             javax.persistence.Query emNativeQuery = em.createNativeQuery(sb.toString());
 

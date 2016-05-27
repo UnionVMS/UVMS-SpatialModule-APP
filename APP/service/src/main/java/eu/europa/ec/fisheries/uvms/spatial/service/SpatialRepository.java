@@ -2,7 +2,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service;
 
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.dao.util.SpatialFunction;
+import eu.europa.ec.fisheries.uvms.spatial.dao.util.DatabaseDialect;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.BookmarkEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.CountryEntity;
@@ -115,11 +115,11 @@ public interface SpatialRepository {
 
     void deleteEntity(ReportConnectSpatialEntity entity);
 
-    List closestArea(List<AreaLocationTypesEntity> entities, SpatialFunction spatialFunction, Point point);
+    List closestArea(List<AreaLocationTypesEntity> entities, DatabaseDialect spatialFunction, Point point);
 
-    List closestPoint(List<AreaLocationTypesEntity> typeEntities, SpatialFunction spatialFunction, Point incomingPoint);
+    List closestPoint(List<AreaLocationTypesEntity> typeEntities, DatabaseDialect spatialFunction, Point incomingPoint);
 
-    List intersectingArea( List<AreaLocationTypesEntity> entities, SpatialFunction spatialFunction, Point point);
+    List intersectingArea( List<AreaLocationTypesEntity> entities, DatabaseDialect spatialFunction, Point point);
 
     List<AreaLocationTypesEntity> listAllArea() throws ServiceException;
 

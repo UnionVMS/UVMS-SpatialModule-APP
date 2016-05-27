@@ -3,14 +3,16 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.io.ParseException;
+import com.vividsolutions.jts.operation.distance.DistanceOp;
 import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.interceptors.TracingInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.dao.AbstractSpatialDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.util.DAOFactory;
-import eu.europa.ec.fisheries.uvms.spatial.dao.util.SpatialFunction;
+import eu.europa.ec.fisheries.uvms.spatial.dao.util.DatabaseDialect;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.BaseSpatialEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.PortEntity;
@@ -48,6 +50,7 @@ import eu.europa.ec.fisheries.uvms.spatial.util.PropertiesBean;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.geotools.geometry.jts.GeometryBuilder;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.JTSFactoryFinder;
 import org.geotools.geometry.jts.WKTReader2;
@@ -99,11 +102,11 @@ public class SpatialServiceBean implements SpatialService {
     private @PersistenceContext(unitName = "spatialPU") EntityManager em;
     private @EJB SpatialRepository repository;
     private @EJB PropertiesBean properties;
-    private SpatialFunction spatialFunction;
+    private DatabaseDialect databaseDialect;
 
     @PostConstruct
     public void init(){
-        spatialFunction = new DatabaseDialectFactory(properties).getInstance();
+        databaseDialect = new DatabaseDialectFactory(properties).getInstance();
     }
 
     @Override
@@ -119,7 +122,7 @@ public class SpatialServiceBean implements SpatialService {
         final GeodeticCalculator calc = new GeodeticCalculator();
         final List<AreaLocationTypesEntity> typeEntities = repository.findAllIsPointIsSystemWide(true, true);
 
-        List records = repository.closestPoint(typeEntities, spatialFunction, incomingPoint);
+        List records = repository.closestPoint(typeEntities, databaseDialect, incomingPoint);
 
         for (Object record : records) {
             final Object[] result = (Object[]) record;
@@ -260,11 +263,25 @@ public class SpatialServiceBean implements SpatialService {
         final Map<String, Area> distancePerTypeMap = new HashMap<>();
         final GeodeticCalculator calc = new GeodeticCalculator();
 
-        List records = repository.closestArea(typesEntities, spatialFunction, incomingPoint);
+        List records = repository.closestArea(typesEntities, databaseDialect, incomingPoint);
 
         for (Object record : records) {
+
             final Object[] result = (Object[]) record;
-            final Point closestPoint = (Point) result[4];
+            Geometry geom = (Geometry) result[4];
+            final Point closestPoint;
+
+            if (geom instanceof MultiPolygon){
+                MultiPolygon closestPolygon = (MultiPolygon) result[4];
+                com.vividsolutions.jts.geom.Coordinate[] coordinates =
+                        DistanceOp.nearestPoints(closestPolygon,
+                                new GeometryBuilder().point(incomingLongitude,incomingLatitude));
+                closestPoint = new GeometryBuilder().point(coordinates[0].x,coordinates[0].y); // FICME check for nullpointers
+            }
+            else {
+                closestPoint = (Point) result[4];
+            }
+
             calc.setStartingGeographicPoint(closestPoint.getX(), closestPoint.getY());
             calc.setDestinationGeographicPoint(incomingLongitude, incomingLatitude);
             Double orthodromicDistance = calc.getOrthodromicDistance();
@@ -299,7 +316,7 @@ public class SpatialServiceBean implements SpatialService {
         final List<AreaLocationTypesEntity> typesEntities = repository.findAllIsPointIsSystemWide(false, true);
         final List<AreaExtendedIdentifierType> areaTypes = new ArrayList<>();
 
-        List records = repository.intersectingArea(typesEntities, spatialFunction, incomingPoint);
+        List records = repository.intersectingArea(typesEntities, databaseDialect, incomingPoint);
 
         for (Object record : records) {
             final Object[] result = (Object[]) record;
@@ -336,7 +353,7 @@ public class SpatialServiceBean implements SpatialService {
             }
             buildQuery(userAreas.getUserAreas(), sb, "user", typesEntityMap);
 
-            log.debug("{} QUERY => {}", spatialFunction.getClass().getSimpleName().toUpperCase(), sb.toString());
+            log.debug("{} QUERY => {}", databaseDialect.getClass().getSimpleName().toUpperCase(), sb.toString());
 
             Query emNativeQuery = em.createNativeQuery(sb.toString());
             emNativeQuery.unwrap(SQLQuery.class)
@@ -438,7 +455,7 @@ public class SpatialServiceBean implements SpatialService {
                 .append(areaLocationType.getAreaDbTable()).append(" ").append("WHERE (UPPER(name) LIKE '%")
                 .append(toUpperCase).append("%' OR code LIKE '%").append(toUpperCase).append("%') AND enabled='Y' GROUP BY gid");
 
-        log.debug("{} QUERY => {}", spatialFunction.getClass().getSimpleName().toUpperCase(), sb.toString());
+        log.debug("{} QUERY => {}", databaseDialect.getClass().getSimpleName().toUpperCase(), sb.toString());
 
         final Query emNativeQuery = em.createNativeQuery(sb.toString());
 
