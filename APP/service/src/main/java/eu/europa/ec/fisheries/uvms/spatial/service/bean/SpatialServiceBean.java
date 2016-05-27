@@ -3,7 +3,6 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.operation.distance.DistanceOp;
@@ -269,18 +268,14 @@ public class SpatialServiceBean implements SpatialService {
 
             final Object[] result = (Object[]) record;
             Geometry geom = (Geometry) result[4];
-            final Point closestPoint;
 
-            if (geom instanceof MultiPolygon){
-                MultiPolygon closestPolygon = (MultiPolygon) result[4];
-                com.vividsolutions.jts.geom.Coordinate[] coordinates =
-                        DistanceOp.nearestPoints(closestPolygon,
-                                new GeometryBuilder().point(incomingLongitude,incomingLatitude));
-                closestPoint = new GeometryBuilder().point(coordinates[0].x,coordinates[0].y); // FICME check for nullpointers
+            if(geom.isEmpty()){
+                continue;
             }
-            else {
-                closestPoint = (Point) result[4];
-            }
+
+            com.vividsolutions.jts.geom.Coordinate[] coordinates =
+                    DistanceOp.nearestPoints(geom, new GeometryBuilder().point(incomingLongitude,incomingLatitude));
+            final Point closestPoint = new GeometryBuilder().point(coordinates[0].x,coordinates[0].y);
 
             calc.setStartingGeographicPoint(closestPoint.getX(), closestPoint.getY());
             calc.setDestinationGeographicPoint(incomingLongitude, incomingLatitude);
