@@ -20,7 +20,6 @@
     <include file="schema\tables\projection.xml"/>
     <include file="schema\tables\service_layer.xml"/>
     <include file="schema\tables\provider_format.xml"/>
-    <include file="schema\tables\rac.xml"/>
     <include file="schema\tables\rfmo.xml"/>
     <include file="schema\tables\stat_rect.xml"/>
     <include file="schema\tables\user_areas.xml"/>
