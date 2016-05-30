@@ -84,7 +84,7 @@ public class XMLResource {
     public ClosestAreaSpatialRS getClosestAreasToPointByType(ClosestAreaSpatialRQ request) throws ServiceException {
 
         ClosestAreaSpatialRS response = new ClosestAreaSpatialRS();
-        List<Area> closestAreas = spatialService.getClosestAreasToPointByType(request);
+        List<Area> closestAreas = spatialService.getClosestArea(request);
 
         if (closestAreas != null) {
             ClosestAreasType closestAreasType = new ClosestAreasType();

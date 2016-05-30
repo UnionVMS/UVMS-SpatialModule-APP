@@ -251,7 +251,7 @@ public class SpatialServiceBean implements SpatialService {
     }
 
     @Override
-    public List<Area> getClosestAreasToPointByType(final ClosestAreaSpatialRQ request) throws ServiceException {
+    public List<Area> getClosestArea(final ClosestAreaSpatialRQ request) throws ServiceException {
 
         final Point incomingPoint = convertToPointInWGS84(request.getPoint());
         final Double incomingLatitude = incomingPoint.getY();
@@ -269,7 +269,7 @@ public class SpatialServiceBean implements SpatialService {
             final Object[] result = (Object[]) record;
             Geometry geom = (Geometry) result[4];
 
-            if(geom.isEmpty()){
+            if (geom.isEmpty()){
                 continue;
             }
 
@@ -318,8 +318,8 @@ public class SpatialServiceBean implements SpatialService {
             AreaExtendedIdentifierType area = new AreaExtendedIdentifierType();
             area.setAreaType(AreaType.valueOf(String.valueOf(result[0])));
             area.setId(String.valueOf(result[1]));
-            area.setName(String.valueOf(result[2]));
-            area.setCode(String.valueOf(result[3]));
+            area.setCode(String.valueOf(result[2]));
+            area.setName(String.valueOf(result[3]));
             areaTypes.add(area);
         }
 

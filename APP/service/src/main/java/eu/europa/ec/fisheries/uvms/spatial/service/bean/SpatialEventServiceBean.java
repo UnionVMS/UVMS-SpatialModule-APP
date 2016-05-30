@@ -83,7 +83,7 @@ public class SpatialEventServiceBean implements SpatialEventService {
     public void getClosestArea(@Observes @GetClosestAreaEvent SpatialMessageEvent message) {
         log.info("Getting closest area.");
         try {
-            List<Area> closestAreas = spatialService.getClosestAreasToPointByType(message.getClosestAreaSpatialRQ());
+            List<Area> closestAreas = spatialService.getClosestArea(message.getClosestAreaSpatialRQ());
             log.debug("Send back closestAreas response.");
             messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapClosestAreaResponse(closestAreas));
         } catch (Exception e) {
