@@ -17,13 +17,16 @@ import java.util.Map;
         @NamedQuery(name = QueryNameConstants.RFMO_COLUMNS,
                 query = "SELECT rfmo.name AS name, rfmo.code AS code FROM RfmoEntity AS rfmo WHERE rfmo.id =:gid"),
         @NamedQuery(name = RfmoEntity.DISABLE_RFMO_AREAS,
-                query = "UPDATE RfmoEntity SET enabled = 'N'")
+                query = "UPDATE RfmoEntity SET enabled = 'N'"),
+        @NamedQuery(name = RfmoEntity.SEARCH_RFMO, query = "FROM RfmoEntity where upper(name) like :name OR upper(code) like :code AND enabled='Y' GROUP BY gid")
 })
 @Table(name = "rfmo")
 public class RfmoEntity extends BaseSpatialEntity {
 
     public static final String RFMO_BY_COORDINATE = "rfmoEntity.ByCoordinate";
     public static final String DISABLE_RFMO_AREAS = "rfmoEntity.disableRfmoAreas";
+    public static final String SEARCH_RFMO = "rfmoEntity.searchRfmoByNameOrCode";
+
     private static final String TUNA = "tuna";
 
     @Column(length = 10)

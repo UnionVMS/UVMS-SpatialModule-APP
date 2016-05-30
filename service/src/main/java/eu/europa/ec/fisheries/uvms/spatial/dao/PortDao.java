@@ -28,6 +28,11 @@ public class PortDao extends AbstractSpatialDao<PortEntity> {
     }
 
     @Override
+    protected String getSearchNamedQuery() {
+        return SEARCH_PORT;
+    }
+
+    @Override
     protected Class<PortEntity> getClazz() {
         return PortEntity.class;
     }

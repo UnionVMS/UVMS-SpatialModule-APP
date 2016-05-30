@@ -21,6 +21,11 @@ public class GfcmDao extends AbstractSpatialDao<GfcmEntity> {
     }
 
     @Override
+    protected String getSearchNamedQuery() {
+        return SEARCH_GFCM;
+    }
+
+    @Override
     protected Class<GfcmEntity> getClazz() {
         return GfcmEntity.class;
     }

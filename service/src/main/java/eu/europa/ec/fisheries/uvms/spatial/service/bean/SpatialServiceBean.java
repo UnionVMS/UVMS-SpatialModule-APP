@@ -434,42 +434,18 @@ public class SpatialServiceBean implements SpatialService {
     @Override
     public List<GenericSystemAreaDto> searchAreasByNameOrCode(final String areaType, final String filter) throws ServiceException {
 
-        AreaLocationTypesEntity areaLocationType;
-        final String toUpperCase = filter.toUpperCase();
-        final ArrayList<GenericSystemAreaDto> systemAreaByFilterRecords = new ArrayList<>();
-        final WKTWriter2 wktWriter2 = new WKTWriter2();
-        final StringBuilder sb = new StringBuilder();
-
-        areaLocationType = repository.findAreaLocationTypeByTypeName(areaType.toUpperCase());
+        AreaLocationTypesEntity areaLocationType = repository.findAreaLocationTypeByTypeName(areaType.toUpperCase());
 
         if (areaLocationType == null) {
             throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
         }
+        final ArrayList<GenericSystemAreaDto> systemAreaByFilterRecords = new ArrayList<>();
+        final WKTWriter2 wktWriter2 = new WKTWriter2();
 
-        sb.append("SELECT gid, name, code, geom FROM spatial.")
-                .append(areaLocationType.getAreaDbTable()).append(" ").append("WHERE (UPPER(name) LIKE '%")
-                .append(toUpperCase).append("%' OR code LIKE '%").append(toUpperCase).append("%') AND enabled='Y' GROUP BY gid");
-
-        log.debug("{} QUERY => {}", databaseDialect.getClass().getSimpleName().toUpperCase(), sb.toString());
-
-        final Query emNativeQuery = em.createNativeQuery(sb.toString());
-
-        emNativeQuery.unwrap(SQLQuery.class)
-                .addScalar(GID, IntegerType.INSTANCE)
-                .addScalar(NAME, StringType.INSTANCE)
-                .addScalar(CODE, StringType.INSTANCE)
-                .addScalar(GEOM, GeometryType.INSTANCE);
-
-        final List records = emNativeQuery.getResultList();
-        Iterator it = records.iterator();
-
-        while (it.hasNext( )) {
-            final Object[] result = (Object[])it.next();
-            it.remove(); // avoids a ConcurrentModificationException
-            final Geometry envelope = ((Geometry)result[3]).getEnvelope();
-            systemAreaByFilterRecords.add(
-                    new GenericSystemAreaDto(Integer.valueOf(result[0].toString()),
-                            result[2].toString(), areaType.toUpperCase(), wktWriter2.write(envelope), result[1].toString()));
+        List<BaseSpatialEntity> baseEntities = DAOFactory.getAbstractSpatialDao(em, areaLocationType.getTypeName()).searchEntity(filter);
+        for (BaseSpatialEntity entity : baseEntities) {
+            Geometry envelope = entity.getGeom().getEnvelope();
+            systemAreaByFilterRecords.add(new GenericSystemAreaDto(entity.getId().intValue(), entity.getCode(),areaType.toUpperCase(), wktWriter2.write(envelope), entity.getName()));
         }
 
         return systemAreaByFilterRecords;
