@@ -92,11 +92,9 @@ import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 public class SpatialServiceBean implements SpatialService {
 
     private static final String EPSG = "EPSG:";
-    private static final String GID = "gid";
-    private static final String NAME = "name";
-    private static final String CODE = "code";
     private static final String TYPE = "type";
     private static final String GEOM = "geom";
+    private static final String MULTIPOINT = "MULTIPOINT";
 
     private @PersistenceContext(unitName = "spatialPU") EntityManager em;
     private @EJB SpatialRepository repository;
@@ -444,7 +442,8 @@ public class SpatialServiceBean implements SpatialService {
 
         List<BaseSpatialEntity> baseEntities = DAOFactory.getAbstractSpatialDao(em, areaLocationType.getTypeName()).searchEntity(filter);
         for (BaseSpatialEntity entity : baseEntities) {
-            Geometry envelope = entity.getGeom().getEnvelope();
+            Geometry geometry = entity.getGeom();
+            Geometry envelope = geometry.getGeometryType().equalsIgnoreCase(MULTIPOINT) ? geometry : entity.getGeom().getEnvelope();
             systemAreaByFilterRecords.add(new GenericSystemAreaDto(entity.getId().intValue(), entity.getCode(),areaType.toUpperCase(), wktWriter2.write(envelope), entity.getName()));
         }
 
