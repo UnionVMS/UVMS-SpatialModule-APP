@@ -28,6 +28,11 @@ public class RfmoDao extends AbstractSpatialDao<RfmoEntity> {
     }
 
     @Override
+    protected String getSearchNamedQuery() {
+        return SEARCH_RFMO;
+    }
+
+    @Override
     protected Class<RfmoEntity> getClazz() {
         return RfmoEntity.class;
     }

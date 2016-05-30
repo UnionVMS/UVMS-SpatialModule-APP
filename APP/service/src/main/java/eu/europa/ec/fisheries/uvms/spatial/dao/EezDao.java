@@ -33,6 +33,11 @@ public class EezDao extends AbstractSpatialDao<EezEntity> {
     }
 
     @Override
+    protected String getSearchNamedQuery() {
+        return SEARCH_EEZ;
+    }
+
+    @Override
     protected Class<EezEntity> getClazz() {
         return EezEntity.class;
     }

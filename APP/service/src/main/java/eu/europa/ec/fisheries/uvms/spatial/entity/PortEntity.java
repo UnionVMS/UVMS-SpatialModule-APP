@@ -12,7 +12,8 @@ import java.util.Map;
 @Entity
 @NamedQueries({
         @NamedQuery(name = PortEntity.DISABLE, query = "UPDATE PortEntity SET enabled = 'N'"),
-        @NamedQuery(name = PortEntity.LIST_ORDERED_BY_DISTANCE, query ="FROM PortEntity WHERE enabled = 'Y' ORDER BY distance(geom, :shape) ASC") /// TODO create dao test
+        @NamedQuery(name = PortEntity.LIST_ORDERED_BY_DISTANCE, query ="FROM PortEntity WHERE enabled = 'Y' ORDER BY distance(geom, :shape) ASC"), /// TODO create dao test
+        @NamedQuery(name = PortEntity.SEARCH_PORT, query = "FROM PortEntity where upper(name) like :name OR upper(code) like :code AND enabled='Y' GROUP BY gid")
 })
 @Table(name = "port")
 public class PortEntity extends BaseSpatialEntity {
@@ -20,6 +21,7 @@ public class PortEntity extends BaseSpatialEntity {
     public static final String PORT_BY_COORDINATE = "portEntity.ByCoordinate";
     public static final String DISABLE = "portsEntity.disable";
     public static final String LIST_ORDERED_BY_DISTANCE = "portsEntity.listOrderedByDistance";
+    public static final String SEARCH_PORT = "portEntity.searchPortByNameOrCode";
 
     private static final String COUNTRY_CO = "country_co";
     private static final String FISHING_PO = "fishing_po";

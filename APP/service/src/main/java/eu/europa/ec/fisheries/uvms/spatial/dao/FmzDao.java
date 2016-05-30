@@ -6,6 +6,7 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.FmzEntity;
 import java.util.Map;
 import javax.persistence.EntityManager;
 
+import static eu.europa.ec.fisheries.uvms.spatial.entity.FaoEntity.SEARCH_FAO;
 import static eu.europa.ec.fisheries.uvms.spatial.entity.FmzEntity.*;
 
 public class FmzDao extends AbstractSpatialDao<FmzEntity> {
@@ -19,6 +20,11 @@ public class FmzDao extends AbstractSpatialDao<FmzEntity> {
     @Override
     protected String getIntersectNamedQuery() {
         return BY_INTERSECT;
+    }
+
+    @Override
+    protected String getSearchNamedQuery() {
+        return SEARCH_FMZ;
     }
 
     @Override

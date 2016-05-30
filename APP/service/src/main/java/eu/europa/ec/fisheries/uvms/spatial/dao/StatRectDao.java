@@ -21,6 +21,11 @@ public class StatRectDao extends AbstractSpatialDao<StatRectEntity> {
     }
 
     @Override
+    protected String getSearchNamedQuery() {
+        return SEARCH_STATRECT;
+    }
+
+    @Override
     protected Class<StatRectEntity> getClazz() {
         return StatRectEntity.class;
     }
