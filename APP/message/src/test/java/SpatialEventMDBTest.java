@@ -1,4 +1,4 @@
-import eu.europa.ec.fisheries.uvms.BaseTest;
+import eu.europa.ec.fisheries.uvms.BaseUnitilsTest;
 import eu.europa.ec.fisheries.uvms.spatial.message.bean.SpatialEventMDB;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageEvent;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMarshallException;
@@ -31,7 +31,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class SpatialEventMDBTest extends BaseTest {
+public class SpatialEventMDBTest extends BaseUnitilsTest {
 
     private static final double LATITUDE = 45.11557, LONGITUDE = -7.14925;
     private static final int CRS = 3857;
