@@ -54,6 +54,11 @@ public class UserAreaDao extends AbstractSpatialDao<UserAreasEntity> {
     }
 
     @Override
+    protected String getSearchNamedQuery() {
+        return SEARCH_USERAREA;
+    }
+
+    @Override
     protected Class<UserAreasEntity> getClazz() {
         return UserAreasEntity.class;
     }

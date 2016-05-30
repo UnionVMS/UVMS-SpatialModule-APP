@@ -20,23 +20,25 @@ import org.joda.time.format.DateTimeFormatter;
 @NamedQueries({
         @NamedQuery(name = FmzEntity.DISABLE, query = "UPDATE FmzEntity SET enabled = 'N'"),
         @NamedQuery(name = FmzEntity.BY_INTERSECT,
-                query = "FROM FmzEntity WHERE intersects(geom, :shape) = true AND enabled = 'Y'")
+                query = "FROM FmzEntity WHERE intersects(geom, :shape) = true AND enabled = 'Y'"),
+        @NamedQuery(name = FmzEntity.SEARCH_FMZ, query = "FROM FmzEntity where upper(name) like :name OR upper(code) like :code AND enabled='Y' GROUP BY gid")
 })
 public class FmzEntity extends BaseSpatialEntity {
 
     public static final String DISABLE = "fmzEntity.disable";
     public static final String BY_INTERSECT = "fmzEntity.byIntersect";
+    public static final String SEARCH_FMZ = "fmzEntity.SearcgFmzByNameOrCode";
+
     private static final String FMZ_ID = "fmz_id";
     private static final String EDITED = "edited";
-    private static DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormat.forPattern("yyyy-MM-dd");
 
     @Column(name = "fmz_id")
-    @ColumnAliasName(aliasName = "fmzId")
+    @ColumnAliasName(aliasName = FMZ_ID)
     private Long fmzId;
 
-    @Temporal(TemporalType.DATE)
     @Column(name = "edited")
-    private Date edited;
+    @ColumnAliasName(aliasName = EDITED)
+    private String edited;
 
     public FmzEntity() {
         // why JPA why
@@ -50,8 +52,7 @@ public class FmzEntity extends BaseSpatialEntity {
         }
         String edited = readStringProperty(values, EDITED);
         if (edited != null){
-            DateTime dateTime = DATE_TIME_FORMATTER.parseDateTime(edited);
-            this.edited = dateTime.toDate();
+            this.edited = edited;
         }
     }
 
@@ -64,11 +65,11 @@ public class FmzEntity extends BaseSpatialEntity {
         this.fmzId = fmzId;
     }
 
-    public Date getEdited() {
+    public String getEdited() {
         return edited;
     }
 
-    public void setEdited(Date edited) {
+    public void setEdited(String edited) {
         this.edited = edited;
     }
 }

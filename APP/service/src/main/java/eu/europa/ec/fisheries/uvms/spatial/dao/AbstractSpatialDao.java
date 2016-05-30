@@ -20,6 +20,8 @@ import java.util.Map;
 public abstract class AbstractSpatialDao<E extends BaseSpatialEntity> extends AbstractDAO<E> {
 
     protected static final String SHAPE = "shape";
+    protected static final String NAME = "name";
+    protected static final String CODE = "code";
 
     public void bulkInsert(Map<String, List<Property>> features) throws ServiceException {
         StatelessSession session = (getEntityManager().unwrap(Session.class)).getSessionFactory().openStatelessSession();
@@ -46,6 +48,8 @@ public abstract class AbstractSpatialDao<E extends BaseSpatialEntity> extends Ab
 
     protected abstract String getIntersectNamedQuery();
 
+    protected abstract String getSearchNamedQuery();
+
     protected abstract Class<E> getClazz();
 
     protected abstract BaseSpatialEntity createEntity(Map<String, Object> values) throws ServiceException;
@@ -58,5 +62,11 @@ public abstract class AbstractSpatialDao<E extends BaseSpatialEntity> extends Ab
 
     public List findByIntersect(Point point) throws ServiceException {
         return findEntityByNamedQuery(getClazz(), getIntersectNamedQuery(), QueryParameter.with(SHAPE, point).parameters());
+    }
+
+    public List searchEntity(String filter) throws ServiceException {
+        String name = "%" +filter.toUpperCase()+"%";
+        String code = "%" +filter.toUpperCase()+"%";
+        return findEntityByNamedQuery(getClazz(), getSearchNamedQuery(), QueryParameter.with(NAME, name).and(CODE, code).parameters());
     }
 }
