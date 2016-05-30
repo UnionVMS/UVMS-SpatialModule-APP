@@ -11,7 +11,7 @@ public interface SpatialService {
 
     List<Location> getClosestPointToPointByType(ClosestLocationSpatialRQ request) throws ServiceException;
 
-    List<Area> getClosestAreasToPointByType(ClosestAreaSpatialRQ request) throws ServiceException;
+    List<Area> getClosestArea(ClosestAreaSpatialRQ request) throws ServiceException;
 
     List<AreaExtendedIdentifierType> getAreasByPoint(AreaByLocationSpatialRQ request) throws ServiceException;
 

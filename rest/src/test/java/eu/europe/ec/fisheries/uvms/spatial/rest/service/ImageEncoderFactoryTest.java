@@ -1,6 +1,6 @@
 package eu.europe.ec.fisheries.uvms.spatial.rest.service;
 
-import eu.europa.ec.fisheries.uvms.BaseTest;
+import eu.europa.ec.fisheries.uvms.BaseUnitilsTest;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ImageEncoderFactory;
 import lombok.SneakyThrows;
 import org.apache.batik.transcoder.TranscoderException;
@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImageEncoderFactoryTest extends BaseTest {
+public class ImageEncoderFactoryTest extends BaseUnitilsTest {
 
     @Test
     @SneakyThrows
