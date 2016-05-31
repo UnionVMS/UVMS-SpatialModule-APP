@@ -3,10 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 import com.google.common.collect.ImmutableMap;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.reporting.model.schemas.ReportGetStartAndEndDateRS;
-import eu.europa.ec.fisheries.uvms.spatial.entity.ProjectionEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.*;
 import eu.europa.ec.fisheries.uvms.spatial.entity.mapper.ReportConnectSpatialMapper;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.CoordinatesFormat;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.MapConfigurationType;
@@ -19,26 +16,9 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveOrUpdateMapC
 import eu.europa.ec.fisheries.uvms.spatial.service.MapConfigService;
 import eu.europa.ec.fisheries.uvms.spatial.service.ReportingService;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ConfigDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ControlDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.DisplayProjectionDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.LayerDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.MapConfigDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.MapDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.RefreshDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ServiceLayersDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.TbControlDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.VectorStylesDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.ConfigurationDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.LayerAreaDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.LayerSettingsDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.LayersDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.ReportProperties;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.StyleSettingsDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.SystemSettingsDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.VisibilitySettingsDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.helper.MapConfigHelper;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.MapConfigMapper;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.ProjectionMapper;
@@ -47,6 +27,8 @@ import eu.europa.ec.fisheries.uvms.spatial.util.LayerTypeEnum;
 import eu.europa.ec.fisheries.uvms.spatial.validator.SpatialValidator;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.transaction.Transactional;
@@ -69,7 +51,6 @@ public class MapConfigServiceBean implements MapConfigService {
 
     private static final String SCALE = "scale";
     private static final String MOUSECOORDS = "mousecoords";
-    private static final String NAME = "name";
     private static final String GEO_SERVER = "geo_server_url";
     private static final String BING_API_KEY = "bing_api_key";
     private static final String PROVIDER_FORMAT_BING = "BING";
@@ -349,10 +330,6 @@ public class MapConfigServiceBean implements MapConfigService {
         updateLayer(layerSettingsDto.getAreaLayers(), serviceLayers, bingApiKey);
         updateAreaLayer(layerSettingsDto.getAreaLayers(), serviceLayers, bingApiKey, userName, includeUserArea);
 
-        sortLayer(layerSettingsDto.getAdditionalLayers());
-        sortLayer(layerSettingsDto.getBaseLayers());
-        sortLayer(layerSettingsDto.getPortLayers());
-        sortLayer(layerSettingsDto.getAreaLayers());
     }
 
     private void sortLayer(List<? extends LayersDto> layers) {
@@ -378,6 +355,7 @@ public class MapConfigServiceBean implements MapConfigService {
                 }
             }
         }
+        sortLayer(layers);
     }
 
     private void updateLayer(List<? extends LayersDto> layers, List<ServiceLayerEntity> serviceLayers, String bingApiKey) {
@@ -398,6 +376,7 @@ public class MapConfigServiceBean implements MapConfigService {
             }
             layers.removeAll(layersToExclude);
         }
+        sortLayer(layers);
     }
 
     private MapDto getMap(ConfigurationDto configurationDto, Integer reportId, String userName, String scopeName, String timeStamp) throws ServiceException {
@@ -436,25 +415,19 @@ public class MapConfigServiceBean implements MapConfigService {
     }
 
     private ServiceLayersDto getServiceAreaLayer(Integer reportId, ConfigurationDto configurationDto, ProjectionDto projection, String userName, String scopeName, String timeStamp) throws ServiceException {
-        String geoServerUrl = getGeoServerUrl();
-        String bingApiKey = getBingApiKey();
 
         ReportConnectSpatialEntity entity = null;
         if (reportId != null) {
             entity = repository.findReportConnectSpatialByReportId((long) reportId);
         }
-
-        if (entity != null) {
-            Set<ReportConnectServiceAreasEntity> reportConnectServiceAreas = entity.getReportConnectServiceAreases(); // Report is overridden with Layer Settings. Ignore USM layer configuration
-            if (reportConnectServiceAreas != null && !reportConnectServiceAreas.isEmpty()) {
-                LayerSettingsDto layerSettingsDto = MapConfigHelper.getLayerSettingsForMap(entity.getReportConnectServiceAreases());
-                return getServiceAreaLayers(layerSettingsDto, geoServerUrl, bingApiKey, projection, userName, scopeName, timeStamp, reportId, configurationDto.getReportProperties());
-            } else {
-                return getServiceAreaLayers(configurationDto.getLayerSettings(), geoServerUrl, bingApiKey, projection, userName, scopeName, timeStamp, reportId, configurationDto.getReportProperties());
-            }
+        LayerSettingsDto layerSettingsDto = null;
+        if (entity != null && entity.getReportConnectServiceAreases() != null && !entity.getReportConnectServiceAreases().isEmpty()) {
+            layerSettingsDto = MapConfigHelper.getLayerSettingsForMap(entity.getReportConnectServiceAreases());
         } else {
-            return getServiceAreaLayers(configurationDto.getLayerSettings(), geoServerUrl, bingApiKey, projection, userName, scopeName, timeStamp, reportId, configurationDto.getReportProperties());
+            layerSettingsDto = configurationDto.getLayerSettings();
         }
+
+        return getServiceAreaLayers(layerSettingsDto, projection, userName, scopeName, timeStamp, reportId, configurationDto);
     }
 
     private VectorStylesDto getVectorStyles(ConfigurationDto configurationDto, Integer reportId) throws ServiceException {
@@ -489,26 +462,26 @@ public class MapConfigServiceBean implements MapConfigService {
         return new RefreshDto(configurationDto.getMapSettings().getRefreshStatus(), configurationDto.getMapSettings().getRefreshRate());
     }
 
-    private ServiceLayersDto getServiceAreaLayers(LayerSettingsDto layerSettingsDto, String geoServerUrl, String bingApiKey, ProjectionDto projection, String userName, String scopeName, String timeStamp, Integer reportId, ReportProperties properties) throws ServiceException {
+    private ServiceLayersDto getServiceAreaLayers(LayerSettingsDto layerSettingsDto, ProjectionDto projection, String userName, String scopeName, String timeStamp, Integer reportId, ConfigurationDto configurationDto) throws ServiceException {
         ServiceLayersDto serviceLayersDto = new ServiceLayersDto();
-        serviceLayersDto.setPortLayers(getLayerDtoList(layerSettingsDto.getPortLayers(), geoServerUrl, bingApiKey, projection, false)); // Get Service Layers for Port layers
-        serviceLayersDto.setSystemLayers(getAreaLayerDtoList(layerSettingsDto.getAreaLayers(), geoServerUrl, bingApiKey, projection, false, userName, scopeName, timeStamp, reportId, properties)); // // Get Service Layers for system layers and User Layers
-        serviceLayersDto.setAdditionalLayers(getLayerDtoList(layerSettingsDto.getAdditionalLayers(), geoServerUrl, bingApiKey, projection, false)); // Get Service Layers for Additional layers
-        serviceLayersDto.setBaseLayers(getLayerDtoList(layerSettingsDto.getBaseLayers(), geoServerUrl, bingApiKey, projection, true)); // Get Service Layers for base layers
+        serviceLayersDto.setPortLayers(getLayerDtoList(layerSettingsDto.getPortLayers(), projection, false, configurationDto.getReferenceData())); // Get Service Layers for Port layers
+        serviceLayersDto.setSystemLayers(getAreaLayerDtoList(layerSettingsDto.getAreaLayers(), projection, false, userName, scopeName, timeStamp, reportId, configurationDto)); // // Get Service Layers for system layers and User Layers
+        serviceLayersDto.setAdditionalLayers(getLayerDtoList(layerSettingsDto.getAdditionalLayers(), projection, false, configurationDto.getReferenceData())); // Get Service Layers for Additional layers
+        serviceLayersDto.setBaseLayers(getLayerDtoList(layerSettingsDto.getBaseLayers(), projection, true, configurationDto.getReferenceData())); // Get Service Layers for base layers
         return serviceLayersDto;
     }
 
-    private List<LayerDto> getAreaLayerDtoList(List<LayerAreaDto> layersDtos, String geoServerUrl, String bingApiKey, ProjectionDto projection, boolean isBackground, String userName, String scopeName, String timeStamp, Integer reportId, ReportProperties properties) throws ServiceException {
+    private List<LayerDto> getAreaLayerDtoList(List<LayerAreaDto> layersDtos, ProjectionDto projection, boolean isBackground, String userName, String scopeName, String timeStamp, Integer reportId, ConfigurationDto configurationDto) throws ServiceException {
         if (layersDtos == null || layersDtos.isEmpty()) {
             return null;
         }
         Collections.sort(layersDtos);
         List<LayerDto> layerDtoList = new ArrayList<>();
         for (LayerAreaDto layerAreaDto : layersDtos) {
-            List<ServiceLayerEntity> serviceLayers = getServiceLayers(Arrays.asList(Long.parseLong(layerAreaDto.getServiceLayerId())), projection, bingApiKey);
+            List<ServiceLayerEntity> serviceLayers = getServiceLayers(Arrays.asList(Long.parseLong(layerAreaDto.getServiceLayerId())), projection, getBingApiKey());
             if (serviceLayers != null && !serviceLayers.isEmpty()) {
                 ServiceLayerEntity serviceLayer = serviceLayers.get(0);
-                List<LayerDto> layerDtos = getLayerDtos(Arrays.asList(serviceLayer), geoServerUrl, bingApiKey, isBackground);
+                List<LayerDto> layerDtos = getLayerDtos(Arrays.asList(serviceLayer), isBackground, configurationDto.getReferenceData());
                 if (layerDtos != null && !layerDtos.isEmpty()) {
                     LayerDto layerDto = layerDtos.get(0);
                     if (layerAreaDto.getAreaType().equals(AreaTypeEnum.userarea)) {
@@ -521,7 +494,7 @@ public class MapConfigServiceBean implements MapConfigService {
                         if (reportId != null) {
                             layerDto.setCqlActive(getAreaGroupCqlActive(reportId, userName, scopeName, timeStamp));
                         } else {
-                            layerDto.setCqlActive(MapConfigHelper.getAreaGroupCqlActive(properties.getStartDate(), properties.getEndDate()));
+                            layerDto.setCqlActive(MapConfigHelper.getAreaGroupCqlActive(configurationDto.getReportProperties().getStartDate(), configurationDto.getReportProperties().getEndDate()));
                         }
                         layerDto.setAreaType(AreaTypeEnum.areagroup.getType().toUpperCase());
                         layerDto.setTitle(layerAreaDto.getAreaGroupName());
@@ -543,20 +516,20 @@ public class MapConfigServiceBean implements MapConfigService {
         return MapConfigHelper.getAreaGroupCqlActive(response.getStartDate(), response.getEndDate());
     }
 
-    private List<LayerDto> getLayerDtoList(List<? extends LayersDto> layersDtos, String geoServerUrl, String bingApiKey, ProjectionDto projection, boolean isBackground) {
+    private List<LayerDto> getLayerDtoList(List<? extends LayersDto> layersDtos, ProjectionDto projection, boolean isBackground, Map<String, ReferenceDataPropertiesDto> referenceData) throws ServiceException {
         if (layersDtos == null || layersDtos.isEmpty()) {
             return null;
         }
         Collections.sort(layersDtos);
         List<Long> serviceLayerIds = MapConfigHelper.getServiceLayerIds(layersDtos);
-        List<ServiceLayerEntity> serviceLayerEntities = getServiceLayers(serviceLayerIds, projection, bingApiKey);
-        return getLayerDtos(serviceLayerEntities, geoServerUrl, bingApiKey, isBackground);
+        List<ServiceLayerEntity> serviceLayerEntities = getServiceLayers(serviceLayerIds, projection, getBingApiKey());
+        return getLayerDtos(serviceLayerEntities, isBackground, referenceData);
     }
 
-    private List<LayerDto> getLayerDtos(List<ServiceLayerEntity> serviceLayerEntities, String geoserverUrl, String bingApiKey, boolean isBaseLayer) {
+    private List<LayerDto> getLayerDtos(List<ServiceLayerEntity> serviceLayerEntities, boolean isBaseLayer, Map<String, ReferenceDataPropertiesDto> referenceData) throws ServiceException {
         List<LayerDto> layerDtos = new ArrayList<>();
         for (ServiceLayerEntity serviceLayerEntity : serviceLayerEntities) {
-            layerDtos.add(serviceLayerEntity.convertToServiceLayer(geoserverUrl, bingApiKey, isBaseLayer));
+            layerDtos.add(MapConfigHelper.convertToServiceLayer(serviceLayerEntity, getGeoServerUrl(), getBingApiKey(), isBaseLayer, referenceData));
         }
         return layerDtos;
     }

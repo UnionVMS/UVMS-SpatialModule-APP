@@ -280,6 +280,40 @@
       }
     }
   },
+  "referenceDataSettings": {
+    "eez": {
+      "selection": "all",
+      "codes": []
+    },
+    "rfmo": {
+      "selection": "all",
+      "codes": []
+    },
+    "gfcm": {
+      "selection": "all",
+      "codes": []
+    },
+    "fao": {
+      "selection": "all",
+      "codes": []
+    },
+    "fmz": {
+      "selection": "all",
+      "codes": []
+    },
+    "statrect": {
+      "selection": "all",
+      "codes": []
+    },
+    "port": {
+      "selection": "all",
+      "codes": []
+    },
+    "portarea": {
+      "selection": "all",
+      "codes": []
+    }
+  },
   "layerSettings": {
     "portLayers": [
       {
