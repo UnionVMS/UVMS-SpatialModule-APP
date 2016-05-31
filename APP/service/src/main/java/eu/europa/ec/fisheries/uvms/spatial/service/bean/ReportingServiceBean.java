@@ -7,7 +7,7 @@ import eu.europa.ec.fisheries.uvms.reporting.model.mappper.ReportingModuleReques
 import eu.europa.ec.fisheries.uvms.reporting.model.mappper.ReportingModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.reporting.model.schemas.ReportGetStartAndEndDateRS;
 import eu.europa.ec.fisheries.uvms.spatial.message.service.ReportingProducerBean;
-import eu.europa.ec.fisheries.uvms.spatial.message.service.SpatialModuleReceiverBean;
+import eu.europa.ec.fisheries.uvms.spatial.message.service.SpatialConsumerBean;
 import eu.europa.ec.fisheries.uvms.spatial.service.ReportingService;
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,7 +30,7 @@ public class ReportingServiceBean implements ReportingService {
     private ReportingProducerBean producer;
 
     @EJB
-    private SpatialModuleReceiverBean consumer;
+    private SpatialConsumerBean consumer;
 
     @Override
     public ReportGetStartAndEndDateRS getReportDates(Integer reportId, String userName, String scopeName, String timeStamp) throws ServiceException {

@@ -47,7 +47,7 @@ public class ServiceLayerDao extends AbstractDAO<ServiceLayerEntity> {
 
         }
         catch (Exception e){
-            String error = "Error when trying to fetch service layer from db";
+            String error = "Error when trying to fetch resource layer from db";
             log.error(error);
             throw new ServiceException(error);
         }

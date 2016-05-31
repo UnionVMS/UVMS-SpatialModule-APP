@@ -2,20 +2,16 @@ package eu.europa.ec.fisheries.uvms.spatial.message.service;
 
 import eu.europa.ec.fisheries.uvms.message.AbstractConsumer;
 import eu.europa.ec.fisheries.uvms.message.MessageConstants;
-
 import javax.annotation.Resource;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.jms.Destination;
 
-/**
- * Created by padhyad on 3/21/2016.
- */
 @Stateless
 @Local
-public class SpatialModuleReceiverBean extends AbstractConsumer {
+public class UploadConsumerBean extends AbstractConsumer {
 
-    @Resource(mappedName = MessageConstants.QUEUE_SPATIAL)
+    @Resource(mappedName = MessageConstants.UPLOAD_QUEUE)
     private Destination destination;
 
     @Override
