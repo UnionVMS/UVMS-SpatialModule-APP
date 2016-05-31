@@ -66,7 +66,7 @@ public class ServiceLayerResource extends UnionVMSResource {
         }
 
         catch (Exception ex){
-            String error = "[ Error when getting service layer. ] ";
+            String error = "[ Error when getting resource layer. ] ";
             log.error(error, ex);
             response = createErrorResponse(error);
         }
@@ -89,7 +89,7 @@ public class ServiceLayerResource extends UnionVMSResource {
             service.update(serviceLayer);
 
         } catch (Exception ex) {
-            String error = "[ Error when updating service layer. ] ";
+            String error = "[ Error when updating resource layer. ] ";
             log.error(error, ex);
             response = createErrorResponse(error);
         }
