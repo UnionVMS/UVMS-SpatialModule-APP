@@ -27,7 +27,7 @@ import static org.junit.Assert.assertNotNull;
 
 /**
  * @author padhyad
- *         Unit test for Area details service
+ *         Unit test for Area details resource
  */
 @RunWith(MockitoJUnitRunner.class)
 @Ignore

@@ -149,7 +149,7 @@ public class SpatialRepositoryBean implements SpatialRepository {
     }
 
     @Override
-    public void updateSystemConfig(String name, String value) throws ServiceException { // TODO move logic to service or dao please
+    public void updateSystemConfig(String name, String value) throws ServiceException { // TODO move logic to resource or dao please
         List<SysConfigEntity> configs = sysConfigDao.findSystemConfigByName(name);
         if (configs != null && !configs.isEmpty()) {
             SysConfigEntity sysConfigEntity = configs.get(0);

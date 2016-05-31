@@ -272,7 +272,7 @@ CREATE TABLE spatial.service_layer
 	-- to create it:
 	-- CREATE TYPE PROVIDER_FORMAT AS ENUM ('OSM', 'WMS', 'OSEA','TMS')
 	provider_format_id int NOT NULL,
-	-- if service type is WMS than this field is mandatory
+	-- if resource type is WMS than this field is mandatory
 	service_url varchar,
 	-- GeoServer layer name
 	geo_name varchar(255),

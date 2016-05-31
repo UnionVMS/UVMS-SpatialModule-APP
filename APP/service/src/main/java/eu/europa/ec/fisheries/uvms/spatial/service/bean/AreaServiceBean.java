@@ -1,11 +1,14 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
+import eu.europa.ec.fisheries.uvms.common.FileSaver;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.interceptors.SimpleTracingInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.dao.util.DAOFactory;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.BaseSpatialEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.CountryEntity;
+import eu.europa.ec.fisheries.uvms.spatial.message.service.UploadConsumerBean;
+import eu.europa.ec.fisheries.uvms.spatial.message.service.UploadProducerBean;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
@@ -14,11 +17,10 @@ import eu.europa.ec.fisheries.uvms.spatial.service.AreaTypeNamesService;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.util.FileSaver;
 import eu.europa.ec.fisheries.uvms.spatial.util.ShapeFileReader;
 import eu.europa.ec.fisheries.uvms.spatial.util.SpatialTypeEnum;
-import eu.europa.ec.fisheries.uvms.spatial.util.SupportedFileExtensions;
-import eu.europa.ec.fisheries.uvms.spatial.util.ZipExtractor;
+import eu.europa.ec.fisheries.uvms.common.SupportedFileExtensions;
+import eu.europa.ec.fisheries.uvms.common.ZipExtractor;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import lombok.extern.slf4j.Slf4j;
@@ -57,6 +59,8 @@ public class AreaServiceBean implements AreaService {
     private @EJB AreaTypeNamesService areaTypeService;
     private @EJB AreaService areaService;
     private @EJB SpatialRepository repository;
+    private @EJB UploadProducerBean uploadSender;
+    private @EJB UploadConsumerBean uploadReceiver;
 
     @Override
     public Map<String, String> getAllCountriesDesc() throws ServiceException {
