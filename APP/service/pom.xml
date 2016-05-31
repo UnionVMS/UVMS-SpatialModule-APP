@@ -82,6 +82,7 @@
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms</groupId>
             <artifactId>uvms-test</artifactId>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>

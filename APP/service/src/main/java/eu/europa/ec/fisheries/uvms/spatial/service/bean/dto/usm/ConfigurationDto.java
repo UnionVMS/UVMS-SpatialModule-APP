@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.NotNull;
+import java.util.Map;
 
 /**
  * Created by padhyad on 11/25/2015.
@@ -37,9 +38,19 @@ public class ConfigurationDto {
     @JsonProperty("reportProperties")
     private ReportProperties reportProperties;
 
+    @JsonProperty("referenceDataSettings")
+    private Map<String, ReferenceDataPropertiesDto> referenceData;
+
     public ConfigurationDto() {}
 
-    public ConfigurationDto(ToolSettingsDto toolSettings, StyleSettingsDto stylesSettings, SystemSettingsDto systemSettings, LayerSettingsDto layerSettings, MapSettingsDto mapSettings, VisibilitySettingsDto visibilitySettings, ReportProperties reportProperties) {
+    public ConfigurationDto(ToolSettingsDto toolSettings,
+                            StyleSettingsDto stylesSettings,
+                            SystemSettingsDto systemSettings,
+                            LayerSettingsDto layerSettings,
+                            MapSettingsDto mapSettings,
+                            VisibilitySettingsDto visibilitySettings,
+                            ReportProperties reportProperties,
+                            Map<String, ReferenceDataPropertiesDto> referenceData) {
         this.toolSettings = toolSettings;
         this.systemSettings = systemSettings;
         this.stylesSettings = stylesSettings;
@@ -47,6 +58,7 @@ public class ConfigurationDto {
         this.mapSettings = mapSettings;
         this.visibilitySettings = visibilitySettings;
         this.reportProperties = reportProperties;
+        this.referenceData = referenceData;
     }
 
     @JsonProperty("toolSettings")
@@ -117,6 +129,16 @@ public class ConfigurationDto {
     @JsonProperty("reportProperties")
     public void setReportProperties(ReportProperties reportProperties) {
         this.reportProperties = reportProperties;
+    }
+
+    @JsonProperty("referenceDataSettings")
+    public Map<String, ReferenceDataPropertiesDto> getReferenceData() {
+        return referenceData;
+    }
+
+    @JsonProperty("referenceDataSettings")
+    public void setReferenceData(Map<String, ReferenceDataPropertiesDto> referenceData) {
+        this.referenceData = referenceData;
     }
 
     @Override

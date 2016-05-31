@@ -68,6 +68,12 @@ public class LayerDto {
     @JsonProperty("cql_active")
     private String cqlActive;
 
+    @JsonProperty("cql")
+    private String cql;
+
+    @JsonProperty("warning")
+    private Boolean isWarning;
+
     /**
      * No args constructor for use in serialization
      */
@@ -221,5 +227,25 @@ public class LayerDto {
     @JsonProperty("cql_active")
     public void setCqlActive(String cqlActive) {
         this.cqlActive = cqlActive;
+    }
+
+    @JsonProperty("cql")
+    public String getCql() {
+        return cql;
+    }
+
+    @JsonProperty("cql")
+    public void setCql(String cql) {
+        this.cql = cql;
+    }
+
+    @JsonProperty("warning")
+    public Boolean isWarning() {
+        return isWarning;
+    }
+
+    @JsonProperty("warning")
+    public void setIsWarning(Boolean isWarning) {
+        this.isWarning = isWarning;
     }
 }

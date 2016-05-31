@@ -3,24 +3,20 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean.helper;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.ConfigurationDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.LayerAreaDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.LayerSettingsDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.LayersDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.StyleSettingsDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.VisibilitySettingsDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.LayerDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.StylesDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.*;
 import eu.europa.ec.fisheries.uvms.spatial.util.AreaTypeEnum;
 import eu.europa.ec.fisheries.uvms.spatial.util.LayerTypeEnum;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by padhyad on 3/31/2016.
@@ -30,6 +26,8 @@ public class MapConfigHelper {
     private static final String USER_AREA = "userarea";
 
     private static final String PROVIDER_FORMAT_BING = "BING";
+
+    private static final String GEOSERVER = "geoserver";
 
     private static Logger LOGGER =  LoggerFactory.getLogger(LoggerFactory.class);
 
@@ -234,5 +232,64 @@ public class MapConfigHelper {
             }
         }
         return userAreaIds;
+    }
+
+    public static LayerDto convertToServiceLayer(ServiceLayerEntity serviceLayerEntity, String geoServerUrl, String bingApiKey, boolean isBaseLayer, Map<String, ReferenceDataPropertiesDto> referenceData) {
+        LayerDto layerDto = new LayerDto();
+        String type = serviceLayerEntity.getProviderFormat().getServiceType();
+        layerDto.setType(type);
+        layerDto.setTitle(serviceLayerEntity.getName());
+        layerDto.setIsBaseLayer(isBaseLayer);
+        layerDto.setShortCopyright(serviceLayerEntity.getShortCopyright());
+        layerDto.setLongCopyright(serviceLayerEntity.getLongCopyright());
+        if(!(type.equalsIgnoreCase("OSM") || type.equalsIgnoreCase("OSEA") || type.equalsIgnoreCase("BING"))) {
+            layerDto.setUrl(geoServerUrl.concat(serviceLayerEntity.getProviderFormat().getServiceType().toLowerCase()));
+        }
+        layerDto.setServerType(serviceLayerEntity.getIsInternal() ? GEOSERVER : null);
+        layerDto.setLayerGeoName(serviceLayerEntity.getGeoName());
+        if(!(StringUtils.isEmpty(serviceLayerEntity.getStyleGeom()) && StringUtils.isEmpty(serviceLayerEntity.getStyleLabel()) && StringUtils.isEmpty(serviceLayerEntity.getStyleLabelGeom()))) {
+            layerDto.setStyles(new StylesDto(serviceLayerEntity.getStyleGeom(), serviceLayerEntity.getStyleLabel(), serviceLayerEntity.getStyleLabelGeom()));
+        }
+        if (type.equalsIgnoreCase("BING")) {
+            layerDto.setApiKey(bingApiKey);
+        }
+        setCql(referenceData, layerDto, serviceLayerEntity.getAreaType());
+        return layerDto;
+    }
+
+    private static void setCql(Map<String, ReferenceDataPropertiesDto> referenceData, LayerDto layerDto, AreaLocationTypesEntity areaType) {
+        for (Map.Entry<String, ReferenceDataPropertiesDto> entry : referenceData.entrySet()) {
+            if (areaType.getTypeName().equalsIgnoreCase(entry.getKey())) {
+                ReferenceDataPropertiesDto referenceDataPropertiesDto = entry.getValue();
+                switch (referenceDataPropertiesDto.getSelection()) {
+                    case "custom" :
+                        if (referenceDataPropertiesDto.getCodes().isEmpty()) {
+                            layerDto.setIsWarning(true);
+                            layerDto.setCql(null);
+                        } else {
+                            layerDto.setIsWarning(null);
+                            StringBuilder cql = new StringBuilder();
+                            cql.append("code in (");
+                            cql.append(getConcatenateString(referenceDataPropertiesDto.getCodes()));
+                            cql.append(")");
+                            layerDto.setCql(cql.toString().replaceAll(", $", ""));
+                        }
+                        break;
+                    case "all" :
+                        layerDto.setCql(null);
+                        layerDto.setIsWarning(null);
+                        break;
+                }
+
+            }
+        }
+    }
+
+    private static String getConcatenateString(List<String> codes) {
+        StringBuilder concatStr = new StringBuilder();
+        for (String code : codes) {
+            concatStr.append("'" + code + "'" + ",");
+        }
+        return concatStr.toString().replaceAll(",$", "");
     }
 }
