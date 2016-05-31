@@ -280,6 +280,16 @@
       }
     }
   },
+  "referenceDataSettings" : {
+    "eez" : {
+      "selection" : "custom",
+      "codes" : ["abc", "def"]
+    },
+    "rfmo" : {
+      "selection" : "custom",
+      "codes" : ["abc", "def"]
+    }
+  },
   "layerSettings": {
     "portLayers": [
       {

@@ -1,7 +1,8 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import eu.europa.ec.fisheries.uvms.domain.CharBooleanConverter;
-import java.util.Set;
+
+import java.util.*;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -18,6 +19,7 @@ import eu.europa.ec.fisheries.uvms.domain.BaseEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.LayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.StylesDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.ReferenceDataPropertiesDto;
 import org.apache.commons.lang3.StringUtils;
 
 @Entity
@@ -228,31 +230,5 @@ public class ServiceLayerEntity extends BaseEntity {
 
     public boolean isStyleEmpty() {
         return (StringUtils.isEmpty(styleGeom) && StringUtils.isEmpty(styleLabel) && StringUtils.isEmpty(styleLabelGeom));
-    }
-
-    public LayerDto convertToServiceLayer(String geoServerUrl, String bingApiKey, boolean isBaseLayer) {
-        LayerDto layerDto = new LayerDto();
-        String type = getProviderFormat().getServiceType();
-        layerDto.setType(type);
-        layerDto.setTitle(getName());
-        layerDto.setIsBaseLayer(isBaseLayer);
-        layerDto.setShortCopyright(getShortCopyright());
-        layerDto.setLongCopyright(getLongCopyright());
-        if(!(type.equalsIgnoreCase("OSM") || type.equalsIgnoreCase("OSEA") || type.equalsIgnoreCase("BING"))) {
-            layerDto.setUrl(geoServerUrl.concat(getProviderFormat().getServiceType().toLowerCase()));
-        }
-        layerDto.setServerType(getIsInternal() ? GEOSERVER : null);
-        layerDto.setLayerGeoName(getGeoName());
-        setStyle(layerDto);
-        if (type.equalsIgnoreCase("BING")) {
-            layerDto.setApiKey(bingApiKey);
-        }
-        return layerDto;
-    }
-
-    private void setStyle(LayerDto layerDto) {
-        if(!isStyleEmpty()) {
-            layerDto.setStyles(new StylesDto(getStyleGeom(), getStyleLabel(), getStyleLabelGeom()));
-        }
     }
 }

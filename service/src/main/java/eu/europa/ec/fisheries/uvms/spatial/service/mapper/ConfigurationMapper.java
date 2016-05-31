@@ -20,6 +20,7 @@ public class ConfigurationMapper {
         target.setLayerSettings(source.getLayerSettings() == null ? target.getLayerSettings() : source.getLayerSettings());
         target.setVisibilitySettings(source.getVisibilitySettings() == null ? target.getVisibilitySettings() : source.getVisibilitySettings());
         target.setMapSettings(source.getMapSettings() == null ? target.getMapSettings() : source.getMapSettings());
+        target.setReferenceData(source.getReferenceData() == null ? target.getReferenceData() : source.getReferenceData());
         return target;
     }
 
@@ -40,6 +41,7 @@ public class ConfigurationMapper {
         target.setVisibilitySettings(target.getVisibilitySettings() == null ? source.getVisibilitySettings() : target.getVisibilitySettings());
         target.setMapSettings(target.getMapSettings() == null ? source.getMapSettings() : target.getMapSettings());
         target.setLayerSettings(target.getLayerSettings() == null ? source.getLayerSettings() : target.getLayerSettings());
+        target.setReferenceData(target.getReferenceData() == null ? source.getReferenceData() : target.getReferenceData());
         return target;
     }
 
@@ -51,6 +53,7 @@ public class ConfigurationMapper {
         target.setVisibilitySettings(source.getVisibilitySettings() != null ? null : target.getVisibilitySettings());
         target.setMapSettings(source.getMapSettings() != null ? null : target.getMapSettings());
         target.setLayerSettings(source.getLayerSettings() != null ? null : target.getLayerSettings());
+        target.setReferenceData(source.getReferenceData() != null ? null : target.getReferenceData());
         return target;
     }
 
@@ -60,6 +63,7 @@ public class ConfigurationMapper {
         defaultNodeConfigurationDto.setVisibilitySettings(configurationDto.getVisibilitySettings() != null ? adminConfigurationDto.getVisibilitySettings() : null);
         defaultNodeConfigurationDto.setMapSettings(configurationDto.getMapSettings() != null ? adminConfigurationDto.getMapSettings() : null);
         defaultNodeConfigurationDto.setLayerSettings(configurationDto.getLayerSettings() != null ? adminConfigurationDto.getLayerSettings() : null);
+        defaultNodeConfigurationDto.setReferenceData(configurationDto.getReferenceData() != null ? adminConfigurationDto.getReferenceData() : null);
         return defaultNodeConfigurationDto;
     }
 }

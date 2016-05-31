@@ -101,8 +101,4 @@ public class ReportConnectServiceAreasEntity extends BaseEntity implements Compa
 	public int compareTo(ReportConnectServiceAreasEntity reportConnectServiceArea) {
 		return Integer.compare(this.getLayerOrder(), reportConnectServiceArea.getLayerOrder());
 	}
-
-	public LayerDto convertToServiceLayer(String geoServerUrl, String bingApiKey) {
-		return serviceLayer.convertToServiceLayer(geoServerUrl, bingApiKey, false); // TODO Fix is background check
-	}
 }
