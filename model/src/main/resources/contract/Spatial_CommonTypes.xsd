@@ -221,6 +221,15 @@
             <xs:element name="StyleSettings" type="StyleSettingsType" minOccurs="0"/>
             <xs:element name="VisibilitySettings" type="VisibilitySettingsType" minOccurs="0" />
             <xs:element name="LayerSettings" type="LayerSettingsType" minOccurs="0" />
+            <xs:element name="ReferenceData" type="ReferenceDataType" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ReferenceDataType">
+        <xs:sequence>
+            <xs:element name="type" type="xs:string" nillable="false"/>
+            <xs:element name="selection" type="xs:string" nillable="false"/>
+            <xs:element name="codes" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
 

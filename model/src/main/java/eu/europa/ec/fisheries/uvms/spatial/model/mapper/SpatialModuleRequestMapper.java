@@ -93,10 +93,21 @@ public final class SpatialModuleRequestMapper {
         }
     }
 
-    public static String mapToSpatialSaveOrUpdateMapConfigurationRQ(long reportId, Long spatialConnectId, Long mapProjectionId, Long displayProjectionId, CoordinatesFormat coordinatesFormat, ScaleBarUnits scaleBarUnits, StyleSettingsType styleSettings, VisibilitySettingsType visibilitySettings, LayerSettingsType layerSettingsType) throws SpatialModelMarshallException {
+    public static String mapToSpatialSaveOrUpdateMapConfigurationRQ(long reportId,
+                                                                    Long spatialConnectId,
+                                                                    Long mapProjectionId,
+                                                                    Long displayProjectionId,
+                                                                    CoordinatesFormat coordinatesFormat,
+                                                                    ScaleBarUnits scaleBarUnits,
+                                                                    StyleSettingsType styleSettings,
+                                                                    VisibilitySettingsType visibilitySettings,
+                                                                    LayerSettingsType layerSettingsType,
+                                                                    List<ReferenceDataType> referenceDataType) throws SpatialModelMarshallException {
         try {
             MapConfigurationType mapConfiguration =
-                    new MapConfigurationType(reportId, spatialConnectId, mapProjectionId, displayProjectionId, coordinatesFormat, scaleBarUnits, styleSettings, visibilitySettings, layerSettingsType);
+                    new MapConfigurationType(reportId, spatialConnectId, mapProjectionId, displayProjectionId,
+                            coordinatesFormat, scaleBarUnits, styleSettings, visibilitySettings,
+                            layerSettingsType, referenceDataType);
             return JAXBMarshaller.marshall(new SpatialSaveOrUpdateMapConfigurationRQ(SpatialModuleMethod.SAVE_OR_UPDATE_MAP_CONFIGURATION, mapConfiguration));
         } catch (SpatialModelMarshallException ex) {
             return logException(ex);
