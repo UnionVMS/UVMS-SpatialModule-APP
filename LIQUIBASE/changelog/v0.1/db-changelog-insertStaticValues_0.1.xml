@@ -3,20 +3,35 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
-
+				   
     <include file="schema\initdata\provider_format_init.xml"/>
 	<include file="schema\initdata\service_layer_init.xml"/>
 	<include file="schema\initdata\area_location_types_init.xml"/>
 	<include file="schema\initdata\projection_init.xml"/>
     <include file="schema\initdata\system_configurations_init.xml"/>
 
-    <include file="schema\initdata\eez_init.xml"/>
-    <!--<include file="schema\initdata\port_init.xml"/>
-    <include file="schema\initdata\port_area_init.xml"/>
-    <include file="schema\initdata\rfmo_init.xml"/>
-	<include file="schema\initdata\stat_rect_init.xml"/>
-	<include file="schema\initdata\gfcm_init.xml"/>
-    <include file="schema\initdata\fao_init.xml"/>
-    <include file="schema\initdata\fmz_init.xml"/>
-    <include file="schema\initdata\countries_init.xml"/>-->
+	<changeSet author="martinhu" id="1436863739768-2" dbms="postgresql">
+		<loadData file="schema/initdata/csv/postgres/eez.csv" tableName="eez"/>
+		<loadData file="schema/initdata/csv/postgres/countries.csv" tableName="countries"/>
+		<loadData file="schema/initdata/csv/postgres/fao.csv" tableName="fao"/>
+		<loadData file="schema/initdata/csv/postgres/fmz.csv" tableName="fmz"/>
+		<loadData file="schema/initdata/csv/postgres/gfcm.csv" tableName="gfcm"/>
+		<loadData file="schema/initdata/csv/postgres/port_area.csv" tableName="port_area"/>
+		<loadData file="schema/initdata/csv/postgres/port.csv" tableName="port"/>
+		<loadData file="schema/initdata/csv/postgres/rfmo.csv" tableName="rfmo"/>
+		<loadData file="schema/initdata/csv/postgres/stat_rect.csv" tableName="stat_rect"/>
+	</changeSet>
+	
+	<changeSet author="martinhu" id="1436863739768-2" dbms="oracle">
+		<loadData file="schema/initdata/csv/oracle/eez.csv" tableName="eez"/>
+		<loadData file="schema/initdata/csv/oracle/countries.csv" tableName="countries"/>
+		<loadData file="schema/initdata/csv/oracle/fao.csv" tableName="fao"/>
+		<loadData file="schema/initdata/csv/oracle/fmz.csv" tableName="fmz"/>
+		<loadData file="schema/initdata/csv/oracle/gfcm.csv" tableName="gfcm"/>
+		<loadData file="schema/initdata/csv/oracle/port_area.csv" tableName="port_area"/>
+		<loadData file="schema/initdata/csv/oracle/port.csv" tableName="port"/>
+		<loadData file="schema/initdata/csv/oracle/rfmo.csv" tableName="rfmo"/>
+		<loadData file="schema/initdata/csv/oracle/stat_rect.csv" tableName="stat_rect"/>
+	</changeSet>
+	
 </databaseChangeLog>
