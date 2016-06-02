@@ -308,10 +308,6 @@ public class MapConfigHelper {
                         layerDto.setCql(null);
                         layerDto.setIsWarning(null);
                         break;
-                    case "none" :
-                        layerDto.setCql(null);
-                        layerDto.setIsWarning(true);
-
                 }
 
             }
