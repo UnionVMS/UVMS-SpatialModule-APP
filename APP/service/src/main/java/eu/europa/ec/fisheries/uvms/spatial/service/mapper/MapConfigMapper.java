@@ -133,6 +133,29 @@ public abstract class MapConfigMapper {
     })
     public abstract SegmentsDto getSegmentDto(SegmentType segmentType);
 
+    public List<ReferenceDataType> getReferenceDataType(Map<String, ReferenceDataPropertiesDto> referenceData) {
+        if (referenceData == null || referenceData.isEmpty()) {
+            return null;
+        }
+        List<ReferenceDataType> referenceDataTypes = new ArrayList<>();
+        for (Map.Entry<String, ReferenceDataPropertiesDto> entry : referenceData.entrySet()) {
+            referenceDataTypes.add(new ReferenceDataType(entry.getKey(), entry.getValue().getSelection(), entry.getValue().getCodes()));
+        }
+        return referenceDataTypes;
+    }
+
+    public Map<String, ReferenceDataPropertiesDto> getReferenceData(List<ReferenceDataType> referenceDataTypes) {
+        if (referenceDataTypes == null || referenceDataTypes.isEmpty()) {
+            return null;
+        }
+        Map<String, ReferenceDataPropertiesDto> referenceData = new HashMap<>();
+        for (ReferenceDataType referenceDataType : referenceDataTypes) {
+            referenceData.put(referenceDataType.getType(),
+                    new ReferenceDataPropertiesDto(referenceDataType.getSelection(), referenceDataType.getCodes()));
+        }
+        return referenceData;
+    }
+
     protected String getAreaType(AreaTypeEnum areaTypeEnum) {
         return areaTypeEnum.getType();
     }

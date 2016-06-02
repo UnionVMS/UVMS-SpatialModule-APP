@@ -2,6 +2,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean.helper;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
@@ -105,6 +106,22 @@ public class MapConfigHelper {
         }
     }
 
+    public static Map<String, ReferenceDataPropertiesDto> getReferenceDataSettings(String referenceData) throws ServiceException {
+        if (referenceData == null) {
+            return null;
+        }
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
+            Object obj = mapper.readValue(referenceData, Map.class);
+            String jsonString = mapper.writeValueAsString(obj);
+            return mapper.readValue(jsonString, TypeFactory.defaultInstance().constructMapType(Map.class, String.class, ReferenceDataPropertiesDto.class));
+
+        } catch (IOException e) {
+            throw new ServiceException("Parse Exception from Json to Object", e);
+        }
+    }
+
     public static StyleSettingsDto getStyleSettings(String styleSettings) throws ServiceException {
         if (styleSettings == null) {
             return null;
@@ -136,6 +153,18 @@ public class MapConfigHelper {
         try {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.writeValueAsString(visibilitySettings);
+        } catch (IOException e) {
+            throw new ServiceException("Parse Exception from Object to json", e);
+        }
+    }
+
+    public static String getReferenceDataSettingsJson(Map<String, ReferenceDataPropertiesDto> referenceData) throws ServiceException {
+        if (referenceData == null) {
+            return null;
+        }
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.writeValueAsString(referenceData);
         } catch (IOException e) {
             throw new ServiceException("Parse Exception from Object to json", e);
         }
@@ -279,6 +308,10 @@ public class MapConfigHelper {
                         layerDto.setCql(null);
                         layerDto.setIsWarning(null);
                         break;
+                    case "none" :
+                        layerDto.setCql(null);
+                        layerDto.setIsWarning(true);
+
                 }
 
             }

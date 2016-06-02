@@ -86,6 +86,9 @@ public class ReportConnectSpatialEntity implements Serializable {
 	@Column(columnDefinition = "text", name = "visibility_settings")
 	private String visibilitySettings;
 
+	@Column(columnDefinition = "text", name = "reference_data")
+	private String referenceData;
+
 	@Column(name = "app_version", nullable = false, length = 255)
 	private String appVersion;
 	
@@ -219,5 +222,13 @@ public class ReportConnectSpatialEntity implements Serializable {
 
 	public void setVisibilitySettings(String visibilitySettings) {
 		this.visibilitySettings = visibilitySettings;
+	}
+
+	public String getReferenceData() {
+		return referenceData;
+	}
+
+	public void setReferenceData(String referenceData) {
+		this.referenceData = referenceData;
 	}
 }
