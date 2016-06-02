@@ -2,8 +2,10 @@ package eu.europa.ec.fisheries.uvms.spatial.util;
 
 import com.google.common.collect.Maps;
 import com.vividsolutions.jts.geom.Geometry;
+import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadProperty;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
+import java.util.ArrayList;
 import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFinder;
 import org.geotools.data.FeatureSource;
@@ -14,6 +16,7 @@ import org.geotools.referencing.CRS;
 import org.opengis.feature.Property;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
+import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.filter.Filter;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
@@ -63,6 +66,45 @@ public class ShapeFileReader {
         } catch (FactoryException | TransformException e) {
             throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
         }
+    }
+
+    public List<UploadProperty> readAttribute(Path shapeFilePath) throws IOException {
+
+        List<UploadProperty> properties = new ArrayList<>();
+        Map<String, Object> map = Maps.newHashMap();
+        map.put("url", shapeFilePath.toUri().toURL());
+
+        DataStore dataStore = DataStoreFinder.getDataStore(map);
+        String typeName = dataStore.getTypeNames()[0];
+
+        FeatureSource<SimpleFeatureType, SimpleFeature> source = dataStore
+                .getFeatureSource(typeName);
+        Filter filter = Filter.INCLUDE;
+
+        FeatureCollection<SimpleFeatureType, SimpleFeature> collection = source.getFeatures(filter);
+
+        FeatureIterator<SimpleFeature> features = collection.features();
+        SimpleFeature next = features.next();
+
+        List<AttributeDescriptor> attributeDescriptors = next.getFeatureType().getAttributeDescriptors();
+
+        for (AttributeDescriptor attributeDescriptor : attributeDescriptors){
+            String localPart = attributeDescriptor.getName().getLocalPart();
+            switch (localPart){
+                case "the_geom":
+                case "geom":
+                case "name":
+                case "code":
+                case "gid":
+                case "enabled":
+                case "enabled_on":
+                    break;
+                default:
+                    properties.add(new UploadProperty().withName(localPart).withType(attributeDescriptor.getType().getBinding().getSimpleName())); // TODO nullpointer checks
+            }
+
+        }
+        return properties;
     }
 
     private void transformCRSToDefault(SimpleFeature feature, CoordinateReferenceSystem sourceCRS, CoordinateReferenceSystem targetCRS, MathTransform transform) throws FactoryException, TransformException {
