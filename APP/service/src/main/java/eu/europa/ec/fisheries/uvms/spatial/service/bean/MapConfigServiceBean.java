@@ -226,6 +226,16 @@ public class MapConfigServiceBean implements MapConfigService {
                 getVisibilitySettings(configurationDto, null));
     }
 
+    @Override
+    @SneakyThrows
+    public MapConfigDto getBasicReportConfig(String userPreferences, String adminPreferences) {
+        ConfigurationDto configurationDto = mergeConfiguration(MapConfigHelper.getUserConfiguration(userPreferences), MapConfigHelper.getAdminConfiguration(adminPreferences)); //Returns merged config object between Admin and User configuration from USM
+        ProjectionDto projection = getMapProjection(null, configurationDto);
+        ServiceLayersDto serviceLayersDto = new ServiceLayersDto();
+        serviceLayersDto.setBaseLayers(getLayerDtoList(configurationDto.getLayerSettings().getBaseLayers(), projection, true, configurationDto.getReferenceData()));
+        return new MapConfigDto(new MapDto(projection, null, null, serviceLayersDto, null), null, null);
+    }
+
     private ReportConnectSpatialEntity getReportConnectSpatialEntity(final SpatialSaveOrUpdateMapConfigurationRQ request) throws ServiceException {
         ReportConnectSpatialEntity entity = repository.findReportConnectSpatialByReportIdAndConnectId(request.getMapConfiguration().getReportId(), request.getMapConfiguration().getSpatialConnectId());
 
