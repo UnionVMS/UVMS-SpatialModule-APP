@@ -1,7 +1,9 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadMappingProperty;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
@@ -48,12 +50,8 @@ public class PortEntity extends BaseSpatialEntity {
         // why JPA why
     }
 
-    public PortEntity(Map<String, Object> values) throws ServiceException {
-        super(values);
-        setCountryCode(readStringProperty(values, COUNTRY_CO));
-        setFishingPort(readStringProperty(values, FISHING_PO));
-        setLandingPlace(readStringProperty(values, LANDING_PL));
-        setCommercialPort(readStringProperty(values, COMMERCIAL));
+    public PortEntity(Map<String, Object> values, List<UploadMappingProperty> mapping) throws ServiceException {
+        super(values, mapping);
     }
 
     public String getCountryCode() {

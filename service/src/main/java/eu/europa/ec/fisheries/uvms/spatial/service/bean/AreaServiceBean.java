@@ -1,6 +1,5 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import eu.europa.ec.fisheries.uvms.common.FileSaver;
 import eu.europa.ec.fisheries.uvms.domain.BaseEntity;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.interceptors.SimpleTracingInterceptor;
@@ -14,6 +13,7 @@ import eu.europa.ec.fisheries.uvms.spatial.message.service.UploadProducerBean;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
+import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadMapping;
 import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadMetadata;
 import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadProperty;
 import eu.europa.ec.fisheries.uvms.spatial.service.AreaService;
@@ -21,16 +21,14 @@ import eu.europa.ec.fisheries.uvms.spatial.service.AreaTypeNamesService;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.util.ShapeFileReader;
 import eu.europa.ec.fisheries.uvms.spatial.util.SpatialTypeEnum;
-import eu.europa.ec.fisheries.uvms.common.SupportedFileExtensions;
 import eu.europa.ec.fisheries.uvms.common.ZipExtractor;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.nio.file.attribute.FileAttribute;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.geotools.referencing.CRS;
 import org.opengis.feature.Property;
@@ -57,8 +55,6 @@ public class AreaServiceBean implements AreaService {
 
     private @PersistenceContext(unitName = "spatialPU") EntityManager em;
 
-    private static final String AREA_ZIP_FILE = "AreaFile.zip";
-    private static final String PREFIX = "temp";
     private static final String GID = "gid";
     private static final String AREA_TYPE = "areaType";
 
@@ -111,105 +107,66 @@ public class AreaServiceBean implements AreaService {
         return columnMapList;
     }
 
-
     @Override
     @Interceptors(SimpleTracingInterceptor.class)
-    public void upload(UploadMetadata metadata, String type, String code) throws ServiceException, FactoryException, IOException {
+    public void upload(final UploadMapping mapping, final String type, final Integer code) throws ServiceException {
 
-        String ref = (String) metadata.getAdditionalProperties().get("ref");
-        CoordinateReferenceSystem crsCode = CRS.decode(ShapeFileReader.EPSG + code);
-
-        AreaLocationTypesEntity typeName = repository.findAreaLocationTypeByTypeName(type.toUpperCase());
-        Path path = new File(ref).toPath();
-        Map<SupportedFileExtensions, Path> fileNames = new ZipExtractor().unZipFile(path, path);
-        Map<String, List<Property>> features = new ShapeFileReader().readShapeFile(fileNames.get(SupportedFileExtensions.SHP), crsCode);
-        DAOFactory.getAbstractSpatialDao(em, typeName.getTypeName()).bulkInsert(features);
-        FileUtils.deleteDirectory(new File(ref));
-    }
-
-    @Override
-    @Transactional(Transactional.TxType.REQUIRES_NEW)
-    @Interceptors(SimpleTracingInterceptor.class)
-    public void uploadArea(byte[] content, String areaTypeString, int crsCode) { //TODO remove later on
+        String ref = (String) mapping.getAdditionalProperties().get("ref");
 
         try {
+            CoordinateReferenceSystem crsCode = CRS.decode("EPSG:" + code);
+            AreaLocationTypesEntity typeName = repository.findAreaLocationTypeByTypeName(type.toUpperCase());
 
-            CoordinateReferenceSystem sourceCRS = validate(content, crsCode);
-            AreaLocationTypesEntity typeName = repository.findAreaLocationTypeByTypeName(areaTypeString.toUpperCase());
-            Path absolutePath = Files.createTempDirectory(PREFIX);
-            Path zipFilePath = Paths.get(absolutePath + File.separator + AREA_ZIP_FILE);
-            FileSaver fileSaver = new FileSaver();
-            fileSaver.saveContentToFile(content, zipFilePath);
-            ZipExtractor zipExtractor = new ZipExtractor();
-            Map<SupportedFileExtensions, Path> fileNames = zipExtractor.unZipFile(zipFilePath, absolutePath);
-            ShapeFileReader shapeFileReader = new ShapeFileReader();
-            Map<String, List<Property>> features = shapeFileReader.readShapeFile(fileNames.get(SupportedFileExtensions.SHP), sourceCRS);
-            DAOFactory.getAbstractSpatialDao(em, typeName.getTypeName()).bulkInsert(features);
-            FileUtils.deleteDirectory(new File(absolutePath.toString()));
+            if (typeName == null){
+                throw new ServiceException("TYPE NOT SUPPORTED");
+            }
 
-        } catch (Exception ex) {
-            throw new SpatialServiceException(SpatialServiceErrors.INVALID_UPLOAD_AREA_DATA, ex);
+            Map<String, List<Property>> features = SpatialUtils.readShapeFile(
+                    Paths.get(ref + File.separator + typeName.getAreaDbTable() + ".shp"),crsCode);
+            DAOFactory.getAbstractSpatialDao(em, typeName.getTypeName()).bulkInsert(features, mapping.getMapping());
+            org.apache.commons.io.FileUtils.deleteDirectory(Paths.get(ref).getParent().toFile());
+        } catch (FactoryException | IOException e) {
+            throw new ServiceException(e.getMessage(), e);
         }
     }
 
     @Override
     @Interceptors(SimpleTracingInterceptor.class)
-    public UploadMetadata metadata(byte[] content, String areaTypeString) { //TODO use Upload module to save file
+    public UploadMetadata metadata(byte[] bytes, String type) {
 
         UploadMetadata response = new UploadMetadata();
 
         try {
-
-            if (content.length == 0) {
+            if (bytes.length == 0) {
                 throw new IllegalArgumentException("File is empty.");
             }
+            AreaLocationTypesEntity typeName = repository.findAreaLocationTypeByTypeName(type.toUpperCase());
 
-            AreaLocationTypesEntity typeName = repository.findAreaLocationTypeByTypeName(areaTypeString.toUpperCase());
+            if (typeName == null){
+                throw new ServiceException("TYPE NOT SUPPORTED");
+            }
 
             BaseEntity instance = EntityFactory.getInstance(typeName.getTypeName());
             List<Field> properties = instance.listMembers();
 
             for(Field field : properties){
                 UploadProperty uploadProperty = new UploadProperty();
-                uploadProperty.withName(field.getName()).
-                        withType(field.getType().getSimpleName());
+                uploadProperty.withName(field.getName()).withType(field.getType().getSimpleName());
                 response.getDomain().add(uploadProperty);
             }
 
-            Path absolutePath = Files.createTempDirectory(PREFIX);
-            Path zipFilePath = Paths.get(absolutePath + File.separator + AREA_ZIP_FILE);
-            FileSaver fileSaver = new FileSaver();
-            fileSaver.saveContentToFile(content, zipFilePath);
-            Map<SupportedFileExtensions, Path> fileNames =  new ZipExtractor().unZipFile(zipFilePath, absolutePath);
-            ShapeFileReader shapeFileReader = new ShapeFileReader();
-            List<UploadProperty> propertyList = shapeFileReader.readAttribute(fileNames.get(SupportedFileExtensions.SHP));
+            Path uploadPath = Paths.get("app/upload/spatial");
+            uploadPath.toFile().mkdirs();
+            Path absolutePath = Files.createTempDirectory(uploadPath, null, new FileAttribute[0]);
+            ZipExtractor.unZipFile(bytes, absolutePath);
+            List<UploadProperty> propertyList = SpatialUtils.readAttribute(absolutePath);
             response.getFile().addAll(propertyList);
-            response.withAdditionalProperty("ref", zipFilePath.toString());
+            response.withAdditionalProperty("ref", absolutePath.toString());
 
         } catch (Exception ex) {
             throw new SpatialServiceException(SpatialServiceErrors.INVALID_UPLOAD_AREA_DATA, ex);
         }
-
         return response;
-    }
-
-    private CoordinateReferenceSystem validate(byte[] content, int crsCode) {
-
-        CoordinateReferenceSystem sourceCRS;
-
-        try {
-
-            if (content.length == 0) {
-                throw new IllegalArgumentException("File is empty.");
-            }
-
-            sourceCRS = CRS.decode(ShapeFileReader.EPSG + crsCode);
-
-        } catch (FactoryException e) {
-            throw new IllegalArgumentException("CrsCode is wrong.");
-        }
-
-        return sourceCRS;
     }
 
     @Override
@@ -248,7 +205,5 @@ public class AreaServiceBean implements AreaService {
         areaDetails.setAreaType(areaTypeEntry);
         areaDetails.getAreaProperties().addAll(areaProperties);
         return areaDetails;
-
     }
-
 }

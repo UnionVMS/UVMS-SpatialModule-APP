@@ -2,8 +2,9 @@ package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
+import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadMappingProperty;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
-import javax.persistence.SequenceGenerator;
+import java.util.List;
 import lombok.EqualsAndHashCode;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -90,19 +91,8 @@ public class EezEntity extends BaseSpatialEntity {
         // why JPA why
     }
 
-    public EezEntity(Map<String, Object> values) throws ServiceException {
-        super(values);
-        setCountry(readStringProperty(values, COUNTRY));
-        setSovereign(readStringProperty(values, SOVEREIGN));
-        setRemarks(readStringProperty(values, REMARKS));
-        setSovId((Long) values.get(SOV_ID));
-        setEezId((Long) values.get(EEZ_ID));
-        setMrgid(BigDecimal.valueOf(((Double) values.get(MRGID)).longValue()));
-        setDateChang(readStringProperty(values, DATE_CHANG));
-        setAreaM2((Double) values.get(AREA_M_2));
-        setLongitude((Double) values.get(LONGITUDE));
-        setLatitude((Double) values.get(LATITUDE));
-        setMrgidEez((Long) values.get(MRGID_EEZ));
+    public EezEntity(Map<String, Object> values, List<UploadMappingProperty> mapping) throws ServiceException {
+        super(values, mapping);
     }
 
     public String getCountry() {

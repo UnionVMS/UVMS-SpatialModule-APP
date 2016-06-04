@@ -1,19 +1,15 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadMappingProperty;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
-import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 @Entity
 @Table(name = "fmz")
@@ -44,16 +40,8 @@ public class FmzEntity extends BaseSpatialEntity {
         // why JPA why
     }
 
-    public FmzEntity(Map<String, Object> values) throws ServiceException {
-        super(values);
-        String fmzId = readStringProperty(values, FMZ_ID);
-        if (fmzId != null){
-            this.fmzId = Long.valueOf(fmzId);
-        }
-        String edited = readStringProperty(values, EDITED);
-        if (edited != null){
-            this.edited = edited;
-        }
+    public FmzEntity(Map<String, Object> values, List<UploadMappingProperty> mapping) throws ServiceException {
+        super(values, mapping);
     }
 
 
