@@ -1,11 +1,15 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadMappingProperty;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
-
-import java.util.Date;
+import java.util.List;
 import java.util.Map;
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "fao")
@@ -126,28 +130,8 @@ public class FaoEntity extends BaseSpatialEntity {
         // why JPA why
     }
 
-    public FaoEntity(Map<String, Object> values) throws ServiceException {
-        super(values);
-        setOcean(readStringProperty(values, OCEAN));
-        setSubocean(readStringProperty(values, SUBOCEAN));
-        setfArea(readStringProperty(values, F_AREA));
-        setAreaL(readStringProperty(values, AREA_L));
-        setfSubarea(readStringProperty(values, F_SUBAREA));
-        setSubareaN(readStringProperty(values, SUBAREA_N));
-        setSubareaL(readStringProperty(values, SUBAREA_L));
-        setfDivision(readStringProperty(values, F_DIVISION));
-        setDivisionN(readStringProperty(values, DIVISION_N));
-        setDivisionL(readStringProperty(values, DIVISION_L));
-        setfSubdivis(readStringProperty(values, F_SUBDIVIS));
-        setSubdivisN(readStringProperty(values, SUBDIVIS_N));
-        setSubdivisL(readStringProperty(values, SUBDIVIS_L));
-        setfSubunit(readStringProperty(values, F_SUBUNIT));
-        setSubunitN(readStringProperty(values, SUBUNIT_N));
-        setSubunitL(readStringProperty(values, SUBUNIT_L));
-        setEleName(readStringProperty(values, ELE_NAME));
-        setEleLabel(readStringProperty(values, ELE_LABEL));
-        setEleType(readStringProperty(values, ELE_TYPE));
-        setfLabel(readStringProperty(values, F_LABEL));
+    public FaoEntity(Map<String, Object> values, List<UploadMappingProperty> mapping) throws ServiceException {
+        super(values, mapping);
     }
 
     public String getOcean() {

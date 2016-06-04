@@ -3,10 +3,11 @@ package eu.europa.ec.fisheries.uvms.spatial.dao;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.BaseSpatialEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.FmzEntity;
+import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadMappingProperty;
+import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
 
-import static eu.europa.ec.fisheries.uvms.spatial.entity.FaoEntity.SEARCH_FAO;
 import static eu.europa.ec.fisheries.uvms.spatial.entity.FmzEntity.*;
 
 public class FmzDao extends AbstractSpatialDao<FmzEntity> {
@@ -33,8 +34,8 @@ public class FmzDao extends AbstractSpatialDao<FmzEntity> {
     }
 
     @Override
-    protected BaseSpatialEntity createEntity(Map<String, Object> values) throws ServiceException {
-        return new FmzEntity(values);
+    protected BaseSpatialEntity createEntity(Map<String, Object> values, List<UploadMappingProperty> mapping) throws ServiceException {
+        return new FmzEntity(values, mapping);
     }
 
     @Override

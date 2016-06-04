@@ -123,7 +123,7 @@ public class UserAreasEntity extends BaseSpatialEntity {
     }
 
     public UserAreasEntity(Map<String, Object> values) throws ServiceException {
-        super(values);
+        super(values, null);
     }
 
     public String getType() {

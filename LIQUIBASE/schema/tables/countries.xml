@@ -25,7 +25,7 @@
             <column name="name_asci" type="VARCHAR(150)"/>
             <column name="name" type="VARCHAR(254)"/>
             <column name="name_fren" type="VARCHAR(254)"/>
-            <column name="poli_org_c" type="TINYINT"/>
+            <column name="poli_org_c" type="BIGINT"/>
             <column name="name_gaul" type="VARCHAR(150)"/>
             <column name="code" type="VARCHAR(3)"/>
             <column name="svrg_un" type="VARCHAR(60)"/>

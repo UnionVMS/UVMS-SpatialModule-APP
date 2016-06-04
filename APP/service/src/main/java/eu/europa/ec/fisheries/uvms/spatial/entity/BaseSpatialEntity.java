@@ -7,6 +7,7 @@ import eu.europa.ec.fisheries.uvms.common.DateUtils;
 import eu.europa.ec.fisheries.uvms.domain.BaseEntity;
 import eu.europa.ec.fisheries.uvms.domain.CharBooleanConverter;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadMappingProperty;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
@@ -15,6 +16,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import org.opengis.feature.Property;
@@ -61,12 +63,22 @@ public class BaseSpatialEntity extends BaseEntity {
     @Column(name = "enabled_on")
     private Date enabledOn;
 
-    public BaseSpatialEntity(Map<String, Object> values) throws ServiceException {
-        geom = (Geometry) values.get("the_geom");
-        code = readStringProperty(values, "code");
-        name = readStringProperty(values, "name");
-        enabled = true;
-        enabledOn = new Date();
+    public BaseSpatialEntity(Map<String, Object> values, List<UploadMappingProperty> mapping) throws ServiceException {
+
+        try {
+            geom = (Geometry) values.get("the_geom");
+            code = readStringProperty(values, "code");
+            name = readStringProperty(values, "name");
+            enabled = true;
+            enabledOn = new Date();
+            if (mapping != null){
+                for (UploadMappingProperty property : mapping){
+                    FieldUtils.writeDeclaredField(this, property.getTarget(), values.get(property.getSource()), true);
+                }
+            }
+        } catch (IllegalAccessException e) {
+            throw new ServiceException("ERROR WHILE MAPPING ENTITY", e);
+        }
     }
 
     public BaseSpatialEntity() {

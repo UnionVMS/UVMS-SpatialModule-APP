@@ -35,7 +35,7 @@
             <column name="subunit_l" type="VARCHAR(50)"/>
             <column name="ele_name" type="VARCHAR(50)"/>
             <column name="ele_label" type="VARCHAR(50)"/>
-            <column name="ele_type" type="TINYINT"/>
+            <column name="ele_type" type="VARCHAR(50)"/>
             <column name="f_label" type="VARCHAR(16)"/>
             <column name="code" type="VARCHAR(20)"/>
             <column name="enabled" type="VARCHAR(1)">

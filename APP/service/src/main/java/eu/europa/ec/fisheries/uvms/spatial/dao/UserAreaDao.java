@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.dao;
 
+import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadMappingProperty;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -64,7 +65,7 @@ public class UserAreaDao extends AbstractSpatialDao<UserAreasEntity> {
     }
 
     @Override
-    protected UserAreasEntity createEntity(Map<String, Object> values) throws ServiceException {
+    protected UserAreasEntity createEntity(Map<String, Object> values, List<UploadMappingProperty> mapping) throws ServiceException {
         return new UserAreasEntity(values);
     }
 

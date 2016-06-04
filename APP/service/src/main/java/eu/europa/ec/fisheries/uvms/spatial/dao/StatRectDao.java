@@ -2,6 +2,8 @@ package eu.europa.ec.fisheries.uvms.spatial.dao;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.StatRectEntity;
+import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadMappingProperty;
+import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
 
@@ -31,8 +33,8 @@ public class StatRectDao extends AbstractSpatialDao<StatRectEntity> {
     }
 
     @Override
-    protected StatRectEntity createEntity(Map<String, Object> values) throws ServiceException {
-        return new StatRectEntity(values);
+    protected StatRectEntity createEntity(Map<String, Object> values, List<UploadMappingProperty> mapping) throws ServiceException {
+        return new StatRectEntity(values, mapping);
     }
 
     @Override

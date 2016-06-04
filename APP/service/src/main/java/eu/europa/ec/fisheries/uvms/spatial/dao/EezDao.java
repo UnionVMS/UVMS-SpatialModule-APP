@@ -2,6 +2,7 @@ package eu.europa.ec.fisheries.uvms.spatial.dao;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
+import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadMappingProperty;
 import lombok.extern.slf4j.Slf4j;
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -43,8 +44,8 @@ public class EezDao extends AbstractSpatialDao<EezEntity> {
     }
 
     @Override
-    protected EezEntity createEntity(Map<String, Object> values) throws ServiceException {
-        return new EezEntity(values);
+    protected EezEntity createEntity(Map<String, Object> values, List<UploadMappingProperty> mapping) throws ServiceException {
+        return new EezEntity(values, mapping);
     }
 
     @Override

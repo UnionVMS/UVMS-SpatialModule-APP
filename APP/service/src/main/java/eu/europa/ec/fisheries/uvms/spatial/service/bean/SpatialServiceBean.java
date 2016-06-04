@@ -77,7 +77,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import static eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialUtils.DEFAULT_CRS;
+import static eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialUtils.DEFAULT_SRID;
 import static eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialUtils.convertToPointInWGS84;
 import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 
@@ -484,7 +484,7 @@ public class SpatialServiceBean implements SpatialService {
             Map<String, Object> fieldMap = new HashMap<>();
 
             final Point incomingPoint =
-                    convertToPointInWGS84(locationTypeEntry.getLongitude(), locationTypeEntry.getLatitude(), DEFAULT_CRS);
+                    convertToPointInWGS84(locationTypeEntry.getLongitude(), locationTypeEntry.getLatitude(), DEFAULT_SRID);
             final Double incomingLatitude = incomingPoint.getY();
             final Double incomingLongitude = incomingPoint.getX();
 

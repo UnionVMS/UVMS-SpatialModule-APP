@@ -2,7 +2,9 @@ package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
+import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadMappingProperty;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
@@ -37,9 +39,8 @@ public class RfmoEntity extends BaseSpatialEntity {
         // why JPA why
     }
 
-    public RfmoEntity(Map<String, Object> values) throws ServiceException {
-        super(values);
-        setTuna(readStringProperty(values, TUNA));
+    public RfmoEntity(Map<String, Object> values, List<UploadMappingProperty> mapping) throws ServiceException {
+        super(values, mapping);
     }
 
     public String getTuna() {

@@ -1,10 +1,17 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadMappingProperty;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
-
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 import java.util.Map;
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import org.apache.commons.beanutils.BeanUtils;
 
 @Entity
 @Table(name = "stat_rect")
@@ -12,7 +19,8 @@ import javax.persistence.*;
         @NamedQuery(name = StatRectEntity.DISABLE, query = "UPDATE StatRectEntity SET enabled = 'N'"),
         @NamedQuery(name = StatRectEntity.BY_INTERSECT,
                 query = "FROM StatRectEntity WHERE intersects(geom, :shape) = true AND enabled = 'Y'"),
-        @NamedQuery(name = StatRectEntity.SEARCH_STATRECT, query = "FROM StatRectEntity where upper(name) like :name OR upper(code) like :code AND enabled='Y' GROUP BY gid")
+        @NamedQuery(name = StatRectEntity.SEARCH_STATRECT, query = "FROM StatRectEntity " +
+                "WHERE upper(name) like :name OR upper(code) like :code AND enabled='Y' GROUP BY gid")
 })
 public class StatRectEntity extends BaseSpatialEntity {
 
@@ -45,12 +53,17 @@ public class StatRectEntity extends BaseSpatialEntity {
         // why JPA why
     }
 
-    public StatRectEntity(Map<String, Object> values) throws ServiceException {
-        super(values);
-        setNorth((Double) values.get(NORTH));
-        setSouth((Double) values.get(SOUTH));
-        setEast((Double) values.get(EAST));
-        setWest((Double) values.get(WEST));
+    public StatRectEntity(Map<String, Object> values, List<UploadMappingProperty> mapping) throws ServiceException {
+       super(values, mapping);
+       // for (UploadMappingProperty property : mapping){
+       //     String source = property.getSource();
+       //     String target = property.getTarget();
+       //     try {
+       //         BeanUtils.setProperty(this, target, values.get(source));
+       //     } catch (IllegalAccessException | InvocationTargetException e) {
+       //         throw new ServiceException("ERROR WHILE MAPPING ENTITY", e);
+       //     }
+       // }
     }
 
     public Double getNorth() {

@@ -26,7 +26,11 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialDeleteMapConfigu
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRS;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialGetMapConfigurationRS;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveOrUpdateMapConfigurationRS;
-import eu.europa.ec.fisheries.uvms.spatial.service.*;
+import eu.europa.ec.fisheries.uvms.spatial.service.AreaTypeNamesService;
+import eu.europa.ec.fisheries.uvms.spatial.service.MapConfigService;
+import eu.europa.ec.fisheries.uvms.spatial.service.SpatialEnrichmentService;
+import eu.europa.ec.fisheries.uvms.spatial.service.SpatialEventService;
+import eu.europa.ec.fisheries.uvms.spatial.service.SpatialService;
 import lombok.extern.slf4j.Slf4j;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
