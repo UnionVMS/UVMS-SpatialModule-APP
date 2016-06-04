@@ -3,6 +3,8 @@ package eu.europa.ec.fisheries.uvms.spatial.dao;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.PortAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.PortEntity;
+import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadMappingProperty;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import javax.persistence.EntityManager;
 import java.util.Map;
@@ -39,8 +41,8 @@ public class PortAreaDao extends AbstractSpatialDao<PortAreasEntity> {
     }
 
     @Override
-    protected PortAreasEntity createEntity(Map<String, Object> values) throws ServiceException {
-        return new PortAreasEntity(values);
+    protected PortAreasEntity createEntity(Map<String, Object> values, List<UploadMappingProperty> mapping) throws ServiceException {
+        return new PortAreasEntity(values, mapping);
     }
 
     @Override

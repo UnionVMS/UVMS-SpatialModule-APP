@@ -1,6 +1,8 @@
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadMappingProperty;
+import java.util.List;
 import java.util.Map;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
@@ -25,7 +27,7 @@ public class GfcmEntity extends BaseSpatialEntity {
         // why JPA why
     }
 
-    public GfcmEntity(Map<String, Object> values) throws ServiceException {
-        super(values);
+    public GfcmEntity(Map<String, Object> values, List<UploadMappingProperty> mapping) throws ServiceException {
+        super(values, mapping);
     }
 }

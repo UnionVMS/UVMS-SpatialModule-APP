@@ -5,6 +5,7 @@ import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.service.QueryParameter;
 import eu.europa.ec.fisheries.uvms.spatial.entity.BaseSpatialEntity;
+import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadMappingProperty;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -23,7 +24,7 @@ public abstract class AbstractSpatialDao<E extends BaseSpatialEntity> extends Ab
     protected static final String NAME = "name";
     protected static final String CODE = "code";
 
-    public void bulkInsert(Map<String, List<Property>> features) throws ServiceException {
+    public void bulkInsert(Map<String, List<Property>> features, List<UploadMappingProperty> mapping) throws ServiceException {
         StatelessSession session = (getEntityManager().unwrap(Session.class)).getSessionFactory().openStatelessSession();
         Transaction tx = session.beginTransaction();
         try {
@@ -31,7 +32,7 @@ public abstract class AbstractSpatialDao<E extends BaseSpatialEntity> extends Ab
             query.executeUpdate();
             for (List<Property> properties : features.values()) {
                 Map<String, Object> values = BaseSpatialEntity.createAttributesMap(properties);
-                session.insert(createEntity(values));
+                session.insert(createEntity(values, mapping));
             }
             log.debug("Commit transaction");
             tx.commit();
@@ -52,7 +53,7 @@ public abstract class AbstractSpatialDao<E extends BaseSpatialEntity> extends Ab
 
     protected abstract Class<E> getClazz();
 
-    protected abstract BaseSpatialEntity createEntity(Map<String, Object> values) throws ServiceException;
+    protected abstract BaseSpatialEntity createEntity(Map<String, Object> values, List<UploadMappingProperty> mapping) throws ServiceException;
 
     protected abstract String getDisableAreaNamedQuery();
 
