@@ -29,6 +29,7 @@ import java.nio.file.attribute.FileAttribute;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.geotools.referencing.CRS;
 import org.opengis.feature.Property;
@@ -123,9 +124,15 @@ public class AreaServiceBean implements AreaService {
 
             Map<String, List<Property>> features = SpatialUtils.readShapeFile(
                     Paths.get(ref + File.separator + typeName.getAreaDbTable() + ".shp"),crsCode);
-            DAOFactory.getAbstractSpatialDao(em, typeName.getTypeName()).bulkInsert(features, mapping.getMapping());
+            List inValidGeometries = DAOFactory.getAbstractSpatialDao(em, typeName.getTypeName())
+                    .bulkInsert(features, mapping.getMapping());
             org.apache.commons.io.FileUtils.deleteDirectory(Paths.get(ref).getParent().toFile());
-        } catch (FactoryException | IOException e) {
+
+            if (CollectionUtils.isEmpty(inValidGeometries)){
+
+            }
+
+        } catch (Exception e) {
             throw new ServiceException(e.getMessage(), e);
         }
     }

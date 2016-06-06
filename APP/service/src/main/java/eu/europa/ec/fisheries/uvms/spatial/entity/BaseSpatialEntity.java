@@ -73,10 +73,14 @@ public class BaseSpatialEntity extends BaseEntity {
                 for (UploadMappingProperty property : mapping){
                     Object value = values.get(property.getSource());
                     if ("code".equals(property.getTarget())){
-                        code = String.valueOf(value);
+                        if (value!= null){
+                            code = String.valueOf(value);
+                        }
                     }
                     else if ("name".equals(property.getTarget())){
-                        name = String.valueOf(value);
+                        if (value!= null){
+                            name = String.valueOf(value);
+                        }
                     }
                     else {
                         FieldUtils.writeDeclaredField(this, property.getTarget(), value, true);
