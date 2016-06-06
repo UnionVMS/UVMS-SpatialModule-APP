@@ -66,7 +66,7 @@ public class BaseSpatialEntity extends BaseEntity {
     public BaseSpatialEntity(Map<String, Object> values, List<UploadMappingProperty> mapping) throws ServiceException {
 
         try {
-            geom = (Geometry) values.get("the_geom");
+            geom = (Geometry) values.get("the_geom"); // shape file standard
             enabled = true;
             enabledOn = new Date();
             if (mapping != null){
