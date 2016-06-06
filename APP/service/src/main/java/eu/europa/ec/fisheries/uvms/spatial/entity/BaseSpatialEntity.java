@@ -67,15 +67,23 @@ public class BaseSpatialEntity extends BaseEntity {
 
         try {
             geom = (Geometry) values.get("the_geom");
-            code = readStringProperty(values, "code");
-            name = readStringProperty(values, "name");
             enabled = true;
             enabledOn = new Date();
             if (mapping != null){
                 for (UploadMappingProperty property : mapping){
-                    FieldUtils.writeDeclaredField(this, property.getTarget(), values.get(property.getSource()), true);
+                    Object value = values.get(property.getSource());
+                    if ("code".equals(property.getTarget())){
+                        code = String.valueOf(value);
+                    }
+                    else if ("name".equals(property.getTarget())){
+                        name = String.valueOf(value);
+                    }
+                    else {
+                        FieldUtils.writeDeclaredField(this, property.getTarget(), value, true);
+                    }
                 }
             }
+
         } catch (IllegalAccessException e) {
             throw new ServiceException("ERROR WHILE MAPPING ENTITY", e);
         }
