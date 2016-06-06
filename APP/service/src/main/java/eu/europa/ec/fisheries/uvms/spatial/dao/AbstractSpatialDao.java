@@ -6,6 +6,8 @@ import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.service.QueryParameter;
 import eu.europa.ec.fisheries.uvms.spatial.entity.BaseSpatialEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadMappingProperty;
+import java.io.Serializable;
+import java.util.ArrayList;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -23,7 +25,8 @@ public abstract class AbstractSpatialDao<E extends BaseSpatialEntity> extends Ab
     protected static final String NAME = "name";
     protected static final String CODE = "code";
 
-    public void bulkInsert(Map<String, List<Property>> features, List<UploadMappingProperty> mapping) throws ServiceException {
+    public List<Serializable> bulkInsert(Map<String, List<Property>> features, List<UploadMappingProperty> mapping) throws ServiceException {
+        List<Serializable> invalidGeometryList = new ArrayList<>();
         StatelessSession session = (getEntityManager().unwrap(Session.class)).getSessionFactory().openStatelessSession();
         Transaction tx = session.beginTransaction();
         try {
@@ -35,7 +38,10 @@ public abstract class AbstractSpatialDao<E extends BaseSpatialEntity> extends Ab
                 if (entity.getName() == null || entity.getCode() == null){
                     throw new ServiceException("NAME AND CODE FIELD ARE MANDATORY");
                 }
-                session.insert(entity);
+                Serializable identifier = session.insert(entity);
+                if(!entity.getGeom().isValid()){
+                    invalidGeometryList.add(identifier);
+                }
             }
             log.debug("Commit transaction");
             tx.commit();
@@ -48,6 +54,7 @@ public abstract class AbstractSpatialDao<E extends BaseSpatialEntity> extends Ab
             log.debug("Closing session");
             session.close();
         }
+        return invalidGeometryList;
     }
 
     protected abstract String getIntersectNamedQuery();
