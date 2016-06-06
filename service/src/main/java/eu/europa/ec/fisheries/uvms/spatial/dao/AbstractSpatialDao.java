@@ -11,7 +11,6 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.StatelessSession;
 import org.hibernate.Transaction;
-import org.hibernate.transform.AliasToEntityMapResultTransformer;
 import org.opengis.feature.Property;
 
 import java.util.List;
@@ -32,7 +31,11 @@ public abstract class AbstractSpatialDao<E extends BaseSpatialEntity> extends Ab
             query.executeUpdate();
             for (List<Property> properties : features.values()) {
                 Map<String, Object> values = BaseSpatialEntity.createAttributesMap(properties);
-                session.insert(createEntity(values, mapping));
+                BaseSpatialEntity entity = createEntity(values, mapping);
+                if (entity.getName() == null || entity.getCode() == null){
+                    throw new ServiceException("NAME AND CODE FIELD ARE MANDATORY");
+                }
+                session.insert(entity);
             }
             log.debug("Commit transaction");
             tx.commit();
