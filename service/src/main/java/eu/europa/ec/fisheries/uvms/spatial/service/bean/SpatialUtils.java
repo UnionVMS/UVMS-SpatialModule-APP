@@ -165,11 +165,6 @@ public class SpatialUtils {
                 switch (localPart){
                     case "the_geom":
                     case "geom":
-                    case "name":
-                    case "code":
-                    case "gid":
-                    case "enabled":
-                    case "enabled_on":
                         break;
                     default:
                         properties.add(new UploadProperty().withName(localPart).withType(attributeDescriptor.getType().getBinding().getSimpleName())); // TODO nullpointer checks
