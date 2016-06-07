@@ -69,9 +69,7 @@ public class UserAreaResource extends UnionVMSResource {
         if (request.isUserInRole("MANAGE_USER_DEFINED_AREAS")) {
             String userName = request.getRemoteUser();
             log.info("{} is requesting storeUserArea(...)", userName);
-            if(userAreaGeoJsonDto.getDatasetName() == null){
-                throw new UnsupportedOperationException("Operation not allowed");
-            }
+
             if (StringUtils.isNotBlank(userAreaGeoJsonDto.getDatasetName()) && !request.isUserInRole("CREATE_USER_AREA_DATASET")) {
                 return createErrorResponse("user_area_dataset_creation_not_allowed");
             }
