@@ -5,6 +5,7 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.RfmoEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadMappingProperty;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+
 import javax.persistence.EntityManager;
 import java.util.Map;
 
@@ -32,6 +33,11 @@ public class RfmoDao extends AbstractSpatialDao<RfmoEntity> {
     @Override
     protected String getSearchNamedQuery() {
         return SEARCH_RFMO;
+    }
+
+    @Override
+    protected String getSearchNameByCodeQuery() {
+        return SEARCH_RFMO_NAMES_BY_CODE;
     }
 
     @Override

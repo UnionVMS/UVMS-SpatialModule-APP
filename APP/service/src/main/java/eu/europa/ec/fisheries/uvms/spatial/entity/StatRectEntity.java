@@ -3,15 +3,10 @@ package eu.europa.ec.fisheries.uvms.spatial.entity;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadMappingProperty;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
-import java.lang.reflect.InvocationTargetException;
+
+import javax.persistence.*;
 import java.util.List;
 import java.util.Map;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-import org.apache.commons.beanutils.BeanUtils;
 
 @Entity
 @Table(name = "stat_rect")
@@ -19,14 +14,15 @@ import org.apache.commons.beanutils.BeanUtils;
         @NamedQuery(name = StatRectEntity.DISABLE, query = "UPDATE StatRectEntity SET enabled = 'N'"),
         @NamedQuery(name = StatRectEntity.BY_INTERSECT,
                 query = "FROM StatRectEntity WHERE intersects(geom, :shape) = true AND enabled = 'Y'"),
-        @NamedQuery(name = StatRectEntity.SEARCH_STATRECT, query = "FROM StatRectEntity " +
-                "WHERE upper(name) like :name OR upper(code) like :code AND enabled='Y' GROUP BY gid")
+        @NamedQuery(name = StatRectEntity.SEARCH_STATRECT, query = "FROM StatRectEntity where upper(name) like :name OR upper(code) like :code AND enabled='Y' GROUP BY gid"),
+        @NamedQuery(name = StatRectEntity.SEARCH_STATRECT_NAMES_BY_CODE, query = "From StatRectEntity where code in (SELECT distinct(code) from StatRectEntity where upper(name) like :name OR upper(code) like :code AND enabled='Y' GROUP BY gid)")
 })
 public class StatRectEntity extends BaseSpatialEntity {
 
     public static final String BY_INTERSECT = "statRectEntity.byIntersect";
     public static final String DISABLE = "statRectEntity.disable";
     public static final String SEARCH_STATRECT = "statrectEntity.searchStatrectByNameOrCode";
+    public static final String SEARCH_STATRECT_NAMES_BY_CODE = "statrectEntity.searchNamesByCode";
 
     public static final String NORTH = "north";
     public static final String SOUTH = "south";

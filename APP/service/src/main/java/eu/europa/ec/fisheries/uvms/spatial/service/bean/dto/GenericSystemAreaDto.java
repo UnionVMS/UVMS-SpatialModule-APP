@@ -36,6 +36,14 @@ public class GenericSystemAreaDto {
 
     /**
      *
+     * @param code
+     */
+    public GenericSystemAreaDto(String code) {
+        this.code = code;
+    }
+
+    /**
+     *
      * @param extent
      * @param areaType
      * @param name

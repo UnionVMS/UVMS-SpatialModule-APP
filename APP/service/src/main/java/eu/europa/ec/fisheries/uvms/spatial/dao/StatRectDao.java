@@ -2,10 +2,12 @@ package eu.europa.ec.fisheries.uvms.spatial.dao;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.StatRectEntity;
+
 import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadMappingProperty;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
+import java.util.Map;
 
 import static eu.europa.ec.fisheries.uvms.spatial.entity.StatRectEntity.*;
 
@@ -25,6 +27,11 @@ public class StatRectDao extends AbstractSpatialDao<StatRectEntity> {
     @Override
     protected String getSearchNamedQuery() {
         return SEARCH_STATRECT;
+    }
+
+    @Override
+    protected String getSearchNameByCodeQuery() {
+        return SEARCH_STATRECT_NAMES_BY_CODE;
     }
 
     @Override

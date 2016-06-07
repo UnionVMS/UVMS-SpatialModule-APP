@@ -5,7 +5,9 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.GfcmEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadMappingProperty;
 import java.util.List;
 import java.util.Map;
+
 import javax.persistence.EntityManager;
+import java.util.Map;
 
 import static eu.europa.ec.fisheries.uvms.spatial.entity.GfcmEntity.*;
 
@@ -25,6 +27,11 @@ public class GfcmDao extends AbstractSpatialDao<GfcmEntity> {
     @Override
     protected String getSearchNamedQuery() {
         return SEARCH_GFCM;
+    }
+
+    @Override
+    protected String getSearchNameByCodeQuery() {
+        return SEARCH_GFCM_NAMES_BY_CODE;
     }
 
     @Override

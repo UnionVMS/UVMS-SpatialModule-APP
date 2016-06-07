@@ -40,6 +40,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.UserAreasType;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.GenericSystemAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.SystemAreaNamesDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.UserAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.util.MeasurementUnit;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
@@ -71,11 +72,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialUtils.DEFAULT_SRID;
 import static eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialUtils.convertToPointInWGS84;
@@ -174,6 +171,12 @@ public class SpatialServiceBean implements SpatialService {
                 AreaProperty areaProperty = new AreaProperty();
                 areaProperty.setPropertyName(entry.getKey());
                 areaProperty.setPropertyValue(entry.getValue());
+                areaProperties.add(areaProperty);
+            }
+            if (!properties.isEmpty()) {
+                AreaProperty areaProperty = new AreaProperty();
+                areaProperty.setPropertyName("gid");
+                areaProperty.setPropertyValue(String.valueOf(((BaseSpatialEntity) area).getId()));
                 areaProperties.add(areaProperty);
             }
 
@@ -449,6 +452,31 @@ public class SpatialServiceBean implements SpatialService {
 
         return systemAreaByFilterRecords;
 
+    }
+
+    public List<SystemAreaNamesDto> searchAreasByCode(String areaType, String filter) throws ServiceException {
+        AreaLocationTypesEntity areaLocationType = repository.findAreaLocationTypeByTypeName(areaType.toUpperCase());
+
+        if (areaLocationType == null) {
+            throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
+        }
+        List<BaseSpatialEntity> baseEntities = DAOFactory.getAbstractSpatialDao(em, areaLocationType.getTypeName()).searchNameByCode(filter);
+
+        List<SystemAreaNamesDto> systemAreas = new ArrayList<>();
+        for (BaseSpatialEntity baseEntity : baseEntities) {
+            boolean isAdded = false;
+            for (SystemAreaNamesDto systemAreaNamesDto : systemAreas) {
+                if (systemAreaNamesDto.getCode().equalsIgnoreCase(baseEntity.getCode())) {
+                    systemAreaNamesDto.getAreaNames().add(baseEntity.getName());
+                    isAdded = true;
+                }
+            }
+            if (!isAdded) {
+                systemAreas.add(new SystemAreaNamesDto(baseEntity.getCode(), new HashSet<String>(Arrays.asList(baseEntity.getName()))));
+            }
+        }
+
+        return systemAreas;
     }
 
     @Override

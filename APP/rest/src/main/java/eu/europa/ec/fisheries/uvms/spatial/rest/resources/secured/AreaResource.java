@@ -158,6 +158,15 @@ public class AreaResource extends UnionVMSResource {
     	return createSuccessResponse(spatialService.searchAreasByNameOrCode(areaFilterType.getAreaType(), areaFilterType.getFilter()));
     }
 
+    @POST
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/areabycode")
+    @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
+    public Response searchAreaNamesByCode(AreaFilterType areaFilterType) throws ServiceException {
+        return createSuccessResponse(spatialService.searchAreasByCode(areaFilterType.getAreaType(), areaFilterType.getFilter()));
+    }
+
     @GET
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
