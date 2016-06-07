@@ -3,6 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.GenericSystemAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.SystemAreaNamesDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.UserAreaDto;
 
 import java.util.List;
@@ -18,6 +19,8 @@ public interface SpatialService {
     FilterAreasSpatialRS computeAreaFilter(FilterAreasSpatialRQ filterAreasSpatialRQ) throws ServiceException;
 
     List<GenericSystemAreaDto> searchAreasByNameOrCode(String areaType, String filter) throws ServiceException;
+
+    List<SystemAreaNamesDto> searchAreasByCode(String areaType, String filter) throws ServiceException;
 
     LocationDetails getLocationDetails(LocationTypeEntry locationTypeEntry) throws ServiceException;
 

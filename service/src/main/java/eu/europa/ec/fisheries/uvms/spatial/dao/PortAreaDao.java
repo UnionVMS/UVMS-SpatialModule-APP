@@ -6,6 +6,7 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.PortEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadMappingProperty;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+
 import javax.persistence.EntityManager;
 import java.util.Map;
 
@@ -33,6 +34,11 @@ public class PortAreaDao extends AbstractSpatialDao<PortAreasEntity> {
     @Override
     protected String getSearchNamedQuery() {
         return SEARCH_PORTAREAS;
+    }
+
+    @Override
+    protected String getSearchNameByCodeQuery() {
+        return SEARCH_PORT_AREA_NAMES_BY_CODE;
     }
 
     @Override

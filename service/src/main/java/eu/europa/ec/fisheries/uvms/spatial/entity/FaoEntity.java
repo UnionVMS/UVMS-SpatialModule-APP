@@ -17,13 +17,15 @@ import javax.persistence.Table;
         @NamedQuery(name = FaoEntity.DISABLE_FAO_AREAS, query = "UPDATE FaoEntity SET enabled = 'N'"),
         @NamedQuery(name = FaoEntity.FAO_BY_INTERSECT,
                 query = "FROM FaoEntity WHERE intersects(geom, :shape) = true AND enabled = 'Y'"),
-        @NamedQuery(name = FaoEntity.SEARCH_FAO, query = "FROM FaoEntity where upper(name) like :name OR upper(code) like :code AND enabled='Y' GROUP BY gid")
+        @NamedQuery(name = FaoEntity.SEARCH_FAO, query = "FROM FaoEntity where upper(name) like :name OR upper(code) like :code AND enabled='Y' GROUP BY gid"),
+        @NamedQuery(name = FaoEntity.SEARCH_FAO_NAMES_BY_CODE, query = "From FaoEntity where code in (SELECT distinct(code) from FaoEntity where upper(name) like :name OR upper(code) like :code AND enabled='Y' GROUP BY gid)")
 })
 public class FaoEntity extends BaseSpatialEntity {
 
     public static final String DISABLE_FAO_AREAS = "faoEntity.disableFaoAreas";
     public static final String FAO_BY_INTERSECT = "faoEntity.faoByIntersect";
     public static final String SEARCH_FAO = "FaoEntity.searchFaoByNameOrCode";
+    public static final String SEARCH_FAO_NAMES_BY_CODE = "FaoEntity.searchNamesByCode";
 
     public static final String OCEAN = "ocean";
     public static final String SUBOCEAN = "subocean";

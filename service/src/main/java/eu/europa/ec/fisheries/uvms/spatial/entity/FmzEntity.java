@@ -17,13 +17,15 @@ import javax.persistence.Table;
         @NamedQuery(name = FmzEntity.DISABLE, query = "UPDATE FmzEntity SET enabled = 'N'"),
         @NamedQuery(name = FmzEntity.BY_INTERSECT,
                 query = "FROM FmzEntity WHERE intersects(geom, :shape) = true AND enabled = 'Y'"),
-        @NamedQuery(name = FmzEntity.SEARCH_FMZ, query = "FROM FmzEntity where upper(name) like :name OR upper(code) like :code AND enabled='Y' GROUP BY gid")
+        @NamedQuery(name = FmzEntity.SEARCH_FMZ, query = "FROM FmzEntity where upper(name) like :name OR upper(code) like :code AND enabled='Y' GROUP BY gid"),
+        @NamedQuery(name = FmzEntity.SEARCH_FMZ_NAMES_BY_CODE, query = "From FmzEntity where code in (SELECT distinct(code) from FmzEntity where upper(name) like :name OR upper(code) like :code AND enabled='Y' GROUP BY gid)")
 })
 public class FmzEntity extends BaseSpatialEntity {
 
     public static final String DISABLE = "fmzEntity.disable";
     public static final String BY_INTERSECT = "fmzEntity.byIntersect";
     public static final String SEARCH_FMZ = "fmzEntity.SearcgFmzByNameOrCode";
+    public static final String SEARCH_FMZ_NAMES_BY_CODE = "fmzEntity.searchNamesByCode";
 
     private static final String FMZ_ID = "fmz_id";
     private static final String EDITED = "edited";
