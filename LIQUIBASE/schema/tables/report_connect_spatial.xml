@@ -28,6 +28,7 @@
                 <constraints/>
             </column>
             <column name="visibility_settings" type="CLOB"/>
+            <column name="reference_data" type="CLOB"/>
         </createTable>
     </changeSet>
     
