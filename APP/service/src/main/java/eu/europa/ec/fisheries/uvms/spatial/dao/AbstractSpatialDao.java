@@ -61,6 +61,8 @@ public abstract class AbstractSpatialDao<E extends BaseSpatialEntity> extends Ab
 
     protected abstract String getSearchNamedQuery();
 
+    protected abstract String getSearchNameByCodeQuery();
+
     protected abstract Class<E> getClazz();
 
     protected abstract BaseSpatialEntity createEntity(Map<String, Object> values, List<UploadMappingProperty> mapping) throws ServiceException;
@@ -79,5 +81,11 @@ public abstract class AbstractSpatialDao<E extends BaseSpatialEntity> extends Ab
         String name = "%" +filter.toUpperCase()+"%";
         String code = "%" +filter.toUpperCase()+"%";
         return findEntityByNamedQuery(getClazz(), getSearchNamedQuery(), QueryParameter.with(NAME, name).and(CODE, code).parameters());
+    }
+
+    public List searchNameByCode(String filter) throws ServiceException {
+        String name = "%" +filter.toUpperCase()+"%";
+        String code = "%" +filter.toUpperCase()+"%";
+        return findEntityByNamedQuery(getClazz(), getSearchNameByCodeQuery(), QueryParameter.with(NAME, name).and(CODE, code).parameters());
     }
 }

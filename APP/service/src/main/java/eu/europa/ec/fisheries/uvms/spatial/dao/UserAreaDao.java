@@ -18,6 +18,11 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
 
+import javax.persistence.EntityManager;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import static eu.europa.ec.fisheries.uvms.service.QueryParameter.with;
 import static eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity.*;
 
@@ -57,6 +62,11 @@ public class UserAreaDao extends AbstractSpatialDao<UserAreasEntity> {
     @Override
     protected String getSearchNamedQuery() {
         return SEARCH_USERAREA;
+    }
+
+    @Override
+    protected String getSearchNameByCodeQuery() {
+        return SEARCH_USERAREA_NAMES_BY_CODE;
     }
 
     @Override

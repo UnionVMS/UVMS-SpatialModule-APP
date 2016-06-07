@@ -28,6 +28,11 @@ public class FaoDao extends AbstractSpatialDao<FaoEntity> {
     }
 
     @Override
+    protected String getSearchNameByCodeQuery() {
+        return SEARCH_FAO_NAMES_BY_CODE;
+    }
+
+    @Override
     protected Class<FaoEntity> getClazz() {
         return FaoEntity.class;
     }

@@ -207,6 +207,12 @@ public class AreaServiceBean implements AreaService {
             areaProperty.setPropertyValue(entry.getValue());
             areaProperties.add(areaProperty);
         }
+        if (!properties.isEmpty()) {
+            AreaProperty areaProperty = new AreaProperty();
+            areaProperty.setPropertyName("gid");
+            areaProperty.setPropertyValue(String.valueOf(area.getId()));
+            areaProperties.add(areaProperty);
+        }
 
         AreaDetails areaDetails = new AreaDetails();
         areaDetails.setAreaType(areaTypeEntry);
