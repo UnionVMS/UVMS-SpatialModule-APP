@@ -363,7 +363,7 @@ public class SpatialRepositoryBean implements SpatialRepository {
 
     @Override
     public List<CountryEntity> findAllCountries() throws ServiceException {
-        return countryDao.findEntityByNamedQuery(CountryEntity.class, CountryEntity.FIND_ALL);
+        return countryDao.findEntitiesByNamedQuery(CountryEntity.FIND_ALL);
     }
 
 }
