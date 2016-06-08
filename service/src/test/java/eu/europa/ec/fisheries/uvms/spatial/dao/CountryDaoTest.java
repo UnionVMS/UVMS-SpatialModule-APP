@@ -28,7 +28,7 @@ public class CountryDaoTest extends BaseSpatialDaoTest {
     public void testFindAllCountriesDesc() {
         dbSetupTracker.skipNextLaunch();
 
-        List<CountryEntity> entityByNamedQuery = dao.findEntityByNamedQuery(CountryEntity.class, CountryEntity.FIND_ALL);
+        List<CountryEntity> entityByNamedQuery = dao.findEntitiesByNamedQuery(CountryEntity.FIND_ALL);
 
         assertEquals("Portugal", entityByNamedQuery.get(0).getName());
         assertEquals("PRT", entityByNamedQuery.get(0).getCode());
