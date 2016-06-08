@@ -9,7 +9,7 @@ import javax.persistence.Table;
 @Entity
 @NamedQueries({
 		@NamedQuery(name = CountryEntity.FIND_ALL,
-        query = "FROM CountryEntity country WHERE country.code IN (SELECT DISTINCT c.code FROM CountryEntity c)")
+        query = "SELECT country.name as name, country.code as code FROM CountryEntity country WHERE country.code IN (SELECT DISTINCT c.code FROM CountryEntity c)")
 })
 @Table(name = "countries")
 @EqualsAndHashCode(callSuper = true)
