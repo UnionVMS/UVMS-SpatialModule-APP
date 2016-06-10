@@ -366,4 +366,9 @@ public class SpatialRepositoryBean implements SpatialRepository {
         return countryDao.findEntitiesByNamedQuery(CountryEntity.FIND_ALL);
     }
 
+    @Override
+    public void makeGeomValid(String areaDbTable, DatabaseDialect dialect) {
+        areaDao.makeGeomValid(areaDbTable, dialect);
+    }
+
 }

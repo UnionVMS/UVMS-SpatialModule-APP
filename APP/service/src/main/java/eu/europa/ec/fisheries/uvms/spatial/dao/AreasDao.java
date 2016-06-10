@@ -200,4 +200,10 @@ public class AreasDao extends AbstractDAO<BaseSpatialEntity> {
         return em;
     }
 
+    public void makeGeomValid(final String areaDbTable, final DatabaseDialect dialect) {
+        String query = dialect.makeGeomValid(areaDbTable);
+        log.debug("{} QUERY => {}", dialect.getClass().getSimpleName().toUpperCase(), query);
+        javax.persistence.Query nativeQuery = em.createNativeQuery(query);
+        nativeQuery.executeUpdate();
+    }
 }
