@@ -130,4 +130,6 @@ public interface SpatialRepository {
     List<PortEntity> listClosestPorts(Double incomingLongitude, Double incomingLatitude, Integer limit) throws ServiceException;
 
     List<CountryEntity> findAllCountries() throws ServiceException;
+
+    void makeGeomValid(String areaDbTable, DatabaseDialect dialect);
 }

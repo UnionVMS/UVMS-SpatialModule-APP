@@ -27,4 +27,9 @@ public class PostGres extends AbstractGisFunction {
                 " ORDER BY distance ASC LIMIT " + limit + " )";
     }
 
+    @Override
+    public String makeGeomValid(String tableName) {
+        return "update spatial."+ tableName + " set geom = st_makevalid(geom) where enabled = 'Y'";
+    }
+
 }

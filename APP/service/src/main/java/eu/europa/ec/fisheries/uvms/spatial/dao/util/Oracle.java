@@ -25,7 +25,14 @@ public class Oracle extends AbstractGisFunction {
                 "ORDER BY distance ASC OFFSET 0 ROWS FETCH NEXT " + limit + " ROWS ONLY)";
     }
 
+    @Override
+    public String makeGeomValid(String tableName) {
+        return "update spatial." + tableName + " set geom = SDO_UTIL.RECTIFY_GEOMETRY(geom, 0.005) where enabled = 'Y'";
+    }
+
     private String stDistance(Double latitude, Double longitude) {
         return "SDO_GEOM.SDO_DISTANCE(geom, SDO_GEOMETRY('POINT(" + longitude + " " + latitude + ")', 8307), 0.05, 'unit=M')";
     }
+
+
 }

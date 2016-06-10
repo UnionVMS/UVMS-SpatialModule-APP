@@ -8,4 +8,6 @@ public interface DatabaseDialect {
 
     String closestPointToPoint(String typeName, String tableName, Double latitude, Double longitude, Integer limit);
 
+    String makeGeomValid(String tableName);
+
 }

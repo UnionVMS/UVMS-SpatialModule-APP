@@ -4,6 +4,8 @@ import eu.europa.ec.fisheries.uvms.domain.BaseEntity;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.interceptors.SimpleTracingInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.dao.util.DAOFactory;
+import eu.europa.ec.fisheries.uvms.spatial.dao.util.DatabaseDialect;
+import eu.europa.ec.fisheries.uvms.spatial.dao.util.DatabaseDialectFactory;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.BaseSpatialEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.CountryEntity;
@@ -21,11 +23,13 @@ import eu.europa.ec.fisheries.uvms.spatial.service.AreaTypeNamesService;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.util.PropertiesBean;
 import eu.europa.ec.fisheries.uvms.spatial.util.SpatialTypeEnum;
 import eu.europa.ec.fisheries.uvms.common.ZipExtractor;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.attribute.FileAttribute;
+import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import lombok.extern.slf4j.Slf4j;
@@ -64,6 +68,13 @@ public class AreaServiceBean implements AreaService {
     private @EJB SpatialRepository repository;
     private @EJB UploadProducerBean uploadSender;
     private @EJB UploadConsumerBean uploadReceiver;
+    private @EJB PropertiesBean properties;
+    private DatabaseDialect databaseDialect;
+
+    @PostConstruct
+    public void init(){
+        databaseDialect = new DatabaseDialectFactory(properties).getInstance();
+    }
 
     @Override
     public Map<String, String> getAllCountriesDesc() throws ServiceException {
@@ -128,9 +139,10 @@ public class AreaServiceBean implements AreaService {
                     .bulkInsert(features, mapping.getMapping());
             org.apache.commons.io.FileUtils.deleteDirectory(Paths.get(ref).getParent().toFile());
 
-            if (CollectionUtils.isEmpty(inValidGeometries)){
+            repository.makeGeomValid(typeName.getAreaDbTable(), databaseDialect);
+/*            if (CollectionUtils.isEmpty(inValidGeometries)){
 
-            }
+            }*/
 
         } catch (Exception e) {
             throw new ServiceException(e.getMessage(), e);
