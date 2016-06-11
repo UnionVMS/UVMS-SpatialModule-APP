@@ -17,7 +17,7 @@
     <profiles>
 
         <profile>
-            <id>oracle-local</id>
+            <id>oracle</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
@@ -33,7 +33,7 @@
         </profile>
         
         <profile>
-            <id>postgres-local</id>
+            <id>postgres</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
