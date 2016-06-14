@@ -1,10 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
@@ -185,9 +182,12 @@ public class AreaResource extends UnionVMSResource {
 
         //filter those that the user is not allowed to see
         Collection<String> permittedLayersNames = ServiceLayerUtils.getUserPermittedLayersNames(usmService, request.getRemoteUser(), roleName, scopeName);
-        for(int i = 0; i < areaServiceLayerDtos.size(); i++) {
-            if (!permittedLayersNames.contains(areaServiceLayerDtos.get(i).getName()) ) {
-                areaServiceLayerDtos.remove(i);
+        Iterator<? extends ServiceLayerDto> iterator = areaServiceLayerDtos.iterator();
+        while (iterator.hasNext()) {
+            ServiceLayerDto serviceLayer = iterator.next();
+
+            if (!permittedLayersNames.contains(serviceLayer.getName()) ) {
+                iterator.remove();
             }
         }
         return createSuccessResponse(areaServiceLayerDtos);
