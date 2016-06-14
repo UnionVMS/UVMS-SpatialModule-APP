@@ -27,7 +27,7 @@ public class MapConfigServiceIT extends BaseSpatialArquillianTest {
     @Test
     public void testGetAdminConfig() throws IOException {
         //Given
-        ConfigurationDto configurationDto = mapConfigService.retrieveAdminConfiguration(getConfig("/Config.json"));
+        ConfigurationDto configurationDto = mapConfigService.retrieveAdminConfiguration(getConfig("/Config.json"), null);
 
         //test
         assertNotNull(configurationDto);
@@ -37,7 +37,7 @@ public class MapConfigServiceIT extends BaseSpatialArquillianTest {
     @Test
     public void testGetUserConfig() throws IOException {
         //Given
-        ConfigurationDto configurationDto = mapConfigService.retrieveUserConfiguration(getConfig("/UserConfig.json"), getConfig("/Config.json"), "rep_power");
+        ConfigurationDto configurationDto = mapConfigService.retrieveUserConfiguration(getConfig("/UserConfig.json"), getConfig("/Config.json"), "rep_power", null);
 
         //test
         assertNotNull(configurationDto);
@@ -47,7 +47,7 @@ public class MapConfigServiceIT extends BaseSpatialArquillianTest {
     @Test
     public void testGetMapConfig() throws IOException {
         //given
-        MapConfigDto mapConfigDto = mapConfigService.getReportConfig(1, getConfig("/UserConfig.json"), getConfig("/Config.json"), "rep_power", "EC", new Date().toString());
+        MapConfigDto mapConfigDto = mapConfigService.getReportConfig(1, getConfig("/UserConfig.json"), getConfig("/Config.json"), "rep_power", "EC", new Date().toString(), null);
 
         //test
         assertNotNull(mapConfigDto.getMap().getProjectionDto());
@@ -58,7 +58,7 @@ public class MapConfigServiceIT extends BaseSpatialArquillianTest {
     @Test
     public void testInvalidMapConfig() throws IOException {
         //given
-        MapConfigDto mapConfigDto = mapConfigService.getReportConfig(1000000, getConfig("/UserConfig.json"), getConfig("/Config.json"), "rep_power", "EC", new Date().toString());
+        MapConfigDto mapConfigDto = mapConfigService.getReportConfig(1000000, getConfig("/UserConfig.json"), getConfig("/Config.json"), "rep_power", "EC", new Date().toString(), null);
 
         //test
         assertNull(mapConfigDto.getMap().getProjectionDto());

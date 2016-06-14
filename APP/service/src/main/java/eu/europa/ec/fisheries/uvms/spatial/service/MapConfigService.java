@@ -12,19 +12,20 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.MapConfigDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.ConfigurationDto;
 
+import java.util.Collection;
 import java.util.List;
 import javax.ejb.Local;
 
 @Local
 public interface MapConfigService {
 
-    MapConfigDto getReportConfig(int reportId, String userPreferences, String adminPreferences, String userName, String scopeName, String timeStamp);
+    MapConfigDto getReportConfig(int reportId, String userPreferences, String adminPreferences, String userName, String scopeName, String timeStamp, Collection<String> permittedServiceLayer);
 
-    MapConfigDto getReportConfigWithoutSave(ConfigurationDto configurationDto, String userName, String scopeName);
+    MapConfigDto getReportConfigWithoutSave(ConfigurationDto configurationDto, String userName, String scopeName, Collection<String> permittedServiceLayer);
 
-    public MapConfigDto getBasicReportConfig(String userPreferences, String adminPreferences);
+    MapConfigurationType getMapConfigurationType(final Long reportId, Collection<String> permittedServiceLayers) throws ServiceException;
 
-    MapConfigurationType getMapConfigurationType(final Long reportId) throws ServiceException;
+    MapConfigDto getBasicReportConfig(String userPreferences, String adminPreferences);
 
     SpatialGetMapConfigurationRS getMapConfiguration(SpatialGetMapConfigurationRQ mapConfigurationRQ) throws ServiceException;
 
@@ -34,17 +35,17 @@ public interface MapConfigService {
 
     void handleDeleteMapConfiguration(SpatialDeleteMapConfigurationRQ spatialDeleteMapConfigurationRQ) throws ServiceException;
 
-    ConfigurationDto retrieveAdminConfiguration(String config);
+    ConfigurationDto retrieveAdminConfiguration(String config, Collection<String> permittedServiceLayers);
 
-    String saveAdminJson(ConfigurationDto configurationDto, String defaultConfig);
+    String saveAdminJson(ConfigurationDto configurationDto, String defaultConfig, Collection<String> permittedServiceLayers);
 
-    ConfigurationDto retrieveUserConfiguration(String config, String defaultConfig, String userName);
+    ConfigurationDto retrieveUserConfiguration(String config, String defaultConfig, String userName, Collection<String> permittedServiceLayers);
 
     String saveUserJson(ConfigurationDto configurationDto, String userPref);
 
     String resetUserJson(ConfigurationDto configurationDto, String userPref);
 
-    ConfigurationDto getNodeDefaultValue(ConfigurationDto configurationDto, String adminConfig, String userName);
+    ConfigurationDto getNodeDefaultValue(ConfigurationDto configurationDto, String adminConfig, String userName, Collection<String> permittedServiceLayers);
 
     ConfigDto getReportConfigWithoutMap(String userPref, String adminPref);
 }
