@@ -513,18 +513,21 @@ public class MapConfigServiceBean implements MapConfigService {
         return serviceLayersDto;
     }
 
-    private void filterAllForbiddenLayers(LayerSettingsDto layerSettingsDto, Collection<String> permittedLayersNames) {
+    private void filterAllForbiddenLayers(LayerSettingsDto layerSettingsDto, final Collection<String> permittedLayersNames) {
         filterList(layerSettingsDto.getPortLayers(), permittedLayersNames);
         filterList(layerSettingsDto.getAreaLayers(), permittedLayersNames);
         filterList(layerSettingsDto.getAdditionalLayers(), permittedLayersNames);
         filterList(layerSettingsDto.getBaseLayers(), permittedLayersNames);
     }
 
-    private void filterList(List<? extends LayersDto> layers, Collection<String> permittedLayersNames) {
+    private void filterList(List<? extends LayersDto> layers, final Collection<String> permittedLayersNames) {
         if (layers != null) {
-            for (int i = 0; i < layers.size(); i++) {
-                if (!permittedLayersNames.contains(layers.get(i).getName())) {
-                    layers.remove(i);
+            Iterator<? extends LayersDto> iterator = layers.iterator();
+            while (iterator.hasNext()) {
+                LayersDto layer = iterator.next();
+
+                if (!permittedLayersNames.contains(layer.getName()) ) {
+                    iterator.remove();
                 }
             }
         }
