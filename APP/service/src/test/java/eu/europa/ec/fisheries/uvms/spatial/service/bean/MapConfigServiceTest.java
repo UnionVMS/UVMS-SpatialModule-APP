@@ -99,7 +99,7 @@ public class MapConfigServiceTest extends BaseUnitilsTest {
         mockGenMapProjectionWithDefaultConfig();
 
         //Given
-        MapConfigDto mapConfigDto = mapConfigServiceBean.getReportConfig(1, getConfig("src/test/resources/UserConfig.json"), getConfig("src/test/resources/Config.json"), "rep_power", "EC", new Date().toString());
+        MapConfigDto mapConfigDto = mapConfigServiceBean.getReportConfig(1, getConfig("src/test/resources/UserConfig.json"), getConfig("src/test/resources/Config.json"), "rep_power", "EC", new Date().toString(), null);
         MapDto mapDto = mapConfigDto.getMap();
         ServiceLayersDto layers = mapDto.getServiceLayers();
 
@@ -119,7 +119,7 @@ public class MapConfigServiceTest extends BaseUnitilsTest {
         mockGenMapProjectionWithoutDefaultConfig();
 
         //Given
-        MapConfigDto mapConfigDto = mapConfigServiceBean.getReportConfig(1, getConfig("src/test/resources/UserConfig.json"), getConfig("src/test/resources/Config.json"), "rep_power", "EC", new Date().toString());
+        MapConfigDto mapConfigDto = mapConfigServiceBean.getReportConfig(1, getConfig("src/test/resources/UserConfig.json"), getConfig("src/test/resources/Config.json"), "rep_power", "EC", new Date().toString(), null);
         MapDto mapDto = mapConfigDto.getMap();
         ServiceLayersDto layers = mapDto.getServiceLayers();
 

@@ -5,6 +5,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collection;
 import java.util.List;
 
 public final class SpatialModuleRequestMapper {
@@ -114,9 +115,9 @@ public final class SpatialModuleRequestMapper {
         }
     }
 
-    public static String mapToSpatialGetMapConfigurationRQ(long reportId) throws SpatialModelMarshallException {
+    public static String mapToSpatialGetMapConfigurationRQ(long reportId, List<String> permittedServiceLayers) throws SpatialModelMarshallException {
         try {
-            return JAXBMarshaller.marshall(new SpatialGetMapConfigurationRQ(SpatialModuleMethod.GET_MAP_CONFIGURATION, reportId));
+            return JAXBMarshaller.marshall(new SpatialGetMapConfigurationRQ(SpatialModuleMethod.GET_MAP_CONFIGURATION, reportId, permittedServiceLayers));
         } catch (SpatialModelMarshallException ex) {
             return logException(ex);
         }

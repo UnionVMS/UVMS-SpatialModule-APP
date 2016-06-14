@@ -2,6 +2,7 @@ package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import javax.ejb.EJB;
@@ -26,6 +27,7 @@ import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
 import eu.europa.ec.fisheries.uvms.service.interceptor.ValidationInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.model.constants.USMSpatial;
+import eu.europa.ec.fisheries.uvms.spatial.model.layer.ServiceLayerUtils;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationDetails;
@@ -40,8 +42,8 @@ import eu.europa.ec.fisheries.uvms.spatial.rest.type.AreaFilterType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.AreaLocationDtoMapper;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.LocationDetailsGeoJsonDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaServiceLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.LayerSubTypeEnum;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.ServiceLayerDto;
 import eu.europa.ec.fisheries.wsdl.user.types.DatasetExtension;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -171,14 +173,24 @@ public class AreaResource extends UnionVMSResource {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/servicelayers/{layerType}")
-    public Response getServiceLayersByType(@PathParam("layerType") String layerType, @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName, @Context HttpServletRequest request) throws ServiceException {
+    public Response getServiceLayersByType(@PathParam("layerType") String layerType, @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName, @HeaderParam(USMSpatial.ROLE_NAME) String roleName,@Context HttpServletRequest request) throws ServiceException {
         LayerSubTypeEnum layerTypeEnum = LayerSubTypeEnum.value(layerType);
+        List<? extends ServiceLayerDto> areaServiceLayerDtos ;
+
         if (layerTypeEnum.equals(LayerSubTypeEnum.USERAREA) || layerTypeEnum.equals(LayerSubTypeEnum.AREAGROUP)) {
-            List<AreaServiceLayerDto> areaServiceLayerDtos = areaTypeService.getAllAreasLayerDescription(layerTypeEnum, request.getRemoteUser(), scopeName);
-            return createSuccessResponse(areaServiceLayerDtos);
+            areaServiceLayerDtos = areaTypeService.getAllAreasLayerDescription(layerTypeEnum, request.getRemoteUser(), scopeName);
         } else {
-            return createSuccessResponse(areaTypeService.getAreaLayerDescription(layerTypeEnum));
+            areaServiceLayerDtos = areaTypeService.getAreaLayerDescription(layerTypeEnum);
         }
+
+        //filter those that the user is not allowed to see
+        Collection<String> permittedLayersNames = ServiceLayerUtils.getUserPermittedLayersNames(usmService, request.getRemoteUser(), roleName, scopeName);
+        for(int i = 0; i < areaServiceLayerDtos.size(); i++) {
+            if (!permittedLayersNames.contains(areaServiceLayerDtos.get(i).getName()) ) {
+                areaServiceLayerDtos.remove(i);
+            }
+        }
+        return createSuccessResponse(areaServiceLayerDtos);
     }
 
 

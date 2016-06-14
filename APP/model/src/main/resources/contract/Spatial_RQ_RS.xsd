@@ -279,6 +279,7 @@
                 <xs:extension base="SpatialModuleRequest">
                     <xs:sequence>
                         <xs:element name="reportId" type="xs:long" minOccurs="1"/>
+                        <xs:element name="permittedServiceLayers" type="xs:string" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
                     </xs:sequence>
                 </xs:extension>
             </xs:complexContent>
