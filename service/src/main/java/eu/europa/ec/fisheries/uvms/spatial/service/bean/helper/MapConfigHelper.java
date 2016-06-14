@@ -212,20 +212,23 @@ public class MapConfigHelper {
             LayerTypeEnum layerTypeEnum = LayerTypeEnum.getLayerType(layer.getLayerType());
             switch (layerTypeEnum) {
                 case BASE:
-                    LayersDto baseLayersDto = new LayersDto(String.valueOf(layer.getServiceLayer().getId()), Long.valueOf(layer.getLayerOrder()));
+                    LayersDto baseLayersDto = new LayersDto(layer.getServiceLayer().getName(), String.valueOf(layer.getServiceLayer().getId()), layer.getServiceLayer().getSubType(),Long.valueOf(layer.getLayerOrder()));
                     layerSettingsDto.addBaseLayer(baseLayersDto);
                     break;
                 case ADDITIONAL:
-                    LayersDto additionalLayersDto = new LayersDto(String.valueOf(layer.getServiceLayer().getId()), Long.valueOf(layer.getLayerOrder()));
+                    LayersDto additionalLayersDto = new LayersDto(layer.getServiceLayer().getName(), String.valueOf(layer.getServiceLayer().getId()), layer.getServiceLayer().getSubType(), Long.valueOf(layer.getLayerOrder()));
                     layerSettingsDto.addAdditionalLayer(additionalLayersDto);
                     break;
                 case PORT:
-                    LayersDto portLayersDto = new LayersDto(String.valueOf(layer.getServiceLayer().getId()), Long.valueOf(layer.getLayerOrder()));
+                    LayersDto portLayersDto = new LayersDto(layer.getServiceLayer().getName(), String.valueOf(layer.getServiceLayer().getId()), layer.getServiceLayer().getSubType(), Long.valueOf(layer.getLayerOrder()));
                     layerSettingsDto.addPortLayer(portLayersDto);
                     break;
                 case AREA:
                     AreaTypeEnum areaTypeEnum = AreaTypeEnum.valueOf(layer.getAreaType());
                     LayerAreaDto areaLayersDto = new LayerAreaDto(areaTypeEnum, String.valueOf(layer.getServiceLayer().getId()), Long.valueOf(layer.getLayerOrder()));
+                    areaLayersDto.setName(layer.getServiceLayer().getName());
+                    areaLayersDto.setSubType(layer.getServiceLayer().getSubType());
+
                     if (areaTypeEnum.equals(AreaTypeEnum.userarea)) {
                         areaLayersDto.setGid(Long.parseLong(layer.getSqlFilter()));
                     }

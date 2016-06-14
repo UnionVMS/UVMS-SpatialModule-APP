@@ -89,6 +89,11 @@
             <artifactId>logback-core</artifactId>
             <version>${logback.core.version}</version>
         </dependency>
+        <dependency>
+            <groupId>eu.europa.ec.fisheries.uvms</groupId>
+            <artifactId>usm4uvms</artifactId>
+            <version>2.0.11-SNAPSHOT</version>
+        </dependency>
 
     </dependencies>
 

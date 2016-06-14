@@ -695,5 +695,96 @@
             <defaultValue></defaultValue>
         </option>
 
+        <dataset>
+            <name>EEZ</name>
+            <description>Dataset used to enable/disable the usage of the specified map service layer</description>
+            <category>service layer</category>
+            <discriminator>SPATIAL_SERVICE_LAYER</discriminator>
+        </dataset>
+        <dataset>
+            <name>RFMO</name>
+            <description>Dataset used to enable/disable the usage of the specified map service layer</description>
+            <category>service layer</category>
+            <discriminator>SPATIAL_SERVICE_LAYER</discriminator>
+        </dataset>
+        <dataset>
+            <name>Countries</name>
+            <description>Dataset used to enable/disable the usage of the specified map service layer</description>
+            <category>service layer</category>
+            <discriminator>SPATIAL_SERVICE_LAYER</discriminator>
+        </dataset>
+        <dataset>
+            <name>Ports</name>
+            <description>Dataset used to enable/disable the usage of the specified map service layer</description>
+            <category>service layer</category>
+            <discriminator>SPATIAL_SERVICE_LAYER</discriminator>
+        </dataset>
+        <dataset>
+            <name>USERAREA</name>
+            <description>Dataset used to enable/disable the usage of the specified map service layer</description>
+            <category>service layer</category>
+            <discriminator>SPATIAL_SERVICE_LAYER</discriminator>
+        </dataset>
+        <dataset>
+            <name>OpenStreetMap</name>
+            <description>Dataset used to enable/disable the usage of the specified map service layer</description>
+            <category>service layer</category>
+            <discriminator>SPATIAL_SERVICE_LAYER</discriminator>
+        </dataset>
+        <dataset>
+            <name>OpenSeaMap</name>
+            <description>Dataset used to enable/disable the usage of the specified map service layer</description>
+            <category>service layer</category>
+            <discriminator>SPATIAL_SERVICE_LAYER</discriminator>
+        </dataset>
+        <dataset>
+            <name>bing_roads</name>
+            <description>Dataset used to enable/disable the usage of the specified map service layer</description>
+            <category>service layer</category>
+            <discriminator>SPATIAL_SERVICE_LAYER</discriminator>
+        </dataset>
+        <dataset>
+            <name>bing_aerial</name>
+            <description>Dataset used to enable/disable the usage of the specified map service layer</description>
+            <category>service layer</category>
+            <discriminator>SPATIAL_SERVICE_LAYER</discriminator>
+        </dataset>
+        <dataset>
+            <name>bing_aerial_labels</name>
+            <description>Dataset used to enable/disable the usage of the specified map service layer</description>
+            <category>service layer</category>
+            <discriminator>SPATIAL_SERVICE_LAYER</discriminator>
+        </dataset>
+        <dataset>
+            <name>Port Areas</name>
+            <description>Dataset used to enable/disable the usage of the specified map service layer</description>
+            <category>service layer</category>
+            <discriminator>SPATIAL_SERVICE_LAYER</discriminator>
+        </dataset>
+        <dataset>
+            <name>Statistical Rectangles</name>
+            <description>Dataset used to enable/disable the usage of the specified map service layer</description>
+            <category>service layer</category>
+            <discriminator>SPATIAL_SERVICE_LAYER</discriminator>
+        </dataset>
+        <dataset>
+            <name>GFCM</name>
+            <description>Dataset used to enable/disable the usage of the specified map service layer</description>
+            <category>service layer</category>
+            <discriminator>SPATIAL_SERVICE_LAYER</discriminator>
+        </dataset>
+        <dataset>
+            <name>FAO</name>
+            <description>Dataset used to enable/disable the usage of the specified map service layer</description>
+            <category>service layer</category>
+            <discriminator>SPATIAL_SERVICE_LAYER</discriminator>
+        </dataset>
+        <dataset>
+            <name>FMZ</name>
+            <description>Dataset used to enable/disable the usage of the specified map service layer</description>
+            <category>service layer</category>
+            <discriminator>SPATIAL_SERVICE_LAYER</discriminator>
+        </dataset>
+
     </application>
 </ns2:deployApplicationRequest>
