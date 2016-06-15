@@ -501,15 +501,16 @@ public class MapConfigServiceBean implements MapConfigService {
                                                   String userName, String scopeName, String timeStamp,
                                                   Integer reportId, Map<String, ReferenceDataPropertiesDto> referenceData,
                                                   ReportProperties reportProperties, Collection<String> allowedServiceLayers) throws ServiceException {
-        if (allowedServiceLayers != null) {
-            filterAllForbiddenLayers(layerSettingsDto, allowedServiceLayers);
-        }
 
         ServiceLayersDto serviceLayersDto = new ServiceLayersDto();
         serviceLayersDto.setPortLayers(getLayerDtoList(layerSettingsDto.getPortLayers(), projection, false, referenceData)); // Get Service Layers for Port layers
         serviceLayersDto.setSystemLayers(getAreaLayerDtoList(layerSettingsDto.getAreaLayers(), projection, false, userName, scopeName, timeStamp, reportId, referenceData, reportProperties)); // // Get Service Layers for system layers and User Layers
         serviceLayersDto.setAdditionalLayers(getLayerDtoList(layerSettingsDto.getAdditionalLayers(), projection, false, referenceData)); // Get Service Layers for Additional layers
         serviceLayersDto.setBaseLayers(getLayerDtoList(layerSettingsDto.getBaseLayers(), projection, true, referenceData)); // Get Service Layers for base layers
+
+        if (allowedServiceLayers != null) {
+            filterAllForbiddenLayers(serviceLayersDto, allowedServiceLayers);
+        }
         return serviceLayersDto;
     }
 
@@ -520,6 +521,13 @@ public class MapConfigServiceBean implements MapConfigService {
         filterList(layerSettingsDto.getBaseLayers(), permittedLayersNames);
     }
 
+    private void filterAllForbiddenLayers(ServiceLayersDto layerSettingsDto, final Collection<String> permittedLayersNames) {
+        filterLayerList(layerSettingsDto.getPortLayers(), permittedLayersNames);
+        filterLayerList(layerSettingsDto.getSystemLayers(), permittedLayersNames);
+        filterLayerList(layerSettingsDto.getAdditionalLayers(), permittedLayersNames);
+        filterLayerList(layerSettingsDto.getBaseLayers(), permittedLayersNames);
+    }
+
     private void filterList(List<? extends LayersDto> layers, final Collection<String> permittedLayersNames) {
         if (layers != null) {
             Iterator<? extends LayersDto> iterator = layers.iterator();
@@ -527,6 +535,19 @@ public class MapConfigServiceBean implements MapConfigService {
                 LayersDto layer = iterator.next();
 
                 if (!permittedLayersNames.contains(layer.getName()) ) {
+                    iterator.remove();
+                }
+            }
+        }
+    }
+
+    private void filterLayerList(List<? extends LayerDto> layers, final Collection<String> permittedLayersNames) {
+        if (layers != null) {
+            Iterator<? extends LayerDto> iterator = layers.iterator();
+            while (iterator.hasNext()) {
+                LayerDto layer = iterator.next();
+
+                if (!permittedLayersNames.contains(layer.getTitle()) ) {
                     iterator.remove();
                 }
             }
