@@ -18,12 +18,13 @@ import eu.europa.ec.fisheries.uvms.spatial.rest.type.geocoordinate.LocationCoord
 
 @Mapper
 public abstract class AreaLocationDtoMapper {
-	
+
 	private static final String AREA_TYPE = "areaType";
-	
 	private static final String LOCATION_TYPE = "locationType";
+	public static final String AREA_ID = "id";
 	
 	private static final AreaLocationDtoMapper INSTANCE = Mappers.getMapper(AreaLocationDtoMapper.class);
+
 
 	public static AreaLocationDtoMapper mapper() {
 		return INSTANCE;
@@ -81,6 +82,7 @@ public abstract class AreaLocationDtoMapper {
 		}
 		if (!propertyMap.isEmpty()) {
 			propertyMap.put(AREA_TYPE, String.valueOf(areaDetails.getAreaType().getAreaType()).toUpperCase());
+			propertyMap.put(AREA_ID, areaDetails.getAreaType().getId());
 		}
 		return propertyMap;
 	}
