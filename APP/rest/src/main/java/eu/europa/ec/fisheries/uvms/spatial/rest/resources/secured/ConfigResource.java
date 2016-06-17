@@ -61,7 +61,20 @@ public class ConfigResource extends UnionVMSResource {
         return createSuccessResponse(mapConfig);
     }
 
-
+    @GET
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Path("/basic")
+    @Interceptors(value = {ExceptionInterceptor.class})
+    public Response getBasicReportMapConfig(@Context HttpServletRequest request,
+                                            @HeaderParam(AuthConstants.HTTP_HEADER_SCOPE_NAME) String scopeName,
+                                            @HeaderParam(AuthConstants.HTTP_HEADER_ROLE_NAME) String roleName) throws ServiceException {
+        final String username = request.getRemoteUser();
+        String applicationName = request.getServletContext().getInitParameter("usmApplication");
+        String adminPref = usmService.getOptionDefaultValue(DEFAULT_CONFIG, applicationName);
+        String userPref = usmService.getUserPreference(USER_CONFIG, username, applicationName, roleName, scopeName);
+        MapConfigDto mapConfig = mapConfigService.getBasicReportConfig(userPref, adminPref);
+        return createSuccessResponse(mapConfig);
+    }
 
     @POST
     @Produces(value = {MediaType.APPLICATION_JSON})
