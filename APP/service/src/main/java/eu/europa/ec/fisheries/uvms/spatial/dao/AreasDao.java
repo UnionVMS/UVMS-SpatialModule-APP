@@ -1,19 +1,13 @@
 package eu.europa.ec.fisheries.uvms.spatial.dao;
 
-import eu.europa.ec.fisheries.uvms.spatial.dao.util.DatabaseDialect;
-import eu.europa.ec.fisheries.uvms.spatial.entity.BaseSpatialEntity;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import javax.persistence.EntityManager;
-import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
-import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
-import com.vividsolutions.jts.geom.Point;
-import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
@@ -24,6 +18,16 @@ import org.hibernate.type.DoubleType;
 import org.hibernate.type.IntegerType;
 import org.hibernate.type.StandardBasicTypes;
 import org.hibernate.type.StringType;
+
+import com.vividsolutions.jts.geom.Point;
+
+import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
+import eu.europa.ec.fisheries.uvms.spatial.dao.util.DatabaseDialect;
+import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.BaseSpatialEntity;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class AreasDao extends AbstractDAO<BaseSpatialEntity> {
@@ -125,16 +129,21 @@ public class AreasDao extends AbstractDAO<BaseSpatialEntity> {
             final Double latitude = point.getY();
 
             Iterator<AreaLocationTypesEntity> it = entities.iterator();
+            sb.append(dialect.closestAreaToPointPrefix());
+            int index = 0;
             while (it.hasNext()) {
                 AreaLocationTypesEntity next = it.next();
                 final String areaDbTable = next.getAreaDbTable();
                 final String typeName = next.getTypeName();
-                sb.append(dialect.closestAreaToPoint(typeName, areaDbTable, latitude, longitude, 10));
+                sb.append(dialect.closestAreaToPoint(index,typeName, areaDbTable, latitude, longitude, 10));
+                index++;
                 it.remove(); // avoids a ConcurrentModificationException
                 if (it.hasNext()) {
                     sb.append(" UNION ALL ");
                 }
             }
+            
+            sb.append(dialect.closestAreaToPointSuffix());
 
             log.debug("{} QUERY => {}", dialect.getClass().getSimpleName().toUpperCase(), sb.toString());
 
@@ -157,6 +166,7 @@ public class AreasDao extends AbstractDAO<BaseSpatialEntity> {
     public List<BaseSpatialEntity> intersectingArea(final List<AreaLocationTypesEntity> entities, final DatabaseDialect dialect, final Point point){
 
         List resultList = new ArrayList();
+        int index = 1;
 
         if (dialect != null && CollectionUtils.isNotEmpty(entities) && (point != null && !point.isEmpty())) {
 
@@ -165,19 +175,26 @@ public class AreasDao extends AbstractDAO<BaseSpatialEntity> {
             final Double latitude = point.getY();
 
             Iterator<AreaLocationTypesEntity> it = entities.iterator();
+
+        	sb.append("select * from  (");
+
             while (it.hasNext()) {
                 AreaLocationTypesEntity next = it.next();
                 final String areaDbTable = next.getAreaDbTable();
                 final String typeName = next.getTypeName();
-                sb.append("(SELECT '").append(typeName).append("' as type, gid, code, name FROM spatial.").
+                sb.append("(SELECT ").append(index).append(" as indexRS,").append("'").append(typeName).append("' as type, gid, code, name FROM spatial.").
                         append(areaDbTable).append(" WHERE ").
                         append(dialect.stIntersects(latitude, longitude)).append(" AND enabled = 'Y')");
                 it.remove(); // avoids a ConcurrentModificationException
+                index++;
                 if (it.hasNext()) {
                     sb.append(" UNION ALL ");
                 }
             }
+ 
 
+            sb.append(") a  ORDER BY indexRS,gid ASC ");
+            
             log.debug("{} QUERY => {}", dialect.getClass().getSimpleName().toUpperCase(), sb.toString());
 
             javax.persistence.Query emNativeQuery = em.createNativeQuery(sb.toString());
@@ -200,10 +217,4 @@ public class AreasDao extends AbstractDAO<BaseSpatialEntity> {
         return em;
     }
 
-    public void makeGeomValid(final String areaDbTable, final DatabaseDialect dialect) {
-        String query = dialect.makeGeomValid(areaDbTable);
-        log.debug("{} QUERY => {}", dialect.getClass().getSimpleName().toUpperCase(), query);
-        javax.persistence.Query nativeQuery = em.createNativeQuery(query);
-        nativeQuery.executeUpdate();
-    }
 }
