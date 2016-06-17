@@ -1,8 +1,5 @@
 package eu.europa.ec.fisheries.uvms.spatial.dao.util;
 
-import java.util.Iterator;
-
-
 public class Oracle extends AbstractGisFunction {
 
     @Override
