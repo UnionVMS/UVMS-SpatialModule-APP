@@ -18,6 +18,10 @@ public class Oracle extends AbstractGisFunction {
     	return ")  ORDER BY indexRS,dist,gid ASC ";
     }
 
+    @Override
+    public String makeGeomValid(String tableName) {
+        return "update spatial." + tableName + " set geom = SDO_UTIL.RECTIFY_GEOMETRY(geom, 0.005) where enabled = 'Y'";
+    }
     
     	
     @Override
