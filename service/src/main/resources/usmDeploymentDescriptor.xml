@@ -357,35 +357,35 @@
         }
     },
     "referenceDataSettings": {
-        "eez": {
+        "EEZ": {
             "selection": "all",
             "codes": []
         },
-        "rfmo": {
+        "RFMO": {
             "selection": "all",
             "codes": []
         },
-        "gfcm": {
+        "GFCM": {
             "selection": "all",
             "codes": []
         },
-        "fao": {
+        "FAO": {
             "selection": "all",
             "codes": []
         },
-        "fmz": {
+        "FMZ": {
             "selection": "all",
             "codes": []
         },
-        "statrect": {
+        "STATRECT": {
             "selection": "all",
             "codes": []
         },
-        "port": {
+        "PORT": {
             "selection": "all",
             "codes": []
         },
-        "portarea": {
+        "PORTAREA": {
             "selection": "all",
             "codes": []
         }
