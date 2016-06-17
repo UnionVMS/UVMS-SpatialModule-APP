@@ -19,6 +19,11 @@ public class PostGres extends AbstractGisFunction {
     }
     
     @Override
+    public String makeGeomValid(String tableName) {
+        return "update spatial."+ tableName + " set geom = st_makevalid(geom) where enabled = 'Y'";
+    }
+    
+    @Override
     public String closestAreaToPoint(int index,String typeName, String tableName, Double latitude, Double longitude, Integer limit) {
 
         return "(SELECT '" + typeName + "' AS type, gid, code, name," +
