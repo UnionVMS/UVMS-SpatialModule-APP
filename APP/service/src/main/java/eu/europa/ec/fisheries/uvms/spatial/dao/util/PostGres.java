@@ -33,7 +33,7 @@ public class PostGres extends AbstractGisFunction {
     	sb.append("(SELECT '").append(typeName).append("' AS type, gid, code, name,");
     	sb.append(" ST_ClosestPoint(geom, ST_GeomFromText(CAST ('POINT(").append(longitude).append(" ").append(latitude).append(")' AS TEXT), 4326))" );
     	sb.append(" AS closest, ");
-    	sb.append(" ST_Distance(geom, ST_GeomFromText(CAST ('POINT(").append(longitude).append(" ").append(latitude).append(")' AS TEXT), 4326),true) as dist ");                
+    	sb.append(" ST_Distance(geom, ST_GeomFromText(CAST ('POINT(").append(longitude).append(" ").append(latitude).append(")' AS TEXT), 4326),true) as dist ");
     	sb.append(" FROM spatial.").append(tableName);
     	sb.append(" WHERE NOT ST_IsEmpty(geom) AND enabled = 'Y' ORDER BY dist,gid ");
     	sb.append(" LIMIT ").append(limit).append(")");
