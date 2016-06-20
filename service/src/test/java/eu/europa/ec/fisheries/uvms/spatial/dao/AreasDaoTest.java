@@ -3,11 +3,11 @@ package eu.europa.ec.fisheries.uvms.spatial.dao;
 import com.ninja_squad.dbsetup.DbSetup;
 import com.ninja_squad.dbsetup.destination.DataSourceDestination;
 import com.ninja_squad.dbsetup.operation.Operation;
+import eu.europa.ec.fisheries.uvms.spatial.dao.util.H2gis;
 import eu.europa.ec.fisheries.uvms.spatial.dao.util.PostGres;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
-import junit.framework.Assert;
 import org.geotools.geometry.jts.GeometryBuilder;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,8 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.ninja_squad.dbsetup.Operations.sequenceOf;
-import static junit.framework.Assert.*;
-import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 
@@ -93,7 +91,7 @@ public class AreasDaoTest extends BaseSpatialDaoTest {
         portAreaLocationTypesEntity.setTypeName("PORT_AREA");
         entities.add(portAreaLocationTypesEntity);
 
-        List list = dao.closestArea(entities, new PostGres(), new GeometryBuilder().point(-8, 40));
+        List list = dao.closestArea(entities, new H2gis(), new GeometryBuilder().point(-8, 40));
 
         assertEquals(8, list.size());
         // TODO continue test what is inside the collection
