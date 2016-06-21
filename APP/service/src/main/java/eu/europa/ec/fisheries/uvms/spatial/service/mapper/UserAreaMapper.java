@@ -8,6 +8,7 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.UserScopeEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.UserAreaGeoJsonDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
 import java.util.Date;
@@ -38,6 +39,17 @@ public abstract class UserAreaMapper {
     })
     public abstract UserAreasEntity fromDtoToEntity(UserAreaGeoJsonDto userAreaDto);
 
+    @Mappings({
+            @Mapping(target = "name", expression = "java(userAreaDto.getName())"),
+            @Mapping(target = "type", expression = "java(userAreaDto.getSubType())"),
+            @Mapping(target = "areaDesc", expression = "java(userAreaDto.getDesc())"),
+            @Mapping(source = "geometry", target = "geom"),
+            @Mapping(target = "startDate", expression = "java(stringToDate(userAreaDto.getStartDate()))"),
+            @Mapping(target = "endDate", expression = "java(stringToDate(userAreaDto.getEndDate()))"),
+            @Mapping(target = "datasetName", expression = "java(userAreaDto.getDatasetName())")
+    })
+    public abstract void updateUserAreaEntity(UserAreaGeoJsonDto userAreaDto, @MappingTarget UserAreasEntity userAreasEntity);
+
     protected Date stringToDate(String date) {
         if (isEmpty(date)) {
             return null;
@@ -52,6 +64,21 @@ public abstract class UserAreaMapper {
             for (String scope : scopeSelection) {
                 UserScopeEntity userScopeEntity = new UserScopeEntity();
                 userScopeEntity.setName(scope);
+                userScopeEntities.add(userScopeEntity);
+            }
+        }
+
+        return userScopeEntities;
+    }
+
+    public static Set<UserScopeEntity> fromScopeArrayToEntity(List<String> scopeSelection, UserAreasEntity userAreasEntity) {
+        Set<UserScopeEntity> userScopeEntities = Sets.newHashSet();
+
+        if (scopeSelection != null) {
+            for (String scope : scopeSelection) {
+                UserScopeEntity userScopeEntity = new UserScopeEntity();
+                userScopeEntity.setName(scope);
+                userScopeEntity.setUserAreas(userAreasEntity);
                 userScopeEntities.add(userScopeEntity);
             }
         }

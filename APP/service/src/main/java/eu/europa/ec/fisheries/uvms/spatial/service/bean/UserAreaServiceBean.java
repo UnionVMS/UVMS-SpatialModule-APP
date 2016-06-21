@@ -91,33 +91,25 @@ public class UserAreaServiceBean implements UserAreaService {
             throw new SpatialServiceException(SpatialServiceErrors.USER_AREA_DOES_NOT_EXIST, userAreaById);
         }
 
-        UserAreasEntity persistentUserArea = userAreaById;
-
-        if (!persistentUserArea.getUserName().equals(userName) && !isPowerUser) {
+        if (!userAreaById.getUserName().equals(userName) && !isPowerUser) {
             throw new ServiceException("user_not_authorised");
         }
 
-        if (StringUtils.isNotBlank(userAreaDto.getDatasetName()) && !userAreaDto.getDatasetName().equals(persistentUserArea.getDatasetName())) {
-            updateUSMDataset(persistentUserArea, userAreaDto.getDatasetName());
+        if (StringUtils.isNotBlank(userAreaDto.getDatasetName()) && !userAreaDto.getDatasetName().equals(userAreaById.getDatasetName())) {
+            updateUSMDataset(userAreaById, userAreaDto.getDatasetName());
         }
+        UserAreaMapper.mapper().updateUserAreaEntity(userAreaDto, userAreaById);
+        createScopeSelection(userAreaDto, userAreaById);
 
-        UserAreasEntity userAreasEntityToUpdate = UserAreaMapper.mapper().fromDtoToEntity(userAreaDto);
-        userAreasEntityToUpdate.setUserName(persistentUserArea.getUserName());
-
-        userAreasEntityToUpdate.setCreatedOn(persistentUserArea.getCreatedOn());
-        userAreasEntityToUpdate.setScopeSelection(createScopeSelection(userAreaDto, persistentUserArea));
-
-        UserAreasEntity persistedUpdatedEntity = repository.update(userAreasEntityToUpdate);
-
+        UserAreasEntity persistedUpdatedEntity = repository.update(userAreaById);
         return persistedUpdatedEntity.getId();
     }
 
     //BUG FIX: Caused by: org.hibernate.HibernateException: A collection with cascade="all-delete-orphan" was no longer referenced by the owning entity instance: eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity.scopeSelection
-    private Set<UserScopeEntity> createScopeSelection(UserAreaGeoJsonDto userAreaDto, UserAreasEntity persistentUserArea) {
+    private void createScopeSelection(UserAreaGeoJsonDto userAreaDto, UserAreasEntity persistentUserArea) {
         Set<UserScopeEntity> scopeSelection = persistentUserArea.getScopeSelection();
         scopeSelection.clear();
-        scopeSelection.addAll(UserAreaMapper.fromScopeArrayToEntity(userAreaDto.getScopeSelection()));
-        return scopeSelection;
+        scopeSelection.addAll(UserAreaMapper.fromScopeArrayToEntity(userAreaDto.getScopeSelection(), persistentUserArea));
     }
 
     private void updateUSMDataset(UserAreasEntity oldDatasetName, String newDatasetName) throws ServiceException {

@@ -107,7 +107,7 @@ public class UserAreasEntity extends BaseSpatialEntity {
     @ColumnAliasName(aliasName ="areaDesc")
     private String areaDesc;
 
-    @Column(columnDefinition = "text", name = "dataset_name", unique = true)
+    @Column(columnDefinition = "text", name = "dataset_name")
     @ColumnAliasName(aliasName ="datasetName")
     private String datasetName;
 
@@ -116,7 +116,7 @@ public class UserAreasEntity extends BaseSpatialEntity {
     @ColumnAliasName(aliasName ="createdOn")
     private Date createdOn;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAreas", cascade = CascadeType.MERGE, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAreas", cascade = CascadeType.ALL, orphanRemoval = true)
     @ColumnAliasName(aliasName ="scopeSelection")
     private Set<UserScopeEntity> scopeSelection;
 
