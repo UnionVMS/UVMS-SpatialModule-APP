@@ -96,6 +96,7 @@ public class MapConfigServiceBean implements MapConfigService {
         updateLayerSettings(layerSettingsDto, null, false, permittedServiceLayers);
         mapConfigurationType.setLayerSettings(MapConfigMapper.INSTANCE.getLayerSettingsType(layerSettingsDto));
         Map<String, ReferenceDataPropertiesDto> referenceData = MapConfigHelper.getReferenceDataSettings(entity.getReferenceData());
+        updateReferenceDataSettings(referenceData, permittedServiceLayers);
         mapConfigurationType.setReferenceDatas(MapConfigMapper.INSTANCE.getReferenceDataType(referenceData));
         return mapConfigurationType;
     }
@@ -136,9 +137,12 @@ public class MapConfigServiceBean implements MapConfigService {
     public ConfigurationDto retrieveAdminConfiguration(String config, Collection<String> permittedServiceLayers) {
         ConfigurationDto configurationDto = MapConfigHelper.getAdminConfiguration(config);
         updateLayerSettings(configurationDto.getLayerSettings(), null,  false, permittedServiceLayers);
+        updateReferenceDataSettings(configurationDto.getReferenceData(), permittedServiceLayers);
         configurationDto.setSystemSettings(getConfigSystemSettings());
         return configurationDto;
     }
+
+
 
     @Override
     @SneakyThrows
@@ -147,6 +151,7 @@ public class MapConfigServiceBean implements MapConfigService {
         ConfigurationDto adminConfig = MapConfigHelper.getAdminConfiguration(defaultConfig);
         ConfigurationDto mergedConfig = mergeUserConfiguration(adminConfig, userConfig);
         updateLayerSettings(mergedConfig.getLayerSettings(), userName, false, permittedServiceLayers);
+        updateReferenceDataSettings(mergedConfig.getReferenceData(), permittedServiceLayers);
         return mergedConfig;
     }
 
@@ -190,6 +195,9 @@ public class MapConfigServiceBean implements MapConfigService {
         if (configurationDto.getLayerSettings() != null) {
             updateLayerSettings(defaultNodeConfig.getLayerSettings(), userName, false, permittedServiceLayers);
         }
+        if (configurationDto.getReferenceData() != null) {
+            updateReferenceDataSettings(defaultNodeConfig.getReferenceData(), permittedServiceLayers);
+        }
         return defaultNodeConfig;
     }
 
@@ -208,7 +216,7 @@ public class MapConfigServiceBean implements MapConfigService {
      * @param userName
      * @param scopeName
      * @param timeStamp
-     * @param permittedServiceLayer
+     * @param permittedServiceLayers
      * @return
      */
     @Override
@@ -226,7 +234,7 @@ public class MapConfigServiceBean implements MapConfigService {
      * @param configurationDto
      * @param userName
      * @param scopeName
-     * @param permittedServiceLayer
+     * @param permittedServiceLayers
      * @return
      */
     @Override
@@ -332,6 +340,18 @@ public class MapConfigServiceBean implements MapConfigService {
 
     private SpatialSaveOrUpdateMapConfigurationRS createSaveOrUpdateMapConfigurationResponse() {
         return new SpatialSaveOrUpdateMapConfigurationRS();
+    }
+
+    private void updateReferenceDataSettings(Map<String, ReferenceDataPropertiesDto> referenceData, Collection<String> permittedServiceLayers) {
+        if (referenceData != null) {
+            Iterator<Map.Entry<String, ReferenceDataPropertiesDto>> iterator = referenceData.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Map.Entry<String, ReferenceDataPropertiesDto> referenceDataEntry = iterator.next();
+                if (!MapConfigHelper.isServiceLayerPermitted(referenceDataEntry.getKey(), permittedServiceLayers)) {
+                    iterator.remove();
+                }
+            }
+        }
     }
 
     private void updateLayerSettings(LayerSettingsDto layerSettingsDto, String userName, boolean includeUserArea, Collection<String> permittedServiceLayers) throws ServiceException {

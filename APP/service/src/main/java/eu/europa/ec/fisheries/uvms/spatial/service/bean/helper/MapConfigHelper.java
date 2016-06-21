@@ -324,4 +324,13 @@ public class MapConfigHelper {
         }
         return concatStr.toString().replaceAll(",$", "");
     }
+
+    public static boolean isServiceLayerPermitted(String serviceLayerName, Collection<String> permittedServiceLayers) {
+        for (String layer : permittedServiceLayers) {
+            if (serviceLayerName.equalsIgnoreCase(layer)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

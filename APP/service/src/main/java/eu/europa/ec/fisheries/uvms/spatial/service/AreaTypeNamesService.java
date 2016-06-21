@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.service;
 
+import java.util.Collection;
 import java.util.List;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
@@ -16,7 +17,7 @@ public interface AreaTypeNamesService {
 
     List<AreaLayerDto> listSystemAreaLayerMapping();
 
-    List<AreaLayerDto> listSystemAreaAndLocationLayerMapping();
+    List<AreaLayerDto> listSystemAreaAndLocationLayerMapping(Collection<String> permittedLayersNames);
 
     List<ServiceLayerDto> getAreaLayerDescription(LayerSubTypeEnum layerTypeEnum) throws ServiceException;
 

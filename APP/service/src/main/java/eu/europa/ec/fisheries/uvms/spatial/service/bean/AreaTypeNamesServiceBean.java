@@ -13,12 +13,15 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.LayerSubTypeE
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.ServiceLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.helper.MapConfigHelper;
 import lombok.SneakyThrows;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 @Stateless
@@ -52,8 +55,15 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
     }
 
     @Override
-    public List<AreaLayerDto> listSystemAreaAndLocationLayerMapping() {
+    public List<AreaLayerDto> listSystemAreaAndLocationLayerMapping(Collection<String> permittedLayersNames) {
         List<AreaLayerDto> systemAreaLayerMapping = repository.findSystemAreaAndLocationLayerMapping();
+        Iterator<AreaLayerDto> iterator = systemAreaLayerMapping.iterator();
+        while(iterator.hasNext()) {
+            AreaLayerDto areaLayerDto = iterator.next();
+            if(!MapConfigHelper.isServiceLayerPermitted(areaLayerDto.getTypeName(), permittedLayersNames)) {
+                iterator.remove();
+            }
+        }
         addServiceUrlForInternalWMSLayers(systemAreaLayerMapping);
         return systemAreaLayerMapping;
     }
