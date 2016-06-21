@@ -18,6 +18,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.vividsolutions.jts.io.ParseException;
+import eu.europa.ec.fisheries.uvms.constants.AuthConstants;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.rest.FeatureToGeoJsonJacksonMapper;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
@@ -59,6 +60,10 @@ public class AreaResource extends UnionVMSResource {
     SpatialService spatialService;
     @EJB
     private USMService usmService;
+
+    private static final String DEFAULT_CONFIG = "DEFAULT_CONFIG";
+
+    private static final String USER_CONFIG = "USER_CONFIG";
 
     private AreaLocationDtoMapper mapper = AreaLocationDtoMapper.mapper();
 
@@ -144,8 +149,17 @@ public class AreaResource extends UnionVMSResource {
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/arealocationlayers")
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response getSystemAreaAndLocationLayerMapping() {
-        return createSuccessResponse(areaTypeService.listSystemAreaAndLocationLayerMapping());
+    public Response getSystemAreaAndLocationLayerMapping(@Context HttpServletRequest request,
+                                                         @HeaderParam(AuthConstants.HTTP_HEADER_SCOPE_NAME) String scopeName,
+                                                         @HeaderParam(AuthConstants.HTTP_HEADER_ROLE_NAME) String roleName) throws ServiceException {
+        final String username = request.getRemoteUser();
+        String applicationName = request.getServletContext().getInitParameter("usmApplication");
+        String adminPref = usmService.getOptionDefaultValue(DEFAULT_CONFIG, applicationName);
+        String userPref = usmService.getUserPreference(USER_CONFIG, username, applicationName, roleName, scopeName);
+        log.info("Filtering reference data");
+
+        Collection<String> permittedLayersNames = ServiceLayerUtils.getUserPermittedLayersNames(usmService, username, roleName, scopeName);
+        return createSuccessResponse(areaTypeService.listSystemAreaAndLocationLayerMapping(permittedLayersNames));
     }
 
     @POST
