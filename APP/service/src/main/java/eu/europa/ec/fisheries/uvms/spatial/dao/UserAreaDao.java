@@ -1,16 +1,12 @@
 package eu.europa.ec.fisheries.uvms.spatial.dao;
 
-import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadMappingProperty;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import javax.persistence.EntityManager;
 import com.google.common.collect.ImmutableMap;
 import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.QueryParameter;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
+import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadMappingProperty;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaDto;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -19,7 +15,9 @@ import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -213,4 +211,49 @@ public class UserAreaDao extends AbstractSpatialDao<UserAreasEntity> {
         return findEntityByNamedQuery(UserAreasEntity.class, FIND_BY_USER_NAME_AND_SCOPE_NAME,
                 with(USER_NAME, userName).and(SCOPE_NAME, scopeName).parameters());
     }
+
+    /**
+     * <p>Update Start date and End date for user areas if the user is having scope <code><B>MANAGE_ANY_USER_AREA</B></code>
+     * <p><code>StartDate</code> and <code>EndDate</code> can be NULL or Empty or a Valid Date</p>
+     *
+     * @param remoteUser User Name
+     * @param scopeName Scope Name
+     * @param startDate Start Date
+     * @param endDate End Date
+     * @param type Area Type
+     * @exception ServiceException Exception is Date cannot be updated
+     *
+     * @see UserAreaDao#updateUserAreasForUser(String, Date, Date, String)
+     */
+    public void updateUserAreasForUserAndScope(String remoteUser, String scopeName, Date startDate, Date endDate, String type) throws ServiceException {
+        TypedQuery query = (TypedQuery) getEntityManager().createNamedQuery(UserAreasEntity.UPDATE_USERAREA_FORUSER_AND_SCOPE);
+        query.setParameter("startDate", startDate);
+        query.setParameter("endDate", endDate);
+        query.setParameter("userName", remoteUser);
+        query.setParameter("type", type);
+        query.setParameter("scopeName", scopeName);
+        query.executeUpdate();
+    }
+
+    /**
+     * <p>Update Start date and End date for user areas those are created by the user</p>
+     * <p><code>StartDate</code> and <code>EndDate</code> can be NULL or Empty or a Valid Date</p>
+     *
+     * @param remoteUser User Name
+     * @param startDate Start Date
+     * @param endDate End Date
+     * @param type Area Type
+     * @throws ServiceException Exception is Date cannot be updated
+     *
+     * @see UserAreaDao#updateUserAreasForUserAndScope(String, String, Date, Date, String)
+     */
+    public void updateUserAreasForUser(String remoteUser, Date startDate, Date endDate, String type) throws ServiceException {
+        TypedQuery query = (TypedQuery) getEntityManager().createNamedQuery(UserAreasEntity.UPDATE_USERAREA_FORUSER);
+        query.setParameter("startDate", startDate);
+        query.setParameter("endDate", endDate);
+        query.setParameter("userName", remoteUser);
+        query.setParameter("type", type);
+        query.executeUpdate();
+    }
+
 }

@@ -19,6 +19,8 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.ServiceLayerDto;
+
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -132,4 +134,33 @@ public interface SpatialRepository {
     List<CountryEntity> findAllCountries() throws ServiceException;
 
     void makeGeomValid(String areaDbTable, DatabaseDialect dialect);
+
+    /**
+     * <p>Update Start date and End date for user areas if the user is having scope <code><B>MANAGE_ANY_USER_AREA</B></code>
+     * <p><code>StartDate</code> and <code>EndDate</code> can be NULL or Empty or a Valid Date</p>
+     *
+     * @param remoteUser User Name
+     * @param scopeName Scope Name
+     * @param startDate Start Date
+     * @param endDate End Date
+     * @param type Area Type
+     * @exception ServiceException Exception is Date cannot be updated
+     *
+     * @see SpatialRepository#updateUserAreaForUser(String, Date, Date, String)
+     */
+    void updateUserAreaForUserAndScope(String remoteUser, String scopeName, Date startDate, Date endDate, String type) throws ServiceException;
+
+    /**
+     * <p>Update Start date and End date for user areas those are created by the user</p>
+     * <p><code>StartDate</code> and <code>EndDate</code> can be NULL or Empty or a Valid Date</p>
+     *
+     * @param remoteUser User Name
+     * @param startDate Start Date
+     * @param endDate End Date
+     * @param type Area Type
+     * @throws ServiceException Exception is Date cannot be updated
+     *
+     * @see SpatialRepository#updateUserAreaForUserAndScope(String, String, Date, Date, String)
+     */
+    void updateUserAreaForUser(String remoteUser, Date startDate, Date endDate, String type) throws ServiceException;
 }

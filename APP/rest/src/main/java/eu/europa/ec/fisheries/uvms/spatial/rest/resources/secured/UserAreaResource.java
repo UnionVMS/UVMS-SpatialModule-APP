@@ -19,6 +19,7 @@ import eu.europa.ec.fisheries.uvms.spatial.rest.type.geocoordinate.UserAreaCoord
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialService;
 import eu.europa.ec.fisheries.uvms.spatial.service.UserAreaService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaUpdateDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.UserAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.AreaDetailsGeoJsonDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.UserAreaGeoJsonDto;
@@ -42,6 +43,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -160,10 +162,6 @@ public class UserAreaResource extends UnionVMSResource {
         return response;
     }
 
-    private boolean isPowerUser(HttpServletRequest request) {
-        return request.isUserInRole("MANAGE_ANY_USER_AREA");
-    }
-
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/userareatypes")
@@ -177,6 +175,25 @@ public class UserAreaResource extends UnionVMSResource {
         }
 
         return createSuccessResponse(userAreaService.getUserAreaTypes(request.getRemoteUser(), scopeName, isPowerUser));
+    }
+
+    @POST
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/userarea/updatedate")
+    @Interceptors(value = {ExceptionInterceptor.class})
+    public Response updateUserAreaDates(@Context HttpServletRequest request,
+                                        @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName,
+                                        UserAreaUpdateDto userAreaUpdateDto) throws ServiceException {
+        boolean isPowerUser = false;
+        if (request.isUserInRole(SpatialFeaturesEnum.MANAGE_ANY_USER_AREA.value())) {
+            isPowerUser = true;
+        }
+        userAreaService.updateUserAreaDates(request.getRemoteUser(), scopeName, userAreaUpdateDto.getStartDate(), userAreaUpdateDto.getEndDate(), userAreaUpdateDto.getType(), isPowerUser);
+        return createSuccessResponse();
+    }
+
+    private boolean isPowerUser(HttpServletRequest request) {
+        return request.isUserInRole("MANAGE_ANY_USER_AREA");
     }
 
     private Response getUserAreaDetailsById(UserAreaCoordinateType userAreaTypeDto, String userName, boolean isPowerUser, String scopeName) throws ServiceException, IOException, ParseException {
