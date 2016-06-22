@@ -1,9 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.util;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.rest.constants.ErrorCodes;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.interceptor.AroundInvoke;
