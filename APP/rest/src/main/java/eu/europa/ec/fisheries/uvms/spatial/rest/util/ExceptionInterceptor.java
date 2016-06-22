@@ -23,8 +23,11 @@ public class ExceptionInterceptor extends UnionVMSResource {
     		return createErrorResponse(ErrorCodes.INPUT_NOT_SUPPORTED);
     	} catch (Exception e) {
     		if (e.getCause() instanceof SpatialServiceException) {
-    			return createErrorResponse(((SpatialServiceException)e.getCause()).getErrorMessageCode());
-    		}
+				return createErrorResponse(((SpatialServiceException)e.getCause()).getErrorMessageCode());
+			}
+			if (e.getCause() instanceof RuntimeException) {
+				return createErrorResponse(((RuntimeException)e.getCause()).getMessage());
+			}
 			return createErrorResponse(ErrorCodes.INTERNAL_SERVER_ERROR);
 		}
 	}	

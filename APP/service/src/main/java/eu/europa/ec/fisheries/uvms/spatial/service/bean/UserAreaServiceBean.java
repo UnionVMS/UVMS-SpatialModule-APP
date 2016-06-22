@@ -20,6 +20,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.UserAreaGeoJ
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.UserAreaMapper;
+import eu.europa.ec.fisheries.uvms.spatial.util.RuntimeExceptionInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.geotools.geometry.jts.WKTReader2;
@@ -27,6 +28,7 @@ import org.geotools.geometry.jts.WKTWriter2;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
+import javax.interceptor.Interceptors;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,6 +50,7 @@ public class UserAreaServiceBean implements UserAreaService {
 
     @Override
     @Transactional
+    @Interceptors(value = {RuntimeExceptionInterceptor.class})
     public Long storeUserArea(UserAreaGeoJsonDto userAreaDto, String userName) throws ServiceException {
 
         UserAreasEntity userAreaByUserNameAndName = repository.getUserAreaByUserNameAndName(userName, userAreaDto.getName()); //TODO improve the performance by creating DB unique constrain containing the two fields, instead of this search
@@ -78,6 +81,7 @@ public class UserAreaServiceBean implements UserAreaService {
 
     @Override
     @Transactional
+    @Interceptors(value = {RuntimeExceptionInterceptor.class})
     public Long updateUserArea(UserAreaGeoJsonDto userAreaDto, String userName, boolean isPowerUser, String scopeName) throws ServiceException {
         Long id = userAreaDto.getId();
 
