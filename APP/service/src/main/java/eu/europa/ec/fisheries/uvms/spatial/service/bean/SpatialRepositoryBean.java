@@ -39,6 +39,7 @@ import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -369,6 +370,20 @@ public class SpatialRepositoryBean implements SpatialRepository {
     @Override
     public void makeGeomValid(String areaDbTable, DatabaseDialect dialect) {
         areaDao.makeGeomValid(areaDbTable, dialect);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void updateUserAreaForUserAndScope(String remoteUser, String scopeName, Date startDate, Date endDate, String type) throws ServiceException {
+        userAreaDao.updateUserAreasForUserAndScope(remoteUser, scopeName, startDate, endDate, type);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void updateUserAreaForUser(String remoteUser, Date startDate, Date endDate, String type) throws ServiceException {
+        userAreaDao.updateUserAreasForUser(remoteUser, startDate, endDate, type);
     }
 
 }
