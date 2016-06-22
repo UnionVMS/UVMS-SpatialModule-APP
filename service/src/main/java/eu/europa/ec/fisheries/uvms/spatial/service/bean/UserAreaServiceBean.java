@@ -75,9 +75,6 @@ public class UserAreaServiceBean implements UserAreaService {
 
     }
 
-    private String createDescriminator(UserAreasEntity persistedEntity) {
-        return AreaType.USERAREA.value() + USMSpatial.DELIMITER + persistedEntity.getId();
-    }
 
     @Override
     @Transactional
@@ -107,25 +104,6 @@ public class UserAreaServiceBean implements UserAreaService {
 
         UserAreasEntity persistedUpdatedEntity = repository.update(userAreaById);
         return persistedUpdatedEntity.getId();
-    }
-
-    //BUG FIX: Caused by: org.hibernate.HibernateException: A collection with cascade="all-delete-orphan" was no longer referenced by the owning entity instance: eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity.scopeSelection
-    private void createScopeSelection(UserAreaGeoJsonDto userAreaDto, UserAreasEntity persistentUserArea) {
-        Set<UserScopeEntity> scopeSelection = persistentUserArea.getScopeSelection();
-        scopeSelection.clear();
-        scopeSelection.addAll(UserAreaMapper.fromScopeArrayToEntity(userAreaDto.getScopeSelection(), persistentUserArea));
-    }
-
-    private void updateUSMDataset(UserAreasEntity oldDatasetName, String newDatasetName) throws ServiceException {
-        //first remove the old dataset
-        if (StringUtils.isNotBlank(oldDatasetName.getDatasetName())) {
-            usmService.deleteDataset(USMSpatial.APPLICATION_NAME, oldDatasetName.getDatasetName());
-        }
-        //and if it is a renaming action
-        if (StringUtils.isNotBlank(newDatasetName)) {
-            //create the new dataset
-            usmService.createDataset(USMSpatial.APPLICATION_NAME, newDatasetName, createDescriminator(oldDatasetName), USMSpatial.USM_DATASET_CATEGORY, USMSpatial.USM_DATASET_DESCRIPTION);
-        }
     }
 
     @Override
@@ -210,6 +188,42 @@ public class UserAreaServiceBean implements UserAreaService {
             String error = "Error while trying to parse geometry";
             log.error(error);
             throw new ServiceException(error);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void updateUserAreaDates(String remoteUser, String scopeName, Date startDate, Date endDate, String type, boolean isPowerUser) throws ServiceException {
+        if (isPowerUser) {
+            repository.updateUserAreaForUserAndScope(remoteUser, scopeName, startDate, endDate, type);
+        } else {
+            repository.updateUserAreaForUser(remoteUser, startDate, endDate, type);
+        }
+    }
+
+
+    private String createDescriminator(UserAreasEntity persistedEntity) {
+        return AreaType.USERAREA.value() + USMSpatial.DELIMITER + persistedEntity.getId();
+    }
+
+    //BUG FIX: Caused by: org.hibernate.HibernateException: A collection with cascade="all-delete-orphan" was no longer referenced by the owning entity instance: eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity.scopeSelection
+    private void createScopeSelection(UserAreaGeoJsonDto userAreaDto, UserAreasEntity persistentUserArea) {
+        Set<UserScopeEntity> scopeSelection = persistentUserArea.getScopeSelection();
+        scopeSelection.clear();
+        scopeSelection.addAll(UserAreaMapper.fromScopeArrayToEntity(userAreaDto.getScopeSelection(), persistentUserArea));
+    }
+
+    private void updateUSMDataset(UserAreasEntity oldDatasetName, String newDatasetName) throws ServiceException {
+        //first remove the old dataset
+        if (StringUtils.isNotBlank(oldDatasetName.getDatasetName())) {
+            usmService.deleteDataset(USMSpatial.APPLICATION_NAME, oldDatasetName.getDatasetName());
+        }
+        //and if it is a renaming action
+        if (StringUtils.isNotBlank(newDatasetName)) {
+            //create the new dataset
+            usmService.createDataset(USMSpatial.APPLICATION_NAME, newDatasetName, createDescriminator(oldDatasetName), USMSpatial.USM_DATASET_CATEGORY, USMSpatial.USM_DATASET_DESCRIPTION);
         }
     }
 

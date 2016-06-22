@@ -64,7 +64,20 @@ import java.util.Set;
         @NamedQuery(name = UserAreasEntity.DISABLE, query = "UPDATE UserAreasEntity SET enabled = 'N'"),
         @NamedQuery(name = UserAreasEntity.BY_INTERSECT, query = "FROM UserAreasEntity WHERE intersects(geom, :shape) = true AND enabled = 'Y'"),
         @NamedQuery(name = UserAreasEntity.SEARCH_USERAREA, query = "FROM UserAreasEntity where upper(name) like :name OR upper(code) like :code AND enabled='Y' GROUP BY gid"),
-        @NamedQuery(name = UserAreasEntity.SEARCH_USERAREA_NAMES_BY_CODE, query = "From UserAreasEntity where code in (SELECT distinct(code) from UserAreasEntity where upper(name) like :name OR upper(code) like :code AND enabled='Y' GROUP BY gid)")
+        @NamedQuery(name = UserAreasEntity.SEARCH_USERAREA_NAMES_BY_CODE, query = "From UserAreasEntity where code in (SELECT distinct(code) from UserAreasEntity where upper(name) like :name OR upper(code) like :code AND enabled='Y' GROUP BY gid)"),
+        @NamedQuery(name = UserAreasEntity.UPDATE_USERAREA_FORUSER_AND_SCOPE,
+                query = "update UserAreasEntity userarea " +
+                        "set userarea.startDate = :startDate, userarea.endDate = :endDate " +
+                        "where userarea.id in (" +
+                        "select area.id from UserAreasEntity area " +
+                        "LEFT JOIN area.scopeSelection scope " +
+                        "where ((area.userName = :userName and area.type = :type) " +
+                        "OR (area.userName <> :userName and area.type = :type and scope.name = :scopeName)))"),
+        @NamedQuery(name = UserAreasEntity.UPDATE_USERAREA_FORUSER,
+                query = "update UserAreasEntity userarea " +
+                        "set userarea.startDate = :startDate, userarea.endDate = :endDate " +
+                        "where userarea.userName = :userName and userarea.type = :type")
+
 })
 @Where(clause = "enabled = 'Y'")
 @Table(name="user_areas", uniqueConstraints = {
@@ -85,6 +98,8 @@ public class UserAreasEntity extends BaseSpatialEntity {
     public static final String BY_INTERSECT = "userArea.byIntersect";
     public static final String SEARCH_USERAREA = "userAreaEntity.searchUserAreaByNameOrCode";
     public static final String SEARCH_USERAREA_NAMES_BY_CODE = "userAreaEntity.searchNamesByCode";
+    public static final String UPDATE_USERAREA_FORUSER_AND_SCOPE = "userAreaEntity.updateUserAreaForUserAndScope";
+    public static final String UPDATE_USERAREA_FORUSER = "userAreaEntity.updateUserAreaForUser";
 
     @Column(length = 255)
     @ColumnAliasName(aliasName ="subType")
