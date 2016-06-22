@@ -107,7 +107,7 @@ public class UserAreasEntity extends BaseSpatialEntity {
     @ColumnAliasName(aliasName ="areaDesc")
     private String areaDesc;
 
-    @Column(columnDefinition = "text", name = "dataset_name")
+    @Column(columnDefinition = "text", name = "dataset_name", unique = true)
     @ColumnAliasName(aliasName ="datasetName")
     private String datasetName;
 
