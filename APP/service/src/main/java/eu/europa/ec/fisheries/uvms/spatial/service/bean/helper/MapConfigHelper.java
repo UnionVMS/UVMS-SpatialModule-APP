@@ -290,29 +290,32 @@ public class MapConfigHelper {
     }
 
     private static void setCql(Map<String, ReferenceDataPropertiesDto> referenceData, LayerDto layerDto, AreaLocationTypesEntity areaType) {
-        for (Map.Entry<String, ReferenceDataPropertiesDto> entry : referenceData.entrySet()) {
-            if (areaType.getTypeName().equalsIgnoreCase(entry.getKey())) {
-                ReferenceDataPropertiesDto referenceDataPropertiesDto = entry.getValue();
-                switch (referenceDataPropertiesDto.getSelection()) {
-                    case "custom" :
-                        if (referenceDataPropertiesDto.getCodes().isEmpty()) {
-                            layerDto.setIsWarning(true);
-                            layerDto.setCql(null);
-                        } else {
-                            layerDto.setIsWarning(null);
-                            StringBuilder cql = new StringBuilder();
-                            cql.append("code in (");
-                            cql.append(getConcatenateString(referenceDataPropertiesDto.getCodes()));
-                            cql.append(")");
-                            layerDto.setCql(cql.toString().replaceAll(", $", ""));
-                        }
-                        break;
-                    case "all" :
-                        layerDto.setCql(null);
-                        layerDto.setIsWarning(null);
-                        break;
-                }
 
+        if (areaType != null) {
+            for (Map.Entry<String, ReferenceDataPropertiesDto> entry : referenceData.entrySet()) {
+                if (areaType.getTypeName().equalsIgnoreCase(entry.getKey())) {
+                    ReferenceDataPropertiesDto referenceDataPropertiesDto = entry.getValue();
+                    switch (referenceDataPropertiesDto.getSelection()) {
+                        case "custom" :
+                            if (referenceDataPropertiesDto.getCodes().isEmpty()) {
+                                layerDto.setIsWarning(true);
+                                layerDto.setCql(null);
+                            } else {
+                                layerDto.setIsWarning(null);
+                                StringBuilder cql = new StringBuilder();
+                                cql.append("code in (");
+                                cql.append(getConcatenateString(referenceDataPropertiesDto.getCodes()));
+                                cql.append(")");
+                                layerDto.setCql(cql.toString().replaceAll(", $", ""));
+                            }
+                            break;
+                        case "all" :
+                            layerDto.setCql(null);
+                            layerDto.setIsWarning(null);
+                            break;
+                    }
+
+                }
             }
         }
     }
