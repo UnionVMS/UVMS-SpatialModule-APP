@@ -708,13 +708,13 @@
             <discriminator>SPATIAL_SERVICE_LAYER</discriminator>
         </dataset>
         <dataset>
-            <name>Countries</name>
+            <name>COUNTRY</name>
             <description>Dataset used to enable/disable the usage of the specified map service layer</description>
             <category>service layer</category>
             <discriminator>SPATIAL_SERVICE_LAYER</discriminator>
         </dataset>
         <dataset>
-            <name>Ports</name>
+            <name>PORT</name>
             <description>Dataset used to enable/disable the usage of the specified map service layer</description>
             <category>service layer</category>
             <discriminator>SPATIAL_SERVICE_LAYER</discriminator>
@@ -726,43 +726,43 @@
             <discriminator>SPATIAL_SERVICE_LAYER</discriminator>
         </dataset>
         <dataset>
-            <name>OpenStreetMap</name>
+            <name>OSM</name>
             <description>Dataset used to enable/disable the usage of the specified map service layer</description>
             <category>service layer</category>
             <discriminator>SPATIAL_SERVICE_LAYER</discriminator>
         </dataset>
         <dataset>
-            <name>OpenSeaMap</name>
+            <name>OSEA</name>
             <description>Dataset used to enable/disable the usage of the specified map service layer</description>
             <category>service layer</category>
             <discriminator>SPATIAL_SERVICE_LAYER</discriminator>
         </dataset>
         <dataset>
-            <name>bing_roads</name>
+            <name>BINGROAD</name>
             <description>Dataset used to enable/disable the usage of the specified map service layer</description>
             <category>service layer</category>
             <discriminator>SPATIAL_SERVICE_LAYER</discriminator>
         </dataset>
         <dataset>
-            <name>bing_aerial</name>
+            <name>BINGAREAL</name>
             <description>Dataset used to enable/disable the usage of the specified map service layer</description>
             <category>service layer</category>
             <discriminator>SPATIAL_SERVICE_LAYER</discriminator>
         </dataset>
         <dataset>
-            <name>bing_aerial_labels</name>
+            <name>BINGAREALLABELS</name>
             <description>Dataset used to enable/disable the usage of the specified map service layer</description>
             <category>service layer</category>
             <discriminator>SPATIAL_SERVICE_LAYER</discriminator>
         </dataset>
         <dataset>
-            <name>Port Areas</name>
+            <name>PORTAREA</name>
             <description>Dataset used to enable/disable the usage of the specified map service layer</description>
             <category>service layer</category>
             <discriminator>SPATIAL_SERVICE_LAYER</discriminator>
         </dataset>
         <dataset>
-            <name>Statistical Rectangles</name>
+            <name>STATRECT</name>
             <description>Dataset used to enable/disable the usage of the specified map service layer</description>
             <category>service layer</category>
             <discriminator>SPATIAL_SERVICE_LAYER</discriminator>

@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -20,6 +21,9 @@ public class ServiceLayerDto {
 
     @JsonProperty("subType")
     private String subType;
+
+    @JsonIgnore
+    private String areaLocationTypeName;
 
     public ServiceLayerDto() {}
 
@@ -68,5 +72,13 @@ public class ServiceLayerDto {
     @JsonProperty("subType")
     public void setSubType(String subType) {
         this.subType = subType;
+    }
+
+    public String getAreaLocationTypeName() {
+        return areaLocationTypeName;
+    }
+
+    public void setAreaLocationTypeName(String areaLocationTypeName) {
+        this.areaLocationTypeName = areaLocationTypeName;
     }
 }
