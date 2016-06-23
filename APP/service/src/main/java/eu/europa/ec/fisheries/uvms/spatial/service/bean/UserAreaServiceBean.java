@@ -195,9 +195,9 @@ public class UserAreaServiceBean implements UserAreaService {
      * {@inheritDoc}
      */
     @Override
-    public void updateUserAreaDates(String remoteUser, String scopeName, Date startDate, Date endDate, String type, boolean isPowerUser) throws ServiceException {
+    public void updateUserAreaDates(String remoteUser, Date startDate, Date endDate, String type, boolean isPowerUser) throws ServiceException {
         if (isPowerUser) {
-            repository.updateUserAreaForUserAndScope(remoteUser, scopeName, startDate, endDate, type);
+            repository.updateUserAreaForUserAndScope(startDate, endDate, type);
         } else {
             repository.updateUserAreaForUser(remoteUser, startDate, endDate, type);
         }

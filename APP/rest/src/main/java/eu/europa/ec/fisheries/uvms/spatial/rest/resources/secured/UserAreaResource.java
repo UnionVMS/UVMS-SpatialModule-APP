@@ -182,13 +182,12 @@ public class UserAreaResource extends UnionVMSResource {
     @Path("/userarea/updatedate")
     @Interceptors(value = {ExceptionInterceptor.class})
     public Response updateUserAreaDates(@Context HttpServletRequest request,
-                                        @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName,
                                         UserAreaUpdateDto userAreaUpdateDto) throws ServiceException {
         boolean isPowerUser = false;
         if (request.isUserInRole(SpatialFeaturesEnum.MANAGE_ANY_USER_AREA.value())) {
             isPowerUser = true;
         }
-        userAreaService.updateUserAreaDates(request.getRemoteUser(), scopeName, userAreaUpdateDto.getStartDate(), userAreaUpdateDto.getEndDate(), userAreaUpdateDto.getType(), isPowerUser);
+        userAreaService.updateUserAreaDates(request.getRemoteUser(), userAreaUpdateDto.getStartDate(), userAreaUpdateDto.getEndDate(), userAreaUpdateDto.getType(), isPowerUser);
         return createSuccessResponse();
     }
 

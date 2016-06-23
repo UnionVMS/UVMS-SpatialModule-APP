@@ -68,11 +68,7 @@ import java.util.Set;
         @NamedQuery(name = UserAreasEntity.UPDATE_USERAREA_FORUSER_AND_SCOPE,
                 query = "update UserAreasEntity userarea " +
                         "set userarea.startDate = :startDate, userarea.endDate = :endDate " +
-                        "where userarea.id in (" +
-                        "select area.id from UserAreasEntity area " +
-                        "LEFT JOIN area.scopeSelection scope " +
-                        "where ((area.userName = :userName and area.type = :type) " +
-                        "OR (area.userName <> :userName and area.type = :type and scope.name = :scopeName)))"),
+                        "where userarea.type = :type"),
         @NamedQuery(name = UserAreasEntity.UPDATE_USERAREA_FORUSER,
                 query = "update UserAreasEntity userarea " +
                         "set userarea.startDate = :startDate, userarea.endDate = :endDate " +
