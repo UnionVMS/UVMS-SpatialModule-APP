@@ -279,6 +279,7 @@ public class MapConfigHelper {
         }
         layerDto.setServerType(serviceLayerEntity.getIsInternal() ? GEOSERVER : null);
         layerDto.setLayerGeoName(serviceLayerEntity.getGeoName());
+        layerDto.setAreaLocationTypeName(serviceLayerEntity.getAreaType().getTypeName());
         if(!(StringUtils.isEmpty(serviceLayerEntity.getStyleGeom()) && StringUtils.isEmpty(serviceLayerEntity.getStyleLabel()) && StringUtils.isEmpty(serviceLayerEntity.getStyleLabelGeom()))) {
             layerDto.setStyles(new StylesDto(serviceLayerEntity.getStyleGeom(), serviceLayerEntity.getStyleLabel(), serviceLayerEntity.getStyleLabelGeom()));
         }

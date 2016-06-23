@@ -48,8 +48,9 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
     }
 
     @Override
-    public List<AreaLayerDto> listSystemAreaLayerMapping() {
+    public List<AreaLayerDto> listSystemAreaLayerMapping(Collection<String> permittedLayersNames) {
         List<AreaLayerDto> systemAreaLayerMapping = repository.findSystemAreaLayerMapping();
+        filterSystemAreaLayers(systemAreaLayerMapping, permittedLayersNames);
         addServiceUrlForInternalWMSLayers(systemAreaLayerMapping);
         return systemAreaLayerMapping;
     }
@@ -57,13 +58,7 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
     @Override
     public List<AreaLayerDto> listSystemAreaAndLocationLayerMapping(Collection<String> permittedLayersNames) {
         List<AreaLayerDto> systemAreaLayerMapping = repository.findSystemAreaAndLocationLayerMapping();
-        Iterator<AreaLayerDto> iterator = systemAreaLayerMapping.iterator();
-        while(iterator.hasNext()) {
-            AreaLayerDto areaLayerDto = iterator.next();
-            if(!MapConfigHelper.isServiceLayerPermitted(areaLayerDto.getTypeName(), permittedLayersNames)) {
-                iterator.remove();
-            }
-        }
+        filterSystemAreaLayers(systemAreaLayerMapping, permittedLayersNames);
         addServiceUrlForInternalWMSLayers(systemAreaLayerMapping);
         return systemAreaLayerMapping;
     }
@@ -78,6 +73,7 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
         }
     }
 
+    @Override
     public List<AreaServiceLayerDto> getAllAreasLayerDescription(LayerSubTypeEnum layerTypeEnum, String userName, String scopeName) throws ServiceException {
         List<AreaServiceLayerDto> areaServiceLayerDtos = new ArrayList<AreaServiceLayerDto>();
         switch (layerTypeEnum) {
@@ -86,6 +82,7 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
                 List<AreaDto> allUserAreas = repository.getAllUserAreas(userName, scopeName);
                 for (ServiceLayerDto serviceLayerDto : userserviceLayerDtos) {
                     AreaServiceLayerDto areaServiceLayerDto = new AreaServiceLayerDto(serviceLayerDto, allUserAreas);
+                    areaServiceLayerDto.setAreaLocationTypeName(serviceLayerDto.getAreaLocationTypeName());
                     areaServiceLayerDtos.add(areaServiceLayerDto);
                 }
                 break;
@@ -94,10 +91,22 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
                 List<AreaDto> allUserAreaGroupNames = repository.getAllUserAreaGroupNames(userName, scopeName);
                 for (ServiceLayerDto serviceLayerDto : areGroupServiceLayerDtos) {
                     AreaServiceLayerDto areaServiceLayerDto = new AreaServiceLayerDto(serviceLayerDto, allUserAreaGroupNames);
+                    areaServiceLayerDto.setAreaLocationTypeName(serviceLayerDto.getAreaLocationTypeName());
                     areaServiceLayerDtos.add(areaServiceLayerDto);
                 }
         }
         return areaServiceLayerDtos;
+    }
+
+
+    private void filterSystemAreaLayers(List<AreaLayerDto> systemAreaLayerMapping, Collection<String> permittedLayersNames) {
+        Iterator<AreaLayerDto> iterator = systemAreaLayerMapping.iterator();
+        while(iterator.hasNext()) {
+            AreaLayerDto areaLayerDto = iterator.next();
+            if(!MapConfigHelper.isServiceLayerPermitted(areaLayerDto.getTypeName(), permittedLayersNames)) {
+                iterator.remove();
+            }
+        }
     }
 
     private String getBingApiKey() throws ServiceException {

@@ -74,6 +74,9 @@ public class LayerDto {
     @JsonProperty("warning")
     private Boolean isWarning;
 
+    @JsonIgnore
+    private String areaLocationTypeName;
+
     /**
      * No args constructor for use in serialization
      */
@@ -247,5 +250,13 @@ public class LayerDto {
     @JsonProperty("warning")
     public void setIsWarning(Boolean isWarning) {
         this.isWarning = isWarning;
+    }
+
+    public String getAreaLocationTypeName() {
+        return areaLocationTypeName;
+    }
+
+    public void setAreaLocationTypeName(String areaLocationTypeName) {
+        this.areaLocationTypeName = areaLocationTypeName;
     }
 }

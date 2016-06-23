@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaLayerDto;
 
 import javax.ejb.EJB;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertFalse;
@@ -36,7 +37,7 @@ public class AreaTypeNamesServiceIT extends BaseSpatialArquillianTest {
     @Test
     public void shouldReturnAreaLayerMappings() {
         // when
-        List<AreaLayerDto> areaLayerMappings = areaTypeNamesService.listSystemAreaLayerMapping();
+        List<AreaLayerDto> areaLayerMappings = areaTypeNamesService.listSystemAreaLayerMapping(Collections.EMPTY_LIST);
 
         //then
         assertNotNull(areaLayerMappings);

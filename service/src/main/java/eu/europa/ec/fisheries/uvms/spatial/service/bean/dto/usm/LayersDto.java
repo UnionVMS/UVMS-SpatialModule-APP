@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -20,6 +21,9 @@ public class LayersDto implements Comparable<LayersDto> {
 
     @JsonProperty("order")
     private Long order;
+
+    @JsonIgnore
+    private String areaLocationTypeName;
 
     public LayersDto() {}
 
@@ -78,6 +82,14 @@ public class LayersDto implements Comparable<LayersDto> {
     @JsonProperty("order")
     public void setOrder(Long order) {
         this.order = order;
+    }
+
+    public String getAreaLocationTypeName() {
+        return areaLocationTypeName;
+    }
+
+    public void setAreaLocationTypeName(String areaLocationTypeName) {
+        this.areaLocationTypeName = areaLocationTypeName;
     }
 
     @Override

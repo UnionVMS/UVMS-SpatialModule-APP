@@ -418,6 +418,7 @@ public class MapConfigServiceBean implements MapConfigService {
                         } else {
                             layersDto.setName(serviceLayerEntity.getName());
                             layersDto.setSubType(serviceLayerEntity.getSubType());
+                            layersDto.setAreaLocationTypeName(serviceLayerEntity.getAreaType().getTypeName());
                         }
                         break;
                     }
@@ -554,7 +555,7 @@ public class MapConfigServiceBean implements MapConfigService {
             while (iterator.hasNext()) {
                 LayersDto layer = iterator.next();
 
-                if (!permittedLayersNames.contains(layer.getName()) ) {
+                if (!permittedLayersNames.contains(layer.getAreaLocationTypeName()) ) {
                     iterator.remove();
                 }
             }
@@ -567,7 +568,7 @@ public class MapConfigServiceBean implements MapConfigService {
             while (iterator.hasNext()) {
                 LayerDto layer = iterator.next();
 
-                if (!permittedLayersNames.contains(layer.getTitle()) ) {
+                if (!permittedLayersNames.contains(layer.getAreaLocationTypeName()) ) {
                     iterator.remove();
                 }
             }
