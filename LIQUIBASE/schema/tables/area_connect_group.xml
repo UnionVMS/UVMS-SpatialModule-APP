@@ -8,9 +8,9 @@
                         sequenceName="area_connect_group_seq" startValue="1"/>
     </changeSet>
 
-    <changeSet author="padhyad" id="1439890745706-30">
+    <changeSet author="padhyad" id="1439890745706-30" >
         <createTable tableName="area_connect_group">
-            <column name="id" type="BIGINT" defaultValueSequenceNext="area_connect_group_seq">
+            <column name="id" type="BIGINT" >
                 <constraints primaryKey="true" primaryKeyName="area_connect_group_pkey"/>
             </column>
             <column name="area_type_id" type="TINYINT">
@@ -25,9 +25,35 @@
             </column>
         </createTable>
     </changeSet>
+	
     
     <changeSet author="padhyad" id="1439890745706-62">
         <addForeignKeyConstraint baseColumnNames="area_connect_group_id" baseTableName="report_layer_config" constraintName="report_layer_config_area_connect_group_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="area_connect_group"/>
     </changeSet>
 
+	
+	<changeSet author="dubduan" id="76834618168717" dbms="postgresql">
+    <addDefaultValue 
+            columnDataType="BIGINT"
+            columnName="id"
+            defaultValueSequenceNext="area_connect_group_seq"
+            tableName="area_connect_group"/>
+	</changeSet>
+	
+	<changeSet author="dubduan" id="1439190741706-31" dbms="oracle">
+	
+        <createProcedure>
+            CREATE OR REPLACE TRIGGER trg_area_connect_group
+            BEFORE INSERT
+            ON area_connect_group
+            FOR EACH ROW
+            DECLARE
+            BEGIN
+            SELECT area_connect_group_seq.NEXTVAL INTO :NEW.ID FROM DUAL;
+            END trg_area_connect_group;
+        </createProcedure>			
+    </changeSet>
+	
+	
+	
 </databaseChangeLog>

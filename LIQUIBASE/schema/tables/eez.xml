@@ -15,7 +15,7 @@
             <spatial:spatialSupported/>
         </preConditions>
         <createTable tableName="eez">
-            <column name="gid" type="BIGINT" defaultValueSequenceNext="eez_seq">
+            <column name="gid" type="BIGINT" >
                 <constraints primaryKey="true" primaryKeyName="eez_pkey"/>
             </column>
             <column name="geom" type="GEOMETRY(Multipolygon, 4326)"/>
@@ -44,4 +44,26 @@
             <column name="geom" />
         </spatial:createSpatialIndex>
     </changeSet>
+	
+	<changeSet author="dubduan" id="76834618168717" dbms="postgresql">
+    <addDefaultValue 
+            columnDataType="BIGINT"
+            columnName="gid"
+            defaultValueSequenceNext="eez_seq"
+            tableName="eez"/>
+	</changeSet>
+	
+    <changeSet author="dubduan" id="1431890745716-31" dbms="oracle">
+
+        <createProcedure>
+            CREATE OR REPLACE TRIGGER trg_eez
+            BEFORE INSERT
+            ON eez
+            FOR EACH ROW
+            DECLARE
+            BEGIN
+            SELECT eez_seq.NEXTVAL INTO :NEW.gid FROM DUAL;
+            END trg_eez;
+        </createProcedure>	
+    </changeSet>	
 </databaseChangeLog>

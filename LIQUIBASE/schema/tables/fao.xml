@@ -12,7 +12,7 @@
 
 	<changeSet author="martinhu" id="1462799386763-8">
         <createTable tableName="fao">
-            <column name="gid" type="BIGINT" defaultValueSequenceNext="fao_seq">
+            <column name="gid" type="BIGINT" >
                 <constraints primaryKey="true" primaryKeyName="fao_pkey"/>
             </column>
             <column name="geom" type="GEOMETRY(Multipolygon, 4326)"/>
@@ -50,4 +50,26 @@
             <column name="geom" />
         </spatial:createSpatialIndex>
     </changeSet>
+	
+	<changeSet author="dubduan" id="76834618168717" dbms="postgresql">
+    <addDefaultValue 
+            columnDataType="BIGINT"
+            columnName="gid"
+            defaultValueSequenceNext="fao_seq"
+            tableName="fao"/>
+	</changeSet>
+	
+	<changeSet author="dubduan" id="1462199386163-8" dbms="oracle">
+	
+        <createProcedure>
+            CREATE OR REPLACE TRIGGER trg_fao
+            BEFORE INSERT
+            ON fao
+            FOR EACH ROW
+            DECLARE
+            BEGIN
+            SELECT fao_seq.NEXTVAL INTO :NEW.gid FROM DUAL;
+            END trg_fao;
+        </createProcedure>
+	</changeSet>	
 </databaseChangeLog>

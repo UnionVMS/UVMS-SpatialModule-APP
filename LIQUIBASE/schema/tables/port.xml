@@ -15,7 +15,7 @@
             <spatial:spatialSupported/>
         </preConditions>
         <createTable tableName="port">
-            <column name="gid" type="BIGINT" defaultValueSequenceNext="port_seq">
+            <column name="gid" type="BIGINT" >
                 <constraints primaryKey="true" primaryKeyName="port_pkey"/>
             </column>
             <column name="geom" type="GEOMETRY(Multipoint, 4326)"/>
@@ -33,10 +33,34 @@
 
     </changeSet>
 
+
     <changeSet id="1" author="emrinalgr">
         <spatial:createSpatialIndex tableName="port" indexName="port_geom_index" geometryType="Multipoint" srid="4326">
             <column name="geom" />
         </spatial:createSpatialIndex>
     </changeSet>
+	
+	<changeSet author="dubduan" id="76834618168717" dbms="postgresql">
+    <addDefaultValue 
+            columnDataType="BIGINT"
+            columnName="gid"
+            defaultValueSequenceNext="port_seq"
+            tableName="port"/>
+	</changeSet>
 
+	
+	<changeSet author="dubduan" id="1419190745701-38" dbms="oracle">
+	
+        <createProcedure>
+            CREATE OR REPLACE TRIGGER trg_port
+            BEFORE INSERT
+            ON port
+            FOR EACH ROW
+            DECLARE
+            BEGIN
+            SELECT port_seq.NEXTVAL INTO :NEW.gid FROM DUAL;
+            END trg_port;
+        </createProcedure>
+    </changeSet>
+	
 </databaseChangeLog>

@@ -8,9 +8,9 @@
                         sequenceName="report_layer_config_seq" startValue="1"/>
     </changeSet>
 
-    <changeSet author="padhyad" id="1439890745706-44">
+    <changeSet author="padhyad" id="1439890745706-44" >
         <createTable tableName="report_layer_config">
-            <column name="id" type="BIGINT" defaultValueSequenceNext="report_layer_config_seq">
+            <column name="id" type="BIGINT" >
                 <constraints primaryKey="true" primaryKeyName="report_layer_config_pkey"/>
             </column>
             <column name="report_connect_service_area_id" type="BIGINT"/>
@@ -23,5 +23,28 @@
             <column name="sld" type="CLOB"/>
         </createTable>
     </changeSet>
+	
+		
+	<changeSet author="dubduan" id="7681678168717" dbms="postgresql">
+    <addDefaultValue 
+            columnDataType="BIGINT"
+            columnName="id"
+            defaultValueSequenceNext="report_layer_config_seq"
+            tableName="report_layer_config"/>
+	</changeSet>
+	
+	
+    <changeSet author="dubduan" id="1419890745701-41" dbms="oracle" >
+        <createProcedure>
+            CREATE OR REPLACE TRIGGER trg_report_layer_config
+            BEFORE INSERT
+            ON report_layer_config
+            FOR EACH ROW
+            DECLARE
+            BEGIN
+            SELECT report_layer_config_seq.NEXTVAL INTO :NEW.ID FROM DUAL;
+            END trg_report_layer_config;
+        </createProcedure>			
+    </changeSet>	
 
 </databaseChangeLog>

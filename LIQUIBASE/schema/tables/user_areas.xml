@@ -15,7 +15,7 @@
             <spatial:spatialSupported/>
         </preConditions>
 		<createTable tableName="user_areas">
-            <column name="gid" type="BIGINT" defaultValueSequenceNext="user_areas_seq">
+            <column name="gid" type="BIGINT" >
                 <constraints primaryKey="true" primaryKeyName="user_areas_pkey"/>
             </column>
             <column name="user_name" type="VARCHAR(255)">
@@ -49,4 +49,25 @@
         </spatial:createSpatialIndex>
     </changeSet>
 
+	<changeSet author="dubduan" id="76834618168717" dbms="postgresql">
+    <addDefaultValue 
+            columnDataType="BIGINT"
+            columnName="gid"
+            defaultValueSequenceNext="user_areas_seq"
+            tableName="user_areas"/>
+	</changeSet>
+	
+    <changeSet author="dubduan" id="1451714034491-21" dbms="oracle">
+        <createProcedure>
+            CREATE OR REPLACE TRIGGER trg_user_areas
+            BEFORE INSERT
+            ON user_areas
+            FOR EACH ROW
+            DECLARE
+            BEGIN
+            SELECT user_areas_seq.NEXTVAL INTO :NEW.gid FROM DUAL;
+            END trg_user_areas;
+        </createProcedure>		
+    </changeSet>	
+	
 </databaseChangeLog>
