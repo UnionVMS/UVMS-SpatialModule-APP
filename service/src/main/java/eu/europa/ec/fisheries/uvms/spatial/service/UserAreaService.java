@@ -41,12 +41,11 @@ public interface UserAreaService {
 	 * <p><code>StartDate</code> and <code>EndDate</code> can be NULL or Empty or a Valid Date</p>
 	 *
 	 * @param remoteUser User Name
-	 * @param scopeName Scope Name
 	 * @param startDate Start Date
 	 * @param endDate End Date
 	 * @param type Type
 	 * @param isPowerUser Is User have scope <code>MANAGE_ANY_USER_AREA</code>
 	 * @throws ServiceException Exception if the dates cannot be updated
 	 */
-	void updateUserAreaDates(String remoteUser, String scopeName, Date startDate, Date endDate, String type, boolean isPowerUser) throws ServiceException;
+	void updateUserAreaDates(String remoteUser, Date startDate, Date endDate, String type, boolean isPowerUser) throws ServiceException;
 }

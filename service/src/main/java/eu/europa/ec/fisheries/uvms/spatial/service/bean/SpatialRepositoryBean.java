@@ -375,8 +375,8 @@ public class SpatialRepositoryBean implements SpatialRepository {
     /**
      * {@inheritDoc}
      */
-    public void updateUserAreaForUserAndScope(String remoteUser, String scopeName, Date startDate, Date endDate, String type) throws ServiceException {
-        userAreaDao.updateUserAreasForUserAndScope(remoteUser, scopeName, startDate, endDate, type);
+    public void updateUserAreaForUserAndScope(Date startDate, Date endDate, String type) throws ServiceException {
+        userAreaDao.updateUserAreasForUserAndScope(startDate, endDate, type);
     }
 
     /**
