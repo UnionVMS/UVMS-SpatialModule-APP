@@ -133,16 +133,11 @@ public class AreaServiceBean implements AreaService {
                 throw new ServiceException("TYPE NOT SUPPORTED");
             }
 
-            Map<String, List<Property>> features = SpatialUtils.readShapeFile(
-                    Paths.get(ref + File.separator + typeName.getAreaDbTable() + ".shp"),crsCode);
-            List inValidGeometries = DAOFactory.getAbstractSpatialDao(em, typeName.getTypeName())
-                    .bulkInsert(features, mapping.getMapping());
+            Map<String, List<Property>> features = SpatialUtils.readShapeFile(Paths.get(ref + File.separator + typeName.getAreaDbTable() + ".shp"), crsCode);
+            DAOFactory.getAbstractSpatialDao(em, typeName.getTypeName()).bulkInsert(features, mapping.getMapping());
             org.apache.commons.io.FileUtils.deleteDirectory(Paths.get(ref).getParent().toFile());
 
             repository.makeGeomValid(typeName.getAreaDbTable(), databaseDialect);
-/*            if (CollectionUtils.isEmpty(inValidGeometries)){
-
-            }*/
 
         } catch (Exception e) {
             throw new ServiceException(e.getMessage(), e);
@@ -178,6 +173,7 @@ public class AreaServiceBean implements AreaService {
             uploadPath.toFile().mkdirs();
             Path absolutePath = Files.createTempDirectory(uploadPath, null, new FileAttribute[0]);
             ZipExtractor.unZipFile(bytes, absolutePath);
+            ZipExtractor.renameFiles(absolutePath, typeName.getTypeName());
             List<UploadProperty> propertyList = SpatialUtils.readAttribute(absolutePath);
             response.getFile().addAll(propertyList);
             response.withAdditionalProperty("ref", absolutePath.toString());
