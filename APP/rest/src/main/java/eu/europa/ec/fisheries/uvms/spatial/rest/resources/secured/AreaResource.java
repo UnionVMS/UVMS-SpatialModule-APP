@@ -141,8 +141,12 @@ public class AreaResource extends UnionVMSResource {
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/arealayers")
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response getSystemAreaLayerMapping() {
-    	return createSuccessResponse(areaTypeService.listSystemAreaLayerMapping());
+    public Response getSystemAreaLayerMapping(@Context HttpServletRequest request,
+                                              @HeaderParam(AuthConstants.HTTP_HEADER_SCOPE_NAME) String scopeName,
+                                              @HeaderParam(AuthConstants.HTTP_HEADER_ROLE_NAME) String roleName) throws ServiceException {
+        final String username = request.getRemoteUser();
+        Collection<String> permittedLayersNames = ServiceLayerUtils.getUserPermittedLayersNames(usmService, username, roleName, scopeName);
+    	return createSuccessResponse(areaTypeService.listSystemAreaLayerMapping(permittedLayersNames));
     }
 
     @GET
@@ -153,11 +157,6 @@ public class AreaResource extends UnionVMSResource {
                                                          @HeaderParam(AuthConstants.HTTP_HEADER_SCOPE_NAME) String scopeName,
                                                          @HeaderParam(AuthConstants.HTTP_HEADER_ROLE_NAME) String roleName) throws ServiceException {
         final String username = request.getRemoteUser();
-        String applicationName = request.getServletContext().getInitParameter("usmApplication");
-        String adminPref = usmService.getOptionDefaultValue(DEFAULT_CONFIG, applicationName);
-        String userPref = usmService.getUserPreference(USER_CONFIG, username, applicationName, roleName, scopeName);
-        log.info("Filtering reference data");
-
         Collection<String> permittedLayersNames = ServiceLayerUtils.getUserPermittedLayersNames(usmService, username, roleName, scopeName);
         return createSuccessResponse(areaTypeService.listSystemAreaAndLocationLayerMapping(permittedLayersNames));
     }
@@ -200,7 +199,7 @@ public class AreaResource extends UnionVMSResource {
         while (iterator.hasNext()) {
             ServiceLayerDto serviceLayer = iterator.next();
 
-            if (!permittedLayersNames.contains(serviceLayer.getName()) ) {
+            if (!permittedLayersNames.contains(serviceLayer.getAreaLocationTypeName())) {
                 iterator.remove();
             }
         }

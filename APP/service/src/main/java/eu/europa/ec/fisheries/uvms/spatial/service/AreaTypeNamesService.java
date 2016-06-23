@@ -15,7 +15,7 @@ public interface AreaTypeNamesService {
 
     List<String> listAllAreaTypeNames();
 
-    List<AreaLayerDto> listSystemAreaLayerMapping();
+    List<AreaLayerDto> listSystemAreaLayerMapping(Collection<String> permittedLayersNames);
 
     List<AreaLayerDto> listSystemAreaAndLocationLayerMapping(Collection<String> permittedLayersNames);
 
