@@ -103,5 +103,29 @@
 			<column name="area_type_desc" value="FMZ areas" />
 			<column name="is_location" value="N" />
 		</insert>
+		<insert tableName="area_location_types">
+			<column name="service_layer_id" valueNumeric="8" />
+			<column name="type_name" value="BINGROAD" />
+			<column name="area_db_table" value="NA" />
+			<column name="is_system_wide" value="N" />
+			<column name="area_type_desc" value="Bing Road" />
+			<column name="is_location" value="N" />
+		</insert>
+		<insert tableName="area_location_types">
+			<column name="service_layer_id" valueNumeric="9" />
+			<column name="type_name" value="BINGAREAL" />
+			<column name="area_db_table" value="NA" />
+			<column name="is_system_wide" value="N" />
+			<column name="area_type_desc" value="Bing Areal" />
+			<column name="is_location" value="N" />
+		</insert>
+		<insert tableName="area_location_types">
+			<column name="service_layer_id" valueNumeric="10" />
+			<column name="type_name" value="BINGAREALLABELS" />
+			<column name="area_db_table" value="NA" />
+			<column name="is_system_wide" value="N" />
+			<column name="area_type_desc" value="BIng Areal Labels" />
+			<column name="is_location" value="N" />
+		</insert>
 	</changeSet>
 </databaseChangeLog>
