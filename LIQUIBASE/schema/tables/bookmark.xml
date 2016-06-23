@@ -10,7 +10,7 @@
 
     <changeSet author="padhyad" id="1439890745706-34">
         <createTable tableName="bookmark">
-            <column name="id" type="BIGINT" defaultValueSequenceNext="bookmark_seq">
+            <column name="id" type="BIGINT" >
                 <constraints primaryKey="true" primaryKeyName="bookmark_pkey"/>
             </column>
              <column name="srs" type="TINYINT">
@@ -27,5 +27,26 @@
             </column>
         </createTable>
     </changeSet>
+	
+	<changeSet author="dubduan" id="7681719168717" dbms="postgresql">
+    <addDefaultValue 
+            columnDataType="BIGINT"
+            columnName="id"
+            defaultValueSequenceNext="bookmark_seq"
+            tableName="bookmark"/>
+	</changeSet>	
+
+   <changeSet author="dubduan" id="1419190715706-31" dbms="oracle">   
+        <createProcedure>
+            CREATE OR REPLACE TRIGGER trg_bookmark
+            BEFORE INSERT
+            ON bookmark
+            FOR EACH ROW
+            DECLARE
+            BEGIN
+            SELECT bookmark_seq.NEXTVAL INTO :NEW.ID FROM DUAL;
+            END trg_bookmark;
+        </createProcedure>			
+    </changeSet>	
 
 </databaseChangeLog>

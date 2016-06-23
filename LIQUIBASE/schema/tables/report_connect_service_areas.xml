@@ -10,7 +10,7 @@
 
     <changeSet author="padhyad" id="1439890745706-42">
         <createTable tableName="report_connect_service_area">
-            <column name="id" type="BIGINT" defaultValueSequenceNext="report_conn_serv_area_seq">
+            <column name="id" type="BIGINT" >
                 <constraints primaryKey="true" primaryKeyName="report_layer_mapping_pkey"/>
             </column>
             <column name="report_connect_spatial_id" type="BIGINT">
@@ -40,4 +40,26 @@
                                  referencedTableName="report_connect_service_area"/>
     </changeSet>
 
+	<changeSet author="dubduan" id="76834618168717" dbms="postgresql">
+    <addDefaultValue 
+            columnDataType="BIGINT"
+            columnName="id"
+            defaultValueSequenceNext="report_conn_serv_area_seq"
+            tableName="report_connect_service_area"/>
+	</changeSet>
+	
+    <changeSet author="dubduan" id="143181745701-42" dbms="oracle">
+        <createProcedure>
+            CREATE OR REPLACE TRIGGER trg_rpt_cct_srv_a
+            BEFORE INSERT
+            ON report_connect_service_area
+            FOR EACH ROW
+            DECLARE
+            BEGIN
+            SELECT report_conn_serv_area_seq.NEXTVAL INTO :NEW.ID FROM DUAL;
+            END trg_rpt_cct_srv_a;
+        </createProcedure>			
+		
+    </changeSet>	
+	
 </databaseChangeLog>

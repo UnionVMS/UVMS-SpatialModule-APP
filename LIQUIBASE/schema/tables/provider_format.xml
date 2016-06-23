@@ -10,7 +10,7 @@
 
    <changeSet author="padhyad" id="1439890745706-40">
         <createTable tableName="provider_format">
-            <column name="id" type="BIGINT" defaultValueSequenceNext="provider_format_seq">
+            <column name="id" type="BIGINT" >
                 <constraints primaryKey="true" primaryKeyName="provider_format_pkey"/>
             </column>
             <column name="service_type" type="VARCHAR(10)">
@@ -31,6 +31,28 @@
                                  referencedTableName="provider_format"/>
     </changeSet>
     
+	
+	<changeSet author="dubduan" id="76834618168717" dbms="postgresql">
+    <addDefaultValue 
+            columnDataType="BIGINT"
+            columnName="id"
+            defaultValueSequenceNext="provider_format_seq"
+            tableName="provider_format"/>
+	</changeSet>
+	
+   <changeSet author="dubduan" id="1419810741706-40" dbms="oracle">
+        <createProcedure>
+            CREATE OR REPLACE TRIGGER trg_provider_format
+            BEFORE INSERT
+            ON provider_format
+            FOR EACH ROW
+            DECLARE
+            BEGIN
+            SELECT provider_format_seq.NEXTVAL INTO :NEW.ID FROM DUAL;
+            END trg_provider_format;
+        </createProcedure>		
+    </changeSet>	
+	
 </databaseChangeLog>
  
  

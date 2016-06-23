@@ -12,7 +12,7 @@
 
     <changeSet author="martinhu" id="1462540272744-9">
         <createTable tableName="gfcm">
-            <column name="gid" type="BIGINT" defaultValueSequenceNext="gfcm_seq">
+            <column name="gid" type="BIGINT" >
                 <constraints primaryKey="true" primaryKeyName="gfcm_pkey"/>
             </column>
             <column name="geom" type="GEOMETRY(Multipolygon, 4326)"/>
@@ -32,4 +32,28 @@
         </spatial:createSpatialIndex>
     </changeSet>
 
+	
+	<changeSet author="dubduan" id="76834618168717" dbms="postgresql">
+    <addDefaultValue 
+            columnDataType="BIGINT"
+            columnName="gid"
+            defaultValueSequenceNext="gfcm_seq"
+            tableName="gfcm"/>
+	</changeSet>
+
+	
+   <changeSet author="dubduan" id="1412540212744-9" dbms="oracle">
+   
+        <createProcedure>
+            CREATE OR REPLACE TRIGGER trg_gfcm
+            BEFORE INSERT
+            ON gfcm
+            FOR EACH ROW
+            DECLARE
+            BEGIN
+            SELECT gfcm_seq.NEXTVAL INTO :NEW.gid FROM DUAL;
+            END trg_gfcm;
+        </createProcedure>
+    </changeSet>
+	
 </databaseChangeLog>

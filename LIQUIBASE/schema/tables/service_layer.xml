@@ -43,5 +43,25 @@
     <changeSet author="padhyad" id="1439890745706-59">
         <addForeignKeyConstraint baseColumnNames="service_layer_id" baseTableName="report_connect_service_area" constraintName="area_service_layer_fkey" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="service_layer"/>
     </changeSet>
-    
+
+	<changeSet author="dubduan" id="76834618168717" dbms="postgresql">
+    <addDefaultValue 
+            columnDataType="BIGINT"
+            columnName="id"
+            defaultValueSequenceNext="service_layer_seq"
+            tableName="service_layer"/>
+	</changeSet>
+	
+     <changeSet author="dubduan" id="1419890745106-41" dbms="oracle">
+        <createProcedure>
+            CREATE OR REPLACE TRIGGER trg_service_layer
+            BEFORE INSERT
+            ON service_layer
+            FOR EACH ROW
+            DECLARE
+            BEGIN
+            SELECT service_layer_seq.NEXTVAL INTO :NEW.ID FROM DUAL;
+            END trg_service_layer;
+        </createProcedure>			
+    </changeSet>    
 </databaseChangeLog>

@@ -15,7 +15,7 @@
             <spatial:spatialSupported/>
         </preConditions>
         <createTable tableName="port_area">
-            <column name="gid" type="BIGINT" defaultValueSequenceNext="port_area_seq">
+            <column name="gid" type="BIGINT" >
                 <constraints primaryKey="true" primaryKeyName="port_area_pkey"/>
             </column>
             <column name="geom" type="GEOMETRY(Multipolygon, 4326)"/>
@@ -34,4 +34,25 @@
         </spatial:createSpatialIndex>
     </changeSet>
 
+	<changeSet author="dubduan" id="76834618168717" dbms="postgresql">
+    <addDefaultValue 
+            columnDataType="BIGINT"
+            columnName="gid"
+            defaultValueSequenceNext="port_area_seq"
+            tableName="port_area"/>
+	</changeSet>
+
+	
+    <changeSet author="dubduan" id="1439190741706-31" dbms="oracle">
+        <createProcedure>
+            CREATE OR REPLACE TRIGGER trg_port_area
+            BEFORE INSERT
+            ON port_area
+            FOR EACH ROW
+            DECLARE
+            BEGIN
+            SELECT port_area_seq.NEXTVAL INTO :NEW.gid FROM DUAL;
+            END trg_port_area;
+        </createProcedure>		
+    </changeSet>	
 </databaseChangeLog>
