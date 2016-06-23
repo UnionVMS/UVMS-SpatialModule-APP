@@ -216,8 +216,6 @@ public class UserAreaDao extends AbstractSpatialDao<UserAreasEntity> {
      * <p>Update Start date and End date for user areas if the user is having scope <code><B>MANAGE_ANY_USER_AREA</B></code>
      * <p><code>StartDate</code> and <code>EndDate</code> can be NULL or Empty or a Valid Date</p>
      *
-     * @param remoteUser User Name
-     * @param scopeName Scope Name
      * @param startDate Start Date
      * @param endDate End Date
      * @param type Area Type
@@ -225,13 +223,11 @@ public class UserAreaDao extends AbstractSpatialDao<UserAreasEntity> {
      *
      * @see UserAreaDao#updateUserAreasForUser(String, Date, Date, String)
      */
-    public void updateUserAreasForUserAndScope(String remoteUser, String scopeName, Date startDate, Date endDate, String type) throws ServiceException {
+    public void updateUserAreasForUserAndScope(Date startDate, Date endDate, String type) throws ServiceException {
         TypedQuery query = (TypedQuery) getEntityManager().createNamedQuery(UserAreasEntity.UPDATE_USERAREA_FORUSER_AND_SCOPE);
         query.setParameter("startDate", startDate);
         query.setParameter("endDate", endDate);
-        query.setParameter("userName", remoteUser);
         query.setParameter("type", type);
-        query.setParameter("scopeName", scopeName);
         query.executeUpdate();
     }
 
@@ -245,7 +241,7 @@ public class UserAreaDao extends AbstractSpatialDao<UserAreasEntity> {
      * @param type Area Type
      * @throws ServiceException Exception is Date cannot be updated
      *
-     * @see UserAreaDao#updateUserAreasForUserAndScope(String, String, Date, Date, String)
+     * @see UserAreaDao#updateUserAreasForUserAndScope(Date, Date, String)
      */
     public void updateUserAreasForUser(String remoteUser, Date startDate, Date endDate, String type) throws ServiceException {
         TypedQuery query = (TypedQuery) getEntityManager().createNamedQuery(UserAreasEntity.UPDATE_USERAREA_FORUSER);
