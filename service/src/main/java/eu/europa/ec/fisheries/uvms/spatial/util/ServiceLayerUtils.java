@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.spatial.model.layer;
+package eu.europa.ec.fisheries.uvms.spatial.util;
 
 import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
 import eu.europa.ec.fisheries.uvms.spatial.model.constants.USMSpatial;
@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 
 /**
- * Created by georgige on 6/7/2016.
+ * Created by padhyad on 6/24/2016.
  */
 public class ServiceLayerUtils {
 
