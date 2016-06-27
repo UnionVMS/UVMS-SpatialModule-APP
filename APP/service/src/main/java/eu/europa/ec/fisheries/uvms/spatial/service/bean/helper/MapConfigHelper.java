@@ -277,6 +277,9 @@ public class MapConfigHelper {
         if(!(type.equalsIgnoreCase("OSM") || type.equalsIgnoreCase("OSEA") || type.equalsIgnoreCase("BING"))) {
             layerDto.setUrl(geoServerUrl.concat(serviceLayerEntity.getProviderFormat().getServiceType().toLowerCase()));
         }
+        if(type.equalsIgnoreCase("WMS") && !serviceLayerEntity.getIsInternal()) {
+            layerDto.setUrl(serviceLayerEntity.getServiceUrl());
+        }
         layerDto.setServerType(serviceLayerEntity.getIsInternal() ? GEOSERVER : null);
         layerDto.setLayerGeoName(serviceLayerEntity.getGeoName());
         layerDto.setAreaLocationTypeName(serviceLayerEntity.getAreaType().getTypeName());
