@@ -71,19 +71,19 @@ public class BaseSpatialEntity extends BaseEntity {
             enabledOn = new Date();
             if (mapping != null){
                 for (UploadMappingProperty property : mapping){
-                    Object value = values.get(property.getSource());
-                    if ("code".equals(property.getTarget())){
+                    Object value = values.get(property.getTarget());
+                    if ("code".equals(property.getSource())){
                         if (value!= null){
                             code = String.valueOf(value);
                         }
                     }
-                    else if ("name".equals(property.getTarget())){
+                    else if ("name".equals(property.getSource())){
                         if (value!= null){
                             name = String.valueOf(value);
                         }
                     }
                     else {
-                        FieldUtils.writeDeclaredField(this, property.getTarget(), value, true);
+                        FieldUtils.writeDeclaredField(this, property.getSource(), value, true);
                     }
                 }
             }
