@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.spatial.service.bean;
+package eu.europa.ec.fisheries.uvms.spatial.service;
 
 import eu.europa.ec.fisheries.uvms.BaseUnitilsTest;
 import eu.europa.ec.fisheries.uvms.spatial.message.bean.SpatialMessageServiceBean;
@@ -12,6 +12,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.AreaTypeNamesService;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialEnrichmentService;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialEventService;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialEventServiceBean;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import lombok.SneakyThrows;
 import org.junit.Test;
