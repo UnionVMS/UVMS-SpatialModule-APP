@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.spatial.service.bean;
+package eu.europa.ec.fisheries.uvms.spatial.service;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,6 +8,7 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.*;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.CoordinatesFormat;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ScaleBarUnits;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.MapConfigServiceBean;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.ConfigurationDto;
 import org.apache.commons.io.IOUtils;
