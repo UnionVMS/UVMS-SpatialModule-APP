@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.spatial.service.bean;
+package eu.europa.ec.fisheries.uvms.spatial.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import eu.europa.ec.fisheries.uvms.spatial.entity.PortEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialServiceBean;
 import lombok.SneakyThrows;
 import org.geotools.geometry.jts.GeometryBuilder;
 import org.junit.Before;

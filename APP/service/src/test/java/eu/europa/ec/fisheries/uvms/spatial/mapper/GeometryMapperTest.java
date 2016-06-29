@@ -1,10 +1,12 @@
-package eu.europa.ec.fisheries.uvms.spatial.service.mapper;
+package eu.europa.ec.fisheries.uvms.spatial.mapper;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Polygon;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GeometryType;
+import eu.europa.ec.fisheries.uvms.spatial.service.mapper.GeometryMapper;
+import eu.europa.ec.fisheries.uvms.spatial.service.mapper.GeometryMapperImpl;
 import org.junit.Before;
 import org.junit.Test;
 
