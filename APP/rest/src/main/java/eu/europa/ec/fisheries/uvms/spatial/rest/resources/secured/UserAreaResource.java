@@ -25,6 +25,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.AreaDetailsG
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.UserAreaGeoJsonDto;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
+
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
@@ -43,11 +44,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-@Path("/")
+@Path("/userarea")
 @Slf4j
 @Stateless
 public class UserAreaResource extends UnionVMSResource {
@@ -63,7 +63,7 @@ public class UserAreaResource extends UnionVMSResource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/userarea")
+    @Path("/")
     @Interceptors(value = {ExceptionInterceptor.class})
     public Response storeUserArea(@Context HttpServletRequest request,
                                   UserAreaGeoJsonDto userAreaGeoJsonDto,
@@ -88,7 +88,7 @@ public class UserAreaResource extends UnionVMSResource {
     }
 
     @PUT
-    @Path("userarea")
+    @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Interceptors(value = {ExceptionInterceptor.class})
@@ -118,7 +118,7 @@ public class UserAreaResource extends UnionVMSResource {
     }
 
     @DELETE
-    @Path("/userarea/{id}")
+    @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Interceptors(value = {ExceptionInterceptor.class})
     public Response deleteUserArea(@Context HttpServletRequest request,
@@ -134,7 +134,7 @@ public class UserAreaResource extends UnionVMSResource {
 
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    @Path("/userarealayers")
+    @Path("/layers")
     @Interceptors(value = {ExceptionInterceptor.class})
     public Response getUserAreaLayerMapping(@Context HttpServletRequest request, @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName) {
         log.debug("UserName from security : " + request.getRemoteUser());
@@ -143,7 +143,7 @@ public class UserAreaResource extends UnionVMSResource {
 
     @POST
     @Produces({MediaType.APPLICATION_JSON})
-    @Path("/userareadetails")
+    @Path("/details")
     @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
     public Response getUserAreaDetails(UserAreaCoordinateType userAreaTypeDto, @Context HttpServletRequest request, @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName) throws IOException, ParseException, ServiceException {
         Response response;
@@ -164,7 +164,7 @@ public class UserAreaResource extends UnionVMSResource {
 
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    @Path("/userareatypes")
+    @Path("/types")
     @Interceptors(value = {ExceptionInterceptor.class})
     public Response getUserAreaTypes(@Context HttpServletRequest request, @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName) throws ServiceException {
         log.debug("UserName from security : " + request.getRemoteUser());
@@ -179,7 +179,7 @@ public class UserAreaResource extends UnionVMSResource {
 
     @POST
     @Produces({MediaType.APPLICATION_JSON})
-    @Path("/userarea/updatedate")
+    @Path("/updatedate")
     @Interceptors(value = {ExceptionInterceptor.class})
     public Response updateUserAreaDates(@Context HttpServletRequest request,
                                         UserAreaUpdateDto userAreaUpdateDto) throws ServiceException {
@@ -242,7 +242,7 @@ public class UserAreaResource extends UnionVMSResource {
 
     @POST
     @Produces({MediaType.APPLICATION_JSON})
-    @Path("/userareasbyfilter")
+    @Path("/byfilter")
     @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
     public Response searchUserAreas(FilterType filter, @Context HttpServletRequest request, @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName) throws ServiceException {
         return createSuccessResponse(userAreaService.searchUserAreasByCriteria(request.getRemoteUser(), scopeName, filter.getFilter(), isPowerUser(request)));
@@ -250,7 +250,7 @@ public class UserAreaResource extends UnionVMSResource {
 
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    @Path("/userareaslist")
+    @Path("/list")
     public Response listUserAreas(@Context HttpServletRequest request, @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName) throws ServiceException {
         Response response;
 
@@ -264,7 +264,7 @@ public class UserAreaResource extends UnionVMSResource {
 
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    @Path("/userareaslist/{type}")
+    @Path("/userarea/list/{type}")
     public Response listUserAreas(@Context HttpServletRequest request, @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName, @PathParam("type") String userAreaType) throws ServiceException {
         Response response;
         if (request.isUserInRole(SpatialFeaturesEnum.MANAGE_USER_DEFINED_AREAS.toString())) {
