@@ -50,7 +50,7 @@
 		<insert tableName="area_location_types">
 			<column name="service_layer_id" valueNumeric="6" />
 			<column name="type_name" value="OSM" />
-			<column name="area_db_table" value="osm" />
+			<column name="area_db_table" value="NA" />
 			<column name="is_system_wide" value="N" />
 			<column name="area_type_desc" value="Open street Map" />
 			<column name="is_location" value="N" />
@@ -58,7 +58,7 @@
 		<insert tableName="area_location_types">
 			<column name="service_layer_id" valueNumeric="7" />
 			<column name="type_name" value="OSEA" />
-			<column name="area_db_table" value="osea" />
+			<column name="area_db_table" value="NA" />
 			<column name="is_system_wide" value="N" />
 			<column name="area_type_desc" value="Open sea Map" />
 			<column name="is_location" value="N" />
