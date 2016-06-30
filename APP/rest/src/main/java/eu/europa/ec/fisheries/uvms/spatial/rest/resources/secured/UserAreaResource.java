@@ -264,7 +264,7 @@ public class UserAreaResource extends UnionVMSResource {
 
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    @Path("/userarea/list/{type}")
+    @Path("/list/{type}")
     public Response listUserAreas(@Context HttpServletRequest request, @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName, @PathParam("type") String userAreaType) throws ServiceException {
         Response response;
         if (request.isUserInRole(SpatialFeaturesEnum.MANAGE_USER_DEFINED_AREAS.toString())) {
