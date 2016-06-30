@@ -19,7 +19,7 @@ import javax.persistence.UniqueConstraint;
 @Entity
 @NamedQueries({
         @NamedQuery(name = AreaLocationTypesEntity.FIND_ALL_AREA_AND_LOCATION_TYPE_NAMES, query = "FROM AreaLocationTypesEntity area"),
-        @NamedQuery(name = AreaLocationTypesEntity.FIND_ALL_IS_LOCATION, query = "FROM AreaLocationTypesEntity area WHERE isLocation = :isLocation"),
+        @NamedQuery(name = AreaLocationTypesEntity.FIND_ALL_IS_LOCATION, query = "FROM AreaLocationTypesEntity area WHERE isLocation = :isLocation and area.areaDbTable <> 'NA'"),
         @NamedQuery(name = AreaLocationTypesEntity.FIND_ALL_IS_LOCATION_IS_SYSTEM_WIDE, query = "FROM AreaLocationTypesEntity WHERE isLocation = :isLocation AND isSystemWide = :isSystemWide"),
         @NamedQuery(name = AreaLocationTypesEntity.FIND_TYPE_BY_NAME, query = "FROM AreaLocationTypesEntity WHERE typeName= :typeName"),
         @NamedQuery(name = AreaLocationTypesEntity.FIND_TYPE_BY_NAMES, query = "FROM AreaLocationTypesEntity WHERE typeName in (:typeNames)"),
