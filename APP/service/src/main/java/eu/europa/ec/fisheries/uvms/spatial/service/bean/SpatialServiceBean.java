@@ -427,6 +427,10 @@ public class SpatialServiceBean implements SpatialService {
         }
     }
 
+    /**
+     *
+     * {@inheritDoc}
+     */
     @Override
     public List<GenericSystemAreaDto> searchAreasByNameOrCode(final String areaType, final String filter) throws ServiceException {
 
@@ -449,6 +453,10 @@ public class SpatialServiceBean implements SpatialService {
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public List<SystemAreaNamesDto> searchAreasByCode(String areaType, String filter) throws ServiceException {
         AreaLocationTypesEntity areaLocationType = repository.findAreaLocationTypeByTypeName(areaType.toUpperCase());
 
