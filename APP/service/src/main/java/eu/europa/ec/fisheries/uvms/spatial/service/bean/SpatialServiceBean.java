@@ -9,6 +9,7 @@ import com.vividsolutions.jts.operation.distance.DistanceOp;
 import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.interceptors.TracingInterceptor;
+import eu.europa.ec.fisheries.uvms.spatial.dao.AbstractSpatialDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.util.DAOFactory;
 import eu.europa.ec.fisheries.uvms.spatial.dao.util.DatabaseDialect;
 import eu.europa.ec.fisheries.uvms.spatial.dao.util.DatabaseDialectFactory;
@@ -16,27 +17,7 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.BaseSpatialEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.PortEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Area;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaExtendedIdentifierType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaIdentifierType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestLocationSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Coordinate;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRS;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Location;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationDetails;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationProperty;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationTypeEntry;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ScopeAreasType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.UnitType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.UserAreasType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.GenericSystemAreaDto;
@@ -49,11 +30,7 @@ import eu.europa.ec.fisheries.uvms.spatial.util.PropertiesBean;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.geotools.geometry.jts.GeometryBuilder;
-import org.geotools.geometry.jts.JTS;
-import org.geotools.geometry.jts.JTSFactoryFinder;
-import org.geotools.geometry.jts.WKTReader2;
-import org.geotools.geometry.jts.WKTWriter2;
+import org.geotools.geometry.jts.*;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.GeodeticCalculator;
 import org.hibernate.SQLQuery;
@@ -61,6 +38,7 @@ import org.hibernate.spatial.GeometryType;
 import org.hibernate.type.StringType;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.operation.TransformException;
+
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Local;
@@ -70,13 +48,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialUtils.convertToPointInWGS84;
 import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
@@ -524,6 +496,20 @@ public class SpatialServiceBean implements SpatialService {
         else if (!locationTypesEntity.getIsLocation()){
             throw new ServiceException(locationTypesEntity.getTypeName() + " IS NOT A LOCATION");
         }
+
+        if (locationTypeEntry.getId() != null) {
+
+            AbstractSpatialDao dao = DAOFactory.getAbstractSpatialDao(em, locationTypesEntity.getTypeName());
+            BaseSpatialEntity areaEntity = dao.findOne(Long.parseLong(locationTypeEntry.getId()));
+
+            if (areaEntity == null) {
+                throw new SpatialServiceException(SpatialServiceErrors.ENTITY_NOT_FOUND, locationTypesEntity.getTypeName());
+            }
+
+            properties = areaEntity.getFieldMap();
+
+        }
+
         else {
 
             Map<String, Object> fieldMap = new HashMap<>();
@@ -555,18 +541,19 @@ public class SpatialServiceBean implements SpatialService {
             }
             properties = fieldMap;
 
-            for (Map.Entry<String, Object> entry : properties.entrySet()) {
-                LocationProperty locationProperty = new LocationProperty();
-                locationProperty.setPropertyName(entry.getKey());
-                locationProperty.setPropertyValue(entry.getValue()!=null?entry.getValue().toString():null);
-                locationProperties.add(locationProperty);
-            }
-
-            LocationDetails locationDetails = new LocationDetails();
-            locationDetails.setLocationType(locationTypeEntry);
-            locationDetails.getLocationProperties().addAll(locationProperties);
-            return locationDetails;
         }
+
+        for (Map.Entry<String, Object> entry : properties.entrySet()) {
+            LocationProperty locationProperty = new LocationProperty();
+            locationProperty.setPropertyName(entry.getKey());
+            locationProperty.setPropertyValue(entry.getValue()!=null?entry.getValue().toString():null);
+            locationProperties.add(locationProperty);
+        }
+
+        LocationDetails locationDetails = new LocationDetails();
+        locationDetails.setLocationType(locationTypeEntry);
+        locationDetails.getLocationProperties().addAll(locationProperties);
+        return locationDetails;
     }
 
     @Override
