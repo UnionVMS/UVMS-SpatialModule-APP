@@ -12,6 +12,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.constants.USMSpatial;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationDetails;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.AreaLocationDtoMapper;
 import eu.europa.ec.fisheries.uvms.spatial.rest.type.AreaFilterType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.type.geocoordinate.AreaCoordinateType;
@@ -23,13 +24,10 @@ import eu.europa.ec.fisheries.uvms.spatial.service.SpatialService;
 import eu.europa.ec.fisheries.uvms.spatial.service.UserAreaService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.AreaDetailsGeoJsonDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.LocationDetailsGeoJsonDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.LayerSubTypeEnum;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.ServiceLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.util.ServiceLayerUtils;
 import eu.europa.ec.fisheries.wsdl.user.types.DatasetExtension;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
-
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
@@ -45,7 +43,10 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 @Path("/area")
 @Slf4j
@@ -77,7 +78,29 @@ public class AreaResource extends UnionVMSResource {
         }
         return response;
     }
-    
+
+    @POST
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/location/details")
+    public Response getLocationDetails(LocationCoordinateType locationDto) {
+
+        Response response;
+
+        try {
+
+            LocationTypeEntry locationTypeEntry = mapper.getLocationTypeEntry(locationDto);
+            LocationDetails locationDetails = spatialService.getLocationDetails(locationTypeEntry);
+            LocationDetailsGeoJsonDto locationDetailsGeoJsonDto = mapper.getLocationDetailsDto(locationDetails);
+            ObjectNode nodes = new FeatureToGeoJsonJacksonMapper().convert(locationDetailsGeoJsonDto.toFeature());
+            response = createSuccessResponse(nodes);
+
+        } catch (ServiceException | ParseException | IOException e) {
+           response = createErrorResponse(e.getMessage());
+        }
+        return response;
+    }
+
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
@@ -170,19 +193,6 @@ public class AreaResource extends UnionVMSResource {
     @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
     public Response searchAreaNamesByCode(AreaFilterType areaFilterType) throws ServiceException {
         return createSuccessResponse(spatialService.searchAreasByCode(areaFilterType.getAreaType(), areaFilterType.getFilter()));
-    }
-
-    // TODO check this it looks like DUPLICATE functionality as 'areadetails' at first sight only the output looks a bit different
-    @POST
-    @Consumes({MediaType.APPLICATION_JSON})
-    @Produces({MediaType.APPLICATION_JSON})
-    @Path("/locationdetails")
-    @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
-    public Response getLocationDetails(LocationCoordinateType locationDto) throws IOException, ParseException, ServiceException {
-        LocationDetails locationDetails = spatialService.getLocationDetails(mapper.getLocationTypeEntry(locationDto));
-        LocationDetailsGeoJsonDto locationDetailsGeoJsonDto = mapper.getLocationDetailsDto(locationDetails);
-        ObjectNode nodes = new FeatureToGeoJsonJacksonMapper().convert(locationDetailsGeoJsonDto.toFeature());
-        return createSuccessResponse(nodes);
     }
 
     @POST

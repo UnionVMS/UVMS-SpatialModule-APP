@@ -3,8 +3,8 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.QueryParameter;
-import eu.europa.ec.fisheries.uvms.spatial.dao.AreasDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.AreaLocationTypesDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.AreasDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.BookmarkDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.CountryDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.PortDao;
@@ -33,7 +33,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.ServiceLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.BookmarkMapper;
-import org.geotools.geometry.jts.GeometryBuilder;
+
 import javax.annotation.PostConstruct;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
@@ -356,10 +356,9 @@ public class SpatialRepositoryBean implements SpatialRepository {
     }
 
     @Override
-    public List<PortEntity> listClosestPorts(Double longitude, Double latitude, Integer limit) throws ServiceException {
-        Point point = new GeometryBuilder().point(longitude, latitude);
+    public List<PortEntity> listClosestPorts(final Point point, final Integer limit) throws ServiceException {
         final Map parameters = QueryParameter.with("shape", point).parameters();
-        return portDao.findEntityByNamedQuery(PortEntity.class, PortEntity.LIST_ORDERED_BY_DISTANCE, parameters, 10);
+        return portDao.findEntityByNamedQuery(PortEntity.class, PortEntity.LIST_ORDERED_BY_DISTANCE, parameters, limit);
     }
 
     @Override
