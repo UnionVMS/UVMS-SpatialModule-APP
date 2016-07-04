@@ -1,8 +1,12 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vividsolutions.jts.geom.Geometry;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -17,9 +21,16 @@ public class SystemAreaNamesDto {
     @JsonProperty("areaNames")
     private Set<String> areaNames;
 
-    public SystemAreaNamesDto(String code, Set<String> areaNames) {
+    @JsonProperty("extent")
+    private String extent;
+
+    @JsonIgnore
+    private List<Geometry> geoms;
+
+    public SystemAreaNamesDto(String code, Set<String> areaNames, List<Geometry> geoms) {
         this.code = code;
         this.areaNames = areaNames;
+        this.geoms = geoms;
     }
 
     /**
@@ -58,5 +69,39 @@ public class SystemAreaNamesDto {
     @JsonProperty("areaNames")
     public void setAreaNames(Set<String> areaNames) {
         this.areaNames = areaNames;
+    }
+
+    /**
+     *
+     * @return
+     */
+    @JsonProperty("extent")
+    public String getExtent() {
+        return extent;
+    }
+
+    /**
+     *
+     * @param extent
+     */
+    @JsonProperty("extent")
+    public void setExtent(String extent) {
+        this.extent = extent;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public List<Geometry> getGeoms() {
+        return geoms;
+    }
+
+    /**
+     *
+     * @param geoms
+     */
+    public void setGeoms(List<Geometry> geoms) {
+        this.geoms = geoms;
     }
 }

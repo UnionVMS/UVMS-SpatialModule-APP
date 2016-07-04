@@ -50,16 +50,11 @@ import eu.europa.ec.fisheries.uvms.spatial.util.PropertiesBean;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.geotools.geometry.jts.GeometryBuilder;
-import org.geotools.geometry.jts.JTS;
-import org.geotools.geometry.jts.JTSFactoryFinder;
-import org.geotools.geometry.jts.WKTReader2;
-import org.geotools.geometry.jts.WKTWriter2;
+import org.geotools.geometry.jts.*;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.GeodeticCalculator;
 import org.hibernate.SQLQuery;
 import org.hibernate.spatial.GeometryType;
-import org.hibernate.type.IntegerType;
 import org.hibernate.type.StringType;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.operation.TransformException;
@@ -468,12 +463,21 @@ public class SpatialServiceBean implements SpatialService {
             for (SystemAreaNamesDto systemAreaNamesDto : systemAreas) {
                 if (systemAreaNamesDto.getCode().equalsIgnoreCase(baseEntity.getCode())) {
                     systemAreaNamesDto.getAreaNames().add(baseEntity.getName());
+                    List<Geometry> geometries = systemAreaNamesDto.getGeoms();
+                    Geometry geometry = baseEntity.getGeom();
+                    geometries.add(geometry);
                     isAdded = true;
                 }
             }
             if (!isAdded) {
-                systemAreas.add(new SystemAreaNamesDto(baseEntity.getCode(), new HashSet<String>(Arrays.asList(baseEntity.getName()))));
+                systemAreas.add(new SystemAreaNamesDto(baseEntity.getCode(), new HashSet<String>(Arrays.asList(baseEntity.getName())), new ArrayList(Arrays.asList(baseEntity.getGeom()))));
             }
+        }
+
+        for (SystemAreaNamesDto systemAreaNamesDto : systemAreas) {
+            GeometryFactory geometryFactory = JTSFactoryFinder.getGeometryFactory();
+            Geometry unionGeom = geometryFactory.buildGeometry(systemAreaNamesDto.getGeoms()).union();
+            systemAreaNamesDto.setExtent(new WKTWriter2().write(unionGeom.getEnvelope()));
         }
 
         return systemAreas;
