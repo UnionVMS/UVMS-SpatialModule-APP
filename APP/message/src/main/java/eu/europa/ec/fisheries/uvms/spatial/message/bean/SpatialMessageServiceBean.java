@@ -1,7 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.message.bean;
 
 import eu.europa.ec.fisheries.uvms.message.AbstractMessageService;
-import static eu.europa.ec.fisheries.uvms.message.MessageConstants.*;
 import eu.europa.ec.fisheries.uvms.spatial.message.SpatialConstants;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageErrorEvent;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageEvent;
@@ -15,7 +14,14 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.enterprise.event.Observes;
-import javax.jms.*;
+import javax.jms.ConnectionFactory;
+import javax.jms.Destination;
+import javax.jms.JMSException;
+import javax.jms.Session;
+import javax.jms.TextMessage;
+
+import static eu.europa.ec.fisheries.uvms.message.MessageConstants.CONNECTION_FACTORY;
+import static eu.europa.ec.fisheries.uvms.message.MessageConstants.QUEUE_MODULE_SPATIAL;
 
 @Stateless
 @LocalBean
@@ -48,6 +54,10 @@ public class SpatialMessageServiceBean extends AbstractMessageService {
         return SpatialConstants.MODULE_NAME;
     }
 
+    @Override
+    public long getMilliseconds() {
+        return 10000L;
+    }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void sendModuleErrorResponseMessage(@Observes @SpatialMessageErrorEvent SpatialMessageEvent message){

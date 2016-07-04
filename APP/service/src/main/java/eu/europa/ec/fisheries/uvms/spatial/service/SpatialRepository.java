@@ -19,7 +19,6 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.ServiceLayerDto;
-
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -129,7 +128,7 @@ public interface SpatialRepository {
 
     List<UserAreasEntity> findUserAreaByUserNameAndScopeName(String userName, String scopeName) throws ServiceException;
 
-    List<PortEntity> listClosestPorts(Double incomingLongitude, Double incomingLatitude, Integer limit) throws ServiceException;
+    List<PortEntity> listClosestPorts(Point point, Integer limit) throws ServiceException;
 
     List<CountryEntity> findAllCountries() throws ServiceException;
 
