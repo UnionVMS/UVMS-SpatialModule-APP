@@ -88,10 +88,13 @@ public class AreaResource extends UnionVMSResource {
         Response response;
 
         try {
-
             LocationTypeEntry locationTypeEntry = mapper.getLocationTypeEntry(locationDto);
             LocationDetails locationDetails = spatialService.getLocationDetails(locationTypeEntry);
             LocationDetailsGeoJsonDto locationDetailsGeoJsonDto = mapper.getLocationDetailsDto(locationDetails);
+            if(!locationDto.getIsGeom()) {
+                locationDetailsGeoJsonDto.removeGeometry();
+                return createSuccessResponse(locationDetailsGeoJsonDto.getProperties());
+            }
             ObjectNode nodes = new FeatureToGeoJsonJacksonMapper().convert(locationDetailsGeoJsonDto.toFeature());
             response = createSuccessResponse(nodes);
 
