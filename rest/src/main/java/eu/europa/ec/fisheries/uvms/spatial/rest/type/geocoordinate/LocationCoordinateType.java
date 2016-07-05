@@ -14,6 +14,9 @@ public class LocationCoordinateType extends GeoCoordinateType implements Seriali
 	@NotEmpty
 	private String locationType;
 
+	@NotNull
+	private Boolean isGeom = false;
+
 	public String getId() {
 		return id;
 	}
@@ -30,4 +33,11 @@ public class LocationCoordinateType extends GeoCoordinateType implements Seriali
 		this.locationType = locationType;
 	}
 
+	public Boolean getIsGeom() {
+		return isGeom;
+	}
+
+	public void setIsGeom(Boolean isGeom) {
+		this.isGeom = isGeom;
+	}
 }
