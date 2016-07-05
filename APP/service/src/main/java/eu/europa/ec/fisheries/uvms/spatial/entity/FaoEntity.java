@@ -18,7 +18,7 @@ import javax.persistence.Table;
         @NamedQuery(name = FaoEntity.FAO_BY_INTERSECT,
                 query = "FROM FaoEntity WHERE intersects(geom, :shape) = true AND enabled = 'Y'"),
         @NamedQuery(name = FaoEntity.SEARCH_FAO, query = "FROM FaoEntity where upper(name) like :name OR upper(code) like :code AND enabled='Y' GROUP BY gid"),
-        @NamedQuery(name = FaoEntity.SEARCH_FAO_NAMES_BY_CODE, query = "From FaoEntity where code in (SELECT distinct(code) from FaoEntity where upper(name) like :name OR upper(code) like :code AND enabled='Y' GROUP BY gid)")
+        @NamedQuery(name = FaoEntity.SEARCH_FAO_NAMES_BY_CODE, query = "From FaoEntity where code in (SELECT distinct(code) from FaoEntity where (upper(name) like :name OR upper(code) like :code) AND enabled='Y' GROUP BY gid)")
 })
 public class FaoEntity extends BaseSpatialEntity {
 

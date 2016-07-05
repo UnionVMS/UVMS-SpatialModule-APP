@@ -18,7 +18,7 @@ import javax.persistence.Table;
         @NamedQuery(name = FmzEntity.BY_INTERSECT,
                 query = "FROM FmzEntity WHERE intersects(geom, :shape) = true AND enabled = 'Y'"),
         @NamedQuery(name = FmzEntity.SEARCH_FMZ, query = "FROM FmzEntity where upper(name) like :name OR upper(code) like :code AND enabled='Y' GROUP BY gid"),
-        @NamedQuery(name = FmzEntity.SEARCH_FMZ_NAMES_BY_CODE, query = "From FmzEntity where code in (SELECT distinct(code) from FmzEntity where upper(name) like :name OR upper(code) like :code AND enabled='Y' GROUP BY gid)")
+        @NamedQuery(name = FmzEntity.SEARCH_FMZ_NAMES_BY_CODE, query = "From FmzEntity where code in (SELECT distinct(code) from FmzEntity where (upper(name) like :name OR upper(code) like :code) AND enabled='Y' GROUP BY gid)")
 })
 public class FmzEntity extends BaseSpatialEntity {
 
