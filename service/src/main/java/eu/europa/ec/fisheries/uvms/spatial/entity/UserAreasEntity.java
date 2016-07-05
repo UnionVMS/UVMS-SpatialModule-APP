@@ -63,7 +63,7 @@ import java.util.Set;
                 query = "FROM UserAreasEntity WHERE userName = :userName AND name = :name)"),
         @NamedQuery(name = UserAreasEntity.DISABLE, query = "UPDATE UserAreasEntity SET enabled = 'N'"),
         @NamedQuery(name = UserAreasEntity.BY_INTERSECT, query = "FROM UserAreasEntity WHERE intersects(geom, :shape) = true AND enabled = 'Y'"),
-        @NamedQuery(name = UserAreasEntity.SEARCH_USERAREA, query = "FROM UserAreasEntity where upper(name) like :name OR upper(code) like :code AND enabled='Y' GROUP BY gid"),
+        @NamedQuery(name = UserAreasEntity.SEARCH_USERAREA, query = "FROM UserAreasEntity where (upper(name) like :name OR upper(code) like :code) AND enabled='Y' GROUP BY gid"),
         @NamedQuery(name = UserAreasEntity.SEARCH_USERAREA_NAMES_BY_CODE, query = "From UserAreasEntity where code in (SELECT distinct(code) from UserAreasEntity where (upper(name) like :name OR upper(code) like :code) AND enabled='Y' GROUP BY gid)"),
         @NamedQuery(name = UserAreasEntity.UPDATE_USERAREA_FORUSER_AND_SCOPE,
                 query = "update UserAreasEntity userarea " +
