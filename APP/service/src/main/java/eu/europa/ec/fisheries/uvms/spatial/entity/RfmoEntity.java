@@ -20,7 +20,7 @@ import java.util.Map;
                 query = "SELECT rfmo.name AS name, rfmo.code AS code FROM RfmoEntity AS rfmo WHERE rfmo.id =:gid"),
         @NamedQuery(name = RfmoEntity.DISABLE_RFMO_AREAS,
                 query = "UPDATE RfmoEntity SET enabled = 'N'"),
-        @NamedQuery(name = RfmoEntity.SEARCH_RFMO, query = "FROM RfmoEntity where upper(name) like :name OR upper(code) like :code AND enabled='Y' GROUP BY gid"),
+        @NamedQuery(name = RfmoEntity.SEARCH_RFMO, query = "FROM RfmoEntity where (upper(name) like :name OR upper(code) like :code) AND enabled='Y' GROUP BY gid"),
         @NamedQuery(name = RfmoEntity.SEARCH_RFMO_NAMES_BY_CODE, query = "From RfmoEntity where code in (SELECT distinct(code) from RfmoEntity where (upper(name) like :name OR upper(code) like :code) AND enabled='Y' GROUP BY gid)")
 })
 @Table(name = "rfmo")
