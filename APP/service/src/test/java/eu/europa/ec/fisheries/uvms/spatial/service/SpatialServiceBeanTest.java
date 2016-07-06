@@ -8,8 +8,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.PointType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.UnitType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialServiceBean;
-import java.util.Arrays;
-import java.util.List;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialUtils;
 import lombok.SneakyThrows;
 import org.geotools.geometry.jts.WKTReader2;
 import org.junit.Before;
@@ -17,6 +16,9 @@ import org.junit.Test;
 import org.unitils.inject.annotation.InjectIntoByType;
 import org.unitils.inject.annotation.TestedObject;
 import org.unitils.mock.Mock;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static junit.framework.TestCase.assertEquals;
 
@@ -53,14 +55,15 @@ public class SpatialServiceBeanTest extends BaseUnitilsTest {
         areas[0][1] = 231;
         areas[0][2] = "MAR";
         areas[0][3] = "Moroccan Exclusive Zone";
-        Geometry geometry = new WKTReader2().read("MULTIPOLYGON(((106.867924148 -9.16467987999994,108.036593601 -12.9679006599999," +
-                "103.079231596 -12.82837266, 102.56917584 -8.87249927999994," +
-                "106.867924148 -9.16467987999994)))");
+        Geometry geometry = new WKTReader2().read("MULTIPOLYGON(((151.464692488022 -89.9998252076401,166.020867143701 -89.9998601005151," +
+                "104.287122332492 -89.9998930298125,151.464692488022 -89.9998252076401)))");
+        SpatialUtils.convertToJTSCoordinates(geometry.getCoordinates());
         areas[0][4] = geometry;
+        geometry.setSRID(3216);
 
         repo.returns(Arrays.asList(areas)).closestArea(null, null, null);
 
         List<Area> closestArea = service.getClosestArea(closestAreaRequest);
-        assertEquals(10281.53025864021, closestArea.get(0).getDistance());
+        assertEquals(11329.05067571192, closestArea.get(0).getDistance());
     }
 }
