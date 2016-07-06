@@ -1,20 +1,10 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.*;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.PointType;
 import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadProperty;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFinder;
@@ -35,14 +25,36 @@ import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
+
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.security.InvalidParameterException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 public class SpatialUtils {
 
     private static final String EPSG = "EPSG:";
-    public static final int DEFAULT_SRID = 4326;
+    private static final int DEFAULT_SRID = 4326;
+
+    static CoordinateReferenceSystem getCrs(final int srid){
+        CoordinateReferenceSystem referenceSystem;
+        try {
+            referenceSystem = CRS.decode(EPSG + srid);
+        } catch (FactoryException e) {
+            throw new IllegalArgumentException("ERROR WHILE DECODING CRS");
+        }
+        return referenceSystem;
+    }
+
+    static CoordinateReferenceSystem getDefaultCrs(){
+        return getCrs(DEFAULT_SRID);
+    }
 
     private SpatialUtils() {
     }
@@ -127,12 +139,22 @@ public class SpatialUtils {
 
         try {
 
-            CoordinateReferenceSystem targetCRS = CRS.decode(EPSG + DEFAULT_SRID);
-            MathTransform transform = CRS.findMathTransform(sourceCRS, targetCRS);
+            MathTransform transform = CRS.findMathTransform(sourceCRS, SpatialUtils.getDefaultCrs());
             while (iterator.hasNext()) {
-                SimpleFeature feature = iterator.next();
+                final SimpleFeature feature = iterator.next();
                 geometries.put(feature.getID(), new ArrayList<>(feature.getProperties()));
-                transformCRSToDefault(feature, sourceCRS, targetCRS, transform);
+                Geometry targetGeometry = (Geometry) feature.getDefaultGeometry();
+                if (targetGeometry != null) {
+                    if (SpatialUtils.getDefaultCrs().getName().equals(sourceCRS.getName())){
+                        targetGeometry = JTS.transform(targetGeometry, transform);
+                        convertToJTSCoordinates(targetGeometry.getCoordinates()); // Why JTS why
+                    }
+                }
+                else {
+                    throw new InvalidParameterException("TARGET GEOMETRY CANNOT BE NULL");
+                }
+                targetGeometry.setSRID(DEFAULT_SRID);
+                feature.setDefaultGeometry(targetGeometry);
             }
             return geometries;
 
@@ -178,17 +200,12 @@ public class SpatialUtils {
         }
     }
 
-    private static void transformCRSToDefault(SimpleFeature feature, CoordinateReferenceSystem sourceCRS, CoordinateReferenceSystem targetCRS, MathTransform transform) throws FactoryException, TransformException {
-        Geometry sourceGeometry = (Geometry) feature.getDefaultGeometry();
-        if (sourceGeometry != null) {
-            if (sourceCRS != targetCRS) {
-                Geometry targetGeometry = JTS.transform(sourceGeometry, transform);
-                targetGeometry.setSRID(DEFAULT_SRID);
-                feature.setDefaultGeometry(targetGeometry);
-            } else {
-                sourceGeometry.setSRID(DEFAULT_SRID);
-            }
+    public static void convertToJTSCoordinates(Coordinate[] coordinates) {
+
+        for(int i =0; i<coordinates.length; i++){
+            Double swapValue = coordinates[i].x;
+            coordinates[i].x = coordinates[i].y;
+            coordinates[i].y = swapValue;
         }
     }
-
 }

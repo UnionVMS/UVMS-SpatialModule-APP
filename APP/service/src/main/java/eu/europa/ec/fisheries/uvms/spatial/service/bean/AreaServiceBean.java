@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
+import eu.europa.ec.fisheries.uvms.common.ZipExtractor;
 import eu.europa.ec.fisheries.uvms.domain.BaseEntity;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.interceptors.SimpleTracingInterceptor;
@@ -25,29 +26,26 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialService
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.util.PropertiesBean;
 import eu.europa.ec.fisheries.uvms.spatial.util.SpatialTypeEnum;
-import eu.europa.ec.fisheries.uvms.common.ZipExtractor;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.nio.file.attribute.FileAttribute;
-import javax.annotation.PostConstruct;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.geotools.referencing.CRS;
 import org.opengis.feature.Property;
-import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
+
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.io.File;
+import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.FileAttribute;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -126,14 +124,14 @@ public class AreaServiceBean implements AreaService {
         String ref = (String) mapping.getAdditionalProperties().get("ref");
 
         try {
-            CoordinateReferenceSystem crsCode = CRS.decode("EPSG:" + code);
+            CoordinateReferenceSystem sourceCRS = CRS.decode("EPSG:" + code);
             AreaLocationTypesEntity typeName = repository.findAreaLocationTypeByTypeName(type.toUpperCase());
 
             if (typeName == null){
                 throw new ServiceException("TYPE NOT SUPPORTED");
             }
 
-            Map<String, List<Property>> features = SpatialUtils.readShapeFile(Paths.get(ref + File.separator + typeName.getAreaDbTable() + ".shp"), crsCode);
+            Map<String, List<Property>> features = SpatialUtils.readShapeFile(Paths.get(ref + File.separator + typeName.getAreaDbTable() + ".shp"), sourceCRS);
             DAOFactory.getAbstractSpatialDao(em, typeName.getTypeName()).bulkInsert(features, mapping.getMapping());
             org.apache.commons.io.FileUtils.deleteDirectory(Paths.get(ref).getParent().toFile());
 
