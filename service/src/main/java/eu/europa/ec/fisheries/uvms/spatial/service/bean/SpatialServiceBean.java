@@ -17,7 +17,27 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.BaseSpatialEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.PortEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Area;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaExtendedIdentifierType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaIdentifierType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestLocationSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Coordinate;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Location;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationDetails;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationProperty;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationTypeEntry;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ScopeAreasType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.UnitType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.UserAreasType;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.GenericSystemAreaDto;
@@ -30,7 +50,6 @@ import eu.europa.ec.fisheries.uvms.spatial.util.PropertiesBean;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.geotools.geometry.jts.GeometryBuilder;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.JTSFactoryFinder;
 import org.geotools.geometry.jts.WKTReader2;
@@ -42,6 +61,7 @@ import org.hibernate.spatial.GeometryType;
 import org.hibernate.type.StringType;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.operation.TransformException;
+
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Local;
@@ -51,13 +71,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialUtils.convertToPointInWGS84;
 import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
@@ -97,7 +111,7 @@ public class SpatialServiceBean implements SpatialService {
         final Map<String, Location> distancePerTypeMap = new HashMap<>();
         final UnitType unit = request.getUnit();
         final MeasurementUnit measurementUnit = MeasurementUnit.getMeasurement(unit.name());
-        final GeodeticCalculator calc = new GeodeticCalculator();
+        final GeodeticCalculator calc = new GeodeticCalculator(SpatialUtils.getDefaultCrs());
         final List<AreaLocationTypesEntity> typeEntities = repository.findAllIsPointIsSystemWide(true, true);
 
         List records = repository.closestPoint(typeEntities, databaseDialect, incomingPoint);
@@ -238,54 +252,55 @@ public class SpatialServiceBean implements SpatialService {
     @Override
     public List<Area> getClosestArea(final ClosestAreaSpatialRQ request) throws ServiceException {
 
-        final Point incomingPoint = convertToPointInWGS84(request.getPoint());
-        final Double incomingLatitude = incomingPoint.getY();
-        final Double incomingLongitude = incomingPoint.getX();
-        final MeasurementUnit measurementUnit = MeasurementUnit.getMeasurement(request.getUnit().name());
-        final UnitType unit = request.getUnit();
-        final List<AreaLocationTypesEntity> typesEntities = repository.findAllIsPointIsSystemWide(false, true);
         final Map<String, Area> distancePerTypeMap = new HashMap<>();
-        final GeodeticCalculator calc = new GeodeticCalculator();
 
-        List records = repository.closestArea(typesEntities, databaseDialect, incomingPoint);
+        try {
 
-        for (Object record : records) {
+            final Point incomingPoint = convertToPointInWGS84(request.getPoint());
+            final MeasurementUnit measurementUnit = MeasurementUnit.getMeasurement(request.getUnit().name());
+            final UnitType unit = request.getUnit();
+            final List<AreaLocationTypesEntity> typesEntities = repository.findAllIsPointIsSystemWide(false, true);
+            List records = repository.closestArea(typesEntities, databaseDialect, incomingPoint);
 
-            final Object[] result = (Object[]) record;
-            Geometry geom = (Geometry) result[4];
+            for (Object record : records) {
 
-            if (geom.isEmpty()){
-                continue;
-            }
+                final Object[] result = (Object[]) record;
+                Geometry geom = (Geometry) result[4];
 
-            com.vividsolutions.jts.geom.Coordinate[] coordinates =
-                    DistanceOp.nearestPoints(geom, new GeometryBuilder().point(incomingLongitude,incomingLatitude));
-            final Point closestPoint = new GeometryBuilder().point(coordinates[0].x,coordinates[0].y);
-
-            calc.setStartingGeographicPoint(closestPoint.getX(), closestPoint.getY());
-            calc.setDestinationGeographicPoint(incomingLongitude, incomingLatitude);
-            Double orthodromicDistance = calc.getOrthodromicDistance();
-
-            final String type = result[0].toString();
-            Area closest = distancePerTypeMap.get(type);
-
-            if (closest == null || orthodromicDistance / measurementUnit.getRatio() < closest.getDistance()) {
-
-                if (closest == null) {
-                    closest = new Area();
+                if (geom.isEmpty()){
+                    continue;
                 }
 
-                closest.setDistance(orthodromicDistance);
-                closest.setId(result[1].toString());
-                closest.setDistance(orthodromicDistance / measurementUnit.getRatio());
-                closest.setUnit(unit);
-                closest.setCode(result[2] != null ? result[2].toString() : null);
-                closest.setName(result[3] != null ? result[3].toString() : null);
-                closest.setAreaType(AreaType.valueOf(type));
-                distancePerTypeMap.put(type, closest);
-            }
+                final com.vividsolutions.jts.geom.Coordinate[] coordinates =
+                        DistanceOp.nearestPoints(geom, incomingPoint);
+                final Double orthodromicDistance =
+                        JTS.orthodromicDistance(coordinates[0], coordinates[1], SpatialUtils.getDefaultCrs());
 
+                final String type = result[0].toString();
+                Area closest = distancePerTypeMap.get(type);
+
+                if (closest == null || orthodromicDistance / measurementUnit.getRatio() < closest.getDistance()) {
+
+                    if (closest == null) {
+                        closest = new Area();
+                    }
+
+                    closest.setDistance(orthodromicDistance);
+                    closest.setId(result[1].toString());
+                    closest.setDistance(orthodromicDistance / measurementUnit.getRatio());
+                    closest.setUnit(unit);
+                    closest.setCode(result[2] != null ? result[2].toString() : null);
+                    closest.setName(result[3] != null ? result[3].toString() : null);
+                    closest.setAreaType(AreaType.valueOf(type));
+                    distancePerTypeMap.put(type, closest);
+                }
+
+            }
         }
+        catch (TransformException e) {
+            throw new ServiceException("ERROR WHILE CALCULATING DISTANCE", e);
+        }
+
         return new ArrayList<>(distancePerTypeMap.values());
     }
 
@@ -484,7 +499,7 @@ public class SpatialServiceBean implements SpatialService {
     @Transactional
     public LocationDetails getLocationDetails(final LocationTypeEntry locationTypeEntry) throws ServiceException {
 
-        final GeodeticCalculator calc = new GeodeticCalculator();
+        final GeodeticCalculator calc = new GeodeticCalculator(SpatialUtils.getDefaultCrs());
         final Map<String, Object> properties;
         final String id = locationTypeEntry.getId();
         final String locationType = locationTypeEntry.getLocationType();
