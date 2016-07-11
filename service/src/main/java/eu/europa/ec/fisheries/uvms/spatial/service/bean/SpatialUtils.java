@@ -1,5 +1,5 @@
 /*
-Developed by the European Commission - Directorate General for Maritime Affairs and Fisheries © European Union, 2015-2016.
+Developed by the European Commission - Directorate General for Maritime Affairs and Fisheries @ European Union, 2015-2016.
 
 This file is part of the Integrated Fisheries Data Management (IFDM) Suite. The IFDM Suite is free software: you can redistribute it 
 and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of 
@@ -77,7 +77,7 @@ public class SpatialUtils {
             crs = schemaPoint.getCrs();
         }
 
-        return convertToPointInWGS84(schemaPoint.getLongitude(), schemaPoint.getLatitude(), crs);
+        return convertToPointInWGS84(schemaPoint.getLatitude(), schemaPoint.getLongitude(), crs);
     }
 
     static Geometry translate(Double tx, Double ty, Geometry geometry) {
@@ -210,12 +210,13 @@ public class SpatialUtils {
         }
     }
 
-    public static void convertToJTSCoordinates(Coordinate[] coordinates) {
+    public static Coordinate[] convertToJTSCoordinates(Coordinate[] coordinates) {
 
-        for(int i =0; i<coordinates.length; i++){
-            Double swapValue = coordinates[i].x;
-            coordinates[i].x = coordinates[i].y;
-            coordinates[i].y = swapValue;
+        Coordinate[] swapped = new Coordinate[coordinates.length];
+
+        for(int i =0; i < coordinates.length; i++){
+            swapped[i] = new Coordinate(coordinates[i].y, coordinates[i].x);
         }
+        return swapped;
     }
 }
