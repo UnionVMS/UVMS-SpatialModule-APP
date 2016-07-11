@@ -1,5 +1,5 @@
 /*
-Developed by the European Commission - Directorate General for Maritime Affairs and Fisheries © European Union, 2015-2016.
+Developed by the European Commission - Directorate General for Maritime Affairs and Fisheries @ European Union, 2015-2016.
 
 This file is part of the Integrated Fisheries Data Management (IFDM) Suite. The IFDM Suite is free software: you can redistribute it 
 and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of 
@@ -12,13 +12,8 @@ package eu.europa.ec.fisheries.uvms.spatial.service;
 
 import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.BaseUnitilsTest;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Area;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.PointType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.UnitType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialServiceBean;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialUtils;
 import lombok.SneakyThrows;
 import org.geotools.geometry.jts.WKTReader2;
 import org.junit.Before;
@@ -51,7 +46,7 @@ public class SpatialServiceBeanTest extends BaseUnitilsTest {
         closestAreaRequest.setAreaTypes(areaTypes);
 
         PointType point = new PointType();
-        point.setCrs(4326);
+        point.setCrs(3261);
         point.setLatitude(12);
         point.setLongitude(12);
         closestAreaRequest.setPoint(point);
@@ -67,13 +62,12 @@ public class SpatialServiceBeanTest extends BaseUnitilsTest {
         areas[0][3] = "Moroccan Exclusive Zone";
         Geometry geometry = new WKTReader2().read("MULTIPOLYGON(((151.464692488022 -89.9998252076401,166.020867143701 -89.9998601005151," +
                 "104.287122332492 -89.9998930298125,151.464692488022 -89.9998252076401)))");
-        SpatialUtils.convertToJTSCoordinates(geometry.getCoordinates());
         areas[0][4] = geometry;
         geometry.setSRID(3216);
 
         repo.returns(Arrays.asList(areas)).closestArea(null, null, null);
 
         List<Area> closestArea = service.getClosestArea(closestAreaRequest);
-        assertEquals(11329.05067571192, closestArea.get(0).getDistance());
+        assertEquals(0.024537057275323824, closestArea.get(0).getDistance());
     }
 }

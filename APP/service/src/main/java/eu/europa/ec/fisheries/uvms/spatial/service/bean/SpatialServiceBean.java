@@ -1,5 +1,5 @@
 /*
-Developed by the European Commission - Directorate General for Maritime Affairs and Fisheries © European Union, 2015-2016.
+Developed by the European Commission - Directorate General for Maritime Affairs and Fisheries @ European Union, 2015-2016.
 
 This file is part of the Integrated Fisheries Data Management (IFDM) Suite. The IFDM Suite is free software: you can redistribute it 
 and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of 
@@ -283,8 +283,10 @@ public class SpatialServiceBean implements SpatialService {
 
                 final com.vividsolutions.jts.geom.Coordinate[] coordinates =
                         DistanceOp.nearestPoints(geom, incomingPoint);
+                com.vividsolutions.jts.geom.Coordinate[] swapped = SpatialUtils.convertToJTSCoordinates(coordinates);
+
                 final Double orthodromicDistance =
-                        JTS.orthodromicDistance(coordinates[0], coordinates[1], SpatialUtils.getDefaultCrs());
+                        JTS.orthodromicDistance(swapped[0], swapped[1], SpatialUtils.getDefaultCrs());
 
                 final String type = result[0].toString();
                 Area closest = distancePerTypeMap.get(type);
