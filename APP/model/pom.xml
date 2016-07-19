@@ -110,7 +110,6 @@
     </scm>
 
     <profiles>
-
         <profile>
             <id>generate-from-wsdl</id>
             <build>
