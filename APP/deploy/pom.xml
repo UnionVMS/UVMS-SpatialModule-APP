@@ -118,7 +118,6 @@
                         <artifactId>pitest-maven</artifactId>
                         <version>1.1.10</version>
                         <configuration>
-                            <failWhenNoMutations>false</failWhenNoMutations>
                             <!-- we want to skip for this module -->
                             <skip>true</skip>
                         </configuration>
