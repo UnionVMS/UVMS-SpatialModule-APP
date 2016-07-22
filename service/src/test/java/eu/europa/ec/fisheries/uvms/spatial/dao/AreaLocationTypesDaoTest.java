@@ -14,9 +14,11 @@ import com.ninja_squad.dbsetup.DbSetup;
 import com.ninja_squad.dbsetup.destination.DataSourceDestination;
 import com.ninja_squad.dbsetup.operation.Operation;
 import org.junit.Before;
+import org.junit.Ignore;
 
 import static com.ninja_squad.dbsetup.Operations.sequenceOf;
 
+@Ignore
 public class AreaLocationTypesDaoTest extends BaseSpatialDaoTest {
 
     private AreaLocationTypesDao dao = new AreaLocationTypesDao(em);
