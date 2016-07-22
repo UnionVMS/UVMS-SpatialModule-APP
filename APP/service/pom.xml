@@ -206,12 +206,10 @@
                     </avoidCallsTo>
                     <!-- Fix jenkins permGem error -->
                     <targetClasses>
-                        <param>eu.europa.ec.fisheries.uvms.spatial.dao.Eez*</param>
-                        <param>eu.europa.ec.fisheries.uvms.spatial.dao.Country*</param>
+                        <param>eu.europa.ec.fisheries.uvms.spatial.dao.*</param>
                     </targetClasses>
                     <targetTests>
-                        <param>eu.europa.ec.fisheries.uvms.spatial.dao.Eez*</param>
-                        <param>eu.europa.ec.fisheries.uvms.spatial.dao.Country*</param>
+                        <param>eu.europa.ec.fisheries.uvms.spatial.dao.*</param>
                     </targetTests>
                 </configuration>
             </plugin>
