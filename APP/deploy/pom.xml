@@ -3,7 +3,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>deploy-spatial-${database.dialect}</artifactId>
-    <name>${artifactId}-${version}</name>
+    <name>${project.artifactId}-${project.version}</name>
     <packaging>ear</packaging>
 
     <parent>
