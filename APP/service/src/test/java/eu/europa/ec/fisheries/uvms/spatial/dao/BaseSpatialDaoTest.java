@@ -17,7 +17,7 @@ import static com.ninja_squad.dbsetup.Operations.deleteAllFrom;
 import static com.ninja_squad.dbsetup.Operations.insertInto;
 import static com.ninja_squad.dbsetup.Operations.sequenceOf;
 
-public class BaseSpatialDaoTest extends BaseDAOTest {
+public abstract class BaseSpatialDaoTest extends BaseDAOTest {
 
     protected static final Operation DELETE_ALL = sequenceOf(
             deleteAllFrom("spatial.countries"),
