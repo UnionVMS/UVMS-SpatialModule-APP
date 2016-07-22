@@ -204,7 +204,6 @@
                         <avoidCallsTo>org.slf4j</avoidCallsTo>
                         <avoidCallsTo>org.apache.commons.logging</avoidCallsTo>
                     </avoidCallsTo>
-                    <!-- Fix jenkins permGem error -->
                     <targetClasses>
                         <param>eu.europa.ec.fisheries.uvms.spatial.dao.*</param>
                     </targetClasses>
