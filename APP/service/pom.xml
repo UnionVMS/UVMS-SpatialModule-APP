@@ -208,14 +208,10 @@
                     <targetClasses>
                         <param>eu.europa.ec.fisheries.uvms.spatial.dao.Eez*</param>
                         <param>eu.europa.ec.fisheries.uvms.spatial.dao.Country*</param>
-                        <param>eu.europa.ec.fisheries.uvms.spatial.dao.PortArea*</param>
-                        <param>eu.europa.ec.fisheries.uvms.spatial.dao.UserArea*</param>
                     </targetClasses>
                     <targetTests>
                         <param>eu.europa.ec.fisheries.uvms.spatial.dao.Eez*</param>
                         <param>eu.europa.ec.fisheries.uvms.spatial.dao.Country*</param>
-                        <param>eu.europa.ec.fisheries.uvms.spatial.dao.PortArea*</param>
-                        <param>eu.europa.ec.fisheries.uvms.spatial.dao.UserArea*</param>
                     </targetTests>
                 </configuration>
             </plugin>
