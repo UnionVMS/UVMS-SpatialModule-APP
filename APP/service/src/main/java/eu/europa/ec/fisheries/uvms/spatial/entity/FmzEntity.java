@@ -28,7 +28,8 @@ import javax.persistence.Table;
         @NamedQuery(name = FmzEntity.BY_INTERSECT,
                 query = "FROM FmzEntity WHERE intersects(geom, :shape) = true AND enabled = 'Y'"),
         @NamedQuery(name = FmzEntity.SEARCH_FMZ, query = "FROM FmzEntity where (upper(name) like :name OR upper(code) like :code) AND enabled='Y' GROUP BY gid"),
-        @NamedQuery(name = FmzEntity.SEARCH_FMZ_NAMES_BY_CODE, query = "From FmzEntity where code in (SELECT distinct(code) from FmzEntity where (upper(name) like :name OR upper(code) like :code) AND enabled='Y' GROUP BY gid)")
+        @NamedQuery(name = FmzEntity.SEARCH_FMZ_NAMES_BY_CODE, query = "From FmzEntity where code in (SELECT distinct(code) from FmzEntity where (upper(name) like :name OR upper(code) like :code) AND enabled='Y' GROUP BY gid)"),
+        @NamedQuery(name = FmzEntity.FMZ_COLUMNS, query = "SELECT fmz.id as gid, fmz.name AS name, fmz.code AS code FROM FmzEntity AS fmz WHERE fmz.id in (:ids)")
 })
 public class FmzEntity extends BaseSpatialEntity {
 
@@ -36,6 +37,7 @@ public class FmzEntity extends BaseSpatialEntity {
     public static final String BY_INTERSECT = "fmzEntity.byIntersect";
     public static final String SEARCH_FMZ = "fmzEntity.SearcgFmzByNameOrCode";
     public static final String SEARCH_FMZ_NAMES_BY_CODE = "fmzEntity.searchNamesByCode";
+    public static final String FMZ_COLUMNS = "fmzEntity.fmzColumns";
 
     private static final String FMZ_ID = "fmz_id";
     private static final String EDITED = "edited";

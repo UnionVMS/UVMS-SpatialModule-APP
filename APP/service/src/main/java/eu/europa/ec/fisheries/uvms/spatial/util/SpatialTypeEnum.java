@@ -10,29 +10,24 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.util;
 
-import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.PortAreasEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.PortEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.RfmoEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.*;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 
 public enum SpatialTypeEnum {
 	
-	EEZ("EEZ", EezEntity.EEZ_BY_COORDINATE, QueryNameConstants.EEZ_COLUMNS, EezEntity.class),
-	RFMO("RFMO", RfmoEntity.RFMO_BY_COORDINATE, QueryNameConstants.RFMO_COLUMNS, RfmoEntity.class),
-	PORT("PORT", PortEntity.PORT_BY_COORDINATE, PortEntity.class),
-	PORTAREA("PORTAREA", PortAreasEntity.PORT_AREA_BY_COORDINATE, null, PortAreasEntity.class),
-	USERAREA("USERAREA", UserAreasEntity.USER_AREA_BY_COORDINATE, QueryNameConstants.USERAREA_COLUMNS, UserAreasEntity.class);
+	EEZ("EEZ", EezEntity.EEZ_COLUMNS),
+	RFMO("RFMO", RfmoEntity.RFMO_COLUMNS),
+	FAO("FAO", FaoEntity.FAO_COLUMNS),
+	FMZ("FMZ", FmzEntity.FMZ_COLUMNS),
+	GFCM("GFCM", GfcmEntity.GFCM_COLUMNS),
+	STATRECT("STATRECT", StatRectEntity.STATRECT_COLUMNS),
+	PORTAREA("PORTAREA", PortAreasEntity.PORTAREA_COLUMNS),
+	USERAREA("USERAREA", UserAreasEntity.USERAREA_COLUMNS);
 	
 	private String type;
 	private String namedQuery;
 	
-	private SpatialTypeEnum(String type, String nativeQuery, Class entityClass) {
-		this(type, nativeQuery, "", entityClass);
-	}
-	
-	private SpatialTypeEnum(String type, String nativeQuery, String namedQuery, Class entityClass) {
+	SpatialTypeEnum(String type, String namedQuery) {
 		this.type = type;
 		this.namedQuery = namedQuery;
 	}

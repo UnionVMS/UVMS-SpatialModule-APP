@@ -27,7 +27,7 @@ import java.util.Map;
 @Entity
 @NamedQueries({
         @NamedQuery(name = EezEntity.EEZ_BY_COORDINATE, query = "FROM EezEntity WHERE intersects(geom, :shape) = true AND enabled = 'Y'"),
-        @NamedQuery(name = QueryNameConstants.EEZ_COLUMNS, query = "SELECT eez.name AS name, eez.code AS code FROM EezEntity AS eez WHERE eez.id =:gid"),
+        @NamedQuery(name = EezEntity.EEZ_COLUMNS, query = "SELECT eez.id as gid, eez.name AS name, eez.code AS code FROM EezEntity AS eez WHERE eez.id in (:ids)"),
         @NamedQuery(name = EezEntity.DISABLE_EEZ_AREAS, query = "UPDATE EezEntity SET enabled = 'N'"),
         @NamedQuery(name = EezEntity.LIST_EMPTY_GEOMETRIES, query = "FROM EezEntity WHERE isEmpty(geom) = true AND enabled = 'Y'"),
         @NamedQuery(name = EezEntity.SEARCH_EEZ, query = "FROM EezEntity where (upper(name) like :name OR upper(code) like :code) AND enabled='Y' GROUP BY gid"),
@@ -42,6 +42,7 @@ public class EezEntity extends BaseSpatialEntity {
     public static final String DISABLE_EEZ_AREAS = "eezEntity.disableEezAreas";
     public static final String SEARCH_EEZ = "eezEntity.searchByNameAndCode";
     public static final String SEARCH_EEZ_NAMES_BY_CODE = "eezEntity.searchNameByCode";
+    public static final String EEZ_COLUMNS = "eezEntity.findSelectedColumns";
 
     private static final String COUNTRY = "country";
     private static final String SOVEREIGN = "sovereign";
