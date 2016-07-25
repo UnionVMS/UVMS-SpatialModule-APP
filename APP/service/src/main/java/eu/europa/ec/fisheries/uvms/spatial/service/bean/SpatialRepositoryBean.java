@@ -110,8 +110,8 @@ public class SpatialRepositoryBean implements SpatialRepository {
     }
 
     @Override
-    public List<Map<String, String>> findSelectedAreaColumns(String namedQueryString, Number gid) {
-        return areaDao.findSelectedAreaColumns(namedQueryString, gid);
+    public List<Map<String, String>> findSelectedAreaColumns(String namedQueryString, List<Long> gids) {
+        return areaDao.findSelectedAreaColumns(namedQueryString, gids);
     }
 
     @Override

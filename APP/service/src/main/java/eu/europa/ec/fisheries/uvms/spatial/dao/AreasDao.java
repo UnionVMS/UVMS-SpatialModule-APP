@@ -87,9 +87,9 @@ public class AreasDao extends AbstractDAO<BaseSpatialEntity> {
         return resultList;
       }
 
-    public List<Map<String, String>> findSelectedAreaColumns(String namedQueryString, Number gid) {
+    public List<Map<String, String>> findSelectedAreaColumns(String namedQueryString, List<Long> gids) {
         Query query = em.unwrap(Session.class).getNamedQuery(namedQueryString);
-        query.setParameter("gid", gid);
+        query.setParameterList("ids", gids);
         query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
         return query.list();
     }

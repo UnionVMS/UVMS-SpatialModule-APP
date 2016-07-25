@@ -42,7 +42,7 @@ public interface SpatialRepository {
 
     List<UserAreaLayerDto> findUserAreaLayerMapping();
 
-    List<Map<String, String>> findSelectedAreaColumns(String namedQueryString, Number gid);
+    List<Map<String, String>> findSelectedAreaColumns(String namedQueryString, List<Long> gids);
 
     List<ProjectionDto> findProjectionByMap(long reportId);
 

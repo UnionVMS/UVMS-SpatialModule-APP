@@ -56,10 +56,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.FileAttribute;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Stateless
 @Local(AreaService.class)
@@ -98,8 +95,10 @@ public class AreaServiceBean implements AreaService {
     @Transactional
     public List<Map<String, String>> getSelectedAreaColumns(final List<AreaTypeEntry> areaTypes) throws ServiceException {
 
-        List<Map<String, String>> columnMapList = new ArrayList<>();
-        for(AreaTypeEntry areaTypeEntry : areaTypes) { // TODO @Greg get rid of the loop
+        List<Map<String, String>> areaColumnsList = new ArrayList<>();
+        Map<String, List<Long>> areaTypeGidMap = new HashMap<>();
+
+        for(AreaTypeEntry areaTypeEntry : areaTypes) { // Loops through the list of gids, areaType and forms a map containing a list of Gids for each Area Type
             String gid = areaTypeEntry.getId();
             String areaType = areaTypeEntry.getAreaType().value();
 
@@ -107,25 +106,36 @@ public class AreaServiceBean implements AreaService {
                 throw new SpatialServiceException(SpatialServiceErrors.INVALID_ID_TYPE, gid);
             }
 
+            boolean isAdded = false;
+            for (Map.Entry<String, List<Long>> entry : areaTypeGidMap.entrySet()) {
+                if (entry.getKey().equalsIgnoreCase(areaType)) {
+                    entry.getValue().add(Long.parseLong(gid));
+                    isAdded = true;
+                }
+            }
+            if (!isAdded) {
+                areaTypeGidMap.put(areaType, new ArrayList(Arrays.asList(Long.parseLong(gid))));
+            }
+        }
+
+        for (Map.Entry<String, List<Long>> entry : areaTypeGidMap.entrySet()) {
             String namedQuery = null;
             for (SpatialTypeEnum type : SpatialTypeEnum.values()) {
-                if(type.getType().equalsIgnoreCase(areaType)) {
+                if(type.getType().equalsIgnoreCase(entry.getKey())) {
                     namedQuery = type.getNamedQuery();
                 }
             }
-            List<Map<String, String>> selectedAreaColumns = repository.findSelectedAreaColumns(namedQuery, Long.parseLong(gid));
-
-            Map<String, String> columnMap;
-
-            if (!selectedAreaColumns.isEmpty()) {
-                columnMap = selectedAreaColumns.get(0);
-                columnMap.put(GID, gid);
-                columnMap.put(AREA_TYPE, areaType.toUpperCase());
-                columnMapList.add(columnMap);
+            if (namedQuery != null) {
+                List<Map<String, String>> selectedAreaColumns = repository.findSelectedAreaColumns(namedQuery, entry.getValue());
+                for (Map<String, String> columnMap : selectedAreaColumns) {
+                    columnMap.put(AREA_TYPE, entry.getKey().toUpperCase());
+                }
+                areaColumnsList.addAll(selectedAreaColumns);
             }
         }
-        return columnMapList;
+        return areaColumnsList;
     }
+
 
     @Override
     @Interceptors(SimpleTracingInterceptor.class)
