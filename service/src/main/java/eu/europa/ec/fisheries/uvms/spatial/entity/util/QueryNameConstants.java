@@ -30,13 +30,6 @@ public final class QueryNameConstants {
     public static final String FIND_ALL_USER_AREAS_BY_GIDS = "UserAreas.findAllUserAreasByGid";
 
     /**
-     * Native Queries
-     */
-    public static final String EEZ_COLUMNS = "eezEntity.findSelectedColumns";
-    public static final String RFMO_COLUMNS = "rfmoEntity.findSelectedColumns";
-    public static final String USERAREA_COLUMNS = "userAreasEntity.findSelectedColumns";
-
-    /**
      * MapDto Config queries
      */
     public static final String FIND_BY_ID = "ReportLayerConfig.findById";

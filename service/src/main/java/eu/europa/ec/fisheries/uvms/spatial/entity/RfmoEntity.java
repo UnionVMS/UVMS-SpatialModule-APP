@@ -26,8 +26,8 @@ import java.util.Map;
 @NamedQueries({
         @NamedQuery(name = RfmoEntity.RFMO_BY_COORDINATE,
                 query = "FROM RfmoEntity WHERE intersects(geom, :shape) = true AND enabled = 'Y'"),
-        @NamedQuery(name = QueryNameConstants.RFMO_COLUMNS,
-                query = "SELECT rfmo.name AS name, rfmo.code AS code FROM RfmoEntity AS rfmo WHERE rfmo.id =:gid"),
+        @NamedQuery(name = RfmoEntity.RFMO_COLUMNS,
+                query = "SELECT rfmo.id as gid, rfmo.name AS name, rfmo.code AS code FROM RfmoEntity AS rfmo WHERE rfmo.id in (:ids)"),
         @NamedQuery(name = RfmoEntity.DISABLE_RFMO_AREAS,
                 query = "UPDATE RfmoEntity SET enabled = 'N'"),
         @NamedQuery(name = RfmoEntity.SEARCH_RFMO, query = "FROM RfmoEntity where (upper(name) like :name OR upper(code) like :code) AND enabled='Y' GROUP BY gid"),
@@ -40,6 +40,7 @@ public class RfmoEntity extends BaseSpatialEntity {
     public static final String DISABLE_RFMO_AREAS = "rfmoEntity.disableRfmoAreas";
     public static final String SEARCH_RFMO = "rfmoEntity.searchRfmoByNameOrCode";
     public static final String SEARCH_RFMO_NAMES_BY_CODE = "rfmoEntity.searchNamesByCode";
+    public static final String RFMO_COLUMNS = "rfmoEntity.findSelectedColumns";
 
     private static final String TUNA = "tuna";
 

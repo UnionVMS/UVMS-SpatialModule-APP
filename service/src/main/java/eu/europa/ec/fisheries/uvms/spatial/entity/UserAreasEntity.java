@@ -52,8 +52,8 @@ import java.util.Set;
                 query = "FROM UserAreasEntity WHERE intersects(geom, :shape) = true AND enabled = 'Y'"),
         @NamedQuery(name = UserAreasEntity.FIND_USER_AREA_BY_ID,
                 query = "SELECT area FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection WHERE area.id = :userAreaId AND ((1=:isPowerUser) OR (area.userName=:userName OR scopeSelection.name=:scopeName))"),
-        @NamedQuery(name = QueryNameConstants.USERAREA_COLUMNS,
-                query = "SELECT userArea.name as name, userArea.areaDesc as desc FROM UserAreasEntity AS userArea WHERE userArea.id =:gid"),
+        @NamedQuery(name = UserAreasEntity.USERAREA_COLUMNS,
+                query = "SELECT userArea.id as gid, userArea.name as name, userArea.areaDesc as desc FROM UserAreasEntity AS userArea WHERE userArea.id in (:gid)"),
         @NamedQuery(name = QueryNameConstants.FIND_ALL_USER_AREAS,
                 query = "SELECT DISTINCT area.id as gid, area.name as name, area.areaDesc as desc FROM UserAreasEntity area " +
                         "LEFT JOIN area.scopeSelection scope WHERE area.userName = :userName OR scope.name = :scopeName"),
@@ -106,6 +106,7 @@ public class UserAreasEntity extends BaseSpatialEntity {
     public static final String SEARCH_USERAREA_NAMES_BY_CODE = "userAreaEntity.searchNamesByCode";
     public static final String UPDATE_USERAREA_FORUSER_AND_SCOPE = "userAreaEntity.updateUserAreaForUserAndScope";
     public static final String UPDATE_USERAREA_FORUSER = "userAreaEntity.updateUserAreaForUser";
+    public static final String USERAREA_COLUMNS = "userAreasEntity.findSelectedColumns";
 
     @Column(length = 255)
     @ColumnAliasName(aliasName ="subType")
