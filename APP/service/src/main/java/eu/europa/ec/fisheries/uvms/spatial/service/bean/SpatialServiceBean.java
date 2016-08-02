@@ -560,7 +560,7 @@ public class SpatialServiceBean implements SpatialService {
                 final Geometry geometry = portsEntity.getGeom();
                 final Point centroid = geometry.getCentroid();
                 calc.setStartingGeographicPoint(centroid.getX(), centroid.getY());
-                calc.setDestinationGeographicPoint(incomingLongitude, incomingLatitude);
+                calc.setDestinationGeographicPoint(point.getX(), point.getY());
                 Double orthodromicDistance = calc.getOrthodromicDistance();
 
                 if (closestDistance > orthodromicDistance) {
