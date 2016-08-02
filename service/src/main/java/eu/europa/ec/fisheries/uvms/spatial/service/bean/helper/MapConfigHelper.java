@@ -300,6 +300,7 @@ public class MapConfigHelper {
             layerDto.setApiKey(bingApiKey);
         }
         setCql(referenceData, layerDto, serviceLayerEntity.getAreaType());
+        layerDto.setTypeName(serviceLayerEntity.getAreaType().getTypeName());
         return layerDto;
     }
 
