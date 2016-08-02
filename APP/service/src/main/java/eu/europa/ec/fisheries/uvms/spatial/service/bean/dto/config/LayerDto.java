@@ -84,6 +84,9 @@ public class LayerDto {
     @JsonProperty("warning")
     private Boolean isWarning;
 
+    @JsonProperty("typeName")
+    private String typeName;
+
     @JsonIgnore
     private String areaLocationTypeName;
 
@@ -268,5 +271,15 @@ public class LayerDto {
 
     public void setAreaLocationTypeName(String areaLocationTypeName) {
         this.areaLocationTypeName = areaLocationTypeName;
+    }
+
+    @JsonProperty("typeName")
+    public String getTypeName() {
+        return typeName;
+    }
+
+    @JsonProperty("typeName")
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
     }
 }
