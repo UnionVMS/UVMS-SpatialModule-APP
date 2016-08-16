@@ -16,6 +16,7 @@
 			<column name="world" value="Y" />
 			<column name="extent" value="-20026376.39;-20048966.10;20026376.39;20048966.10" />
 			<column name="axis" value="enu" />
+			<column name="world_extent" value="-20026376.39;-20048966.10;20026376.39;20048966.10" />
 		</insert>
 		<insert tableName="projection">
 			<column name="name" value="WGS 84" />
@@ -26,6 +27,7 @@
 			<column name="world" value="Y" />
 			<column name="extent" value="-180;-90;180;90" />
 			<column name="axis" value="neu" />
+			<column name="world_extent" value="-180;-90;180;90" />
 		</insert>
 	</changeSet>
 </databaseChangeLog>

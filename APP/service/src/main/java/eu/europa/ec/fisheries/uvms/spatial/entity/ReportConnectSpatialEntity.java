@@ -37,7 +37,7 @@ import javax.persistence.Table;
 @Table(name = "report_connect_spatial")
 @NamedQueries({
 		@NamedQuery(name = ReportConnectSpatialEntity.FIND_MAP_PROJ_BY_ID,
-				query = "SELECT projection.srsCode AS epsgCode, projection.units AS units, projection.isWorld AS global, projection.extent as extent, projection.axis as axis , projection.projDef as projDef " +
+				query = "SELECT projection.srsCode AS epsgCode, projection.units AS units, projection.isWorld AS global, projection.extent as extent, projection.axis as axis , projection.projDef as projDef, projection.worldExtent as worldExtent " +
 						"FROM ReportConnectSpatialEntity rcs INNER JOIN rcs.projectionByMapProjId AS projection " +
 						"WHERE rcs.reportId = :reportId"),
 		@NamedQuery(name = ReportConnectSpatialEntity.FIND_BY_REPORT_ID,

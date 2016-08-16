@@ -35,6 +35,9 @@
             <column name="axis" type="VARCHAR(3)">
                 <constraints nullable="false"/>
             </column>
+            <column name="world_extent" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
     </changeSet>
     
