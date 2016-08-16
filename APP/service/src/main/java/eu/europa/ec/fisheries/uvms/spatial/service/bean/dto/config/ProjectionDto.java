@@ -54,6 +54,9 @@ public class ProjectionDto {
     @JsonProperty("projDef")
     private String projDef;
 
+    @JsonProperty("worldExtent")
+    private String worldExtent;
+
     /**
      * No args constructor for use in serialization
      */
@@ -164,5 +167,15 @@ public class ProjectionDto {
     @JsonProperty("projDef")
     public void setProjDef(String projDef) {
         this.projDef = projDef;
+    }
+
+    @JsonProperty("worldExtent")
+    public String getWorldExtent() {
+        return worldExtent;
+    }
+
+    @JsonProperty("worldExtent")
+    public void setWorldExtent(String worldExtent) {
+        this.worldExtent = worldExtent;
     }
 }
