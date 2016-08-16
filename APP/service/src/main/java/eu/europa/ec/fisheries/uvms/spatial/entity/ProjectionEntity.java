@@ -30,7 +30,7 @@ import javax.persistence.Table;
 @NamedQueries({
         @NamedQuery(name = ProjectionEntity.FIND_BY_SRS_CODE, query = "FROM ProjectionEntity p WHERE p.srsCode = :srsCode"),
         @NamedQuery(name = ProjectionEntity.FIND_PROJECTION_BY_ID,
-				query = "SELECT projection.srsCode AS epsgCode, projection.units AS units, projection.isWorld AS global, projection.extent as extent, projection.axis as axis, projection.projDef as projDef " +
+				query = "SELECT projection.srsCode AS epsgCode, projection.units AS units, projection.isWorld AS global, projection.extent as extent, projection.axis as axis, projection.projDef as projDef, projection.worldExtent as worldExtent " +
 						"FROM ProjectionEntity projection WHERE projection.id = :id")
 })
 public class ProjectionEntity extends BaseEntity {
@@ -62,6 +62,9 @@ public class ProjectionEntity extends BaseEntity {
 
 	@Column(nullable = false, length = 3)
 	private String axis;
+
+	@Column(name = "world_extent", nullable = false, length = 255)
+	private String worldExtent;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "projectionByMapProjId", cascade = CascadeType.ALL)
 	private Set<ReportConnectSpatialEntity> reportConnectSpatialsForMapProjId;
@@ -152,5 +155,13 @@ public class ProjectionEntity extends BaseEntity {
 	public void setReportConnectSpatialsForDisplayProjId(
 			Set<ReportConnectSpatialEntity> reportConnectSpatialsForDisplayProjId) {
 		this.reportConnectSpatialsForDisplayProjId = reportConnectSpatialsForDisplayProjId;
+	}
+
+	public String getWorldExtent() {
+		return worldExtent;
+	}
+
+	public void setWorldExtent(String worldExtent) {
+		this.worldExtent = worldExtent;
 	}
 }
