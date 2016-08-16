@@ -51,6 +51,9 @@ public class ProjectionDto {
     @JsonProperty("axis")
     private String axis;
 
+    @JsonProperty("projDef")
+    private String projDef;
+
     /**
      * No args constructor for use in serialization
      */
@@ -151,5 +154,15 @@ public class ProjectionDto {
     @JsonProperty("axis")
     public void setAxis(String axis) {
         this.axis = axis;
+    }
+
+    @JsonProperty("projDef")
+    public String getProjDef() {
+        return projDef;
+    }
+
+    @JsonProperty("projDef")
+    public void setProjDef(String projDef) {
+        this.projDef = projDef;
     }
 }
