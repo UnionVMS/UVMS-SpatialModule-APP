@@ -16,7 +16,7 @@
 			<column name="world" value="Y" />
 			<column name="extent" value="-20026376.39;-20048966.10;20026376.39;20048966.10" />
 			<column name="axis" value="enu" />
-			<column name="world_extent" value="-20026376.39;-20048966.10;20026376.39;20048966.10" />
+			<column name="world_extent" value="-180;-89.99;180;89.99" />
 		</insert>
 		<insert tableName="projection">
 			<column name="name" value="WGS 84" />
@@ -29,5 +29,27 @@
 			<column name="axis" value="neu" />
 			<column name="world_extent" value="-180;-90;180;90" />
 		</insert>
+		<!--insert tableName="projection">
+			<column name="name" value="Arctic Polar Stereographic" />
+			<column name="srs_code" valueNumeric="3995" />
+			<column name="proj_def" value="+proj=stere +lat_0=90 +lat_ts=71 +lon_0=0 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs" />
+			<column name="formats" value="m" />
+			<column name="units" value="m" />
+			<column name="world" value="N" />
+			<column name="extent" value="-12382000;-12382000;12382000;12382000" />
+			<column name="axis" value="enu" />
+			<column name="world_extent" value="-180;60;180;90" />
+		</insert>
+		<insert tableName="projection">
+			<column name="name" value="ETRS89, ETRS-LAEA" />
+			<column name="srs_code" valueNumeric="3035" />
+			<column name="proj_def" value="+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs " />
+			<column name="formats" value="m" />
+			<column name="units" value="m" />
+			<column name="world" value="N" />
+			<column name="extent" value="2426378.0132;1528101.2618;6293974.6215;5446513.5222" />
+			<column name="axis" value="neu" />
+			<column name="world_extent" value="-16.1;32.88;39.65;84.17" />
+		</insert-->
 	</changeSet>
 </databaseChangeLog>
