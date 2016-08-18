@@ -15,6 +15,7 @@
     <include file="schema\tables\fao.xml"/>
     <include file="schema\tables\gfcm.xml"/>
 	<include file="schema\tables\fmz.xml"/>
+	<include file="schema\tables\geometry_columns.xml"/>	
     <include file="schema\tables\port.xml"/>
 	<include file="schema\tables\port_area.xml"/>
     <include file="schema\tables\projection.xml"/>
