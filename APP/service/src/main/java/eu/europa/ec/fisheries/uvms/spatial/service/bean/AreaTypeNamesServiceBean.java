@@ -76,7 +76,7 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
     @Override
     public List<ServiceLayerDto> getAreaLayerDescription(LayerSubTypeEnum layerTypeEnum) throws ServiceException {
         String apiKey = getBingApiKey();
-        if (apiKey != null) {
+        if (apiKey != null && !apiKey.trim().equals("")) {
             return repository.findServiceLayerBySubType(constructInParameters(layerTypeEnum), true);
         } else {
             return repository.findServiceLayerBySubType(constructInParameters(layerTypeEnum), false);
