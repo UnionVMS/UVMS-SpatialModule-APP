@@ -9,7 +9,8 @@
 	<include file="schema\initdata\area_location_types_init.xml"/>
 	<include file="schema\initdata\projection_init.xml"/>
     <include file="schema\initdata\system_configurations_init.xml"/>
-
+	<include file="schema\initdata\geometry_columns.xml"/>
+	
 	<changeSet author="martinhu" id="1436863739768-2" dbms="postgresql">
 		<loadData file="schema/initdata/csv/postgres/eez.csv" tableName="eez"/>
 		<loadData file="schema/initdata/csv/postgres/countries.csv" tableName="countries"/>
