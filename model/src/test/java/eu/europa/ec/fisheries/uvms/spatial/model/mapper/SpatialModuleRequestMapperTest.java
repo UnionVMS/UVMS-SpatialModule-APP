@@ -12,7 +12,6 @@ package eu.europa.ec.fisheries.uvms.spatial.model.mapper;
 
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMarshallException;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
-import org.junit.Before;
 import org.junit.Test;
 
 import javax.xml.bind.JAXBContext;

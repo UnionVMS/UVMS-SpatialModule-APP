@@ -10,8 +10,11 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import com.vividsolutions.jts.geom.*;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.PointType;
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.Polygon;
 import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadProperty;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
@@ -24,7 +27,6 @@ import org.geotools.feature.FeatureIterator;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.JTSFactoryFinder;
 import org.geotools.referencing.CRS;
-import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.feature.Property;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
@@ -35,7 +37,6 @@ import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
-
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.io.IOException;
@@ -46,38 +47,31 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.geotools.referencing.crs.DefaultGeographicCRS.WGS84;
+
 @Slf4j
 public class SpatialUtils {
 
     private static final String EPSG = "EPSG:";
     private static final int DEFAULT_SRID = 4326;
+    private static GeometryFactory gf = new GeometryFactory();
+    public static final CoordinateReferenceSystem DEFAULT_CRS;
 
-    static CoordinateReferenceSystem getCrs(final int srid){
-        CoordinateReferenceSystem referenceSystem;
-        try {
-            referenceSystem = CRS.decode(EPSG + srid);
-        } catch (FactoryException e) {
-            throw new IllegalArgumentException("ERROR WHILE DECODING CRS");
-        }
-        return referenceSystem;
-    }
-
-    static CoordinateReferenceSystem getDefaultCrs(){
-        return getCrs(DEFAULT_SRID);
+    static {
+        DEFAULT_CRS = buildCrs(DEFAULT_SRID);
     }
 
     private SpatialUtils() {
     }
 
-    static Point convertToPointInWGS84(PointType schemaPoint) {
-
-        Integer crs = DEFAULT_SRID;
-
-        if (schemaPoint.getCrs() != null){
-            crs = schemaPoint.getCrs();
+    private static CoordinateReferenceSystem buildCrs(final Integer srid){
+        CoordinateReferenceSystem referenceSystem;
+        try {
+            referenceSystem = CRS.decode(EPSG + srid);
+        } catch (FactoryException e) {
+            throw new IllegalArgumentException("COORDINATE REFERENCE SYSTEM NOT SUPPORTED");
         }
-
-        return convertToPointInWGS84(schemaPoint.getLatitude(), schemaPoint.getLongitude(), crs);
+        return referenceSystem;
     }
 
     static Geometry translate(Double tx, Double ty, Geometry geometry) {
@@ -103,28 +97,43 @@ public class SpatialUtils {
            targetGeometry = geometryFactory.createPolygon(target);
         }
         else {
-            throw new UnsupportedOperationException("Geometry type not supported");
+            throw new UnsupportedOperationException("GEOMETRY TYPE NOT SUPPORTED");
         }
 
         return targetGeometry;
     }
 
-    static Point convertToPointInWGS84(double lon, double lat, int crs) {
+    private static Point convertToPoint(Double lon, Double lat, Integer crs) {
+        Point p = gf.createPoint(new Coordinate(lat, lon));
+        p.setSRID(crs);
+        return p;
+    }
+
+    static Point transform(Double lon, Double lat, Integer crs) {
+
+        Point p;
+        if (!isDefaultCrs(crs)){
+            p = transformToDefault(lat, lon, crs);
+        }
+        else {
+            p = convertToPoint(lat, lon, crs);
+        }
+        return p;
+    }
+
+    private static Point transformToDefault(double lon, double lat, int crs) {
         try {
 
-            GeometryFactory gf = new GeometryFactory();
-            Point point = gf.createPoint(new Coordinate(lon, lat));
+            Point p = gf.createPoint(new Coordinate(lat, lon));
+            p.setSRID(DEFAULT_SRID);
 
             if (!isDefaultCrs(crs)) {
-
                 CoordinateReferenceSystem inputCrs = CRS.decode(EPSG + crs);
-                MathTransform mathTransform = CRS.findMathTransform(inputCrs, DefaultGeographicCRS.WGS84, false);
-                point = (Point) JTS.transform(point, mathTransform);
-
+                MathTransform mathTransform = CRS.findMathTransform(inputCrs, WGS84, false);
+                p = (Point) JTS.transform(p, mathTransform);
             }
+            return p;
 
-            point.setSRID(DEFAULT_SRID);
-            return point;
         } catch (FactoryException ex) {
             throw new SpatialServiceException(SpatialServiceErrors.NO_SUCH_CRS_CODE_ERROR, String.valueOf(crs), ex);
         } catch (MismatchedDimensionException | TransformException ex) {
@@ -149,15 +158,14 @@ public class SpatialUtils {
 
         try {
 
-            MathTransform transform = CRS.findMathTransform(sourceCRS, SpatialUtils.getDefaultCrs());
+            MathTransform transform = CRS.findMathTransform(sourceCRS, DEFAULT_CRS);
             while (iterator.hasNext()) {
                 final SimpleFeature feature = iterator.next();
                 geometries.put(feature.getID(), new ArrayList<>(feature.getProperties()));
                 Geometry targetGeometry = (Geometry) feature.getDefaultGeometry();
                 if (targetGeometry != null) {
-                    if (SpatialUtils.getDefaultCrs().getName().equals(sourceCRS.getName())){
+                    if (DEFAULT_CRS.getName().equals(sourceCRS.getName())){
                         targetGeometry = JTS.transform(targetGeometry, transform);
-                        convertToJTSCoordinates(targetGeometry.getCoordinates()); // Why JTS why
                     }
                 }
                 else {
@@ -210,13 +218,4 @@ public class SpatialUtils {
         }
     }
 
-    public static Coordinate[] convertToJTSCoordinates(Coordinate[] coordinates) {
-
-        Coordinate[] swapped = new Coordinate[coordinates.length];
-
-        for(int i =0; i < coordinates.length; i++){
-            swapped[i] = new Coordinate(coordinates[i].y, coordinates[i].x);
-        }
-        return swapped;
-    }
 }
