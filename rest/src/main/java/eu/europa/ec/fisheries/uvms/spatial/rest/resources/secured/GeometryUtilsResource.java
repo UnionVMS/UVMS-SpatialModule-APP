@@ -90,8 +90,8 @@ public class GeometryUtilsResource extends UnionVMSResource {
         Geometry translate;
 
         try {
-            Double latitude = Double.valueOf(String.valueOf(payload.get("lat")));
-            Double longitude = Double.valueOf(String.valueOf(payload.get("lon")));
+            Double longitude = Double.valueOf(String.valueOf(payload.get("x")));
+            Double latitude = Double.valueOf(String.valueOf(payload.get("y")));
             Integer crs = Integer.valueOf(String.valueOf(payload.get("crs")));
 
             translate = GeometryUtils.toWgs84Point(latitude, longitude, crs);
