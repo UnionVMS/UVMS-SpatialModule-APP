@@ -53,7 +53,7 @@ import java.util.Set;
         @NamedQuery(name = UserAreasEntity.FIND_USER_AREA_BY_ID,
                 query = "SELECT area FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection WHERE area.id = :userAreaId AND ((1=:isPowerUser) OR (area.userName=:userName OR scopeSelection.name=:scopeName))"),
         @NamedQuery(name = UserAreasEntity.USERAREA_COLUMNS,
-                query = "SELECT userArea.id as gid, userArea.name as name, userArea.areaDesc as desc FROM UserAreasEntity AS userArea WHERE userArea.id in (:gid)"),
+                query = "SELECT userArea.id as gid, userArea.name as name, userArea.areaDesc as desc FROM UserAreasEntity AS userArea WHERE userArea.id in (:ids)"),
         @NamedQuery(name = QueryNameConstants.FIND_ALL_USER_AREAS,
                 query = "SELECT DISTINCT area.id as gid, area.name as name, area.areaDesc as desc FROM UserAreasEntity area " +
                         "LEFT JOIN area.scopeSelection scope WHERE area.userName = :userName OR scope.name = :scopeName"),
