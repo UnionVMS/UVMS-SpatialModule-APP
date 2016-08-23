@@ -87,7 +87,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.vividsolutions.jts.operation.distance.DistanceOp.nearestPoints;
-import static eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialUtils.*;
+import static eu.europa.ec.fisheries.uvms.spatial.service.bean.GeometryUtils.*;
 import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 import static org.geotools.geometry.jts.JTS.orthodromicDistance;
 import static org.geotools.geometry.jts.JTS.toGeographic;
@@ -136,7 +136,7 @@ public class SpatialServiceBean implements SpatialService {
             throw new ServiceException("MISSING MANDATORY FIELDS");
         }
 
-        final Point incoming = transform(lat, lon, crs);
+        final Point incoming = toWgs84Point(lat, lon, crs);
         final Double incomingLatitude = incoming.getY();
         final Double incomingLongitude = incoming.getX();
         final Map<String, Location> distancePerTypeMap = new HashMap<>();
@@ -187,7 +187,7 @@ public class SpatialServiceBean implements SpatialService {
 
         AreaLocationTypesEntity areaLocationTypesEntity = repository.findAreaLocationTypeByTypeName(areaTypeEntry.getAreaType().value().toUpperCase());
 
-        Point point = transform(areaTypeEntry.getLongitude(), areaTypeEntry.getLatitude(), areaTypeEntry.getCrs());
+        Point point = toWgs84Point(areaTypeEntry.getLongitude(), areaTypeEntry.getLatitude(), areaTypeEntry.getCrs());
 
         List list = DAOFactory.getAbstractSpatialDao(em, areaLocationTypesEntity.getTypeName()).findByIntersect(point);
         List<AreaDetails> areaDetailsList = new ArrayList<>();
@@ -221,7 +221,7 @@ public class SpatialServiceBean implements SpatialService {
     @Override
     @Transactional
     public List<UserAreaDto> getUserAreaDetailsWithExtentByLocation(Coordinate coordinate, String userName) throws ServiceException {
-        Point point = transform(coordinate.getLongitude(), coordinate.getLatitude(), coordinate.getCrs());
+        Point point = toWgs84Point(coordinate.getLongitude(), coordinate.getLatitude(), coordinate.getCrs());
 
         List<UserAreasEntity> userAreaDetailsWithExtentByLocation = repository.findUserAreaDetailsByLocation(userName, point);
 
@@ -242,7 +242,7 @@ public class SpatialServiceBean implements SpatialService {
     @Override
     @Transactional
     public List<AreaDetails> getUserAreaDetailsByLocation(AreaTypeEntry areaTypeEntry, String userName) throws ServiceException {
-        Point point = transform(areaTypeEntry.getLongitude(), areaTypeEntry.getLatitude(), areaTypeEntry.getCrs());
+        Point point = toWgs84Point(areaTypeEntry.getLongitude(), areaTypeEntry.getLatitude(), areaTypeEntry.getCrs());
         List<UserAreasEntity> userAreaDetails = repository.findUserAreaDetailsByLocation(userName, point);
         try {
             List<AreaDetails> areaDetailsList = Lists.newArrayList();
@@ -302,7 +302,7 @@ public class SpatialServiceBean implements SpatialService {
                 throw new ServiceException("MISSING MANDATORY FIELDS");
             }
 
-            final Point incoming = transform(lat, lon, crs);
+            final Point incoming = toWgs84Point(lat, lon, crs);
 
             final MeasurementUnit measurementUnit = MeasurementUnit.getMeasurement(request.getUnit().name());
             final UnitType unit = request.getUnit();
@@ -367,7 +367,7 @@ public class SpatialServiceBean implements SpatialService {
             throw new ServiceException("MISSING MANDATORY FIELDS");
         }
 
-        final Point incoming = transform(lat, lon, crs);
+        final Point incoming = toWgs84Point(lat, lon, crs);
         final List<AreaLocationTypesEntity> typesEntities = repository.findAllIsPointIsSystemWide(false, true);
         final List<AreaExtendedIdentifierType> areaTypes = new ArrayList<>();
 
@@ -597,7 +597,7 @@ public class SpatialServiceBean implements SpatialService {
 
             Map<String, Object> fieldMap = new HashMap<>();
             List list = new ArrayList();
-            Point point = transform(incomingLongitude, incomingLatitude, locationTypeEntry.getCrs());
+            Point point = toWgs84Point(incomingLongitude, incomingLatitude, locationTypeEntry.getCrs());
 
             List<PortEntity> records = repository.listClosestPorts(point, 5);
             PortEntity closestLocation = null;
@@ -647,20 +647,6 @@ public class SpatialServiceBean implements SpatialService {
         Geometry geometry = point.buffer(buffer);
         return new WKTWriter2().write(geometry);
 
-    }
-
-    @Override
-    public String translate(final Double tx, final Double ty, final String wkt) throws ServiceException {
-
-        try {
-
-            Geometry geometry = new WKTReader2().read(wkt);
-            Geometry translate = SpatialUtils.translate(tx, ty, geometry);
-            return new WKTWriter2().write(translate);
-
-        } catch (Exception ex) {
-            throw new ServiceException(ex.getMessage());
-        }
     }
 
 }

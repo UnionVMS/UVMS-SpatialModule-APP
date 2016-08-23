@@ -70,9 +70,9 @@
     </xs:complexType>
     <xs:complexType name="PointType">
         <xs:sequence>
-            <xs:element name="Longitude" type="xs:double"/>
-            <xs:element name="Latitude" type="xs:double"/>
-            <xs:element name="Crs" type="xs:int" minOccurs="0"/>
+            <xs:element name="Longitude" type="xs:double" nillable="true"/>
+            <xs:element name="Latitude" type="xs:double" nillable="true"/>
+            <xs:element name="Crs" type="xs:int" nillable="true"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="ClosestAreasType">
@@ -87,9 +87,9 @@
     </xs:complexType>
     <xs:complexType name="Coordinate">
         <xs:sequence>
-            <xs:element name="longitude" type="xs:double" nillable="false"/>
-            <xs:element name="latitude" type="xs:double" nillable="false"/>
-            <xs:element name="crs" type="xs:int" nillable="false"/>
+            <xs:element name="longitude" type="xs:double" nillable="true"/>
+            <xs:element name="latitude" type="xs:double" nillable="true"/>
+            <xs:element name="crs" type="xs:int" nillable="true"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="AreaDetails">
