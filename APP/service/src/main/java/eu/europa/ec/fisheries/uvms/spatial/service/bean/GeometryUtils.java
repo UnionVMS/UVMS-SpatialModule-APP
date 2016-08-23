@@ -94,19 +94,19 @@ public final class GeometryUtils {
         Point p;
         try {
             if (!isDefaultCrs(crs)){
-                p = gf.createPoint(new Coordinate(latitude, longitude));
+                p = gf.createPoint(new Coordinate(longitude, latitude));
                 if (!isDefaultCrs(crs)) {
                     final CoordinateReferenceSystem inputCrs = CRS.decode(EPSG + crs);
                     MathTransform mathTransform = CRS.findMathTransform(inputCrs, WGS84, false);
                     p = (Point) JTS.transform(p, mathTransform);
                 }
-                checkLatitude(p.getX());
-                checkLongitude(p.getY());
+                checkLatitude(p.getY());
+                checkLongitude(p.getX());
             }
             else {
                 checkLatitude(latitude);
                 checkLongitude(longitude);
-                p = gf.createPoint(new Coordinate(latitude, longitude));
+                p = gf.createPoint(new Coordinate(longitude, latitude));
             }
             p.setSRID(DEFAULT_SRID);
         } catch (TransformException e) {
