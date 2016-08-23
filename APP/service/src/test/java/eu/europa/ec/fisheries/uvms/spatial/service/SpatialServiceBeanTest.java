@@ -11,24 +11,25 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.service;
 
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.io.WKTReader;
 import eu.europa.ec.fisheries.uvms.BaseUnitilsTest;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Area;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.PointType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.UnitType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialServiceBean;
 import lombok.SneakyThrows;
-import org.geotools.geometry.jts.WKTReader2;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.unitils.inject.annotation.InjectIntoByType;
 import org.unitils.inject.annotation.TestedObject;
 import org.unitils.mock.Mock;
-
-import java.util.Arrays;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static junit.framework.TestCase.assertEquals;
 
-@Ignore(value = "FIX LATER")
 public class SpatialServiceBeanTest extends BaseUnitilsTest {
 
     @TestedObject
@@ -44,13 +45,13 @@ public class SpatialServiceBeanTest extends BaseUnitilsTest {
         closestAreaRequest = new ClosestAreaSpatialRQ();
         closestAreaRequest.setUnit(UnitType.KILOMETERS);
         ClosestAreaSpatialRQ.AreaTypes areaTypes = new ClosestAreaSpatialRQ.AreaTypes();
-        areaTypes.setAreaTypes(Arrays.asList(AreaType.EEZ));
+        areaTypes.setAreaTypes(asList(AreaType.EEZ));
         closestAreaRequest.setAreaTypes(areaTypes);
 
         PointType point = new PointType();
-        point.setCrs(3261);
-        point.setLatitude(12);
-        point.setLongitude(12);
+        point.setCrs(3216);
+        point.setLatitude(-21);
+        point.setLongitude(50);
         closestAreaRequest.setPoint(point);
     }
     @Test
@@ -63,14 +64,13 @@ public class SpatialServiceBeanTest extends BaseUnitilsTest {
         areas[0][2] = "MAR";
         areas[0][3] = "Moroccan Exclusive Zone";
 
-        Geometry geometry = new WKTReader2().read("MULTIPOLYGON(((151.464692488022 -89.9998252076401,166.020867143701 -89.9998601005151," +
-                "104.287122332492 -89.9998930298125,151.464692488022 -89.9998252076401)))");
+        Geometry geometry = new WKTReader().read("POINT (-75.347781567 -106.9794456)");
+        geometry.setSRID(4326);
         areas[0][4] = geometry;
-        geometry.setSRID(3216);
-
-        repo.returns(Arrays.asList(areas)).closestArea(null, null, null);
+        repo.returns(asList(areas)).closestArea(null, null, null);
 
         List<Area> closestArea = service.getClosestArea(closestAreaRequest);
-        assertEquals(0.024537057275323824, closestArea.get(0).getDistance());
+        assertEquals(18267.45280663312, closestArea.get(0).getDistance());
     }
+
 }

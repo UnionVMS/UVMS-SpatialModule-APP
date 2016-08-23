@@ -61,7 +61,4 @@ public interface SpatialService {
 
     String calculateBuffer(Double latitude, Double longitude, Double buffer);
 
-    String translate(Double tx, Double ty, String wkt) throws ServiceException;
-
-
 }

@@ -10,11 +10,7 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.*;
 import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadProperty;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
@@ -26,14 +22,18 @@ import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.JTSFactoryFinder;
+import org.geotools.measure.Latitude;
+import org.geotools.measure.Longitude;
 import org.geotools.referencing.CRS;
+import org.geotools.resources.i18n.ErrorKeys;
+import org.geotools.resources.i18n.Errors;
 import org.opengis.feature.Property;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.filter.Filter;
-import org.opengis.geometry.MismatchedDimensionException;
 import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.NoSuchAuthorityCodeException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
@@ -47,98 +47,109 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.lang.Math.toRadians;
 import static org.geotools.referencing.crs.DefaultGeographicCRS.WGS84;
 
 @Slf4j
-public class SpatialUtils {
+public final class GeometryUtils {
 
     private static final String EPSG = "EPSG:";
+
     private static final int DEFAULT_SRID = 4326;
+
     private static GeometryFactory gf = new GeometryFactory();
+
     public static final CoordinateReferenceSystem DEFAULT_CRS;
 
     static {
         DEFAULT_CRS = buildCrs(DEFAULT_SRID);
     }
 
-    private SpatialUtils() {
+    /**
+     * private constructor to avoid class instantiation
+     */
+    private GeometryUtils() {
     }
 
-    private static CoordinateReferenceSystem buildCrs(final Integer srid){
+    private static CoordinateReferenceSystem buildCrs(final Integer crs) throws IllegalArgumentException {
         CoordinateReferenceSystem referenceSystem;
         try {
-            referenceSystem = CRS.decode(EPSG + srid);
+            referenceSystem = CRS.decode(EPSG + crs);
         } catch (FactoryException e) {
             throw new IllegalArgumentException("COORDINATE REFERENCE SYSTEM NOT SUPPORTED");
         }
         return referenceSystem;
     }
 
-    static Geometry translate(Double tx, Double ty, Geometry geometry) {
-
-        AffineTransform translate= AffineTransform.getTranslateInstance(tx, ty);
-        Coordinate[] source = geometry.getCoordinates();
-        Coordinate[] target = new Coordinate[source.length];
-
-        for (int i= 0; i < source.length; i++){
-            Coordinate sourceCoordinate = source[i];
-            Point2D p = new Point2D.Double(sourceCoordinate.x,sourceCoordinate.y);
-            Point2D transform = translate.transform(p, null);
-            target[i] = new Coordinate(transform.getX(), transform.getY());
-        }
-
-        GeometryFactory geometryFactory = JTSFactoryFinder.getGeometryFactory();
-        Geometry targetGeometry;
-
-        if (geometry instanceof Point){
-            targetGeometry = geometryFactory.createPoint(target[0]);
-        }
-        else if (geometry instanceof Polygon){
-           targetGeometry = geometryFactory.createPolygon(target);
-        }
-        else {
-            throw new UnsupportedOperationException("GEOMETRY TYPE NOT SUPPORTED");
-        }
-
-        return targetGeometry;
-    }
-
-    private static Point convertToPoint(Double lon, Double lat, Integer crs) {
-        Point p = gf.createPoint(new Coordinate(lat, lon));
-        p.setSRID(crs);
-        return p;
-    }
-
-    static Point transform(Double lon, Double lat, Integer crs) {
+    /**
+     * This method returns a Point in WGS84 for a given latitude and longitude and Coordinate reference System.
+     * It will check the parameters for inconsistencies and translate the point if necessary.
+     *
+     * @param latitude The longitude value in <strong>decimal degrees</strong>.
+     * @param longitude The longitude value in <strong>decimal degrees</strong>.
+     * @return The Point in WGS84.
+     */
+    public static Point toWgs84Point(double latitude, double longitude, int crs) {
 
         Point p;
-        if (!isDefaultCrs(crs)){
-            p = transformToDefault(lat, lon, crs);
-        }
-        else {
-            p = convertToPoint(lat, lon, crs);
+        try {
+            if (!isDefaultCrs(crs)){
+                p = gf.createPoint(new Coordinate(latitude, longitude));
+                if (!isDefaultCrs(crs)) {
+                    final CoordinateReferenceSystem inputCrs = CRS.decode(EPSG + crs);
+                    MathTransform mathTransform = CRS.findMathTransform(inputCrs, WGS84, false);
+                    p = (Point) JTS.transform(p, mathTransform);
+                }
+                checkLatitude(p.getX());
+                checkLongitude(p.getY());
+            }
+            else {
+                checkLatitude(latitude);
+                checkLongitude(longitude);
+                p = gf.createPoint(new Coordinate(latitude, longitude));
+            }
+            p.setSRID(DEFAULT_SRID);
+        } catch (TransformException e) {
+            throw new IllegalArgumentException("TRANSFORMATION FAILED", e);
+        } catch (NoSuchAuthorityCodeException e) {
+            throw new IllegalArgumentException("CRS CODE NOT UNDERSTOOD");
+        } catch (FactoryException e) {
+            throw new IllegalArgumentException("MATH TRANSFORM COULD BE CREATED");
         }
         return p;
     }
 
-    private static Point transformToDefault(double lon, double lat, int crs) {
-        try {
-
-            Point p = gf.createPoint(new Coordinate(lat, lon));
-            p.setSRID(DEFAULT_SRID);
-
-            if (!isDefaultCrs(crs)) {
-                CoordinateReferenceSystem inputCrs = CRS.decode(EPSG + crs);
-                MathTransform mathTransform = CRS.findMathTransform(inputCrs, WGS84, false);
-                p = (Point) JTS.transform(p, mathTransform);
-            }
-            return p;
-
-        } catch (FactoryException ex) {
-            throw new SpatialServiceException(SpatialServiceErrors.NO_SUCH_CRS_CODE_ERROR, String.valueOf(crs), ex);
-        } catch (MismatchedDimensionException | TransformException ex) {
-            throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR, ex);
+    /**
+     * Checks the longitude validity. The argument {@code longitude} should be
+     * greater or equal than -180 degrees and lower or equals than +180 degrees. As
+     * a convenience, this method returns the longitude in radians.
+     *
+     * @param  longitude The longitude value in <strong>decimal degrees</strong>.
+     * @return The longitude value in <strong>radians</strong>.
+     * @throws IllegalArgumentException if {@code longitude} is not between -180 and +180 degrees.
+     */
+    private static double checkLongitude(final double longitude) throws IllegalArgumentException {
+        if (longitude >= Longitude.MIN_VALUE && longitude <= Longitude.MAX_VALUE) {
+            return toRadians(longitude);
         }
+        throw new IllegalArgumentException(Errors.format(ErrorKeys.LONGITUDE_OUT_OF_RANGE_$1, new Longitude(longitude)));
+    }
+
+    /**
+     * Checks the latitude validity. The argument {@code latitude} should be
+     * greater or equal than -90 degrees and lower or equals than +90 degrees. As
+     * a convenience, this method returns the latitude in radians.
+     *
+     * @param  latitude The latitude value in <strong>decimal degrees</strong>.
+     * @return The latitude value in <strong>radians</strong>.
+     * @throws IllegalArgumentException if {@code latitude} is not between -90 and +90 degrees.
+     */
+    private static double checkLatitude(final double latitude) throws IllegalArgumentException {
+        if (latitude >= Latitude.MIN_VALUE && latitude <= Latitude.MAX_VALUE) {
+            return toRadians(latitude);
+        }
+        throw new IllegalArgumentException(Errors.format(
+                ErrorKeys.LATITUDE_OUT_OF_RANGE_$1, new Latitude(latitude)));
     }
 
     public static boolean isDefaultCrs(int crs) {
@@ -216,6 +227,35 @@ public class SpatialUtils {
             iterator.close();
             dataStore.dispose();
         }
+    }
+
+    public static Geometry transform(Double tx, Double ty, Geometry geometry) {
+
+        AffineTransform translate= AffineTransform.getTranslateInstance(tx, ty);
+        Coordinate[] source = geometry.getCoordinates();
+        Coordinate[] target = new Coordinate[source.length];
+
+        for (int i= 0; i < source.length; i++){
+            Coordinate sourceCoordinate = source[i];
+            Point2D p = new Point2D.Double(sourceCoordinate.x,sourceCoordinate.y);
+            Point2D transform = translate.transform(p, null);
+            target[i] = new Coordinate(transform.getX(), transform.getY());
+        }
+
+        GeometryFactory geometryFactory = JTSFactoryFinder.getGeometryFactory();
+        Geometry targetGeometry;
+
+        if (geometry instanceof Point){
+            targetGeometry = geometryFactory.createPoint(target[0]);
+        }
+        else if (geometry instanceof Polygon){
+            targetGeometry = geometryFactory.createPolygon(target);
+        }
+        else {
+            throw new UnsupportedOperationException("GEOMETRY TYPE NOT SUPPORTED");
+        }
+
+        return targetGeometry;
     }
 
 }
