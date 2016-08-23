@@ -187,7 +187,7 @@ public class SpatialServiceBean implements SpatialService {
 
         AreaLocationTypesEntity areaLocationTypesEntity = repository.findAreaLocationTypeByTypeName(areaTypeEntry.getAreaType().value().toUpperCase());
 
-        Point point = toWgs84Point(areaTypeEntry.getLongitude(), areaTypeEntry.getLatitude(), areaTypeEntry.getCrs());
+        Point point = toWgs84Point(areaTypeEntry.getLatitude(),areaTypeEntry.getLongitude(), areaTypeEntry.getCrs());
 
         List list = DAOFactory.getAbstractSpatialDao(em, areaLocationTypesEntity.getTypeName()).findByIntersect(point);
         List<AreaDetails> areaDetailsList = new ArrayList<>();
@@ -221,7 +221,7 @@ public class SpatialServiceBean implements SpatialService {
     @Override
     @Transactional
     public List<UserAreaDto> getUserAreaDetailsWithExtentByLocation(Coordinate coordinate, String userName) throws ServiceException {
-        Point point = toWgs84Point(coordinate.getLongitude(), coordinate.getLatitude(), coordinate.getCrs());
+        Point point = toWgs84Point(coordinate.getLatitude(), coordinate.getLongitude(), coordinate.getCrs());
 
         List<UserAreasEntity> userAreaDetailsWithExtentByLocation = repository.findUserAreaDetailsByLocation(userName, point);
 
@@ -242,7 +242,7 @@ public class SpatialServiceBean implements SpatialService {
     @Override
     @Transactional
     public List<AreaDetails> getUserAreaDetailsByLocation(AreaTypeEntry areaTypeEntry, String userName) throws ServiceException {
-        Point point = toWgs84Point(areaTypeEntry.getLongitude(), areaTypeEntry.getLatitude(), areaTypeEntry.getCrs());
+        Point point = toWgs84Point(areaTypeEntry.getLatitude(), areaTypeEntry.getLongitude(), areaTypeEntry.getCrs());
         List<UserAreasEntity> userAreaDetails = repository.findUserAreaDetailsByLocation(userName, point);
         try {
             List<AreaDetails> areaDetailsList = Lists.newArrayList();
@@ -597,7 +597,7 @@ public class SpatialServiceBean implements SpatialService {
 
             Map<String, Object> fieldMap = new HashMap<>();
             List list = new ArrayList();
-            Point point = toWgs84Point(incomingLongitude, incomingLatitude, locationTypeEntry.getCrs());
+            Point point = toWgs84Point(incomingLatitude, incomingLongitude, locationTypeEntry.getCrs());
 
             List<PortEntity> records = repository.listClosestPorts(point, 5);
             PortEntity closestLocation = null;

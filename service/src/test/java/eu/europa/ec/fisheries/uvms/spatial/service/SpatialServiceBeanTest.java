@@ -50,8 +50,8 @@ public class SpatialServiceBeanTest extends BaseUnitilsTest {
 
         PointType point = new PointType();
         point.setCrs(3216);
-        point.setLatitude(-21);
-        point.setLongitude(50);
+        point.setLatitude(50);
+        point.setLongitude(-21);
         closestAreaRequest.setPoint(point);
     }
     @Test
