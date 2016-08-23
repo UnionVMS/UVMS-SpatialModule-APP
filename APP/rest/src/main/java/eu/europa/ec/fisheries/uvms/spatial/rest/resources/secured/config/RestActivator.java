@@ -11,17 +11,8 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured.config;
 
 import eu.europa.ec.fisheries.uvms.spatial.rest.constants.RestConstants;
-import eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured.AreaResource;
-import eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured.BookmarkResource;
-import eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured.CalculateResource;
-import eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured.ConfigResource;
-import eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured.CountryResource;
-import eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured.FileUploadResource;
-import eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured.ImageResource;
-import eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured.MapConfigResource;
-import eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured.ServiceLayerResource;
-import eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured.UserAreaResource;
-import eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured.XMLResource;
+import eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured.*;
+import eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured.GeometryUtilsResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.ws.rs.ApplicationPath;
@@ -48,7 +39,7 @@ public class RestActivator extends Application {
         set.add(BookmarkResource.class);
         set.add(ImageResource.class);
         set.add(ServiceLayerResource.class);
-        set.add(CalculateResource.class);
+        set.add(GeometryUtilsResource.class);
         LOG.info(RestConstants.MODULE_NAME + " module starting up");
     }
 

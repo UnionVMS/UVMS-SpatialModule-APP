@@ -10,9 +10,13 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
+import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.GeometryUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.geotools.geometry.jts.WKTReader2;
+import org.geotools.geometry.jts.WKTWriter2;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -22,9 +26,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Map;
 
-@Path("/calculate")
+@Path("/geometry/utils")
 @Slf4j
-public class CalculateResource extends UnionVMSResource {
+public class GeometryUtilsResource extends UnionVMSResource {
 
     @EJB
     private SpatialService service;
@@ -54,24 +58,25 @@ public class CalculateResource extends UnionVMSResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/translate")
-    public Response translate(Map<String, Object> payload){
+    @Path("/transform")
+    public Response transform(Map<String, Object> payload){
 
         Response response;
+        Geometry translate;
 
         try {
             Double latitude = Double.valueOf(String.valueOf(payload.get("x")));
             Double longitude = Double.valueOf(String.valueOf(payload.get("y")));
             String wkt = String.valueOf(String.valueOf(payload.get("wkt")));
-            response = createSuccessResponse(service.translate(latitude, longitude, wkt));
+            Geometry geometry = new WKTReader2().read(wkt);
+            translate = GeometryUtils.transform(latitude, longitude, geometry);
+            response = createSuccessResponse(new WKTWriter2().write(translate));
         }
-
         catch (Exception ex){
-            String error = "[ Error when calculating buffer. ] ";
+            String error = "[ Error when translating. ] ";
             log.error(error, ex);
             response = createErrorResponse(error);
         }
-
         return response;
     }
 }
