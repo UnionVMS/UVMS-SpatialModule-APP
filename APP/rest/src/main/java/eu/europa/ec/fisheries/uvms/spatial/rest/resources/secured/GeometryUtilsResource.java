@@ -79,4 +79,29 @@ public class GeometryUtilsResource extends UnionVMSResource {
         }
         return response;
     }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/translate")
+    public Response translateToDefault(Map<String, Object> payload){
+
+        Response response;
+        Geometry translate;
+
+        try {
+            Double latitude = Double.valueOf(String.valueOf(payload.get("lat")));
+            Double longitude = Double.valueOf(String.valueOf(payload.get("lon")));
+            Integer crs = Integer.valueOf(String.valueOf(payload.get("crs")));
+
+            translate = GeometryUtils.toWgs84Point(latitude, longitude, crs);
+            response = createSuccessResponse(new WKTWriter2().write(translate));
+        }
+        catch (Exception ex){
+            String error = "[ Error when translating. ] ";
+            log.error(error, ex);
+            response = createErrorResponse(error);
+        }
+        return response;
+    }
 }
