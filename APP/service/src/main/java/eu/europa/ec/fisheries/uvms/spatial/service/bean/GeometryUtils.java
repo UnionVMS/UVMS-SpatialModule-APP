@@ -57,7 +57,7 @@ public final class GeometryUtils {
 
     private static final int DEFAULT_SRID = 4326;
 
-    private static GeometryFactory gf = new GeometryFactory();
+    private static GeometryFactory FACTORY = new GeometryFactory();
 
     public static final CoordinateReferenceSystem DEFAULT_CRS;
 
@@ -94,7 +94,7 @@ public final class GeometryUtils {
         Point p;
         try {
             if (!isDefaultCrs(crs)){
-                p = gf.createPoint(new Coordinate(longitude, latitude));
+                p = FACTORY.createPoint(new Coordinate(longitude, latitude));
                 if (!isDefaultCrs(crs)) {
                     final CoordinateReferenceSystem inputCrs = CRS.decode(EPSG + crs);
                     MathTransform mathTransform = CRS.findMathTransform(inputCrs, WGS84, false);
@@ -106,7 +106,7 @@ public final class GeometryUtils {
             else {
                 checkLatitude(latitude);
                 checkLongitude(longitude);
-                p = gf.createPoint(new Coordinate(longitude, latitude));
+                p = FACTORY.createPoint(new Coordinate(longitude, latitude));
             }
             p.setSRID(DEFAULT_SRID);
         } catch (TransformException e) {
