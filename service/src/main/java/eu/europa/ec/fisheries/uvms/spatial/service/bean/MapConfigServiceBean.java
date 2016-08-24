@@ -734,7 +734,7 @@ public class MapConfigServiceBean implements MapConfigService {
 
         // Update Bing API Key
         String bingApiKey = systemSettingsDto.getBingApiKey();
-        if (bingApiKey.trim().equals("")) {
+        if (bingApiKey != null && bingApiKey.trim().equals("")) {
             bingApiKey = null;
         }
         repository.updateSystemConfig(BING_API_KEY, bingApiKey);
