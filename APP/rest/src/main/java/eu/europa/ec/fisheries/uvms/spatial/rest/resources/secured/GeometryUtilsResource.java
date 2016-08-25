@@ -24,6 +24,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.HashMap;
 import java.util.Map;
 
 @Path("/geometry/utils")
@@ -92,10 +93,17 @@ public class GeometryUtilsResource extends UnionVMSResource {
         try {
             Double longitude = Double.valueOf(String.valueOf(payload.get("x")));
             Double latitude = Double.valueOf(String.valueOf(payload.get("y")));
-            Integer crs = Integer.valueOf(String.valueOf(payload.get("crs")));
-
-            translate = GeometryUtils.toWgs84Point(latitude, longitude, crs);
-            response = createSuccessResponse(new WKTWriter2().write(translate));
+            Integer sourceCode = Integer.valueOf(String.valueOf(payload.get("sourceCode")));
+            translate = GeometryUtils.toWgs84Point(latitude, longitude, sourceCode);
+            final Double x = translate.getCoordinates()[0].x;
+            final Double y = translate.getCoordinates()[0].y;
+            final Integer srid = translate.getSRID();
+            final Map<String, Object> result = new HashMap<>();
+            result.put("lon", x);
+            result.put("lat", y);
+            result.put("srid", srid);
+            result.put("wkt", new WKTWriter2().write(translate));
+            response = createSuccessResponse(result);
         }
         catch (Exception ex){
             String error = "[ Error when translating. ] ";
