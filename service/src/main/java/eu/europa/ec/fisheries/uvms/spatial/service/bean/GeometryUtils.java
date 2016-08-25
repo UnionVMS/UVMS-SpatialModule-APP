@@ -89,28 +89,29 @@ public final class GeometryUtils {
      * This method returns a Point in WGS84 for a given latitude and longitude and Coordinate reference System.
      * It will check the parameters for inconsistencies and translate the point if necessary.
      *
-     * @param latitude The longitude value in <strong>decimal degrees</strong>.
-     * @param longitude The longitude value in <strong>decimal degrees</strong>.
+     * @param y The latitude value in <strong>decimal degrees</strong>.
+     * @param x The longitude value in <strong>decimal degrees</strong>.
+     * @param sourceCode The longitude value in <strong>decimal degrees</strong>.
      * @return The Point in WGS84.
      */
-    public static Point toWgs84Point(double latitude, double longitude, int crs) {
+    public static Point toWgs84Point(double y, double x, int sourceCode) {
 
         Point p;
         try {
-            if (!isDefaultCrs(crs)){
-                p = FACTORY.createPoint(new Coordinate(longitude, latitude));
-                if (!isDefaultCrs(crs)) {
-                    final CoordinateReferenceSystem inputCrs = CRS.decode(EPSG + crs);
-                    MathTransform mathTransform = CRS.findMathTransform(inputCrs, WGS84, false);
+            if (!isDefaultCrs(sourceCode)){
+                p = FACTORY.createPoint(new Coordinate(x, y));
+                if (!isDefaultCrs(sourceCode)) {
+                    final CoordinateReferenceSystem sourceCRS = CRS.decode(EPSG + sourceCode);
+                    MathTransform mathTransform = CRS.findMathTransform(sourceCRS, WGS84, false);
                     p = (Point) JTS.transform(p, mathTransform);
                 }
                 checkLatitude(p.getY());
                 checkLongitude(p.getX());
             }
             else {
-                checkLatitude(latitude);
-                checkLongitude(longitude);
-                p = FACTORY.createPoint(new Coordinate(longitude, latitude));
+                checkLatitude(y);
+                checkLongitude(x);
+                p = FACTORY.createPoint(new Coordinate(x, y));
             }
             p.setSRID(DEFAULT_SRID);
         } catch (TransformException e) {
@@ -123,6 +124,23 @@ public final class GeometryUtils {
         return p;
     }
 
+    public static Point toWgs84Point(double y, double x, int sourceCode, int targetCode) {
+        Point p;
+        try {
+            p = FACTORY.createPoint(new Coordinate(x, y));
+            final CoordinateReferenceSystem sourceCRS = CRS.decode(EPSG + sourceCode);
+            final CoordinateReferenceSystem targetCRS = CRS.decode(EPSG + targetCode);
+            MathTransform mathTransform = CRS.findMathTransform(sourceCRS, targetCRS, false);
+            p = (Point) JTS.transform(p, mathTransform);
+            checkLatitude(p.getY());
+            checkLongitude(p.getX());
+        } catch (FactoryException e) {
+            throw new IllegalArgumentException("MATH TRANSFORM COULD BE CREATED");
+        } catch (TransformException e) {
+            throw new IllegalArgumentException("TRANSFORMATION FAILED", e);
+        }
+        return p;
+    }
     /**
      * Checks the longitude validity. The argument {@code longitude} should be
      * greater or equal than -180 degrees and lower or equals than +180 degrees. As
