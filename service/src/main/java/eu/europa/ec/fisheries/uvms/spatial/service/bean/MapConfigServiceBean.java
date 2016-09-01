@@ -605,8 +605,8 @@ public class MapConfigServiceBean implements MapConfigService {
                     LayerDto layerDto = layerDtos.get(0);
                     if (layerAreaDto.getAreaType().equals(AreaTypeEnum.userarea)) {
                         List<AreaDto> userAreas = repository.findAllUserAreasByGids(Arrays.asList(layerAreaDto.getGid()));
-                        layerDto.setGid((userAreas != null & !userAreas.isEmpty()) ? userAreas.get(0).getGid() : null);
-                        layerDto.setTitle((userAreas != null & !userAreas.isEmpty()) ? userAreas.get(0).getName() : null);
+                        layerDto.setGid((userAreas != null && !userAreas.isEmpty()) ? userAreas.get(0).getGid() : null);
+                        layerDto.setTitle((userAreas != null && !userAreas.isEmpty()) ? userAreas.get(0).getName() : null);
                         layerDto.setAreaType(AreaTypeEnum.userarea.getType().toUpperCase());
                     } else if (layerAreaDto.getAreaType().equals(AreaTypeEnum.areagroup)) {
                         layerDto.setCqlAll(MapConfigHelper.getAreaGroupCqlAll(userName, scopeName, layerAreaDto.getAreaGroupName()));

@@ -16,6 +16,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class SpatialServiceException extends RuntimeException {
 
+    private static final long serialVersionUID = 2405172041950251807L;
+
     private final SpatialServiceErrors error;
     private Object[] params;
 

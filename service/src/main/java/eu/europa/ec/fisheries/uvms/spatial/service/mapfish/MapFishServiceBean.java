@@ -12,11 +12,14 @@ package eu.europa.ec.fisheries.uvms.spatial.service.mapfish;
 
 import eu.europa.ec.fisheries.uvms.spatial.service.MapFishService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.batik.transcoder.TranscoderException;
+
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 @Stateless
@@ -25,7 +28,7 @@ import java.util.List;
 public class MapFishServiceBean implements MapFishService{
 
     @Override
-    public void saveVesselIconsWithColor(List<String> colors) throws Exception {
+    public void saveVesselIconsWithColor(List<String> colors) throws IOException, TranscoderException {
 
         File path = new File("app/mapfish/");
 
@@ -39,6 +42,5 @@ public class MapFishServiceBean implements MapFishService{
                 ImageIO.write(bufferedImage, "png", outputfile);
             }
         }
-
     }
 }

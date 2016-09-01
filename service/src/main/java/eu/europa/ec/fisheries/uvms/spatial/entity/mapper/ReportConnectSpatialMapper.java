@@ -21,7 +21,7 @@ import org.mapstruct.factory.Mappers;
 @Mapper(componentModel = "cdi", imports = ProjectionEntity.class)
 public abstract class ReportConnectSpatialMapper {
 
-    public static ReportConnectSpatialMapper INSTANCE = Mappers.getMapper(ReportConnectSpatialMapper.class);
+    public static final ReportConnectSpatialMapper INSTANCE = Mappers.getMapper(ReportConnectSpatialMapper.class);
 
     @Mappings({
             @Mapping(source = "scaleBarUnits", target = "scaleBarType"),

@@ -35,13 +35,7 @@ public class CountryResource extends UnionVMSResource {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response getAllCountriesDesc() {
-        Response response;
-        try {
-            response = createSuccessResponse(areaService.getAllCountriesDesc());
-        } catch (ServiceException e) {
-            response = createErrorResponse();
-        }
-        return response;
+    public Response getAllCountriesDesc() throws ServiceException {
+        return createSuccessResponse(areaService.getAllCountriesDesc());
     }
 }
