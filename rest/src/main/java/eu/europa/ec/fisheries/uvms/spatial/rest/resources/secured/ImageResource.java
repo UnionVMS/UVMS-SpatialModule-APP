@@ -12,6 +12,7 @@ package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import static org.apache.commons.lang3.StringUtils.*;
 
+import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.spatial.model.mapfish.request.Class;
 import eu.europa.ec.fisheries.uvms.spatial.model.mapfish.request.Cluster;
@@ -20,11 +21,14 @@ import eu.europa.ec.fisheries.uvms.spatial.model.mapfish.response.ImageResponse;
 import eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured.AlarmResource;
 import eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured.LegendResource;
 import eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured.PositionResource;
+import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ImageEncoderFactory;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.batik.transcoder.TranscoderException;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ObjectUtils;
 
+import javax.interceptor.Interceptors;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -48,12 +52,13 @@ public class ImageResource extends UnionVMSResource {
     @Path("/position")
     @Produces(MediaType.APPLICATION_JSON)
     public Response listPositionEntryKeys() throws IOException {
-        return createSuccessResponse(PositionResource.positionEntries.keySet());
+        return createSuccessResponse(PositionResource.getpositionEntries().keySet());
     }
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public Response renderImages(@Context HttpServletRequest request, Icons payload) throws Exception {
+    @Interceptors(value = { ExceptionInterceptor.class})
+    public Response renderImages(@Context HttpServletRequest request, Icons payload) throws ServiceException {
 
         ImageResponse response = new ImageResponse();
         response.getLegend().withBase("/spatial/image/legend/");
@@ -74,79 +79,93 @@ public class ImageResource extends UnionVMSResource {
 
     }
 
-    private void handleAlarms(Icons payload, ImageResponse response) throws Exception {
+    private void handleAlarms(Icons payload, ImageResponse response) throws ServiceException {
+        try {
+            List<ImageEncoderFactory.LegendEntry> temp = new ArrayList<>();
 
-        List<ImageEncoderFactory.LegendEntry> temp = new ArrayList<>();
+            for (Class clazz : payload.getAlarms().getClasses()) {
 
-        for (Class clazz : payload.getAlarms().getClasses()) {
-
-            ImageEncoderFactory.LegendEntry legendEntry = new ImageEncoderFactory.LegendEntry();
-            legendEntry.setMsg(clazz.getText());
-            BufferedImage alarmIconForLegend = ImageEncoderFactory.renderAlarm(clazz.getColor());
-            legendEntry.setIcon(alarmIconForLegend);
-            temp.add(legendEntry);
-        }
-
-        String guid = UUID.randomUUID().toString();
-        response.getLegend().withAlarms(guid);
-        LegendResource.legendEntries.put(guid, ImageEncoderFactory.renderLegend(temp, payload.getAlarms().getTitle(), 25));
-    }
-
-    private void handlePositions(Icons payload, ImageResponse response) throws Exception {
-
-        response.getMap().getVmspos().withBase("/spatial/image/position/");
-        List<ImageEncoderFactory.LegendEntry> temp = new ArrayList<>();
-
-        for (Class clazz : payload.getPositions().getClasses()) { // TODO validate hex value
-
-            ImageEncoderFactory.LegendEntry legendEntry = new ImageEncoderFactory.LegendEntry();
-            legendEntry.setMsg(clazz.getText());
-
-            if (PositionResource.positionEntries.get(clazz.getColor().replace("#", EMPTY)) == null){
-                BufferedImage positionForMapIcon = ImageEncoderFactory.renderPosition(clazz.getColor());
-                PositionResource.positionEntries.put(clazz.getColor().replace("#", EMPTY), positionForMapIcon);
+                ImageEncoderFactory.LegendEntry legendEntry = new ImageEncoderFactory.LegendEntry();
+                legendEntry.setMsg(clazz.getText());
+                BufferedImage alarmIconForLegend = ImageEncoderFactory.renderAlarm(clazz.getColor());
+                legendEntry.setIcon(alarmIconForLegend);
+                temp.add(legendEntry);
             }
 
-            BufferedImage iconForLegend = ImageEncoderFactory.renderPosition(clazz.getColor(), SCALE_0_3);
-            legendEntry.setIcon(iconForLegend);
-
-            response.getMap().getVmspos().getColors().add(clazz.getColor().replace("#", EMPTY));
-            temp.add(legendEntry);
+            String guid = UUID.randomUUID().toString();
+            response.getLegend().withAlarms(guid);
+            LegendResource.getLegendEntries().put(guid, ImageEncoderFactory.renderLegend(temp, payload.getAlarms().getTitle(), 25));
+        } catch (TranscoderException | IOException e) {
+            log.error(e.getMessage(), e);
+            throw new ServiceException(e.getMessage(), e);
         }
-
-        Cluster cluster = payload.getPositions().getCluster();
-
-        if (cluster != null){
-
-            BufferedImage bufferedImage = ImageEncoderFactory.renderCluster(cluster.getBgcolor(), cluster.getBordercolor());
-            ImageEncoderFactory.LegendEntry clusterEntry = new ImageEncoderFactory.LegendEntry();
-            clusterEntry.setMsg(cluster.getText());
-            clusterEntry.setIcon(bufferedImage);
-            temp.add(clusterEntry);
-        }
-
-        String guid = UUID.randomUUID().toString();
-        response.getLegend().withPositions(guid);
-        LegendResource.legendEntries.put(guid, ImageEncoderFactory.renderLegend(temp, payload.getPositions().getTitle(), 25));
     }
 
-    private void handleSegments(Icons payload, ImageResponse response) throws Exception {
+    private void handlePositions(Icons payload, ImageResponse response) throws ServiceException {
+        try {
+            response.getMap().getVmspos().withBase("/spatial/image/position/");
+            List<ImageEncoderFactory.LegendEntry> temp = new ArrayList<>();
 
-        String lineStyle = payload.getSegments().getLineStyle();
-        List<ImageEncoderFactory.LegendEntry> temp = new ArrayList<>();
+            for (Class clazz : payload.getPositions().getClasses()) { // TODO validate hex value
 
-        for (Class clazz : payload.getSegments().getClasses()) {
+                ImageEncoderFactory.LegendEntry legendEntry = new ImageEncoderFactory.LegendEntry();
+                legendEntry.setMsg(clazz.getText());
 
-            ImageEncoderFactory.LegendEntry legendEntry = new ImageEncoderFactory.LegendEntry();
-            legendEntry.setMsg(clazz.getText());
-            BufferedImage segmentIconForLegend = ImageEncoderFactory.renderSegment(clazz.getColor(), lineStyle, SCALE_1_3);
-            legendEntry.setIcon(segmentIconForLegend);
-            temp.add(legendEntry);
+                if (PositionResource.getpositionEntries().get(clazz.getColor().replace("#", EMPTY)) == null){
+                    BufferedImage positionForMapIcon = ImageEncoderFactory.renderPosition(clazz.getColor());
+                    PositionResource.getpositionEntries().put(clazz.getColor().replace("#", EMPTY), positionForMapIcon);
+                }
+
+                BufferedImage iconForLegend = ImageEncoderFactory.renderPosition(clazz.getColor(), SCALE_0_3);
+                legendEntry.setIcon(iconForLegend);
+
+                response.getMap().getVmspos().getColors().add(clazz.getColor().replace("#", EMPTY));
+                temp.add(legendEntry);
+            }
+
+            Cluster cluster = payload.getPositions().getCluster();
+
+            if (cluster != null){
+
+                BufferedImage bufferedImage = ImageEncoderFactory.renderCluster(cluster.getBgcolor(), cluster.getBordercolor());
+                ImageEncoderFactory.LegendEntry clusterEntry = new ImageEncoderFactory.LegendEntry();
+                clusterEntry.setMsg(cluster.getText());
+                clusterEntry.setIcon(bufferedImage);
+                temp.add(clusterEntry);
+            }
+
+            String guid = UUID.randomUUID().toString();
+            response.getLegend().withPositions(guid);
+            LegendResource.getLegendEntries().put(guid, ImageEncoderFactory.renderLegend(temp, payload.getPositions().getTitle(), 25));
+
+        } catch (TranscoderException | IOException e) {
+            log.error(e.getMessage(), e);
+            throw new ServiceException(e.getMessage(), e);
         }
+    }
 
-        String guid = UUID.randomUUID().toString();
-        response.getLegend().withSegments(guid);
-        LegendResource.legendEntries.put(guid, ImageEncoderFactory.renderLegend(temp, payload.getSegments().getTitle(), 40));
+    private void handleSegments(Icons payload, ImageResponse response) throws ServiceException {
+        try {
+            String lineStyle = payload.getSegments().getLineStyle();
+            List<ImageEncoderFactory.LegendEntry> temp = new ArrayList<>();
+
+            for (Class clazz : payload.getSegments().getClasses()) {
+
+                ImageEncoderFactory.LegendEntry legendEntry = new ImageEncoderFactory.LegendEntry();
+                legendEntry.setMsg(clazz.getText());
+                BufferedImage segmentIconForLegend = ImageEncoderFactory.renderSegment(clazz.getColor(), lineStyle, SCALE_1_3);
+                legendEntry.setIcon(segmentIconForLegend);
+                temp.add(legendEntry);
+            }
+
+            String guid = UUID.randomUUID().toString();
+            response.getLegend().withSegments(guid);
+            LegendResource.getLegendEntries().put(guid, ImageEncoderFactory.renderLegend(temp, payload.getSegments().getTitle(), 40));
+
+        } catch (TranscoderException | IOException e) {
+            log.error(e.getMessage(), e);
+            throw new ServiceException(e.getMessage(), e);
+        }
     }
 
 }
