@@ -74,7 +74,7 @@ public class ImageResource extends UnionVMSResource {
 
     }
 
-    private void handleAlarms(Icons payload, ImageResponse response)  throws Exception {
+    private void handleAlarms(Icons payload, ImageResponse response) throws Exception {
 
         List<ImageEncoderFactory.LegendEntry> temp = new ArrayList<>();
 

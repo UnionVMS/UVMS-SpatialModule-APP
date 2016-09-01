@@ -30,8 +30,10 @@ public class ExceptionInterceptor extends UnionVMSResource {
 		try {
 			return ic.proceed();
 		} catch (IllegalArgumentException e) {
+			log.error(e.getMessage(), e);
     		return createErrorResponse(ErrorCodes.INPUT_NOT_SUPPORTED);
     	} catch (Exception e) {
+			log.error(e.getMessage(), e);
     		if (e.getCause() instanceof SpatialServiceException) {
 				return createErrorResponse(((SpatialServiceException)e.getCause()).getErrorMessageCode());
 			}

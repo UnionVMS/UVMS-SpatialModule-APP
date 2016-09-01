@@ -29,7 +29,7 @@ import java.util.Map;
 @Slf4j
 public class LegendResource {
 
-    public static Map<String, BufferedImage> legendEntries = Collections.synchronizedMap(new LinkedHashMap() {
+    public static final Map<String, BufferedImage> legendEntries = Collections.synchronizedMap(new LinkedHashMap() {
 
         private static final int MAX_ENTRIES = 100;
 

@@ -80,7 +80,7 @@ public class ImageEncoderFactory {
         return getBufferedImage(line);
     }
 
-    public static BufferedImage renderPosition(String hexColor, String scale) throws Exception {
+    public static BufferedImage renderPosition(String hexColor, String scale) throws IOException, TranscoderException {
 
         log.debug("Rendering position icon with color {} ", hexColor);
         Document position = createDocument(POSITION_SVG);
@@ -89,7 +89,7 @@ public class ImageEncoderFactory {
         return getBufferedImage(position);
     }
 
-    public static BufferedImage renderPosition(String hexColor) throws Exception {
+    public static BufferedImage renderPosition(String hexColor) throws IOException, TranscoderException {
 
         log.debug("Rendering position icon with color {} ", hexColor);
         Document position = createDocument(POSITION_SVG);
@@ -97,7 +97,7 @@ public class ImageEncoderFactory {
         return getBufferedImage(position);
     }
 
-    public static BufferedImage renderAlarm(String hexColor) throws Exception {
+    public static BufferedImage renderAlarm(String hexColor) throws IOException, TranscoderException {
 
         log.debug("Rendering alarm icon with color {} ", hexColor);
         Document alarm = createDocument(ALARM_SVG);
@@ -138,12 +138,12 @@ public class ImageEncoderFactory {
             return f.createDocument("http://www.w3.org/2000/svg", is);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return null;
     }
 
-    static public BufferedImage renderLegend(List<LegendEntry> legendEntries, String title, int iconAndTextOffset) throws Exception {
+    static public BufferedImage renderLegend(List<LegendEntry> legendEntries, String title, int iconAndTextOffset) {
 
         int height = 20 + (LINE_HEIGHT+ LINE_SPACING) * legendEntries.size();
 

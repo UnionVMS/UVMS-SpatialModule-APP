@@ -73,30 +73,20 @@ public class AreaResource extends UnionVMSResource {
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
+    @Interceptors(value = {ExceptionInterceptor.class})
     @Path("/types")
     public Response getAreaTypes() {
-
-        Response response;
-
-        try {
-            log.info("Getting user areas list");
-            List<String> areaTypes = areaTypeService.listAllAreaTypeNames();
-            response = createSuccessResponse(areaTypes);
-        } catch (Exception ex) {
-            log.error("[ Error when getting area types list. ] ", ex);
-            return createErrorResponse("[ Error when getting area types list. ] " + ex.getMessage());
-        }
-        return response;
+        log.info("Getting user areas list");
+        List<String> areaTypes = areaTypeService.listAllAreaTypeNames();
+        return createSuccessResponse(areaTypes);
     }
 
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
+    @Interceptors(value = {ExceptionInterceptor.class})
     @Path("/location/details")
-    public Response getLocationDetails(LocationCoordinateType locationDto) {
-
-        Response response;
-
+    public Response getLocationDetails(LocationCoordinateType locationDto) throws ServiceException {
         try {
             LocationTypeEntry locationTypeEntry = mapper.getLocationTypeEntry(locationDto);
             LocationDetails locationDetails = spatialService.getLocationDetails(locationTypeEntry);
@@ -106,12 +96,10 @@ public class AreaResource extends UnionVMSResource {
                 return createSuccessResponse(locationDetailsGeoJsonDto.getProperties());
             }
             ObjectNode nodes = new FeatureToGeoJsonJacksonMapper().convert(locationDetailsGeoJsonDto.toFeature());
-            response = createSuccessResponse(nodes);
-
+            return createSuccessResponse(nodes);
         } catch (ServiceException | ParseException | IOException e) {
-           response = createErrorResponse(e.getMessage());
+            throw new ServiceException(e.getMessage(), e);
         }
-        return response;
     }
 
     @POST
@@ -119,37 +107,36 @@ public class AreaResource extends UnionVMSResource {
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/details")
     @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
-    public Response getAreaDetails(AreaCoordinateType areaDto) throws IOException, ParseException, ServiceException {
-
+    public Response getAreaDetails(AreaCoordinateType areaDto) throws ServiceException {
         Response response;
+        try {
+            if (areaDto.getId() != null) {
 
-        if (areaDto.getId() != null) {
+                AreaDetails areaDetails = areaService.getAreaDetailsById(mapper.getAreaTypeEntry(areaDto));
+                AreaDetailsGeoJsonDto areaDetailsGeoJsonDto = mapper.getAreaDetailsDto(areaDetails);
+                if (!areaDto.getIsGeom()) {
+                    areaDetailsGeoJsonDto.removeGeometry();
+                    return createSuccessResponse(areaDetailsGeoJsonDto.getProperties());
+                }
+                response = createSuccessResponse(new FeatureToGeoJsonJacksonMapper().convert(areaDetailsGeoJsonDto.toFeature()));
+            } else {
+                List<AreaDetails> areaDetailsList = spatialService.getAreaDetailsByLocation(mapper.getAreaTypeEntry(areaDto));
+                AreaDetailsGeoJsonDto areaDetailsGeoJsonDto = mapper.getAreaDetailsDtoForAllAreas(areaDetailsList, areaDto);
+                if (!areaDto.getIsGeom()) {
+                    areaDetailsGeoJsonDto.removeGeometryAllAreas();
+                    return createSuccessResponse(areaDetailsGeoJsonDto.getAllAreaProperties());
+                }
+                List<ObjectNode> nodeList = new ArrayList<>();
 
-            AreaDetails areaDetails = areaService.getAreaDetailsById(mapper.getAreaTypeEntry(areaDto));
-            AreaDetailsGeoJsonDto areaDetailsGeoJsonDto = mapper.getAreaDetailsDto(areaDetails);
-            if (!areaDto.getIsGeom()) {
-                areaDetailsGeoJsonDto.removeGeometry();
-                return createSuccessResponse(areaDetailsGeoJsonDto.getProperties());
+                for (Map<String, Object> featureMap : areaDetailsGeoJsonDto.getAllAreaProperties()) {
+                    ObjectNode convert = new FeatureToGeoJsonJacksonMapper().convert(areaDetailsGeoJsonDto.toFeature(featureMap));
+                    nodeList.add(convert);
+                }
+                response = createSuccessResponse(nodeList);
             }
-
-            response = createSuccessResponse(new FeatureToGeoJsonJacksonMapper().convert(areaDetailsGeoJsonDto.toFeature()));
-
-    	} else {
-            List<AreaDetails> areaDetailsList = spatialService.getAreaDetailsByLocation(mapper.getAreaTypeEntry(areaDto));
-            AreaDetailsGeoJsonDto areaDetailsGeoJsonDto = mapper.getAreaDetailsDtoForAllAreas(areaDetailsList, areaDto);
-            if (!areaDto.getIsGeom()) {
-                areaDetailsGeoJsonDto.removeGeometryAllAreas();
-                return createSuccessResponse(areaDetailsGeoJsonDto.getAllAreaProperties());
-            }
-
-            List<ObjectNode> nodeList = new ArrayList<>();
-
-            for (Map<String, Object> featureMap : areaDetailsGeoJsonDto.getAllAreaProperties()) {
-                ObjectNode convert = new FeatureToGeoJsonJacksonMapper().convert(areaDetailsGeoJsonDto.toFeature(featureMap));
-                nodeList.add(convert);
-            }
-            response = createSuccessResponse(nodeList);
-    	}
+        } catch (ServiceException | ParseException | IOException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
 
         return response;
     }
@@ -160,7 +147,6 @@ public class AreaResource extends UnionVMSResource {
     @Path("/properties")
     @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
     public Response getAreaProperties(List<AreaCoordinateType> areaDtoList) throws ServiceException {
-
         List<AreaTypeEntry> areaTypeEntryList = mapper.getAreaTypeEntryList(areaDtoList);
         List<Map<String, String>> selectedAreaColumns = areaService.getSelectedAreaColumns(areaTypeEntryList);
         return createSuccessResponse(selectedAreaColumns);
@@ -220,7 +206,6 @@ public class AreaResource extends UnionVMSResource {
         if (!request.isUserInRole("CREATE_USER_AREA_DATASET")) {
             return createErrorResponse("user_area_dataset_creation_not_allowed");
         }
-
         if (StringUtils.isNotBlank(datasetName)) {
             usmService.createDataset(USMSpatial.APPLICATION_NAME, datasetName,  areaType + USMSpatial.DELIMITER + areaGid, USMSpatial.USM_DATASET_CATEGORY, USMSpatial.USM_DATASET_DESCRIPTION);
         } else {
@@ -234,7 +219,6 @@ public class AreaResource extends UnionVMSResource {
     @Path("/datasets/{areaType}/{areaGid}")
     @Interceptors(value = { ExceptionInterceptor.class})
     public Response findDatasets(@PathParam("areaType") String areaType, @PathParam("areaGid") String areaGid,@Context HttpServletRequest request ) throws ServiceException {
-
        List<DatasetExtension> datasets = usmService.findDatasetsByDiscriminator(USMSpatial.APPLICATION_NAME,  areaType + USMSpatial.DELIMITER + areaGid);
        return createSuccessResponse(datasets);
     }

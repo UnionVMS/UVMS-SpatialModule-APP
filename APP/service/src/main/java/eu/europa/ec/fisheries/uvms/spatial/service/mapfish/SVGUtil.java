@@ -12,6 +12,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.mapfish;
 
 import org.apache.batik.anim.dom.SAXSVGDocumentFactory;
 import org.apache.batik.transcoder.SVGAbstractTranscoder;
+import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.batik.transcoder.image.PNGTranscoder;
@@ -28,7 +29,7 @@ public class SVGUtil {
 
     private SVGUtil(){};
 
-    public static BufferedImage convertSVGToPNG(URL url, String elementId, String color) throws Exception {
+    public static BufferedImage convertSVGToPNG(URL url, String elementId, String color) throws IOException, TranscoderException {
 
         Document documentFromSvg = createDocumentFromSvg(url);
         documentFromSvg.getElementById(elementId).getAttributes().getNamedItem("style").getFirstChild().setNodeValue("fill:#" + color);
@@ -48,14 +49,9 @@ public class SVGUtil {
         return ImageIO.read(new ByteArrayInputStream(resultByteStream.toByteArray()));
     }
 
-    private static Document createDocumentFromSvg(URL url) throws Exception {
-
-        try {
-            String parser = XMLResourceDescriptor.getXMLParserClassName();
-            SAXSVGDocumentFactory f = new SAXSVGDocumentFactory(parser);
-            return f.createDocument(url.getPath());
-        } catch (IOException ex) {
-            throw new Exception();
-        }
+    private static Document createDocumentFromSvg(URL url) throws IOException {
+        String parser = XMLResourceDescriptor.getXMLParserClassName();
+        SAXSVGDocumentFactory f = new SAXSVGDocumentFactory(parser);
+        return f.createDocument(url.getPath());
     }
 }

@@ -50,80 +50,54 @@ public class BookmarkResource extends UnionVMSResource {
                          @HeaderParam(AuthConstants.HTTP_HEADER_ROLE_NAME) String roleName) throws ServiceException {
 
         final String username = request.getRemoteUser();
-
-        try {
-
-            Set<Bookmark> bookmarks = bookmarkService.listByUsername(username);
-            return createSuccessResponse(bookmarks);
-
-        }
-        catch (ServiceException e){
-            return createErrorResponse("Unable to get user features from USM. Reason: " + e.getMessage());
-        }
+        Set<Bookmark> bookmarks = bookmarkService.listByUsername(username);
+        return createSuccessResponse(bookmarks);
     }
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
+    @Interceptors(value = {ExceptionInterceptor.class})
     public Response createBookmark(@Context HttpServletRequest request,
                                    @Context HttpServletResponse response,
                                    @HeaderParam(AuthConstants.HTTP_HEADER_SCOPE_NAME) String scopeName,
                                    @HeaderParam(AuthConstants.HTTP_HEADER_ROLE_NAME) String roleName,
-                                   final Bookmark bookmark) {
+                                   final Bookmark bookmark) throws ServiceException {
 
         final String username = request.getRemoteUser();
-
-        try {
-            final Bookmark result = bookmarkService.create(bookmark, username);
-            return createSuccessResponse(result);
-        }
-        catch (ServiceException e){
-            return createErrorResponse("Unable to get user features from USM. Reason: " + e.getMessage());
-        }
-
+        final Bookmark result = bookmarkService.create(bookmark, username);
+        return createSuccessResponse(result);
     }
 
     @DELETE
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
+    @Interceptors(value = {ExceptionInterceptor.class})
     public Response deleteReport(@Context HttpServletRequest request,
                                  @Context HttpServletResponse response,
                                  @PathParam("id") Long id,
                                  @HeaderParam(AuthConstants.HTTP_HEADER_SCOPE_NAME) String scopeName,
-                                 @HeaderParam(AuthConstants.HTTP_HEADER_ROLE_NAME) String roleName) {
+                                 @HeaderParam(AuthConstants.HTTP_HEADER_ROLE_NAME) String roleName) throws ServiceException {
 
         final String username = request.getRemoteUser();
-
-        try {
-            bookmarkService.delete(id, username);
-            return createSuccessResponse();
-
-        }
-        catch (ServiceException e){
-            return createErrorResponse("Unable to get user features from USM. Reason: " + e.getMessage());
-        }
-
+        bookmarkService.delete(id, username);
+        return createSuccessResponse();
     }
 
     @PUT
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
+    @Interceptors(value = {ExceptionInterceptor.class})
     public Response updateBookmark(@Context HttpServletRequest request,
                                    @Context HttpServletResponse response,
                                    Bookmark bookmark, @PathParam("id") Long id,
                                    @HeaderParam(AuthConstants.HTTP_HEADER_SCOPE_NAME) String scopeName,
-                                   @HeaderParam(AuthConstants.HTTP_HEADER_ROLE_NAME) String roleName) {
+                                   @HeaderParam(AuthConstants.HTTP_HEADER_ROLE_NAME) String roleName) throws ServiceException {
 
         final String username = request.getRemoteUser();
-
-        try {
-            bookmark.setId(id);
-            bookmarkService.update(bookmark, username);
-            return createSuccessResponse();
-        }
-        catch (ServiceException e){
-            return createErrorResponse("Unable to get user features from USM. Reason: " + e.getMessage());
-        }
+        bookmark.setId(id);
+        bookmarkService.update(bookmark, username);
+        return createSuccessResponse();
     }
 }
