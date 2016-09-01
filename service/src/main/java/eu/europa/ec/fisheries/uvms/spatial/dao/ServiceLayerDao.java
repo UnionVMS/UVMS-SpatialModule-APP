@@ -46,20 +46,11 @@ public class ServiceLayerDao extends AbstractDAO<ServiceLayerEntity> {
     public ServiceLayerEntity getBy(String locationType) throws ServiceException {
 
         ServiceLayerEntity serviceLayerEntity = null;
+        List<ServiceLayerEntity> layers = findEntityByNamedQuery(ServiceLayerEntity.class, ServiceLayerEntity.BY_LOCATION_TYPE,
+                QueryParameter.with("locationType", locationType).parameters(), 1);
 
-        try {
-            List<ServiceLayerEntity> layers = findEntityByNamedQuery(ServiceLayerEntity.class, ServiceLayerEntity.BY_LOCATION_TYPE,
-                    QueryParameter.with("locationType", locationType).parameters(), 1);
-
-            if (layers != null && layers.size() == 1) {
-                serviceLayerEntity = layers.get(0);
-            }
-
-        }
-        catch (Exception e){
-            String error = "Error when trying to fetch resource layer from db";
-            log.error(error);
-            throw new ServiceException(error, e);
+        if (layers != null && layers.size() == 1) {
+            serviceLayerEntity = layers.get(0);
         }
 
         return serviceLayerEntity;
