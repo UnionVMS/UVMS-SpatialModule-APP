@@ -29,7 +29,7 @@ import java.util.Map;
 @Slf4j
 public class PositionResource {
 
-    public static final Map<String, BufferedImage> positionEntries = Collections.synchronizedMap(new LinkedHashMap() {
+    private static final Map<String, BufferedImage> positionEntries = Collections.synchronizedMap(new LinkedHashMap() {
 
         private static final int MAX_ENTRIES = 1000;
 
@@ -39,6 +39,10 @@ public class PositionResource {
             return size() > MAX_ENTRIES;
         }
     });
+
+    public static Map<String, BufferedImage> getpositionEntries() {
+        return positionEntries;
+    }
 
     @GET
     @Path("/{key}")

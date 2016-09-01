@@ -30,7 +30,7 @@ import java.util.Map;
 @Slf4j
 public class AlarmResource {
 
-    public static final Map<String, BufferedImage> alarmEntries = Collections.synchronizedMap(new LinkedHashMap() {
+    protected static final Map<String, BufferedImage> alarmEntries = Collections.synchronizedMap(new LinkedHashMap() {
 
         private static final int MAX_ENTRIES = 1000;
 
