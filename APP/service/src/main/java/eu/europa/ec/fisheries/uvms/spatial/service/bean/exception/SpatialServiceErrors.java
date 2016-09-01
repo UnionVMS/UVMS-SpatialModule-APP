@@ -10,8 +10,11 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.exception;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.text.MessageFormat;
 
+@Slf4j
 public enum SpatialServiceErrors {
 
     INTERNAL_APPLICATION_ERROR("INTERNAL_APPLICATION_ERROR", 500, "An internal application error has occurred.", "An internal application error has occurred."),
@@ -72,6 +75,7 @@ public enum SpatialServiceErrors {
         try {
             return MessageFormat.format(this.getMessagePattern().replaceAll("\'", "\'\'"), arguments);
         } catch (Exception var3) {
+            log.error(var3.getMessage(), var3);
             return "Error message (" + this + ") cannot be resolved correctly (Reason: " + var3.getMessage() + ")";
         }
     }

@@ -10,9 +10,12 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.service;
 
+import org.apache.batik.transcoder.TranscoderException;
+
+import java.io.IOException;
 import java.util.List;
 
 public interface MapFishService {
 
-    void saveVesselIconsWithColor(List<String> colors) throws Exception;
+    void saveVesselIconsWithColor(List<String> colors) throws IOException, TranscoderException;
 }

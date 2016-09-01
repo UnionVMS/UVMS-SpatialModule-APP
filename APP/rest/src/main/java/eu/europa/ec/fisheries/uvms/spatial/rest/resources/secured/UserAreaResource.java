@@ -157,17 +157,11 @@ public class UserAreaResource extends UnionVMSResource {
     public Response getUserAreaDetails(UserAreaCoordinateType userAreaTypeDto, @Context HttpServletRequest request, @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName) throws IOException, ParseException, ServiceException {
         Response response;
         boolean isPowerUser = isPowerUser(request);
-        try {
-            if (userAreaTypeDto.getId() != null) {
-                response = getUserAreaDetailsById(userAreaTypeDto, request.getRemoteUser(), isPowerUser, scopeName);
-            } else {
-                response = getUserAreaDetailsByLocation(userAreaTypeDto, request.getRemoteUser());
-            }
+        if (userAreaTypeDto.getId() != null) {
+            response = getUserAreaDetailsById(userAreaTypeDto, request.getRemoteUser(), isPowerUser, scopeName);
+        } else {
+            response = getUserAreaDetailsByLocation(userAreaTypeDto, request.getRemoteUser());
         }
-        catch (Exception ex){
-            response = createErrorResponse(ex.getMessage());
-        }
-
         return response;
     }
 
@@ -227,25 +221,29 @@ public class UserAreaResource extends UnionVMSResource {
         }
     }
 
-    private Response getUserAreaDetailsByLocation(UserAreaCoordinateType userAreaTypeDto, String userName) throws Exception {
+    private Response getUserAreaDetailsByLocation(UserAreaCoordinateType userAreaTypeDto, String userName) throws ServiceException {
 
-        if (!userAreaTypeDto.getIsGeom()) {
-            Coordinate coordinate = areaLocationMapper.getCoordinateFromDto(userAreaTypeDto);
-            List<UserAreaDto> userAreaDetails = spatialService.getUserAreaDetailsWithExtentByLocation(coordinate, userName);
-            return createSuccessResponse(userAreaDetails);
-        } else {
-            AreaTypeEntry areaTypeEntry = AreaLocationDtoMapper.mapper().getAreaTypeEntry(userAreaTypeDto);
-            List<AreaDetails> userAreaDetails = spatialService.getUserAreaDetailsByLocation(areaTypeEntry, userName);
-            AreaDetailsGeoJsonDto areaDetailsGeoJsonDto = areaLocationMapper.getAreaDetailsDtoForAllAreas(userAreaDetails, userAreaTypeDto);
+        try {
+            if (!userAreaTypeDto.getIsGeom()) {
+                Coordinate coordinate = areaLocationMapper.getCoordinateFromDto(userAreaTypeDto);
+                List<UserAreaDto> userAreaDetails = spatialService.getUserAreaDetailsWithExtentByLocation(coordinate, userName);
+                return createSuccessResponse(userAreaDetails);
+            } else {
+                AreaTypeEntry areaTypeEntry = AreaLocationDtoMapper.mapper().getAreaTypeEntry(userAreaTypeDto);
+                List<AreaDetails> userAreaDetails = spatialService.getUserAreaDetailsByLocation(areaTypeEntry, userName);
+                AreaDetailsGeoJsonDto areaDetailsGeoJsonDto = areaLocationMapper.getAreaDetailsDtoForAllAreas(userAreaDetails, userAreaTypeDto);
 
-            List<ObjectNode> nodeList = new ArrayList<>();
+                List<ObjectNode> nodeList = new ArrayList<>();
 
-            for (Map<String, Object> featureMap : areaDetailsGeoJsonDto.getAllAreaProperties()) {
-                ObjectNode convert = new FeatureToGeoJsonJacksonMapper().convert(areaDetailsGeoJsonDto.toFeature(featureMap));
-                nodeList.add(convert);
+                for (Map<String, Object> featureMap : areaDetailsGeoJsonDto.getAllAreaProperties()) {
+                    ObjectNode convert = new FeatureToGeoJsonJacksonMapper().convert(areaDetailsGeoJsonDto.toFeature(featureMap));
+                    nodeList.add(convert);
+                }
+
+                return createSuccessResponse(nodeList);
             }
-
-            return createSuccessResponse(nodeList);
+        } catch (IOException | ParseException e) {
+            throw new ServiceException(e.getMessage(), e);
         }
     }
 

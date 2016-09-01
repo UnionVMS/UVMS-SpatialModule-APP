@@ -25,6 +25,8 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialService
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.helper.MapConfigHelper;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
@@ -37,6 +39,7 @@ import java.util.List;
 @Stateless
 @Local(AreaTypeNamesService.class)
 @Transactional
+@Slf4j
 public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
 
     private static final String WMS_SERVICE_TYPE = "wms";
@@ -175,6 +178,7 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
             }
             return geoServerUrl;
         } catch (ServiceException e) {
+            log.error(e.getMessage(), e);
             throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
         }
     }

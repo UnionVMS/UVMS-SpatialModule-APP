@@ -80,6 +80,7 @@ public class SpatialMessageServiceBean extends AbstractMessageService {
             response.setJMSCorrelationID(message.getMessage().getJMSMessageID());
             session.createProducer(message.getMessage().getJMSReplyTo()).send(response);
         } catch (JMSException | SpatialModelMarshallException e) {
+            log.error("Error when returning module spatial request", e);
             log.error("[ Error when returning module spatial request. ] {} {}", e.getMessage(), e.getStackTrace());
         } finally {
             disconnectQueue();

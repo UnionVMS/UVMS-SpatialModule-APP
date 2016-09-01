@@ -48,6 +48,7 @@ public class SpatialInitializerBean extends AbstractModuleInitializerBean {
                 isMustRedploy = Boolean.valueOf(moduleConfigs.getProperty(PROP_USM_DESCRIPTOR_FORCE_UPDATE));
                 log.info("{} file contains a configuration {}, with the following value {}", PROP_FILE_NAME, PROP_USM_DESCRIPTOR_FORCE_UPDATE, isMustRedploy);
             } catch (IOException e) {
+                log.error(e.getMessage(), e);
                 log.info("No {} file with property {} was configured. The default behavior is to skip USM deployment if application has already been deployed.", PROP_FILE_NAME, PROP_USM_DESCRIPTOR_FORCE_UPDATE);
                 //in case we can't retrieve a configuration, the default behavior is skipping redeployment
             }

@@ -36,15 +36,8 @@ public class BookmarkServiceBean implements BookmarkService {
 
     @Override
     public Set<Bookmark> listByUsername(String userName) throws ServiceException {
-
         log.info("{} is requesting bookmarks(...), with a scopeName={}", userName);
-
-        try {
-            return repository.listBookmarksBy(userName);
-
-        } catch (ServiceException e) {
-            throw new ServiceException("User doesn't have the right to list bookmarks");
-        }
+        return repository.listBookmarksBy(userName);
     }
 
     @Override
@@ -52,22 +45,13 @@ public class BookmarkServiceBean implements BookmarkService {
     public Bookmark create(Bookmark bookmark, String userName) throws ServiceException {
 
         log.info("{} is creating bookmark(...), with a scopeName={}", userName);
-
-        try {
-            List<ProjectionEntity> projection = repository.findProjection(bookmark.getSrs());
-
-            if (CollectionUtils.isEmpty(projection)){
-                throw new ServiceException("PROJECTION NOT FOUND");
-            }
-
-            bookmark.setCreatedBy(userName);
-            BookmarkEntity entity = repository.create(BookmarkMapper.INSTANCE.bookmarkToBookmarkEntity(bookmark));
-            return BookmarkMapper.INSTANCE.bookmarkEntityToBookmark(entity);
-
-
-        } catch (ServiceException e) {
-            throw new ServiceException(e.getMessage());
+        List<ProjectionEntity> projection = repository.findProjection(bookmark.getSrs());
+        if (CollectionUtils.isEmpty(projection)){
+            throw new ServiceException("PROJECTION NOT FOUND");
         }
+        bookmark.setCreatedBy(userName);
+        BookmarkEntity entity = repository.create(BookmarkMapper.INSTANCE.bookmarkToBookmarkEntity(bookmark));
+        return BookmarkMapper.INSTANCE.bookmarkEntityToBookmark(entity);
     }
 
     @Override
@@ -75,13 +59,7 @@ public class BookmarkServiceBean implements BookmarkService {
     public void delete(Long id, String userName) throws ServiceException {
 
         log.info("{} is deleting bookmark(...), with a scopeName={}", userName);
-
-        try {
-            repository.deleteBookmark(id);
-
-        } catch (ServiceException e) {
-            throw new ServiceException("User doesn't have the right to delete bookmarks");
-        }
+        repository.deleteBookmark(id);
     }
 
     @Override
@@ -89,13 +67,7 @@ public class BookmarkServiceBean implements BookmarkService {
     public void update(Bookmark bookmark, String userName) throws ServiceException {
 
         log.info("{} is updating bookmark(...), with a scopeName={}", userName);
-
-        try {
-            BookmarkEntity entity = repository.getBookmarkBy(bookmark.getId());
-            BookmarkMapper.INSTANCE.merge(bookmark, entity);
-        } catch (ServiceException e) {
-            throw new ServiceException("User doesn't have the right to update bookmarks");
-        }
-
+        BookmarkEntity entity = repository.getBookmarkBy(bookmark.getId());
+        BookmarkMapper.INSTANCE.merge(bookmark, entity);
     }
 }
