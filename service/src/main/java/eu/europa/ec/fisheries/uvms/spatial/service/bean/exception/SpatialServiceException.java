@@ -17,7 +17,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 public class SpatialServiceException extends RuntimeException {
 
     private final SpatialServiceErrors error;
-    private final Object[] params;
+    private final transient Object[] params;
 
     public SpatialServiceException(SpatialServiceErrors error, Object... params) {
         super(error.formatMessage(params));
@@ -49,10 +49,6 @@ public class SpatialServiceException extends RuntimeException {
 
     private static String getMessage(SpatialServiceErrors error) {
         return error.getMessagePattern();
-    }
-
-    public Integer getErrorCode() {
-        return this.error.getErrorCode();
     }
     
     public String getErrorMessageCode() {
