@@ -125,4 +125,14 @@ public class LayersDto implements Comparable<LayersDto> {
         return !(areaLocationTypeName != null ? !areaLocationTypeName.equals(layersDto.areaLocationTypeName) : layersDto.areaLocationTypeName != null);
 
     }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + serviceLayerId.hashCode();
+        result = 31 * result + subType.hashCode();
+        result = 31 * result + order.hashCode();
+        result = 31 * result + areaLocationTypeName.hashCode();
+        return result;
+    }
 }
