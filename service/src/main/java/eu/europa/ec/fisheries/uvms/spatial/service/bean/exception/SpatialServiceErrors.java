@@ -12,10 +12,11 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean.exception;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.Serializable;
 import java.text.MessageFormat;
 
 @Slf4j
-public enum SpatialServiceErrors {
+public enum SpatialServiceErrors implements Serializable {
 
     INTERNAL_APPLICATION_ERROR("INTERNAL_APPLICATION_ERROR", 500, "An internal application error has occurred.", "An internal application error has occurred."),
     WRONG_NATIVE_SQL_CONFIGURATION_ERROR("WRONG_NATIVE_SQL_CONFIGURATION_ERROR", 5001, "Sql Native query with name {0} does not exist.", "Wrong configuration."),

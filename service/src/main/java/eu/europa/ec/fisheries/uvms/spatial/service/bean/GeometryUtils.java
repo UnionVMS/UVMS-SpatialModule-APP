@@ -80,6 +80,7 @@ public final class GeometryUtils {
         try {
             referenceSystem = CRS.decode(EPSG + crs);
         } catch (FactoryException e) {
+            log.error(e.getMessage(), e);
             throw new IllegalArgumentException("COORDINATE REFERENCE SYSTEM NOT SUPPORTED");
         }
         return referenceSystem;
@@ -115,10 +116,13 @@ public final class GeometryUtils {
             }
             p.setSRID(DEFAULT_SRID);
         } catch (TransformException e) {
+            log.error(e.getMessage(), e);
             throw new IllegalArgumentException("TRANSFORMATION FAILED", e);
         } catch (NoSuchAuthorityCodeException e) {
+            log.error(e.getMessage(), e);
             throw new IllegalArgumentException("CRS CODE NOT UNDERSTOOD");
         } catch (FactoryException e) {
+            log.error(e.getMessage(), e);
             throw new IllegalArgumentException("MATH TRANSFORM COULD BE CREATED");
         }
         return p;
@@ -135,8 +139,10 @@ public final class GeometryUtils {
             checkLatitude(p.getY());
             checkLongitude(p.getX());
         } catch (FactoryException e) {
+            log.error(e.getMessage(), e);
             throw new IllegalArgumentException("MATH TRANSFORM COULD BE CREATED");
         } catch (TransformException e) {
+            log.error(e.getMessage(), e);
             throw new IllegalArgumentException("TRANSFORMATION FAILED", e);
         }
         return p;
@@ -209,7 +215,8 @@ public final class GeometryUtils {
             }
             return geometries;
 
-        } catch (Exception e) {
+        } catch (FactoryException | TransformException e) {
+            log.error(e.getMessage(), e);
             throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR, e);
         }
         finally {
