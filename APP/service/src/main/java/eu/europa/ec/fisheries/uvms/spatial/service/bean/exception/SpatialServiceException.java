@@ -16,10 +16,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class SpatialServiceException extends RuntimeException {
 
-    private static final long serialVersionUID = 2405172041950251807L;
-
     private final SpatialServiceErrors error;
-    private Object[] params;
+    private final Object[] params;
 
     public SpatialServiceException(SpatialServiceErrors error, Object... params) {
         super(error.formatMessage(params));
@@ -36,11 +34,13 @@ public class SpatialServiceException extends RuntimeException {
     public SpatialServiceException(SpatialServiceErrors error, SpatialServiceException cause) {
         super(join(getMessage(error), cause.getMessage()), cause);
         this.error = cause.getError();
+        params = null;
     }
 
     public SpatialServiceException(SpatialServiceErrors error, SpatialServiceException cause, Object... arguments) {
         super(join(error.formatMessage(arguments), cause.getMessage()), cause);
         this.error = cause.getError();
+        params = null;
     }
 
     private static String join(String... params) {

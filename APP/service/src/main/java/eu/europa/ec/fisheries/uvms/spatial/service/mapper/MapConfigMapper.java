@@ -23,15 +23,12 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Mapper(componentModel = "cdi")
 public abstract class MapConfigMapper {
 
-    public static MapConfigMapper INSTANCE = Mappers.getMapper(MapConfigMapper.class);
+    public static final MapConfigMapper INSTANCE = Mappers.getMapper(MapConfigMapper.class);
 
     public abstract PositionDto getPositionDtos(PositionsDto positionsDto);
 
@@ -145,7 +142,7 @@ public abstract class MapConfigMapper {
 
     public List<ReferenceDataType> getReferenceDataType(Map<String, ReferenceDataPropertiesDto> referenceData) {
         if (referenceData == null || referenceData.isEmpty()) {
-            return null;
+            return Collections.emptyList();
         }
         List<ReferenceDataType> referenceDataTypes = new ArrayList<>();
         for (Map.Entry<String, ReferenceDataPropertiesDto> entry : referenceData.entrySet()) {
@@ -156,7 +153,7 @@ public abstract class MapConfigMapper {
 
     public Map<String, ReferenceDataPropertiesDto> getReferenceData(List<ReferenceDataType> referenceDataTypes) {
         if (referenceDataTypes == null || referenceDataTypes.isEmpty()) {
-            return null;
+            return Collections.emptyMap();
         }
         Map<String, ReferenceDataPropertiesDto> referenceData = new HashMap<>();
         for (ReferenceDataType referenceDataType : referenceDataTypes) {
@@ -209,7 +206,7 @@ public abstract class MapConfigMapper {
 
     protected List<StyleDataType> convertToStyleType(Map<String, String> style) {
         if (style == null) {
-            return null;
+            return Collections.emptyList();
         }
         List<StyleDataType> styleDataTypes = new ArrayList<>();
         for (Map.Entry<String, String> entry : style.entrySet()) {
@@ -221,7 +218,7 @@ public abstract class MapConfigMapper {
 
     protected Map<String, String> convertToStyleMap(List<StyleDataType> styleDataTypes) {
         if(styleDataTypes == null || styleDataTypes.isEmpty()) {
-            return null;
+            return Collections.emptyMap();
         }
         Map<String, String> styleMap = new HashMap<>();
         for (StyleDataType styleDataType : styleDataTypes) {
