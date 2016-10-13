@@ -15,7 +15,11 @@ import eu.europa.ec.fisheries.uvms.spatial.util.PropertiesBean;
 public class DatabaseDialectFactory {
 
     private PropertiesBean properties;
-
+    // only for testing
+    private static int callIndex = 0;
+    private static Oracle oracleDialect = null;
+    private static PostGres postgresDialect = null;
+	
     public DatabaseDialectFactory(PropertiesBean properties) {
         this.properties = properties;
     }
