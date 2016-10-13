@@ -33,5 +33,34 @@ public class DatabaseDialectFactory {
             return new PostGres();
         }
     }
+	
+	
+	public static DatabaseDialect bounceInstance(){
+    	DatabaseDialect dialect = null;
+        if(isOracle()){
+        	if (oracleDialect==null)
+        		oracleDialect = new Oracle();
+            dialect =  oracleDialect;
+        }
+        else {
+        	if (postgresDialect == null)
+        		postgresDialect = new PostGres();
+            dialect =  postgresDialect;
+        }    	
+        
+        return dialect;        
+    }
+    
+    public static void switchDatabase(){
+        callIndex++;    	
+    }
+    
+    public static boolean isOracle(){
+        boolean isOracle = false;
+        if (callIndex % 2 == 0){
+        	isOracle = true;
+        }
+        return isOracle;
+    }
 
 }
