@@ -241,6 +241,8 @@
 			    <version>3.0.11.Final</version>
 			</dependency>
 
+
+
         </dependencies>
 
     </dependencyManagement>
@@ -412,6 +414,43 @@
                 <database.dialect>postgres</database.dialect> <!-- the record -->
             </properties>
         </profile>
+		
+		<profile>
+				<id>weblogic</id>
+				<properties>
+					<database.dialect>oracle</database.dialect> <!-- the record -->
+				</properties>
+				
+					<dependencies>				
+						
+						<dependency>
+							<groupId>io.jsonwebtoken</groupId>
+							<artifactId>jjwt</artifactId>
+						</dependency>
+						<dependency>
+							<groupId>javax</groupId>
+							<artifactId>javaee-api</artifactId>
+						</dependency>
+						<dependency>
+							<groupId>org.mapstruct</groupId>
+							<artifactId>mapstruct</artifactId>
+						</dependency>
+						<dependency>
+							<groupId>org.mapstruct</groupId>
+							<artifactId>mapstruct-processor</artifactId>
+						</dependency>
+						<dependency>
+							<groupId>org.hibernate</groupId>
+							<artifactId>hibernate-validator</artifactId>
+						</dependency>
+
+					
+					
+					</dependencies>
+		</profile>			
+		
+		
+			
 	</profiles>
 
     <modules>
