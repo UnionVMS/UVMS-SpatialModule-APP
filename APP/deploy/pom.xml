@@ -160,6 +160,36 @@
 							</modules>
 						</configuration>
 					</plugin>
+					
+					<plugin>
+					<artifactId>maven-antrun-plugin</artifactId>
+					<version>1.7</version>
+					<executions>
+					  <execution>
+						<id>configPackage</id>
+						<phase>package</phase>
+						<configuration>
+						  <tasks>
+						  <!-- check if config is available, if not fail -->
+						  <available file="${configDirectory}/weblogic-application.xml" property="configIsAvailable" />
+						  <fail message="Unable to locate configuration: ${configDirectory}/weblogic-application.xml" unless="configIsAvailable" />
+
+						  <!-- copy the files from the config dir to the webapp dir -->
+						  <echo message="Copying data dir from ${configDirectory}/weblogic-application.xml" />
+						  <copy todir="${webappSourceDirectory}" >
+							 <fileset dir="${configDirectory}" includes="**/**" />
+						  </copy>
+			  
+						  </tasks>
+						</configuration>
+						<goals>
+						  <goal>run</goal>
+						</goals>
+					  </execution>
+					</executions>
+				  </plugin>					
+					
+					
                 </plugins>
             </build>
         </profile>					
