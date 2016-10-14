@@ -145,6 +145,7 @@
 						<version>2.7</version>
 						<configuration>
 							<defaultLibBundleDir>APP-INF/lib</defaultLibBundleDir>					
+							<skinnyWars>true</skinnyWars>							
 							<modules>
 							 <ejbModule>
 									<groupId>${project.groupId}</groupId>
