@@ -419,8 +419,10 @@
 				<id>weblogic</id>
 				<properties>
 					<database.dialect>oracle</database.dialect> <!-- the record -->
-				</properties>
-				
+					<configDirectory>${basedir}/../container-conf/oracle</configDirectory>
+					<webappSourceDirectory>${basedir}/../deploy/src/main/application/META-INF</webappSourceDirectory>
+					
+				</properties>				
 					<dependencies>				
 						
 						<dependency>
@@ -447,6 +449,8 @@
 					
 					
 					</dependencies>
+				
+				
 		</profile>			
 		
 		
