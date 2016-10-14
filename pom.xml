@@ -420,8 +420,8 @@
 				<properties>
 					<database.dialect>oracle</database.dialect> <!-- the record -->
 					<configDirectory>${basedir}/../container-conf/oracle</configDirectory>
-					<webappSourceDirectory>${basedir}/../deploy/src/main/application/META-INF</webappSourceDirectory>
-					
+					<earSourceDirectory>${basedir}/../deploy/src/main/application/META-INF</earSourceDirectory>
+				
 				</properties>				
 					<dependencies>				
 						
