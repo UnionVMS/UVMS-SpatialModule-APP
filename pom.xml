@@ -421,7 +421,7 @@
 					<database.dialect>oracle</database.dialect> <!-- the record -->
 					<configDirectory>${basedir}/../container-conf/oracle</configDirectory>
 					<earSourceDirectory>${basedir}/../deploy/src/main/application/META-INF</earSourceDirectory>
-				
+					<jndiReferenceName>jdbc/uvms_spatial</jndiReferenceName>				
 				</properties>				
 					<dependencies>				
 						
@@ -445,8 +445,6 @@
 							<groupId>org.hibernate</groupId>
 							<artifactId>hibernate-validator</artifactId>
 						</dependency>
-
-					
 					
 					</dependencies>
 				
