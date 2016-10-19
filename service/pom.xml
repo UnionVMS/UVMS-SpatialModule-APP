@@ -152,6 +152,7 @@
                 <usm_deployment_descriptor_force_update>true</usm_deployment_descriptor_force_update>
             </properties>
         </profile>
+ 		
     </profiles>
     <build>
 
@@ -222,6 +223,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
             </plugin>
+	
+			
         </plugins>
 
         <pluginManagement>
