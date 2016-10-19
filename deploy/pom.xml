@@ -161,56 +161,21 @@
 						</configuration>
 					</plugin>
 					
-					<plugin>
-					<artifactId>maven-antrun-plugin</artifactId>
-					<version>1.7</version>
+				
+				  
+				  <plugin>
+					<groupId>eu.europa.ec.fisheries.uvms.containerconversion</groupId>
+					<artifactId>uvms-wildfly-weblogic-convertor</artifactId>
+					 <version>1.1.0</version>
 					<executions>
 					  <execution>
-						<id>configPackage</id>
-						<phase>validate</phase>
-						<configuration>
-						  <tasks>
-						  <!-- check if config is available, if not fail -->
-						  <available file="${configDirectory}/weblogic-application.xml" property="configIsAvailable" />
-						  <fail message="Unable to locate configuration: ${configDirectory}/weblogic-application.xml" unless="configIsAvailable" />
-
-						  <available file="${configDirectory}/application.xml" property="configIsAvailable" />
-						  <fail message="Unable to locate configuration: ${configDirectory}/application.xml" unless="configIsAvailable" />
-						  
-
-						  <!-- copy the files from the config dir to the webapp dir -->
-						  <echo message="Copying data dir from ${configDirectory}" />
-						  <copy todir="${earSourceDirectory}" >
-							 <fileset dir="${configDirectory}" includes="**/**" />
-						  </copy>
-						  
-						  
-						  <replace file="${earSourceDirectory}/application.xml" token="@projectVersion@" value="${project.parent.version}"/> 
-						  <replace file="${earSourceDirectory}/application.xml" token="@usm4uvmsVersion@" value="${usm4uvms.version}"/> 
-						  
-						  
-						  <mkdir dir="${basedir}/../container-conf/temp" />
-						  
-						  <copy todir="${basedir}/../container-conf/temp" >
-							 <fileset dir="${basedir}/../rest/src/main/webapp/WEB-INF" includes="web.xml" />
-						  </copy>
-						  
-						  <available file="${basedir}/../container-conf/temp/web.xml" property="configIsAvailable" />
-						  <fail message="Unable to locate configuration: ${basedir}/../container-conf/temp/web.xml" unless="configIsAvailable" />
-						  
-						  <replace file="${basedir}/../container-conf/temp/web.xml" token="3_1" value="3_0"/> 
-						  <replace file="${basedir}/../container-conf/temp/web.xml" token="3.1" value="3.0"/> 
-						  <replace file="${basedir}/../container-conf/temp/web.xml" token="http://xmlns.jcp.org/xml/ns/javaee" value="http://java.sun.com/xml/ns/javaee"/> 
-						  
-			 
-						  </tasks>
-						</configuration>
+						<phase>package</phase>
 						<goals>
-						  <goal>run</goal>
+						  <goal>convertEAR</goal>
 						</goals>
 					  </execution>
 					</executions>
-				  </plugin>					
+				  </plugin>	
 					
 					
                 </plugins>
