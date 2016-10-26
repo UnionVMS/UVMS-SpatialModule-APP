@@ -9,7 +9,7 @@
     <parent>
         <groupId>eu.europa.ec.fisheries.uvms.spatial</groupId>
         <artifactId>spatial</artifactId>
-        <version>0.5.5-SNAPSHOT</version>
+        <version>0.5.5</version>
     </parent> 
 
     <build>
@@ -156,7 +156,7 @@
 									<groupId>eu.europa.ec.fisheries.uvms</groupId>
 									<artifactId>usm4uvms</artifactId>		   
 									<bundleDir>/</bundleDir>					
-								</jarModule >						
+								</jarModule>						
 							</modules>
 						</configuration>
 					</plugin>
