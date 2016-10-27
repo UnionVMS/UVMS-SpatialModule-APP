@@ -21,7 +21,7 @@ import java.util.Map;
 import static eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity.*;
 
 @Slf4j
-public class EezDao extends AbstractSpatialDao<EezEntity> {
+public class EezDao extends AbstractAreaDao<EezEntity> {
 
     private EntityManager em;
 
@@ -32,10 +32,6 @@ public class EezDao extends AbstractSpatialDao<EezEntity> {
     @Override
     public EntityManager getEntityManager() {
         return em;
-    }
-
-    public List<EezEntity> listEmptyGeometries() throws ServiceException {
-        return findEntityByNamedQuery(EezEntity.class, LIST_EMPTY_GEOMETRIES);
     }
 
     @Override

@@ -27,7 +27,7 @@ import javax.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.Map;
 
-@Path("/geometry/utils")
+@Path("/geometry/utility")
 @Slf4j
 public class GeometryUtilsResource extends UnionVMSResource {
 

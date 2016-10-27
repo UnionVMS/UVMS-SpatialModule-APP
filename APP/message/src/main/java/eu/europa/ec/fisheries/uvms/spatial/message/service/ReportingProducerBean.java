@@ -18,9 +18,6 @@ import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.jms.Destination;
 
-/**
- * Created by padhyad on 3/21/2016.
- */
 @Stateless
 @Local
 public class ReportingProducerBean extends AbstractProducer {

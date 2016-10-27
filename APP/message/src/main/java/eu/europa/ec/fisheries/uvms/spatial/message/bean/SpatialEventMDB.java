@@ -79,6 +79,10 @@ public class SpatialEventMDB implements MessageListener {
     private Event<SpatialMessageEvent> pingSpatialEvent;
 
     @Inject
+    @AreaByCodeEvent
+    private Event<SpatialMessageEvent> areaByCodeSpatialEvent;
+
+    @Inject
     @SpatialMessageErrorEvent
     private Event<SpatialMessageEvent> spatialErrorEvent;
 
@@ -143,6 +147,11 @@ public class SpatialEventMDB implements MessageListener {
                     PingRQ pingRQ = JAXBMarshaller.unmarshall(textMessage, PingRQ.class);
                     SpatialMessageEvent pingEvent = new SpatialMessageEvent(textMessage, pingRQ);
                     pingSpatialEvent.fire(pingEvent);
+                    break;
+                case GET_AREA_BY_CODE:
+                    AreaByCodeRequest areaByCodeRequest = JAXBMarshaller.unmarshall(textMessage, AreaByCodeRequest.class);
+                    SpatialMessageEvent areaByCodeEvent = new SpatialMessageEvent(textMessage, areaByCodeRequest);
+                    areaByCodeSpatialEvent.fire(areaByCodeEvent);
                     break;
                 default:
                     log.error("[ Not implemented method consumed: {} ]", method);

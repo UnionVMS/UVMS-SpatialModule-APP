@@ -150,6 +150,7 @@
             <xs:enumeration value="SAVE_OR_UPDATE_MAP_CONFIGURATION"/>
             <xs:enumeration value="DELETE_MAP_CONFIGURATION"/>
             <xs:enumeration value="PING"/>
+            <xs:enumeration value="GET_AREA_BY_CODE"/>
         </xs:restriction>
     </xs:simpleType>
 
@@ -318,6 +319,14 @@
             <xs:element name="closed" type="xs:string"/>
             <xs:element name="pending" type="xs:string"/>
             <xs:element name="none" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="AreaSimpleType">
+        <xs:sequence>
+            <xs:element name="areaType" type="xs:string" nillable="false" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="areaCode" type="xs:string" nillable="false" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="wkt" type="xs:string" nillable="true" maxOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
 

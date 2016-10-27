@@ -11,23 +11,16 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.dao.util;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.dao.AbstractSpatialDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.EezDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.FaoDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.FmzDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.GfcmDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.PortAreaDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.PortDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.RfmoDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.StatRectDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.UserAreaDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.*;
+import eu.europa.ec.fisheries.uvms.spatial.dao.AbstractAreaDao;
+
 import javax.persistence.EntityManager;
 
 public abstract class DAOFactory {
 
-    public static AbstractSpatialDao getAbstractSpatialDao(EntityManager em, String name) throws ServiceException {
+    public static AbstractAreaDao getAbstractSpatialDao(final EntityManager em, final String name) throws ServiceException {
 
-        AbstractSpatialDao dao;
+        AbstractAreaDao dao;
 
         switch(name){
             case "eez":

@@ -23,7 +23,7 @@ import javax.persistence.Table;
 })
 @Table(name = "countries")
 @EqualsAndHashCode(callSuper = true)
-public class CountryEntity extends BaseSpatialEntity {
+public class CountryEntity extends BaseAreaEntity {
 
     public static final String FIND_ALL = "countryEntity.findAll";
 

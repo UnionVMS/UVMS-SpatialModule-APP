@@ -34,7 +34,7 @@ import java.util.Map;
 import static eu.europa.ec.fisheries.uvms.service.QueryParameter.with;
 import static eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity.*;
 
-public class UserAreaDao extends AbstractSpatialDao<UserAreasEntity> {
+public class UserAreaDao extends AbstractAreaDao<UserAreasEntity> {
 
     private EntityManager em;
 

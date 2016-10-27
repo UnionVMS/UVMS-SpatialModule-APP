@@ -18,12 +18,12 @@ import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.interceptors.TracingInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.dao.AbstractSpatialDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.AbstractAreaDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.util.DAOFactory;
 import eu.europa.ec.fisheries.uvms.spatial.dao.util.DatabaseDialect;
 import eu.europa.ec.fisheries.uvms.spatial.dao.util.DatabaseDialectFactory;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.BaseSpatialEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.BaseAreaEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.PortEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Area;
@@ -193,7 +193,7 @@ public class SpatialServiceBean implements SpatialService {
         List<AreaDetails> areaDetailsList = new ArrayList<>();
 
         for (Object area : list) {
-            Map<String, Object> properties = ((BaseSpatialEntity)area).getFieldMap();
+            Map<String, Object> properties = ((BaseAreaEntity)area).getFieldMap();
 
             List<AreaProperty> areaProperties = new ArrayList<>();
             for (Map.Entry<String, Object> entry : properties.entrySet()) {
@@ -205,7 +205,7 @@ public class SpatialServiceBean implements SpatialService {
             if (!properties.isEmpty()) {
                 AreaProperty areaProperty = new AreaProperty();
                 areaProperty.setPropertyName("gid");
-                areaProperty.setPropertyValue(String.valueOf(((BaseSpatialEntity) area).getId()));
+                areaProperty.setPropertyValue(String.valueOf(((BaseAreaEntity) area).getId()));
                 areaProperties.add(areaProperty);
             }
 
@@ -505,8 +505,8 @@ public class SpatialServiceBean implements SpatialService {
         final ArrayList<GenericSystemAreaDto> systemAreaByFilterRecords = new ArrayList<>();
         final WKTWriter2 wktWriter2 = new WKTWriter2();
 
-        List<BaseSpatialEntity> baseEntities = DAOFactory.getAbstractSpatialDao(em, areaLocationType.getTypeName()).searchEntity(filter);
-        for (BaseSpatialEntity entity : baseEntities) {
+        List<BaseAreaEntity> baseEntities = DAOFactory.getAbstractSpatialDao(em, areaLocationType.getTypeName()).searchEntity(filter);
+        for (BaseAreaEntity entity : baseEntities) {
             Geometry geometry = entity.getGeom();
             Geometry envelope = geometry.getGeometryType().equalsIgnoreCase(MULTIPOINT) ? geometry : entity.getGeom().getEnvelope();
             systemAreaByFilterRecords.add(new GenericSystemAreaDto(entity.getId().intValue(), entity.getCode(),areaType.toUpperCase(), wktWriter2.write(envelope), entity.getName()));
@@ -526,10 +526,10 @@ public class SpatialServiceBean implements SpatialService {
         if (areaLocationType == null) {
             throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
         }
-        List<BaseSpatialEntity> baseEntities = DAOFactory.getAbstractSpatialDao(em, areaLocationType.getTypeName()).searchNameByCode(filter);
+        List<BaseAreaEntity> baseEntities = DAOFactory.getAbstractSpatialDao(em, areaLocationType.getTypeName()).searchNameByCode(filter);
 
         List<SystemAreaNamesDto> systemAreas = new ArrayList<>();
-        for (BaseSpatialEntity baseEntity : baseEntities) {
+        for (BaseAreaEntity baseEntity : baseEntities) {
             boolean isAdded = false;
             for (SystemAreaNamesDto systemAreaNamesDto : systemAreas) {
                 if (systemAreaNamesDto.getCode().equalsIgnoreCase(baseEntity.getCode())) {
@@ -582,8 +582,8 @@ public class SpatialServiceBean implements SpatialService {
 
         if (locationTypeEntry.getId() != null) {
 
-            AbstractSpatialDao dao = DAOFactory.getAbstractSpatialDao(em, locationTypesEntity.getTypeName());
-            BaseSpatialEntity areaEntity = dao.findOne(Long.parseLong(locationTypeEntry.getId()));
+            AbstractAreaDao dao = DAOFactory.getAbstractSpatialDao(em, locationTypesEntity.getTypeName());
+            BaseAreaEntity areaEntity = dao.findOne(Long.parseLong(locationTypeEntry.getId()));
 
             if (areaEntity == null) {
                 throw new SpatialServiceException(SpatialServiceErrors.ENTITY_NOT_FOUND, locationTypesEntity.getTypeName());
@@ -620,7 +620,7 @@ public class SpatialServiceBean implements SpatialService {
                 list.add(closestLocation);
             }
             if (isNotEmpty(list)) {
-                fieldMap = ((BaseSpatialEntity)list.iterator().next()).getFieldMap();
+                fieldMap = ((BaseAreaEntity)list.iterator().next()).getFieldMap();
             }
             properties = fieldMap;
 

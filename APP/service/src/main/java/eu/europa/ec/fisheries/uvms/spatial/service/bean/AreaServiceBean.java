@@ -10,6 +10,7 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
+import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.common.ZipExtractor;
 import eu.europa.ec.fisheries.uvms.domain.BaseEntity;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
@@ -18,13 +19,14 @@ import eu.europa.ec.fisheries.uvms.spatial.dao.util.DAOFactory;
 import eu.europa.ec.fisheries.uvms.spatial.dao.util.DatabaseDialect;
 import eu.europa.ec.fisheries.uvms.spatial.dao.util.DatabaseDialectFactory;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.BaseSpatialEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.BaseAreaEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.CountryEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EntityFactory;
 import eu.europa.ec.fisheries.uvms.spatial.message.service.UploadConsumerBean;
 import eu.europa.ec.fisheries.uvms.spatial.message.service.UploadProducerBean;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadMapping;
 import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadMetadata;
@@ -38,6 +40,7 @@ import eu.europa.ec.fisheries.uvms.spatial.util.PropertiesBean;
 import eu.europa.ec.fisheries.uvms.spatial.util.SpatialTypeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.geotools.geometry.jts.WKTWriter2;
 import org.geotools.referencing.CRS;
 import org.opengis.feature.Property;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
@@ -118,7 +121,7 @@ public class AreaServiceBean implements AreaService {
             }
         }
 
-        for (Map.Entry<String, List<Long>> entry : areaTypeGidMap.entrySet()) {
+        for (Map.Entry<String, List<Long>> entry : areaTypeGidMap.entrySet()) { // FIXME looping and querying should be avoided
             String namedQuery = null;
             for (SpatialTypeEnum type : SpatialTypeEnum.values()) {
                 if(type.getType().equalsIgnoreCase(entry.getKey())) {
@@ -218,7 +221,7 @@ public class AreaServiceBean implements AreaService {
                 repository.findAreaLocationTypeByTypeName(areaTypeEntry.getAreaType().value().toUpperCase());
 
         Long id = Long.parseLong(areaTypeEntry.getId());
-        BaseSpatialEntity area = DAOFactory.getAbstractSpatialDao(em, areaLocationTypesEntity.getTypeName()).findOne(id);
+        BaseAreaEntity area = DAOFactory.getAbstractSpatialDao(em, areaLocationTypesEntity.getTypeName()).findOne(id);
 
         if (area == null) {
             throw new SpatialServiceException(SpatialServiceErrors.ENTITY_NOT_FOUND, areaLocationTypesEntity.getTypeName());
@@ -235,7 +238,7 @@ public class AreaServiceBean implements AreaService {
         }
         if (!properties.isEmpty()) {
             AreaProperty areaProperty = new AreaProperty();
-            areaProperty.setPropertyName("gid");
+            areaProperty.setPropertyName(GID);
             areaProperty.setPropertyValue(String.valueOf(area.getId()));
             areaProperties.add(areaProperty);
         }
@@ -244,5 +247,26 @@ public class AreaServiceBean implements AreaService {
         areaDetails.setAreaType(areaTypeEntry);
         areaDetails.getAreaProperties().addAll(areaProperties);
         return areaDetails;
+    }
+
+    @Override
+    @Transactional
+    public List<AreaSimpleType> byCode(List<AreaSimpleType> areaSimpleTypeList) throws ServiceException {
+
+        List records = repository.areaByCode(areaSimpleTypeList);
+        List<AreaSimpleType> simpleTypeList = new ArrayList<>();
+
+        WKTWriter2 wktWriter = new WKTWriter2();
+        for (Object record : records) {
+
+            final Object[] result = (Object[]) record;
+            String type = (String) result[0];
+            String code = (String) result[1];
+            Geometry geom = (Geometry) result[2];
+            simpleTypeList.add(new AreaSimpleType(type, code, wktWriter.write(geom)));
+
+        }
+
+        return simpleTypeList;
     }
 }

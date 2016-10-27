@@ -295,4 +295,27 @@
             </xs:sequence>
         </xs:complexType>
     </xs:element>
+
+    <!-- area by code -->
+    <xs:element name="AreaByCodeRequest">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="SpatialModuleRequest">
+                    <xs:sequence>
+                        <xs:element name="areaSimple" type="AreaSimpleType" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="AreaByCodeResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="areaSimple" type="AreaSimpleType" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+       </xs:complexType>
+    </xs:element>
+
+
 </xs:schema>
