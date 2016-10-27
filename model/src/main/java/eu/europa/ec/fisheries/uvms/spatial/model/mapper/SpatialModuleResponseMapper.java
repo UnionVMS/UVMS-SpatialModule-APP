@@ -222,6 +222,24 @@ public final class SpatialModuleResponseMapper {
         }
     }
 
+
+    public static String mapAreaByCodeResponseToString(AreaByCodeResponse areaByCodeResponse) throws SpatialModelMarshallException {
+        try {
+            return JAXBMarshaller.marshall(areaByCodeResponse);
+        } catch (SpatialModelMarshallException e) {
+            return exception(areaByCodeResponse, e);
+        }
+    }
+
+    public static AreaByCodeResponse mapAreaByCodeResponse(TextMessage response, String correlationId) throws SpatialModelMapperException {
+        try {
+            validateResponse(response, correlationId);
+            return JAXBMarshaller.unmarshall(response, AreaByCodeResponse.class);
+        } catch (SpatialModelMarshallException e) {
+            return exception(e);
+        }
+    }
+
     public static SpatialDeleteMapConfigurationRS mapToSpatialDeleteMapConfigurationRS(TextMessage response, String correlationId) throws SpatialModelMapperException {
         try {
             validateResponse(response, correlationId);
@@ -258,4 +276,5 @@ public final class SpatialModuleResponseMapper {
         LOG.error("[ Error when marshalling data. ] {}", e);
         throw new SpatialModelMarshallException("Error when marshalling object to String", e);
     }
+
 }

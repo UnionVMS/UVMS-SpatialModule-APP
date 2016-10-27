@@ -25,7 +25,7 @@
 
         <!-- The spatial name is used as a common point to rename the application alias visible in USM-->
         <spatial.name>Spatial</spatial.name>
-        <spatial.model>0.5.4</spatial.model>
+        <spatial.model>0.5.5-SNAPSHOT</spatial.model>
         <reporting.model>0.5.4</reporting.model>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -35,8 +35,8 @@
         <mapstruct.version>1.0.0.Final</mapstruct.version>
         <jackson.version>2.6.0</jackson.version>
         <logback.core.version>1.1.2</logback.core.version>
-        <asset.module.version>2.0.0</asset.module.version>
-        <movement.model.version>2.0.0</movement.model.version>
+        <asset.module.version>2.0.6</asset.module.version>
+        <movement.model.version>2.0.6</movement.model.version>
         <application.name>${project.parent.artifactId}</application.name>
         <application.version>${project.parent.version}</application.version>
         <application.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}.log</application.logfile>

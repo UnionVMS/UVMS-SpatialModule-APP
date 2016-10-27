@@ -36,8 +36,7 @@ public class Oracle extends AbstractGisFunction {
     	sb.append("update spatial.").append(tableName).append(" set geom = SDO_UTIL.RECTIFY_GEOMETRY(geom, 0.005) where enabled = 'Y'");
         return sb.toString();
     }
-    
-    	
+
     @Override
     public String closestAreaToPoint(int index,String typeName, String tableName, Double latitude, Double longitude, Integer limit) {
     	StringBuffer sb = new StringBuffer();     	

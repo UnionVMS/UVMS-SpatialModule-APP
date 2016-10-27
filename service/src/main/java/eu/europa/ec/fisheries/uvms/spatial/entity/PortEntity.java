@@ -29,7 +29,7 @@ import java.util.Map;
         @NamedQuery(name = PortEntity.SEARCH_PORT_NAMES_BY_CODE, query = "From PortEntity where code in (SELECT distinct(code) from PortEntity where (upper(name) like :name OR upper(code) like :code) AND enabled='Y' GROUP BY gid)")
 })
 @Table(name = "port")
-public class PortEntity extends BaseSpatialEntity {
+public class PortEntity extends BaseAreaEntity {
 
     public static final String PORT_BY_COORDINATE = "portEntity.ByCoordinate";
     public static final String DISABLE = "portsEntity.disable";

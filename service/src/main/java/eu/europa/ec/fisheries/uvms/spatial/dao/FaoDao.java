@@ -13,13 +13,14 @@ package eu.europa.ec.fisheries.uvms.spatial.dao;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.FaoEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadMappingProperty;
+
+import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Map;
-import javax.persistence.EntityManager;
 
 import static eu.europa.ec.fisheries.uvms.spatial.entity.FaoEntity.*;
 
-public class FaoDao extends AbstractSpatialDao<FaoEntity> {
+public class FaoDao extends AbstractAreaDao<FaoEntity> {
 
     private EntityManager em;
 

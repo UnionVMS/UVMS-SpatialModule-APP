@@ -11,37 +11,14 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.spatial.message.bean.SpatialMessageServiceBean;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.DeleteMapConfigurationEvent;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.GetAreaByLocationEvent;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.GetAreaTypeNamesEvent;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.GetClosestAreaEvent;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.GetClosestLocationEvent;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.GetFilterAreaEvent;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.GetMapConfigurationEvent;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.GetSpatialEnrichmentEvent;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.PingEvent;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.SaveOrUpdateMapConfigurationEvent;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageErrorEvent;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.*;
 import eu.europa.ec.fisheries.uvms.spatial.model.FaultCode;
 import eu.europa.ec.fisheries.uvms.spatial.model.mapper.SpatialModuleMapper;
 import eu.europa.ec.fisheries.uvms.spatial.model.mapper.SpatialModuleResponseMapper;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Area;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaExtendedIdentifierType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRS;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Location;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.PingRS;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialDeleteMapConfigurationRS;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRS;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialGetMapConfigurationRS;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveOrUpdateMapConfigurationRS;
-import eu.europa.ec.fisheries.uvms.spatial.service.AreaTypeNamesService;
-import eu.europa.ec.fisheries.uvms.spatial.service.MapConfigService;
-import eu.europa.ec.fisheries.uvms.spatial.service.SpatialEnrichmentService;
-import eu.europa.ec.fisheries.uvms.spatial.service.SpatialEventService;
-import eu.europa.ec.fisheries.uvms.spatial.service.SpatialService;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
+import eu.europa.ec.fisheries.uvms.spatial.service.*;
 import lombok.extern.slf4j.Slf4j;
+
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
@@ -58,6 +35,7 @@ public class SpatialEventServiceBean implements SpatialEventService {
     SpatialService spatialService;
     private @EJB
     SpatialEnrichmentService enrichmentService;
+    private @EJB AreaService areaService;
     private @EJB
     MapConfigService mapConfigService;
     private @EJB
@@ -113,6 +91,25 @@ public class SpatialEventServiceBean implements SpatialEventService {
             log.debug("Send back closest locations response.");
             messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapClosestLocationResponse(closestLocations));
         } catch (Exception e) {
+            sendError(message, e);
+        }
+    }
+
+    @Override
+    public void areaByCode(@Observes @AreaByCodeEvent SpatialMessageEvent message) {
+        log.info("Getting area by code");
+        try {
+            AreaByCodeRequest areaByCodeRequest = message.getAreaByCodeRequest();
+            List<AreaSimpleType> areaSimples = areaByCodeRequest.getAreaSimples();
+            List<AreaSimpleType> areaSimpleTypeList = areaService.byCode(areaSimples);
+
+            AreaByCodeResponse areaByCodeRes = new AreaByCodeResponse();
+            areaByCodeRes.setAreaSimples(areaSimpleTypeList);
+
+            messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapAreaByCodeResponseToString(areaByCodeRes));
+
+        } catch (Exception e) {
+            log.error("[ Error when responding to area by code. ] ", e);
             sendError(message, e);
         }
     }
@@ -193,4 +190,5 @@ public class SpatialEventServiceBean implements SpatialEventService {
             sendError(message, e);
         }
     }
+
 }

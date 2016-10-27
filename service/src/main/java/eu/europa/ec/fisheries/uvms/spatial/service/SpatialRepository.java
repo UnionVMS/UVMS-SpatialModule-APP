@@ -24,6 +24,7 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.config.SysConfigEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.bookmark.Bookmark;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
@@ -170,4 +171,6 @@ public interface SpatialRepository {
      * @see SpatialRepository#updateUserAreaForUserAndScope(Date, Date, String)
      */
     void updateUserAreaForUser(String remoteUser, Date startDate, Date endDate, String type) throws ServiceException;
+
+    List areaByCode(List<AreaSimpleType> areaSimpleTypeList) throws ServiceException;
 }

@@ -12,16 +12,15 @@ package eu.europa.ec.fisheries.uvms.spatial.dao;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.StatRectEntity;
-
 import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadMappingProperty;
-import java.util.List;
-import java.util.Map;
+
 import javax.persistence.EntityManager;
+import java.util.List;
 import java.util.Map;
 
 import static eu.europa.ec.fisheries.uvms.spatial.entity.StatRectEntity.*;
 
-public class StatRectDao extends AbstractSpatialDao<StatRectEntity> {
+public class StatRectDao extends AbstractAreaDao<StatRectEntity> {
 
     private EntityManager em;
 

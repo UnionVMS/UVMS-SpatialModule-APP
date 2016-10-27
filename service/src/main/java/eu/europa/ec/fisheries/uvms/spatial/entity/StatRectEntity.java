@@ -28,7 +28,7 @@ import java.util.Map;
         @NamedQuery(name = StatRectEntity.SEARCH_STATRECT_NAMES_BY_CODE, query = "From StatRectEntity where code in (SELECT distinct(code) from StatRectEntity where (upper(name) like :name OR upper(code) like :code) AND enabled='Y' GROUP BY gid)"),
         @NamedQuery(name = StatRectEntity.STATRECT_COLUMNS, query = "SELECT statrect.id as gid, statrect.name AS name, statrect.code AS code FROM StatRectEntity AS statrect WHERE statrect.id in (:ids)")
 })
-public class StatRectEntity extends BaseSpatialEntity {
+public class StatRectEntity extends BaseAreaEntity {
 
     public static final String BY_INTERSECT = "statRectEntity.byIntersect";
     public static final String DISABLE = "statRectEntity.disable";

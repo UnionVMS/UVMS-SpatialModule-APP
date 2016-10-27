@@ -10,38 +10,35 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.dao;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.persistence.EntityManager;
-
+import com.vividsolutions.jts.geom.Point;
+import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
+import eu.europa.ec.fisheries.uvms.service.QueryParameter;
+import eu.europa.ec.fisheries.uvms.spatial.dao.util.DatabaseDialect;
+import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.BaseAreaEntity;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
+import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadMappingProperty;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
-import org.hibernate.Query;
-import org.hibernate.SQLQuery;
-import org.hibernate.Session;
+import org.hibernate.*;
 import org.hibernate.spatial.GeometryType;
 import org.hibernate.transform.AliasToEntityMapResultTransformer;
 import org.hibernate.type.DoubleType;
 import org.hibernate.type.IntegerType;
 import org.hibernate.type.StandardBasicTypes;
 import org.hibernate.type.StringType;
+import org.opengis.feature.Property;
 
-import com.vividsolutions.jts.geom.Point;
-
-import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
-import eu.europa.ec.fisheries.uvms.spatial.dao.util.DatabaseDialect;
-import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.BaseSpatialEntity;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
-import lombok.extern.slf4j.Slf4j;
+import java.io.Serializable;
+import java.util.*;
 
 @Slf4j
-public class AreasDao extends AbstractDAO<BaseSpatialEntity> {
+public abstract class AbstractAreaDao<E extends BaseAreaEntity> extends AbstractDAO<E> {
 
+    protected static final String SHAPE = "shape";
     private static final String GID = "gid";
     private static final String NAME = "name";
     private static final String CODE = "code";
@@ -49,11 +46,110 @@ public class AreasDao extends AbstractDAO<BaseSpatialEntity> {
     private static final String CLOSEST = "closest";
     private static final String GEOM = "geom";
 
-    private EntityManager em;
-
-    public AreasDao(EntityManager em) {
-        this.em = em;
+    public List<Serializable> bulkInsert(Map<String, List<Property>> features, List<UploadMappingProperty> mapping) throws ServiceException {
+        List<Serializable> invalidGeometryList = new ArrayList<>();
+        StatelessSession session = (getEntityManager().unwrap(Session.class)).getSessionFactory().openStatelessSession();
+        Transaction tx = session.beginTransaction();
+        try {
+            Query query = session.getNamedQuery(getDisableAreaNamedQuery());
+            query.executeUpdate();
+            for (List<Property> properties : features.values()) {
+                Map<String, Object> values = BaseAreaEntity.createAttributesMap(properties);
+                BaseAreaEntity entity = createEntity(values, mapping);
+                if (entity.getName() == null || entity.getCode() == null){
+                    throw new ServiceException("NAME AND CODE FIELD ARE MANDATORY");
+                }
+                Serializable identifier = session.insert(entity);
+                if(!entity.getGeom().isValid()){
+                    invalidGeometryList.add(identifier);
+                }
+            }
+            log.debug("Commit transaction");
+            tx.commit();
+        }
+        catch (Exception e){
+            tx.rollback();
+            throw new ServiceException("Rollback transaction", e);
+        }
+        finally {
+            log.debug("Closing session");
+            session.close();
+        }
+        return invalidGeometryList;
     }
+
+    protected abstract String getIntersectNamedQuery();
+
+    protected abstract String getSearchNamedQuery();
+
+    protected abstract String getSearchNameByCodeQuery();
+
+    protected abstract Class<E> getClazz();
+
+    protected abstract BaseAreaEntity createEntity(Map<String, Object> values, List<UploadMappingProperty> mapping) throws ServiceException;
+
+    protected abstract String getDisableAreaNamedQuery();
+
+    public BaseAreaEntity findOne(final Long id) throws ServiceException {
+        return findEntityById(getClazz(), id);
+    }
+
+    public List findByIntersect(Point point) throws ServiceException {
+        return findEntityByNamedQuery(getClazz(), getIntersectNamedQuery(), QueryParameter.with(SHAPE, point).parameters());
+    }
+
+    public List searchEntity(String filter) throws ServiceException {
+        String name = "%" +filter.toUpperCase()+"%";
+        String code = "%" +filter.toUpperCase()+"%";
+        return findEntityByNamedQuery(getClazz(), getSearchNamedQuery(), QueryParameter.with(NAME, name).and(CODE, code).parameters());
+    }
+
+    public List searchNameByCode(String filter) throws ServiceException {
+        String name = "%" +filter.toUpperCase()+"%";
+        String code = "%" +filter.toUpperCase()+"%";
+        return findEntityByNamedQuery(getClazz(), getSearchNameByCodeQuery(), QueryParameter.with(NAME, name).and(CODE, code).parameters());
+    }
+
+
+    public List<E> byCode(List<AreaSimpleType> areaSimpleTypeList) throws ServiceException {
+
+        if (areaSimpleTypeList == null || areaSimpleTypeList.size() == 0) {
+            throw new IllegalArgumentException("LIST CAN NOT BE EMPTY OR NULL");
+        }
+
+        final StringBuilder sb = new StringBuilder();
+
+        List resultList;
+
+        Iterator<AreaSimpleType> iterator = areaSimpleTypeList.iterator();
+
+        while (iterator.hasNext()) {
+            AreaSimpleType next = iterator.next();
+            sb.append("SELECT '")
+                    .append(next.getAreaType())
+                    .append("' as type,'")
+                    .append(next.getAreaCode()).append("' as code,")
+                    .append(" GEOM FROM ").append(next.getAreaType())
+                    .append(" WHERE code = '").append(next.getAreaCode())
+                    .append("' AND enabled='Y'");
+            if (iterator.hasNext()) {
+                sb.append(" UNION ALL ");
+            }
+        }
+
+        log.debug("{} QUERY => {}", sb.toString());
+
+        final javax.persistence.Query emNativeQuery = getEntityManager().createNativeQuery(sb.toString());
+        emNativeQuery.unwrap(SQLQuery.class)
+                .addScalar("type", StringType.INSTANCE)
+                .addScalar("code", StringType.INSTANCE)
+                .addScalar(GEOM, org.hibernate.spatial.GeometryType.INSTANCE);
+
+        resultList = emNativeQuery.getResultList();
+
+        return resultList;
+    }
+
 
     public List getNameAndCode(final List<AreaLocationTypesEntity> entities, List<AreaTypeEntry> areaTypes) {
 
@@ -80,21 +176,21 @@ public class AreasDao extends AbstractDAO<BaseSpatialEntity> {
 
         log.debug("{} QUERY => {}", sb.toString());
 
-        final javax.persistence.Query emNativeQuery = em.createNativeQuery(sb.toString());
+        final javax.persistence.Query emNativeQuery = getEntityManager().createNativeQuery(sb.toString());
         emNativeQuery.unwrap(SQLQuery.class).addScalar("type", StringType.INSTANCE).addScalar("name", StringType.INSTANCE).addScalar("code", StringType.INSTANCE);
         resultList = emNativeQuery.getResultList();
 
         return resultList;
-      }
+    }
 
     public List<Map<String, String>> findSelectedAreaColumns(String namedQueryString, List<Long> gids) {
-        Query query = em.unwrap(Session.class).getNamedQuery(namedQueryString);
+        Query query = getEntityManager().unwrap(Session.class).getNamedQuery(namedQueryString);
         query.setParameterList("ids", gids);
         query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
         return query.list();
     }
 
-    public List<BaseSpatialEntity> closestPoint(final List<AreaLocationTypesEntity> entities, final DatabaseDialect spatialFunction, final Point point){
+    public List<BaseAreaEntity> closestPoint(final List<AreaLocationTypesEntity> entities, final DatabaseDialect spatialFunction, final Point point){
 
         List resultList = new ArrayList();
 
@@ -106,29 +202,29 @@ public class AreasDao extends AbstractDAO<BaseSpatialEntity> {
 
             Iterator<AreaLocationTypesEntity> it = entities.iterator();
 
-        while (it.hasNext()) {
-            AreaLocationTypesEntity next = it.next();
-            String typeName = next.getTypeName();
-            sb.append(spatialFunction.closestPointToPoint(typeName, next.getAreaDbTable(), longitude, latitude, 10));
-            it.remove(); // avoids a ConcurrentModificationException
-            if (it.hasNext()) {
-                sb.append(" UNION ALL ");
+            while (it.hasNext()) {
+                AreaLocationTypesEntity next = it.next();
+                String typeName = next.getTypeName();
+                sb.append(spatialFunction.closestPointToPoint(typeName, next.getAreaDbTable(), longitude, latitude, 10));
+                it.remove(); // avoids a ConcurrentModificationException
+                if (it.hasNext()) {
+                    sb.append(" UNION ALL ");
+                }
             }
-        }
 
-        log.debug("{} QUERY => {}", spatialFunction.getClass().getSimpleName().toUpperCase(), sb.toString());
+            log.debug("{} QUERY => {}", spatialFunction.getClass().getSimpleName().toUpperCase(), sb.toString());
 
-        final javax.persistence.Query emNativeQuery = em.createNativeQuery(sb.toString());
-        emNativeQuery.unwrap(SQLQuery.class).addScalar("type", StringType.INSTANCE).addScalar(GID, IntegerType.INSTANCE)
-                .addScalar(CODE, StringType.INSTANCE).addScalar(NAME, StringType.INSTANCE).addScalar(GEOM, GeometryType.INSTANCE)
-                .addScalar("distance", DoubleType.INSTANCE);
+            final javax.persistence.Query emNativeQuery = getEntityManager().createNativeQuery(sb.toString());
+            emNativeQuery.unwrap(SQLQuery.class).addScalar("type", StringType.INSTANCE).addScalar(GID, IntegerType.INSTANCE)
+                    .addScalar(CODE, StringType.INSTANCE).addScalar(NAME, StringType.INSTANCE).addScalar(GEOM, GeometryType.INSTANCE)
+                    .addScalar("distance", DoubleType.INSTANCE);
 
             resultList = emNativeQuery.getResultList();
         }
         return resultList;
     }
 
-    public List<BaseSpatialEntity> closestArea(final List<AreaLocationTypesEntity> entities, final DatabaseDialect dialect, final Point point){
+    public List<BaseAreaEntity> closestArea(final List<AreaLocationTypesEntity> entities, final DatabaseDialect dialect, final Point point){
 
         List resultList = new ArrayList();
 
@@ -152,12 +248,12 @@ public class AreasDao extends AbstractDAO<BaseSpatialEntity> {
                     sb.append(" UNION ALL ");
                 }
             }
-            
+
             sb.append(dialect.closestAreaToPointSuffix());
 
             log.debug("{} QUERY => {}", dialect.getClass().getSimpleName().toUpperCase(), sb.toString());
 
-            javax.persistence.Query emNativeQuery = em.createNativeQuery(sb.toString());
+            javax.persistence.Query emNativeQuery = getEntityManager().createNativeQuery(sb.toString());
 
             emNativeQuery.unwrap(SQLQuery.class)
                     .addScalar(TYPE, StandardBasicTypes.STRING)
@@ -173,7 +269,7 @@ public class AreasDao extends AbstractDAO<BaseSpatialEntity> {
 
     }
 
-    public List<BaseSpatialEntity> intersectingArea(final List<AreaLocationTypesEntity> entities, final DatabaseDialect dialect, final Point point){
+    public List<BaseAreaEntity> intersectingArea(final List<AreaLocationTypesEntity> entities, final DatabaseDialect dialect, final Point point){
 
         List resultList = new ArrayList();
         int index = 1;
@@ -186,7 +282,7 @@ public class AreasDao extends AbstractDAO<BaseSpatialEntity> {
 
             Iterator<AreaLocationTypesEntity> it = entities.iterator();
 
-        	sb.append("select * from  (");
+            sb.append("select * from  (");
 
             while (it.hasNext()) {
                 AreaLocationTypesEntity next = it.next();
@@ -201,13 +297,13 @@ public class AreasDao extends AbstractDAO<BaseSpatialEntity> {
                     sb.append(" UNION ALL ");
                 }
             }
- 
+
 
             sb.append(") a  ORDER BY indexRS,gid ASC ");
-            
+
             log.debug("{} QUERY => {}", dialect.getClass().getSimpleName().toUpperCase(), sb.toString());
 
-            javax.persistence.Query emNativeQuery = em.createNativeQuery(sb.toString());
+            javax.persistence.Query emNativeQuery = getEntityManager().createNativeQuery(sb.toString());
 
             emNativeQuery.unwrap(SQLQuery.class)
                     .addScalar(TYPE, StandardBasicTypes.STRING)
@@ -222,18 +318,11 @@ public class AreasDao extends AbstractDAO<BaseSpatialEntity> {
 
     }
 
-    
+
     public void makeGeomValid(final String areaDbTable, final DatabaseDialect dialect) {
         String query = dialect.makeGeomValid(areaDbTable);
         log.debug("{} QUERY => {}", dialect.getClass().getSimpleName().toUpperCase(), query);
-        javax.persistence.Query nativeQuery = em.createNativeQuery(query);
+        javax.persistence.Query nativeQuery = getEntityManager().createNativeQuery(query);
         nativeQuery.executeUpdate();
     }
-
-
-    @Override
-    public EntityManager getEntityManager() {
-        return em;
-    }
-
 }

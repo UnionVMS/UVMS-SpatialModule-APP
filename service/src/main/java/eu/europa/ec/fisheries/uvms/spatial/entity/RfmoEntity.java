@@ -11,7 +11,6 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadMappingProperty;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 import java.util.List;
@@ -31,10 +30,9 @@ import java.util.Map;
         @NamedQuery(name = RfmoEntity.DISABLE_RFMO_AREAS,
                 query = "UPDATE RfmoEntity SET enabled = 'N'"),
         @NamedQuery(name = RfmoEntity.SEARCH_RFMO, query = "FROM RfmoEntity where (upper(name) like :name OR upper(code) like :code) AND enabled='Y' GROUP BY gid"),
-        @NamedQuery(name = RfmoEntity.SEARCH_RFMO_NAMES_BY_CODE, query = "From RfmoEntity where code in (SELECT distinct(code) from RfmoEntity where (upper(name) like :name OR upper(code) like :code) AND enabled='Y' GROUP BY gid)")
-})
+        @NamedQuery(name = RfmoEntity.SEARCH_RFMO_NAMES_BY_CODE, query = "From RfmoEntity where code in (SELECT distinct(code) from RfmoEntity where (upper(name) like :name OR upper(code) like :code) AND enabled='Y' GROUP BY gid)")})
 @Table(name = "rfmo")
-public class RfmoEntity extends BaseSpatialEntity {
+public class RfmoEntity extends BaseAreaEntity {
 
     public static final String RFMO_BY_COORDINATE = "rfmoEntity.ByCoordinate";
     public static final String DISABLE_RFMO_AREAS = "rfmoEntity.disableRfmoAreas";

@@ -8,31 +8,16 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
-package eu.europa.ec.fisheries.uvms.spatial.dao;
+package eu.europa.ec.fisheries.uvms.spatial.message.event;
 
-import eu.europa.ec.fisheries.uvms.spatial.entity.PortAreasEntity;
-import lombok.SneakyThrows;
-import org.geotools.geometry.jts.GeometryBuilder;
-import org.junit.Test;
+import javax.inject.Qualifier;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import java.util.List;
-
-import static junit.framework.Assert.assertNull;
-
-public class PortAreaDaoTest extends BaseSpatialDaoTest {
-
-    private PortAreaDao dao = new PortAreaDao(em);
-
-    @Test
-    @SneakyThrows
-    public void shouldReturnIntersectedPortArea(){
-        List intersects = dao.findByIntersect(new GeometryBuilder().point(1, 1));
-    }
-
-    @Test
-    @SneakyThrows
-    public void testFindOne(){
-        PortAreasEntity one = dao.findEntityById(PortAreasEntity.class, 1L);
-        assertNull(one);
-    }
+@Qualifier
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE})
+public @interface AreaByCodeEvent {
 }

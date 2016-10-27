@@ -83,13 +83,12 @@ import java.util.Set;
                 query = "update UserAreasEntity userarea " +
                         "set userarea.startDate = :startDate, userarea.endDate = :endDate " +
                         "where userarea.userName = :userName and userarea.type = :type")
-
 })
 @Where(clause = "enabled = 'Y'")
 @Table(name="user_areas", uniqueConstraints = {
         @UniqueConstraint(columnNames={"name", "user_name"})
 })
-public class UserAreasEntity extends BaseSpatialEntity {
+public class UserAreasEntity extends BaseAreaEntity {
 
     public static final String USER_AREA_DETAILS_BY_LOCATION = "UserArea.findUserAreaDetailsByLocation";
     public static final String USER_AREA_BY_COORDINATE = "userAreasEntity.ByCoordinate";

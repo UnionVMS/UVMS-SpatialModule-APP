@@ -37,4 +37,7 @@ public interface SpatialEventService {
     void getMapConfiguration(@Observes @GetMapConfigurationEvent SpatialMessageEvent message);
 
     void ping(@Observes @PingEvent SpatialMessageEvent message);
+
+    void areaByCode(@Observes @AreaByCodeEvent SpatialMessageEvent message);
+
 }
