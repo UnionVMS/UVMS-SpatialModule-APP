@@ -36,7 +36,7 @@ public class PostGres extends AbstractGisFunction {
     	sb.append("update spatial.").append(tableName).append(" set geom = st_makevalid(geom) where enabled = 'Y'");
     	return sb.toString();
     }
-    
+
     @Override
     public String closestAreaToPoint(int index,String typeName, String tableName, Double latitude, Double longitude, Integer limit) {
     	StringBuffer sb = new StringBuffer();

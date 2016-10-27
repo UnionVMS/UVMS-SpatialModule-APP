@@ -8,7 +8,7 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
-package eu.europa.ec.fisheries.uvms.spatial.dao;
+package eu.europa.ec.fisheries.uvms.spatial.utility;
 
 import com.ninja_squad.dbsetup.operation.Operation;
 import eu.europa.ec.fisheries.uvms.BaseDAOTest;
@@ -90,19 +90,14 @@ public abstract class BaseSpatialDaoTest extends BaseDAOTest {
                     .build()
     );
 
-    protected static final Operation INSERT_EEZ_REFERENCE_DATA = sequenceOf(
-            insertInto("spatial.eez")
-                    .columns("GID", "NAME", "COUNTRY", "SOVEREIGN", "GEOM", "ENABLED")
-                    .values(1L, "Eez with empty geometry", "Belgium", "Belgium", "MULTIPOLYGON EMPTY", "Y")
-                    .values(2L, "Portuguese Exclusive Economic Zone", "Portugal", "Portugal",
-                            "MULTIPOLYGON(((-8.72722170899993 40.722410075, -12.211019511 34.9460901480001," +
-                                    "-13.3017399999999 41.46626, -8.72722170899993 40.722410075)))", "Y")
-                    .values(3L, "Christmas Island", "Australia", "Australia",
-                            "MULTIPOLYGON(((106.867924148 -9.16467987999994,108.036593601 -12.9679006599999," +
-                                    "103.079231596 -12.82837266, 102.56917584 -8.87249927999994," +
-                                    "106.867924148 -9.16467987999994)))", "Y")
-                    .build()
-    );
+    protected static final Operation INSERT_EEZ_REFERENCE_DATA = sequenceOf(insertInto("spatial.eez").columns("GID", "NAME", "COUNTRY", "SOVEREIGN", "GEOM", "ENABLED", "CODE")
+            .values(1L, "Eez with empty geometry", "Belgium", "Belgium", "MULTIPOLYGON EMPTY", "Y", "BEL")
+            .values(2L, "Portuguese Exclusive Economic Zone", "Portugal", "Portugal", "MULTIPOLYGON(((-8.72722170899993 40.722410075, -12.211019511 34.9460901480001," + "-13.3017399999999 41.46626, -8.72722170899993 40.722410075)))", "Y", "456").values(3L, "Christmas Island", "Australia", "Australia", "MULTIPOLYGON(((106.867924148 -9.16467987999994,108.036593601 -12.9679006599999," +
+                            "103.079231596 -12.82837266, 102.56917584 -8.87249927999994," +
+                            "106.867924148 -9.16467987999994)))", "Y", "POR")
+            .values(4L, "Christmas Island", "Australia", "Australia", "MULTIPOLYGON(((106.867924148 -9.16467987999994,108.036593601 -12.9679006599999," +
+                            "103.079231596 -12.82837266, 102.56917584 -8.87249927999994," +
+                            "106.867924148 -9.16467987999994)))", "N", "disabled").build());
 
     protected static final Operation INSERT_USER_AREA_REFERENCE_DATA = sequenceOf(
             insertInto("spatial.user_areas")

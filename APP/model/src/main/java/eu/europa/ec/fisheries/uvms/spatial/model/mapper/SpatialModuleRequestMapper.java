@@ -15,7 +15,6 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
 import java.util.List;
 
 public final class SpatialModuleRequestMapper {
@@ -45,6 +44,19 @@ public final class SpatialModuleRequestMapper {
             return logException(ex);
         }
     }
+
+    public static String mapToCreateGetAreaByCodeRequest(List<AreaSimpleType> areaSimpleTypeList) throws SpatialModelMarshallException {
+
+        AreaByCodeRequest areaByCodeRequest = new AreaByCodeRequest();
+        areaByCodeRequest.setAreaSimples(areaSimpleTypeList);
+        areaByCodeRequest.setMethod(SpatialModuleMethod.GET_AREA_BY_CODE);
+        try {
+            return JAXBMarshaller.marshall(areaByCodeRequest);
+        } catch (SpatialModelMarshallException ex) {
+            return logException(ex);
+        }
+    }
+
 
     public static String mapToCreateClosestAreaRequest(PointType point, UnitType unit, List<AreaType> areaTypes) throws SpatialModelMarshallException {
         ClosestAreaSpatialRQ request = new ClosestAreaSpatialRQ();

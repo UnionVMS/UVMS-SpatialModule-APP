@@ -13,16 +13,16 @@ package eu.europa.ec.fisheries.uvms.spatial.dao;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.PortEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadMappingProperty;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.EntityManager;
+import java.util.List;
 import java.util.Map;
 
 import static eu.europa.ec.fisheries.uvms.spatial.entity.PortEntity.*;
 
 @Slf4j
-public class PortDao extends AbstractSpatialDao<PortEntity> {
+public class PortDao extends AbstractAreaDao<PortEntity> {
 
     private EntityManager em;
 

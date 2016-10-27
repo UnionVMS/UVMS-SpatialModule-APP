@@ -24,5 +24,4 @@ public interface DatabaseDialect {
 
 
     String makeGeomValid(String tableName);
-    
 }

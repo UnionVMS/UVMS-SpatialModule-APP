@@ -31,7 +31,7 @@ import javax.persistence.Table;
         @NamedQuery(name = FaoEntity.SEARCH_FAO_NAMES_BY_CODE, query = "From FaoEntity where code in (SELECT distinct(code) from FaoEntity where (upper(name) like :name OR upper(code) like :code) AND enabled='Y' GROUP BY gid)"),
         @NamedQuery(name = FaoEntity.FAO_COLUMNS, query = "SELECT fao.id as gid, fao.name AS name, fao.code AS code FROM FaoEntity AS fao WHERE fao.id in (:ids)")
 })
-public class FaoEntity extends BaseSpatialEntity {
+public class FaoEntity extends BaseAreaEntity {
 
     public static final String DISABLE_FAO_AREAS = "faoEntity.disableFaoAreas";
     public static final String FAO_BY_INTERSECT = "faoEntity.faoByIntersect";

@@ -21,7 +21,6 @@ import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadMappingProperty;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
-import javax.persistence.AttributeOverride;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -30,11 +29,8 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import org.opengis.feature.Property;
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+
+import javax.persistence.*;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.util.Date;
@@ -47,7 +43,7 @@ import java.util.Map;
 @EqualsAndHashCode(callSuper = true)
 @Slf4j
 @AttributeOverride(name = "id", column = @Column(name = "GID"))
-public class BaseSpatialEntity extends BaseEntity {
+public class BaseAreaEntity extends BaseEntity {
 
     private static final String ISO_8859_1 = "ISO-8859-1";
     private static final String UTF_8 = "UTF-8";
@@ -73,7 +69,7 @@ public class BaseSpatialEntity extends BaseEntity {
     @Column(name = "enabled_on")
     private Date enabledOn;
 
-    public BaseSpatialEntity(Map<String, Object> values, List<UploadMappingProperty> mapping) throws ServiceException {
+    public BaseAreaEntity(Map<String, Object> values, List<UploadMappingProperty> mapping) throws ServiceException {
 
         try {
             geom = (Geometry) values.get("the_geom"); // shape file standard
@@ -103,7 +99,7 @@ public class BaseSpatialEntity extends BaseEntity {
         }
     }
 
-    public BaseSpatialEntity() {
+    public BaseAreaEntity() {
         // why JPA why
     }
 

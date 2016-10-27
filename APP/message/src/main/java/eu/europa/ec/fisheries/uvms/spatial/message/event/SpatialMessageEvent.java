@@ -16,6 +16,7 @@ import javax.jms.TextMessage;
 
 public class SpatialMessageEvent {
 
+
     private TextMessage message;
 
     private AreaByLocationSpatialRQ areaByLocationSpatialRQ;
@@ -28,6 +29,8 @@ public class SpatialMessageEvent {
     private SpatialSaveOrUpdateMapConfigurationRQ spatialSaveOrUpdateMapConfigurationRQ;
     private SpatialGetMapConfigurationRQ spatialGetMapConfigurationRQ;
     private PingRQ pingRQ;
+    private AreaByCodeRequest areaByCodeRequest;
+
     private SpatialFault fault;
 
     public SpatialMessageEvent(TextMessage message, AreaByLocationSpatialRQ areaByLocationSpatialRQ) {
@@ -85,6 +88,11 @@ public class SpatialMessageEvent {
         this.spatialDeleteMapConfigurationRQ = mapConfigurationRQ;
     }
 
+    public SpatialMessageEvent(TextMessage textMessage, AreaByCodeRequest areaByCodeRequest) {
+        this.message = textMessage;
+        this.areaByCodeRequest = areaByCodeRequest;
+    }
+
     public TextMessage getMessage() {
         return message;
     }
@@ -131,5 +139,10 @@ public class SpatialMessageEvent {
 
     public SpatialDeleteMapConfigurationRQ getSpatialDeleteMapConfigurationRQ() {
         return spatialDeleteMapConfigurationRQ;
+    }
+
+    public AreaByCodeRequest getAreaByCodeRequest() {
+
+        return areaByCodeRequest;
     }
 }

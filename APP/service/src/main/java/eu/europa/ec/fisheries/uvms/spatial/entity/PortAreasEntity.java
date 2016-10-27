@@ -26,10 +26,9 @@ import java.util.Map;
         @NamedQuery(name = PortAreasEntity.DISABLE_PORT_AREAS, query = "UPDATE PortAreasEntity SET enabled = 'N'"),
         @NamedQuery(name = PortAreasEntity.SEARCH_PORTAREAS, query = "FROM PortAreasEntity where (upper(name) like :name OR upper(code) like :code) AND enabled='Y' GROUP BY gid"),
         @NamedQuery(name = PortAreasEntity.SEARCH_PORT_AREA_NAMES_BY_CODE, query = "From PortAreasEntity where code in (SELECT distinct(code) from PortAreasEntity where (upper(name) like :name OR upper(code) like :code) AND enabled='Y' GROUP BY gid)"),
-        @NamedQuery(name = PortAreasEntity.PORTAREA_COLUMNS, query = "SELECT portarea.id as gid, portarea.name AS name, portarea.code AS code FROM PortAreasEntity AS portarea WHERE portarea.id in (:ids)")
-})
+        @NamedQuery(name = PortAreasEntity.PORTAREA_COLUMNS, query = "SELECT portarea.id as gid, portarea.name AS name, portarea.code AS code FROM PortAreasEntity AS portarea WHERE portarea.id in (:ids)")})
 @Table(name = "port_area")
-public class PortAreasEntity extends BaseSpatialEntity {
+public class PortAreasEntity extends BaseAreaEntity {
 
     public static final String PORT_AREA_BY_COORDINATE = "portEntity.PortAreaByCoordinate";
     public static final String DISABLE_PORT_AREAS = "portAreasEntity.disablePortAreas";

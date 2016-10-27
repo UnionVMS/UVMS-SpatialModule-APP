@@ -11,7 +11,6 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadMappingProperty;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 import java.util.List;
@@ -29,16 +28,14 @@ import java.util.Map;
         @NamedQuery(name = EezEntity.EEZ_BY_COORDINATE, query = "FROM EezEntity WHERE intersects(geom, :shape) = true AND enabled = 'Y'"),
         @NamedQuery(name = EezEntity.EEZ_COLUMNS, query = "SELECT eez.id as gid, eez.name AS name, eez.code AS code FROM EezEntity AS eez WHERE eez.id in (:ids)"),
         @NamedQuery(name = EezEntity.DISABLE_EEZ_AREAS, query = "UPDATE EezEntity SET enabled = 'N'"),
-        @NamedQuery(name = EezEntity.LIST_EMPTY_GEOMETRIES, query = "FROM EezEntity WHERE isEmpty(geom) = true AND enabled = 'Y'"),
         @NamedQuery(name = EezEntity.SEARCH_EEZ, query = "FROM EezEntity where (upper(name) like :name OR upper(code) like :code) AND enabled='Y' GROUP BY gid"),
         @NamedQuery(name = EezEntity.SEARCH_EEZ_NAMES_BY_CODE, query = "From EezEntity where code in (SELECT distinct(code) from EezEntity where (upper(name) like :name OR upper(code) like :code) AND enabled='Y' GROUP BY gid)")
 })
 @Table(name = "eez")
 @EqualsAndHashCode(callSuper = true)
-public class EezEntity extends BaseSpatialEntity {
+public class EezEntity extends BaseAreaEntity {
 
     public static final String EEZ_BY_COORDINATE = "eezEntity.ByCoordinate";
-    public static final String LIST_EMPTY_GEOMETRIES = "eezEntity.TEST";
     public static final String DISABLE_EEZ_AREAS = "eezEntity.disableEezAreas";
     public static final String SEARCH_EEZ = "eezEntity.searchByNameAndCode";
     public static final String SEARCH_EEZ_NAMES_BY_CODE = "eezEntity.searchNameByCode";

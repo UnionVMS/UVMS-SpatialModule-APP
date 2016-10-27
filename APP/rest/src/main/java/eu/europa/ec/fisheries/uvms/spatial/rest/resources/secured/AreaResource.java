@@ -18,11 +18,10 @@ import eu.europa.ec.fisheries.uvms.rest.FeatureToGeoJsonJacksonMapper;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
 import eu.europa.ec.fisheries.uvms.service.interceptor.ValidationInterceptor;
+import eu.europa.ec.fisheries.uvms.spatial.model.area.*;
+import eu.europa.ec.fisheries.uvms.spatial.model.area.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.model.constants.USMSpatial;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationDetails;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationTypeEntry;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.AreaLocationDtoMapper;
 import eu.europa.ec.fisheries.uvms.spatial.rest.type.AreaFilterType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.type.geocoordinate.AreaCoordinateType;
@@ -35,7 +34,6 @@ import eu.europa.ec.fisheries.uvms.spatial.service.UserAreaService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.AreaDetailsGeoJsonDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.LocationDetailsGeoJsonDto;
 import eu.europa.ec.fisheries.uvms.spatial.util.ServiceLayerUtils;
-import eu.europa.ec.fisheries.wsdl.user.types.DatasetExtension;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import javax.ejb.EJB;
@@ -214,13 +212,20 @@ public class AreaResource extends UnionVMSResource {
         return createSuccessResponse();
     }
 
-    @GET
-    @Produces((MediaType.APPLICATION_JSON))
-    @Path("/datasets/{areaType}/{areaGid}")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/type/code")
     @Interceptors(value = { ExceptionInterceptor.class})
-    public Response findDatasets(@PathParam("areaType") String areaType, @PathParam("areaGid") String areaGid,@Context HttpServletRequest request ) throws ServiceException {
-       List<DatasetExtension> datasets = usmService.findDatasetsByDiscriminator(USMSpatial.APPLICATION_NAME,  areaType + USMSpatial.DELIMITER + areaGid);
-       return createSuccessResponse(datasets);
+    public Response byCode(AreaByCodeJsonPayload payload) throws ServiceException {
+
+        List<AreaSimpleType> request = new ArrayList<>();
+        List<AreaType> areaTypeList = payload.getAreaTypes();
+        for (AreaType areaType : areaTypeList){
+            request.add(new AreaSimpleType(areaType.getAreaType(), areaType.getAreaCode(), null));
+        }
+        List<AreaSimpleType> response = areaService.byCode(request);
+        return createSuccessResponse(response);
     }
 
 }

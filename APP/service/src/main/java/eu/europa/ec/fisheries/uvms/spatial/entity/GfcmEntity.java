@@ -27,9 +27,8 @@ import javax.persistence.Table;
                 query = "FROM GfcmEntity WHERE intersects(geom, :shape) = true AND enabled = 'Y'"),
         @NamedQuery(name = GfcmEntity.SEARCH_GFCM, query = "FROM GfcmEntity where (upper(name) like :name OR upper(code) like :code) AND enabled='Y' GROUP BY gid"),
         @NamedQuery(name = GfcmEntity.SEARCH_GFCM_NAMES_BY_CODE, query = "From GfcmEntity where code in (SELECT distinct(code) from GfcmEntity where (upper(name) like :name OR upper(code) like :code) AND enabled='Y' GROUP BY gid)"),
-        @NamedQuery(name = GfcmEntity.GFCM_COLUMNS, query = "SELECT gfcm.id as gid, gfcm.name AS name, gfcm.code AS code FROM GfcmEntity AS gfcm WHERE gfcm.id in (:ids)")
-})
-public class GfcmEntity extends BaseSpatialEntity {
+        @NamedQuery(name = GfcmEntity.GFCM_COLUMNS, query = "SELECT gfcm.id as gid, gfcm.name AS name, gfcm.code AS code FROM GfcmEntity AS gfcm WHERE gfcm.id in (:ids)")})
+public class GfcmEntity extends BaseAreaEntity {
 
     public static final String DISABLE_GFMC_AREAS = "gfmcEntity.disable";
     public static final String GFMC_BY_INTERSECT = "gfmcEntity.gfmcByIntersect";
@@ -37,7 +36,7 @@ public class GfcmEntity extends BaseSpatialEntity {
     public static final String SEARCH_GFCM_NAMES_BY_CODE = "gfcmEntity.searchNamesByCode";
     public static final String GFCM_COLUMNS = "gfcmEntity.gfcmColumns";
 
-	public GfcmEntity() {
+    public GfcmEntity() {
         // why JPA why
     }
 

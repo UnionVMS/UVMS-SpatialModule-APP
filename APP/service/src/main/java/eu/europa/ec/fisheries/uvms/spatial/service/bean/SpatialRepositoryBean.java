@@ -13,10 +13,11 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.QueryParameter;
+import eu.europa.ec.fisheries.uvms.spatial.dao.AbstractAreaDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.AreaLocationTypesDao;
-import eu.europa.ec.fisheries.uvms.spatial.dao.AreasDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.BookmarkDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.CountryDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.EezDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.PortDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.ProjectionDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.ReportConnectServiceAreaDao;
@@ -36,6 +37,7 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.config.SysConfigEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.bookmark.Bookmark;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
@@ -43,7 +45,6 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.ServiceLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.BookmarkMapper;
-
 import javax.annotation.PostConstruct;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
@@ -62,8 +63,8 @@ public class SpatialRepositoryBean implements SpatialRepository {
 
     private @PersistenceContext(unitName = "spatialPU") EntityManager em;
 
-    private AreasDao areaDao;
     private UserAreaDao userAreaDao;
+    private AbstractAreaDao abstractAreaDao;
     private SysConfigDao sysConfigDao;
     private ReportConnectSpatialDao reportConnectSpatialDao;
     private BookmarkDao bookmarkDao;
@@ -76,7 +77,7 @@ public class SpatialRepositoryBean implements SpatialRepository {
 
     @PostConstruct
     public void init() {
-        areaDao = new AreasDao(em);
+        abstractAreaDao = new EezDao(em);
         userAreaDao = new UserAreaDao(em);
         sysConfigDao = new SysConfigDao(em);
         reportConnectSpatialDao = new ReportConnectSpatialDao(em);
@@ -111,7 +112,7 @@ public class SpatialRepositoryBean implements SpatialRepository {
 
     @Override
     public List<Map<String, String>> findSelectedAreaColumns(String namedQueryString, List<Long> gids) {
-        return areaDao.findSelectedAreaColumns(namedQueryString, gids);
+        return abstractAreaDao.findSelectedAreaColumns(namedQueryString, gids);
     }
 
     @Override
@@ -337,17 +338,17 @@ public class SpatialRepositoryBean implements SpatialRepository {
 
     @Override
     public List closestArea(List<AreaLocationTypesEntity> entities, DatabaseDialect spatialFunction, Point point) {
-        return areaDao.closestArea(entities, spatialFunction, point);
+        return abstractAreaDao.closestArea(entities, spatialFunction, point);
     }
 
     @Override
     public List closestPoint(List<AreaLocationTypesEntity> entities, DatabaseDialect spatialFunction, Point incomingPoint) {
-        return areaDao.closestPoint(entities, spatialFunction, incomingPoint);
+        return abstractAreaDao.closestPoint(entities, spatialFunction, incomingPoint);
     }
 
     @Override
     public List intersectingArea(List<AreaLocationTypesEntity> entities, DatabaseDialect spatialFunction, Point point) {
-        return areaDao.intersectingArea(entities, spatialFunction, point);
+        return abstractAreaDao.intersectingArea(entities, spatialFunction, point);
     }
 
     @Override
@@ -378,7 +379,7 @@ public class SpatialRepositoryBean implements SpatialRepository {
 
     @Override
     public void makeGeomValid(String areaDbTable, DatabaseDialect dialect) {
-        areaDao.makeGeomValid(areaDbTable, dialect);
+        abstractAreaDao.makeGeomValid(areaDbTable, dialect);
     }
 
     /**
@@ -393,6 +394,11 @@ public class SpatialRepositoryBean implements SpatialRepository {
      */
     public void updateUserAreaForUser(String remoteUser, Date startDate, Date endDate, String type) throws ServiceException {
         userAreaDao.updateUserAreasForUser(remoteUser, startDate, endDate, type);
+    }
+
+    @Override
+    public List areaByCode(List<AreaSimpleType> areaSimpleTypeList) throws ServiceException {
+        return  ((AbstractAreaDao) portDao).byCode(areaSimpleTypeList);
     }
 
 }
