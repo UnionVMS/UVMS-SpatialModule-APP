@@ -14,7 +14,7 @@ public class PostGres extends AbstractGisFunction {
 
     @Override
     public String stIntersects(Double latitude, Double longitude) {
-    	StringBuffer sb = new StringBuffer();    	    	
+        StringBuilder sb = new StringBuilder();
         sb.append("ST_Intersects(geom, ST_GeomFromText(CAST ('POINT(").append(longitude).append(" ").append(latitude).append(")' AS TEXT), 4326)) ");
         return sb.toString();
     }
@@ -32,14 +32,14 @@ public class PostGres extends AbstractGisFunction {
     
     @Override
     public String makeGeomValid(String tableName) {
-    	StringBuffer sb = new StringBuffer();    	
+        StringBuilder sb = new StringBuilder();
     	sb.append("update spatial.").append(tableName).append(" set geom = st_makevalid(geom) where enabled = 'Y'");
     	return sb.toString();
     }
 
     @Override
     public String closestAreaToPoint(int index,String typeName, String tableName, Double latitude, Double longitude, Integer limit) {
-    	StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
     	sb.append("(SELECT '").append(typeName).append("' AS type, gid, code, name,");
     	sb.append(" ST_ClosestPoint(geom, ST_GeomFromText(CAST ('POINT(").append(longitude).append(" ").append(latitude).append(")' AS TEXT), 4326))" );
     	sb.append(" AS closest, ");
@@ -52,7 +52,7 @@ public class PostGres extends AbstractGisFunction {
 
     @Override
     public String closestPointToPoint(String typeName, String tableName, Double latitude, Double longitude, Integer limit) {
-    	StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("(SELECT '").append(typeName).append("' as type, gid, code, name, geom, ");
         sb.append("ST_Distance(geom, ST_GeomFromText(CAST ('POINT(").append(longitude).append(" ").append(latitude).append(")' AS TEXT), 4326),true) ");
         sb.append("AS distance FROM spatial.").append(tableName).append(" WHERE enabled = 'Y'");
