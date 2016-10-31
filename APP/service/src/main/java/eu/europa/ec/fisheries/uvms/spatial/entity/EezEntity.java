@@ -41,28 +41,28 @@ public class EezEntity extends BaseAreaEntity {
     public static final String SEARCH_EEZ_NAMES_BY_CODE = "eezEntity.searchNameByCode";
     public static final String EEZ_COLUMNS = "eezEntity.findSelectedColumns";
 
-    private static final String COUNTRY = "country";
-    private static final String SOVEREIGN = "sovereign";
-    private static final String REMARKS = "remarks";
+    private static final String COUNTRY_ALIAS = "country";
+    private static final String SOVEREIGN_ALIAS = "sovereign";
+    private static final String REMARKS_ALIAS = "remarks";
     private static final String SOV_ID = "sov_id";
     private static final String EEZ_ID = "eez_id";
     private static final String MRGID = "mrgid";
     private static final String DATE_CHANG = "date_chang";
     private static final String AREA_M_2 = "area_m2";
-    private static final String LONGITUDE = "longitude";
-    private static final String LATITUDE = "latitude";
+    private static final String LONGITUDE_ALIAS = "longitude";
+    private static final String LATITUDE_ALIAS = "latitude";
     private static final String MRGID_EEZ = "mrgid_eez";
 
     @Column(length = 100)
-    @ColumnAliasName(aliasName = COUNTRY)
+    @ColumnAliasName(aliasName = COUNTRY_ALIAS)
     private String country;
 
     @Column(length = 100)
-    @ColumnAliasName(aliasName = SOVEREIGN)
+    @ColumnAliasName(aliasName = SOVEREIGN_ALIAS)
     private String sovereign;
 
     @Column(length = 150)
-    @ColumnAliasName(aliasName = REMARKS)
+    @ColumnAliasName(aliasName = REMARKS_ALIAS)
     private String remarks;
 
     @Column(name = SOV_ID)
@@ -85,12 +85,12 @@ public class EezEntity extends BaseAreaEntity {
     @ColumnAliasName(aliasName = "areaM2")
     private Double areaM2;
 
-    @Column(name = LONGITUDE)
-    @ColumnAliasName(aliasName = LONGITUDE)
+    @Column(name = LONGITUDE_ALIAS)
+    @ColumnAliasName(aliasName = LONGITUDE_ALIAS)
     private Double longitude;
 
-    @Column(name = LATITUDE)
-    @ColumnAliasName(aliasName = LATITUDE)
+    @Column(name = LATITUDE_ALIAS)
+    @ColumnAliasName(aliasName = LATITUDE_ALIAS)
     private Double latitude;
 
     @Column(name = "mrgid_eez")
