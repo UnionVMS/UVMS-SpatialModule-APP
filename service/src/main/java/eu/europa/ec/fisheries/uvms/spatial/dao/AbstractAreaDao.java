@@ -45,6 +45,9 @@ public abstract class AbstractAreaDao<E extends BaseAreaEntity> extends Abstract
     private static final String TYPE = "type";
     private static final String CLOSEST = "closest";
     private static final String GEOM = "geom";
+    private static final String UNION_ALL = " UNION ALL ";
+    private static final String QUERY = "{} QUERY => {}";
+
 
     public List<Serializable> bulkInsert(Map<String, List<Property>> features, List<UploadMappingProperty> mapping) throws ServiceException {
         List<Serializable> invalidGeometryList = new ArrayList<>();
@@ -113,7 +116,7 @@ public abstract class AbstractAreaDao<E extends BaseAreaEntity> extends Abstract
 
     public List<E> byCode(List<AreaSimpleType> areaSimpleTypeList) throws ServiceException {
 
-        if (areaSimpleTypeList == null || areaSimpleTypeList.size() == 0) {
+        if (areaSimpleTypeList == null || areaSimpleTypeList.isEmpty()) {
             throw new IllegalArgumentException("LIST CAN NOT BE EMPTY OR NULL");
         }
 
@@ -133,11 +136,11 @@ public abstract class AbstractAreaDao<E extends BaseAreaEntity> extends Abstract
                     .append(" WHERE code = '").append(next.getAreaCode())
                     .append("' AND enabled='Y'");
             if (iterator.hasNext()) {
-                sb.append(" UNION ALL ");
+                sb.append(UNION_ALL);
             }
         }
 
-        log.debug("{} QUERY => {}", sb.toString());
+        log.debug(QUERY, sb.toString());
 
         final javax.persistence.Query emNativeQuery = getEntityManager().createNativeQuery(sb.toString());
         emNativeQuery.unwrap(SQLQuery.class)
@@ -170,11 +173,11 @@ public abstract class AbstractAreaDao<E extends BaseAreaEntity> extends Abstract
                     + typesEntityMap.get(areaType.value()).getAreaDbTable() + " AS area WHERE area.gid = " + id + ")");
             it.remove(); // avoids a ConcurrentModificationException
             if (it.hasNext()) {
-                sb.append(" UNION ALL ");
+                sb.append(UNION_ALL);
             }
         }
 
-        log.debug("{} QUERY => {}", sb.toString());
+        log.debug(QUERY, sb.toString());
 
         final javax.persistence.Query emNativeQuery = getEntityManager().createNativeQuery(sb.toString());
         emNativeQuery.unwrap(SQLQuery.class).addScalar("type", StringType.INSTANCE).addScalar("name", StringType.INSTANCE).addScalar("code", StringType.INSTANCE);
@@ -208,11 +211,11 @@ public abstract class AbstractAreaDao<E extends BaseAreaEntity> extends Abstract
                 sb.append(spatialFunction.closestPointToPoint(typeName, next.getAreaDbTable(), longitude, latitude, 10));
                 it.remove(); // avoids a ConcurrentModificationException
                 if (it.hasNext()) {
-                    sb.append(" UNION ALL ");
+                    sb.append(UNION_ALL);
                 }
             }
 
-            log.debug("{} QUERY => {}", spatialFunction.getClass().getSimpleName().toUpperCase(), sb.toString());
+            log.debug(QUERY, spatialFunction.getClass().getSimpleName().toUpperCase(), sb.toString());
 
             final javax.persistence.Query emNativeQuery = getEntityManager().createNativeQuery(sb.toString());
             emNativeQuery.unwrap(SQLQuery.class).addScalar("type", StringType.INSTANCE).addScalar(GID, IntegerType.INSTANCE)
@@ -245,13 +248,13 @@ public abstract class AbstractAreaDao<E extends BaseAreaEntity> extends Abstract
                 index++;
                 it.remove(); // avoids a ConcurrentModificationException
                 if (it.hasNext()) {
-                    sb.append(" UNION ALL ");
+                    sb.append(UNION_ALL);
                 }
             }
 
             sb.append(dialect.closestAreaToPointSuffix());
 
-            log.debug("{} QUERY => {}", dialect.getClass().getSimpleName().toUpperCase(), sb.toString());
+            log.debug(QUERY, dialect.getClass().getSimpleName().toUpperCase(), sb.toString());
 
             javax.persistence.Query emNativeQuery = getEntityManager().createNativeQuery(sb.toString());
 
@@ -294,14 +297,14 @@ public abstract class AbstractAreaDao<E extends BaseAreaEntity> extends Abstract
                 it.remove(); // avoids a ConcurrentModificationException
                 index++;
                 if (it.hasNext()) {
-                    sb.append(" UNION ALL ");
+                    sb.append(UNION_ALL);
                 }
             }
 
 
-            sb.append(") a  ORDER BY indexRS,gid ASC ");
+            sb.append(") a ORDER BY indexRS, gid ASC ");
 
-            log.debug("{} QUERY => {}", dialect.getClass().getSimpleName().toUpperCase(), sb.toString());
+            log.debug(QUERY, dialect.getClass().getSimpleName().toUpperCase(), sb.toString());
 
             javax.persistence.Query emNativeQuery = getEntityManager().createNativeQuery(sb.toString());
 
@@ -321,7 +324,7 @@ public abstract class AbstractAreaDao<E extends BaseAreaEntity> extends Abstract
 
     public void makeGeomValid(final String areaDbTable, final DatabaseDialect dialect) {
         String query = dialect.makeGeomValid(areaDbTable);
-        log.debug("{} QUERY => {}", dialect.getClass().getSimpleName().toUpperCase(), query);
+        log.debug(QUERY, dialect.getClass().getSimpleName().toUpperCase(), query);
         javax.persistence.Query nativeQuery = getEntityManager().createNativeQuery(query);
         nativeQuery.executeUpdate();
     }
