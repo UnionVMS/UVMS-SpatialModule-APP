@@ -15,13 +15,11 @@ package eu.europa.ec.fisheries.uvms.spatial.entity.util;
  **/
 public final class QueryNameConstants {
 
-    private QueryNameConstants() {}
-
     /**
      * Find System
      */
     public static final String FIND_USER_AREA_LAYER = "AreaLocationType.findUserAreaLayerMappings";
-    
+
     /**
      * Find User Area
      */
@@ -35,5 +33,7 @@ public final class QueryNameConstants {
     public static final String FIND_BY_ID = "ReportLayerConfig.findById";
     public static final String FIND_SERVICE_LAYER_BY_SUBTYPE = "ServiceLayer.findServiceLayerBySubType";
     public static final String FIND_SERVICE_LAYER_BY_SUBTYPE_WITHOUT_BING = "ServiceLayer.findServiceLayerBySubTypeWithoutBing";
+
+    private QueryNameConstants() {}
 
 }
