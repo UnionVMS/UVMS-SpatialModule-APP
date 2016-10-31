@@ -175,15 +175,15 @@ public class BaseAreaEntity extends BaseEntity {
 
                     log.info("Alias Name : " + aliasName);
                     Object value;
-                    if ((field.get(this) instanceof Number)) {
+                    if (field.get(this) instanceof Number) {
                         Number numberVal = (Number) field.get(this);
                         value = String.valueOf(numberVal);
                     } else if ((field.get(this) instanceof Geometry)) {
                         Geometry geometry = ((Geometry) field.get(this));
                         value = new WKTWriter().write(geometry);
-                    } else if ((field.get(this) instanceof Date)) {
+                    } else if (field.get(this) instanceof Date) {
                         value = DateUtils.UI_FORMATTER.print(new DateTime(field.get(this)));
-                    } else if ((field.get(this) instanceof Boolean)) {
+                    } else if (field.get(this) instanceof Boolean) {
                         value = Boolean.toString((Boolean) field.get(this));
                     } else {
                         value = field.get(this);
