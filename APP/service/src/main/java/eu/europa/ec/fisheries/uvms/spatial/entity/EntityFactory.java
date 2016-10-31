@@ -15,6 +15,10 @@ import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 
 public abstract class EntityFactory {
 
+    private EntityFactory(){
+
+    }
+
     public static BaseEntity getInstance(String value) throws ServiceException {
 
         BaseEntity entity;
