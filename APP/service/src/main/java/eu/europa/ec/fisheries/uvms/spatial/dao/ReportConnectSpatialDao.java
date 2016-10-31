@@ -16,19 +16,21 @@ import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
-import java.util.Map;
-import javax.persistence.EntityManager;
-import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
 
-import static eu.europa.ec.fisheries.uvms.service.QueryParameter.*;
-import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
+import javax.persistence.EntityManager;
+import java.util.List;
+import java.util.Map;
+
+import static eu.europa.ec.fisheries.uvms.service.QueryParameter.with;
 
 public class ReportConnectSpatialDao extends AbstractDAO<ReportConnectSpatialEntity> {
 
     private EntityManager em;
+
+    private static final String REPORT_ID = "reportId";
 
     public ReportConnectSpatialDao(EntityManager em) {
         this.em = em;
@@ -44,7 +46,7 @@ public class ReportConnectSpatialDao extends AbstractDAO<ReportConnectSpatialEnt
 
         List<ReportConnectSpatialEntity> list =
                 findEntityByNamedQuery(ReportConnectSpatialEntity.class,
-                        ReportConnectSpatialEntity.FIND_BY_REPORT_ID, with("reportId", reportId).parameters(), 1);
+                        ReportConnectSpatialEntity.FIND_BY_REPORT_ID, with(REPORT_ID, reportId).parameters(), 1);
 
         return list.get(0);
 
@@ -57,7 +59,7 @@ public class ReportConnectSpatialDao extends AbstractDAO<ReportConnectSpatialEnt
     public List<ReportConnectSpatialEntity> findByReportIdAndConnectId(Long reportId, Long id) throws ServiceException {
         return findEntityByNamedQuery(
                 ReportConnectSpatialEntity.class, QueryNameConstants.FIND_BY_ID,
-                with("reportId", reportId).and("id", id).parameters(), 1
+                with(REPORT_ID, reportId).and("id", id).parameters(), 1
         );
     }
 
@@ -69,7 +71,7 @@ public class ReportConnectSpatialDao extends AbstractDAO<ReportConnectSpatialEnt
     }
 
     public List<ProjectionDto> findProjectionByMap(long reportId) {
-        Map<String, Object> parameters = ImmutableMap.<String, Object>builder().put("reportId", reportId).build();
+        Map<String, Object> parameters = ImmutableMap.<String, Object>builder().put(REPORT_ID, reportId).build();
         Query query = em.unwrap(Session.class).getNamedQuery(ReportConnectSpatialEntity.FIND_MAP_PROJ_BY_ID);
         for (Map.Entry<String, Object> entry : parameters.entrySet()) {
             query.setParameter(entry.getKey(), entry.getValue());
