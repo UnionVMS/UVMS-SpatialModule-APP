@@ -18,6 +18,10 @@ import javax.persistence.EntityManager;
 
 public abstract class DAOFactory {
 
+    private DAOFactory() {
+
+    }
+
     public static AbstractAreaDao getAbstractSpatialDao(final EntityManager em, final String name) throws ServiceException {
 
         AbstractAreaDao dao;
