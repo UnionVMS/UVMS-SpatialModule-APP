@@ -36,7 +36,7 @@ public class DatabaseDialectFactory {
 	
 	
 	public static DatabaseDialect bounceInstance(){
-    	DatabaseDialect dialect = null;
+    	DatabaseDialect dialect;
         if(isOracle()){
         	if (oracleDialect==null)
         		oracleDialect = new Oracle();
