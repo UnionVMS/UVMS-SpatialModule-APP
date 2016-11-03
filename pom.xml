@@ -281,14 +281,12 @@
         </snapshotRepository>
     </distributionManagement>
 
-    <scm>
-
-		<!--connection>scm:svn:https://webgate.ec.europa.eu/CITnet/svn/UNIONVMS/tags/spatial-1.0.0.final</connection-->
-		<developerConnection>scm:svn:https://webgate.ec.europa.eu/CITnet/svn/UNIONVMS/trunk/Modules/Spatial/</developerConnection>
-		<!--url>https://webgate.ec.europa.eu/CITnet/svn/UNIONVMS/tags/spatial-1.0.0.final</url-->
        
-    </scm>
-
+	<scm>
+		 <connection>scm:git:https://empadhyad@webgate.ec.europa.eu/CITnet/stash/scm/unionvms/uvms-spatialmodule-app.git</connection>
+		 <developerConnection>scm:git:https://empadhyad@webgate.ec.europa.eu/CITnet/stash/scm/unionvms/uvms-spatialmodule-app.git</developerConnection>
+		 <url>https://emserveje@webgate.ec.europa.eu/CITnet/stash/scm/unionvms/</url>
+	</scm>
 
     <build>
         <pluginManagement>
