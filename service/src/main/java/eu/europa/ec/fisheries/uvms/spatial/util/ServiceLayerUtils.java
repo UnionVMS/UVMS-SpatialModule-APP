@@ -8,6 +8,8 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
+
 package eu.europa.ec.fisheries.uvms.spatial.util;
 
 import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
@@ -18,9 +20,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-/**
- * Created by padhyad on 6/24/2016.
- */
 public class ServiceLayerUtils {
 
     public static Collection<String> getUserPermittedLayersNames(USMService usmService, String username, String roleName, String scopeName) throws eu.europa.ec.fisheries.uvms.exception.ServiceException {

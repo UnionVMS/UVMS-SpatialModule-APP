@@ -10,23 +10,16 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
+import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
-import java.util.Map;
+import lombok.Builder;
 import org.hibernate.annotations.Where;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.UniqueConstraint;
+
+import javax.persistence.*;
 import java.util.Date;
+import java.util.Map;
 import java.util.Set;
 
 @Entity
@@ -108,41 +101,56 @@ public class UserAreasEntity extends BaseAreaEntity {
     public static final String USERAREA_COLUMNS = "userAreasEntity.findSelectedColumns";
 
     @Column(length = 255)
-    @ColumnAliasName(aliasName ="subType")
+    @ColumnAliasName(aliasName = "subType")
     private String type;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "start_date")
-    @ColumnAliasName(aliasName ="startDate")
+    @ColumnAliasName(aliasName = "startDate")
     private Date startDate;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "end_date")
-    @ColumnAliasName(aliasName ="endDate")
+    @ColumnAliasName(aliasName = "endDate")
     private Date endDate;
 
     @Column(name = "user_name", nullable = false, length = 255)
     private String userName;
 
     @Column(columnDefinition = "text", name = "area_desc")
-    @ColumnAliasName(aliasName ="areaDesc")
+    @ColumnAliasName(aliasName = "areaDesc")
     private String areaDesc;
 
     @Column(columnDefinition = "text", name = "dataset_name")
-    @ColumnAliasName(aliasName ="datasetName")
+    @ColumnAliasName(aliasName = "datasetName")
     private String datasetName;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_on", nullable = false)
-    @ColumnAliasName(aliasName ="createdOn")
+    @ColumnAliasName(aliasName = "createdOn")
     private Date createdOn;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAreas", cascade = CascadeType.ALL, orphanRemoval = true)
-    @ColumnAliasName(aliasName ="scopeSelection")
+    @ColumnAliasName(aliasName = "scopeSelection")
     private Set<UserScopeEntity> scopeSelection;
 
     public UserAreasEntity() {
         // why JPA why
+    }
+
+    @Builder
+    private UserAreasEntity(String type, Date startDate, Date endDate, String userName, String areaDesc,
+                            String datasetName, Date createdOn, Set<UserScopeEntity> scopeSelection,
+                            Geometry geom, String name, String code, boolean enabled, Date enabledOn) {
+        super(geom, name, code, enabled, enabledOn);
+        this.type = type;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.userName = userName;
+        this.areaDesc = areaDesc;
+        this.datasetName = datasetName;
+        this.createdOn = createdOn;
+        this.scopeSelection = scopeSelection;
     }
 
     public UserAreasEntity(Map<String, Object> values) throws ServiceException {

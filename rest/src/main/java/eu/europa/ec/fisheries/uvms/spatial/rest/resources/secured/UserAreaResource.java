@@ -147,7 +147,7 @@ public class UserAreaResource extends UnionVMSResource {
     @Interceptors(value = {ExceptionInterceptor.class})
     public Response getUserAreaLayerMapping(@Context HttpServletRequest request, @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName) {
         log.debug("UserName from security : " + request.getRemoteUser());
-        return createSuccessResponse(userAreaService.getUserAreaLayerDefination(request.getRemoteUser(), scopeName));
+        return createSuccessResponse(userAreaService.getUserAreaLayerDefinition(request.getRemoteUser(), scopeName));
     }
 
     @POST

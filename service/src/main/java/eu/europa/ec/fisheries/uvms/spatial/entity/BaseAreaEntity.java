@@ -21,6 +21,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadMappingProperty;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +44,7 @@ import java.util.Map;
 @EqualsAndHashCode(callSuper = true)
 @Slf4j
 @AttributeOverride(name = "id", column = @Column(name = "GID"))
+@AllArgsConstructor
 public class BaseAreaEntity extends BaseEntity {
 
     private static final String ISO_8859_1 = "ISO-8859-1";
