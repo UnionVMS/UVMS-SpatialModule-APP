@@ -221,6 +221,7 @@ public class SpatialServiceBean implements SpatialService {
     @Override
     @Transactional
     public List<UserAreaDto> getUserAreaDetailsWithExtentByLocation(Coordinate coordinate, String userName) throws ServiceException {
+
         Point point = toWgs84Point(coordinate.getLatitude(), coordinate.getLongitude(), coordinate.getCrs());
 
         List<UserAreasEntity> userAreaDetailsWithExtentByLocation = repository.findUserAreaDetailsByLocation(userName, point);

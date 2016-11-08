@@ -8,20 +8,26 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
+
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto;
 
-import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Builder;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+public class UserAreaLayerDto extends AreaLayerDto {
 
-public class UserAreaLayerDto extends AreaLayerDto implements Serializable {
+    @Builder
+    public UserAreaLayerDto(String typeName, String areaTypeDesc, String geoName, String serviceUrl, String serviceType, String style, Boolean isInternal, Boolean isLocation, List<Long> idList) {
+        super(typeName, areaTypeDesc, geoName, serviceUrl, serviceType, style, isInternal, isLocation);
+        this.idList = idList;
+    }
 
-	private static final long serialVersionUID = 3751017881001167114L;
-	
 	@JsonInclude
-	private List<Long> idList = new ArrayList<Long>();
+	private List<Long> idList = new ArrayList<>();
 	
 	public List<Long> getIdList() {
 		return idList;

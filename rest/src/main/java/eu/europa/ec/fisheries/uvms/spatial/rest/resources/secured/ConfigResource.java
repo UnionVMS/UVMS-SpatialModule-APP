@@ -166,7 +166,7 @@ public class ConfigResource extends UnionVMSResource {
         String adminPref = usmService.getOptionDefaultValue(DEFAULT_CONFIG, applicationName);
         String userPref = usmService.getUserPreference(USER_CONFIG, username, applicationName, roleName, scopeName);
         Collection<String> permittedLayersNames = ServiceLayerUtils.getUserPermittedLayersNames(usmService, username, roleName, scopeName);
-        return createSuccessResponse(mapConfigService.retrieveUserConfiguration(userPref, adminPref, username, permittedLayersNames));
+        return createSuccessResponse(mapConfigService. retrieveUserConfiguration(userPref, adminPref, username, permittedLayersNames));
     }
 
     @POST

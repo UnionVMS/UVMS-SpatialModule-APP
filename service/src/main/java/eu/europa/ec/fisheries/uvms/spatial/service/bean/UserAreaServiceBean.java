@@ -8,6 +8,8 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
+
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -24,6 +26,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.service.AreaTypeNamesService;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.UserAreaService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.UserAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.UserAreaGeoJsonDto;
@@ -142,7 +145,8 @@ public class UserAreaServiceBean implements UserAreaService {
 
     @Override
     @Transactional
-    public UserAreaLayerDto getUserAreaLayerDefination(String userName, String scopeName) {
+    public UserAreaLayerDto getUserAreaLayerDefinition(String userName, String scopeName) {
+
         List<UserAreaLayerDto> userAreaLayerDtoList = areaTypeNamesService.listUserAreaLayerMapping();
         UserAreaLayerDto userAreaLayerDto = userAreaLayerDtoList.get(0);
         userAreaLayerDto.setIdList(getUserAreaGuid(userName, scopeName));
@@ -154,19 +158,22 @@ public class UserAreaServiceBean implements UserAreaService {
     public List<AreaDetails> getUserAreaDetailsWithExtentById(AreaTypeEntry areaTypeEntry, String userName, boolean isPowerUser, String scopeName) throws ServiceException {
 
         UserAreasEntity userAreaById = repository.findUserAreaById(Long.parseLong(areaTypeEntry.getId()), userName, isPowerUser, scopeName);
+        List<AreaDetails> areaDetailsList;
+
         try {
             if (userAreaById != null) {
-                List<AreaDetails> areaDetailsList = new ArrayList<>();
+                areaDetailsList = new ArrayList<>();
                 Map<String, Object> properties = userAreaById.getFieldMap();
                 addCentroidToProperties(properties);
                 areaDetailsList.add(createAreaDetailsSpatialResponse(properties, areaTypeEntry));
-                return areaDetailsList;
 
             } else {
                 AreaDetails areaDetails = new AreaDetails();
                 areaDetails.setAreaType(areaTypeEntry);
-                return Arrays.asList(areaDetails);
+                areaDetailsList = Arrays.asList(areaDetails);
             }
+            return areaDetailsList;
+
         } catch (ParseException e) {
             String error = "Error while trying to parse geometry";
             log.error(error, e);
@@ -234,8 +241,10 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     private void addCentroidToProperties(Map<String, Object> properties) throws ParseException {
+
         Object geometry = properties.get("geometry");
-        if(geometry != null){
+
+        if (geometry != null){
             Geometry centroid = new WKTReader2().read(String.valueOf(geometry)).getCentroid();
             properties.put("centroid", new WKTWriter2().write(centroid));
         }
@@ -256,7 +265,7 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     @SuppressWarnings("unchecked")
-    private List<Long> getUserAreaGuid(String userName, String scopeName) {
+    public List<Long> getUserAreaGuid(String userName, String scopeName) {
         try {
             List<Long> longList = new ArrayList<>();
             List<UserAreasEntity> userAreaByUserNameAndScopeName = repository.findUserAreaByUserNameAndScopeName(userName, scopeName);
@@ -282,10 +291,13 @@ public class UserAreaServiceBean implements UserAreaService {
         while (it.hasNext( )) {
             UserAreasEntity next = (UserAreasEntity) it.next();
             it.remove(); // avoids a ConcurrentModificationException
-            final Geometry envelope = next.getGeom().getEnvelope();
-
-            userAreaDtos.add(new UserAreaDto(next.getId(), next.getName(), StringUtils.isNotBlank(next.getAreaDesc())
-                    ? next.getAreaDesc() : StringUtils.EMPTY, wktWriter2.write(envelope), next.getUserName()));
+            Geometry geom = next.getGeom();
+            if (geom != null){
+                Geometry envelope = next.getGeom().getEnvelope();
+                userAreaDtos.add(new UserAreaDto(next.getId(), next.getName(),
+                        StringUtils.isNotBlank(next.getAreaDesc()) ? next.getAreaDesc() : StringUtils.EMPTY,
+                        wktWriter2.write(envelope), next.getUserName()));
+            }
         }
         return userAreaDtos;
     }

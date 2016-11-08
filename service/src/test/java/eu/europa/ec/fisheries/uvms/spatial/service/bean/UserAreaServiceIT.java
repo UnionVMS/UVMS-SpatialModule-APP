@@ -8,6 +8,8 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
+
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -17,7 +19,6 @@ import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Coordinate;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialService;
 import eu.europa.ec.fisheries.uvms.spatial.service.UserAreaService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.UserAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.UserAreaGeoJsonDto;
 import lombok.SneakyThrows;
@@ -29,7 +30,8 @@ import javax.ejb.EJB;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
 public class UserAreaServiceIT extends BaseSpatialArquillianTest {
@@ -37,42 +39,8 @@ public class UserAreaServiceIT extends BaseSpatialArquillianTest {
 	@EJB
 	private UserAreaService userAreaService;
 
-
     @EJB
     private SpatialService spatialService;
-
-    @Test
-    @SneakyThrows
-    public void testSearchUserAreaByFilter() {
-		//Given
-		List<UserAreaDto> userAreas = userAreaService.searchUserAreasByCriteria("rep_power", "EC", "area", false);
-		
-		assertNotNull(userAreas);
-		assertFalse(userAreas.isEmpty());
-	}
-	
-	@Test
-    @SneakyThrows
-	public void testSearchInvalidUserAreaByFilter() {
-		//Given
-		List<UserAreaDto> userAreas = userAreaService.searchUserAreasByCriteria("rep_power", "EC", "invalid", false);
-		
-		assertNotNull(userAreas);
-		assertTrue(userAreas.isEmpty());
-	}
-	
-	@Test
-    @SneakyThrows
-    public void testUserAreaDetails() {
-		//Given
-		Coordinate coordinate = new Coordinate(20.0535983848415, 31.1417484902222, 4326);
-		List<UserAreaDto> userAreas = spatialService.getUserAreaDetailsWithExtentByLocation(coordinate, "rep_power");
-		
-		//Test
-		assertNotNull(userAreas);
-		assertFalse(userAreas.isEmpty());
-		assertNotNull(userAreas.get(0).getExtent());
-	}
 	
 	@Test
     @SneakyThrows
@@ -84,26 +52,6 @@ public class UserAreaServiceIT extends BaseSpatialArquillianTest {
 		//Test
 		assertNotNull(userAreas);
 		assertTrue(userAreas.isEmpty());
-	}
-	
-	@Test
-	public void testUserAreaLayerMapping() {
-		//Given
-		UserAreaLayerDto userAreaLayer = userAreaService.getUserAreaLayerDefination("rep_power", "EC");
-		
-		//Test
-		assertNotNull(userAreaLayer);
-		assertFalse(userAreaLayer.getIdList().isEmpty());
-	}
-
-	@Test
-	public void testUserAreaLayerMappingForInvalidUserNameAndScopeName() {
-		//Given
-		UserAreaLayerDto userAreaLayer = userAreaService.getUserAreaLayerDefination("00000", "00000");
-		
-		//Test
-		assertNotNull(userAreaLayer);
-		assertTrue(userAreaLayer.getIdList().isEmpty());
 	}
 
 	@Test

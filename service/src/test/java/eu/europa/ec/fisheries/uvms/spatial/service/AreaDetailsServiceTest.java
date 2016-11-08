@@ -8,14 +8,15 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
+
 package eu.europa.ec.fisheries.uvms.spatial.service;
-;
+
 import eu.europa.ec.fisheries.uvms.BaseUnitilsTest;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.RfmoEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
-import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaServiceBean;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialServiceBean;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
@@ -32,13 +33,14 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-/***         Unit test for Area details resource
- */
 @RunWith(MockitoJUnitRunner.class)
 @Ignore
 public class AreaDetailsServiceTest extends BaseUnitilsTest {

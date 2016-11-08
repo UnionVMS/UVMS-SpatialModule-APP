@@ -8,22 +8,23 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
-package eu.europa.ec.fisheries.uvms.spatial.service;
 
-import java.util.Date;
-import java.util.List;
+
+package eu.europa.ec.fisheries.uvms.spatial.service;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Coordinate;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.UserAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.UserAreaGeoJsonDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
+
+import java.util.Date;
+import java.util.List;
 
 public interface UserAreaService {
 
-	UserAreaLayerDto getUserAreaLayerDefination(String userName, String scopeName);
+    UserAreaLayerDto getUserAreaLayerDefinition(String userName, String scopeName);
 
 	List<AreaDetails> getUserAreaDetailsWithExtentById(AreaTypeEntry areaTypeEntry, String userName, boolean isPowerUser, String scopeName) throws ServiceException;
 
