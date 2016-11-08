@@ -39,7 +39,6 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.mockito.Matchers.anyString;
 
 public class UserAreaServiceTest extends BaseUnitilsTest {
 
@@ -164,9 +163,9 @@ public class UserAreaServiceTest extends BaseUnitilsTest {
         Field id = userAreasEntity.getClass().getSuperclass().getSuperclass().getDeclaredField("id");
         makeModifiable(id);
         setValue(userAreasEntity, id, 2L);
-        repoMock.returns(Arrays.asList(userAreasEntity)).findUserAreaByUserNameAndScopeName(anyString(), anyString());
+        repoMock.returns(Arrays.asList(userAreasEntity)).findUserAreaByUserNameAndScopeName(null, null);
 
-        UserAreaLayerDto response = service.getUserAreaLayerDefinition(anyString(), anyString());
+        UserAreaLayerDto response = service.getUserAreaLayerDefinition(null, null);
 
         assertEquals(1, response.getIdList().size());
         assertEquals(userAreasEntity.getId(), response.getIdList().get(0), 0);
