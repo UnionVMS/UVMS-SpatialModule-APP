@@ -13,10 +13,15 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.service;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.io.ParseException;
+import com.vividsolutions.jts.io.WKTReader;
 import com.vividsolutions.jts.util.Assert;
 import eu.europa.ec.fisheries.uvms.BaseUnitilsTest;
+import eu.europa.ec.fisheries.uvms.TestToolBox;
+import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
@@ -24,6 +29,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.UserAreaServiceBean;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.UserAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.UserAreaGeoJsonDto;
 import lombok.SneakyThrows;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,10 +38,10 @@ import org.unitils.inject.annotation.TestedObject;
 import org.unitils.mock.Mock;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -50,6 +56,9 @@ public class UserAreaServiceTest extends BaseUnitilsTest {
 
     @InjectIntoByType
     private Mock<AreaTypeNamesService> namesServiceMock;
+
+    @InjectIntoByType
+    private Mock<USMService> usmServiceMock;
 
     private GeometryFactory geomFactory = new GeometryFactory();
 
@@ -81,12 +90,15 @@ public class UserAreaServiceTest extends BaseUnitilsTest {
     @SneakyThrows
     public void getUserAreaDetailsWithExtentByIdWithId(){
 
+        // Given
         AreaTypeEntry areaTypeEntry = new AreaTypeEntry();
         areaTypeEntry.setId("1");
         repoMock.returns(UserAreasEntity.builder().geom(point).build()).findUserAreaById(null, null, null, null);
 
+        // When
         List<AreaDetails> userAreaDetailsWithExtentById = service.getUserAreaDetailsWithExtentById(areaTypeEntry, "", true, "");
 
+        // Then
         AreaDetails areaDetails = userAreaDetailsWithExtentById.get(0);
         List<AreaProperty> areaProperties = areaDetails.getAreaProperties();
 
@@ -154,6 +166,7 @@ public class UserAreaServiceTest extends BaseUnitilsTest {
     @SneakyThrows
     public void getUserAreaLayerDefinition(){
 
+        // Given
         UserAreaLayerDto dto = UserAreaLayerDto.builder()
                 .isInternal(true).isLocation(true).geoName("geoName").areaTypeDesc("desc").serviceType("serviceType")
                 .serviceUrl("serviceUrl").style("style").typeName("typeName").idList(Arrays.asList(100L)).build();
@@ -161,12 +174,14 @@ public class UserAreaServiceTest extends BaseUnitilsTest {
 
         UserAreasEntity userAreasEntity = new UserAreasEntity();
         Field id = userAreasEntity.getClass().getSuperclass().getSuperclass().getDeclaredField("id");
-        makeModifiable(id);
-        setValue(userAreasEntity, id, 2L);
+        TestToolBox.makeModifiable(id);
+        TestToolBox.setValue(userAreasEntity, id, 2L);
         repoMock.returns(Arrays.asList(userAreasEntity)).findUserAreaByUserNameAndScopeName(null, null);
 
+        // When
         UserAreaLayerDto response = service.getUserAreaLayerDefinition(null, null);
 
+        // Then
         assertEquals(1, response.getIdList().size());
         assertEquals(userAreasEntity.getId(), response.getIdList().get(0), 0);
         assertEquals(dto.getIsLocation(), response.getIsLocation());
@@ -180,25 +195,82 @@ public class UserAreaServiceTest extends BaseUnitilsTest {
 
     }
 
-    /**
-     *
-     * Set the value of a field reflectively.
-     */
-    protected static void setValue(Object owner, Field field, Object value) throws Exception {
-        makeModifiable(field);
-        field.set(owner, value);
+    @Test
+    @SneakyThrows
+    public void testStoreUserArea(){
+
+        // Given
+        UserAreaGeoJsonDto userAreaDto = createUserArea("name", UUID.randomUUID().toString(), "desc", null);
+        UserAreasEntity userAreasEntity = new UserAreasEntity();
+        Field id = userAreasEntity.getClass().getSuperclass().getSuperclass().getDeclaredField("id");
+        TestToolBox.makeModifiable(id);
+        TestToolBox.setValue(userAreasEntity, id, 2L);
+        repoMock.returns(userAreasEntity).save(null);
+
+        // When
+        Long result = service.storeUserArea(userAreaDto, "rep_power");
+
+        // Then
+        assertEquals(result, 2L, 0);
+
     }
 
-    /**
-     *
-     * Force the field to be modifiable and accessible.
-     */
-    protected static void makeModifiable(Field nameField) throws Exception {
-        nameField.setAccessible(true);
-        int modifiers = nameField.getModifiers();
-        Field modifierField = nameField.getClass().getDeclaredField("modifiers");
-        modifiers = modifiers & ~Modifier.FINAL;
-        modifierField.setAccessible(true);
-        modifierField.setInt(nameField, modifiers);
+    @Test
+    @SneakyThrows
+    public void testStoreUserAreaWithDataSet(){
+
+        // Given
+        UserAreaGeoJsonDto userAreaDto = createUserArea("name", UUID.randomUUID().toString(), "desc", null);
+        UserAreasEntity userAreasEntity = new UserAreasEntity();
+        userAreasEntity.setDatasetName("dataSet");
+        Field id = userAreasEntity.getClass().getSuperclass().getSuperclass().getDeclaredField("id");
+        TestToolBox.makeModifiable(id);
+        TestToolBox.setValue(userAreasEntity, id, 2L);
+        repoMock.returns(userAreasEntity).save(null);
+
+        // When
+        Long result = service.storeUserArea(userAreaDto, "rep_power");
+
+        // Then
+        assertEquals(result, 2L, 0);
+
+    }
+
+    @Test
+    @SneakyThrows
+    public void testUpdateUserAreaHappy(){
+
+        // Given
+        UserAreaGeoJsonDto userAreaDto = createUserArea("name", UUID.randomUUID().toString(), "desc", null);
+        userAreaDto.setId(2L);
+        UserAreasEntity userAreasEntity = new UserAreasEntity();
+        userAreasEntity.setDatasetName("dataSet");
+        Field id = userAreasEntity.getClass().getSuperclass().getSuperclass().getDeclaredField("id");
+        TestToolBox.makeModifiable(id);
+        TestToolBox.setValue(userAreasEntity, id, 2L);
+
+        repoMock.returns(userAreasEntity).findUserAreaById(null, null, null, null);
+
+        repoMock.returns(userAreasEntity).update(null);
+
+        // When
+        Long result = service.updateUserArea(userAreaDto, "rep_power", true, "");
+
+        // Then
+        assertEquals(result, 2L, 0);
+
+    }
+
+    private UserAreaGeoJsonDto createUserArea(String name, String datasetName, String desc, Long gid) throws ParseException {
+        Geometry geometry = new WKTReader().read("MULTIPOLYGON(((1 1,5 1,5 5,1 5,1 1),(2 2, 3 2, 3 3, 2 3,2 2)),((3 3,6 2,6 4,3 3)))");
+        geometry.setSRID(4326);
+
+        UserAreaGeoJsonDto userAreaDto = new UserAreaGeoJsonDto();
+        userAreaDto.setGeometry(geometry);
+        userAreaDto.setId(gid);
+        userAreaDto.setName(name);
+        userAreaDto.setDatasetName(datasetName);
+        userAreaDto.setDesc(desc);
+        return userAreaDto;
     }
 }

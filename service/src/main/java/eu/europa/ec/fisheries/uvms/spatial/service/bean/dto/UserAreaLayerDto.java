@@ -14,10 +14,12 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@NoArgsConstructor
 public class UserAreaLayerDto extends AreaLayerDto {
 
     @Builder
