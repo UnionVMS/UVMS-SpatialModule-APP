@@ -13,12 +13,9 @@ package eu.europa.ec.fisheries.uvms.spatial.service;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTReader;
 import eu.europa.ec.fisheries.uvms.BaseUnitilsTest;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Area;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.PointType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.UnitType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialServiceBean;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.UserAreaDto;
 import lombok.SneakyThrows;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,6 +26,8 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class SpatialServiceBeanTest extends BaseUnitilsTest {
 
@@ -72,5 +71,18 @@ public class SpatialServiceBeanTest extends BaseUnitilsTest {
         List<Area> closestArea = service.getClosestArea(closestAreaRequest);
         assertEquals(18267.45280663312, closestArea.get(0).getDistance());
     }
+
+    @Test
+    @SneakyThrows
+    public void testUserAreaDetailsForInvalidUserNameAndScopeName() {
+        //Given
+        Coordinate coordinate = new Coordinate(20.0535983848415, 31.1417484902222, 4326);
+        List<UserAreaDto> userAreas = service.getUserAreaDetailsWithExtentByLocation(coordinate, "00000");
+
+        //Test
+        assertNotNull(userAreas);
+        assertTrue(userAreas.isEmpty());
+    }
+
 
 }

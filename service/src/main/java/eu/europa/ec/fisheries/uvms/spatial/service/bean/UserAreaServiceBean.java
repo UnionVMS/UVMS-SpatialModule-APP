@@ -26,7 +26,6 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.service.AreaTypeNamesService;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.UserAreaService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.UserAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.UserAreaGeoJsonDto;
@@ -37,18 +36,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.geotools.geometry.jts.WKTReader2;
 import org.geotools.geometry.jts.WKTWriter2;
+
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Stateless
 @Local(UserAreaService.class)
@@ -63,7 +56,7 @@ public class UserAreaServiceBean implements UserAreaService {
     @Transactional
     public Long storeUserArea(UserAreaGeoJsonDto userAreaDto, String userName) throws ServiceException {
 
-        UserAreasEntity userAreaByUserNameAndName = repository.getUserAreaByUserNameAndName(userName, userAreaDto.getName()); //TODO improve the performance by creating DB unique constrain containing the two fields, instead of this search
+        UserAreasEntity userAreaByUserNameAndName = repository.getUserAreaByUserNameAndName(userName, userAreaDto.getName());
 
         if (userAreaByUserNameAndName != null){
             throw new SpatialServiceException(SpatialServiceErrors.USER_AREA_ALREADY_EXISTING);
@@ -91,6 +84,10 @@ public class UserAreaServiceBean implements UserAreaService {
     public Long updateUserArea(UserAreaGeoJsonDto userAreaDto, String userName, boolean isPowerUser, String scopeName) throws ServiceException {
         Long id = userAreaDto.getId();
 
+        if (userName == null) {
+            throw new IllegalArgumentException("USER CANNOT BE NULL");
+        }
+
         if (id == null) {
             throw new SpatialServiceException(SpatialServiceErrors.MISSING_USER_AREA_ID);
         }
@@ -101,7 +98,7 @@ public class UserAreaServiceBean implements UserAreaService {
             throw new SpatialServiceException(SpatialServiceErrors.USER_AREA_DOES_NOT_EXIST, userAreaById);
         }
 
-        if (!userAreaById.getUserName().equals(userName) && !isPowerUser) {
+        if (!(userName).equals(userAreaById.getUserName()) && !isPowerUser) {
             throw new ServiceException("user_not_authorised");
         }
 
