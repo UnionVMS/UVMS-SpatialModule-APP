@@ -194,29 +194,6 @@
         </dependencies>
 
     </dependencyManagement>
-
-    <dependencies>
-
-        <!-- LOGGING DEPENDENCIES -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${sl4j.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${logback.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-core</artifactId>
-            <version>${logback.core.version}</version>
-        </dependency> 
-    </dependencies>
-
     	
     <distributionManagement>
         <repository>
@@ -231,7 +208,6 @@
         </snapshotRepository>
     </distributionManagement>
 
-       
 	<scm>
 		 <connection>scm:git:https:///emserveje@webgate.ec.europa.eu/CITnet/stash/scm/unionvms/uvms-spatialmodule-app.git</connection>
 		 <developerConnection>scm:git:https:///emserveje@webgate.ec.europa.eu/CITnet/stash/scm/unionvms/uvms-spatialmodule-app.git</developerConnection>
