@@ -29,9 +29,6 @@
         <reporting.model>0.5.4</reporting.model>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <javaee.version>7.0</javaee.version>
-        <sl4j.version>1.7.12</sl4j.version>
-        <logback.version>1.1.2</logback.version>
         <jackson.version>2.6.0</jackson.version>
         <logback.core.version>1.1.2</logback.core.version>
         <asset.module.version>2.0.6</asset.module.version>
@@ -370,9 +367,7 @@
 				
 				
 		</profile>
-		
-		
-			
+
 	</profiles>
 
     <modules>
