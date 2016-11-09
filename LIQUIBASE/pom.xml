@@ -77,14 +77,6 @@
                     <plugin>
                         <groupId>org.liquibase</groupId>
                         <artifactId>liquibase-maven-plugin</artifactId>
-                        <version>3.5.1</version>
-                        <dependencies>
-                            <dependency>
-                                <groupId>com.github.lonnyj</groupId>
-                                <artifactId>liquibase-spatial</artifactId>
-                                <version>1.2.1</version>
-                            </dependency>
-                        </dependencies>
                         <configuration>
                             <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
                             <changeLogFile>${db.changeLogFile}</changeLogFile>
