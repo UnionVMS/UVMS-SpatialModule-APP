@@ -44,7 +44,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.ServiceLayerDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.mapper.BookmarkMapper;
+import eu.europa.ec.fisheries.uvms.spatial.mapper.BookmarkMapper;
 import javax.annotation.PostConstruct;
 import javax.ejb.Local;
 import javax.ejb.Stateless;

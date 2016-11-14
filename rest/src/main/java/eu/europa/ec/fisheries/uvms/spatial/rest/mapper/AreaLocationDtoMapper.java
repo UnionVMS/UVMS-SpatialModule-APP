@@ -17,7 +17,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.rest.type.geocoordinate.AreaCoordinateType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.type.geocoordinate.GeoCoordinateType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.AreaDetailsGeoJsonDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.mapper.UserAreaMapper;
+import eu.europa.ec.fisheries.uvms.spatial.mapper.UserAreaMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;

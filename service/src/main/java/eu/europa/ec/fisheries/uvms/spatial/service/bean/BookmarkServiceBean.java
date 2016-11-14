@@ -16,7 +16,7 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.ProjectionEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.bookmark.Bookmark;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.BookmarkService;
-import eu.europa.ec.fisheries.uvms.spatial.service.mapper.BookmarkMapper;
+import eu.europa.ec.fisheries.uvms.spatial.mapper.BookmarkMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 

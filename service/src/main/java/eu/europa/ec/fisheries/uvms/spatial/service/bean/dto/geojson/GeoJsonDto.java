@@ -8,6 +8,8 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
+
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -15,7 +17,7 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
 import com.vividsolutions.jts.io.WKTWriter;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.util.GeometryDeserializer;
+import eu.europa.ec.fisheries.uvms.deserializer.GeometryDeserializer;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -29,11 +31,13 @@ import java.util.Map.Entry;
 public abstract class GeoJsonDto {
 
     public static final String GEOMETRY = "geometry";
-    protected static final String ID = "id";
     public static final String EXTENT = "extent";
+
     protected String type;
+
     @JsonDeserialize(using = GeometryDeserializer.class)
     protected Geometry geometry;
+
     protected Map<String, Object> properties = new HashMap<String, Object>();
 
     public String getType() {
@@ -48,8 +52,8 @@ public abstract class GeoJsonDto {
         return geometry;
     }
 
-    public void setGeometry(Geometry geometry) {
-        this.geometry = geometry;
+    public void setGeometry(Geometry geoJson) {
+        this.geometry = geoJson;
     }
 
     public Map<String, Object> getProperties() {
@@ -111,7 +115,7 @@ public abstract class GeoJsonDto {
             }
             return extent;
         } catch (ParseException e) {
-            return geometry == null ? null : geometry.toString();
+            return geometry.toString();
         }
     }
 

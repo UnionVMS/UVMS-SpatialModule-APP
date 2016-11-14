@@ -8,12 +8,17 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
+
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.reporting.model.schemas.ReportGetStartAndEndDateRS;
-import eu.europa.ec.fisheries.uvms.spatial.entity.*;
-import eu.europa.ec.fisheries.uvms.spatial.entity.mapper.ReportConnectSpatialMapper;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ProjectionEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity;
+import eu.europa.ec.fisheries.uvms.spatial.mapper.ReportConnectSpatialMapper;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.CoordinatesFormat;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.MapConfigurationType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ScaleBarUnits;
@@ -29,8 +34,8 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.helper.MapConfigHelper;
-import eu.europa.ec.fisheries.uvms.spatial.service.mapper.MapConfigMapper;
-import eu.europa.ec.fisheries.uvms.spatial.service.mapper.ProjectionMapper;
+import eu.europa.ec.fisheries.uvms.spatial.mapper.MapConfigMapper;
+import eu.europa.ec.fisheries.uvms.spatial.mapper.ProjectionMapper;
 import eu.europa.ec.fisheries.uvms.spatial.util.AreaTypeEnum;
 import eu.europa.ec.fisheries.uvms.spatial.util.LayerTypeEnum;
 import eu.europa.ec.fisheries.uvms.spatial.validator.SpatialValidator;
@@ -42,7 +47,7 @@ import javax.ejb.Stateless;
 import javax.transaction.Transactional;
 import java.util.*;
 
-import static eu.europa.ec.fisheries.uvms.spatial.service.mapper.ConfigurationMapper.*;
+import static eu.europa.ec.fisheries.uvms.spatial.mapper.ConfigurationMapper.*;
 
 @Stateless
 @Transactional

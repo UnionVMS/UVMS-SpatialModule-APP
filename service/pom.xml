@@ -48,11 +48,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.wololo</groupId>
-            <artifactId>jts2geojson</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>message</artifactId>
             <scope>provided</scope>
