@@ -14,11 +14,12 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.vividsolutions.jts.io.ParseException;
 import eu.europa.ec.fisheries.uvms.constants.AuthConstants;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.mapper.GeometryMapper;
 import eu.europa.ec.fisheries.uvms.rest.FeatureToGeoJsonJacksonMapper;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
 import eu.europa.ec.fisheries.uvms.service.interceptor.ValidationInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.model.area.*;
+import eu.europa.ec.fisheries.uvms.spatial.model.area.AreaByCodeJsonPayload;
 import eu.europa.ec.fisheries.uvms.spatial.model.area.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.model.constants.USMSpatial;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
@@ -36,21 +37,17 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.LocationDeta
 import eu.europa.ec.fisheries.uvms.spatial.util.ServiceLayerUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
+
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -93,8 +90,9 @@ public class AreaResource extends UnionVMSResource {
                 locationDetailsGeoJsonDto.removeGeometry();
                 return createSuccessResponse(locationDetailsGeoJsonDto.getProperties());
             }
-            ObjectNode nodes = new FeatureToGeoJsonJacksonMapper().convert(locationDetailsGeoJsonDto.toFeature());
-            return createSuccessResponse(nodes);
+            StringWriter writer = new StringWriter();
+            GeometryMapper.INSTANCE.simpleFeatureToGeoJson(locationDetailsGeoJsonDto.toFeature(), writer);
+            return Response.ok(writer.toString()).build();
         } catch (ServiceException | ParseException | IOException e) {
             throw new ServiceException(e.getMessage(), e);
         }
@@ -107,6 +105,7 @@ public class AreaResource extends UnionVMSResource {
     @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
     public Response getAreaDetails(AreaCoordinateType areaDto) throws ServiceException {
         Response response;
+        StringWriter writer = new StringWriter();
         try {
             if (areaDto.getId() != null) {
 
@@ -116,7 +115,9 @@ public class AreaResource extends UnionVMSResource {
                     areaDetailsGeoJsonDto.removeGeometry();
                     return createSuccessResponse(areaDetailsGeoJsonDto.getProperties());
                 }
-                response = createSuccessResponse(new FeatureToGeoJsonJacksonMapper().convert(areaDetailsGeoJsonDto.toFeature()));
+                GeometryMapper.INSTANCE.simpleFeatureToGeoJson(areaDetailsGeoJsonDto.toFeature(), writer);
+                response = Response.ok(writer.toString()).build();
+
             } else {
                 List<AreaDetails> areaDetailsList = spatialService.getAreaDetailsByLocation(mapper.getAreaTypeEntry(areaDto));
                 AreaDetailsGeoJsonDto areaDetailsGeoJsonDto = mapper.getAreaDetailsDtoForAllAreas(areaDetailsList, areaDto);
@@ -127,7 +128,7 @@ public class AreaResource extends UnionVMSResource {
                 List<ObjectNode> nodeList = new ArrayList<>();
 
                 for (Map<String, Object> featureMap : areaDetailsGeoJsonDto.getAllAreaProperties()) {
-                    ObjectNode convert = new FeatureToGeoJsonJacksonMapper().convert(areaDetailsGeoJsonDto.toFeature(featureMap));
+                    ObjectNode convert = new FeatureToGeoJsonJacksonMapper().convert(areaDetailsGeoJsonDto.toFeature(featureMap)); // TODO remove JacksonMapper
                     nodeList.add(convert);
                 }
                 response = createSuccessResponse(nodeList);
