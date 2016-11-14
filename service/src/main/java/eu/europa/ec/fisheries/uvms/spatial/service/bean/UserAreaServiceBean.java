@@ -31,7 +31,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.UserAre
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.UserAreaGeoJsonDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.service.mapper.UserAreaMapper;
+import eu.europa.ec.fisheries.uvms.spatial.mapper.UserAreaMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.geotools.geometry.jts.WKTReader2;

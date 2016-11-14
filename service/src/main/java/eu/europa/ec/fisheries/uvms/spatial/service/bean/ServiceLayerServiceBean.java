@@ -15,7 +15,7 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.layer.ServiceLayer;
 import eu.europa.ec.fisheries.uvms.spatial.service.ServiceLayerService;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
-import eu.europa.ec.fisheries.uvms.spatial.service.mapper.ServiceLayerMapper;
+import eu.europa.ec.fisheries.uvms.spatial.mapper.ServiceLayerMapper;
 import lombok.extern.slf4j.Slf4j;
 import javax.ejb.EJB;
 import javax.ejb.Local;

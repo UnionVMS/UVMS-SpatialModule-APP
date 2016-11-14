@@ -8,6 +8,8 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
+
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.google.common.collect.Lists;
@@ -18,6 +20,7 @@ import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.interceptors.TracingInterceptor;
+import eu.europa.ec.fisheries.uvms.mapper.GeometryMapper;
 import eu.europa.ec.fisheries.uvms.spatial.dao.AbstractAreaDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.util.DAOFactory;
 import eu.europa.ec.fisheries.uvms.spatial.dao.util.DatabaseDialect;
@@ -646,7 +649,7 @@ public class SpatialServiceBean implements SpatialService {
         GeometryFactory gf = new GeometryFactory();
         Point point = gf.createPoint(new com.vividsolutions.jts.geom.Coordinate(longitude, latitude));
         Geometry geometry = point.buffer(buffer);
-        return new WKTWriter2().write(geometry);
+        return GeometryMapper.INSTANCE.geometryToWkt(geometry).getValue();
 
     }
 
