@@ -21,12 +21,5 @@
 			<column name="is_system_area" value="Y" />
 			<column name="area_type_desc" value="Regional Fisheries Management Organisation" />
 		</insert>
-		<insert tableName="area_types">
-			<column name="service_layer_id" valueNumeric="3" />
-			<column name="type_name" value="COUNTRY" />
-			<column name="area_db_table" value="countries" />
-			<column name="is_system_area" value="N" />
-			<column name="area_type_desc" value="Country" />
-		</insert>
 	</changeSet>
 </databaseChangeLog>
