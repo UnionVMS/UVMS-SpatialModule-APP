@@ -10,11 +10,9 @@
     <include file="schema\tables\report_connect_spatial.xml"/>
     <include file="schema\tables\area_location_types.xml"/>
     <include file="schema\tables\bookmark.xml"/>
-	<include file="schema\tables\countries.xml"/>
     <include file="schema\tables\eez.xml"/>
     <include file="schema\tables\fao.xml"/>
     <include file="schema\tables\gfcm.xml"/>
-	<include file="schema\tables\fmz.xml"/>
 	<include file="schema\tables\geometry_columns.xml"/>	
     <include file="schema\tables\port.xml"/>
 	<include file="schema\tables\port_area.xml"/>
