@@ -25,7 +25,7 @@
 		</insert>
 		
 		<insert tableName="area_location_types">
-			<column name="service_layer_id" valueNumeric="4" />
+			<column name="service_layer_id" valueNumeric="3" />
 			<column name="type_name" value="PORT" />
 			<column name="area_db_table" value="port" />
 			<column name="is_system_wide" value="Y" />
@@ -33,7 +33,7 @@
 			<column name="is_location" value="Y" />
 		</insert>
 		<insert tableName="area_location_types">
-			<column name="service_layer_id" valueNumeric="5" />
+			<column name="service_layer_id" valueNumeric="4" />
 			<column name="type_name" value="USERAREA" />
 			<column name="area_db_table" value="user_areas" />
 			<column name="is_system_wide" value="N" />
@@ -41,7 +41,7 @@
 			<column name="is_location" value="N" />
 		</insert>
 		<insert tableName="area_location_types">
-			<column name="service_layer_id" valueNumeric="6" />
+			<column name="service_layer_id" valueNumeric="5" />
 			<column name="type_name" value="OSM" />
 			<column name="area_db_table" value="NA" />
 			<column name="is_system_wide" value="N" />
@@ -49,7 +49,7 @@
 			<column name="is_location" value="N" />
 		</insert>
 		<insert tableName="area_location_types">
-			<column name="service_layer_id" valueNumeric="7" />
+			<column name="service_layer_id" valueNumeric="6" />
 			<column name="type_name" value="OSEA" />
 			<column name="area_db_table" value="NA" />
 			<column name="is_system_wide" value="N" />
@@ -57,7 +57,7 @@
 			<column name="is_location" value="N" />
 		</insert>
 		<insert tableName="area_location_types">
-			<column name="service_layer_id" valueNumeric="11" />
+			<column name="service_layer_id" valueNumeric="10" />
 			<column name="type_name" value="PORTAREA" />
 			<column name="area_db_table" value="port_area" />
 			<column name="is_system_wide" value="Y" />
@@ -65,7 +65,7 @@
 			<column name="is_location" value="N" />
 		</insert>
 		<insert tableName="area_location_types">
-			<column name="service_layer_id" valueNumeric="12" />
+			<column name="service_layer_id" valueNumeric="11" />
 			<column name="type_name" value="STATRECT" />
 			<column name="area_db_table" value="stat_rect" />
 			<column name="is_system_wide" value="Y" />
@@ -73,7 +73,7 @@
 			<column name="is_location" value="N" />
 		</insert>
 		<insert tableName="area_location_types">
-			<column name="service_layer_id" valueNumeric="13" />
+			<column name="service_layer_id" valueNumeric="12" />
 			<column name="type_name" value="GFCM" />
 			<column name="area_db_table" value="gfcm" />
 			<column name="is_system_wide" value="Y" />
@@ -81,7 +81,7 @@
 			<column name="is_location" value="N" />
 		</insert>
 		<insert tableName="area_location_types">
-			<column name="service_layer_id" valueNumeric="14" />
+			<column name="service_layer_id" valueNumeric="13" />
 			<column name="type_name" value="FAO" />
 			<column name="area_db_table" value="fao" />
 			<column name="is_system_wide" value="Y" />
@@ -90,7 +90,7 @@
 		</insert>
 
 		<insert tableName="area_location_types">
-			<column name="service_layer_id" valueNumeric="8" />
+			<column name="service_layer_id" valueNumeric="7" />
 			<column name="type_name" value="BINGROAD" />
 			<column name="area_db_table" value="NA" />
 			<column name="is_system_wide" value="N" />
@@ -98,7 +98,7 @@
 			<column name="is_location" value="N" />
 		</insert>
 		<insert tableName="area_location_types">
-			<column name="service_layer_id" valueNumeric="9" />
+			<column name="service_layer_id" valueNumeric="8" />
 			<column name="type_name" value="BINGAREAL" />
 			<column name="area_db_table" value="NA" />
 			<column name="is_system_wide" value="N" />
@@ -106,7 +106,7 @@
 			<column name="is_location" value="N" />
 		</insert>
 		<insert tableName="area_location_types">
-			<column name="service_layer_id" valueNumeric="10" />
+			<column name="service_layer_id" valueNumeric="9" />
 			<column name="type_name" value="BINGAREALLABELS" />
 			<column name="area_db_table" value="NA" />
 			<column name="is_system_wide" value="N" />
