@@ -35,20 +35,7 @@
             <column name="style_label_geom" value="rfmo_label_geom" />
 			<column name="subtype" value="sysarea"/>
 		</insert>
-		<insert tableName="service_layer">
-			<column name="name" value="Countries" />
-			<column name="layer_desc" value="Countries" />
-			<column name="provider_format_id" valueNumeric="2" />
-			<column name="geo_name" value="uvms:countries" />
-			<column name="srs_code" valueNumeric="4326" />
-			<column name="short_copyright" value="&amp;copy; &lt;b&gt;Countries&lt;/b&gt;: EuroGeographics for the administrative boundaries." />
-			<column name="long_copyright" value="&amp;copy; EuroGeographics for the administrative boundaries" />
-			<column name="is_internal" value="Y" />
-			<column name="style_geom" value="countries" />
-            <column name="style_label" value="countries_label" />
-            <column name="style_label_geom" value="countries_label_geom" />
-			<column name="subtype" value="others"/>
-		</insert>
+
 		<insert tableName="service_layer">
 			<column name="name" value="Ports" />
 			<column name="layer_desc" value="Ports" />
@@ -172,19 +159,6 @@
             <column name="style_label_geom" value="fao_label_geom"/>
 			<column name="subtype" value="sysarea"/>
 		</insert>
-		<insert tableName="service_layer">
-			<column name="name" value="FMZ" />
-			<column name="layer_desc" value="FMZ areas" />
-			<column name="provider_format_id" valueNumeric="2" />
-			<column name="geo_name" value="uvms:fmz" />
-			<column name="srs_code" valueNumeric="4326" />
-			<column name="short_copyright" value="&amp;copy; &lt;b&gt;FMZ&lt;/b&gt;: European Commission, DG MARE, Master Data Register." />
-			<column name="long_copyright" value="&lt;div&gt; &lt;div class=&quot;copy-message&quot;&gt;&amp;copy; European Commission, DG MARE, Master Data Register &lt;a href=&quot;http://ec.europa.eu/fisheries/cfp/control/codes/index_en.htm&quot; title=&quot;http://ec.europa.eu/fisheries/cfp/control/codes/index_en.htm&quot; target=&quot;_blank&quot;&gt;&lt;i class=&quot;fa fa-external-link&quot;&gt;&lt;/i&gt;&lt;/a&gt;&lt;/div&gt; &lt;div class=&quot;copy-disclaimer&quot;&gt; &lt;div class=&quot;content&quot;&gt;The European Commission maintains this dataset to improve public access to information about its initiatives and EU policies in general. However, the Commission accepts no responsibility or liability whatsoever with regard to the information on this geographical dataset. This information is: &lt;ul&gt; &lt;li&gt;of a general nature only and is not intended to address the specific circumstances of any particular individual or entity&lt;/li&gt; &lt;li&gt;not necessarily comprehensive, complete, accurate or up-to-date&lt;/li&gt; &lt;li&gt;sometimes based on external datasets over which the Commission has no control and for which it assumes no responsibility.&lt;/li&gt; &lt;/ul&gt; We cannot guarantee that the geographical datasets provided exactly reproduce the geographical features described in officially adopted texts. Only EU legislation published in paper editions of the Official Journal of the European Union is deemed authentic. It is our goal to minimize disruption caused by technical errors. However, some data or information in our datasets may have been created or structured in files or formats that contain errors. We cannot guarantee that our data has not been affected by such problems. This disclaimer is not intended to limit the liability of the Commission in contravention of any requirements laid down in applicable national law, nor to exclude its liability for matters which may not be excluded under that law. &lt;/div&gt; &lt;/div&gt; &lt;/div&gt;" />
-			<column name="is_internal" value="Y" />
-			<column name="style_geom" value="fmz"/>
-			<column name="style_label" value="fmz_label"/>
-            <column name="style_label_geom" value="fmz_label_geom"/>
-			<column name="subtype" value="sysarea"/>
-		</insert>
+		
 	</changeSet>
 </databaseChangeLog>

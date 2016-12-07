@@ -7,22 +7,7 @@
       http://lonnyj.github.com/liquibase-spatial/liquibase-spatial.xsd">
 
 	<changeSet author="mkopyczok" id="1439890746709-22" dbms="oracle">
-		<insert tableName="GEOMETRY_COLUMNS">
-			<column name="F_TABLE_SCHEMA" value="SPATIAL" />
-			<column name="F_TABLE_NAME"  value="COUNTRIES" />
-			<column name="F_GEOMETRY_COLUMN" value="GEOM" />
-			<column name="COORD_DIMENSION" valueNumeric="2" />
-			<column name="SRID" valueNumeric="4326" />
-			<column name="TYPE" value="MULTIPOLYGON" />
-		</insert>
-		<insert tableName="GEOMETRY_COLUMNS">
-			<column name="F_TABLE_SCHEMA" value="SPATIAL" />
-			<column name="F_TABLE_NAME"  value="COUNTRIES" />
-			<column name="F_GEOMETRY_COLUMN" value="GEOM_20" />
-			<column name="COORD_DIMENSION" valueNumeric="2" />
-			<column name="SRID" valueNumeric="4326" />
-			<column name="TYPE" value="MULTIPOLYGON" />
-		</insert>		
+	
 		<insert tableName="GEOMETRY_COLUMNS">
 			<column name="F_TABLE_SCHEMA" value="SPATIAL" />
 			<column name="F_TABLE_NAME"  value="EEZ" />
@@ -47,14 +32,7 @@
 			<column name="SRID" valueNumeric="4326" />
 			<column name="TYPE" value="MULTIPOLYGON" />
 		</insert>
-		<insert tableName="GEOMETRY_COLUMNS">
-			<column name="F_TABLE_SCHEMA" value="SPATIAL" />
-			<column name="F_TABLE_NAME"  value="FMZ" />
-			<column name="F_GEOMETRY_COLUMN" value="GEOM" />
-			<column name="COORD_DIMENSION" valueNumeric="2" />
-			<column name="SRID" valueNumeric="4326" />
-			<column name="TYPE" value="MULTIPOLYGON" />
-		</insert>
+
 		<insert tableName="GEOMETRY_COLUMNS">
 			<column name="F_TABLE_SCHEMA" value="SPATIAL" />
 			<column name="F_TABLE_NAME"  value="PORT" />

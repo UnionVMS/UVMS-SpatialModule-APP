@@ -13,9 +13,7 @@
 	
 	<changeSet author="martinhu" id="1436863739768-2" dbms="postgresql">
 		<loadData file="schema/initdata/csv/postgres/eez.csv" tableName="eez"/>
-		<loadData file="schema/initdata/csv/postgres/countries.csv" tableName="countries"/>
 		<loadData file="schema/initdata/csv/postgres/fao.csv" tableName="fao"/>
-		<loadData file="schema/initdata/csv/postgres/fmz.csv" tableName="fmz"/>
 		<loadData file="schema/initdata/csv/postgres/gfcm.csv" tableName="gfcm"/>
 		<loadData file="schema/initdata/csv/postgres/port_area.csv" tableName="port_area"/>
 		<loadData file="schema/initdata/csv/postgres/port.csv" tableName="port"/>
@@ -25,9 +23,7 @@
 	
 	<changeSet author="martinhu" id="1436863739768-2" dbms="oracle">
 		<loadData file="schema/initdata/csv/oracle/eez.csv" tableName="eez"/>
-		<loadData file="schema/initdata/csv/oracle/countries.csv" tableName="countries"/>
 		<loadData file="schema/initdata/csv/oracle/fao.csv" tableName="fao"/>
-		<loadData file="schema/initdata/csv/oracle/fmz.csv" tableName="fmz"/>
 		<loadData file="schema/initdata/csv/oracle/gfcm.csv" tableName="gfcm"/>
 		<loadData file="schema/initdata/csv/oracle/port_area.csv" tableName="port_area"/>
 		<loadData file="schema/initdata/csv/oracle/port.csv" tableName="port"/>
