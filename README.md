@@ -1,0 +1,1 @@
+Before running Maven Liquibase commands, change your current directory to LIQUIBASE!
