@@ -18,6 +18,8 @@ import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Entity
 @Table(name = "gfcm")
@@ -28,6 +30,8 @@ import javax.persistence.Table;
         @NamedQuery(name = GfcmEntity.SEARCH_GFCM, query = "FROM GfcmEntity where (upper(name) like :name OR upper(code) like :code) AND enabled='Y' GROUP BY gid"),
         @NamedQuery(name = GfcmEntity.SEARCH_GFCM_NAMES_BY_CODE, query = "From GfcmEntity where code in (SELECT distinct(code) from GfcmEntity where (upper(name) like :name OR upper(code) like :code) AND enabled='Y' GROUP BY gid)"),
         @NamedQuery(name = GfcmEntity.GFCM_COLUMNS, query = "SELECT gfcm.id as gid, gfcm.name AS name, gfcm.code AS code FROM GfcmEntity AS gfcm WHERE gfcm.id in (:ids)")})
+@EqualsAndHashCode(callSuper = true)
+@Data
 public class GfcmEntity extends BaseAreaEntity {
 
     public static final String DISABLE_GFMC_AREAS = "gfmcEntity.disable";

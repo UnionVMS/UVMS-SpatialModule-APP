@@ -8,6 +8,8 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
+
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -15,6 +17,8 @@ import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
@@ -81,6 +85,8 @@ import java.util.Set;
 @Table(name="user_areas", uniqueConstraints = {
         @UniqueConstraint(columnNames={"name", "user_name"})
 })
+@EqualsAndHashCode(callSuper = true, exclude = "scopeSelection")
+@Data
 public class UserAreasEntity extends BaseAreaEntity {
 
     public static final String USER_AREA_DETAILS_BY_LOCATION = "UserArea.findUserAreaDetailsByLocation";
@@ -157,58 +163,6 @@ public class UserAreasEntity extends BaseAreaEntity {
         super(values, null);
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
-
-    public String getAreaDesc() {
-        return this.areaDesc;
-    }
-
-    public void setAreaDesc(String areaDesc) {
-        this.areaDesc = areaDesc;
-    }
-
-    public Date getCreatedOn() {
-        return this.createdOn;
-    }
-
-    public void setCreatedOn(Date createdOn) {
-        this.createdOn = createdOn;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public Set<UserScopeEntity> getScopeSelection() {
-        return scopeSelection;
-    }
-
     public void setScopeSelection(Set<UserScopeEntity> scopeSelection) {
         if (scopeSelection != null) {
             for (UserScopeEntity userScopeEntity : scopeSelection) {
@@ -217,13 +171,4 @@ public class UserAreasEntity extends BaseAreaEntity {
             this.scopeSelection = scopeSelection;
         }
     }
-
-    public String getDatasetName() {
-        return datasetName;
-    }
-
-    public void setDatasetName(String datasetName) {
-        this.datasetName = datasetName;
-    }
-
 }

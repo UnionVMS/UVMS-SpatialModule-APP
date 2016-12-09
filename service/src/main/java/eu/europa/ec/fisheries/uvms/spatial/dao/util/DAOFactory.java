@@ -8,12 +8,23 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
+
 package eu.europa.ec.fisheries.uvms.spatial.dao.util;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.dao.*;
 import eu.europa.ec.fisheries.uvms.spatial.dao.AbstractAreaDao;
-
+import eu.europa.ec.fisheries.uvms.spatial.dao.EezDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.FaoDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.FmzDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.GfcmDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.PortAreaDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.PortDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.RfmoDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.StatRectDao;
+import eu.europa.ec.fisheries.uvms.spatial.dao.UserAreaDao;
+import java.util.HashMap;
+import java.util.Map;
 import javax.persistence.EntityManager;
 
 public abstract class DAOFactory {
@@ -26,72 +37,25 @@ public abstract class DAOFactory {
 
         AbstractAreaDao dao;
 
-        switch(name){
-            case "eez":
-            case "EEZ":
-            case "Eez":
-                dao = new EezDao(em);
-                break;
-            case "fao":
-            case "FAO":
-            case "Fao":
-                dao = new FaoDao(em);
-                break;
-            case "rfmo":
-            case "RFMO":
-            case "Rfmo":
-                dao = new RfmoDao(em);
-                break;
-            case "port":
-            case "PORT":
-            case "Port":
-                dao = new PortDao(em);
-                break;
-            case "portarea":
-            case "portareas":
-            case "PORTAREA":
-            case "PORTAREAS":
-            case "PORT_AREA":
-            case "PORT_AREAS":
-            case "port_area":
-            case "port_areas":
-            case "PortArea":
-            case "portArea":
-            case "portAreas":
-            case "Port_Area":
-            case "Port_Areas":
-                dao = new PortAreaDao(em);
-                break;
-            case "gfcm":
-            case "GFCM":
-            case "Gfcm":
-                dao = new GfcmDao(em);
-                break;
-            case "statrect":
-            case "STATRECT":
-            case "STAT_RECT":
-            case "StatRect":
-            case "statRect":
-            case "stat_rect":
-            case "Stat_Rect":
-                dao = new StatRectDao(em);
-                break;
-            case "USERAREA":
-            case "userArea":
-            case "userarea":
-            case "UserArea":
-                dao = new UserAreaDao(em);
-                break;
-            case "FMZ":
-            case "fmz":
-            case "Fmz":
-                dao = new FmzDao(em);
-                break;
-            default:
-                throw new ServiceException("Type not supported");
+        Map<String, AbstractAreaDao> daoMap = new HashMap<>();
 
+        daoMap.put("EEZ", new EezDao(em));
+        daoMap.put("FAO", new FaoDao(em));
+        daoMap.put("RFMO", new RfmoDao(em));
+        daoMap.put("PORT", new PortDao(em));
+        daoMap.put("GFCM", new GfcmDao(em));
+        daoMap.put("FMZ", new FmzDao(em));
+        daoMap.put("STATRECT", new StatRectDao(em));
+        daoMap.put("USERAREA", new UserAreaDao(em));
+        daoMap.put("PORTAREA", new PortAreaDao(em));
+
+        dao = daoMap.get(name.toUpperCase());
+
+        if (dao != null) {
+            return dao;
         }
-        return dao;
+        else {
+            throw new ServiceException("DAO NOT FOUND");
+        }
     }
-
 }

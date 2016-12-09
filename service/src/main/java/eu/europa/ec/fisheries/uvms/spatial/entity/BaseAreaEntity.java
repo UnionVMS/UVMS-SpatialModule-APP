@@ -8,6 +8,8 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
+
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import com.google.common.collect.Maps;
@@ -22,6 +24,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasNa
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -40,11 +43,11 @@ import java.util.List;
 import java.util.Map;
 
 @MappedSuperclass
-@ToString
-@EqualsAndHashCode(callSuper = true)
 @Slf4j
 @AttributeOverride(name = "id", column = @Column(name = "GID"))
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+@Data
 public class BaseAreaEntity extends BaseEntity {
 
     private static final String ISO_8859_1 = "ISO-8859-1";
@@ -105,46 +108,6 @@ public class BaseAreaEntity extends BaseEntity {
         // why JPA why
     }
 
-    public Geometry getGeom() {
-        return this.geom;
-    }
-
-    public void setGeom(Geometry geom) {
-        this.geom = geom;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCode() {
-        return this.code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public Boolean getEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public Date getEnabledOn() {
-        return enabledOn;
-    }
-
-    public void setEnabledOn(Date enabledOn) {
-        this.enabledOn = enabledOn;
-    }
-
     protected String readStringProperty(Map<String, Object> values, String propertyName) throws ServiceException {
         try {
             return new String(((String) values.get(propertyName)).getBytes(ISO_8859_1), UTF_8);
@@ -180,8 +143,8 @@ public class BaseAreaEntity extends BaseEntity {
                     if (field.get(this) instanceof Number) {
                         Number numberVal = (Number) field.get(this);
                         value = String.valueOf(numberVal);
-                    } else if ((field.get(this) instanceof Geometry)) {
-                        Geometry geometry = ((Geometry) field.get(this));
+                    } else if (field.get(this) instanceof Geometry) {
+                        Geometry geometry = (Geometry) field.get(this);
                         value = new WKTWriter().write(geometry);
                     } else if (field.get(this) instanceof Date) {
                         value = DateUtils.UI_FORMATTER.print(new DateTime(field.get(this)));

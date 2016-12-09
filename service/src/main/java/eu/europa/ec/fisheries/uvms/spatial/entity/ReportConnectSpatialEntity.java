@@ -8,12 +8,15 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
+
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.CoordinatesFormat;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ScaleBarUnits;
 import lombok.Builder;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import java.io.Serializable;
 import java.util.Set;
@@ -49,7 +52,8 @@ import javax.persistence.Table;
         @NamedQuery(name = ReportConnectSpatialEntity.DELETE_BY_ID_LIST,
                 query = "DELETE FROM ReportConnectSpatialEntity WHERE id IN :idList")
 })
-@EqualsAndHashCode(exclude = {"id", "reportConnectServiceAreases"})
+@EqualsAndHashCode(exclude = {"id", "reportConnectServiceAreas"})
+@Data
 public class ReportConnectSpatialEntity implements Serializable {
 
     public static final String FIND_MAP_PROJ_BY_ID = "ReportLayerConfig.findMapProjectionById";
@@ -103,7 +107,7 @@ public class ReportConnectSpatialEntity implements Serializable {
 	private String appVersion;
 	
 	@OneToMany(orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "reportConnectSpatial", cascade = CascadeType.ALL)
-	private Set<ReportConnectServiceAreasEntity> reportConnectServiceAreases;
+	private Set<ReportConnectServiceAreasEntity> reportConnectServiceAreas;
 
     public ReportConnectSpatialEntity() {
         // why JPA why
@@ -126,119 +130,7 @@ public class ReportConnectSpatialEntity implements Serializable {
         this.scaleBarType = scaleBarType;
         this.styleSettings = styleSettings;
         this.appVersion = appVersion;
-        this.reportConnectServiceAreases = reportConnectServiceAreases;
+        this.reportConnectServiceAreas = reportConnectServiceAreases;
 		this.visibilitySettings = visibilitySettings;
     }
-
-    public Long getId() {
-		return this.id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public ProjectionEntity getProjectionByMapProjId() {
-		return this.projectionByMapProjId;
-	}
-
-	public void setProjectionByMapProjId(ProjectionEntity projectionByMapProjId) {
-		this.projectionByMapProjId = projectionByMapProjId;
-	}
-
-	public ProjectionEntity getProjectionByDisplayProjId() {
-		return this.projectionByDisplayProjId;
-	}
-
-	public void setProjectionByDisplayProjId(ProjectionEntity projectionByDisplayProjId) {
-		this.projectionByDisplayProjId = projectionByDisplayProjId;
-	}
-
-	public Long getReportId() {
-		return this.reportId;
-	}
-
-	public void setReportId(Long reportId) {
-		this.reportId = reportId;
-	}
-
-	public String getMapCenter() {
-		return this.mapCenter;
-	}
-
-	public void setMapCenter(String mapCenter) {
-		this.mapCenter = mapCenter;
-	}
-
-	public Integer getMapZoom() {
-		return this.mapZoom;
-	}
-
-	public void setMapZoom(Integer mapZoom) {
-		this.mapZoom = mapZoom;
-	}
-
-	public String getMeasurementUnits() {
-		return this.measurementUnits;
-	}
-
-	public void setMeasurementUnits(String measurementUnits) {
-		this.measurementUnits = measurementUnits;
-	}
-
-    public CoordinatesFormat getDisplayFormatType() {
-        return displayFormatType;
-    }
-
-    public void setDisplayFormatType(CoordinatesFormat displayFormatType) {
-        this.displayFormatType = displayFormatType;
-    }
-
-    public ScaleBarUnits getScaleBarType() {
-        return scaleBarType;
-    }
-
-    public void setScaleBarType(ScaleBarUnits scaleBarType) {
-        this.scaleBarType = scaleBarType;
-    }
-
-	public String getStyleSettings() {
-		return styleSettings;
-	}
-
-	public void setStyleSettings(String styleSettings) {
-		this.styleSettings = styleSettings;
-	}
-
-	public String getAppVersion() {
-		return this.appVersion;
-	}
-
-	public void setAppVersion(String appVersion) {
-		this.appVersion = appVersion;
-	}
-
-	public Set<ReportConnectServiceAreasEntity> getReportConnectServiceAreases() {
-		return this.reportConnectServiceAreases;
-	}
-
-	public void setReportConnectServiceAreases(Set<ReportConnectServiceAreasEntity> reportConnectServiceAreases) {
-		this.reportConnectServiceAreases = reportConnectServiceAreases;
-	}
-
-	public String getVisibilitySettings() {
-		return visibilitySettings;
-	}
-
-	public void setVisibilitySettings(String visibilitySettings) {
-		this.visibilitySettings = visibilitySettings;
-	}
-
-	public String getReferenceData() {
-		return referenceData;
-	}
-
-	public void setReferenceData(String referenceData) {
-		this.referenceData = referenceData;
-	}
 }

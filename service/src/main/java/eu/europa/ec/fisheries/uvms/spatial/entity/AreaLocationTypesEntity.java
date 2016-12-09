@@ -13,6 +13,7 @@ package eu.europa.ec.fisheries.uvms.spatial.entity;
 import eu.europa.ec.fisheries.uvms.domain.BaseEntity;
 import eu.europa.ec.fisheries.uvms.domain.CharBooleanConverter;
 import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import javax.persistence.Column;
@@ -48,10 +49,9 @@ import javax.persistence.UniqueConstraint;
                 + " INNER JOIN layer.providerFormat as provider WHERE area.isSystemWide = 'N' AND area.isLocation =  'N'"
                 + " AND area.serviceLayer = layer AND area.areaDbTable = 'user_areas' AND layer.providerFormat = provider")
 })
-
-@ToString
-@EqualsAndHashCode(callSuper = true)
 @Table(name = "area_location_types", uniqueConstraints = @UniqueConstraint(columnNames = "type_name"))
+@EqualsAndHashCode(callSuper = true)
+@Data
 public class AreaLocationTypesEntity extends BaseEntity {
 
     public static final String FIND_ALL_IS_LOCATION  = "AreaLocationType.findAllIsLocation";
@@ -86,54 +86,4 @@ public class AreaLocationTypesEntity extends BaseEntity {
     public AreaLocationTypesEntity() {
         // why JPA why
     }
-
-    public ServiceLayerEntity getServiceLayer() {
-        return this.serviceLayer;
-    }
-
-    public void setServiceLayer(ServiceLayerEntity serviceLayer) {
-        this.serviceLayer = serviceLayer;
-    }
-
-    public String getTypeName() {
-        return this.typeName;
-    }
-
-    public void setTypeName(String typeName) {
-        this.typeName = typeName;
-    }
-
-    public String getAreaTypeDesc() {
-        return this.areaTypeDesc;
-    }
-
-    public void setAreaTypeDesc(String areaTypeDesc) {
-        this.areaTypeDesc = areaTypeDesc;
-    }
-
-    public String getAreaDbTable() {
-        return this.areaDbTable;
-    }
-
-    public void setAreaDbTable(String areaDbTable) {
-        this.areaDbTable = areaDbTable;
-    }
-
-    public Boolean getIsSystemWide() {
-        return this.isSystemWide;
-    }
-
-    public void setIsSystemArea(Boolean isSystemWide) {
-        this.isSystemWide = isSystemWide;
-    }
-
-    public Boolean getIsLocation() {
-        return this.isLocation;
-    }
-
-    public void setIsLocation(Boolean isLocation) {
-        this.isLocation = isLocation;
-    }
-
-
 }

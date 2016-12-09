@@ -8,6 +8,8 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
+
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
@@ -20,6 +22,8 @@ import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Entity
 @Table(name = "fmz")
@@ -31,6 +35,8 @@ import javax.persistence.Table;
         @NamedQuery(name = FmzEntity.SEARCH_FMZ_NAMES_BY_CODE, query = "From FmzEntity where code in (SELECT distinct(code) from FmzEntity where (upper(name) like :name OR upper(code) like :code) AND enabled='Y' GROUP BY gid)"),
         @NamedQuery(name = FmzEntity.FMZ_COLUMNS, query = "SELECT fmz.id as gid, fmz.name AS name, fmz.code AS code FROM FmzEntity AS fmz WHERE fmz.id in (:ids)")
 })
+@EqualsAndHashCode(callSuper = true)
+@Data
 public class FmzEntity extends BaseAreaEntity {
 
     public static final String DISABLE = "fmzEntity.disable";
@@ -58,20 +64,4 @@ public class FmzEntity extends BaseAreaEntity {
         super(values, mapping);
     }
 
-
-    public Long getFmzId() {
-        return fmzId;
-    }
-
-    public void setFmzId(Long fmzId) {
-        this.fmzId = fmzId;
-    }
-
-    public String getEdited() {
-        return edited;
-    }
-
-    public void setEdited(String edited) {
-        this.edited = edited;
-    }
 }

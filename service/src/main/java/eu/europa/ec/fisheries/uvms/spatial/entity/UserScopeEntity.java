@@ -8,10 +8,13 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
+
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import eu.europa.ec.fisheries.uvms.domain.BaseEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,8 +25,9 @@ import lombok.ToString;
 
 @Entity
 @Table(name = "user_scope")
-@EqualsAndHashCode(of = {"name"}, callSuper = true)
 @ToString(of = "name")
+@EqualsAndHashCode(of = {"name"}, callSuper = true)
+@Data
 public class UserScopeEntity extends BaseEntity {
 
     @ManyToOne
@@ -33,21 +37,5 @@ public class UserScopeEntity extends BaseEntity {
     @Column(name = "scope_name", nullable = false, length = 255)
     @ColumnAliasName(aliasName ="scope_name")
     private String name;
-
-    public UserAreasEntity getUserAreas() {
-        return userAreas;
-    }
-
-    public void setUserAreas(UserAreasEntity userAreas) {
-        this.userAreas = userAreas;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
 }

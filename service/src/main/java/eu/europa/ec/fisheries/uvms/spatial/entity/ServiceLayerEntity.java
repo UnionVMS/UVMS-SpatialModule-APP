@@ -8,6 +8,8 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
+
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import eu.europa.ec.fisheries.uvms.domain.CharBooleanConverter;
@@ -30,6 +32,8 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.LayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.StylesDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.ReferenceDataPropertiesDto;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.StringUtils;
 
 @Entity
@@ -49,6 +53,8 @@ import org.apache.commons.lang3.StringUtils;
         @NamedQuery(name = ServiceLayerEntity.BY_AREA_LOCATION_TYPE,
                 query = "FROM ServiceLayerEntity serviceLayer WHERE upper(serviceLayer.areaType.typeName) = upper(:typeName)")
 })
+@EqualsAndHashCode(callSuper = true, exclude = "reportConnectServiceAreas")
+@Data
 public class ServiceLayerEntity extends BaseEntity {
 
     public static final String BY_LOCATION_TYPE = "ServiceLayer.byLocationType";
@@ -108,137 +114,5 @@ public class ServiceLayerEntity extends BaseEntity {
 
     public ServiceLayerEntity() {
         // why JPA why
-    }
-
-    public ProviderFormatEntity getProviderFormat() {
-        return this.providerFormat;
-    }
-
-    public void setProviderFormat(ProviderFormatEntity providerFormat) {
-        this.providerFormat = providerFormat;
-    }
-
-    public Long getUserId() {
-        return this.userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getLayerDesc() {
-        return this.layerDesc;
-    }
-
-    public void setLayerDesc(String layerDesc) {
-        this.layerDesc = layerDesc;
-    }
-
-    public String getServiceUrl() {
-        return this.serviceUrl;
-    }
-
-    public void setServiceUrl(String serviceUrl) {
-        this.serviceUrl = serviceUrl;
-    }
-
-    public String getGeoName() {
-        return this.geoName;
-    }
-
-    public void setGeoName(String geoName) {
-        this.geoName = geoName;
-    }
-
-    public Integer getSrsCode() {
-        return this.srsCode;
-    }
-
-    public void setSrsCode(Integer srsCode) {
-        this.srsCode = srsCode;
-    }
-
-    public String getShortCopyright() {
-        return this.shortCopyright;
-    }
-
-    public void setShortCopyright(String shortCopyright) {
-        this.shortCopyright = shortCopyright;
-    }
-
-    public String getLongCopyright() {
-        return this.longCopyright;
-    }
-
-    public void setLongCopyright(String longCopyright) {
-        this.longCopyright = longCopyright;
-    }
-
-    public Boolean getIsInternal() {
-        return this.isInternal;
-    }
-
-    public void setIsInternal(Boolean isInternal) {
-        this.isInternal = isInternal;
-    }
-
-    public String getStyleGeom() {
-		return styleGeom;
-	}
-
-	public void setStyleGeom(String styleGeom) {
-		this.styleGeom = styleGeom;
-	}
-
-	public String getStyleLabel() {
-		return styleLabel;
-	}
-
-	public void setStyleLabel(String styleLabel) {
-		this.styleLabel = styleLabel;
-	}
-
-	public String getStyleLabelGeom() {
-		return styleLabelGeom;
-	}
-
-	public void setStyleLabelGeom(String styleLabelGeom) {
-		this.styleLabelGeom = styleLabelGeom;
-	}
-
-	public AreaLocationTypesEntity getAreaType() {
-        return this.areaType;
-    }
-
-    public void setAreaType(AreaLocationTypesEntity areaType) {
-        this.areaType = areaType;
-    }
-
-    public String getSubType() {
-        return subType;
-    }
-
-    public void setSubType(String subType) {
-        this.subType = subType;
-    }
-
-    public Set<ReportConnectServiceAreasEntity> getReportConnectServiceAreas() {
-        return this.reportConnectServiceAreas;
-    }
-
-    public void setReportConnectServiceAreas(Set<ReportConnectServiceAreasEntity> reportConnectServiceAreas) {
-        this.reportConnectServiceAreas = reportConnectServiceAreas;
-    }
-
-    public boolean isStyleEmpty() {
-        return (StringUtils.isEmpty(styleGeom) && StringUtils.isEmpty(styleLabel) && StringUtils.isEmpty(styleLabelGeom));
     }
 }

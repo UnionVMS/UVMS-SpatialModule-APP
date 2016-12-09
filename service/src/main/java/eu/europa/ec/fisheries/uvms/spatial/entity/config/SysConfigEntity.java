@@ -8,9 +8,12 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
+
 package eu.europa.ec.fisheries.uvms.spatial.entity.config;
 
 import eu.europa.ec.fisheries.uvms.domain.BaseEntity;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
@@ -19,32 +22,19 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "system_configurations", schema = "spatial")
-@EqualsAndHashCode(callSuper = true)
 @NamedQueries({
         @NamedQuery(name= SysConfigEntity.FIND_CONFIG_BY_NAME,
         query = "FROM SysConfigEntity config WHERE config.name = :name")
 })
+@EqualsAndHashCode(callSuper = true)
+@Data
 public class SysConfigEntity extends BaseEntity {
 
-    public static final String FIND_CONFIG_BY_NAME = "SysConfig.findConfigById";
-    public static final String FIND_CONFIG = "SysConfig.findConfig";
+    public static final String FIND_CONFIG_BY_NAME = "sysConfig.findById";
+    public static final String FIND_CONFIG = "sysConfig.find";
 
     private String name;
+
     private String value;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
 }
