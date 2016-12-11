@@ -23,15 +23,41 @@ import eu.europa.ec.fisheries.uvms.spatial.dao.PortDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.RfmoDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.StatRectDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.UserAreaDao;
+import eu.europa.ec.fisheries.uvms.spatial.entity.BaseAreaEntity;
 import org.apache.commons.collections.keyvalue.MultiKey;
 import org.apache.commons.collections.map.MultiKeyMap;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.persistence.EntityManager;
 
 public abstract class DAOFactory {
+
+    private static Map<String, Class> syncMap;
+
+    static {
+
+        Map<String, Class> map = new HashMap<>();
+
+        map.put("EEZ", EezDao.class);
+        map.put("FAO", FaoDao.class);
+        map.put("RFMO", RfmoDao.class);
+        map.put("PORT", PortDao.class);
+        map.put("GFCM", GfcmDao.class);
+        map.put("FMZ", FmzDao.class);
+        map.put("STATRECT", StatRectDao.class);
+        map.put("STAT_RECT", StatRectDao.class);
+        map.put("USERAREA", UserAreaDao.class);
+        map.put("PORTAREA", PortAreaDao.class);
+        map.put("PORT_AREA", PortAreaDao.class);
+        map.put("PORTAREAS", PortAreaDao.class);
+        map.put("PORT_AREAS", PortAreaDao.class);
+
+        syncMap = Collections.synchronizedMap(map);
+    }
 
     private DAOFactory() {
 
@@ -41,29 +67,12 @@ public abstract class DAOFactory {
 
         AbstractAreaDao dao;
 
-        Map<String, AbstractAreaDao> daoMap = new ConcurrentHashMap<>();
-
-        daoMap.put("EEZ", new EezDao(em));
-        daoMap.put("FAO", new FaoDao(em));
-        daoMap.put("RFMO", new RfmoDao(em));
-        daoMap.put("PORT", new PortDao(em));
-        daoMap.put("GFCM", new GfcmDao(em));
-        daoMap.put("FMZ", new FmzDao(em));
-        daoMap.put("STATRECT", new StatRectDao(em));
-        daoMap.put("STAT_RECT", new StatRectDao(em));
-        daoMap.put("USERAREA", new UserAreaDao(em));
-        daoMap.put("PORTAREA", new PortAreaDao(em));
-        daoMap.put("PORT_AREA", new PortAreaDao(em));
-        daoMap.put("PORTAREAS", new PortAreaDao(em));
-        daoMap.put("PORT_AREAS", new PortAreaDao(em));
-
-        dao = daoMap.get(name.toUpperCase());
-
-        if (dao != null) {
-            return dao;
-        }
-        else {
+        try {
+            dao = (AbstractAreaDao) syncMap.get(name.toUpperCase()).getDeclaredConstructor(EntityManager.class).newInstance(em);
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             throw new ServiceException("DAO NOT FOUND");
         }
+
+        return dao;
     }
 }
