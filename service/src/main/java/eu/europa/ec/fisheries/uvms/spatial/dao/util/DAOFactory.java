@@ -23,8 +23,12 @@ import eu.europa.ec.fisheries.uvms.spatial.dao.PortDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.RfmoDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.StatRectDao;
 import eu.europa.ec.fisheries.uvms.spatial.dao.UserAreaDao;
+import org.apache.commons.collections.keyvalue.MultiKey;
+import org.apache.commons.collections.map.MultiKeyMap;
+
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.persistence.EntityManager;
 
 public abstract class DAOFactory {
@@ -37,7 +41,7 @@ public abstract class DAOFactory {
 
         AbstractAreaDao dao;
 
-        Map<String, AbstractAreaDao> daoMap = new HashMap<>();
+        Map<String, AbstractAreaDao> daoMap = new ConcurrentHashMap<>();
 
         daoMap.put("EEZ", new EezDao(em));
         daoMap.put("FAO", new FaoDao(em));
@@ -46,8 +50,12 @@ public abstract class DAOFactory {
         daoMap.put("GFCM", new GfcmDao(em));
         daoMap.put("FMZ", new FmzDao(em));
         daoMap.put("STATRECT", new StatRectDao(em));
+        daoMap.put("STAT_RECT", new StatRectDao(em));
         daoMap.put("USERAREA", new UserAreaDao(em));
         daoMap.put("PORTAREA", new PortAreaDao(em));
+        daoMap.put("PORT_AREA", new PortAreaDao(em));
+        daoMap.put("PORTAREAS", new PortAreaDao(em));
+        daoMap.put("PORT_AREAS", new PortAreaDao(em));
 
         dao = daoMap.get(name.toUpperCase());
 
