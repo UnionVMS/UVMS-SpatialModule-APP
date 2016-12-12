@@ -110,6 +110,6 @@ public class ServiceLayerEntity extends BaseEntity {
     private Set<ReportConnectServiceAreasEntity> reportConnectServiceAreas;
 
     public ServiceLayerEntity() {
-        // why JPA why
+        // why JPA why.
     }
 }
