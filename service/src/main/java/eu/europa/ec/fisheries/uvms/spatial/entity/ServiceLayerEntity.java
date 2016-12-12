@@ -58,7 +58,6 @@ public class ServiceLayerEntity extends BaseEntity {
     public static final String BY_LOCATION_TYPE = "ServiceLayer.byLocationType";
     public static final String FIND_SERVICE_LAYERS_BY_ID ="ReportLayerConfig.findServiceLayerById";
     public static final String BY_AREA_LOCATION_TYPE = "ServiceLayer.byAreaLocationType";
-    private static final String GEOSERVER = "geoserver";
 
     @ManyToOne
     @JoinColumn(name = "provider_format_id", nullable = false)
