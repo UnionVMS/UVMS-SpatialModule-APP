@@ -35,7 +35,7 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntit
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.config.SysConfigEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.SysConfigEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.bookmark.Bookmark;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;

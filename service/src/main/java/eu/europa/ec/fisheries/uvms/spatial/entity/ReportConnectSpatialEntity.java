@@ -12,7 +12,6 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
-import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.CoordinatesFormat;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ScaleBarUnits;
 import lombok.Builder;
@@ -45,7 +44,7 @@ import javax.persistence.Table;
 						"WHERE rcs.reportId = :reportId"),
 		@NamedQuery(name = ReportConnectSpatialEntity.FIND_BY_REPORT_ID,
 				query = "FROM ReportConnectSpatialEntity WHERE reportId = :reportId"),
-		@NamedQuery(name = QueryNameConstants.FIND_BY_ID,
+		@NamedQuery(name = ReportConnectSpatialEntity.FIND_BY_ID,
 				query = "FROM ReportConnectSpatialEntity WHERE reportId = :reportId AND id = :id"),
 		@NamedQuery(name = ReportConnectSpatialEntity.FIND_BY_REPORT_CONNECT_ID,
 				query = "FROM ReportConnectSpatialEntity WHERE id = :id"),
@@ -56,7 +55,8 @@ import javax.persistence.Table;
 @Data
 public class ReportConnectSpatialEntity implements Serializable {
 
-    public static final String FIND_MAP_PROJ_BY_ID = "ReportLayerConfig.findMapProjectionById";
+    public static final String FIND_BY_ID = "reportConnectSpatialEntity.findById";
+    public static final String FIND_MAP_PROJ_BY_ID = "reportConnectSpatialEntity.findMapProjectionById";
     public static final String DELETE_BY_ID_LIST = "reportConnectSpatialEntity.deleteByIdList";
 	public static final String FIND_BY_REPORT_CONNECT_ID = "reportConnectSpatialEntity.findByReportConnectId";
     public static final String FIND_BY_REPORT_ID = "ReportLayerConfig.findByReportId";

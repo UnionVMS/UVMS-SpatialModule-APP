@@ -8,10 +8,18 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
+
 package eu.europa.ec.fisheries.uvms.spatial.util;
 
-import eu.europa.ec.fisheries.uvms.spatial.entity.*;
-import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
+import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.FaoEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.FmzEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.GfcmEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.PortAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.RfmoEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.StatRectEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 
 public enum SpatialTypeEnum {
 	

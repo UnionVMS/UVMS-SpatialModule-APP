@@ -14,14 +14,22 @@ package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.Where;
-
-import javax.persistence.*;
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
@@ -51,17 +59,17 @@ import java.util.Set;
                 query = "SELECT area FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection WHERE area.id = :userAreaId AND ((1=:isPowerUser) OR (area.userName=:userName OR scopeSelection.name=:scopeName))"),
         @NamedQuery(name = UserAreasEntity.USERAREA_COLUMNS,
                 query = "SELECT userArea.id as gid, userArea.name as name, userArea.areaDesc as desc FROM UserAreasEntity AS userArea WHERE userArea.id in (:ids)"),
-        @NamedQuery(name = QueryNameConstants.FIND_ALL_USER_AREAS,
+        @NamedQuery(name = UserAreasEntity.FIND_ALL_USER_AREAS,
                 query = "SELECT DISTINCT area.id as gid, area.name as name, area.areaDesc as desc FROM UserAreasEntity area " +
                         "LEFT JOIN area.scopeSelection scope WHERE area.userName = :userName OR scope.name = :scopeName"),
-        @NamedQuery(name = QueryNameConstants.FIND_ALL_USER_AREAS_BY_GIDS,
+        @NamedQuery(name = UserAreasEntity.FIND_ALL_USER_AREAS_BY_GIDS,
                 query = "SELECT area.id as gid, area.name as name, area.areaDesc as desc FROM UserAreasEntity area WHERE area.id IN (:gids)"),
         @NamedQuery(name = UserAreasEntity.FIND_USER_AREA_BY_USER,
                 query = "SELECT DISTINCT area " +
                         "FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection " +
                         "WHERE area.type<>'' AND area.type <> null AND ((1=:isPowerUser) " +
                         "OR (area.userName=:userName OR scopeSelection.name=:scopeName))"), // TODO Test distinct (distinct can be deleted in this case)
-        @NamedQuery(name = QueryNameConstants.FIND_ALL_USER_AREAS_GROUP,
+        @NamedQuery(name = UserAreasEntity.FIND_ALL_USER_AREAS_GROUP,
                 query = "SELECT DISTINCT area.type as name FROM UserAreasEntity area " +
                         "LEFT JOIN area.scopeSelection scope WHERE (area.userName = :userName OR (scope.name = :scopeName AND scope.userAreas = area))"),
         @NamedQuery(name = UserAreasEntity.FIND_GID_FOR_SHARED_AREA,
@@ -89,6 +97,9 @@ import java.util.Set;
 @Data
 public class UserAreasEntity extends BaseAreaEntity {
 
+    public static final String FIND_ALL_USER_AREAS = "userArea.findAllUserAreas";
+    public static final String FIND_ALL_USER_AREAS_GROUP = "userArea.findAllUserAreaGroup";
+    public static final String FIND_ALL_USER_AREAS_BY_GIDS = "userAreas.findAllUserAreasByGid";
     public static final String USER_AREA_DETAILS_BY_LOCATION = "UserArea.findUserAreaDetailsByLocation";
     public static final String USER_AREA_BY_COORDINATE = "userAreasEntity.ByCoordinate";
     public static final String FIND_GID_FOR_SHARED_AREA = "userAreasEntity.findGidForSharedAreas";

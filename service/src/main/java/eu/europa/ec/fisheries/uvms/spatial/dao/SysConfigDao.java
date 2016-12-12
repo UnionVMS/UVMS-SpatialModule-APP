@@ -12,14 +12,14 @@ package eu.europa.ec.fisheries.uvms.spatial.dao;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
-import eu.europa.ec.fisheries.uvms.spatial.entity.config.SysConfigEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.SysConfigEntity;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
 
 import static eu.europa.ec.fisheries.uvms.service.QueryParameter.*;
-import static eu.europa.ec.fisheries.uvms.spatial.entity.config.SysConfigEntity.*;
+import static eu.europa.ec.fisheries.uvms.spatial.entity.SysConfigEntity.*;
 
 public class SysConfigDao extends AbstractDAO<SysConfigEntity> {
 
