@@ -30,22 +30,48 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveOrUpdateMapC
 import eu.europa.ec.fisheries.uvms.spatial.service.MapConfigService;
 import eu.europa.ec.fisheries.uvms.spatial.service.ReportingService;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.*;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ConfigDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ControlDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.DisplayProjectionDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.LayerDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.MapConfigDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.MapDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.RefreshDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ServiceLayersDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.TbControlDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.VectorStylesDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.*;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.ConfigurationDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.LayerAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.LayerSettingsDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.LayersDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.ReferenceDataPropertiesDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.ReportProperties;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.StyleSettingsDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.SystemSettingsDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.VisibilitySettingsDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.helper.MapConfigHelper;
 import eu.europa.ec.fisheries.uvms.spatial.mapper.MapConfigMapper;
 import eu.europa.ec.fisheries.uvms.spatial.mapper.ProjectionMapper;
 import eu.europa.ec.fisheries.uvms.spatial.util.AreaTypeEnum;
 import eu.europa.ec.fisheries.uvms.spatial.util.LayerTypeEnum;
 import eu.europa.ec.fisheries.uvms.spatial.validator.SpatialValidator;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.transaction.Transactional;
-import java.util.*;
 
 import static eu.europa.ec.fisheries.uvms.spatial.mapper.ConfigurationMapper.*;
 
@@ -89,7 +115,7 @@ public class MapConfigServiceBean implements MapConfigService {
             }
 
             if (entity != null) {
-                repository.deleteReportConnectServiceAreas(entity.getReportConnectServiceAreases());
+                repository.deleteReportConnectServiceAreas(entity.getReportConnectServiceAreas());
                 repository.deleteEntity(entity);
             }
         }
@@ -107,7 +133,7 @@ public class MapConfigServiceBean implements MapConfigService {
         mapConfigurationType.setVisibilitySettings(MapConfigMapper.INSTANCE.getVisibilitySettingsType(visibilitySettings));
         StyleSettingsDto styleSettingsDto = MapConfigHelper.getStyleSettings(entity.getStyleSettings());
         mapConfigurationType.setStyleSettings(MapConfigMapper.INSTANCE.getStyleSettingsType(styleSettingsDto));
-        LayerSettingsDto layerSettingsDto = MapConfigHelper.getLayerSettingsForMap(entity.getReportConnectServiceAreases());
+        LayerSettingsDto layerSettingsDto = MapConfigHelper.getLayerSettingsForMap(entity.getReportConnectServiceAreas());
         updateLayerSettings(layerSettingsDto, null, false, permittedServiceLayers);
         mapConfigurationType.setLayerSettings(MapConfigMapper.INSTANCE.getLayerSettingsType(layerSettingsDto));
         Map<String, ReferenceDataPropertiesDto> referenceData = MapConfigHelper.getReferenceDataSettings(entity.getReferenceData());
@@ -277,7 +303,7 @@ public class MapConfigServiceBean implements MapConfigService {
         if (entity != null) {
             entity.setScaleBarType(request.getMapConfiguration().getScaleBarUnits());
             entity.setDisplayFormatType(request.getMapConfiguration().getCoordinatesFormat());
-            repository.deleteReportConnectServiceAreas(entity.getReportConnectServiceAreases());
+            repository.deleteReportConnectServiceAreas(entity.getReportConnectServiceAreas());
         } else {
             entity = ReportConnectSpatialMapper.INSTANCE.mapConfigurationTypeToReportConnectSpatialEntity(request.getMapConfiguration());
         }
@@ -303,13 +329,13 @@ public class MapConfigServiceBean implements MapConfigService {
         }
         Set<ReportConnectServiceAreasEntity> serviceAreas = createReportConnectServiceAreas(request, entity, layerSettingsDto);
         if (serviceAreas != null && !serviceAreas.isEmpty()) {
-            Set<ReportConnectServiceAreasEntity> areas = entity.getReportConnectServiceAreases();
+            Set<ReportConnectServiceAreasEntity> areas = entity.getReportConnectServiceAreas();
             if (areas == null) {
-                entity.setReportConnectServiceAreases(serviceAreas);
+                entity.setReportConnectServiceAreas(serviceAreas);
             } else {
                 areas.clear();
                 areas.addAll(serviceAreas);
-                entity.setReportConnectServiceAreases(areas);
+                entity.setReportConnectServiceAreas(areas);
             }
         } else {
             clearReportConectServiceAreas(entity);
@@ -317,10 +343,10 @@ public class MapConfigServiceBean implements MapConfigService {
     }
 
     private void clearReportConectServiceAreas(ReportConnectSpatialEntity entity) {
-        Set<ReportConnectServiceAreasEntity> areas = entity.getReportConnectServiceAreases();
+        Set<ReportConnectServiceAreasEntity> areas = entity.getReportConnectServiceAreas();
         if(areas != null) {
             areas.clear();
-            entity.setReportConnectServiceAreases(areas);
+            entity.setReportConnectServiceAreas(areas);
         }
     }
 
@@ -486,12 +512,12 @@ public class MapConfigServiceBean implements MapConfigService {
         if (reportId != null) {
             entity = repository.findReportConnectSpatialByReportId((long) reportId);
         }
-        LayerSettingsDto layerSettingsDto = null;
-        Map<String, ReferenceDataPropertiesDto> referenceData = null;
+        LayerSettingsDto layerSettingsDto;
+        Map<String, ReferenceDataPropertiesDto> referenceData;
 
         if (entity != null) {
-            layerSettingsDto = (entity.getReportConnectServiceAreases() != null && !entity.getReportConnectServiceAreases().isEmpty()) ?
-                    MapConfigHelper.getLayerSettingsForMap(entity.getReportConnectServiceAreases()) : configurationDto.getLayerSettings();
+            layerSettingsDto = (entity.getReportConnectServiceAreas() != null && !entity.getReportConnectServiceAreas().isEmpty()) ?
+                    MapConfigHelper.getLayerSettingsForMap(entity.getReportConnectServiceAreas()) : configurationDto.getLayerSettings();
             referenceData = entity.getReferenceData() != null ?
                     MapConfigHelper.getReferenceDataSettings(entity.getReferenceData()) : configurationDto.getReferenceData();
         } else {

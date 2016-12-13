@@ -14,12 +14,10 @@ import com.google.common.collect.ImmutableMap;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
-
 import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Map;
@@ -58,7 +56,7 @@ public class ReportConnectSpatialDao extends AbstractDAO<ReportConnectSpatialEnt
 
     public List<ReportConnectSpatialEntity> findByReportIdAndConnectId(Long reportId, Long id) throws ServiceException {
         return findEntityByNamedQuery(
-                ReportConnectSpatialEntity.class, QueryNameConstants.FIND_BY_ID,
+                ReportConnectSpatialEntity.class, ReportConnectSpatialEntity.FIND_BY_ID,
                 with(REPORT_ID, reportId).and("id", id).parameters(), 1
         );
     }

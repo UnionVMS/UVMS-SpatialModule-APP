@@ -15,7 +15,6 @@ import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.QueryParameter;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadMappingProperty;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaDto;
 import org.apache.commons.collections.CollectionUtils;
@@ -23,7 +22,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
-
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import java.util.ArrayList;
@@ -105,14 +103,14 @@ public class UserAreaDao extends AbstractAreaDao<UserAreasEntity> {
 
     public List<AreaDto> getAllUserAreas(String userName, String scopeName) {
         Map<String, Object> parameters = ImmutableMap.<String, Object>builder().put(USER_NAME, userName).put(SCOPE_NAME, scopeName).build();
-        Query query = createNamedNativeQuery(QueryNameConstants.FIND_ALL_USER_AREAS, parameters);
+        Query query = createNamedNativeQuery(UserAreasEntity.FIND_ALL_USER_AREAS, parameters);
         query.setResultTransformer(Transformers.aliasToBean(AreaDto.class));
         return query.list();
     }
 
     public List<AreaDto> getAllUserAreaGroupName(String userName, String scopeName) {
         Map<String, Object> parameters = ImmutableMap.<String, Object>builder().put(USER_NAME, userName).put(SCOPE_NAME, scopeName).build();
-        Query query = createNamedNativeQuery(QueryNameConstants.FIND_ALL_USER_AREAS_GROUP, parameters);
+        Query query = createNamedNativeQuery(UserAreasEntity.FIND_ALL_USER_AREAS_GROUP, parameters);
         query.setResultTransformer(Transformers.aliasToBean(AreaDto.class));
         return query.list();
     }
@@ -124,7 +122,7 @@ public class UserAreaDao extends AbstractAreaDao<UserAreasEntity> {
     }
 
     public List<AreaDto> findAllUserAreasByGids(List<Long> gids) {
-        Query query = getSession().getNamedQuery(QueryNameConstants.FIND_ALL_USER_AREAS_BY_GIDS);
+        Query query = getSession().getNamedQuery(UserAreasEntity.FIND_ALL_USER_AREAS_BY_GIDS);
         query.setParameterList(GID_LIST, gids);
         query.setResultTransformer(Transformers.aliasToBean( AreaDto.class));
         return query.list();

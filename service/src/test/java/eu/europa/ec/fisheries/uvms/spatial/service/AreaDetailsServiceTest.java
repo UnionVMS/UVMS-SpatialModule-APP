@@ -225,7 +225,7 @@ public class AreaDetailsServiceTest extends BaseUnitilsTest {
         eezEntity.setCode("iso3digit");
         eezEntity.setLatitude(345.60);
         eezEntity.setLongitude(234.54);
-        eezEntity.setMrgid(new BigDecimal("100"));
+        eezEntity.setMrGid(new BigDecimal("100"));
         eezEntity.setMrgidEez(123L);
         eezEntity.setRemarks("This is Test");
         eezEntity.setSovereign("Test");

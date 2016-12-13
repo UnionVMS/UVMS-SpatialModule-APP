@@ -8,6 +8,8 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
+
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
@@ -18,6 +20,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import java.util.Map;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Entity
 @NamedQueries({
@@ -28,6 +32,8 @@ import java.util.Map;
         @NamedQuery(name = PortAreasEntity.SEARCH_PORT_AREA_NAMES_BY_CODE, query = "From PortAreasEntity where code in (SELECT distinct(code) from PortAreasEntity where (upper(name) like :name OR upper(code) like :code) AND enabled='Y' GROUP BY gid)"),
         @NamedQuery(name = PortAreasEntity.PORTAREA_COLUMNS, query = "SELECT portarea.id as gid, portarea.name AS name, portarea.code AS code FROM PortAreasEntity AS portarea WHERE portarea.id in (:ids)")})
 @Table(name = "port_area")
+@EqualsAndHashCode(callSuper = true)
+@Data
 public class PortAreasEntity extends BaseAreaEntity {
 
     public static final String PORT_AREA_BY_COORDINATE = "portEntity.PortAreaByCoordinate";

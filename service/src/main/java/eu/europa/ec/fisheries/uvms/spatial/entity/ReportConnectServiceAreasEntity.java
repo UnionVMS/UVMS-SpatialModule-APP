@@ -8,10 +8,13 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
+
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import eu.europa.ec.fisheries.uvms.domain.BaseEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.LayerDto;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -30,6 +33,7 @@ import javax.persistence.Table;
 				query = "DELETE FROM ReportConnectServiceAreasEntity rcsa WHERE rcsa.id = :id")
 })
 @EqualsAndHashCode(callSuper = false)
+@Data
 public class ReportConnectServiceAreasEntity extends BaseEntity implements Comparable<ReportConnectServiceAreasEntity> {
 
     public static final String DELETE_BY_REPORT_CONNECT_SPATIAL_ID = "ReportLayerConfig.deleteByReportConnectSpatialId";
@@ -58,54 +62,6 @@ public class ReportConnectServiceAreasEntity extends BaseEntity implements Compa
 	public ReportConnectServiceAreasEntity() {
         // why JPA why
     }
-
-	public ReportConnectSpatialEntity getReportConnectSpatial() {
-		return this.reportConnectSpatial;
-	}
-
-	public void setReportConnectSpatial(ReportConnectSpatialEntity reportConnectSpatial) {
-		this.reportConnectSpatial = reportConnectSpatial;
-	}
-
-	public ServiceLayerEntity getServiceLayer() {
-		return this.serviceLayer;
-	}
-
-	public void setServiceLayer(ServiceLayerEntity serviceLayer) {
-		this.serviceLayer = serviceLayer;
-	}
-
-	public String getSqlFilter() {
-		return this.sqlFilter;
-	}
-
-	public void setSqlFilter(String sqlFilter) {
-		this.sqlFilter = sqlFilter;
-	}
-
-	public int getLayerOrder() {
-		return this.layerOrder;
-	}
-
-	public void setLayerOrder(int layerOrder) {
-		this.layerOrder = layerOrder;
-	}
-
-	public String getLayerType() {
-		return layerType;
-	}
-
-	public void setLayerType(String layerType) {
-		this.layerType = layerType;
-	}
-
-	public String getAreaType() {
-		return areaType;
-	}
-
-	public void setAreaType(String areaType) {
-		this.areaType = areaType;
-	}
 
 	@Override
 	public int compareTo(ReportConnectServiceAreasEntity reportConnectServiceArea) {

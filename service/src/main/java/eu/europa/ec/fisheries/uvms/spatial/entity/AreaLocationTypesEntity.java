@@ -8,13 +8,14 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
+
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import eu.europa.ec.fisheries.uvms.domain.BaseEntity;
 import eu.europa.ec.fisheries.uvms.domain.CharBooleanConverter;
-import eu.europa.ec.fisheries.uvms.spatial.entity.util.QueryNameConstants;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -43,19 +44,19 @@ import javax.persistence.UniqueConstraint;
                 + " provider.serviceType as serviceType FROM AreaLocationTypesEntity as area INNER JOIN area.serviceLayer as layer"
                 + " INNER JOIN layer.providerFormat as provider WHERE area.isSystemWide = 'Y'"
                 + " AND area.serviceLayer = layer AND layer.providerFormat = provider"),
-        @NamedQuery(name = QueryNameConstants.FIND_USER_AREA_LAYER, query = "SELECT area.typeName as typeName, layer.geoName as geoName, layer.isInternal as isInternal, layer.serviceUrl as serviceUrl, layer.styleLabelGeom as style,"
+        @NamedQuery(name = AreaLocationTypesEntity.FIND_USER_AREA_LAYER, query = "SELECT area.typeName as typeName, layer.geoName as geoName, layer.isInternal as isInternal, layer.serviceUrl as serviceUrl, layer.styleLabelGeom as style,"
                 + " provider.serviceType as serviceType FROM AreaLocationTypesEntity as area INNER JOIN area.serviceLayer as layer"
                 + " INNER JOIN layer.providerFormat as provider WHERE area.isSystemWide = 'N' AND area.isLocation =  'N'"
                 + " AND area.serviceLayer = layer AND area.areaDbTable = 'user_areas' AND layer.providerFormat = provider")
 })
-
-@ToString
-@EqualsAndHashCode(callSuper = true)
 @Table(name = "area_location_types", uniqueConstraints = @UniqueConstraint(columnNames = "type_name"))
+@EqualsAndHashCode(callSuper = true)
+@Data
 public class AreaLocationTypesEntity extends BaseEntity {
 
-    public static final String FIND_ALL_IS_LOCATION  = "AreaLocationType.findAllIsLocation";
-    public static final String FIND_TYPE_BY_NAME = "AreaLocationType.findAreaByName";
+    public static final String FIND_USER_AREA_LAYER = "areaLocationType.findUserAreaLayerMappings";
+    public static final String FIND_ALL_IS_LOCATION  = "areaLocationType.findAllIsLocation";
+    public static final String FIND_TYPE_BY_NAME = "areaLocationType.findAreaByName";
     public static final String FIND_ALL_IS_LOCATION_IS_SYSTEM_WIDE = "AreaLocationType.findAllByIsLocationIsSystemWide";
     public static final String FIND_SYSTEM_AREA_LAYER = "AreaLocationType.findSystemAreaLayerMappings";
     public static final String FIND_SYSTEM_AREA_AND_LOCATION_LAYER = "AreaLocationType.findSystemAreaAndLocationLayerMappings";
@@ -86,54 +87,4 @@ public class AreaLocationTypesEntity extends BaseEntity {
     public AreaLocationTypesEntity() {
         // why JPA why
     }
-
-    public ServiceLayerEntity getServiceLayer() {
-        return this.serviceLayer;
-    }
-
-    public void setServiceLayer(ServiceLayerEntity serviceLayer) {
-        this.serviceLayer = serviceLayer;
-    }
-
-    public String getTypeName() {
-        return this.typeName;
-    }
-
-    public void setTypeName(String typeName) {
-        this.typeName = typeName;
-    }
-
-    public String getAreaTypeDesc() {
-        return this.areaTypeDesc;
-    }
-
-    public void setAreaTypeDesc(String areaTypeDesc) {
-        this.areaTypeDesc = areaTypeDesc;
-    }
-
-    public String getAreaDbTable() {
-        return this.areaDbTable;
-    }
-
-    public void setAreaDbTable(String areaDbTable) {
-        this.areaDbTable = areaDbTable;
-    }
-
-    public Boolean getIsSystemWide() {
-        return this.isSystemWide;
-    }
-
-    public void setIsSystemArea(Boolean isSystemWide) {
-        this.isSystemWide = isSystemWide;
-    }
-
-    public Boolean getIsLocation() {
-        return this.isLocation;
-    }
-
-    public void setIsLocation(Boolean isLocation) {
-        this.isLocation = isLocation;
-    }
-
-
 }

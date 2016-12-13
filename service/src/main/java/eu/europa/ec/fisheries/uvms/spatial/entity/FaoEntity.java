@@ -8,6 +8,7 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
@@ -20,6 +21,8 @@ import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Entity
 @Table(name = "fao")
@@ -31,6 +34,8 @@ import javax.persistence.Table;
         @NamedQuery(name = FaoEntity.SEARCH_FAO_NAMES_BY_CODE, query = "From FaoEntity where code in (SELECT distinct(code) from FaoEntity where (upper(name) like :name OR upper(code) like :code) AND enabled='Y' GROUP BY gid)"),
         @NamedQuery(name = FaoEntity.FAO_COLUMNS, query = "SELECT fao.id as gid, fao.name AS name, fao.code AS code FROM FaoEntity AS fao WHERE fao.id in (:ids)")
 })
+@EqualsAndHashCode(callSuper = true)
+@Data
 public class FaoEntity extends BaseAreaEntity {
 
     public static final String DISABLE_FAO_AREAS = "faoEntity.disableFaoAreas";
@@ -146,165 +151,5 @@ public class FaoEntity extends BaseAreaEntity {
 
     public FaoEntity(Map<String, Object> values, List<UploadMappingProperty> mapping) throws ServiceException {
         super(values, mapping);
-    }
-
-    public String getOcean() {
-        return ocean;
-    }
-
-    public void setOcean(String ocean) {
-        this.ocean = ocean;
-    }
-
-    public String getSubocean() {
-        return subocean;
-    }
-
-    public void setSubocean(String subocean) {
-        this.subocean = subocean;
-    }
-
-    public String getfArea() {
-        return fArea;
-    }
-
-    public void setfArea(String fArea) {
-        this.fArea = fArea;
-    }
-
-    public String getAreaL() {
-        return areaL;
-    }
-
-    public void setAreaL(String areaL) {
-        this.areaL = areaL;
-    }
-
-    public String getfSubarea() {
-        return fSubarea;
-    }
-
-    public void setfSubarea(String fSubarea) {
-        this.fSubarea = fSubarea;
-    }
-
-    public String getSubareaN() {
-        return subareaN;
-    }
-
-    public void setSubareaN(String subareaN) {
-        this.subareaN = subareaN;
-    }
-
-    public String getSubareaL() {
-        return subareaL;
-    }
-
-    public void setSubareaL(String subareaL) {
-        this.subareaL = subareaL;
-    }
-
-    public String getfDivision() {
-        return fDivision;
-    }
-
-    public void setfDivision(String fDivision) {
-        this.fDivision = fDivision;
-    }
-
-    public String getDivisionN() {
-        return divisionN;
-    }
-
-    public void setDivisionN(String divisionN) {
-        this.divisionN = divisionN;
-    }
-
-    public String getDivisionL() {
-        return divisionL;
-    }
-
-    public void setDivisionL(String divisionL) {
-        this.divisionL = divisionL;
-    }
-
-    public String getfSubdivis() {
-        return fSubdivis;
-    }
-
-    public void setfSubdivis(String fSubdivis) {
-        this.fSubdivis = fSubdivis;
-    }
-
-    public String getSubdivisN() {
-        return subdivisN;
-    }
-
-    public void setSubdivisN(String subdivisN) {
-        this.subdivisN = subdivisN;
-    }
-
-    public String getSubdivisL() {
-        return subdivisL;
-    }
-
-    public void setSubdivisL(String subdivisL) {
-        this.subdivisL = subdivisL;
-    }
-
-    public String getfSubunit() {
-        return fSubunit;
-    }
-
-    public void setfSubunit(String fSubunit) {
-        this.fSubunit = fSubunit;
-    }
-
-    public String getSubunitN() {
-        return subunitN;
-    }
-
-    public void setSubunitN(String subunitN) {
-        this.subunitN = subunitN;
-    }
-
-    public String getSubunitL() {
-        return subunitL;
-    }
-
-    public void setSubunitL(String subunitL) {
-        this.subunitL = subunitL;
-    }
-
-    public String getEleName() {
-        return eleName;
-    }
-
-    public void setEleName(String eleName) {
-        this.eleName = eleName;
-    }
-
-    public String getEleLabel() {
-        return eleLabel;
-    }
-
-    public void setEleLabel(String eleLabel) {
-        this.eleLabel = eleLabel;
-    }
-
-    public String getEleType() {
-        return eleType;
-    }
-
-    public void setEleType(String eleType) {
-        this.eleType = eleType;
-    }
-
-    public String getfLabel() {
-        return fLabel;
-    }
-
-    public void setfLabel(String fLabel) {
-        this.fLabel = fLabel;
     }
 }

@@ -21,7 +21,7 @@
         <class>eu.europa.ec.fisheries.uvms.spatial.entity.StatRectEntity</class>
         <class>eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity</class>
         <class>eu.europa.ec.fisheries.uvms.spatial.entity.UserScopeEntity</class>
-        <class> eu.europa.ec.fisheries.uvms.spatial.entity.config.SysConfigEntity</class>
+        <class>eu.europa.ec.fisheries.uvms.spatial.entity.SysConfigEntity</class>
         <properties>
             <property name="hibernate.default_schema" value="spatial"/>
             <property name="javax.persistence.schema-generation.create-database-schemas" value="true"/>

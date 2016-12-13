@@ -8,12 +8,15 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
+
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadMappingProperty;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.annotation.ColumnAliasName;
 import java.util.List;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -33,6 +36,7 @@ import java.util.Map;
 })
 @Table(name = "eez")
 @EqualsAndHashCode(callSuper = true)
+@Data
 public class EezEntity extends BaseAreaEntity {
 
     public static final String EEZ_BY_COORDINATE = "eezEntity.ByCoordinate";
@@ -73,15 +77,15 @@ public class EezEntity extends BaseAreaEntity {
     @ColumnAliasName(aliasName = "eezId")
     private Long eezId;
 
-    @Column(name = "mrgid")
-    @ColumnAliasName(aliasName = "mrgid")
-    private BigDecimal mrgid;
+    @Column(name = MRGID)
+    @ColumnAliasName(aliasName = MRGID)
+    private BigDecimal mrGid;
 
     @Column(name = "date_chang", length = 50)
     @ColumnAliasName(aliasName = "dateChang")
     private String dateChang;
 
-    @Column(name = "area_m2")
+    @Column(name = AREA_M_2)
     @ColumnAliasName(aliasName = "areaM2")
     private Double areaM2;
 
@@ -103,94 +107,6 @@ public class EezEntity extends BaseAreaEntity {
 
     public EezEntity(Map<String, Object> values, List<UploadMappingProperty> mapping) throws ServiceException {
         super(values, mapping);
-    }
-
-    public String getCountry() {
-        return this.country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public String getSovereign() {
-        return this.sovereign;
-    }
-
-    public void setSovereign(String sovereign) {
-        this.sovereign = sovereign;
-    }
-
-    public String getRemarks() {
-        return this.remarks;
-    }
-
-    public void setRemarks(String remarks) {
-        this.remarks = remarks;
-    }
-
-    public Long getSovId() {
-        return this.sovId;
-    }
-
-    public void setSovId(Long sovId) {
-        this.sovId = sovId;
-    }
-
-    public Long getEezId() {
-        return this.eezId;
-    }
-
-    public void setEezId(Long eezId) {
-        this.eezId = eezId;
-    }
-
-    public BigDecimal getMrgid() {
-        return this.mrgid;
-    }
-
-    public void setMrgid(BigDecimal mrgid) {
-        this.mrgid = mrgid;
-    }
-
-    public String getDateChang() {
-        return this.dateChang;
-    }
-
-    public void setDateChang(String dateChang) {
-        this.dateChang = dateChang;
-    }
-
-    public Double getAreaM2() {
-        return this.areaM2;
-    }
-
-    public void setAreaM2(Double areaM2) {
-        this.areaM2 = areaM2;
-    }
-
-    public Double getLongitude() {
-        return this.longitude;
-    }
-
-    public void setLongitude(Double longitude) {
-        this.longitude = longitude;
-    }
-
-    public Double getLatitude() {
-        return this.latitude;
-    }
-
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
-    }
-
-    public Long getMrgidEez() {
-        return this.mrgidEez;
-    }
-
-    public void setMrgidEez(Long mrgidEez) {
-        this.mrgidEez = mrgidEez;
     }
 
 }

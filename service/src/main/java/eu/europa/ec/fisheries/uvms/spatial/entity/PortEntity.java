@@ -8,6 +8,8 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
+
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
@@ -20,6 +22,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import java.util.Map;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Entity
 @NamedQueries({
@@ -29,6 +33,8 @@ import java.util.Map;
         @NamedQuery(name = PortEntity.SEARCH_PORT_NAMES_BY_CODE, query = "From PortEntity where code in (SELECT distinct(code) from PortEntity where (upper(name) like :name OR upper(code) like :code) AND enabled='Y' GROUP BY gid)")
 })
 @Table(name = "port")
+@EqualsAndHashCode(callSuper = true)
+@Data
 public class PortEntity extends BaseAreaEntity {
 
     public static final String PORT_BY_COORDINATE = "portEntity.ByCoordinate";
@@ -64,38 +70,6 @@ public class PortEntity extends BaseAreaEntity {
 
     public PortEntity(Map<String, Object> values, List<UploadMappingProperty> mapping) throws ServiceException {
         super(values, mapping);
-    }
-
-    public String getCountryCode() {
-        return countryCode;
-    }
-
-    public void setCountryCode(String countryCode) {
-        this.countryCode = countryCode;
-    }
-
-    public String getFishingPort() {
-        return fishingPort;
-    }
-
-    public void setFishingPort(String fishingPort) {
-        this.fishingPort = fishingPort;
-    }
-
-    public String getLandingPlace() {
-        return landingPlace;
-    }
-
-    public void setLandingPlace(String landingPlace) {
-        this.landingPlace = landingPlace;
-    }
-
-    public String getCommercialPort() {
-        return commercialPort;
-    }
-
-    public void setCommercialPort(String commercialPort) {
-        this.commercialPort = commercialPort;
     }
 
 }

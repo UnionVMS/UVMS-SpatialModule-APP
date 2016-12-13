@@ -8,6 +8,8 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
+
 package eu.europa.ec.fisheries.uvms.spatial.entity;
 
 import eu.europa.ec.fisheries.uvms.domain.BaseEntity;
@@ -18,9 +20,13 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Entity
 @Table(name = "provider_format")
+@EqualsAndHashCode(callSuper = true, exclude = "serviceLayers")
+@Data
 public class ProviderFormatEntity extends BaseEntity {
 
 	@Column(name = "service_type", nullable = false, length = 10)
@@ -33,19 +39,4 @@ public class ProviderFormatEntity extends BaseEntity {
         // why JPA why
     }
 
-	public String getServiceType() {
-		return this.serviceType;
-	}
-
-	public void setServiceType(String serviceType) {
-		this.serviceType = serviceType;
-	}
-
-	public Set<ServiceLayerEntity> getServiceLayers() {
-		return this.serviceLayers;
-	}
-
-	public void setServiceLayers(Set<ServiceLayerEntity> serviceLayers) {
-		this.serviceLayers = serviceLayers;
-	}
 }
