@@ -67,7 +67,7 @@ public class DAOFactory {
         try {
             dao = (AbstractAreaDao) syncMap.get(name.toUpperCase()).getDeclaredConstructor(EntityManager.class).newInstance(em);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-            log.error(e.getMessage());
+            log.error(e.getMessage(), e);
             throw new ServiceException("DAO NOT FOUND");
         }
 
