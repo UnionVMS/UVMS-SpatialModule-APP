@@ -143,6 +143,8 @@ public interface SpatialRepository {
 
     List<CountryEntity> findAllCountries() throws ServiceException;
 
+    List listBaseAreaList(String query) throws ServiceException;
+
     void makeGeomValid(String areaDbTable, DatabaseDialect dialect);
 
     /**

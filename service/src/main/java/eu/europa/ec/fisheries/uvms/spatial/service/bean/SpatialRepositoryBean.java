@@ -378,6 +378,11 @@ public class SpatialRepositoryBean implements SpatialRepository {
     }
 
     @Override
+    public List listBaseAreaList(final String query) throws ServiceException {
+        return abstractAreaDao.listBaseAreas(query);
+    }
+
+    @Override
     public void makeGeomValid(String areaDbTable, DatabaseDialect dialect) {
         abstractAreaDao.makeGeomValid(areaDbTable, dialect);
     }

@@ -59,7 +59,7 @@ public final class GeometryUtils {
 
     private static final String EPSG = "EPSG:";
 
-    private static final int DEFAULT_SRID = 4326;
+    public static final int DEFAULT_SRID = 4326;
 
     private static GeometryFactory FACTORY = new GeometryFactory();
 

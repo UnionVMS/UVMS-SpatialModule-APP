@@ -67,19 +67,14 @@ import org.geotools.geometry.jts.WKTReader2;
 import org.geotools.geometry.jts.WKTWriter2;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.GeodeticCalculator;
-import org.hibernate.SQLQuery;
-import org.hibernate.spatial.GeometryType;
-import org.hibernate.type.StringType;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.operation.TransformException;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -99,15 +94,12 @@ import static org.geotools.geometry.jts.JTS.toGeographic;
  * This class groups all the spatial operations on the spatial database.
  */
 @Stateless
-@Local(SpatialService.class)
 @Transactional
 @Slf4j
 @Interceptors(TracingInterceptor.class)
 public class SpatialServiceBean implements SpatialService {
 
     private static final String EPSG = "EPSG:";
-    private static final String TYPE = "type";
-    private static final String GEOM = "geom";
     private static final String MULTIPOINT = "MULTIPOINT";
 
     private @PersistenceContext(unitName = "spatialPU") EntityManager em;
@@ -407,18 +399,14 @@ public class SpatialServiceBean implements SpatialService {
         try {
 
             buildQuery(scopeAreas.getScopeAreas(), sb, "scope", typesEntityMap);
-            if (CollectionUtils.isNotEmpty(userAreas.getUserAreas()) && StringUtils.isNotEmpty(sb.toString())){
+            if (userAreas != null && CollectionUtils.isNotEmpty(userAreas.getUserAreas()) && StringUtils.isNotEmpty(sb.toString())){
                 sb.append(" UNION ALL ");
+                buildQuery(userAreas.getUserAreas(), sb, "user", typesEntityMap);
             }
-            buildQuery(userAreas.getUserAreas(), sb, "user", typesEntityMap);
 
-            log.debug("{} QUERY => {}", databaseDialect.getClass().getSimpleName().toUpperCase(), sb.toString());
+            log.debug("{} QUERY => {}", sb.toString());
 
-            Query emNativeQuery = em.createNativeQuery(sb.toString());
-            emNativeQuery.unwrap(SQLQuery.class)
-                    .addScalar(TYPE, StringType.INSTANCE)
-                    .addScalar(GEOM, GeometryType.INSTANCE);
-            List records = emNativeQuery.getResultList();
+            List records = repository.listBaseAreaList(sb.toString());
 
             final List<Geometry> scopeGeometryList = new ArrayList<>();
             final List<Geometry> userGeometryList = new ArrayList<>();

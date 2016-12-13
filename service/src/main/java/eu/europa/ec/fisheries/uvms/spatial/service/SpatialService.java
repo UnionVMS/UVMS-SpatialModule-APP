@@ -8,6 +8,8 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
+
 package eu.europa.ec.fisheries.uvms.spatial.service;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
@@ -17,7 +19,9 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.SystemAreaNamesDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.UserAreaDto;
 
 import java.util.List;
+import javax.ejb.Local;
 
+@Local
 public interface SpatialService {
 
     List<Location> getClosestPointToPointByType(ClosestLocationSpatialRQ request) throws ServiceException;

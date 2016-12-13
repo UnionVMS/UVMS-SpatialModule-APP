@@ -21,6 +21,7 @@ import eu.europa.ec.fisheries.uvms.spatial.dao.util.PostGres;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.BaseAreaEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.FaoEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.PortAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
@@ -39,6 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.ninja_squad.dbsetup.Operations.sequenceOf;
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static junitparams.JUnitParamsRunner.$;
 
@@ -50,7 +52,7 @@ public class AbstractAreaDaoTest extends BaseSpatialDaoTest {
 
         Operation operation = sequenceOf(DELETE_ALL, INSERT_EEZ_REFERENCE_DATA,
                 INSERT_RFMO_REFERENCE_DATA, INSERT_PORT_AREA_REFERENCE_DATA,
-                INSERT_COUNTRY_REFERENCE_DATA);
+                INSERT_COUNTRY_REFERENCE_DATA, INSERT_FAO_REFERENCE_DATA);
         DbSetup dbSetup = new DbSetup(new DataSourceDestination(ds), operation);
         dbSetupTracker.launchIfNecessary(dbSetup);
     }
@@ -67,6 +69,16 @@ public class AbstractAreaDaoTest extends BaseSpatialDaoTest {
     public void shouldReturnIntersectedPortArea(){
         AbstractAreaDao dao = DAOFactory.getAbstractSpatialDao(em, "PORTAREA");
         dao.findByIntersect(new GeometryBuilder().point(1, 1));
+    }
+
+    @Test
+    @SneakyThrows
+    public void shouldReturnIntersectedFao(){
+        AbstractAreaDao fao = DAOFactory.getAbstractSpatialDao(em, "FAO");
+        FaoEntity faoOne = (FaoEntity)fao.findOne(1L);
+        assertEquals(faoOne.getDivisionL(), FaoEntity.DIVISION_L);
+        assertEquals(faoOne.getDivisionN(), FaoEntity.DIVISION_N);
+
     }
 
     @Test

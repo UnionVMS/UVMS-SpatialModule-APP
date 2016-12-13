@@ -12,6 +12,7 @@ package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.vividsolutions.jts.geom.util.GeometryMapper;
 import com.vividsolutions.jts.io.ParseException;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.rest.FeatureToGeoJsonJacksonMapper;

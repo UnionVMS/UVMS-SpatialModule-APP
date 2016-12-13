@@ -12,6 +12,7 @@ package eu.europa.ec.fisheries.uvms.spatial.utility;
 
 import com.ninja_squad.dbsetup.operation.Operation;
 import eu.europa.ec.fisheries.uvms.BaseDAOTest;
+import eu.europa.ec.fisheries.uvms.spatial.entity.FaoEntity;
 
 import static com.ninja_squad.dbsetup.Operations.deleteAllFrom;
 import static com.ninja_squad.dbsetup.Operations.insertInto;
@@ -98,6 +99,11 @@ public abstract class BaseSpatialDaoTest extends BaseDAOTest {
             .values(4L, "Christmas Island", "Australia", "Australia", "MULTIPOLYGON(((106.867924148 -9.16467987999994,108.036593601 -12.9679006599999," +
                             "103.079231596 -12.82837266, 102.56917584 -8.87249927999994," +
                             "106.867924148 -9.16467987999994)))", "N", "disabled").build());
+
+    protected static final Operation INSERT_FAO_REFERENCE_DATA = sequenceOf(insertInto("spatial.fao").
+            columns("ENABLED", "GID", FaoEntity.OCEAN, FaoEntity.ELE_LABEL, FaoEntity.AREA_L, FaoEntity.F_AREA, FaoEntity.DIVISION_L, FaoEntity.DIVISION_N, FaoEntity.F_LABEL)
+            .values("Y", 1L,  FaoEntity.OCEAN, FaoEntity.ELE_LABEL, FaoEntity.AREA_L, FaoEntity.F_AREA, FaoEntity.DIVISION_L, FaoEntity.DIVISION_N, FaoEntity.F_LABEL)
+            .build());
 
     protected static final Operation INSERT_USER_AREA_REFERENCE_DATA = sequenceOf(
             insertInto("spatial.user_areas")

@@ -13,19 +13,23 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.dao;
 
 import com.vividsolutions.jts.geom.Point;
+import eu.europa.ec.fisheries.uvms.domain.BaseEntity;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.service.QueryParameter;
 import eu.europa.ec.fisheries.uvms.spatial.dao.util.DatabaseDialect;
 import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.BaseAreaEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadMappingProperty;
+import javax.persistence.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.hibernate.*;
+import org.hibernate.Query;
 import org.hibernate.spatial.GeometryType;
 import org.hibernate.transform.AliasToEntityMapResultTransformer;
 import org.hibernate.type.DoubleType;
@@ -115,6 +119,13 @@ public abstract class AbstractAreaDao<E extends BaseAreaEntity> extends Abstract
         return findEntityByNamedQuery(getClazz(), getSearchNameByCodeQuery(), QueryParameter.with(NAME, name).and(CODE, code).parameters());
     }
 
+    public List listBaseAreas(final String query) throws ServiceException {
+        javax.persistence.Query emNativeQuery = getEntityManager().createNativeQuery(query);
+        emNativeQuery.unwrap(SQLQuery.class)
+                .addScalar(TYPE, StringType.INSTANCE)
+                .addScalar(GEOM, GeometryType.INSTANCE);
+        return emNativeQuery.getResultList();
+    }
 
     public List<E> byCode(List<AreaSimpleType> areaSimpleTypeList) throws ServiceException {
 
