@@ -399,8 +399,11 @@ public class SpatialServiceBean implements SpatialService {
         try {
 
             buildQuery(scopeAreas.getScopeAreas(), sb, "scope", typesEntityMap);
-            if (userAreas != null && CollectionUtils.isNotEmpty(userAreas.getUserAreas()) && StringUtils.isNotEmpty(sb.toString())){
-                sb.append(" UNION ALL ");
+
+            if(userAreas != null){
+                if ( CollectionUtils.isNotEmpty(userAreas.getUserAreas()) && StringUtils.isNotEmpty(sb.toString())){
+                    sb.append(" UNION ALL ");
+                }
                 buildQuery(userAreas.getUserAreas(), sb, "user", typesEntityMap);
             }
 
