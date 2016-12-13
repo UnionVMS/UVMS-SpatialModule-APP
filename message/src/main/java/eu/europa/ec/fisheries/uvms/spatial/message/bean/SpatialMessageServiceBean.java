@@ -8,16 +8,16 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
+
 package eu.europa.ec.fisheries.uvms.spatial.message.bean;
 
 import eu.europa.ec.fisheries.uvms.message.AbstractMessageService;
-import eu.europa.ec.fisheries.uvms.spatial.message.SpatialConstants;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageErrorEvent;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageEvent;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMarshallException;
 import eu.europa.ec.fisheries.uvms.spatial.model.mapper.JAXBMarshaller;
 import lombok.extern.slf4j.Slf4j;
-
 import javax.annotation.Resource;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -37,6 +37,8 @@ import static eu.europa.ec.fisheries.uvms.message.MessageConstants.QUEUE_MODULE_
 @LocalBean
 @Slf4j
 public class SpatialMessageServiceBean extends AbstractMessageService {
+
+    private static final String MODULE_NAME = "spatial";
 
     @Resource(mappedName = QUEUE_MODULE_SPATIAL)
     private Destination request;
@@ -61,7 +63,7 @@ public class SpatialMessageServiceBean extends AbstractMessageService {
 
     @Override
     public String getModuleName() {
-        return SpatialConstants.MODULE_NAME;
+        return MODULE_NAME;
     }
 
     @Override
