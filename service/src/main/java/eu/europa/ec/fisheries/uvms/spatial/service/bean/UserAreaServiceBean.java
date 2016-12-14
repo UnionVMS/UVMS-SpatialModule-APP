@@ -15,6 +15,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.ParseException;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.mapper.GeometryMapper;
 import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.UserScopeEntity;
@@ -32,16 +33,20 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.UserAreaGeoJ
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.mapper.UserAreaMapper;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
-import org.geotools.geometry.jts.WKTReader2;
-import org.geotools.geometry.jts.WKTWriter2;
-
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.transaction.Transactional;
-import java.util.*;
 
 @Stateless
 @Local(UserAreaService.class)
@@ -242,8 +247,9 @@ public class UserAreaServiceBean implements UserAreaService {
         Object geometry = properties.get("geometry");
 
         if (geometry != null){
-            Geometry centroid = new WKTReader2().read(String.valueOf(geometry)).getCentroid();
-            properties.put("centroid", new WKTWriter2().write(centroid));
+            Geometry centroid =
+                    GeometryMapper.INSTANCE.wktToGeometry(String.valueOf(geometry)).getValue().getCentroid();
+            properties.put("centroid", GeometryMapper.INSTANCE.geometryToWkt(centroid).getValue());
         }
     }
 
@@ -283,7 +289,6 @@ public class UserAreaServiceBean implements UserAreaService {
         List<UserAreasEntity> userAreas = repository.listUserAreaByCriteria(userName, scopeName, searchCriteria, isPowerUser);
         final List<UserAreaDto> userAreaDtos = new ArrayList<>();
         Iterator it = userAreas.iterator();
-        final WKTWriter2 wktWriter2 = new WKTWriter2();
 
         while (it.hasNext( )) {
             UserAreasEntity next = (UserAreasEntity) it.next();
@@ -293,7 +298,7 @@ public class UserAreaServiceBean implements UserAreaService {
                 Geometry envelope = next.getGeom().getEnvelope();
                 userAreaDtos.add(new UserAreaDto(next.getId(), next.getName(),
                         StringUtils.isNotBlank(next.getAreaDesc()) ? next.getAreaDesc() : StringUtils.EMPTY,
-                        wktWriter2.write(envelope), next.getUserName()));
+                        GeometryMapper.INSTANCE.geometryToWkt(envelope).getValue(), next.getUserName()));
             }
         }
         return userAreaDtos;
