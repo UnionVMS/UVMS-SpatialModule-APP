@@ -12,10 +12,11 @@ package eu.europa.ec.fisheries.uvms.spatial.service;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.model.layer.ServiceLayer;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 
 public interface ServiceLayerService {
 
-    public ServiceLayer findBy(String locationType) throws ServiceException;
+    public ServiceLayer findBy(AreaType areaType) throws ServiceException;
 
     void update(ServiceLayer serviceLayer) throws ServiceException;
 }

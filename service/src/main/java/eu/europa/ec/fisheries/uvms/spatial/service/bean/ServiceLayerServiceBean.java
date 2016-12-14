@@ -13,6 +13,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.layer.ServiceLayer;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.service.ServiceLayerService;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.mapper.ServiceLayerMapper;
@@ -31,13 +32,9 @@ public class ServiceLayerServiceBean implements ServiceLayerService {
     private SpatialRepository repository;
 
     @Override
-    public ServiceLayer findBy(final String locationType) throws ServiceException {
+    public ServiceLayer findBy(final AreaType areaType) throws ServiceException {
 
-        if (locationType == null){
-            throw new ServiceException("locationType null not allowed");
-        }
-
-        ServiceLayerEntity entity = repository.getServiceLayerBy(locationType);
+        ServiceLayerEntity entity = repository.getServiceLayerBy(areaType);
 
         return ServiceLayerMapper.INSTANCE.serviceLayerEntityToServiceLayer(entity);
 

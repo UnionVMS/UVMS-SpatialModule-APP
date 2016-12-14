@@ -17,6 +17,7 @@ import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
 import eu.europa.ec.fisheries.uvms.spatial.model.constants.USMSpatial;
 import eu.europa.ec.fisheries.uvms.spatial.model.layer.ServiceLayer;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.model.views.Views;
 import eu.europa.ec.fisheries.uvms.spatial.rest.constants.RestConstants;
 import eu.europa.ec.fisheries.uvms.spatial.rest.constants.View;
@@ -56,16 +57,17 @@ public class ServiceLayerResource extends UnionVMSResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("{locationType}")
-    public Response getServiceLayerByLocationType(
-            @PathParam(LOCATION_TYPE) String locationType,
+    @Path("{systemAreaType}")
+    public Response getServiceLayerBySystemAreaType(
+            @PathParam(SYSTEM_AREA_TYPE) String systemAreaType,
             @DefaultValue(RestConstants.PUBLIC) @QueryParam(value = VIEW) String view) {
 
         Response response = createErrorResponse("Service layer not found");
 
         try {
 
-            final ServiceLayer serviceLayer = service.findBy(locationType);
+            AreaType type = AreaType.valueOf(systemAreaType);
+            final ServiceLayer serviceLayer = service.findBy(type);
 
             if (serviceLayer != null){
 

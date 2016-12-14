@@ -147,7 +147,7 @@ public abstract class BaseSpatialDaoTest extends BaseDAOTest {
                     .values(2L, "RFMO", "rfmo", 'N', 'Y', 2)
                     .values(3L, "COUNTRY", "countries", 'N', 'N', 3)
                     .values(4L, "PORT", "port", 'Y', 'Y', 4)
-                    .values(5L, "USERAREA", "user_areas", 'N', 'Y', 5)
+                    .values(5L, "USERAREA", "user_areas", 'N', 'N', 5)
                     .values(6L, "PORTAREA", "port_area", 'N', 'Y', 6)
                     .build()
     );

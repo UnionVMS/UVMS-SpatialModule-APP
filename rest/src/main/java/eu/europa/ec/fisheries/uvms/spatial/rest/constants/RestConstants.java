@@ -21,7 +21,7 @@ public final class RestConstants {
     public static final String MODULE_NAME = "spatial";
 
     public static final String VIEW = "view";
-    public static final String LOCATION_TYPE = "locationType";
+    public static final String SYSTEM_AREA_TYPE = "systemAreaType";
     public static final String PUBLIC = "PUBLIC";
 
     public static final String ACCESS_CONTROL_ALLOW_ORIGIN = "Access-ControlDto-Allow-Origin";

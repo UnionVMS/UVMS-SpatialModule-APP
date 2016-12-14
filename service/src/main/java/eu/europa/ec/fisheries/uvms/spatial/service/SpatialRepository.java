@@ -25,6 +25,7 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.SysConfigEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.bookmark.Bookmark;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
@@ -105,11 +106,9 @@ public interface SpatialRepository {
 
     List<AreaLocationTypesEntity> findAllIsLocation(Boolean isLocation) throws ServiceException;
 
-    ServiceLayerEntity getServiceLayerBy(String locationType) throws ServiceException;
+    ServiceLayerEntity getServiceLayerBy(AreaType areaType) throws ServiceException;
 
     ServiceLayerEntity getServiceLayerBy(Long id) throws ServiceException;
-
-    ServiceLayerEntity getByAreaLocationType(String areaLocationType) throws ServiceException;
 
     List<UserAreasEntity> findUserAreasByType(String userName, String scopeName, String type, boolean isPowerUser) throws ServiceException;
 

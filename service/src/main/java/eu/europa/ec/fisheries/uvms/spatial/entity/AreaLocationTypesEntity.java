@@ -26,6 +26,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import lombok.ToString;
 
 @Entity
 @NamedQueries({
@@ -52,6 +53,7 @@ import javax.persistence.UniqueConstraint;
 @Table(name = "area_location_types", uniqueConstraints = @UniqueConstraint(columnNames = "type_name"))
 @EqualsAndHashCode(callSuper = true)
 @Data
+@ToString(exclude = "serviceLayer")
 public class AreaLocationTypesEntity extends BaseEntity {
 
     public static final String FIND_USER_AREA_LAYER = "areaLocationType.findUserAreaLayerMappings";
