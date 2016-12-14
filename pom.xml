@@ -339,7 +339,7 @@
             </properties>
         </profile>
 		
-		<profile>
+	<profile>
 				<id>weblogic</id>
 				<properties>
 					<database.dialect>oracle</database.dialect> <!-- the record -->
@@ -369,11 +369,11 @@
 							<groupId>org.hibernate</groupId>
 							<artifactId>hibernate-validator</artifactId>
 						</dependency>
-					
+							
 					</dependencies>
 				
-				
-		</profile>
+
+	</profile>
 
 	</profiles>
 
