@@ -41,10 +41,10 @@ import lombok.ToString;
                 query = "SELECT serviceLayer FROM ServiceLayerEntity serviceLayer WHERE serviceLayer.id in (:ids) order by serviceLayer.id"),
         @NamedQuery(name = ServiceLayerEntity.FIND_SERVICE_LAYER_BY_SUBTYPE,
                 query = "SELECT serviceLayer.id AS id, serviceLayer.name AS name, serviceLayer.layerDesc AS layerDesc, serviceLayer.subType as subType, serviceLayer.areaType.typeName as areaLocationTypeName  " +
-                        "From ServiceLayerEntity serviceLayer WHERE serviceLayer.subType in (:subTypes) order by serviceLayer.id"),
+                        "FROM ServiceLayerEntity serviceLayer WHERE serviceLayer.subType in (:subTypes) order by serviceLayer.id"),
         @NamedQuery(name = ServiceLayerEntity.FIND_SERVICE_LAYER_BY_SUBTYPE_WITHOUT_BING,
                 query = "SELECT serviceLayer.id AS id, serviceLayer.name AS name, serviceLayer.layerDesc AS layerDesc, serviceLayer.subType as subType, serviceLayer.areaType.typeName as areaLocationTypeName " +
-                        "From ServiceLayerEntity serviceLayer INNER JOIN serviceLayer.providerFormat providerFormat " +
+                        "FROM ServiceLayerEntity serviceLayer INNER JOIN serviceLayer.providerFormat providerFormat " +
                         "WHERE serviceLayer.subType in (:subTypes) AND providerFormat.serviceType <> 'BING' order by serviceLayer.id")
 })
 @EqualsAndHashCode(callSuper = true, exclude = {"reportConnectServiceAreas"})

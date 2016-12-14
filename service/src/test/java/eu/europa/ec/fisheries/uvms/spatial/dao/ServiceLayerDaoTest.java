@@ -20,7 +20,10 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.PortEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationType;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.ServiceLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.utility.BaseSpatialDaoTest;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import junit.framework.Assert;
@@ -85,6 +88,51 @@ public class ServiceLayerDaoTest extends BaseSpatialDaoTest {
         ServiceLayerEntity layerEntity = dao.getBy(AreaType.USERAREA);
 
         assertNull(layerEntity);
+    }
+
+    @Test
+    public void shouldReturnListOfServiceLayers(){
+
+        List<ServiceLayerEntity> list = dao.findServiceLayerEntityByIds(Arrays.asList(1L, 2L, 3L));
+
+        assertEquals(3, list.size());
+        assertEquals("EEZ", list.get(0).getName());
+        assertEquals("RFMO", list.get(1).getName());
+        assertEquals("Countries", list.get(2).getName());
+
+    }
+
+    @Test
+    public void shouldReturnServiceLayerList(){
+
+        List<ServiceLayerDto> list = dao.findServiceLayerBySubType(Arrays.asList("SYSAREA"), true);
+
+        assertEquals(6, list.size());
+        assertEquals("EEZ", list.get(0).getName());
+        assertEquals("RFMO", list.get(1).getName());
+        assertEquals("Countries", list.get(2).getName());
+        assertEquals("Ports", list.get(3).getName());
+        assertEquals("UserAreas", list.get(4).getName());
+        assertEquals("PortAreas", list.get(5).getName());
+
+    }
+
+    @Test
+    public void shouldReturnBackgroundWithBing(){
+
+        List<ServiceLayerDto> list = dao.findServiceLayerBySubType(Arrays.asList("background"), true);
+
+        assertEquals(1, list.size());
+        assertEquals("bingRoad", list.get(0).getName());
+
+    }
+
+    @Test
+    public void shouldNotReturnBackgroundWithBing(){
+
+        List<ServiceLayerDto> list = dao.findServiceLayerBySubType(Arrays.asList("background"), false);
+
+        assertEquals(0, list.size());
     }
 
 }

@@ -8,6 +8,8 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
+
 package eu.europa.ec.fisheries.uvms.spatial.dao;
 
 import com.ninja_squad.dbsetup.DbSetup;
@@ -62,4 +64,32 @@ public class UserAreaDaoTest extends BaseSpatialDaoTest {
     }
 
 
+    @Test
+    @SneakyThrows
+    public void shouldReturnOneSharedId(){
+        List<Long> allSharedGids = dao.getAllSharedGids("userName", "EC", "EEZ");
+        assertEquals(1, allSharedGids.size());
+    }
+
+    @Test
+    @SneakyThrows
+    public void shouldReturnListNoSharedIds(){
+        List<Long> allSharedGids = dao.getAllSharedGids("userDaoTest", "EC", "EEZ");
+        assertEquals(0, allSharedGids.size());
+    }
+
+    @Test
+    @SneakyThrows
+    public void shouldReturnListNoSharedIdsWithDiffScope(){
+        List<Long> allSharedGids = dao.getAllSharedGids("userDaoTest", "EEC", "EEZ");
+        assertEquals(0, allSharedGids.size());
+    }
+
+
+    @Test
+    @SneakyThrows
+    public void shouldReturnListNoSharedIdsWithDiffType(){
+        List<Long> allSharedGids = dao.getAllSharedGids("userDaoTest", "EC", "UNKNOWN");
+        assertEquals(0, allSharedGids.size());
+    }
 }

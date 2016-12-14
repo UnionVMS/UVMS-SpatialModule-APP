@@ -116,7 +116,8 @@ public class UserAreaDao extends AbstractAreaDao<UserAreasEntity> {
     }
 
     public List<Long> getAllSharedGids(String userName, String scopeName, String type) {
-        Map<String, Object> parameters = ImmutableMap.<String, Object>builder().put(USER_NAME, userName).put(SCOPE_NAME, scopeName).put(TYPE, type).build();
+        Map<String, Object> parameters =
+                ImmutableMap.<String, Object>builder().put(USER_NAME, userName).put(SCOPE_NAME, scopeName).put(TYPE, type).build();
         Query query = createNamedNativeQuery(FIND_GID_FOR_SHARED_AREA, parameters);
         return query.list();
     }

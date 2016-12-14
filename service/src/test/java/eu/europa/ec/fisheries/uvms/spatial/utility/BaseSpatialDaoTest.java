@@ -130,16 +130,17 @@ public abstract class BaseSpatialDaoTest extends BaseDAOTest {
                     .build(),
             insertInto("spatial.provider_format")
                     .columns("ID", "SERVICE_TYPE")
-                    .values(1L, "WMS")
+                    .values(1L, "BING")
                     .build(),
             insertInto("spatial.service_layer")
-                    .columns("ID", "NAME", "IS_INTERNAL", "PROVIDER_FORMAT_ID")
-                    .values(1L, "EEZ", 'Y', 1)
-                    .values(2L, "RFMO", 'Y', 1)
-                    .values(3L, "Countries", 'Y', 1)
-                    .values(4L, "Ports", 'Y', 1)
-                    .values(5L, "UserAreas", 'Y', 1)
-                    .values(6L, "PortAreas", 'Y', 1)
+                    .columns("ID", "NAME", "IS_INTERNAL", "PROVIDER_FORMAT_ID", "SUBTYPE")
+                    .values(1L, "EEZ", 'Y', 1, "SYSAREA")
+                    .values(2L, "RFMO", 'Y', 1, "SYSAREA")
+                    .values(3L, "Countries", 'Y', 1, "SYSAREA")
+                    .values(4L, "Ports", 'Y', 1, "SYSAREA")
+                    .values(5L, "UserAreas", 'Y', 1, "SYSAREA")
+                    .values(6L, "PortAreas", 'Y', 1, "SYSAREA")
+                    .values(7L, "bingRoad", 'N', 1, "background")
                     .build(),
             insertInto("spatial.area_location_types")
                     .columns("ID", "TYPE_NAME", "AREA_DB_TABLE", "IS_LOCATION", "IS_SYSTEM_WIDE", "SERVICE_LAYER_ID")
@@ -149,6 +150,8 @@ public abstract class BaseSpatialDaoTest extends BaseDAOTest {
                     .values(4L, "PORT", "port", 'Y', 'Y', 4)
                     .values(5L, "USERAREA", "user_areas", 'N', 'N', 5)
                     .values(6L, "PORTAREA", "port_area", 'N', 'Y', 6)
+                    .values(7L, "BINGROAD", "NA", 'N', 'N', 7)
+
                     .build()
     );
 

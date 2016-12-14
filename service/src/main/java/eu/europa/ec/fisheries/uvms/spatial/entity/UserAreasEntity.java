@@ -67,7 +67,7 @@ import java.util.Set;
         @NamedQuery(name = UserAreasEntity.FIND_USER_AREA_BY_USER,
                 query = "SELECT DISTINCT area " +
                         "FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection " +
-                        "WHERE area.type<>'' AND area.type <> null AND ((1=:isPowerUser) " +
+                        "WHERE area.type<>'' AND area.type <> NULL AND ((1=:isPowerUser) " +
                         "OR (area.userName=:userName OR scopeSelection.name=:scopeName))"), // TODO Test distinct (distinct can be deleted in this case)
         @NamedQuery(name = UserAreasEntity.FIND_ALL_USER_AREAS_GROUP,
                 query = "SELECT DISTINCT area.type as name FROM UserAreasEntity area " +
