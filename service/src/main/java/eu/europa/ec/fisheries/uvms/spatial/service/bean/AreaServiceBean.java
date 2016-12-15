@@ -15,6 +15,7 @@ import eu.europa.ec.fisheries.uvms.common.ZipExtractor;
 import eu.europa.ec.fisheries.uvms.domain.BaseEntity;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.interceptors.SimpleTracingInterceptor;
+import eu.europa.ec.fisheries.uvms.mapper.GeometryMapper;
 import eu.europa.ec.fisheries.uvms.spatial.dao.util.DAOFactory;
 import eu.europa.ec.fisheries.uvms.spatial.dao.util.DatabaseDialect;
 import eu.europa.ec.fisheries.uvms.spatial.dao.util.DatabaseDialectFactory;
@@ -38,13 +39,16 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialService
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.util.PropertiesBean;
 import eu.europa.ec.fisheries.uvms.spatial.util.SpatialTypeEnum;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.geotools.geometry.jts.WKTWriter2;
 import org.geotools.referencing.CRS;
 import org.opengis.feature.Property;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
-
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Local;
@@ -59,7 +63,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.FileAttribute;
-import java.util.*;
 
 @Stateless
 @Local(AreaService.class)
@@ -256,15 +259,13 @@ public class AreaServiceBean implements AreaService {
         List records = repository.areaByCode(areaSimpleTypeList);
         List<AreaSimpleType> simpleTypeList = new ArrayList<>();
 
-        WKTWriter2 wktWriter = new WKTWriter2();
-        for (Object record : records) {
+       for (Object record : records) {
 
             final Object[] result = (Object[]) record;
             String type = (String) result[0];
             String code = (String) result[1];
             Geometry geom = (Geometry) result[2];
-            simpleTypeList.add(new AreaSimpleType(type, code, wktWriter.write(geom)));
-
+            simpleTypeList.add(new AreaSimpleType(type, code, GeometryMapper.INSTANCE.geometryToWkt(geom).getValue()));
         }
 
         return simpleTypeList;

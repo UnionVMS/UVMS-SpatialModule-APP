@@ -12,6 +12,7 @@ package eu.europa.ec.fisheries.uvms.spatial.utility;
 
 import com.ninja_squad.dbsetup.operation.Operation;
 import eu.europa.ec.fisheries.uvms.BaseDAOTest;
+import eu.europa.ec.fisheries.uvms.spatial.entity.FaoEntity;
 
 import static com.ninja_squad.dbsetup.Operations.deleteAllFrom;
 import static com.ninja_squad.dbsetup.Operations.insertInto;
@@ -99,6 +100,11 @@ public abstract class BaseSpatialDaoTest extends BaseDAOTest {
                             "103.079231596 -12.82837266, 102.56917584 -8.87249927999994," +
                             "106.867924148 -9.16467987999994)))", "N", "disabled").build());
 
+    protected static final Operation INSERT_FAO_REFERENCE_DATA = sequenceOf(insertInto("spatial.fao").
+            columns("ENABLED", "GID", FaoEntity.OCEAN, FaoEntity.ELE_LABEL, FaoEntity.AREA_L, FaoEntity.F_AREA, FaoEntity.DIVISION_L, FaoEntity.DIVISION_N, FaoEntity.F_LABEL)
+            .values("Y", 1L,  FaoEntity.OCEAN, FaoEntity.ELE_LABEL, FaoEntity.AREA_L, FaoEntity.F_AREA, FaoEntity.DIVISION_L, FaoEntity.DIVISION_N, FaoEntity.F_LABEL)
+            .build());
+
     protected static final Operation INSERT_USER_AREA_REFERENCE_DATA = sequenceOf(
             insertInto("spatial.user_areas")
                     .columns("GID", "USER_NAME", "NAME", "TYPE", "AREA_DESC", "GEOM", "ENABLED", "CREATED_ON")
@@ -124,16 +130,17 @@ public abstract class BaseSpatialDaoTest extends BaseDAOTest {
                     .build(),
             insertInto("spatial.provider_format")
                     .columns("ID", "SERVICE_TYPE")
-                    .values(1L, "WMS")
+                    .values(1L, "BING")
                     .build(),
             insertInto("spatial.service_layer")
-                    .columns("ID", "NAME", "IS_INTERNAL", "PROVIDER_FORMAT_ID")
-                    .values(1L, "EEZ", 'Y', 1)
-                    .values(2L, "RFMO", 'Y', 1)
-                    .values(3L, "Countries", 'Y', 1)
-                    .values(4L, "Ports", 'Y', 1)
-                    .values(5L, "UserAreas", 'Y', 1)
-                    .values(6L, "PortAreas", 'Y', 1)
+                    .columns("ID", "NAME", "IS_INTERNAL", "PROVIDER_FORMAT_ID", "SUBTYPE")
+                    .values(1L, "EEZ", 'Y', 1, "SYSAREA")
+                    .values(2L, "RFMO", 'Y', 1, "SYSAREA")
+                    .values(3L, "Countries", 'Y', 1, "SYSAREA")
+                    .values(4L, "Ports", 'Y', 1, "SYSAREA")
+                    .values(5L, "UserAreas", 'Y', 1, "SYSAREA")
+                    .values(6L, "PortAreas", 'Y', 1, "SYSAREA")
+                    .values(7L, "bingRoad", 'N', 1, "background")
                     .build(),
             insertInto("spatial.area_location_types")
                     .columns("ID", "TYPE_NAME", "AREA_DB_TABLE", "IS_LOCATION", "IS_SYSTEM_WIDE", "SERVICE_LAYER_ID")
@@ -141,8 +148,10 @@ public abstract class BaseSpatialDaoTest extends BaseDAOTest {
                     .values(2L, "RFMO", "rfmo", 'N', 'Y', 2)
                     .values(3L, "COUNTRY", "countries", 'N', 'N', 3)
                     .values(4L, "PORT", "port", 'Y', 'Y', 4)
-                    .values(5L, "USERAREA", "user_areas", 'N', 'Y', 5)
+                    .values(5L, "USERAREA", "user_areas", 'N', 'N', 5)
                     .values(6L, "PORTAREA", "port_area", 'N', 'Y', 6)
+                    .values(7L, "BINGROAD", "NA", 'N', 'N', 7)
+
                     .build()
     );
 

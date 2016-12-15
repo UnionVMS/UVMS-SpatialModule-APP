@@ -14,10 +14,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-
 import javax.ejb.Singleton;
-import javax.ejb.Startup;
-
 import eu.europa.ec.fisheries.uvms.init.AbstractModuleInitializerBean;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

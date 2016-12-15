@@ -22,11 +22,13 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Entity
 @Table(name = "provider_format")
 @EqualsAndHashCode(callSuper = true, exclude = "serviceLayers")
 @Data
+@ToString(exclude = "serviceLayers")
 public class ProviderFormatEntity extends BaseEntity {
 
 	@Column(name = "service_type", nullable = false, length = 10)

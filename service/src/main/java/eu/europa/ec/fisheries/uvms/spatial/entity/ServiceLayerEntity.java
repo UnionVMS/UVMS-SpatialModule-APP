@@ -30,34 +30,31 @@ import javax.persistence.Table;
 import eu.europa.ec.fisheries.uvms.domain.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.apache.commons.lang3.StringUtils;
+import lombok.ToString;
 
 @Entity
 @Table(name = "service_layer")
 @NamedQueries({
-        @NamedQuery(name = ServiceLayerEntity.BY_LOCATION_TYPE,
-                query = "FROM ServiceLayerEntity s JOIN FETCH s.areaType a WHERE a.isSystemWide = 'Y' AND upper(s.areaType.typeName) = upper(:locationType)"),
+        @NamedQuery(name = ServiceLayerEntity.BY_SYSTEM_AREA_TYPE,
+                query = "FROM ServiceLayerEntity s JOIN FETCH s.areaType a WHERE a.isSystemWide = 'Y' AND upper(s.areaType.typeName) = upper(:systemAreaType)"),
         @NamedQuery(name = ServiceLayerEntity.FIND_SERVICE_LAYERS_BY_ID,
                 query = "SELECT serviceLayer FROM ServiceLayerEntity serviceLayer WHERE serviceLayer.id in (:ids) order by serviceLayer.id"),
         @NamedQuery(name = ServiceLayerEntity.FIND_SERVICE_LAYER_BY_SUBTYPE,
                 query = "SELECT serviceLayer.id AS id, serviceLayer.name AS name, serviceLayer.layerDesc AS layerDesc, serviceLayer.subType as subType, serviceLayer.areaType.typeName as areaLocationTypeName  " +
-                        "From ServiceLayerEntity serviceLayer WHERE serviceLayer.subType in (:subTypes) order by serviceLayer.id"),
+                        "FROM ServiceLayerEntity serviceLayer WHERE serviceLayer.subType in (:subTypes) order by serviceLayer.id"),
         @NamedQuery(name = ServiceLayerEntity.FIND_SERVICE_LAYER_BY_SUBTYPE_WITHOUT_BING,
                 query = "SELECT serviceLayer.id AS id, serviceLayer.name AS name, serviceLayer.layerDesc AS layerDesc, serviceLayer.subType as subType, serviceLayer.areaType.typeName as areaLocationTypeName " +
-                        "From ServiceLayerEntity serviceLayer INNER JOIN serviceLayer.providerFormat providerFormat " +
-                        "WHERE serviceLayer.subType in (:subTypes) AND providerFormat.serviceType <> 'BING' order by serviceLayer.id"),
-        @NamedQuery(name = ServiceLayerEntity.BY_AREA_LOCATION_TYPE,
-                query = "FROM ServiceLayerEntity serviceLayer WHERE upper(serviceLayer.areaType.typeName) = upper(:typeName)")
+                        "FROM ServiceLayerEntity serviceLayer INNER JOIN serviceLayer.providerFormat providerFormat " +
+                        "WHERE serviceLayer.subType in (:subTypes) AND providerFormat.serviceType <> 'BING' order by serviceLayer.id")
 })
-@EqualsAndHashCode(callSuper = true, exclude = "reportConnectServiceAreas")
+@EqualsAndHashCode(callSuper = true, exclude = {"reportConnectServiceAreas"})
 @Data
 public class ServiceLayerEntity extends BaseEntity {
 
     public static final String FIND_SERVICE_LAYER_BY_SUBTYPE = "serviceLayer.findServiceLayerBySubType";
     public static final String FIND_SERVICE_LAYER_BY_SUBTYPE_WITHOUT_BING = "serviceLayer.findServiceLayerBySubTypeWithoutBing";
-    public static final String BY_LOCATION_TYPE = "ServiceLayer.byLocationType";
+    public static final String BY_SYSTEM_AREA_TYPE = "serviceLayer.bySystemAreaType";
     public static final String FIND_SERVICE_LAYERS_BY_ID ="ReportLayerConfig.findServiceLayerById";
-    public static final String BY_AREA_LOCATION_TYPE = "ServiceLayer.byAreaLocationType";
 
     @ManyToOne
     @JoinColumn(name = "provider_format_id", nullable = false)

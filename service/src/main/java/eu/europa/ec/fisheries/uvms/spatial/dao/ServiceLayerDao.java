@@ -17,6 +17,7 @@ import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.service.QueryParameter;
 import eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.ServiceLayerDto;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
@@ -43,11 +44,11 @@ public class ServiceLayerDao extends AbstractDAO<ServiceLayerEntity> {
     }
 
     @SuppressWarnings("unchecked")
-    public ServiceLayerEntity getBy(String locationType) throws ServiceException {
+    public ServiceLayerEntity getBy(AreaType areaType) throws ServiceException {
 
         ServiceLayerEntity serviceLayerEntity = null;
-        List<ServiceLayerEntity> layers = findEntityByNamedQuery(ServiceLayerEntity.class, ServiceLayerEntity.BY_LOCATION_TYPE,
-                QueryParameter.with("locationType", locationType).parameters(), 1);
+        List<ServiceLayerEntity> layers = findEntityByNamedQuery(ServiceLayerEntity.class, ServiceLayerEntity.BY_SYSTEM_AREA_TYPE,
+                QueryParameter.with("systemAreaType", areaType.value()).parameters(), 1);
 
         if (layers != null && layers.size() == 1) {
             serviceLayerEntity = layers.get(0);
@@ -55,15 +56,6 @@ public class ServiceLayerDao extends AbstractDAO<ServiceLayerEntity> {
 
         return serviceLayerEntity;
 
-    }
-
-    public ServiceLayerEntity getByAreaLocationType(String areaLocationType) throws ServiceException {
-        List<ServiceLayerEntity> serviceLayers = findEntityByNamedQuery(ServiceLayerEntity.class, ServiceLayerEntity.BY_AREA_LOCATION_TYPE,
-                QueryParameter.with("typeName", areaLocationType).parameters(), 1);
-        if (serviceLayers != null && !serviceLayers.isEmpty()) {
-            return serviceLayers.get(0);
-        }
-        return null;
     }
 
     public List<ServiceLayerDto> findServiceLayerBySubType(List<String> subAreaTypes, boolean isWithBing) {

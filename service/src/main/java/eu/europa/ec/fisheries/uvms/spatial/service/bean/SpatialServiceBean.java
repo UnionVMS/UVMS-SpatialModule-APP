@@ -63,23 +63,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.geotools.geometry.jts.JTSFactoryFinder;
-import org.geotools.geometry.jts.WKTReader2;
-import org.geotools.geometry.jts.WKTWriter2;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.GeodeticCalculator;
-import org.hibernate.SQLQuery;
-import org.hibernate.spatial.GeometryType;
-import org.hibernate.type.StringType;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.operation.TransformException;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -99,15 +92,12 @@ import static org.geotools.geometry.jts.JTS.toGeographic;
  * This class groups all the spatial operations on the spatial database.
  */
 @Stateless
-@Local(SpatialService.class)
 @Transactional
 @Slf4j
 @Interceptors(TracingInterceptor.class)
 public class SpatialServiceBean implements SpatialService {
 
     private static final String EPSG = "EPSG:";
-    private static final String TYPE = "type";
-    private static final String GEOM = "geom";
     private static final String MULTIPOINT = "MULTIPOINT";
 
     private @PersistenceContext(unitName = "spatialPU") EntityManager em;
@@ -234,7 +224,7 @@ public class SpatialServiceBean implements SpatialService {
             UserAreaDto userAreaDto = new UserAreaDto();
             userAreaDto.setGid(userAreaDetails.getId());
             userAreaDto.setDesc(userAreaDetails.getAreaDesc());
-            userAreaDto.setExtent(new WKTWriter2().write(userAreaDetails.getGeom().getEnvelope()));
+            userAreaDto.setExtent(GeometryMapper.INSTANCE.geometryToWkt(userAreaDetails.getGeom().getEnvelope()).getValue());
             userAreaDto.setName(userAreaDetails.getName());
             userAreaDto.setAreaType(userAreaDetails.getType());
             userAreaDtos.add(userAreaDto);
@@ -278,9 +268,8 @@ public class SpatialServiceBean implements SpatialService {
 
     private void addCentroidToProperties(Map<String, Object> properties) throws ParseException {
         Object geometry = properties.get("geometry");
-        if(geometry != null){
-            Geometry centroid = new WKTReader2().read(String.valueOf(geometry)).getCentroid();
-            properties.put("centroid", new WKTWriter2().write(centroid));
+        if (geometry != null) {
+            properties.put("centroid", GeometryUtils.wktToCentroidWkt(String.valueOf(geometry)));
         }
     }
 
@@ -407,18 +396,17 @@ public class SpatialServiceBean implements SpatialService {
         try {
 
             buildQuery(scopeAreas.getScopeAreas(), sb, "scope", typesEntityMap);
-            if (CollectionUtils.isNotEmpty(userAreas.getUserAreas()) && StringUtils.isNotEmpty(sb.toString())){
-                sb.append(" UNION ALL ");
+
+            if(userAreas != null){
+                if ( CollectionUtils.isNotEmpty(userAreas.getUserAreas()) && StringUtils.isNotEmpty(sb.toString())){
+                    sb.append(" UNION ALL ");
+                }
+                buildQuery(userAreas.getUserAreas(), sb, "user", typesEntityMap);
             }
-            buildQuery(userAreas.getUserAreas(), sb, "user", typesEntityMap);
 
-            log.debug("{} QUERY => {}", databaseDialect.getClass().getSimpleName().toUpperCase(), sb.toString());
+            log.debug("{} QUERY => {}", sb.toString());
 
-            Query emNativeQuery = em.createNativeQuery(sb.toString());
-            emNativeQuery.unwrap(SQLQuery.class)
-                    .addScalar(TYPE, StringType.INSTANCE)
-                    .addScalar(GEOM, GeometryType.INSTANCE);
-            List records = emNativeQuery.getResultList();
+            List records = repository.listBaseAreaList(sb.toString());
 
             final List<Geometry> scopeGeometryList = new ArrayList<>();
             final List<Geometry> userGeometryList = new ArrayList<>();
@@ -466,7 +454,7 @@ public class SpatialServiceBean implements SpatialService {
                 if (intersection.getNumPoints() > 20000){
                     intersection = DouglasPeuckerSimplifier.simplify(intersection, 0.5);
                 }
-                response.setGeometry(new WKTWriter2().write(intersection));
+                response.setGeometry(GeometryMapper.INSTANCE.geometryToWkt(intersection).getValue());
             }
 
             return response;
@@ -507,13 +495,14 @@ public class SpatialServiceBean implements SpatialService {
             throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
         }
         final ArrayList<GenericSystemAreaDto> systemAreaByFilterRecords = new ArrayList<>();
-        final WKTWriter2 wktWriter2 = new WKTWriter2();
 
         List<BaseAreaEntity> baseEntities = DAOFactory.getAbstractSpatialDao(em, areaLocationType.getTypeName()).searchEntity(filter);
         for (BaseAreaEntity entity : baseEntities) {
             Geometry geometry = entity.getGeom();
             Geometry envelope = geometry.getGeometryType().equalsIgnoreCase(MULTIPOINT) ? geometry : entity.getGeom().getEnvelope();
-            systemAreaByFilterRecords.add(new GenericSystemAreaDto(entity.getId().intValue(), entity.getCode(),areaType.toUpperCase(), wktWriter2.write(envelope), entity.getName()));
+            systemAreaByFilterRecords.add(
+                    new GenericSystemAreaDto(entity.getId().intValue(), entity.getCode(),areaType.toUpperCase(),
+                            GeometryMapper.INSTANCE.geometryToWkt(envelope).getValue(), entity.getName()));
         }
 
         return systemAreaByFilterRecords;
@@ -552,7 +541,7 @@ public class SpatialServiceBean implements SpatialService {
         for (SystemAreaNamesDto systemAreaNamesDto : systemAreas) {
             GeometryFactory geometryFactory = JTSFactoryFinder.getGeometryFactory();
             Geometry unionGeom = geometryFactory.buildGeometry(systemAreaNamesDto.getGeoms()).union();
-            systemAreaNamesDto.setExtent(new WKTWriter2().write(unionGeom.getEnvelope()));
+            systemAreaNamesDto.setExtent(GeometryMapper.INSTANCE.geometryToWkt(unionGeom.getEnvelope()).getValue());
         }
 
         return systemAreas;

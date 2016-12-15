@@ -11,12 +11,20 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.service;
 
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.io.WKTReader;
 import eu.europa.ec.fisheries.uvms.BaseUnitilsTest;
+import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
+import eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.GeometryUtils;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialServiceBean;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.UserAreaDto;
+import java.util.ArrayList;
+import java.util.Arrays;
+import junit.framework.Assert;
 import lombok.SneakyThrows;
+import org.geotools.geometry.jts.GeometryBuilder;
 import org.junit.Before;
 import org.junit.Test;
 import org.unitils.inject.annotation.InjectIntoByType;
@@ -84,5 +92,97 @@ public class SpatialServiceBeanTest extends BaseUnitilsTest {
         assertTrue(userAreas.isEmpty());
     }
 
+    @Test
+    @SneakyThrows
+    public void testGetClosestPointToPointByType() {
 
+        EezEntity eezEntity = new EezEntity();
+        eezEntity.setLongitude(23.9);
+        eezEntity.setLatitude(32.8);
+
+        Object[] object = new Object[6];
+        object[0] = "PORT";
+        object[1] = 4610;
+        object[2] = "KMYVA";
+        object[3] = "Moroni";
+        object[4] = new GeometryBuilder().point(12.2,34.1);
+        object[5] = 234.19;
+
+        Object[][] objects = new Object[1][1];
+        objects[0][0] = object;
+
+        List<Object> list = new ArrayList<>();
+        list.add(object);
+        repo.returns(list).closestPoint(null, null, null);
+
+        PointType point = new PointType();
+        point.setCrs(GeometryUtils.DEFAULT_SRID);
+        point.setLatitude(23.2);
+        point.setLongitude(21.3);
+
+        ClosestLocationSpatialRQ req = new ClosestLocationSpatialRQ();
+        req.setPoint(point);
+        req.setUnit(UnitType.KILOMETERS);
+
+        List<LocationType> locationTypeList = new ArrayList<>();
+        locationTypeList.add(LocationType.PORT);
+        ClosestLocationSpatialRQ.LocationTypes locationTypes = new ClosestLocationSpatialRQ.LocationTypes();
+        locationTypes.setLocationTypes(locationTypeList);
+
+        req.setLocationTypes(locationTypes);
+
+        List<Location> closestPointToPointByType = service.getClosestPointToPointByType(req);
+
+        assertEquals("4610", closestPointToPointByType.get(0).getId());
+        assertEquals("Moroni", closestPointToPointByType.get(0).getName());
+        assertEquals(1498.670248831626, closestPointToPointByType.get(0).getDistance());
+        assertEquals(UnitType.KILOMETERS, closestPointToPointByType.get(0).getUnit());
+        assertEquals(LocationType.PORT, closestPointToPointByType.get(0).getLocationType());
+
+    }
+
+    @Test
+    @SneakyThrows
+    public void testComputeAreaFilter(){
+
+        List<AreaLocationTypesEntity> entities = new ArrayList<>();
+
+        AreaLocationTypesEntity entity = new AreaLocationTypesEntity();
+        entity.setAreaDbTable("eez");
+        entity.setTypeName("EEZ");
+
+        entities.add(entity);
+
+        repo.returns(entities).findAllIsLocation(false);
+
+        Object[] object = new Object[6];
+        object[0] = "PORT";
+        Point point = new GeometryBuilder().point(12.2, 34.1);
+        point.setSRID(GeometryUtils.DEFAULT_SRID);
+        object[1] = point;
+
+        Object[][] objects = new Object[1][1];
+        objects[0][0] = object;
+
+        List<Object> baseAreaList = new ArrayList<>();
+        baseAreaList.add(object);
+        repo.returns(baseAreaList).listBaseAreaList(null);
+
+        ScopeAreasType scopeAreasType = new ScopeAreasType();
+        List<AreaIdentifierType> list = new ArrayList<>();
+        AreaIdentifierType areaT = new AreaExtendedIdentifierType();
+        areaT.setAreaType(AreaType.EEZ);
+        areaT.setId("1");
+        list.add(areaT);
+        scopeAreasType.setScopeAreas(list);
+
+        FilterAreasSpatialRQ req = new FilterAreasSpatialRQ();
+        req.setScopeAreas(scopeAreasType);
+
+        FilterAreasSpatialRS filterAreasSpatialRS = service.computeAreaFilter(req);
+
+        assertEquals("POINT (12.2 34.1)", filterAreasSpatialRS.getGeometry());
+        assertEquals(2, filterAreasSpatialRS.getCode());
+
+    }
 }

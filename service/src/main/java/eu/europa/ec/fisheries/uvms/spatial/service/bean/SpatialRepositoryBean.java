@@ -38,6 +38,7 @@ import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.entity.SysConfigEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.bookmark.Bookmark;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaLayerDto;
@@ -292,18 +293,13 @@ public class SpatialRepositoryBean implements SpatialRepository {
     }
 
     @Override
-    public ServiceLayerEntity getServiceLayerBy(String locationType) throws ServiceException {
-        return serviceLayerDao.getBy(locationType);
+    public ServiceLayerEntity getServiceLayerBy(AreaType areaType) throws ServiceException {
+        return serviceLayerDao.getBy(areaType);
     }
 
     @Override
     public ServiceLayerEntity getServiceLayerBy(Long id) throws ServiceException {
         return serviceLayerDao.findEntityById(ServiceLayerEntity.class, id);
-    }
-
-    @Override
-    public ServiceLayerEntity getByAreaLocationType(String areaLocationType) throws ServiceException {
-        return  serviceLayerDao.getByAreaLocationType(areaLocationType);
     }
 
     @Override
@@ -375,6 +371,11 @@ public class SpatialRepositoryBean implements SpatialRepository {
     @Override
     public List<CountryEntity> findAllCountries() throws ServiceException {
         return countryDao.findEntitiesByNamedQuery(CountryEntity.FIND_ALL);
+    }
+
+    @Override
+    public List listBaseAreaList(final String query) throws ServiceException {
+        return abstractAreaDao.listBaseAreas(query);
     }
 
     @Override

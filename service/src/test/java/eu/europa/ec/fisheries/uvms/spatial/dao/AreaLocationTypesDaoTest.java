@@ -66,11 +66,10 @@ public class AreaLocationTypesDaoTest extends BaseSpatialDaoTest {
     public void findByIsLocationAndIsSystemReturnSystemWideAreas(){
 
         List<AreaLocationTypesEntity> byIsLocationAndIsSystemWide = dao.findByIsLocationAndIsSystemWide(false, true);
-        assertEquals(4, byIsLocationAndIsSystemWide.size());
+        assertEquals(3, byIsLocationAndIsSystemWide.size());
         assertEquals("EEZ", byIsLocationAndIsSystemWide.get(0).getTypeName());
         assertEquals("RFMO", byIsLocationAndIsSystemWide.get(1).getTypeName());
-        assertEquals("USERAREA", byIsLocationAndIsSystemWide.get(2).getTypeName());
-        assertEquals("PORTAREA", byIsLocationAndIsSystemWide.get(3).getTypeName());
+        assertEquals("PORTAREA", byIsLocationAndIsSystemWide.get(2).getTypeName());
 
     }
 
@@ -89,9 +88,10 @@ public class AreaLocationTypesDaoTest extends BaseSpatialDaoTest {
     public void findByIsLocationAndIsSystemReturnNonSystemWideLocations(){
 
         List<AreaLocationTypesEntity> byIsLocationAndIsSystemWide = dao.findByIsLocationAndIsSystemWide(false, false);
-        assertEquals(1, byIsLocationAndIsSystemWide.size());
+        assertEquals(3, byIsLocationAndIsSystemWide.size());
         assertEquals("COUNTRY", byIsLocationAndIsSystemWide.get(0).getTypeName());
+        assertEquals("USERAREA", byIsLocationAndIsSystemWide.get(1).getTypeName());
+        assertEquals("BINGROAD", byIsLocationAndIsSystemWide.get(2).getTypeName());
 
     }
-
 }
