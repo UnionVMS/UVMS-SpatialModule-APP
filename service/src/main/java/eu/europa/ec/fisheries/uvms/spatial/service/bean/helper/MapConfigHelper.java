@@ -75,10 +75,8 @@ public class MapConfigHelper {
     }
 
     public static boolean isRemoveLayer(ServiceLayerEntity serviceLayer, String bingApiKey) {
-        if (serviceLayer.getProviderFormat().getServiceType().equalsIgnoreCase(PROVIDER_FORMAT_BING) && (bingApiKey == null || bingApiKey.trim().equals(""))) {
-            return true;
-        }
-        return false;
+        return serviceLayer.getProviderFormat().getServiceType().equalsIgnoreCase(PROVIDER_FORMAT_BING) &&
+                (bingApiKey == null || bingApiKey.trim().equals(""));
     }
 
     public static List<ServiceLayerEntity> sortServiceLayers(List<ServiceLayerEntity> serviceLayers, List<Long> ids) {
