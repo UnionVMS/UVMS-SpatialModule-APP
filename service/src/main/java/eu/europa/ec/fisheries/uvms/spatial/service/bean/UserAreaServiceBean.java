@@ -247,9 +247,7 @@ public class UserAreaServiceBean implements UserAreaService {
         Object geometry = properties.get("geometry");
 
         if (geometry != null){
-            Geometry centroid =
-                    GeometryMapper.INSTANCE.wktToGeometry(String.valueOf(geometry)).getValue().getCentroid();
-            properties.put("centroid", GeometryMapper.INSTANCE.geometryToWkt(centroid).getValue());
+            properties.put("centroid", GeometryUtils.wktToCentroidWkt(String.valueOf(geometry)));
         }
     }
 

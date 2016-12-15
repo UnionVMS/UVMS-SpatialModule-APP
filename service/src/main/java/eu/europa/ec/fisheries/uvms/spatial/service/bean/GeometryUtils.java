@@ -8,6 +8,8 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
+
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -15,6 +17,8 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.io.ParseException;
+import eu.europa.ec.fisheries.uvms.mapper.GeometryMapper;
 import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadProperty;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
@@ -128,25 +132,27 @@ public final class GeometryUtils {
         return p;
     }
 
-    public static Point toWgs84Point(double y, double x, int sourceCode, int targetCode) {
-        Point p;
+    /**
+     * Returns ths centroid of a given geometry as WKT
+     *
+     * @param wkt a WKT
+     * @return wkt the centroid as WKT
+     */
+    public static String wktToCentroidWkt(final String wkt){
+
+        String theWktString = null;
+
         try {
-            p = FACTORY.createPoint(new Coordinate(x, y));
-            final CoordinateReferenceSystem sourceCRS = CRS.decode(EPSG + sourceCode);
-            final CoordinateReferenceSystem targetCRS = CRS.decode(EPSG + targetCode);
-            MathTransform mathTransform = CRS.findMathTransform(sourceCRS, targetCRS, false);
-            p = (Point) JTS.transform(p, mathTransform);
-            checkLatitude(p.getY());
-            checkLongitude(p.getX());
-        } catch (FactoryException e) {
+            Point centroid = GeometryMapper.INSTANCE.wktToGeometry(wkt).getValue().getCentroid();
+            theWktString = GeometryMapper.INSTANCE.geometryToWkt(centroid).getValue();
+
+        } catch (ParseException e) {
             log.error(e.getMessage(), e);
-            throw new IllegalArgumentException("MATH TRANSFORM COULD BE CREATED");
-        } catch (TransformException e) {
-            log.error(e.getMessage(), e);
-            throw new IllegalArgumentException("TRANSFORMATION FAILED", e);
         }
-        return p;
+
+        return theWktString;
     }
+
     /**
      * Checks the longitude validity. The argument {@code longitude} should be
      * greater or equal than -180 degrees and lower or equals than +180 degrees. As

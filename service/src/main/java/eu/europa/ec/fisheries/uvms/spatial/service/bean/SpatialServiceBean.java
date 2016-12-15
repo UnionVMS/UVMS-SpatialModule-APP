@@ -268,10 +268,8 @@ public class SpatialServiceBean implements SpatialService {
 
     private void addCentroidToProperties(Map<String, Object> properties) throws ParseException {
         Object geometry = properties.get("geometry");
-        if(geometry != null){
-            Geometry centroid =
-                    GeometryMapper.INSTANCE.wktToGeometry(String.valueOf(geometry)).getValue().getCentroid();
-            properties.put("centroid", GeometryMapper.INSTANCE.geometryToWkt(centroid).getValue());
+        if (geometry != null) {
+            properties.put("centroid", GeometryUtils.wktToCentroidWkt(String.valueOf(geometry)));
         }
     }
 
