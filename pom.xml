@@ -8,16 +8,6 @@
     <packaging>pom</packaging>
     <description>Maven projekt-archetype for UnionVms modules</description>
 
-    <developers>
-        <developer>
-            <name>Gregory Rinaldi</name>
-            <email>gregory.rinaldi@ordina.be</email>
-        </developer>
-		<developer>
-            <name>Georgi Georgiev</name>
-            <email>georgi.georgiev@ordina.be</email>
-        </developer>
-    </developers>
 
     <properties>
 
@@ -51,6 +41,8 @@
         <maven.release.plugin.version>2.5.2</maven.release.plugin.version>
         <maven.scm.provider.version>2.1.1</maven.scm.provider.version>
         <database.dialect>oracle</database.dialect>
+
+        <scm.connection>scm:git:https://github.com/UnionVMS/UVMS-SpatialModule-APP.git</scm.connection>
     </properties>
 
     <dependencyManagement>
@@ -198,25 +190,25 @@
         </dependencies>
 
     </dependencyManagement>
-    	
+
+    <scm>
+        <connection>${scm.connection}</connection>
+        <tag>HEAD</tag>
+    </scm>
+
+
     <distributionManagement>
         <repository>
-            <id>digit-releases</id>
-            <name>DG DIGIT Repository</name>
-            <url>https://webgate.ec.europa.eu/CITnet/nexus/content/repositories/mare/</url>
+            <id>focus-releases</id>
+            <name>UnionVms Repository</name>
+            <url>http://nexus.focus.fish/nexus/content/repositories/releases/</url>
         </repository>
         <snapshotRepository>
-            <id>digit-snapshots</id>
-            <name>DG DIGIT Snapshot Repository</name>
-            <url>https://webgate.ec.europa.eu/CITnet/nexus/content/repositories/mare-snapshots/</url>
+            <id>focus-snapshots</id>
+            <name>UnionVms Snapshot Repository</name>
+            <url>http://nexus.focus.fish/nexus/content/repositories/snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
-
-	<scm>
-		 <connection>scm:git:https:///emserveje@webgate.ec.europa.eu/CITnet/stash/scm/unionvms/uvms-spatialmodule-app.git</connection>
-		 <developerConnection>scm:git:https:///emserveje@webgate.ec.europa.eu/CITnet/stash/scm/unionvms/uvms-spatialmodule-app.git</developerConnection>
-		 <url>https://emserveje@webgate.ec.europa.eu/CITnet/stash/scm/unionvms/</url>
-	</scm>
 
     <build>
         <pluginManagement>
@@ -332,6 +324,25 @@
     </repositories>
 	
 	<profiles>
+        <profile>
+            <id>dg-mare</id>
+            <distributionManagement>
+                <repository>
+                    <id>digit-releases</id>
+                    <name>DG DIGIT Repository</name>
+                    <url>https://webgate.ec.europa.eu/CITnet/nexus/content/repositories/mare/</url>
+                </repository>
+                <snapshotRepository>
+                    <id>digit-snapshots</id>
+                    <name>DG DIGIT Snapshot Repository</name>
+                    <url>https://webgate.ec.europa.eu/CITnet/nexus/content/repositories/mare-snapshots/</url>
+                </snapshotRepository>
+            </distributionManagement>
+
+            <properties>
+                <scm.connection>scm:git:https://emserveje@webgate.ec.europa.eu/CITnet/stash/scm/unionvms/uvms-spatialmodule-app.git</scm.connection>
+            </properties>
+        </profile>
 		<profile>
             <id>postgres</id>
             <properties>
