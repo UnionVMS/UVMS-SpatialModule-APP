@@ -16,14 +16,14 @@
         <!-- The spatial name is used as a common point to rename the application alias visible in USM-->
         <spatial.name>Spatial</spatial.name>
         <spatial.model>0.5.5-SNAPSHOT</spatial.model>
-        <reporting.model>0.5.4</reporting.model>
+        <reporting.model>0.5.6-SNAPSHOT</reporting.model>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <jts.version>1.13</jts.version>
         <jackson.version>2.6.0</jackson.version>
         <logback.core.version>1.1.2</logback.core.version>
-        <asset.module.version>2.0.6</asset.module.version>
-        <movement.model.version>2.0.6</movement.model.version>
+        <asset.module.version>3.0.0-SNAPSHOT</asset.module.version>
+        <movement.model.version>3.0.0-SNAPSHOT</movement.model.version>
         <application.name>${project.parent.artifactId}</application.name>
         <application.version>${project.parent.version}</application.version>
         <application.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}.log</application.logfile>
@@ -35,7 +35,7 @@
         <uvms.commons.version>2.0.14-SNAPSHOT</uvms.commons.version>
         <uvms.test.version>0.0.4-SNAPSHOT</uvms.test.version>
         <hibernate.validator.version>5.2.1.Final</hibernate.validator.version>
-        <usm4uvms.version>2.0.16</usm4uvms.version>
+        <usm4uvms.version>3.0.0-SNAPSHOT</usm4uvms.version>
         <usm_deployment_descriptor_force_update>false</usm_deployment_descriptor_force_update>
         <release.branch.name>uvms-1.0.0</release.branch.name>
         <maven.release.plugin.version>2.5.2</maven.release.plugin.version>
@@ -116,12 +116,14 @@
                 <groupId>eu.europa.ec.fisheries.uvms.movement</groupId>
                 <artifactId>movement-model</artifactId>
                 <version>${movement.model.version}</version>
+                <classifier>xmlgregoriancalendar</classifier>
             </dependency>
 
             <dependency>
                 <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
                 <artifactId>asset-model</artifactId>
                 <version>${asset.module.version}</version>
+				<classifier>date</classifier>
             </dependency>
             
 	        <dependency>
