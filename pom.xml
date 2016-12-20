@@ -148,6 +148,6 @@
     </build>
 
     <modules>
-        <module>liquibase</module>
+        <module>LIQUIBASE</module>
     </modules>
 </project>
