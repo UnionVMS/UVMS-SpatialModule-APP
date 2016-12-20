@@ -15,6 +15,7 @@
 		<liquibase.spatial.version>1.2.1</liquibase.spatial.version>
 
         <scm.connection>scm:git:https://github.com/UnionVMS/UVMS-SpatialModule-DB.git</scm.connection>
+
     </properties>
 
     <dependencyManagement>
@@ -49,6 +50,7 @@
     </dependencyManagement>
 
 
+
     <scm>
         <connection>${scm.connection}</connection>
         <tag>HEAD</tag>
@@ -65,6 +67,7 @@
             <id>focus-snapshots</id>
             <name>UnionVms Snapshot Repository</name>
             <url>http://nexus.focus.fish/nexus/content/repositories/snapshots/</url>
+
         </snapshotRepository>
     </distributionManagement>
 
