@@ -2,3 +2,4 @@
 *.ddl
 target
 target/*
+logging.properties
