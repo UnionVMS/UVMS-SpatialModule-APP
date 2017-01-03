@@ -41,6 +41,9 @@
         <maven.release.plugin.version>2.5.2</maven.release.plugin.version>
         <maven.scm.provider.version>2.1.1</maven.scm.provider.version>
         <database.dialect>oracle</database.dialect>
+        <javaee.version>7.0</javaee.version>
+        <mapstruct.version>1.0.0.Final</mapstruct.version>
+        <uvms-wildfly-weblogic-convertor>1.6.0-SNAPSHOT</uvms-wildfly-weblogic-convertor>
 
         <scm.connection>scm:git:https://github.com/UnionVMS/UVMS-SpatialModule-APP.git</scm.connection>
     </properties>
@@ -194,6 +197,25 @@
 			    <artifactId>jaxrs-api</artifactId>
 			    <version>3.0.11.Final</version>
 			</dependency>
+
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct</artifactId>
+                <version>${mapstruct.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct-processor</artifactId>
+                <version>${mapstruct.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>javax</groupId>
+                <artifactId>javaee-api</artifactId>
+                <version>${javaee.version}</version>
+                <scope>provided</scope>
+            </dependency>
 
         </dependencies>
 

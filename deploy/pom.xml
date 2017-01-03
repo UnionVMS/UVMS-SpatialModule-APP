@@ -163,14 +163,18 @@
 				
 				  
 				  <plugin>
-					<groupId>eu.europa.ec.fisheries.uvms.containerconversion</groupId>
-					<artifactId>uvms-wildfly-weblogic-convertor</artifactId>
-					 <version>1.4.0</version>
-					<executions>
+                      <groupId>eu.europa.ec.fisheries.uvms.containerconversion</groupId>
+                      <artifactId>uvms-wildfly-weblogic-convertor</artifactId>
+                      <version>${uvms-wildfly-weblogic-convertor}</version>
+                      <configuration>
+                          <uvmsCommonsPath>E:/UVMS/converter/uvms-uvmscommonslibrary</uvmsCommonsPath>
+                          <usm4uvmsPath>E:/UVMS/converter/uvms-usm4uvmslibrary</usm4uvmsPath>
+                      </configuration>
+                      <executions>
 					  <execution>
 						<phase>package</phase>
 						<goals>
-						  <goal>convertEAR</goal>
+						  <goal>convertSpatialEAR</goal>
 						</goals>
 					  </execution>
 					</executions>
