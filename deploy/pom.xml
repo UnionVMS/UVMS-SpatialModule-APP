@@ -134,8 +134,19 @@
             </build>
         </profile>
 		
-    <profile>
+  <profile>
             <id>weblogic</id>
+				<properties>
+					<database.dialect>oracle</database.dialect> <!-- the record -->
+				</properties>				
+			<dependencies>			
+				<dependency>
+					<groupId>eu.europa.ec.fisheries.uvms</groupId>
+					<artifactId>usm4uvms</artifactId>
+					<version>${usm4uvms.version}</version>
+				</dependency>
+			</dependencies>			
+			
             <build>
                 <plugins>
 					<plugin>
@@ -156,6 +167,11 @@
 									<artifactId>usm4uvms</artifactId>		   
 									<bundleDir>/</bundleDir>					
 								</jarModule >						
+							   <jarModule>
+									<groupId>eu.europa.ec.mare.usm</groupId>
+									<artifactId>jwt-handler-impl</artifactId>
+									<bundleDir>/</bundleDir>					
+								</jarModule>						
 							</modules>
 						</configuration>
 					</plugin>
@@ -165,12 +181,16 @@
 				  <plugin>
 					<groupId>eu.europa.ec.fisheries.uvms.containerconversion</groupId>
 					<artifactId>uvms-wildfly-weblogic-convertor</artifactId>
-					 <version>1.4.0</version>
+					 <version>1.5.0</version>
+					 <configuration>
+						<uvmsCommonsPath>C:/stuff/Sources/Libraries/uvms-commons</uvmsCommonsPath>
+						<usm4uvmsPath>C:/stuff/Sources/Libraries/usm4uvms</usm4uvmsPath>
+					</configuration> 
 					<executions>
 					  <execution>
 						<phase>package</phase>
 						<goals>
-						  <goal>convertEAR</goal>
+						  <goal>convertSpatialEAR</goal>
 						</goals>
 					  </execution>
 					</executions>
