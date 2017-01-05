@@ -134,7 +134,7 @@
             </build>
         </profile>
 		
-  <profile>
+    <profile>
             <id>weblogic</id>
 				<properties>
 					<database.dialect>oracle</database.dialect> <!-- the record -->
@@ -145,7 +145,7 @@
 					<artifactId>usm4uvms</artifactId>
 					<version>${usm4uvms.version}</version>
 				</dependency>
-			</dependencies>			
+			</dependencies>
 			
             <build>
                 <plugins>
@@ -179,14 +179,14 @@
 				
 				  
 				  <plugin>
-					<groupId>eu.europa.ec.fisheries.uvms.containerconversion</groupId>
-					<artifactId>uvms-wildfly-weblogic-convertor</artifactId>
-					 <version>1.5.0</version>
-					 <configuration>
-						<uvmsCommonsPath>C:/stuff/Sources/Libraries/uvms-commons</uvmsCommonsPath>
-						<usm4uvmsPath>C:/stuff/Sources/Libraries/usm4uvms</usm4uvmsPath>
-					</configuration> 
-					<executions>
+                      <groupId>eu.europa.ec.fisheries.uvms.containerconversion</groupId>
+                      <artifactId>uvms-wildfly-weblogic-convertor</artifactId>
+                      <version>${uvms-wildfly-weblogic-convertor}</version>
+                      <configuration>
+                          <uvmsCommonsPath>E:/UVMS/converter/uvms-uvmscommonslibrary</uvmsCommonsPath>
+                          <usm4uvmsPath>E:/UVMS/converter/uvms-usm4uvmslibrary</usm4uvmsPath>
+                      </configuration>
+                      <executions>
 					  <execution>
 						<phase>package</phase>
 						<goals>
