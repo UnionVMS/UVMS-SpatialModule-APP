@@ -136,6 +136,17 @@
 		
     <profile>
             <id>weblogic</id>
+				<properties>
+					<database.dialect>oracle</database.dialect> <!-- the record -->
+				</properties>				
+			<dependencies>			
+				<dependency>
+					<groupId>eu.europa.ec.fisheries.uvms</groupId>
+					<artifactId>usm4uvms</artifactId>
+					<version>${usm4uvms.version}</version>
+				</dependency>
+			</dependencies>
+			
             <build>
                 <plugins>
 					<plugin>
@@ -156,6 +167,11 @@
 									<artifactId>usm4uvms</artifactId>		   
 									<bundleDir>/</bundleDir>					
 								</jarModule >						
+							   <jarModule>
+									<groupId>eu.europa.ec.mare.usm</groupId>
+									<artifactId>jwt-handler-impl</artifactId>
+									<bundleDir>/</bundleDir>					
+								</jarModule>						
 							</modules>
 						</configuration>
 					</plugin>
