@@ -88,6 +88,7 @@
                 <groupId>eu.europa.ec.fisheries.uvms</groupId>
                 <artifactId>usm4uvms</artifactId>
                 <version>${usm4uvms.version}</version>
+				<optional>true</optional>				
             </dependency>
             
             <dependency>
@@ -100,7 +101,8 @@
                 <groupId>eu.europa.ec.fisheries.uvms</groupId>
                 <artifactId>uvms-commons</artifactId>
                 <version>${uvms.commons.version}</version>
-            </dependency>
+				<optional>true</optional>
+			</dependency>
 
             <dependency>
                 <groupId>eu.europa.ec.fisheries.uvms</groupId>
@@ -410,6 +412,19 @@
 							<groupId>org.hibernate</groupId>
 							<artifactId>hibernate-validator</artifactId>
 						</dependency>
+						<dependency>
+							<groupId>eu.europa.ec.fisheries.uvms</groupId>
+							<artifactId>uvms-commons</artifactId>
+							<version>${uvms.commons.version}</version>
+							<classifier>weblogic</classifier>
+						</dependency>				
+						<dependency>
+							<groupId>eu.europa.ec.fisheries.uvms</groupId>
+							<artifactId>usm4uvms</artifactId>
+							<version>${usm4uvms.version}</version>
+							<classifier>weblogic</classifier>			
+						</dependency>
+					
 					
 					</dependencies>
 				
