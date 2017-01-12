@@ -147,6 +147,12 @@
 					<version>${usm4uvms.version}</version>
 					<classifier>weblogic-activemq</classifier>		   					
 				</dependency>
+				<dependency>
+					<groupId>eu.europa.ec.fisheries.uvms</groupId>
+					<artifactId>uvms-commons</artifactId>
+					<version>${uvms.commons.version}</version>
+					<classifier>weblogic-activemq</classifier>		   					
+				</dependency>			
 			</dependencies>
 			
             <build>
@@ -226,6 +232,13 @@
 					<version>${usm4uvms.version}</version>
 					<classifier>weblogic-weblogic</classifier>		   					
 				</dependency>
+				<dependency>
+					<groupId>eu.europa.ec.fisheries.uvms</groupId>
+					<artifactId>uvms-commons</artifactId>
+					<version>${uvms.commons.version}</version>
+					<classifier>weblogic-weblogic</classifier>		   					
+				</dependency>			
+				
 			</dependencies>
 			
             <build>
@@ -246,8 +259,7 @@
 							   <jarModule>
 									<groupId>eu.europa.ec.fisheries.uvms</groupId>
 									<artifactId>usm4uvms</artifactId>		   
-									<classifier>weblogic-weblogic</classifier>		   
-									
+									<classifier>weblogic-weblogic</classifier>		   									
 									<bundleDir>/</bundleDir>					
 								</jarModule >						
 							   <jarModule>
