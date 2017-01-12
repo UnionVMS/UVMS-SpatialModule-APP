@@ -416,7 +416,7 @@
 							<groupId>eu.europa.ec.fisheries.uvms</groupId>
 							<artifactId>uvms-commons</artifactId>
 							<version>${uvms.commons.version}</version>
-							<classifier>weblogic</classifier>
+							<classifier>weblogic-activemq</classifier>
 						</dependency>				
 						<dependency>
 							<groupId>eu.europa.ec.fisheries.uvms</groupId>
@@ -465,7 +465,7 @@
 							<groupId>eu.europa.ec.fisheries.uvms</groupId>
 							<artifactId>uvms-commons</artifactId>
 							<version>${uvms.commons.version}</version>
-							<classifier>weblogic</classifier>
+							<classifier>weblogic-weblogic</classifier>
 						</dependency>				
 						<dependency>
 							<groupId>eu.europa.ec.fisheries.uvms</groupId>
