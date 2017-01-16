@@ -393,12 +393,10 @@
     "layerSettings": {
         "portLayers": [
             {
-                "serviceLayerId": 4,
                 "serviceLayerId": 3,
                 "order": 1
             },
             {
-                "serviceLayerId": 11,
                 "serviceLayerId": 10,
                 "order": 2
             }
@@ -417,29 +415,24 @@
         ],
         "additionalLayers": [
             {
-                "serviceLayerId": 7,
                 "serviceLayerId": 6,
                 "order": 1
             }
         ],
         "baseLayers": [
             {
-                "serviceLayerId": 6,
                 "serviceLayerId": 5,
                 "order": 1
             },
             {
-                "serviceLayerId": 8,
                 "serviceLayerId": 7,
                 "order": 2
             },
             {
-                "serviceLayerId": 9,
                 "serviceLayerId": 8,
                 "order": 3
             },
             {
-                "serviceLayerId": 10,
                 "serviceLayerId": 9,
                 "order": 4
             }
