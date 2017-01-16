@@ -35,7 +35,7 @@
         <uvms.commons.version>2.0.14-SNAPSHOT</uvms.commons.version>
         <uvms.test.version>0.0.4-SNAPSHOT</uvms.test.version>
         <hibernate.validator.version>5.2.1.Final</hibernate.validator.version>
-        <usm4uvms.version>3.0.0-SNAPSHOT</usm4uvms.version>
+        <usm4uvms.version>2.0.17-SNAPSHOT</usm4uvms.version>
         <usm_deployment_descriptor_force_update>false</usm_deployment_descriptor_force_update>
         <release.branch.name>uvms-1.0.0</release.branch.name>
         <maven.release.plugin.version>2.5.2</maven.release.plugin.version>
@@ -43,7 +43,7 @@
         <database.dialect>oracle</database.dialect>
         <javaee.version>7.0</javaee.version>
         <mapstruct.version>1.0.0.Final</mapstruct.version>
-        <uvms-wildfly-weblogic-convertor>1.6.0-SNAPSHOT</uvms-wildfly-weblogic-convertor>
+        <uvms-wildfly-weblogic-convertor>1.6.0</uvms-wildfly-weblogic-convertor>
 
         <scm.connection>scm:git:https://github.com/UnionVMS/UVMS-SpatialModule-APP.git</scm.connection>
     </properties>
@@ -383,7 +383,7 @@
         </profile>
 		
 		<profile>
-				<id>weblogic</id>
+				<id>weblogic-activemq</id>
 				<properties>
 					<database.dialect>oracle</database.dialect> <!-- the record -->
 					<configDirectory>${basedir}/../container-conf/oracle</configDirectory>
@@ -416,13 +416,13 @@
 							<groupId>eu.europa.ec.fisheries.uvms</groupId>
 							<artifactId>uvms-commons</artifactId>
 							<version>${uvms.commons.version}</version>
-							<classifier>weblogic</classifier>
+							<classifier>weblogic-activemq</classifier>
 						</dependency>				
 						<dependency>
 							<groupId>eu.europa.ec.fisheries.uvms</groupId>
 							<artifactId>usm4uvms</artifactId>
 							<version>${usm4uvms.version}</version>
-							<classifier>weblogic</classifier>			
+							<classifier>weblogic-activemq</classifier>			
 						</dependency>
 					
 					
@@ -431,6 +431,55 @@
 				
 		</profile>
 
+				<profile>
+				<id>weblogic-weblogic</id>
+				<properties>
+					<database.dialect>oracle</database.dialect> <!-- the record -->
+					<configDirectory>${basedir}/../container-conf/oracle</configDirectory>
+					<earSourceDirectory>${basedir}/../deploy/src/main/application/META-INF</earSourceDirectory>
+					<jndiReferenceName>jdbc/uvms_spatial</jndiReferenceName>				
+				</properties>				
+					<dependencies>				
+						
+						<dependency>
+							<groupId>io.jsonwebtoken</groupId>
+							<artifactId>jjwt</artifactId>
+						</dependency>
+						<dependency>
+							<groupId>javax</groupId>
+							<artifactId>javaee-api</artifactId>
+						</dependency>
+						<dependency>
+							<groupId>org.mapstruct</groupId>
+							<artifactId>mapstruct</artifactId>
+						</dependency>
+						<dependency>
+							<groupId>org.mapstruct</groupId>
+							<artifactId>mapstruct-processor</artifactId>
+						</dependency>
+						<dependency>
+							<groupId>org.hibernate</groupId>
+							<artifactId>hibernate-validator</artifactId>
+						</dependency>
+						<dependency>
+							<groupId>eu.europa.ec.fisheries.uvms</groupId>
+							<artifactId>uvms-commons</artifactId>
+							<version>${uvms.commons.version}</version>
+							<classifier>weblogic-weblogic</classifier>
+						</dependency>				
+						<dependency>
+							<groupId>eu.europa.ec.fisheries.uvms</groupId>
+							<artifactId>usm4uvms</artifactId>
+							<version>${usm4uvms.version}</version>
+							<classifier>weblogic-weblogic</classifier>			
+						</dependency>
+					
+					
+					</dependencies>
+				
+				
+		</profile>
+		
 	</profiles>
 
     <modules>
