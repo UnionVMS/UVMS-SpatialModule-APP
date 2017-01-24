@@ -15,14 +15,14 @@
 
         <!-- The spatial name is used as a common point to rename the application alias visible in USM-->
         <spatial.name>Spatial</spatial.name>
-        <spatial.model>0.5.5-SNAPSHOT</spatial.model>
-        <reporting.model>0.5.6-SNAPSHOT</reporting.model>
+        <spatial.model>0.5.6</spatial.model>
+        <reporting.model>0.5.6</reporting.model>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <jts.version>1.13</jts.version>
         <jackson.version>2.6.0</jackson.version>
         <logback.core.version>1.1.2</logback.core.version>
-        <asset.module.version>3.0.0-SNAPSHOT</asset.module.version>
+        <asset.module.version>3.0.0</asset.module.version>
         <movement.model.version>3.0.0-SNAPSHOT</movement.model.version>
         <application.name>${project.parent.artifactId}</application.name>
         <application.version>${project.parent.version}</application.version>
@@ -32,18 +32,17 @@
         <hibernate.version>4.3.5.Final</hibernate.version>
         <hibernate-spatial.version>4.3</hibernate-spatial.version>
         <geotools.version>14-M1</geotools.version>
-        <uvms.commons.version>2.0.14-SNAPSHOT</uvms.commons.version>
-        <uvms.test.version>0.0.4-SNAPSHOT</uvms.test.version>
+        <uvms.commons.version>2.0.15</uvms.commons.version>
+        <uvms.test.version>0.0.4</uvms.test.version>
         <hibernate.validator.version>5.2.1.Final</hibernate.validator.version>
-        <usm4uvms.version>2.0.17-SNAPSHOT</usm4uvms.version>
+        <usm4uvms.version>2.0.17</usm4uvms.version>
         <usm_deployment_descriptor_force_update>false</usm_deployment_descriptor_force_update>
         <release.branch.name>uvms-1.0.0</release.branch.name>
         <maven.release.plugin.version>2.5.2</maven.release.plugin.version>
         <maven.scm.provider.version>2.1.1</maven.scm.provider.version>
-        <database.dialect>oracle</database.dialect>
         <javaee.version>7.0</javaee.version>
         <mapstruct.version>1.0.0.Final</mapstruct.version>
-        <uvms-wildfly-weblogic-convertor>1.6.0</uvms-wildfly-weblogic-convertor>
+        <uvms-wildfly-weblogic-convertor>1.7.2</uvms-wildfly-weblogic-convertor>
 
         <scm.connection>scm:git:https://github.com/UnionVMS/UVMS-SpatialModule-APP.git</scm.connection>
     </properties>
@@ -86,7 +85,7 @@
         
         	<dependency>
                 <groupId>eu.europa.ec.fisheries.uvms</groupId>
-                <artifactId>usm4uvms</artifactId>
+                <artifactId>usm4uvms-wildfly</artifactId>
                 <version>${usm4uvms.version}</version>
 				<optional>true</optional>				
             </dependency>
@@ -99,7 +98,7 @@
 
             <dependency>
                 <groupId>eu.europa.ec.fisheries.uvms</groupId>
-                <artifactId>uvms-commons</artifactId>
+                <artifactId>uvms-commons-wildfly</artifactId>
                 <version>${uvms.commons.version}</version>
 				<optional>true</optional>
 			</dependency>
@@ -375,117 +374,14 @@
                 <scm.connection>scm:git:https://emserveje@webgate.ec.europa.eu/CITnet/stash/scm/unionvms/uvms-spatialmodule-app.git</scm.connection>
             </properties>
         </profile>
-		<profile>
-            <id>postgres</id>
-            <properties>
-                <database.dialect>postgres</database.dialect> <!-- the record -->
-            </properties>
-        </profile>
-		
-		<profile>
-				<id>weblogic-activemq</id>
-				<properties>
-					<database.dialect>oracle</database.dialect> <!-- the record -->
-					<configDirectory>${basedir}/../container-conf/oracle</configDirectory>
-					<earSourceDirectory>${basedir}/../deploy/src/main/application/META-INF</earSourceDirectory>
-					<jndiReferenceName>jdbc/uvms_spatial</jndiReferenceName>				
-				</properties>				
-					<dependencies>				
-						
-						<dependency>
-							<groupId>io.jsonwebtoken</groupId>
-							<artifactId>jjwt</artifactId>
-						</dependency>
-						<dependency>
-							<groupId>javax</groupId>
-							<artifactId>javaee-api</artifactId>
-						</dependency>
-						<dependency>
-							<groupId>org.mapstruct</groupId>
-							<artifactId>mapstruct</artifactId>
-						</dependency>
-						<dependency>
-							<groupId>org.mapstruct</groupId>
-							<artifactId>mapstruct-processor</artifactId>
-						</dependency>
-						<dependency>
-							<groupId>org.hibernate</groupId>
-							<artifactId>hibernate-validator</artifactId>
-						</dependency>
-						<dependency>
-							<groupId>eu.europa.ec.fisheries.uvms</groupId>
-							<artifactId>uvms-commons</artifactId>
-							<version>${uvms.commons.version}</version>
-							<classifier>weblogic-activemq</classifier>
-						</dependency>				
-						<dependency>
-							<groupId>eu.europa.ec.fisheries.uvms</groupId>
-							<artifactId>usm4uvms</artifactId>
-							<version>${usm4uvms.version}</version>
-							<classifier>weblogic-activemq</classifier>			
-						</dependency>
-					
-					
-					</dependencies>
-				
-				
-		</profile>
 
-				<profile>
-				<id>weblogic-weblogic</id>
-				<properties>
-					<database.dialect>oracle</database.dialect> <!-- the record -->
-					<configDirectory>${basedir}/../container-conf/oracle</configDirectory>
-					<earSourceDirectory>${basedir}/../deploy/src/main/application/META-INF</earSourceDirectory>
-					<jndiReferenceName>jdbc/uvms_spatial</jndiReferenceName>				
-				</properties>				
-					<dependencies>				
-						
-						<dependency>
-							<groupId>io.jsonwebtoken</groupId>
-							<artifactId>jjwt</artifactId>
-						</dependency>
-						<dependency>
-							<groupId>javax</groupId>
-							<artifactId>javaee-api</artifactId>
-						</dependency>
-						<dependency>
-							<groupId>org.mapstruct</groupId>
-							<artifactId>mapstruct</artifactId>
-						</dependency>
-						<dependency>
-							<groupId>org.mapstruct</groupId>
-							<artifactId>mapstruct-processor</artifactId>
-						</dependency>
-						<dependency>
-							<groupId>org.hibernate</groupId>
-							<artifactId>hibernate-validator</artifactId>
-						</dependency>
-						<dependency>
-							<groupId>eu.europa.ec.fisheries.uvms</groupId>
-							<artifactId>uvms-commons</artifactId>
-							<version>${uvms.commons.version}</version>
-							<classifier>weblogic-weblogic</classifier>
-						</dependency>				
-						<dependency>
-							<groupId>eu.europa.ec.fisheries.uvms</groupId>
-							<artifactId>usm4uvms</artifactId>
-							<version>${usm4uvms.version}</version>
-							<classifier>weblogic-weblogic</classifier>			
-						</dependency>
-					
-					
-					</dependencies>
-				
-				
-		</profile>
-		
 	</profiles>
 
     <modules>
         <module>rest</module>
         <module>service</module>
         <module>message</module>
-        <module>deploy</module>
+        <module>deploy-wildfly</module>
+        <module>deploy-weblogic</module>
     </modules>
 </project>
