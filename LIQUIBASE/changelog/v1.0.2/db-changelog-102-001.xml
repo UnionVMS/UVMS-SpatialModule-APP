@@ -5,7 +5,7 @@
     <changeSet id="0fb04dfe-815b-41ae-8887-446f63ac492e" author="emrinalgr">
 
         <update tableName="system_configurations">
-            <column name="value" value="http://192.168.99.100:8080/geoserver/"/>
+            <column name="value" value="http://localhost:8080/geoserver/"/>
             <where>name='geo_server_url'</where>
         </update>
 
