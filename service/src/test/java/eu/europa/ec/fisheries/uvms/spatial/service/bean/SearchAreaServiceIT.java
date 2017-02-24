@@ -17,9 +17,7 @@ import java.util.Map;
 import javax.ejb.EJB;
 
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
-import eu.europa.ec.fisheries.uvms.spatial.service.AreaService;
-import eu.europa.ec.fisheries.uvms.spatial.service.SpatialService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.GenericSystemAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.GenericSystemAreaDto;
 import lombok.SneakyThrows;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
