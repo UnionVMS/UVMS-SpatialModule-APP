@@ -12,7 +12,7 @@ package eu.europa.ec.fisheries.uvms.spatial.utility;
 
 import com.ninja_squad.dbsetup.operation.Operation;
 import eu.europa.ec.fisheries.uvms.BaseDAOTest;
-import eu.europa.ec.fisheries.uvms.spatial.entity.FaoEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.FaoEntity;
 
 import static com.ninja_squad.dbsetup.Operations.deleteAllFrom;
 import static com.ninja_squad.dbsetup.Operations.insertInto;

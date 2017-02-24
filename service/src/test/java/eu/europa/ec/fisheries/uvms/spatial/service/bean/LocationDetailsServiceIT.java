@@ -17,7 +17,6 @@ import static org.junit.Assert.fail;
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
 
-import eu.europa.ec.fisheries.uvms.spatial.service.SpatialService;
 import lombok.SneakyThrows;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
@@ -25,7 +24,7 @@ import org.junit.runner.RunWith;
 
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationTypeEntry;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.service.exception.SpatialServiceException;
 
 @RunWith(Arquillian.class)
 public class LocationDetailsServiceIT extends BaseSpatialArquillianTest {

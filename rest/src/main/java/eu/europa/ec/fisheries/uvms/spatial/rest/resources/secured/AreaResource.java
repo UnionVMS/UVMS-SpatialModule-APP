@@ -23,18 +23,18 @@ import eu.europa.ec.fisheries.uvms.spatial.model.area.AreaByCodeJsonPayload;
 import eu.europa.ec.fisheries.uvms.spatial.model.area.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.model.constants.USMSpatial;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
-import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.AreaLocationDtoMapper;
-import eu.europa.ec.fisheries.uvms.spatial.rest.type.AreaFilterType;
-import eu.europa.ec.fisheries.uvms.spatial.rest.type.geocoordinate.AreaCoordinateType;
-import eu.europa.ec.fisheries.uvms.spatial.rest.type.geocoordinate.LocationCoordinateType;
+import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.AreaLocationMapper;
+import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaFilterType;
+import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaCoordinateType;
+import eu.europa.ec.fisheries.uvms.spatial.rest.dto.LocationCoordinateType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.service.AreaService;
-import eu.europa.ec.fisheries.uvms.spatial.service.AreaTypeNamesService;
-import eu.europa.ec.fisheries.uvms.spatial.service.SpatialService;
-import eu.europa.ec.fisheries.uvms.spatial.service.UserAreaService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.AreaDetailsGeoJsonDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.LocationDetailsGeoJsonDto;
-import eu.europa.ec.fisheries.uvms.spatial.util.ServiceLayerUtils;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.UserAreaService;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson.AreaDetailsGeoJsonDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson.LocationDetailsGeoJsonDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.util.ServiceLayerUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 
@@ -64,7 +64,7 @@ public class AreaResource extends UnionVMSResource {
     private @EJB SpatialService spatialService;
     private @EJB USMService usmService;
 
-    private AreaLocationDtoMapper mapper = AreaLocationDtoMapper.mapper();
+    private AreaLocationMapper mapper = AreaLocationMapper.mapper();
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})

@@ -16,10 +16,9 @@ import eu.europa.ec.fisheries.uvms.rest.constants.ErrorCodes;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.MapConfigurationType;
-import eu.europa.ec.fisheries.uvms.spatial.rest.type.MapSettingsType;
-import eu.europa.ec.fisheries.uvms.spatial.service.MapConfigService;
-import eu.europa.ec.fisheries.uvms.spatial.util.ServiceLayerUtils;
-import eu.europa.ec.fisheries.wsdl.user.types.Dataset;
+import eu.europa.ec.fisheries.uvms.spatial.rest.dto.MapSettingsType;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.MapConfigService;
+import eu.europa.ec.fisheries.uvms.spatial.service.util.ServiceLayerUtils;
 import lombok.extern.slf4j.Slf4j;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -29,8 +28,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
 
 @Path("/mapconfig")
 @Slf4j

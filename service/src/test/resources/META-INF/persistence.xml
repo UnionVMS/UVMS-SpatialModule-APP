@@ -4,24 +4,24 @@
              xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd" version="2.0">
     <persistence-unit name="testPU" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <class>eu.europa.ec.fisheries.uvms.spatial.entity.ProjectionEntity</class>
-        <class>eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectSpatialEntity</class>
-        <class>eu.europa.ec.fisheries.uvms.spatial.entity.ReportConnectServiceAreasEntity</class>
-        <class>eu.europa.ec.fisheries.uvms.spatial.entity.ServiceLayerEntity</class>
-        <class>eu.europa.ec.fisheries.uvms.spatial.entity.ProviderFormatEntity</class>
-        <class>eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity</class>
-        <class>eu.europa.ec.fisheries.uvms.spatial.entity.BookmarkEntity</class>
-        <class>eu.europa.ec.fisheries.uvms.spatial.entity.CountryEntity</class>
-        <class>eu.europa.ec.fisheries.uvms.spatial.entity.EezEntity</class>
-        <class>eu.europa.ec.fisheries.uvms.spatial.entity.RfmoEntity</class>
-        <class>eu.europa.ec.fisheries.uvms.spatial.entity.PortAreasEntity</class>
-        <class>eu.europa.ec.fisheries.uvms.spatial.entity.FaoEntity</class>
-        <class>eu.europa.ec.fisheries.uvms.spatial.entity.PortEntity</class>
-        <class>eu.europa.ec.fisheries.uvms.spatial.entity.GfcmEntity</class>
-        <class>eu.europa.ec.fisheries.uvms.spatial.entity.StatRectEntity</class>
-        <class>eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity</class>
-        <class>eu.europa.ec.fisheries.uvms.spatial.entity.UserScopeEntity</class>
-        <class>eu.europa.ec.fisheries.uvms.spatial.entity.SysConfigEntity</class>
+        <class>eu.europa.ec.fisheries.uvms.spatial.service.entity.ProjectionEntity</class>
+        <class>eu.europa.ec.fisheries.uvms.spatial.service.entity.ReportConnectSpatialEntity</class>
+        <class>eu.europa.ec.fisheries.uvms.spatial.service.entity.ReportConnectServiceAreasEntity</class>
+        <class>eu.europa.ec.fisheries.uvms.spatial.service.entity.ServiceLayerEntity</class>
+        <class>eu.europa.ec.fisheries.uvms.spatial.service.entity.ProviderFormatEntity</class>
+        <class>eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTypesEntity</class>
+        <class>eu.europa.ec.fisheries.uvms.spatial.service.entity.BookmarkEntity</class>
+        <class>eu.europa.ec.fisheries.uvms.spatial.service.entity.CountryEntity</class>
+        <class>eu.europa.ec.fisheries.uvms.spatial.service.entity.EezEntity</class>
+        <class>eu.europa.ec.fisheries.uvms.spatial.service.entity.RfmoEntity</class>
+        <class>eu.europa.ec.fisheries.uvms.spatial.service.entity.PortAreasEntity</class>
+        <class>eu.europa.ec.fisheries.uvms.spatial.service.entity.FaoEntity</class>
+        <class>eu.europa.ec.fisheries.uvms.spatial.service.entity.PortEntity</class>
+        <class>eu.europa.ec.fisheries.uvms.spatial.service.entity.GfcmEntity</class>
+        <class>eu.europa.ec.fisheries.uvms.spatial.service.entity.StatRectEntity</class>
+        <class>eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity</class>
+        <class>eu.europa.ec.fisheries.uvms.spatial.service.entity.UserScopeEntity</class>
+        <class>eu.europa.ec.fisheries.uvms.spatial.service.entity.SysConfigEntity</class>
         <properties>
             <property name="hibernate.default_schema" value="spatial"/>
             <property name="javax.persistence.schema-generation.create-database-schemas" value="true"/>

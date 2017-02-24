@@ -12,8 +12,8 @@ package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
-import eu.europa.ec.fisheries.uvms.spatial.service.SpatialService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.GeometryUtils;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.impl.GeometryUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.geotools.geometry.jts.WKTReader2;
 import org.geotools.geometry.jts.WKTWriter2;

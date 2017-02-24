@@ -211,10 +211,10 @@
                         <avoidCallsTo>org.apache.commons.logging</avoidCallsTo>
                     </avoidCallsTo>
                     <targetClasses>
-                        <param>eu.europa.ec.fisheries.uvms.spatial.dao.*</param>
+                        <param>eu.europa.ec.fisheries.uvms.spatial.service.dao.*</param>
                     </targetClasses>
                     <targetTests>
-                        <param>eu.europa.ec.fisheries.uvms.spatial.dao.*</param>
+                        <param>eu.europa.ec.fisheries.uvms.spatial.service.dao.*</param>
                     </targetTests>
                 </configuration>
             </plugin>
