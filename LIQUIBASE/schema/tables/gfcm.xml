@@ -33,13 +33,6 @@
     </changeSet>
 
 	
-	<changeSet author="dubduan" id="76834618168717" dbms="postgresql">
-    <addDefaultValue 
-            columnDataType="BIGINT"
-            columnName="gid"
-            defaultValueSequenceNext="gfcm_seq"
-            tableName="gfcm"/>
-	</changeSet>
 
 	
    <changeSet author="dubduan" id="1412540212744-9" dbms="oracle">
@@ -55,5 +48,21 @@
             END trg_gfcm;
         </createProcedure>
     </changeSet>
+	
+	
+	<changeSet author="dubduan" id="1879830sds-31" dbms="postgresql">
+	
+        <createProcedure>
+						
+			CREATE TRIGGER trg_gfcm
+			before insert on gfcm
+			for each row
+			when(new.gid is null)
+			begin
+				select gfcm_seq.nextval into :new.gid from dual;
+			end;			
+			
+        </createProcedure>			
+    </changeSet>		
 	
 </databaseChangeLog>

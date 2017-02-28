@@ -35,13 +35,6 @@
         </spatial:createSpatialIndex>
     </changeSet>
 	
-	<changeSet author="dubduan" id="76834618168717" dbms="postgresql">
-    <addDefaultValue 
-            columnDataType="BIGINT"
-            columnName="gid"
-            defaultValueSequenceNext="stat_rect_seq"
-            tableName="stat_rect"/>
-	</changeSet>
 	
 	<changeSet author="dubduan" id="1412540272714-10" dbms="oracle">
         <createProcedure>
@@ -55,5 +48,21 @@
             END trg_stat_rect;
         </createProcedure>		
     </changeSet>	
+	
+	
+	<changeSet author="dubduan" id="18k7hjk70s-31" dbms="postgresql">
+	
+        <createProcedure>
+						
+			CREATE TRIGGER trg_stat_rect
+			before insert on stat_rect
+			for each row
+			when(new.gid is null)
+			begin
+				select stat_rect_seq.nextval into :new.gid from dual;
+			end;			
+			
+        </createProcedure>			
+    </changeSet>		
 
 </databaseChangeLog>

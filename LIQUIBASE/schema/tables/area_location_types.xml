@@ -37,13 +37,6 @@
         <addUniqueConstraint columnNames="type_name" constraintName="area_location_key" tableName="area_location_types"/>
     </changeSet>
 	
-	<changeSet author="dubduan" id="76814618168717" dbms="postgresql">
-    <addDefaultValue 
-            columnDataType="BIGINT"
-            columnName="id"
-            defaultValueSequenceNext="area_location_types_seq"
-            tableName="area_location_types"/>
-	</changeSet>	
 	
     <changeSet author="dubduan" id="1419891745906-31" dbms="oracle">
 	
@@ -58,5 +51,21 @@
             END trg_area_location_types;
         </createProcedure>	
 	</changeSet>	
+	
+	
+	<changeSet author="dubduan" id="1429sjhk312i-31" dbms="postgresql">
+	
+        <createProcedure>
+						
+			CREATE TRIGGER trg_area_location_types
+			before insert on area_location_types
+			for each row
+			when(new.ID is null)
+			begin
+				select area_location_types_seq.nextval into :new.ID from dual;
+			end;			
+			
+        </createProcedure>			
+    </changeSet>		
 
 </databaseChangeLog>

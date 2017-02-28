@@ -34,13 +34,6 @@
         </spatial:createSpatialIndex>
     </changeSet>
 
-	<changeSet author="dubduan" id="76834618168717" dbms="postgresql">
-    <addDefaultValue 
-            columnDataType="BIGINT"
-            columnName="gid"
-            defaultValueSequenceNext="port_area_seq"
-            tableName="port_area"/>
-	</changeSet>
 
 	
     <changeSet author="dubduan" id="1439190741706-31" dbms="oracle">
@@ -55,4 +48,21 @@
             END trg_port_area;
         </createProcedure>		
     </changeSet>	
+	
+	
+	<changeSet author="dubduan" id="1879830sds-31" dbms="postgresql">
+	
+        <createProcedure>
+						
+			CREATE TRIGGER trg_port_area
+			before insert on port_area
+			for each row
+			when(new.gid is null)
+			begin
+				select port_area_seq.nextval into :new.gid from dual;
+			end;			
+			
+        </createProcedure>			
+    </changeSet>		
+	
 </databaseChangeLog>

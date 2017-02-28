@@ -20,13 +20,6 @@
         </createTable>
     </changeSet>
 	
-	<changeSet author="dubduan" id="76834618168717" dbms="postgresql">
-    <addDefaultValue 
-            columnDataType="BIGINT"
-            columnName="id"
-            defaultValueSequenceNext="system_configurations_seq"
-            tableName="system_configurations"/>
-	</changeSet>
 	
     <changeSet author="dubduan" id="1418362466451-1" dbms="oracle">
        <createProcedure>
@@ -40,4 +33,20 @@
             END trg_system_configurations;
         </createProcedure>			
     </changeSet>	
+	
+	<changeSet author="dubduan" id="18k7jhk70s-31" dbms="postgresql">
+	
+        <createProcedure>
+						
+			CREATE TRIGGER trg_system_configurations
+			before insert on system_configurations
+			for each row
+			when(new.ID is null)
+			begin
+				select system_configurations_seq.nextval into :new.ID from dual;
+			end;			
+			
+        </createProcedure>			
+    </changeSet>			
+	
 </databaseChangeLog>

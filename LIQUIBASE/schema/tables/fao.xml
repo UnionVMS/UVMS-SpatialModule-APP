@@ -51,13 +51,6 @@
         </spatial:createSpatialIndex>
     </changeSet>
 	
-	<changeSet author="dubduan" id="76834618168717" dbms="postgresql">
-    <addDefaultValue 
-            columnDataType="BIGINT"
-            columnName="gid"
-            defaultValueSequenceNext="fao_seq"
-            tableName="fao"/>
-	</changeSet>
 	
 	<changeSet author="dubduan" id="1462199386163-8" dbms="oracle">
 	
@@ -72,4 +65,20 @@
             END trg_fao;
         </createProcedure>
 	</changeSet>	
+	
+	<changeSet author="dubduan" id="142230sds-31" dbms="postgresql">
+	
+        <createProcedure>
+						
+			CREATE TRIGGER trg_fao
+			before insert on fao
+			for each row
+			when(new.gid is null)
+			begin
+				select fao_seq.nextval into :new.gid from dual;
+			end;			
+			
+        </createProcedure>			
+    </changeSet>	
+	
 </databaseChangeLog>

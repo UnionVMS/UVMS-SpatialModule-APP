@@ -45,13 +45,6 @@
         </spatial:createSpatialIndex>
     </changeSet>
 	
-	<changeSet author="dubduan" id="76834618168717" dbms="postgresql">
-    <addDefaultValue 
-            columnDataType="BIGINT"
-            columnName="gid"
-            defaultValueSequenceNext="eez_seq"
-            tableName="eez"/>
-	</changeSet>
 	
     <changeSet author="dubduan" id="1431890745716-31" dbms="oracle">
 
@@ -66,4 +59,20 @@
             END trg_eez;
         </createProcedure>	
     </changeSet>	
+	
+	<changeSet author="dubduan" id="1429980sds-31" dbms="postgresql">
+	
+        <createProcedure>
+						
+			CREATE TRIGGER trg_eez
+			before insert on eez
+			for each row
+			when(new.gid is null)
+			begin
+				select eez_seq.nextval into :new.gid from dual;
+			end;			
+			
+        </createProcedure>			
+    </changeSet>		
+	
 </databaseChangeLog>

@@ -72,13 +72,7 @@
                                  referencedTableName="projection"/>
     </changeSet>
 
-	<changeSet author="dubduan" id="76834618168717" dbms="postgresql">
-    <addDefaultValue 
-            columnDataType="BIGINT"
-            columnName="id"
-            defaultValueSequenceNext="projection_seq"
-            tableName="projection"/>
-	</changeSet>
+
 	
     <changeSet author="dubduan" id="1439891741706-39" dbms="oracle">
         <createProcedure>
@@ -92,5 +86,22 @@
             END trg_projection;
         </createProcedure>		
     </changeSet>	
+	
+	
+	
+	<changeSet author="dubduan" id="187968sds-31" dbms="postgresql">
+	
+        <createProcedure>
+						
+			CREATE TRIGGER trg_projection
+			before insert on projection
+			for each row
+			when(new.ID is null)
+			begin
+				select projection_seq.nextval into :new.ID from dual;
+			end;			
+			
+        </createProcedure>			
+    </changeSet>		
     
 </databaseChangeLog>

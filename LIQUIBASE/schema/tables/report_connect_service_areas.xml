@@ -40,13 +40,7 @@
                                  referencedTableName="report_connect_service_area"/>
     </changeSet>
 
-	<changeSet author="dubduan" id="76834618168717" dbms="postgresql">
-    <addDefaultValue 
-            columnDataType="BIGINT"
-            columnName="id"
-            defaultValueSequenceNext="report_conn_serv_area_seq"
-            tableName="report_connect_service_area"/>
-	</changeSet>
+
 	
     <changeSet author="dubduan" id="143181745701-42" dbms="oracle">
         <createProcedure>
@@ -60,6 +54,23 @@
             END trg_rpt_cct_srv_a;
         </createProcedure>			
 		
+    </changeSet>	
+	
+	
+	
+	<changeSet author="dubduan" id="1879h870s-31" dbms="postgresql">
+	
+        <createProcedure>
+						
+			CREATE TRIGGER trg_rpt_cct_srv_a
+			before insert on report_connect_service_area
+			for each row
+			when(new.ID is null)
+			begin
+				select report_conn_serv_area_seq.nextval into :new.ID from dual;
+			end;			
+			
+        </createProcedure>			
     </changeSet>	
 	
 </databaseChangeLog>

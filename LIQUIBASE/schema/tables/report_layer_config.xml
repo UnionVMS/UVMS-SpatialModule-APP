@@ -46,5 +46,22 @@
             END trg_report_layer_config;
         </createProcedure>			
     </changeSet>	
+	
+	
+	<changeSet author="dubduan" id="18hjksd870s-31" dbms="postgresql">
+	
+        <createProcedure>
+						
+			CREATE TRIGGER trg_report_layer_config
+			before insert on report_layer_config
+			for each row
+			when(new.ID is null)
+			begin
+				select report_layer_config_seq.nextval into :new.ID from dual;
+			end;			
+			
+        </createProcedure>			
+    </changeSet>	
+	
 
 </databaseChangeLog>

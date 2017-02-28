@@ -33,13 +33,6 @@
         </spatial:createSpatialIndex>
     </changeSet>
 	
-	<changeSet author="dubduan" id="76834618168717" dbms="postgresql">
-    <addDefaultValue 
-            columnDataType="BIGINT"
-            columnName="gid"
-            defaultValueSequenceNext="fmz_seq"
-            tableName="fmz"/>
-	</changeSet>
 	
     <changeSet author="dubduan" id="1461802134891-9" dbms="oracle">
 	<createProcedure>
@@ -53,4 +46,21 @@
             END trg_fmz;
         </createProcedure>		
     </changeSet>	
+	
+	
+	<changeSet author="dubduan" id="1kk230sds-31" dbms="postgresql">
+	
+        <createProcedure>
+						
+			CREATE TRIGGER trg_fmz
+			before insert on fmz
+			for each row
+			when(new.gid is null)
+			begin
+				select fmz_seq.nextval into :new.gid from dual;
+			end;			
+			
+        </createProcedure>			
+    </changeSet>	
+	
 </databaseChangeLog>

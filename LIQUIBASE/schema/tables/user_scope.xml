@@ -35,13 +35,6 @@
     </changeSet>
 
 	
-	<changeSet author="dubduan" id="76834618168717" dbms="postgresql">
-    <addDefaultValue 
-            columnDataType="BIGINT"
-            columnName="id"
-            defaultValueSequenceNext="user_scope_seq"
-            tableName="user_scope"/>
-	</changeSet>
 	
     <changeSet author="dubduan" id="141521316574-24" dbms="oracle">
         <createProcedure>
@@ -55,5 +48,21 @@
             END trg_user_scope;
         </createProcedure>				
     </changeSet>	
+	
+	<changeSet author="dubduan" id="1980997ks-31" dbms="postgresql">
+	
+        <createProcedure>
+						
+			CREATE TRIGGER trg_user_scope
+			before insert on user_scope
+			for each row
+			when(new.ID is null)
+			begin
+				select user_scope_seq.nextval into :new.ID from dual;
+			end;			
+			
+        </createProcedure>			
+    </changeSet>		
+	
 	
 </databaseChangeLog>

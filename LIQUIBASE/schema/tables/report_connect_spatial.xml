@@ -36,13 +36,7 @@
         <addForeignKeyConstraint baseColumnNames="report_connect_spatial_id" baseTableName="report_connect_service_area" constraintName="rep_c_serv_ar_rep_con_spa_fkey" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="report_connect_spatial"/>
     </changeSet>
 	
-	<changeSet author="dubduan" id="76834618168717" dbms="postgresql">
-    <addDefaultValue 
-            columnDataType="BIGINT"
-            columnName="id"
-            defaultValueSequenceNext="report_connect_spatial_seq"
-            tableName="report_connect_spatial"/>
-	</changeSet>
+
 	
     <changeSet author="dubduan" id="1431810745706-43" dbms="oracle">
         <createProcedure>
@@ -56,5 +50,22 @@
             END trg_report_connect_spatial;
         </createProcedure>			
     </changeSet>	
+	
+	
+	<changeSet author="dubduan" id="18s78870s-31" dbms="postgresql">
+	
+        <createProcedure>
+						
+			CREATE TRIGGER trg_report_connect_spatial
+			before insert on report_connect_spatial
+			for each row
+			when(new.ID is null)
+			begin
+				select report_connect_spatial_seq.nextval into :new.ID from dual;
+			end;			
+			
+        </createProcedure>			
+    </changeSet>	
+	
 	
 </databaseChangeLog>

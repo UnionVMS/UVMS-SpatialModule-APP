@@ -31,15 +31,7 @@
         <addForeignKeyConstraint baseColumnNames="area_connect_group_id" baseTableName="report_layer_config" constraintName="report_layer_config_area_connect_group_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="area_connect_group"/>
     </changeSet>
 
-	
-	<changeSet author="dubduan" id="76834618168717" dbms="postgresql">
-    <addDefaultValue 
-            columnDataType="BIGINT"
-            columnName="id"
-            defaultValueSequenceNext="area_connect_group_seq"
-            tableName="area_connect_group"/>
-	</changeSet>
-	
+		
 	<changeSet author="dubduan" id="1439190741706-31" dbms="oracle">
 	
         <createProcedure>
@@ -54,6 +46,19 @@
         </createProcedure>			
     </changeSet>
 	
+	<changeSet author="dubduan" id="1429sdfkf312d-31" dbms="postgresql">
 	
+        <createProcedure>
+						
+			CREATE TRIGGER trg_area_connect_group
+			before insert on area_connect_group
+			for each row
+			when(new.ID is null)
+			begin
+				select area_connect_group_seq.nextval into :new.ID from dual;
+			end;			
+			
+        </createProcedure>			
+    </changeSet>	
 	
 </databaseChangeLog>
