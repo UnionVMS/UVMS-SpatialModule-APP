@@ -26,6 +26,12 @@ import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Map;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+
+
 @Entity
 @NamedQueries({
         @NamedQuery(name = EezEntity.EEZ_BY_COORDINATE, query = "FROM EezEntity WHERE intersects(geom, :shape) = true AND enabled = 'Y'"),
@@ -57,6 +63,12 @@ public class EezEntity extends BaseAreaEntity {
     private static final String LATITUDE_ALIAS = "latitude";
     private static final String MRGID_EEZ = "mrgid_eez";
 
+	@Id
+	@Column(name = "gid")
+	@SequenceGenerator(name="SEQ_GEN", sequenceName="eez_seq")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN")
+	private Long id;
+	
     @Column(length = 100)
     @ColumnAliasName(aliasName = COUNTRY_ALIAS)
     private String country;

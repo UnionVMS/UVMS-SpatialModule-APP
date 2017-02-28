@@ -34,6 +34,12 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+
+
 @Entity
 @NamedQueries({
         @NamedQuery(name = UserAreasEntity.SEARCH_BY_CRITERIA,
@@ -117,6 +123,12 @@ public class UserAreasEntity extends BaseAreaEntity {
     public static final String UPDATE_USERAREA_FORUSER = "userAreaEntity.updateUserAreaForUser";
     public static final String USERAREA_COLUMNS = "userAreasEntity.findSelectedColumns";
 
+	@Id
+	@Column(name = "gid")
+	@SequenceGenerator(name="SEQ_GEN", sequenceName="user_areas_seq")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN")
+	private Long id;	
+	
     @Column(length = 255)
     @ColumnAliasName(aliasName = "subType")
     private String type;

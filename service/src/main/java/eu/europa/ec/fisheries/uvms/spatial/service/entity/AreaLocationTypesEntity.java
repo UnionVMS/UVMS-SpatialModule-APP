@@ -28,6 +28,13 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import lombok.ToString;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+
+
+
 @Entity
 @NamedQueries({
         @NamedQuery(name = AreaLocationTypesEntity.FIND_ALL_AREA_AND_LOCATION_TYPE_NAMES, query = "FROM AreaLocationTypesEntity area"),
@@ -64,7 +71,14 @@ public class AreaLocationTypesEntity extends BaseEntity {
     public static final String FIND_SYSTEM_AREA_AND_LOCATION_LAYER = "AreaLocationType.findSystemAreaAndLocationLayerMappings";
     public static final String FIND_ALL_AREA_AND_LOCATION_TYPE_NAMES = "AreaLocationType.findAllAreaAndLocationTypeNames";
     public static final String FIND_TYPE_BY_NAMES = "AreaLocationType.findAreaByNames";
-
+	
+	
+	@Id
+	@Column(name = "id")
+	@SequenceGenerator(name="SEQ_GEN", sequenceName="area_location_types_seq")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN")
+	private Long id;
+	
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "service_layer_id", nullable = false)
     private ServiceLayerEntity serviceLayer;

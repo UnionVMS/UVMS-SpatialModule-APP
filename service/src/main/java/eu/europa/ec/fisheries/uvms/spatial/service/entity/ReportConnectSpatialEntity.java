@@ -35,6 +35,12 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+
+
 @Entity
 @Table(name = "report_connect_spatial")
 @NamedQueries({
@@ -61,10 +67,14 @@ public class ReportConnectSpatialEntity implements Serializable {
 	public static final String FIND_BY_REPORT_CONNECT_ID = "reportConnectSpatialEntity.findByReportConnectId";
     public static final String FIND_BY_REPORT_ID = "ReportLayerConfig.findByReportId";
 
+	
     @Id
 	@Column(name = "id")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@SequenceGenerator(name="SEQ_GEN", sequenceName="report_connect_spatial_seq")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN")
 	private Long id;
+	
+	
 	
 	@ManyToOne
 	@JoinColumn(name = "map_proj_id")

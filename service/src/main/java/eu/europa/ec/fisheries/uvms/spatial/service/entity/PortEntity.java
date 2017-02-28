@@ -25,6 +25,11 @@ import java.util.Map;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+
 @Entity
 @NamedQueries({
         @NamedQuery(name = PortEntity.DISABLE, query = "UPDATE PortEntity SET enabled = 'N'"),
@@ -48,6 +53,12 @@ public class PortEntity extends BaseAreaEntity {
     private static final String LANDING_PL = "landing_pl";
     private static final String COMMERCIAL = "commercial";
 
+	@Id
+	@Column(name = "gid")
+	@SequenceGenerator(name="SEQ_GEN", sequenceName="port_seq")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN")
+	private Long id;
+	
     @Column(name = "country_code", length = 3)
     @ColumnAliasName(aliasName = "countrycode")
     private String countryCode;

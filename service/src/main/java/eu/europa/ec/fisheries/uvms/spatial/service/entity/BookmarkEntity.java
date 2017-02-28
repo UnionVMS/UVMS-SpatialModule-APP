@@ -20,6 +20,11 @@ import javax.persistence.Entity;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+
 @Entity
 @Table(name = "bookmark")
 @NamedQuery(name = BookmarkEntity.LIST_BY_USERNAME, query = "FROM BookmarkEntity b WHERE b.createdBy = :createdBy")
@@ -29,6 +34,12 @@ public class BookmarkEntity extends BaseEntity {
 
     public static final String LIST_BY_USERNAME = "Bookmark.listByUsername";
 
+	@Id
+	@Column(name = "id")
+	@SequenceGenerator(name="SEQ_GEN", sequenceName="bookmark_seq")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN")
+	private Long id;
+	
     @Column(nullable = false)
 	private Integer srs;
 	

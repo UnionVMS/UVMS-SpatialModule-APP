@@ -23,12 +23,25 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.ToString;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+
+
 @Entity
 @Table(name = "user_scope")
 @ToString(of = "name")
 @EqualsAndHashCode(of = {"name"}, callSuper = true)
 @Data
 public class UserScopeEntity extends BaseEntity {
+
+	@Id
+	@Column(name = "id")
+	@SequenceGenerator(name="SEQ_GEN", sequenceName="user_scope_seq")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN")
+	private Long id;
+
 
     @ManyToOne
     @JoinColumn(name = "user_area_id", nullable = false)

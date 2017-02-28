@@ -27,6 +27,12 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+
+
 @Entity
 @Table(name = "projection")
 @NamedQueries({
@@ -41,6 +47,12 @@ public class ProjectionEntity extends BaseEntity {
 
     public static final String FIND_PROJECTION_BY_ID = "ReportLayerConfig.findProjectionById";
     public static final String FIND_BY_SRS_CODE = "Projection.findBySrsCode";
+	
+	@Id
+	@Column(name = "id")
+	@SequenceGenerator(name="SEQ_GEN", sequenceName="projection_seq")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN")
+	private Long id;
 	
 	@Column(unique = true, nullable = false, length = 255)
 	private String name;

@@ -24,6 +24,12 @@ import javax.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+
+
 @Entity
 @Table(name = "stat_rect")
 @NamedQueries({
@@ -49,6 +55,12 @@ public class StatRectEntity extends BaseAreaEntity {
     public static final String EAST = "east";
     public static final String WEST = "west";
 
+	@Id
+	@Column(name = "gid")
+	@SequenceGenerator(name="SEQ_GEN", sequenceName="stat_rect_seq")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN")
+	private Long id;
+	
     @Column(name = "north")
     @ColumnAliasName(aliasName = NORTH)
     private Double north;

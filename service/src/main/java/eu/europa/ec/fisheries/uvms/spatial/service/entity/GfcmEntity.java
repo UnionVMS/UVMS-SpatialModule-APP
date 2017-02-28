@@ -21,6 +21,13 @@ import javax.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Column;
+
 @Entity
 @Table(name = "gfcm")
 @NamedQueries({
@@ -40,6 +47,12 @@ public class GfcmEntity extends BaseAreaEntity {
     public static final String SEARCH_GFCM_NAMES_BY_CODE = "gfcmEntity.searchNamesByCode";
     public static final String GFCM_COLUMNS = "gfcmEntity.gfcmColumns";
 
+	@Id
+	@Column(name = "gid")
+	@SequenceGenerator(name="SEQ_GEN", sequenceName="gfcm_seq")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN")
+	private Long id;
+	
     public GfcmEntity() {
         // why JPA why
     }

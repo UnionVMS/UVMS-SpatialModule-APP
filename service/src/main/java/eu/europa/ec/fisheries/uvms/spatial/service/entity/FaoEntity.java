@@ -24,6 +24,12 @@ import javax.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+
+
 @Entity
 @Table(name = "fao")
 @NamedQueries({
@@ -65,6 +71,12 @@ public class FaoEntity extends BaseAreaEntity {
     public static final String ELE_TYPE = "ele_type";
     public static final String F_LABEL = "f_label";
 
+	@Id
+	@Column(name = "gid")
+	@SequenceGenerator(name="SEQ_GEN", sequenceName="fao_seq")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN")
+	private Long id;
+	
     @Column(name = "ocean")
     @ColumnAliasName(aliasName = OCEAN)
     private String ocean;
