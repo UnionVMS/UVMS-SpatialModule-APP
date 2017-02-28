@@ -21,11 +21,9 @@ import javax.jms.Destination;
 @Local
 public class UploadProducerBean extends AbstractProducer {
 
-    @Resource(mappedName = MessageConstants.UPLOAD_EVENT_QUEUE)
-    private Destination destination;
 
-    @Override
-    protected Destination getDestination() {
-        return destination;
-    }
+	public String getDestinationName(){
+		return MessageConstants.UPLOAD_EVENT_QUEUE;
+	}	
+
 }

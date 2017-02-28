@@ -36,30 +36,14 @@ import static eu.europa.ec.fisheries.uvms.message.MessageConstants.QUEUE_MODULE_
 @Stateless
 @LocalBean
 @Slf4j
-public class SpatialMessageServiceBean extends AbstractMessageService {
+public class SpatialMessageServiceBean extends AbstractProducer {
 
     private static final String MODULE_NAME = "spatial";
 
-    @Resource(mappedName = QUEUE_MODULE_SPATIAL)
-    private Destination request;
-
-    @Resource(lookup = CONNECTION_FACTORY)
-    private ConnectionFactory connectionFactory;
-
-    @Override
-    public ConnectionFactory getConnectionFactory() {
-        return connectionFactory;
-    }
-
-    @Override
-    protected Destination getEventDestination() {
-        return request;
-    }
-
-    @Override
-    protected Destination getResponseDestination() {
-        return null;
-    }
+	public String getDestinationName(){
+		return MessageConstants.QUEUE_MODULE_SPATIAL;
+	}		
+	
 
     @Override
     public String getModuleName() {

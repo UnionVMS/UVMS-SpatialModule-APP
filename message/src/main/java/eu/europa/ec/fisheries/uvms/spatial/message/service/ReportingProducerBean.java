@@ -22,11 +22,9 @@ import javax.jms.Destination;
 @Local
 public class ReportingProducerBean extends AbstractProducer {
 
-    @Resource(mappedName = MessageConstants.QUEUE_REPORTING_EVENT)
-    private Destination destination;
+	public String getDestinationName(){
+		return MessageConstants.QUEUE_REPORTING_EVENT;
+	}		
+	
 
-    @Override
-    protected Destination getDestination() {
-        return destination;
-    }
 }

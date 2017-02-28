@@ -21,11 +21,8 @@ import javax.jms.Destination;
 @Local
 public class SpatialConsumerBean extends AbstractConsumer {
 
-    @Resource(mappedName = MessageConstants.QUEUE_SPATIAL)
-    private Destination destination;
-
-    @Override
-    public Destination getDestination() {
-        return destination;
-    }
+	public String getDestinationName(){
+		return MessageConstants.QUEUE_SPATIAL;
+	}		
+	
 }
