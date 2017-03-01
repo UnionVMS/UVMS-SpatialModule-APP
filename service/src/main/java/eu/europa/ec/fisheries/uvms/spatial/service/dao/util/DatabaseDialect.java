@@ -8,6 +8,8 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
+
 package eu.europa.ec.fisheries.uvms.spatial.service.dao.util;
 
 public interface DatabaseDialect {
@@ -18,10 +20,10 @@ public interface DatabaseDialect {
 
     String closestAreaToPointPrefix();
     String closestAreaToPointSuffix();
-    
 
     String closestPointToPoint(String typeName, String tableName, Double latitude, Double longitude, Integer limit);
 
-
     String makeGeomValid(String tableName);
+
+    Integer defaultSRID();
 }

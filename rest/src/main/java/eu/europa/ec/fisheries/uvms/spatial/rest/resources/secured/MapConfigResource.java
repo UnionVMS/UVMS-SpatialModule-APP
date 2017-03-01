@@ -48,7 +48,7 @@ public class MapConfigResource extends UnionVMSResource {
                                    @HeaderParam(AuthConstants.HTTP_HEADER_SCOPE_NAME) String scopeName,
                                    @HeaderParam(AuthConstants.HTTP_HEADER_ROLE_NAME) String roleName) {
 
-        log.info("Getting map settings for report with id = {}", reportId);
+        log.info("Getting mapDefaultSRIDToEPSG settings for report with id = {}", reportId);
 
         Response response;
 
@@ -61,7 +61,7 @@ public class MapConfigResource extends UnionVMSResource {
 
         } catch (ServiceException ex) {
 
-            log.error("[ Error when getting map settings. ] ", ex);
+            log.error("[ Error when getting mapDefaultSRIDToEPSG settings. ] ", ex);
 
             response = createErrorResponse(ErrorCodes.INTERNAL_SERVER_ERROR);
 

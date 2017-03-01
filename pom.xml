@@ -15,8 +15,8 @@
 
         <!-- The spatial name is used as a common point to rename the application alias visible in USM-->
         <spatial.name>Spatial</spatial.name>
-        <spatial.model>0.5.6</spatial.model>
-        <reporting.model>0.5.6</reporting.model>
+        <spatial.model>1.0.4-SNAPSHOT</spatial.model>
+        <reporting.model>1.0.2-SNAPSHOT</reporting.model>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <jts.version>1.13</jts.version>
@@ -32,7 +32,7 @@
         <hibernate.version>4.3.5.Final</hibernate.version>
         <hibernate-spatial.version>4.3</hibernate-spatial.version>
         <geotools.version>14-M1</geotools.version>
-        <uvms.commons.version>2.0.15</uvms.commons.version>
+        <uvms.commons.version>2.0.19-SNAPSHOT</uvms.commons.version>
         <uvms.test.version>0.0.4</uvms.test.version>
         <hibernate.validator.version>5.2.1.Final</hibernate.validator.version>
         <usm4uvms.version>2.0.17</usm4uvms.version>
@@ -43,6 +43,7 @@
         <javaee.version>7.0</javaee.version>
         <mapstruct.version>1.0.0.Final</mapstruct.version>
         <uvms-wildfly-weblogic-convertor>1.7.2</uvms-wildfly-weblogic-convertor>
+        <database.dialect>oracle</database.dialect>
 
         <scm.connection>scm:git:https://github.com/UnionVMS/UVMS-SpatialModule-APP.git</scm.connection>
     </properties>
@@ -355,6 +356,12 @@
     </repositories>
 	
 	<profiles>
+        <profile>
+            <id>postgres</id>
+            <properties>
+                <database.dialect>postgres</database.dialect>
+            </properties>
+        </profile>
         <profile>
             <id>dg-mare</id>
             <distributionManagement>

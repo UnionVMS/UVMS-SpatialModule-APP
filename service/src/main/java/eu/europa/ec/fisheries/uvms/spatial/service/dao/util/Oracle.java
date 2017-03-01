@@ -12,6 +12,8 @@ package eu.europa.ec.fisheries.uvms.spatial.service.dao.util;
 
 public class Oracle extends AbstractGisFunction {
 
+    public static final int DEFAULT_ORACLE_SRID = 8307;
+
     @Override
     public String stIntersects(Double latitude, Double longitude) {
         StringBuilder sb = new StringBuilder();
@@ -35,6 +37,11 @@ public class Oracle extends AbstractGisFunction {
         StringBuilder sb = new StringBuilder();
     	sb.append("update spatial.").append(tableName).append(" set geom = SDO_UTIL.RECTIFY_GEOMETRY(geom, 0.005) where enabled = 'Y'");
         return sb.toString();
+    }
+
+    @Override
+    public Integer defaultSRID() {
+        return DEFAULT_ORACLE_SRID;
     }
 
     @Override

@@ -53,7 +53,7 @@ public class ImageResponse {
     /**
      * 
      * @return
-     *     The map
+     *     The mapDefaultSRIDToEPSG
      */
     @JsonProperty("map")
     public Map getMap() {
@@ -63,7 +63,7 @@ public class ImageResponse {
     /**
      * 
      * @param map
-     *     The map
+     *     The mapDefaultSRIDToEPSG
      */
     @JsonProperty("map")
     public void setMap(Map map) {

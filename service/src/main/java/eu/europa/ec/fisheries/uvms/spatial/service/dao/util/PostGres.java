@@ -8,9 +8,13 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
+
 package eu.europa.ec.fisheries.uvms.spatial.service.dao.util;
 
 public class PostGres extends AbstractGisFunction {
+
+    public static final int DEFAULT_WILDFLY_SRID = 4326;
 
     @Override
     public String stIntersects(Double latitude, Double longitude) {
@@ -35,6 +39,11 @@ public class PostGres extends AbstractGisFunction {
         StringBuilder sb = new StringBuilder();
     	sb.append("update spatial.").append(tableName).append(" set geom = st_makevalid(geom) where enabled = 'Y'");
     	return sb.toString();
+    }
+
+    @Override
+    public Integer defaultSRID() {
+        return DEFAULT_WILDFLY_SRID;
     }
 
     @Override

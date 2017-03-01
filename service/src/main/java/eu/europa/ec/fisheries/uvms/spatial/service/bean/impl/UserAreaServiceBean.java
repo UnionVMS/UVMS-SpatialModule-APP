@@ -14,12 +14,15 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean.impl;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.ParseException;
+import eu.europa.ec.fisheries.uvms.common.utils.GeometryUtils;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.mapper.GeometryMapper;
 import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
+import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DatabaseDialect;
+import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DatabaseDialectFactory;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.USMSpatial;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserScopeEntity;
-import eu.europa.ec.fisheries.uvms.spatial.model.constants.USMSpatial;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
@@ -41,6 +44,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import javax.ejb.EJB;
@@ -56,6 +60,13 @@ public class UserAreaServiceBean implements UserAreaService {
     private @EJB SpatialRepository repository;
     private @EJB AreaTypeNamesService areaTypeNamesService;
     private @EJB USMService usmService;
+    private @EJB PropertiesBean properties;
+    private DatabaseDialect dialect;
+
+    @PostConstruct
+    public void init(){
+        dialect = new DatabaseDialectFactory(properties).getInstance();
+    }
 
     @Override
     @Transactional
@@ -69,6 +80,7 @@ public class UserAreaServiceBean implements UserAreaService {
 
         else {
 
+            userAreaDto.getGeometry().setSRID(dialect.defaultSRID());
             UserAreasEntity userAreasEntity = UserAreaMapper.mapper().fromDtoToEntity(userAreaDto);
             userAreasEntity.setUserName(userName);
             userAreasEntity.setCreatedOn(new Date());
@@ -111,6 +123,9 @@ public class UserAreaServiceBean implements UserAreaService {
             updateUSMDataset(userAreaById, userAreaDto.getDatasetName());
         }
         UserAreaMapper.mapper().updateUserAreaEntity(userAreaDto, userAreaById);
+
+        userAreaById.getGeom().setSRID(dialect.defaultSRID());
+
         createScopeSelection(userAreaDto, userAreaById);
 
         UserAreasEntity persistedUpdatedEntity = repository.update(userAreaById);
@@ -308,4 +323,10 @@ public class UserAreaServiceBean implements UserAreaService {
         List<UserAreasEntity> userAreas = repository.findUserAreasByType(userName, scopeName, type, isPowerUser);
         return  UserAreaMapper.mapper().fromEntityListToDtoList(userAreas, false);
     }
+
+    // UT
+    public void setDialect(DatabaseDialect dialect) {
+        this.dialect = dialect;
+    }
+
 }

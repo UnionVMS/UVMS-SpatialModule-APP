@@ -8,11 +8,13 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
+
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.impl;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.ServiceLayer;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.ServiceLayerEntity;
-import eu.europa.ec.fisheries.uvms.spatial.model.layer.ServiceLayer;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.ServiceLayerService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialRepository;

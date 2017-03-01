@@ -249,7 +249,7 @@ public class MapConfigServiceBean implements MapConfigService {
     }
 
     /**
-     * returns Report configuration, which includes map configurations, vector style configurations and visibility settings.
+     * returns Report configuration, which includes mapDefaultSRIDToEPSG configurations, vector style configurations and visibility settings.
      * The method merges all settings taking into account the different available levels of settings - global, user specified and report specific ones.
      * @param reportId
      * @param userPreferences
@@ -270,7 +270,7 @@ public class MapConfigServiceBean implements MapConfigService {
     }
 
     /**
-     *  returns Report configuration, which includes map configurations, vector style configurations and visibility settings.
+     *  returns Report configuration, which includes mapDefaultSRIDToEPSG configurations, vector style configurations and visibility settings.
      * The method merges all settings taking into account the different available levels of settings - global, user specified and report specific ones.
      * @param configurationDto
      * @param userName

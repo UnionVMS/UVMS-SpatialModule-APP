@@ -18,6 +18,7 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
+import eu.europa.ec.fisheries.uvms.common.utils.GeometryUtils;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.interceptors.TracingInterceptor;
 import eu.europa.ec.fisheries.uvms.mapper.GeometryMapper;
@@ -62,9 +63,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.geotools.geometry.jts.JTSFactoryFinder;
-import org.geotools.referencing.CRS;
 import org.geotools.referencing.GeodeticCalculator;
-import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.operation.TransformException;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -82,10 +81,9 @@ import java.util.List;
 import java.util.Map;
 
 import static com.vividsolutions.jts.operation.distance.DistanceOp.nearestPoints;
-import static eu.europa.ec.fisheries.uvms.spatial.service.bean.impl.GeometryUtils.*;
+import static eu.europa.ec.fisheries.uvms.common.utils.GeometryUtils.*;
 import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 import static org.geotools.geometry.jts.JTS.orthodromicDistance;
-import static org.geotools.geometry.jts.JTS.toGeographic;
 
 /**
  * This class groups all the spatial operations on the spatial database.
@@ -96,17 +94,16 @@ import static org.geotools.geometry.jts.JTS.toGeographic;
 @Interceptors(TracingInterceptor.class)
 public class SpatialServiceBean implements SpatialService {
 
-    private static final String EPSG = "EPSG:";
     private static final String MULTIPOINT = "MULTIPOINT";
 
     private @PersistenceContext(unitName = "spatialPU") EntityManager em;
     private @EJB SpatialRepository repository;
     private @EJB PropertiesBean properties;
-    private DatabaseDialect databaseDialect;
+    private DatabaseDialect dialect;
 
     @PostConstruct
     public void init(){
-        databaseDialect = new DatabaseDialectFactory(properties).getInstance();
+        dialect = new DatabaseDialectFactory(properties).getInstance();
     }
 
     @Override
@@ -128,16 +125,16 @@ public class SpatialServiceBean implements SpatialService {
             throw new ServiceException("MISSING MANDATORY FIELDS");
         }
 
-        final Point incoming = toWgs84Point(lat, lon, crs);
+        final Point incoming = (Point) GeometryUtils.toGeographic(lat, lon, crs);
         final Double incomingLatitude = incoming.getY();
         final Double incomingLongitude = incoming.getX();
         final Map<String, Location> distancePerTypeMap = new HashMap<>();
         final UnitType unit = request.getUnit();
         final MeasurementUnit measurementUnit = MeasurementUnit.getMeasurement(unit.name());
-        final GeodeticCalculator calc = new GeodeticCalculator(DEFAULT_CRS);
+        final GeodeticCalculator calc = new GeodeticCalculator(GeometryUtils.toDefaultCoordinateReferenceSystem());
         final List<AreaLocationTypesEntity> typeEntities = repository.findAllIsPointIsSystemWide(true, true);
 
-        List records = repository.closestPoint(typeEntities, databaseDialect, incoming);
+        List records = repository.closestPoint(typeEntities, dialect, incoming);
 
         for (Object record : records) {
             final Object[] result = (Object[]) record;
@@ -179,7 +176,7 @@ public class SpatialServiceBean implements SpatialService {
 
         AreaLocationTypesEntity areaLocationTypesEntity = repository.findAreaLocationTypeByTypeName(areaTypeEntry.getAreaType().value().toUpperCase());
 
-        Point point = toWgs84Point(areaTypeEntry.getLatitude(),areaTypeEntry.getLongitude(), areaTypeEntry.getCrs());
+        Point point = (Point) GeometryUtils.toGeographic(areaTypeEntry.getLatitude(), areaTypeEntry.getLongitude(), areaTypeEntry.getCrs());
 
         List list = DAOFactory.getAbstractSpatialDao(em, areaLocationTypesEntity.getTypeName()).findByIntersect(point);
         List<AreaDetails> areaDetailsList = new ArrayList<>();
@@ -214,7 +211,7 @@ public class SpatialServiceBean implements SpatialService {
     @Transactional
     public List<UserAreaDto> getUserAreaDetailsWithExtentByLocation(Coordinate coordinate, String userName) throws ServiceException {
 
-        Point point = toWgs84Point(coordinate.getLatitude(), coordinate.getLongitude(), coordinate.getCrs());
+        Point point = (Point) GeometryUtils.toGeographic(coordinate.getLatitude(), coordinate.getLongitude(), coordinate.getCrs());
 
         List<UserAreasEntity> userAreaDetailsWithExtentByLocation = repository.findUserAreaDetailsByLocation(userName, point);
 
@@ -235,7 +232,7 @@ public class SpatialServiceBean implements SpatialService {
     @Override
     @Transactional
     public List<AreaDetails> getUserAreaDetailsByLocation(AreaTypeEntry areaTypeEntry, String userName) throws ServiceException {
-        Point point = toWgs84Point(areaTypeEntry.getLatitude(), areaTypeEntry.getLongitude(), areaTypeEntry.getCrs());
+        Point point = (Point) GeometryUtils.toGeographic(areaTypeEntry.getLatitude(), areaTypeEntry.getLongitude(), areaTypeEntry.getCrs());
         List<UserAreasEntity> userAreaDetails = repository.findUserAreaDetailsByLocation(userName, point);
         try {
             List<AreaDetails> areaDetailsList = Lists.newArrayList();
@@ -294,12 +291,12 @@ public class SpatialServiceBean implements SpatialService {
                 throw new ServiceException("MISSING MANDATORY FIELDS");
             }
 
-            final Point incoming = toWgs84Point(lat, lon, crs);
+            final Point incoming = (Point) GeometryUtils.toGeographic(lat, lon, crs);
 
             final MeasurementUnit measurementUnit = MeasurementUnit.getMeasurement(request.getUnit().name());
             final UnitType unit = request.getUnit();
             final List<AreaLocationTypesEntity> typesEntities = repository.findAllIsPointIsSystemWide(false, true);
-            List records = repository.closestArea(typesEntities, databaseDialect, incoming);
+            List records = repository.closestArea(typesEntities, dialect, incoming);
 
             for (Object record : records) {
 
@@ -311,7 +308,7 @@ public class SpatialServiceBean implements SpatialService {
                 }
 
                 final com.vividsolutions.jts.geom.Coordinate[] coordinates = nearestPoints(geom, incoming);
-                final Double orthodromicDistance = orthodromicDistance(coordinates[0], coordinates[1], DEFAULT_CRS);
+                final Double orthodromicDistance = orthodromicDistance(coordinates[0], coordinates[1], GeometryUtils.toDefaultCoordinateReferenceSystem());
 
                 final String type = result[0].toString();
                 Area closest = distancePerTypeMap.get(type);
@@ -359,11 +356,11 @@ public class SpatialServiceBean implements SpatialService {
             throw new ServiceException("MISSING MANDATORY FIELDS");
         }
 
-        final Point incoming = toWgs84Point(lat, lon, crs);
+        final Point incoming = (Point) GeometryUtils.toGeographic(lat, lon, crs);
         final List<AreaLocationTypesEntity> typesEntities = repository.findAllIsPointIsSystemWide(false, true);
         final List<AreaExtendedIdentifierType> areaTypes = new ArrayList<>();
 
-        List records = repository.intersectingArea(typesEntities, databaseDialect, incoming);
+        List records = repository.intersectingArea(typesEntities, dialect, incoming);
 
         for (Object record : records) {
             final Object[] result = (Object[]) record;
@@ -392,75 +389,73 @@ public class SpatialServiceBean implements SpatialService {
             typesEntityMap.put(typesEntity.getTypeName(), typesEntity);
         }
 
-        try {
+        buildQuery(scopeAreas.getScopeAreas(), sb, "scope", typesEntityMap);
 
-            buildQuery(scopeAreas.getScopeAreas(), sb, "scope", typesEntityMap);
-
-            if(userAreas != null){
-                if ( CollectionUtils.isNotEmpty(userAreas.getUserAreas()) && StringUtils.isNotEmpty(sb.toString())){
-                    sb.append(" UNION ALL ");
-                }
-                buildQuery(userAreas.getUserAreas(), sb, "user", typesEntityMap);
+        if (userAreas != null) {
+            if (CollectionUtils.isNotEmpty(userAreas.getUserAreas()) && StringUtils.isNotEmpty(sb.toString())) {
+                sb.append(" UNION ALL ");
             }
-
-            log.debug("{} QUERY => {}", sb.toString());
-
-            List records = repository.listBaseAreaList(sb.toString());
-
-            final List<Geometry> scopeGeometryList = new ArrayList<>();
-            final List<Geometry> userGeometryList = new ArrayList<>();
-
-            for (Object record : records) {
-                final Object[] result = (Object[]) record;
-                final String type = (String) result[0];
-                Geometry geometry = (Geometry) result[1];
-                if (!isDefaultCrs(geometry.getSRID())){
-                    geometry = toGeographic(geometry, CRS.decode(EPSG + Integer.toString(geometry.getSRID()), true));
-                }
-                if ("user".equals(type)){
-                    userGeometryList.add(geometry);
-                } else {
-                    scopeGeometryList.add(geometry);
-                }
-            }
-
-            GeometryFactory geometryFactory = JTSFactoryFinder.getGeometryFactory();
-
-            Geometry userUnion = geometryFactory.buildGeometry(userGeometryList).union();
-            Geometry scopeUnion = geometryFactory.buildGeometry(scopeGeometryList).union();
-
-            FilterAreasSpatialRS response = new FilterAreasSpatialRS(null,0);
-            Geometry intersection = null;
-
-            if (!userUnion.isEmpty() && !scopeUnion.isEmpty()){
-                intersection = userUnion.intersection(scopeUnion);
-                response.setCode(3);
-                if (intersection.isEmpty()){
-                    intersection = scopeUnion;
-                    response.setCode(4);
-                }
-            }
-            else if(!userUnion.isEmpty()){
-                intersection = userUnion;
-                response.setCode(1);
-            }
-            else if(!scopeUnion.isEmpty()){
-                intersection = scopeUnion;
-                response.setCode(2);
-            }
-
-            if (intersection != null){
-                if (intersection.getNumPoints() > 20000){
-                    intersection = DouglasPeuckerSimplifier.simplify(intersection, 0.5);
-                }
-                response.setGeometry(GeometryMapper.INSTANCE.geometryToWkt(intersection).getValue());
-            }
-
-            return response;
-
-        } catch (TransformException | FactoryException ex) {
-            throw new ServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR.toString(), ex);
+            buildQuery(userAreas.getUserAreas(), sb, "user", typesEntityMap);
         }
+
+        log.debug("{} QUERY => {}", sb.toString());
+
+        List records = repository.listBaseAreaList(sb.toString());
+
+        final List<Geometry> scopeGeometryList = new ArrayList<>();
+        final List<Geometry> userGeometryList = new ArrayList<>();
+
+        for (Object record : records) {
+            final Object[] result = (Object[]) record;
+            final String type = (String) result[0];
+            Geometry geometry = (Geometry) result[1];
+
+            Integer epsgSRID = repository.mapToEpsgSRID(geometry.getSRID());
+
+            if (!isDefaultEpsgSRID(epsgSRID)) {
+                geometry = GeometryUtils.toGeographic(geometry, epsgSRID);
+            }
+
+            if ("user".equals(type)) {
+                userGeometryList.add(geometry);
+            } else {
+                scopeGeometryList.add(geometry);
+            }
+        }
+
+        GeometryFactory geometryFactory = JTSFactoryFinder.getGeometryFactory();
+
+        Geometry userUnion = geometryFactory.buildGeometry(userGeometryList).union();
+        Geometry scopeUnion = geometryFactory.buildGeometry(scopeGeometryList).union();
+
+        FilterAreasSpatialRS response = new FilterAreasSpatialRS(null, 0);
+        Geometry intersection = null;
+
+        if (!userUnion.isEmpty() && !scopeUnion.isEmpty()) {
+            intersection = userUnion.intersection(scopeUnion);
+            response.setCode(3);
+            if (intersection.isEmpty()) {
+                intersection = scopeUnion;
+                response.setCode(4);
+            }
+        } else if (!userUnion.isEmpty()) {
+            intersection = userUnion;
+            response.setCode(1);
+        } else if (!scopeUnion.isEmpty()) {
+            intersection = scopeUnion;
+            response.setCode(2);
+        }
+
+        if (intersection != null) {
+            if (intersection.getNumPoints() > 20000) {
+                intersection = DouglasPeuckerSimplifier.simplify(intersection, 0.5);
+            }
+            response.setGeometry(GeometryMapper.INSTANCE.geometryToWkt(intersection).getValue());
+        }
+
+        return response;
+
+
     }
 
     private void buildQuery(List<AreaIdentifierType> typeList, StringBuilder sb, String type, Map<String, AreaLocationTypesEntity> typesEntityMap ) {
@@ -550,7 +545,7 @@ public class SpatialServiceBean implements SpatialService {
     @Transactional
     public LocationDetails getLocationDetails(final LocationTypeEntry locationTypeEntry) throws ServiceException {
 
-        final GeodeticCalculator calc = new GeodeticCalculator(DEFAULT_CRS);
+        final GeodeticCalculator calc = new GeodeticCalculator(GeometryUtils.toDefaultCoordinateReferenceSystem());
         final Map<String, Object> properties;
         final String id = locationTypeEntry.getId();
         final String locationType = locationTypeEntry.getLocationType();
@@ -589,7 +584,7 @@ public class SpatialServiceBean implements SpatialService {
 
             Map<String, Object> fieldMap = new HashMap<>();
             List list = new ArrayList();
-            Point point = toWgs84Point(incomingLatitude, incomingLongitude, locationTypeEntry.getCrs());
+            Point point = (Point) GeometryUtils.toGeographic(incomingLatitude, incomingLongitude, locationTypeEntry.getCrs());
 
             List<PortEntity> records = repository.listClosestPorts(point, 5);
             PortEntity closestLocation = null;

@@ -49,7 +49,7 @@ public class XMLResource {
     @Path("/filter-areas")
     public FilterAreasSpatialRS computeAreaFilter(FilterAreasSpatialRQ request) throws ServiceException {
 
-        return  spatialService.computeAreaFilter(request);
+        return spatialService.computeAreaFilter(request);
 
     }
 

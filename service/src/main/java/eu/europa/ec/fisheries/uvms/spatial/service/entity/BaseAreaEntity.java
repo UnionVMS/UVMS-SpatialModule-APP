@@ -19,7 +19,7 @@ import eu.europa.ec.fisheries.uvms.common.DateUtils;
 import eu.europa.ec.fisheries.uvms.domain.BaseEntity;
 import eu.europa.ec.fisheries.uvms.domain.CharBooleanConverter;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadMappingProperty;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadMappingProperty;
 import eu.europa.ec.fisheries.uvms.spatial.service.util.ColumnAliasName;
 import eu.europa.ec.fisheries.uvms.spatial.service.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.exception.SpatialServiceException;

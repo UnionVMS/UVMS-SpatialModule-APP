@@ -15,6 +15,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DatabaseDialect;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.bookmark.Bookmark;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.BookmarkEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.CountryEntity;
@@ -25,7 +26,6 @@ import eu.europa.ec.fisheries.uvms.spatial.service.entity.ReportConnectSpatialEn
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.ServiceLayerEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.SysConfigEntity;
-import eu.europa.ec.fisheries.uvms.spatial.model.bookmark.Bookmark;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.AreaLayerDto;
@@ -176,4 +176,10 @@ public interface SpatialRepository {
     void updateUserAreaForUser(String remoteUser, Date startDate, Date endDate, String type) throws ServiceException;
 
     List areaByCode(List<AreaSimpleType> areaSimpleTypeList) throws ServiceException;
+
+    Integer mapToEpsgSRID(Integer srid) throws ServiceException;
+
+    Boolean isOracle();
+
+    Integer mapEpsgToSRID(Integer epsg);
 }
