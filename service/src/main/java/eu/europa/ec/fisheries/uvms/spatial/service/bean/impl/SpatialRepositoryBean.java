@@ -64,8 +64,14 @@ import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 @Local(value = SpatialRepository.class)
 public class SpatialRepositoryBean implements SpatialRepository {
 
-    private @PersistenceContext(unitName = "spatialPU") EntityManager em;
+    private EntityManager em;
 
+    @PersistenceContext(unitName = "spatialPUpostgres")
+    private EntityManager postgres;
+
+    @PersistenceContext(unitName = "spatialPUoracle")
+    private EntityManager oracle;	
+	
     private UserAreaDao userAreaDao;
     private AbstractAreaDao abstractAreaDao;
     private SysConfigDao sysConfigDao;
@@ -78,8 +84,18 @@ public class SpatialRepositoryBean implements SpatialRepository {
     private PortDao portDao;
     private CountryDao countryDao;
 
+    public void initEntityManager() {
+        String dbDialect = System.getProperty("db.dialect");
+        if ("oracle".equalsIgnoreCase(dbDialect)) {
+            em = oracle;
+        } else {
+            em = postgres;
+        }
+    }	
+	
     @PostConstruct
     public void init() {
+		initEntityManager();	
         abstractAreaDao = new EezDao(em);
         userAreaDao = new UserAreaDao(em);
         sysConfigDao = new SysConfigDao(em);
