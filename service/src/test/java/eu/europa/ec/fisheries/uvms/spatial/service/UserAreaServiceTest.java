@@ -22,6 +22,8 @@ import com.vividsolutions.jts.util.Assert;
 import eu.europa.ec.fisheries.uvms.BaseUnitilsTest;
 import eu.europa.ec.fisheries.uvms.TestToolBox;
 import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
+import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.H2gis;
+import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.PostGres;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
@@ -52,7 +54,7 @@ import static org.junit.Assert.assertNull;
 public class UserAreaServiceTest extends BaseUnitilsTest {
 
     @TestedObject
-    private UserAreaService service = new UserAreaServiceBean();
+    private UserAreaServiceBean service = new UserAreaServiceBean();
 
     @InjectIntoByType
     private Mock<SpatialRepository> repoMock;
@@ -211,6 +213,7 @@ public class UserAreaServiceTest extends BaseUnitilsTest {
         repoMock.returns(userAreasEntity).save(null);
 
         // When
+        service.setDialect(new H2gis());
         Long result = service.storeUserArea(userAreaDto, "rep_power");
 
         // Then
@@ -232,6 +235,7 @@ public class UserAreaServiceTest extends BaseUnitilsTest {
         repoMock.returns(userAreasEntity).save(null);
 
         // When
+        service.setDialect(new PostGres());
         Long result = service.storeUserArea(userAreaDto, "rep_power");
 
         // Then
@@ -257,6 +261,7 @@ public class UserAreaServiceTest extends BaseUnitilsTest {
         repoMock.returns(userAreasEntity).update(null);
 
         // When
+        service.setDialect(new PostGres());
         Long result = service.updateUserArea(userAreaDto, "rep_power", true, "");
 
         // Then

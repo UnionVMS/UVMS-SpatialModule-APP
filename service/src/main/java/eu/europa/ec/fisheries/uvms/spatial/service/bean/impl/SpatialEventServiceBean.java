@@ -8,14 +8,40 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
+
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.impl;
 
 import eu.europa.ec.fisheries.uvms.spatial.message.bean.SpatialMessageServiceBean;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.*;
-import eu.europa.ec.fisheries.uvms.spatial.model.FaultCode;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.AreaByCodeEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.DeleteMapConfigurationEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.GetAreaByLocationEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.GetAreaTypeNamesEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.GetClosestAreaEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.GetClosestLocationEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.GetFilterAreaEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.GetMapConfigurationEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.GetSpatialEnrichmentEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.PingEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.SaveOrUpdateMapConfigurationEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageErrorEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageEvent;
+import eu.europa.ec.fisheries.uvms.spatial.model.enums.FaultCode;
 import eu.europa.ec.fisheries.uvms.spatial.model.mapper.SpatialModuleMapper;
 import eu.europa.ec.fisheries.uvms.spatial.model.mapper.SpatialModuleResponseMapper;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Area;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByCodeRequest;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByCodeResponse;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaExtendedIdentifierType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Location;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.PingRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialDeleteMapConfigurationRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialGetMapConfigurationRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveOrUpdateMapConfigurationRS;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.MapConfigService;
@@ -134,10 +160,10 @@ public class SpatialEventServiceBean implements SpatialEventService {
 
     @Override
     public void deleteMapConfiguration(@Observes @DeleteMapConfigurationEvent SpatialMessageEvent message) {
-        log.info("Delete map configurations.");
+        log.info("Delete mapDefaultSRIDToEPSG configurations.");
         try {
             mapConfigService.handleDeleteMapConfiguration(message.getSpatialDeleteMapConfigurationRQ());
-            log.debug("Send back map configurations response.");
+            log.debug("Send back mapDefaultSRIDToEPSG configurations response.");
             String value = SpatialModuleMapper.INSTANCE.marshal(new SpatialDeleteMapConfigurationRS()).getValue();
             messageProducer.sendModuleResponseMessage(message.getMessage(), value);
         } catch (Exception e) {
@@ -160,10 +186,10 @@ public class SpatialEventServiceBean implements SpatialEventService {
 
     @Override
     public void saveOrUpdateSpatialMapConfiguration(@Observes @SaveOrUpdateMapConfigurationEvent SpatialMessageEvent message) {
-        log.info("Saving/Updating map configurations.");
+        log.info("Saving/Updating mapDefaultSRIDToEPSG configurations.");
         try {
             SpatialSaveOrUpdateMapConfigurationRS saveOrUpdateMapConfigurationRS = mapConfigService.handleSaveOrUpdateSpatialMapConfiguration(message.getSpatialSaveOrUpdateMapConfigurationRQ());
-            log.debug("Send back map configurations response.");
+            log.debug("Send back mapDefaultSRIDToEPSG configurations response.");
             String response = SpatialModuleResponseMapper.mapSpatialSaveOrUpdateMapConfigurationRSToString(saveOrUpdateMapConfigurationRS);
             messageProducer.sendModuleResponseMessage(message.getMessage(), response);
         } catch (Exception e) {
@@ -173,10 +199,10 @@ public class SpatialEventServiceBean implements SpatialEventService {
 
     @Override
     public void getMapConfiguration(@Observes @GetMapConfigurationEvent SpatialMessageEvent message) {
-        log.info("Getting map configurations.");
+        log.info("Getting mapDefaultSRIDToEPSG configurations.");
         try {
             SpatialGetMapConfigurationRS mapConfigurationRS = mapConfigService.getMapConfiguration(message.getSpatialGetMapConfigurationRQ());
-            log.debug("Send back map configurations response.");
+            log.debug("Send back mapDefaultSRIDToEPSG configurations response.");
             String response = SpatialModuleResponseMapper.mapSpatialGetMapConfigurationResponse(mapConfigurationRS);
             messageProducer.sendModuleResponseMessage(message.getMessage(), response);
         } catch (Exception e) {

@@ -22,4 +22,5 @@ public class H2gis extends PostGres {
     public String closestPointToPoint(String typeName, String tableName, Double latitude, Double longitude, Integer limit) {
         return super.closestPointToPoint(typeName, tableName, latitude, longitude, limit).replace(",true)", ")");
     }
+
 }

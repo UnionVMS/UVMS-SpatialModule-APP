@@ -11,9 +11,9 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.service.dao;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadMappingProperty;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.BaseAreaEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.FmzEntity;
-import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadMappingProperty;
 
 import javax.persistence.EntityManager;
 import java.util.List;

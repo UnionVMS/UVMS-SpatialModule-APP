@@ -11,8 +11,8 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.service.dao;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadMappingProperty;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.PortEntity;
-import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadMappingProperty;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.EntityManager;

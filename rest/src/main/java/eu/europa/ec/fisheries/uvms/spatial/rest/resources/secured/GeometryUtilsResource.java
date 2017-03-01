@@ -13,7 +13,7 @@ package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.impl.GeometryUtils;
+import eu.europa.ec.fisheries.uvms.common.utils.GeometryUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.geotools.geometry.jts.WKTReader2;
 import org.geotools.geometry.jts.WKTWriter2;
@@ -94,7 +94,7 @@ public class GeometryUtilsResource extends UnionVMSResource {
             Double longitude = Double.valueOf(String.valueOf(payload.get("x")));
             Double latitude = Double.valueOf(String.valueOf(payload.get("y")));
             Integer sourceCode = Integer.valueOf(String.valueOf(payload.get("sourceCode")));
-            translate = GeometryUtils.toWgs84Point(latitude, longitude, sourceCode);
+            translate = GeometryUtils.toGeographic(latitude, longitude, sourceCode);
             final Double x = translate.getCoordinates()[0].x;
             final Double y = translate.getCoordinates()[0].y;
             final Integer srid = translate.getSRID();

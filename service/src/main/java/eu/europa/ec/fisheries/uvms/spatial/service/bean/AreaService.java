@@ -14,9 +14,9 @@ import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
-import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadMapping;
-import eu.europa.ec.fisheries.uvms.spatial.model.upload.UploadMetadata;
 
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadMapping;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadMetadata;
 import java.util.List;
 import java.util.Map;
 
