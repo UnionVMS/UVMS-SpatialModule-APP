@@ -49,6 +49,14 @@
         </spatial:createSpatialIndex>
     </changeSet>
 
+    <changeSet author="dubduan" id="76834618168717" dbms="postgresql">
+        <addDefaultValue
+                columnDataType="BIGINT"
+                columnName="gid"
+                defaultValueSequenceNext="user_areas_seq"
+                tableName="user_areas"/>
+    </changeSet>
+
 	
     <changeSet author="dubduan" id="1451714034491-21" dbms="oracle">
         <createProcedure>
@@ -64,19 +72,25 @@
     </changeSet>	
 	
 	
-	<changeSet author="dubduan" id="18k7997k70s-31" dbms="postgresql">
+<!--	<changeSet author="dubduan" id="18k7997k70s-31" dbms="postgresql">
 	
         <createProcedure>
-						
-			CREATE TRIGGER trg_user_areas
-			before insert on user_areas
-			for each row
-			when(new.gid is null)
-			begin
-				select user_areas_seq.nextval into :new.gid from dual;
-			end;			
+
+            CREATE OR REPLACE FUNCTION inc_user_areas_sq()
+            RETURNS "trigger" AS
+            $BODY$
+            BEGIN
+            New.gid:=nextval('user_areas_seq');
+            Return NEW;
+            END;
+            $BODY$
+            LANGUAGE 'plpgsql' VOLATILE;
+
+            CREATE TRIGGER trg_user_areas
+            before insert on user_areas
+            for each row EXECUTE procedure inc_user_areas_sq()
 			
         </createProcedure>			
-    </changeSet>	
+    </changeSet>-->
 	
 </databaseChangeLog>

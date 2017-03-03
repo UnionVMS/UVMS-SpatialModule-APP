@@ -34,6 +34,14 @@
             <column name="geom" />
         </spatial:createSpatialIndex>
     </changeSet>
+
+    <changeSet author="dubduan" id="76834618168717" dbms="postgresql">
+        <addDefaultValue
+                columnDataType="BIGINT"
+                columnName="gid"
+                defaultValueSequenceNext="rfmo_seq"
+                tableName="rfmo"/>
+    </changeSet>
 	
 	
  <changeSet author="dubduan" id="1431890745716-41" dbms="oracle">
@@ -50,19 +58,25 @@
     </changeSet>	
 	
 	
-	<changeSet author="dubduan" id="18h67770s-31" dbms="postgresql">
+<!--	<changeSet author="dubduan" id="18h67770s-31" dbms="postgresql">
 	
         <createProcedure>
-						
-			CREATE TRIGGER trg_rfmo
-			before insert on rfmo
-			for each row
-			when(new.gid is null)
-			begin
-				select rfmo_seq.nextval into :new.gid from dual;
-			end;			
+
+            CREATE OR REPLACE FUNCTION inc_rfmo_sq()
+            RETURNS "trigger" AS
+            $BODY$
+            BEGIN
+            New.gid:=nextval('rfmo_seq');
+            Return NEW;
+            END;
+            $BODY$
+            LANGUAGE 'plpgsql' VOLATILE;
+
+            CREATE TRIGGER trg_rfmo
+            before insert on rfmo
+            for each row EXECUTE procedure inc_rfmo_sq()
 			
         </createProcedure>			
-    </changeSet>		
+    </changeSet>-->
 
 </databaseChangeLog>

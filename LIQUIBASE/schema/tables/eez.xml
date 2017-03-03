@@ -44,6 +44,14 @@
             <column name="geom" />
         </spatial:createSpatialIndex>
     </changeSet>
+
+    <changeSet author="dubduan" id="76834618168717" dbms="postgresql">
+        <addDefaultValue
+                columnDataType="BIGINT"
+                columnName="gid"
+                defaultValueSequenceNext="eez_seq"
+                tableName="eez"/>
+    </changeSet>
 	
 	
     <changeSet author="dubduan" id="1431890745716-31" dbms="oracle">
@@ -60,19 +68,25 @@
         </createProcedure>	
     </changeSet>	
 	
-	<changeSet author="dubduan" id="1429980sds-31" dbms="postgresql">
+<!--	<changeSet author="dubduan" id="1429980sds-31" dbms="postgresql">
 	
         <createProcedure>
-						
-			CREATE TRIGGER trg_eez
-			before insert on eez
-			for each row
-			when(new.gid is null)
-			begin
-				select eez_seq.nextval into :new.gid from dual;
-			end;			
+            CREATE OR REPLACE FUNCTION inc_eez_sq()
+            RETURNS "trigger" AS
+            $BODY$
+            BEGIN
+            New.gid:=nextval('eez_seq');
+            Return NEW;
+            END;
+            $BODY$
+            LANGUAGE 'plpgsql' VOLATILE;
+
+            CREATE TRIGGER trg_eez
+            before insert on eez
+            for each row EXECUTE procedure inc_eez_sq()
+
 			
         </createProcedure>			
-    </changeSet>		
+    </changeSet>-->
 	
 </databaseChangeLog>

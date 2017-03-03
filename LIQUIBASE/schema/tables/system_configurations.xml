@@ -19,6 +19,14 @@
             <column name="value" type="CLOB"/>
         </createTable>
     </changeSet>
+
+    <changeSet author="dubduan" id="76834618168717" dbms="postgresql">
+        <addDefaultValue
+                columnDataType="BIGINT"
+                columnName="id"
+                defaultValueSequenceNext="system_configurations_seq"
+                tableName="system_configurations"/>
+    </changeSet>
 	
 	
     <changeSet author="dubduan" id="1418362466451-1" dbms="oracle">
@@ -34,19 +42,26 @@
         </createProcedure>			
     </changeSet>	
 	
-	<changeSet author="dubduan" id="18k7jhk70s-31" dbms="postgresql">
+<!--	<changeSet author="dubduan" id="18k7jhk70s-31" dbms="postgresql">
 	
         <createProcedure>
-						
-			CREATE TRIGGER trg_system_configurations
-			before insert on system_configurations
-			for each row
-			when(new.ID is null)
-			begin
-				select system_configurations_seq.nextval into :new.ID from dual;
-			end;			
+
+            CREATE OR REPLACE FUNCTION inc_system_configurations_sq()
+            RETURNS "trigger" AS
+            $BODY$
+            BEGIN
+            New.id:=nextval('system_configurations_seq');
+            Return NEW;
+            END;
+            $BODY$
+            LANGUAGE 'plpgsql' VOLATILE;
+
+            CREATE TRIGGER trg_system_configurations
+            before insert on system_configurations
+            for each row EXECUTE procedure inc_system_configurations_sq()
+
 			
         </createProcedure>			
-    </changeSet>			
+    </changeSet>-->
 	
 </databaseChangeLog>

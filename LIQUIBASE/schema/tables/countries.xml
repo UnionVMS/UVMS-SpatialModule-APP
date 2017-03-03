@@ -51,6 +51,14 @@
             <column name="geom_20" />
         </spatial:createSpatialIndex>
     </changeSet>
+
+    <changeSet author="dubduan" id="76834618168717" dbms="postgresql">
+        <addDefaultValue
+                columnDataType="BIGINT"
+                columnName="gid"
+                defaultValueSequenceNext="countries_seq"
+                tableName="countries"/>
+    </changeSet>
 	
 
 	<changeSet author="dubduan" id="1162196361922-1" dbms="oracle">	
@@ -66,19 +74,24 @@
         </createProcedure>			
     </changeSet>	
 	
-	<changeSet author="dubduan" id="1429980sds-31" dbms="postgresql">
+<!--	<changeSet author="dubduan" id="1429980sds-31" dbms="postgresql">
 	
         <createProcedure>
-						
-			CREATE TRIGGER trg_countries
-			before insert on countries
-			for each row
-			when(new.gid is null)
-			begin
-				select countries_seq.nextval into :new.gid from dual;
-			end;			
+            CREATE OR REPLACE FUNCTION inc_countries_sq()
+            RETURNS "trigger" AS
+            $BODY$
+            BEGIN
+            New.id:=nextval('countries_seq');
+            Return NEW;
+            END;
+            $BODY$
+            LANGUAGE 'plpgsql' VOLATILE;
+
+            CREATE TRIGGER trg_countries
+            before insert on countries
+            for each row EXECUTE procedure inc_countries_sq()
 			
         </createProcedure>			
-    </changeSet>	
+    </changeSet>-->
 	
 </databaseChangeLog>

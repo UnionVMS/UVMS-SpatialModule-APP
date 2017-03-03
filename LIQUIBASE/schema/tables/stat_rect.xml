@@ -34,6 +34,14 @@
             <column name="geom" />
         </spatial:createSpatialIndex>
     </changeSet>
+
+    <changeSet author="dubduan" id="76834618168717" dbms="postgresql">
+        <addDefaultValue
+                columnDataType="BIGINT"
+                columnName="gid"
+                defaultValueSequenceNext="stat_rect_seq"
+                tableName="stat_rect"/>
+    </changeSet>
 	
 	
 	<changeSet author="dubduan" id="1412540272714-10" dbms="oracle">
@@ -50,19 +58,26 @@
     </changeSet>	
 	
 	
-	<changeSet author="dubduan" id="18k7hjk70s-31" dbms="postgresql">
+<!--	<changeSet author="dubduan" id="18k7hjk70s-31" dbms="postgresql">
 	
         <createProcedure>
-						
-			CREATE TRIGGER trg_stat_rect
-			before insert on stat_rect
-			for each row
-			when(new.gid is null)
-			begin
-				select stat_rect_seq.nextval into :new.gid from dual;
-			end;			
+
+
+            CREATE OR REPLACE FUNCTION inc_stat_rect_sq()
+            RETURNS "trigger" AS
+            $BODY$
+            BEGIN
+            New.gid:=nextval('stat_rect_seq');
+            Return NEW;
+            END;
+            $BODY$
+            LANGUAGE 'plpgsql' VOLATILE;
+
+            CREATE TRIGGER trg_stat_rect
+            before insert on stat_rect
+            for each row EXECUTE procedure inc_stat_rect_sq()
 			
         </createProcedure>			
-    </changeSet>		
+    </changeSet>-->
 
 </databaseChangeLog>

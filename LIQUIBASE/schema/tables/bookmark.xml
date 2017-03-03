@@ -27,7 +27,14 @@
             </column>
         </createTable>
     </changeSet>
-	
+
+    <changeSet author="dubduan" id="7681719168717" dbms="postgresql">
+        <addDefaultValue
+                columnDataType="BIGINT"
+                columnName="id"
+                defaultValueSequenceNext="bookmark_seq"
+                tableName="bookmark"/>
+    </changeSet>
 
    <changeSet author="dubduan" id="1419190715706-31" dbms="oracle">   
         <createProcedure>
@@ -43,19 +50,25 @@
     </changeSet>	
 	
 	
-	<changeSet author="dubduan" id="1429sjhk982i-31" dbms="postgresql">
+<!--	<changeSet author="dubduan" id="1429sjhk982i-31" dbms="postgresql">
 	
         <createProcedure>
-						
-			CREATE TRIGGER trg_bookmark
-			before insert on bookmark
-			for each row
-			when(new.ID is null)
-			begin
-				select bookmark_seq.nextval into :new.ID from dual;
-			end;			
+
+            CREATE OR REPLACE FUNCTION inc_bookmark_sq()
+            RETURNS "trigger" AS
+            $BODY$
+            BEGIN
+            New.id:=nextval('bookmark_seq');
+            Return NEW;
+            END;
+            $BODY$
+            LANGUAGE 'plpgsql' VOLATILE;
+
+            CREATE TRIGGER trg_bookmark
+            before insert on bookmark
+            for each row EXECUTE procedure inc_bookmark_sq()
 			
         </createProcedure>			
-    </changeSet>	
+    </changeSet>-->
 
 </databaseChangeLog>

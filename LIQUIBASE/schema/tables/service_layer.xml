@@ -44,7 +44,13 @@
         <addForeignKeyConstraint baseColumnNames="service_layer_id" baseTableName="report_connect_service_area" constraintName="area_service_layer_fkey" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="service_layer"/>
     </changeSet>
 
-
+    <changeSet author="dubduan" id="76834618168717" dbms="postgresql">
+        <addDefaultValue
+                columnDataType="BIGINT"
+                columnName="id"
+                defaultValueSequenceNext="service_layer_seq"
+                tableName="service_layer"/>
+    </changeSet>
 	
      <changeSet author="dubduan" id="1419890745106-41" dbms="oracle">
         <createProcedure>
@@ -59,19 +65,27 @@
         </createProcedure>			
     </changeSet>    
 	
-	<changeSet author="dubduan" id="18k77870s-31" dbms="postgresql">
+<!--	<changeSet author="dubduan" id="18k77870s-31" dbms="postgresql">
 	
         <createProcedure>
-						
-			CREATE TRIGGER trg_service_layer
-			before insert on service_layer
-			for each row
-			when(new.ID is null)
-			begin
-				select service_layer_seq.nextval into :new.ID from dual;
-			end;			
+
+            CREATE OR REPLACE FUNCTION inc_service_layer_sq()
+            RETURNS "trigger" AS
+            $BODY$
+            BEGIN
+            New.id:=nextval('service_layer_seq');
+            Return NEW;
+            END;
+            $BODY$
+            LANGUAGE 'plpgsql' VOLATILE;
+
+            CREATE TRIGGER trg_service_layer
+            before insert on service_layer
+            for each row EXECUTE procedure inc_service_layer_sq()
+
+
 			
         </createProcedure>			
-    </changeSet>	
+    </changeSet>	-->
 	
 </databaseChangeLog>

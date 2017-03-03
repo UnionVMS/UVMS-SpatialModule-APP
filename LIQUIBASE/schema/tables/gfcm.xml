@@ -32,7 +32,14 @@
         </spatial:createSpatialIndex>
     </changeSet>
 
-	
+
+    <changeSet author="dubduan" id="76834618168717" dbms="postgresql">
+        <addDefaultValue
+                columnDataType="BIGINT"
+                columnName="gid"
+                defaultValueSequenceNext="gfcm_seq"
+                tableName="gfcm"/>
+    </changeSet>
 
 	
    <changeSet author="dubduan" id="1412540212744-9" dbms="oracle">
@@ -50,19 +57,26 @@
     </changeSet>
 	
 	
-	<changeSet author="dubduan" id="1879830sds-31" dbms="postgresql">
+<!--	<changeSet author="dubduan" id="1879830sds-31" dbms="postgresql">
 	
         <createProcedure>
-						
-			CREATE TRIGGER trg_gfcm
-			before insert on gfcm
-			for each row
-			when(new.gid is null)
-			begin
-				select gfcm_seq.nextval into :new.gid from dual;
-			end;			
+
+            CREATE OR REPLACE FUNCTION inc_gfcm_sq()
+            RETURNS "trigger" AS
+            $BODY$
+            BEGIN
+            New.gid:=nextval('gfcm_seq');
+            Return NEW;
+            END;
+            $BODY$
+            LANGUAGE 'plpgsql' VOLATILE;
+
+            CREATE TRIGGER trg_gfcm
+            before insert on gfcm
+            for each row EXECUTE procedure inc_gfcm_sq()
+
 			
         </createProcedure>			
-    </changeSet>		
+    </changeSet>-->
 	
 </databaseChangeLog>

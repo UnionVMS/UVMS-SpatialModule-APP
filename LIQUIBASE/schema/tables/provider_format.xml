@@ -30,6 +30,14 @@
                                  referencedColumnNames="id"
                                  referencedTableName="provider_format"/>
     </changeSet>
+
+    <changeSet author="dubduan" id="76834618168717" dbms="postgresql">
+        <addDefaultValue
+                columnDataType="BIGINT"
+                columnName="id"
+                defaultValueSequenceNext="provider_format_seq"
+                tableName="provider_format"/>
+    </changeSet>
     
 		
    <changeSet author="dubduan" id="1419810741706-40" dbms="oracle">
@@ -46,20 +54,26 @@
     </changeSet>	
 	
 	
-	<changeSet author="dubduan" id="1879h870s-31" dbms="postgresql">
+<!--	<changeSet author="dubduan" id="1879h870s-31" dbms="postgresql">
 	
         <createProcedure>
-						
-			CREATE TRIGGER trg_provider_format
-			before insert on provider_format
-			for each row
-			when(new.ID is null)
-			begin
-				select provider_format_seq.nextval into :new.ID from dual;
-			end;			
+
+            CREATE OR REPLACE FUNCTION inc_provider_format_sq()
+            RETURNS "trigger" AS
+            $BODY$
+            BEGIN
+            New.id:=nextval('provider_format_seq');
+            Return NEW;
+            END;
+            $BODY$
+            LANGUAGE 'plpgsql' VOLATILE;
+
+            CREATE TRIGGER trg_provider_format
+            before insert on provider_format
+            for each row EXECUTE procedure inc_provider_format_sq()
 			
         </createProcedure>			
-    </changeSet>		
+    </changeSet>-->
 	
 </databaseChangeLog>
  

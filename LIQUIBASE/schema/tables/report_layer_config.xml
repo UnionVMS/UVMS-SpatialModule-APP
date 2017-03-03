@@ -48,20 +48,26 @@
     </changeSet>	
 	
 	
-	<changeSet author="dubduan" id="18hjksd870s-31" dbms="postgresql">
+<!--	<changeSet author="dubduan" id="18hjksd870s-31" dbms="postgresql">
 	
         <createProcedure>
-						
-			CREATE TRIGGER trg_report_layer_config
-			before insert on report_layer_config
-			for each row
-			when(new.ID is null)
-			begin
-				select report_layer_config_seq.nextval into :new.ID from dual;
-			end;			
+
+            CREATE OR REPLACE FUNCTION inc_report_layer_config_sq()
+            RETURNS "trigger" AS
+            $BODY$
+            BEGIN
+            New.id:=nextval('report_layer_config_seq');
+            Return NEW;
+            END;
+            $BODY$
+            LANGUAGE 'plpgsql' VOLATILE;
+
+            CREATE TRIGGER trg_report_layer_config
+            before insert on report_layer_config
+            for each row EXECUTE procedure inc_report_layer_config_sq()
 			
         </createProcedure>			
-    </changeSet>	
+    </changeSet>-->
 	
 
 </databaseChangeLog>
