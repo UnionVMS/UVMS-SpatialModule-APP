@@ -54,7 +54,7 @@ public class SpatialEventServiceBean implements SpatialEventService {
         try {
             List<AreaExtendedIdentifierType> areaTypesByLocation = spatialService.getAreasByPoint(message.getAreaByLocationSpatialRQ());
             log.debug("Send back areaByLocation response.");
-            messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapAreaByLocationResponse(areaTypesByLocation));
+            messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapAreaByLocationResponse(areaTypesByLocation), messageProducer.getModuleName());
         } catch (Exception e) {
             sendError(message, e);
         }
@@ -66,7 +66,7 @@ public class SpatialEventServiceBean implements SpatialEventService {
         try {
             List<String> areaTypeNames = areaTypeNamesService.listAllAreaTypeNames();
             log.debug("Send back area types response.");
-            messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapAreaTypeNamesResponse(areaTypeNames));
+            messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapAreaTypeNamesResponse(areaTypeNames), messageProducer.getModuleName());
         } catch (Exception e) {
             sendError(message, e);
         }
@@ -83,7 +83,7 @@ public class SpatialEventServiceBean implements SpatialEventService {
         try {
             List<Area> closestAreas = spatialService.getClosestArea(message.getClosestAreaSpatialRQ());
             log.debug("Send back closestAreas response.");
-            messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapClosestAreaResponse(closestAreas));
+            messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapClosestAreaResponse(closestAreas), messageProducer.getModuleName());
         } catch (Exception e) {
             sendError(message, e);
         }
@@ -95,7 +95,7 @@ public class SpatialEventServiceBean implements SpatialEventService {
         try {
             List<Location> closestLocations = spatialService.getClosestPointToPointByType(message.getClosestLocationSpatialRQ());
             log.debug("Send back closest locations response.");
-            messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapClosestLocationResponse(closestLocations));
+            messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapClosestLocationResponse(closestLocations), messageProducer.getModuleName());
         } catch (Exception e) {
             sendError(message, e);
         }
@@ -112,7 +112,7 @@ public class SpatialEventServiceBean implements SpatialEventService {
             AreaByCodeResponse areaByCodeRes = new AreaByCodeResponse();
             areaByCodeRes.setAreaSimples(areaSimpleTypeList);
 
-            messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapAreaByCodeResponseToString(areaByCodeRes));
+            messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapAreaByCodeResponseToString(areaByCodeRes), messageProducer.getModuleName());
 
         } catch (Exception e) {
             log.error("[ Error when responding to area by code. ] ", e);
@@ -126,7 +126,7 @@ public class SpatialEventServiceBean implements SpatialEventService {
         try {
             SpatialEnrichmentRS spatialEnrichmentRS = enrichmentService.getSpatialEnrichment(message.getSpatialEnrichmentRQ());
             log.debug("Send back enrichment response.");
-            messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapEnrichmentResponse(spatialEnrichmentRS));
+            messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapEnrichmentResponse(spatialEnrichmentRS), messageProducer.getModuleName());
         } catch (Exception e) {
             sendError(message, e);
         }
@@ -139,7 +139,7 @@ public class SpatialEventServiceBean implements SpatialEventService {
             mapConfigService.handleDeleteMapConfiguration(message.getSpatialDeleteMapConfigurationRQ());
             log.debug("Send back map configurations response.");
             String value = SpatialModuleMapper.INSTANCE.marshal(new SpatialDeleteMapConfigurationRS()).getValue();
-            messageProducer.sendModuleResponseMessage(message.getMessage(), value);
+            messageProducer.sendModuleResponseMessage(message.getMessage(), value, messageProducer.getModuleName());
         } catch (Exception e) {
             sendError(message, e);
         }
@@ -152,7 +152,7 @@ public class SpatialEventServiceBean implements SpatialEventService {
             FilterAreasSpatialRQ filterAreaSpatialRQ = message.getFilterAreasSpatialRQ();
             FilterAreasSpatialRS filterAreasSpatialRS = spatialService.computeAreaFilter(filterAreaSpatialRQ);
             log.debug("Send back filtered Areas");
-            messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapFilterAreasResponse(filterAreasSpatialRS));
+            messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapFilterAreasResponse(filterAreasSpatialRS), messageProducer.getModuleName());
         } catch (Exception e) {
             sendError(message, e);
         }
@@ -165,7 +165,7 @@ public class SpatialEventServiceBean implements SpatialEventService {
             SpatialSaveOrUpdateMapConfigurationRS saveOrUpdateMapConfigurationRS = mapConfigService.handleSaveOrUpdateSpatialMapConfiguration(message.getSpatialSaveOrUpdateMapConfigurationRQ());
             log.debug("Send back map configurations response.");
             String response = SpatialModuleResponseMapper.mapSpatialSaveOrUpdateMapConfigurationRSToString(saveOrUpdateMapConfigurationRS);
-            messageProducer.sendModuleResponseMessage(message.getMessage(), response);
+            messageProducer.sendModuleResponseMessage(message.getMessage(), response, messageProducer.getModuleName());
         } catch (Exception e) {
             sendError(message, e);
         }
@@ -178,7 +178,7 @@ public class SpatialEventServiceBean implements SpatialEventService {
             SpatialGetMapConfigurationRS mapConfigurationRS = mapConfigService.getMapConfiguration(message.getSpatialGetMapConfigurationRQ());
             log.debug("Send back map configurations response.");
             String response = SpatialModuleResponseMapper.mapSpatialGetMapConfigurationResponse(mapConfigurationRS);
-            messageProducer.sendModuleResponseMessage(message.getMessage(), response);
+            messageProducer.sendModuleResponseMessage(message.getMessage(), response, messageProducer.getModuleName());
         } catch (Exception e) {
             sendError(message, e);
         }
@@ -190,7 +190,7 @@ public class SpatialEventServiceBean implements SpatialEventService {
         try {
             PingRS pingRS = new PingRS();
             pingRS.setResponse("pong");
-            messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapPingResponse(pingRS));
+            messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapPingResponse(pingRS), messageProducer.getModuleName());
         } catch (Exception e) {
             log.error("[ Error when responding to ping. ] ", e);
             sendError(message, e);
