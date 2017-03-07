@@ -16,6 +16,8 @@ import eu.europa.ec.fisheries.uvms.domain.BaseEntity;
 import eu.europa.ec.fisheries.uvms.domain.CharBooleanConverter;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -37,6 +39,7 @@ import javax.persistence.Table;
 })
 @EqualsAndHashCode(callSuper = true, exclude = { "reportConnectSpatialsForMapProjId", "reportConnectSpatialsForDisplayProjId"})
 @Data
+@ToString(exclude = { "reportConnectSpatialsForMapProjId", "reportConnectSpatialsForDisplayProjId"})
 public class ProjectionEntity extends BaseEntity {
 
     public static final String FIND_PROJECTION_BY_ID = "ReportLayerConfig.findProjectionById";

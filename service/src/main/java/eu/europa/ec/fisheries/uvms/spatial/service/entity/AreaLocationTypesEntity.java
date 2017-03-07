@@ -51,7 +51,7 @@ import lombok.ToString;
                 + " AND area.serviceLayer = layer AND area.areaDbTable = 'user_areas' AND layer.providerFormat = provider")
 })
 @Table(name = "area_location_types", uniqueConstraints = @UniqueConstraint(columnNames = "type_name"))
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = "serviceLayer")
 @Data
 @ToString(exclude = "serviceLayer")
 public class AreaLocationTypesEntity extends BaseEntity {
@@ -69,13 +69,13 @@ public class AreaLocationTypesEntity extends BaseEntity {
     @JoinColumn(name = "service_layer_id", nullable = false)
     private ServiceLayerEntity serviceLayer;
 
-    @Column(name = "type_name", unique = true, nullable = false, length=255)
+    @Column(name = "type_name", unique = true, nullable = false)
     private String typeName;
 
-    @Column(name = "area_type_desc", length=255)
+    @Column(name = "area_type_desc")
     private String areaTypeDesc;
 
-    @Column(name = "area_db_table", nullable = false, length=255)
+    @Column(name = "area_db_table", nullable = false)
     private String areaDbTable;
 
     @Convert(converter = CharBooleanConverter.class)
