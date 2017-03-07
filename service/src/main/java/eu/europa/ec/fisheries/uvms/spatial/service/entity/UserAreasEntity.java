@@ -29,6 +29,7 @@ import javax.persistence.UniqueConstraint;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.hibernate.annotations.Where;
 import java.util.Date;
 import java.util.Map;
@@ -95,6 +96,7 @@ import java.util.Set;
 })
 @EqualsAndHashCode(callSuper = true, exclude = "scopeSelection")
 @Data
+@ToString(exclude = "scopeSelection")
 public class UserAreasEntity extends BaseAreaEntity {
 
     public static final String FIND_ALL_USER_AREAS = "userArea.findAllUserAreas";
@@ -117,7 +119,7 @@ public class UserAreasEntity extends BaseAreaEntity {
     public static final String UPDATE_USERAREA_FORUSER = "userAreaEntity.updateUserAreaForUser";
     public static final String USERAREA_COLUMNS = "userAreasEntity.findSelectedColumns";
 
-    @Column(length = 255)
+    @Column()
     @ColumnAliasName(aliasName = "subType")
     private String type;
 
@@ -131,7 +133,7 @@ public class UserAreasEntity extends BaseAreaEntity {
     @ColumnAliasName(aliasName = "endDate")
     private Date endDate;
 
-    @Column(name = "user_name", nullable = false, length = 255)
+    @Column(name = "user_name", nullable = false)
     private String userName;
 
     @Column(columnDefinition = "text", name = "area_desc")

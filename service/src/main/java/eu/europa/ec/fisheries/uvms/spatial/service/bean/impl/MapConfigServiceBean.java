@@ -86,15 +86,18 @@ public class MapConfigServiceBean implements MapConfigService {
     private static final String BING_API_KEY = "bing_api_key";
     private static final String PROVIDER_FORMAT_BING = "BING";
 
-    private @EJB SpatialRepository repository;
+    @EJB
+    private SpatialRepository repository;
+
+    @EJB
+    private ReportingService reportingService;
+
     @Override
     @SneakyThrows
     public List<ProjectionDto> getAllProjections() {
         List<ProjectionEntity> projections = repository.findProjection();
         return ProjectionMapper.INSTANCE.projectionEntityListToProjectionDtoList(projections);
     }
-
-    private @EJB ReportingService reportingService;
 
     @Override
     @SneakyThrows
@@ -134,7 +137,7 @@ public class MapConfigServiceBean implements MapConfigService {
         StyleSettingsDto styleSettingsDto = MapConfigHelper.getStyleSettings(entity.getStyleSettings());
         mapConfigurationType.setStyleSettings(MapConfigMapper.INSTANCE.getStyleSettingsType(styleSettingsDto));
         LayerSettingsDto layerSettingsDto = MapConfigHelper.getLayerSettingsForMap(entity.getReportConnectServiceAreas());
-        updateLayerSettings(layerSettingsDto, null, false, permittedServiceLayers);
+        updateLayerSettings(layerSettingsDto, permittedServiceLayers);
         mapConfigurationType.setLayerSettings(MapConfigMapper.INSTANCE.getLayerSettingsType(layerSettingsDto));
         Map<String, ReferenceDataPropertiesDto> referenceData = MapConfigHelper.getReferenceDataSettings(entity.getReferenceData());
         updateReferenceDataSettings(referenceData, permittedServiceLayers);
@@ -151,7 +154,7 @@ public class MapConfigServiceBean implements MapConfigService {
     }
 
     @Override
-    @SneakyThrows
+     @SneakyThrows
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public SpatialSaveOrUpdateMapConfigurationRS handleSaveOrUpdateSpatialMapConfiguration(final SpatialSaveOrUpdateMapConfigurationRQ request) {
         SpatialValidator.validate(request);
@@ -166,7 +169,7 @@ public class MapConfigServiceBean implements MapConfigService {
         StyleSettingsDto styleSettings = MapConfigMapper.INSTANCE.getStyleSettingsDto(request.getMapConfiguration().getStyleSettings());
         entity.setStyleSettings(MapConfigHelper.getStyleSettingsJson(styleSettings));
         LayerSettingsDto layerSettingsDto = MapConfigMapper.INSTANCE.getLayerSettingsDto(request.getMapConfiguration().getLayerSettings());
-        updateReportConnectServiceAreasEntity(request, entity, layerSettingsDto);
+        updateReportConnectServiceAreasEntity(entity, layerSettingsDto);
         Map<String, ReferenceDataPropertiesDto> referenceData = MapConfigMapper.INSTANCE.getReferenceData(request.getMapConfiguration().getReferenceDatas());
         entity.setReferenceData(MapConfigHelper.getReferenceDataSettingsJson(referenceData));
         repository.saveOrUpdateMapConfiguration(entity);
@@ -177,7 +180,7 @@ public class MapConfigServiceBean implements MapConfigService {
     @SneakyThrows
     public ConfigurationDto retrieveAdminConfiguration(String config, Collection<String> permittedServiceLayers) {
         ConfigurationDto configurationDto = MapConfigHelper.getAdminConfiguration(config);
-        updateLayerSettings(configurationDto.getLayerSettings(), null,  false, permittedServiceLayers);
+        updateLayerSettings(configurationDto.getLayerSettings(), permittedServiceLayers);
         updateReferenceDataSettings(configurationDto.getReferenceData(), permittedServiceLayers);
         configurationDto.setSystemSettings(getConfigSystemSettings());
         return configurationDto;
@@ -191,7 +194,7 @@ public class MapConfigServiceBean implements MapConfigService {
         ConfigurationDto userConfig = MapConfigHelper.getUserConfiguration(config);
         ConfigurationDto adminConfig = MapConfigHelper.getAdminConfiguration(defaultConfig);
         ConfigurationDto mergedConfig = mergeUserConfiguration(adminConfig, userConfig);
-        updateLayerSettings(mergedConfig.getLayerSettings(), userName, false, permittedServiceLayers);
+        updateLayerSettings(mergedConfig.getLayerSettings(), permittedServiceLayers);
         updateReferenceDataSettings(mergedConfig.getReferenceData(), permittedServiceLayers);
         return mergedConfig;
     }
@@ -234,7 +237,7 @@ public class MapConfigServiceBean implements MapConfigService {
         }
         ConfigurationDto defaultNodeConfig = getDefaultNodeConfiguration(configurationDto, MapConfigHelper.getAdminConfiguration(adminConfig));
         if (configurationDto.getLayerSettings() != null) {
-            updateLayerSettings(defaultNodeConfig.getLayerSettings(), userName, false, permittedServiceLayers);
+            updateLayerSettings(defaultNodeConfig.getLayerSettings(), permittedServiceLayers);
         }
         if (configurationDto.getReferenceData() != null) {
             updateReferenceDataSettings(defaultNodeConfig.getReferenceData(), permittedServiceLayers);
@@ -293,7 +296,7 @@ public class MapConfigServiceBean implements MapConfigService {
         ProjectionDto projection = getMapProjection(null, configurationDto);
         List<ControlDto> controls = getControls(null, configurationDto);
         ServiceLayersDto serviceLayersDto = new ServiceLayersDto();
-        serviceLayersDto.setBaseLayers(getLayerDtoList(configurationDto.getLayerSettings().getBaseLayers(), projection, true, configurationDto.getReferenceData()));
+        serviceLayersDto.setBaseLayers(getLayerDtoList(configurationDto.getLayerSettings().getBaseLayers(), true, configurationDto.getReferenceData()));
         return new MapConfigDto(new MapDto(projection, controls, null, serviceLayersDto, null), null, null);
     }
 
@@ -322,12 +325,12 @@ public class MapConfigServiceBean implements MapConfigService {
         return entity;
     }
 
-    private void updateReportConnectServiceAreasEntity(SpatialSaveOrUpdateMapConfigurationRQ request, ReportConnectSpatialEntity entity, LayerSettingsDto layerSettingsDto) throws ServiceException {
+    private void updateReportConnectServiceAreasEntity(ReportConnectSpatialEntity entity, LayerSettingsDto layerSettingsDto) throws ServiceException {
         if(layerSettingsDto == null) {
             clearReportConectServiceAreas(entity);
             return;
         }
-        Set<ReportConnectServiceAreasEntity> serviceAreas = createReportConnectServiceAreas(request, entity, layerSettingsDto);
+        Set<ReportConnectServiceAreasEntity> serviceAreas = createReportConnectServiceAreas(entity, layerSettingsDto);
         if (serviceAreas != null && !serviceAreas.isEmpty()) {
             Set<ReportConnectServiceAreasEntity> areas = entity.getReportConnectServiceAreas();
             if (areas == null) {
@@ -350,7 +353,7 @@ public class MapConfigServiceBean implements MapConfigService {
         }
     }
 
-    private Set<ReportConnectServiceAreasEntity> createReportConnectServiceAreas(SpatialSaveOrUpdateMapConfigurationRQ request, ReportConnectSpatialEntity reportConnectSpatialEntity, LayerSettingsDto layerSettingsDto) throws ServiceException {
+    private Set<ReportConnectServiceAreasEntity> createReportConnectServiceAreas(ReportConnectSpatialEntity reportConnectSpatialEntity, LayerSettingsDto layerSettingsDto) throws ServiceException {
         Set<ReportConnectServiceAreasEntity> reportConnectServiceAreasEntities = createReportConnectServiceAreasPerLayer(layerSettingsDto.getAreaLayers(), reportConnectSpatialEntity, LayerTypeEnum.AREA);
         reportConnectServiceAreasEntities.addAll(createReportConnectServiceAreasPerLayer(layerSettingsDto.getPortLayers(), reportConnectSpatialEntity, LayerTypeEnum.PORT));
         reportConnectServiceAreasEntities.addAll(createReportConnectServiceAreasPerLayer(layerSettingsDto.getAdditionalLayers(), reportConnectSpatialEntity, LayerTypeEnum.ADDITIONAL));
@@ -396,7 +399,7 @@ public class MapConfigServiceBean implements MapConfigService {
         }
     }
 
-    private void updateLayerSettings(LayerSettingsDto layerSettingsDto, String userName, boolean includeUserArea, Collection<String> permittedServiceLayers) throws ServiceException {
+    private void updateLayerSettings(LayerSettingsDto layerSettingsDto, Collection<String> permittedServiceLayers) throws ServiceException {
 
         String bingApiKey = getBingApiKey();
         List<Long> ids = new ArrayList<>(); // Get All the Ids to query for Service layer all together
@@ -416,7 +419,7 @@ public class MapConfigServiceBean implements MapConfigService {
         updateLayer(layerSettingsDto.getBaseLayers(), serviceLayers, bingApiKey);
         updateLayer(layerSettingsDto.getPortLayers(), serviceLayers, bingApiKey);
         updateLayer(layerSettingsDto.getAreaLayers(), serviceLayers, bingApiKey);
-        updateAreaLayer(layerSettingsDto.getAreaLayers(), serviceLayers, bingApiKey, userName, includeUserArea);
+        updateAreaLayer(layerSettingsDto.getAreaLayers());
 
         if (permittedServiceLayers != null) {
             filterAllForbiddenLayers(layerSettingsDto, permittedServiceLayers);
@@ -433,7 +436,7 @@ public class MapConfigServiceBean implements MapConfigService {
     }
 
 
-    private void updateAreaLayer(List<LayerAreaDto> layers, List<ServiceLayerEntity> serviceLayers, String bingApiKey, String userName, boolean includeUserArea) throws ServiceException {
+    private void updateAreaLayer(List<LayerAreaDto> layers) throws ServiceException {
         List<Long> userAreaIds = MapConfigHelper.getUserAreaIds(layers);
         if (!userAreaIds.isEmpty()) {
             List<AreaDto> areaDtos = repository.findAllUserAreasByGids(userAreaIds);
@@ -475,7 +478,7 @@ public class MapConfigServiceBean implements MapConfigService {
         ProjectionDto projection = getMapProjection(reportId, configurationDto);
         List<ControlDto> controls = getControls(reportId, configurationDto);
         List<TbControlDto> tbControls = getTbControls(configurationDto);
-        ServiceLayersDto layers = getServiceAreaLayer(reportId, configurationDto, projection, userName, scopeName, timeStamp, permittedServiceLayer);
+        ServiceLayersDto layers = getServiceAreaLayer(reportId, configurationDto, userName, scopeName, timeStamp, permittedServiceLayer);
         RefreshDto refreshDto = getRefreshDto(configurationDto);
         return new MapDto(projection, controls, tbControls, layers, refreshDto);
     }
@@ -506,7 +509,7 @@ public class MapConfigServiceBean implements MapConfigService {
         return MapConfigMapper.INSTANCE.getTbControls(configurationDto.getToolSettings().getTbControl());
     }
 
-    private ServiceLayersDto getServiceAreaLayer(Integer reportId, ConfigurationDto configurationDto, ProjectionDto projection, String userName, String scopeName, String timeStamp, Collection<String> permittedServiceLayers) throws ServiceException {
+    private ServiceLayersDto getServiceAreaLayer(Integer reportId, ConfigurationDto configurationDto, String userName, String scopeName, String timeStamp, Collection<String> permittedServiceLayers) throws ServiceException {
 
         ReportConnectSpatialEntity entity = null;
         if (reportId != null) {
@@ -525,7 +528,7 @@ public class MapConfigServiceBean implements MapConfigService {
             referenceData = configurationDto.getReferenceData();
         }
 
-        return getServiceAreaLayers(layerSettingsDto, projection, userName, scopeName, timeStamp, reportId, referenceData, configurationDto.getReportProperties(), permittedServiceLayers);
+        return getServiceAreaLayers(layerSettingsDto, userName, scopeName, timeStamp, reportId, referenceData, configurationDto.getReportProperties(), permittedServiceLayers);
     }
 
     private VectorStylesDto getVectorStyles(ConfigurationDto configurationDto, Integer reportId) throws ServiceException {
@@ -560,16 +563,16 @@ public class MapConfigServiceBean implements MapConfigService {
         return new RefreshDto(configurationDto.getMapSettings().getRefreshStatus(), configurationDto.getMapSettings().getRefreshRate());
     }
 
-    private ServiceLayersDto getServiceAreaLayers(LayerSettingsDto layerSettingsDto, ProjectionDto projection,
+    private ServiceLayersDto getServiceAreaLayers(LayerSettingsDto layerSettingsDto,
                                                   String userName, String scopeName, String timeStamp,
                                                   Integer reportId, Map<String, ReferenceDataPropertiesDto> referenceData,
                                                   ReportProperties reportProperties, Collection<String> allowedServiceLayers) throws ServiceException {
 
         ServiceLayersDto serviceLayersDto = new ServiceLayersDto();
-        serviceLayersDto.setPortLayers(getLayerDtoList(layerSettingsDto.getPortLayers(), projection, false, referenceData)); // Get Service Layers for Port layers
-        serviceLayersDto.setSystemLayers(getAreaLayerDtoList(layerSettingsDto.getAreaLayers(), projection, false, userName, scopeName, timeStamp, reportId, referenceData, reportProperties)); // // Get Service Layers for system layers and User Layers
-        serviceLayersDto.setAdditionalLayers(getLayerDtoList(layerSettingsDto.getAdditionalLayers(), projection, false, referenceData)); // Get Service Layers for Additional layers
-        serviceLayersDto.setBaseLayers(getLayerDtoList(layerSettingsDto.getBaseLayers(), projection, true, referenceData)); // Get Service Layers for base layers
+        serviceLayersDto.setPortLayers(getLayerDtoList(layerSettingsDto.getPortLayers(), false, referenceData)); // Get Service Layers for Port layers
+        serviceLayersDto.setSystemLayers(getAreaLayerDtoList(layerSettingsDto.getAreaLayers(), false, userName, scopeName, timeStamp, reportId, referenceData, reportProperties)); // // Get Service Layers for system layers and User Layers
+        serviceLayersDto.setAdditionalLayers(getLayerDtoList(layerSettingsDto.getAdditionalLayers(), false, referenceData)); // Get Service Layers for Additional layers
+        serviceLayersDto.setBaseLayers(getLayerDtoList(layerSettingsDto.getBaseLayers(), true, referenceData)); // Get Service Layers for base layers
 
         if (allowedServiceLayers != null) {
             filterAllForbiddenLayers(serviceLayersDto, allowedServiceLayers);
@@ -617,7 +620,7 @@ public class MapConfigServiceBean implements MapConfigService {
         }
     }
 
-    private List<LayerDto> getAreaLayerDtoList(List<LayerAreaDto> layersDtos, ProjectionDto projection,
+    private List<LayerDto> getAreaLayerDtoList(List<LayerAreaDto> layersDtos,
                                                boolean isBackground, String userName, String scopeName,
                                                String timeStamp, Integer reportId,
                                                Map<String, ReferenceDataPropertiesDto> referenceData,
@@ -628,7 +631,7 @@ public class MapConfigServiceBean implements MapConfigService {
         Collections.sort(layersDtos);
         List<LayerDto> layerDtoList = new ArrayList<>();
         for (LayerAreaDto layerAreaDto : layersDtos) {
-            List<ServiceLayerEntity> serviceLayers = getServiceLayers(Arrays.asList(Long.parseLong(layerAreaDto.getServiceLayerId())), projection, getBingApiKey());
+            List<ServiceLayerEntity> serviceLayers = getServiceLayers(Arrays.asList(Long.parseLong(layerAreaDto.getServiceLayerId())), getBingApiKey());
             if (serviceLayers != null && !serviceLayers.isEmpty()) {
                 ServiceLayerEntity serviceLayer = serviceLayers.get(0);
                 List<LayerDto> layerDtos = getLayerDtos(Arrays.asList(serviceLayer), isBackground, referenceData);
@@ -666,14 +669,14 @@ public class MapConfigServiceBean implements MapConfigService {
         return MapConfigHelper.getAreaGroupCqlActive(response.getStartDate(), response.getEndDate());
     }
 
-    private List<LayerDto> getLayerDtoList(List<? extends LayersDto> layersDtos, ProjectionDto projection,
+    private List<LayerDto> getLayerDtoList(List<? extends LayersDto> layersDtos,
                                            boolean isBackground, Map<String, ReferenceDataPropertiesDto> referenceData) throws ServiceException {
         if (layersDtos == null || layersDtos.isEmpty()) {
             return null;
         }
         Collections.sort(layersDtos);
         List<Long> serviceLayerIds = MapConfigHelper.getServiceLayerIds(layersDtos);
-        List<ServiceLayerEntity> serviceLayerEntities = getServiceLayers(serviceLayerIds, projection, getBingApiKey());
+        List<ServiceLayerEntity> serviceLayerEntities = getServiceLayers(serviceLayerIds, getBingApiKey());
         return getLayerDtos(serviceLayerEntities, isBackground, referenceData);
     }
 
@@ -694,7 +697,7 @@ public class MapConfigServiceBean implements MapConfigService {
         return repository.findSystemConfigByName(BING_API_KEY);
     }
 
-    private List<ServiceLayerEntity> getServiceLayers(List<Long> ids, ProjectionDto projection, String bingApiKey) {
+    private List<ServiceLayerEntity> getServiceLayers(List<Long> ids, String bingApiKey) {
         List<ServiceLayerEntity> serviceLayers = MapConfigHelper.sortServiceLayers(repository.findServiceLayerEntityByIds(ids), ids);
         Iterator<ServiceLayerEntity> layerIterator = serviceLayers.iterator();
         while(layerIterator.hasNext()) {
@@ -765,7 +768,7 @@ public class MapConfigServiceBean implements MapConfigService {
 
         // Update Bing API Key
         String bingApiKey = systemSettingsDto.getBingApiKey();
-        if (bingApiKey != null && bingApiKey.trim().equals("")) {
+        if (bingApiKey != null && "".equals(bingApiKey.trim())) {
             bingApiKey = null;
         }
         repository.updateSystemConfig(BING_API_KEY, bingApiKey);
