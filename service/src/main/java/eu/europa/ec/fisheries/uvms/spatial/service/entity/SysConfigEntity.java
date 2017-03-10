@@ -27,7 +27,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Column;
 
 @Entity
-@Table(name = "system_configurations", schema = "spatial")
+@Table(name = "system_configurations")
 @NamedQueries({
         @NamedQuery(name= SysConfigEntity.FIND_CONFIG_BY_NAME,
         query = "FROM SysConfigEntity config WHERE config.name = :name")
