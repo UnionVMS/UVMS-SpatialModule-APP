@@ -14,10 +14,11 @@ package eu.europa.ec.fisheries.uvms.spatial.service.dao;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class OracleUtilsDao implements UtilsDao {
+public class OracleUtilsDao extends UtilsDao {
 
     private EntityManager em;
 

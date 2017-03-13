@@ -8,14 +8,17 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
+
 package eu.europa.ec.fisheries.uvms.spatial.rest.dto;
 
+import javax.ws.rs.FormParam;
+
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.resteasy.annotations.providers.multipart.PartType;
 
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.FormParam;
-
+@NoArgsConstructor
 public class FileUploadForm {
 
     private int crsCode;
@@ -23,9 +26,6 @@ public class FileUploadForm {
     private String areaType;
     @NotEmpty
     private byte[] data;
-
-    public FileUploadForm() {
-    }
 
     public int getCrsCode() {
         return crsCode;

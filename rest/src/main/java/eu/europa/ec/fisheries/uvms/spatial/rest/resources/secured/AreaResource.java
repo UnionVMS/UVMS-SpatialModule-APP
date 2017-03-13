@@ -11,39 +11,17 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.vividsolutions.jts.io.ParseException;
-import eu.europa.ec.fisheries.uvms.constants.AuthConstants;
-import eu.europa.ec.fisheries.uvms.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.mapper.GeometryMapper;
-import eu.europa.ec.fisheries.uvms.rest.FeatureToGeoJsonJacksonMapper;
-import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
-import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
-import eu.europa.ec.fisheries.uvms.service.interceptor.ValidationInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
-import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.AreaLocationMapper;
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaFilterType;
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaCoordinateType;
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.LocationCoordinateType;
-import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.UserAreaService;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.*;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson.AreaDetailsGeoJsonDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson.LocationDetailsGeoJsonDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.USMSpatial;
-import eu.europa.ec.fisheries.uvms.spatial.service.util.ServiceLayerUtils;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
-
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -53,6 +31,37 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.vividsolutions.jts.io.ParseException;
+import eu.europa.ec.fisheries.uvms.constants.AuthConstants;
+import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.mapper.GeometryMapper;
+import eu.europa.ec.fisheries.uvms.rest.FeatureToGeoJsonJacksonMapper;
+import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
+import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
+import eu.europa.ec.fisheries.uvms.service.interceptor.ValidationInterceptor;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationDetails;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationTypeEntry;
+import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaCoordinateType;
+import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaFilterType;
+import eu.europa.ec.fisheries.uvms.spatial.rest.dto.LocationCoordinateType;
+import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.AreaLocationMapper;
+import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.UserAreaService;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.AreaByCodeJsonPayload;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson.AreaDetailsGeoJsonDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson.LocationDetailsGeoJsonDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.USMSpatial;
+import eu.europa.ec.fisheries.uvms.spatial.service.util.ServiceLayerUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 
 @Path("/area")
 @Slf4j
@@ -195,8 +204,8 @@ public class AreaResource extends UnionVMSResource {
     }
 
     @POST
-    @Consumes((MediaType.APPLICATION_JSON))
-    @Produces((MediaType.APPLICATION_JSON))
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     @Path("/datasets/{areaType}/{areaGid}/{datasetName}")
     @Interceptors(value = {ExceptionInterceptor.class})
         public Response createDataset(@PathParam("areaType") String areaType,

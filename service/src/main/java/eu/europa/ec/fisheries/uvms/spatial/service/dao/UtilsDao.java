@@ -16,20 +16,9 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public interface UtilsDao {
+public abstract class UtilsDao {
 
-    public static final Map<Integer, Integer> SRID_EPSG_MAP = Collections.synchronizedMap(new LinkedHashMap() {
-
-        private static final int MAX_ENTRIES = 250;
-
-        @Override
-        protected boolean removeEldestEntry(Map.Entry eldest) {
-
-            return size() > MAX_ENTRIES;
-        }
-    });
-
-    public static final Map<Integer, Integer> EPSG_SRID_MAP = Collections.synchronizedMap(new LinkedHashMap() {
+    Map<Integer, Integer> SRID_EPSG_MAP = Collections.synchronizedMap(new LinkedHashMap() {
 
         private static final int MAX_ENTRIES = 250;
 
@@ -40,7 +29,18 @@ public interface UtilsDao {
         }
     });
 
-    Integer mapDefaultSRIDToEPSG(Integer srid);
+    Map<Integer, Integer> EPSG_SRID_MAP = Collections.synchronizedMap(new LinkedHashMap() {
 
-    Integer mapEPSGtoDefaultSRID(Integer epsg);
+        private static final int MAX_ENTRIES = 250;
+
+        @Override
+        protected boolean removeEldestEntry(Map.Entry eldest) {
+
+            return size() > MAX_ENTRIES;
+        }
+    });
+
+    public abstract Integer mapDefaultSRIDToEPSG(Integer srid);
+
+    public abstract Integer mapEPSGtoDefaultSRID(Integer epsg);
 }

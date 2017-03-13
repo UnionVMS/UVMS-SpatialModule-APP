@@ -12,21 +12,31 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.rest.mapper;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserScopeEntity;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Coordinate;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationDetails;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationProperty;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaCoordinateType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.GeoCoordinateType;
+import eu.europa.ec.fisheries.uvms.spatial.rest.dto.LocationCoordinateType;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson.AreaDetailsGeoJsonDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson.LocationDetailsGeoJsonDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserScopeEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.UserAreaMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
-
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson.LocationDetailsGeoJsonDto;
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.LocationCoordinateType;
 
 @Mapper
 public abstract class AreaLocationMapper {
@@ -82,7 +92,7 @@ public abstract class AreaLocationMapper {
 	protected Map<String, Object> extractProperties(AreaDetails areaDetails) {
 		Map<String, Object> propertyMap = new HashMap<>();
 		for (AreaProperty property : areaDetails.getAreaProperties()) {
-			Object propertyValue = null;
+			Object propertyValue;
 
 			if ("scopeSelection".equalsIgnoreCase(property.getPropertyName()) ) {
 				propertyValue = UserAreaMapper.fromEntityToScopeArray((Set<UserScopeEntity>) property.getPropertyValue());
@@ -100,7 +110,7 @@ public abstract class AreaLocationMapper {
 	}
 	
 	protected List<Map<String, Object>> extractProperties(List<AreaDetails> areaDetailsList) {
-		List<Map<String, Object>> allPropertyMap = new ArrayList<Map<String, Object>>();
+		List<Map<String, Object>> allPropertyMap = new ArrayList<>();
 		for (AreaDetails areaDetails : areaDetailsList) {
 			Map<String, Object> propertyMap = extractProperties(areaDetails);
 			allPropertyMap.add(propertyMap);
