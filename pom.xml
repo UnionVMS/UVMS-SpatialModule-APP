@@ -18,7 +18,6 @@
 
     <properties>
 
-        <sonar.exclusions>src/main/webapp/apidocs/**/*</sonar.exclusions>
         <!-- The spatial name is used as a common point to rename the application alias visible in USM-->
         <spatial.name>Spatial</spatial.name>
         <spatial.model>1.0.4-SNAPSHOT</spatial.model>
@@ -333,7 +332,7 @@
                 <artifactId>sonar-maven-plugin</artifactId>
                 <version>3.0.1</version>
             </plugin>
-            <plugin>
+            <!--<plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>cobertura-maven-plugin</artifactId>
                 <version>2.7</version>
@@ -342,7 +341,7 @@
                     <format>xml</format>
                     <aggregate>true</aggregate>
                 </configuration>
-            </plugin>
+            </plugin>-->
 			 <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
