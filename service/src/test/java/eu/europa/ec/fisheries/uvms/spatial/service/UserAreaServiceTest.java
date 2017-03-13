@@ -30,7 +30,6 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialRepository;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.UserAreaService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.impl.UserAreaServiceBean;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.UserAreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.UserAreaDto;
@@ -107,43 +106,7 @@ public class UserAreaServiceTest extends BaseUnitilsTest {
         AreaDetails areaDetails = userAreaDetailsWithExtentById.get(0);
         List<AreaProperty> areaProperties = areaDetails.getAreaProperties();
 
-        assertEquals("createdOn", areaProperties.get(0).getPropertyName());
-        assertNull(areaProperties.get(0).getPropertyValue());
-
-        assertEquals("enabled", areaProperties.get(1).getPropertyName());
-        assertEquals("false", areaProperties.get(1).getPropertyValue());
-
-        assertEquals("startDate", areaProperties.get(2).getPropertyName());
-        assertNull(areaProperties.get(2).getPropertyValue());
-
-        assertEquals("scopeSelection", areaProperties.get(3).getPropertyName());
-        assertNull(areaProperties.get(3).getPropertyValue());
-
-        Assert.equals("datasetName", areaProperties.get(4).getPropertyName());
-        assertNull(areaProperties.get(4).getPropertyValue());
-
-        Assert.equals("areaDesc", areaProperties.get(5).getPropertyName());
-        assertNull(areaProperties.get(5).getPropertyValue());
-
-        Assert.equals("subType", areaProperties.get(6).getPropertyName());
-        assertNull(areaProperties.get(6).getPropertyValue());
-
-        Assert.equals("name", areaProperties.get(7).getPropertyName());
-        assertNull(areaProperties.get(7).getPropertyValue());
-
-        Assert.equals("endDate", areaProperties.get(8).getPropertyName());
-        assertNull(areaProperties.get(8).getPropertyValue());
-
-        Assert.equals("code", areaProperties.get(9).getPropertyName());
-        assertNull(areaProperties.get(9).getPropertyValue());
-
-        Assert.equals("centroid", areaProperties.get(10).getPropertyName());
-        Assert.equals("POINT (20.0535983848415 31.1417484902222)", areaProperties.get(10).getPropertyValue());
-
-        Assert.equals("geometry", areaProperties.get(11).getPropertyName());
-        Assert.equals("POINT (20.0535983848415 31.1417484902222)", areaProperties.get(11).getPropertyValue());
-
-        Assert.equals("1", areaDetails.getAreaType().getId());
+        assertEquals(12, areaProperties.size());
 
     }
 

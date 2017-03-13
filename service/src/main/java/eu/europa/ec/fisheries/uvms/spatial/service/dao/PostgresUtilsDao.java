@@ -14,7 +14,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.dao;
 
 import javax.persistence.EntityManager;
 
-public class PostgresUtilsDao implements UtilsDao {
+public class PostgresUtilsDao extends UtilsDao {
 
     private EntityManager em;
 
