@@ -53,7 +53,7 @@
 
         <!-- sonar properties -->
         <sonar.exclusions>**/generated-sources/**</sonar.exclusions>
-        <sonar.sources>sonar.sources=src</sonar.sources>
+        <sonar.sources>src</sonar.sources>
         <sonar.java.binaries>target/classes</sonar.java.binaries>
         <sonar.java.libraries>target/dependency/*.jar</sonar.java.libraries>
         <sonar.language>flex</sonar.language>
