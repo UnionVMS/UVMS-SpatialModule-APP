@@ -53,8 +53,6 @@
 
         <!-- sonar properties -->
         <sonar.exclusions>**/generated-sources/**</sonar.exclusions>
-        <sonar.java.binaries>target/classes</sonar.java.binaries>
-        <sonar.java.libraries>target/dependency/*.jar</sonar.java.libraries>
         <sonar.sourceEncoding>UTF-8</sonar.sourceEncoding>
         <sonar.flex.cobertura.reportPath>**/target/site/cobertura/coverage.xml</sonar.flex.cobertura.reportPath>
         <sonar.java.source>1.7</sonar.java.source>
