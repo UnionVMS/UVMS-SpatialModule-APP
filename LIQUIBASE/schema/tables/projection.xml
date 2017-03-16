@@ -72,14 +72,15 @@
                                  referencedTableName="projection"/>
     </changeSet>
 
-	<changeSet author="dubduan" id="76834618168717" dbms="postgresql">
-    <addDefaultValue 
-            columnDataType="BIGINT"
-            columnName="id"
-            defaultValueSequenceNext="projection_seq"
-            tableName="projection"/>
-	</changeSet>
-	
+
+    <changeSet author="dubduan" id="76834618168717" dbms="postgresql">
+        <addDefaultValue
+                columnDataType="BIGINT"
+                columnName="id"
+                defaultValueSequenceNext="projection_seq"
+                tableName="projection"/>
+    </changeSet>
+
     <changeSet author="dubduan" id="1439891741706-39" dbms="oracle">
         <createProcedure>
             CREATE OR REPLACE TRIGGER trg_projection
@@ -92,5 +93,28 @@
             END trg_projection;
         </createProcedure>		
     </changeSet>	
+	
+	
+	
+<!--	<changeSet author="dubduan" id="187968sds-31" dbms="postgresql">
+	
+        <createProcedure>
+
+            CREATE OR REPLACE FUNCTION inc_projection_sq()
+            RETURNS "trigger" AS
+            $BODY$
+            BEGIN
+            New.id:=nextval('projection_seq');
+            Return NEW;
+            END;
+            $BODY$
+            LANGUAGE 'plpgsql' VOLATILE;
+
+            CREATE TRIGGER trg_projection
+            before insert on projection
+            for each row EXECUTE procedure inc_projection_sq()
+			
+        </createProcedure>			
+    </changeSet>-->
     
 </databaseChangeLog>

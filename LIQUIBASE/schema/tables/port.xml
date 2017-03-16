@@ -39,14 +39,14 @@
             <column name="geom" />
         </spatial:createSpatialIndex>
     </changeSet>
-	
-	<changeSet author="dubduan" id="76834618168717" dbms="postgresql">
-    <addDefaultValue 
-            columnDataType="BIGINT"
-            columnName="gid"
-            defaultValueSequenceNext="port_seq"
-            tableName="port"/>
-	</changeSet>
+
+    <changeSet author="dubduan" id="76834618168717" dbms="postgresql">
+        <addDefaultValue
+                columnDataType="BIGINT"
+                columnName="gid"
+                defaultValueSequenceNext="port_seq"
+                tableName="port"/>
+    </changeSet>
 
 	
 	<changeSet author="dubduan" id="1419190745701-38" dbms="oracle">
@@ -62,5 +62,27 @@
             END trg_port;
         </createProcedure>
     </changeSet>
+	
+	
+<!--	<changeSet author="dubduan" id="1879830sds-31" dbms="postgresql">
+	
+        <createProcedure>
+
+            CREATE OR REPLACE FUNCTION inc_port_sq()
+            RETURNS "trigger" AS
+            $BODY$
+            BEGIN
+            New.gid:=nextval('port_seq');
+            Return NEW;
+            END;
+            $BODY$
+            LANGUAGE 'plpgsql' VOLATILE;
+
+            CREATE TRIGGER trg_port
+            before insert on port
+            for each row EXECUTE procedure inc_port_sq()
+			
+        </createProcedure>			
+    </changeSet>-->
 	
 </databaseChangeLog>

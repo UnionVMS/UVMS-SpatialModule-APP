@@ -40,13 +40,15 @@
                                  referencedTableName="report_connect_service_area"/>
     </changeSet>
 
-	<changeSet author="dubduan" id="76834618168717" dbms="postgresql">
-    <addDefaultValue 
-            columnDataType="BIGINT"
-            columnName="id"
-            defaultValueSequenceNext="report_conn_serv_area_seq"
-            tableName="report_connect_service_area"/>
-	</changeSet>
+    <changeSet author="dubduan" id="76834618168717" dbms="postgresql">
+        <addDefaultValue
+                columnDataType="BIGINT"
+                columnName="id"
+                defaultValueSequenceNext="report_conn_serv_area_seq"
+                tableName="report_connect_service_area"/>
+    </changeSet>
+
+
 	
     <changeSet author="dubduan" id="143181745701-42" dbms="oracle">
         <createProcedure>
@@ -61,5 +63,28 @@
         </createProcedure>			
 		
     </changeSet>	
+	
+	
+	
+<!--	<changeSet author="dubduan" id="1879h870s-31" dbms="postgresql">
+	
+        <createProcedure>
+
+            CREATE OR REPLACE FUNCTION inc_report_connect_service_area_sq()
+            RETURNS "trigger" AS
+            $BODY$
+            BEGIN
+            New.id:=nextval('report_conn_serv_area_seq');
+            Return NEW;
+            END;
+            $BODY$
+            LANGUAGE 'plpgsql' VOLATILE;
+
+            CREATE TRIGGER trg_rpt_cct_srv_a
+            before insert on report_connect_service_area
+            for each row EXECUTE procedure inc_report_connect_service_area_sq()
+
+        </createProcedure>			
+    </changeSet>-->
 	
 </databaseChangeLog>

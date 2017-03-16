@@ -32,14 +32,15 @@
             <column name="geom" />
         </spatial:createSpatialIndex>
     </changeSet>
+
+    <changeSet author="dubduan" id="76834618168717" dbms="postgresql">
+        <addDefaultValue
+                columnDataType="BIGINT"
+                columnName="gid"
+                defaultValueSequenceNext="fmz_seq"
+                tableName="fmz"/>
+    </changeSet>
 	
-	<changeSet author="dubduan" id="76834618168717" dbms="postgresql">
-    <addDefaultValue 
-            columnDataType="BIGINT"
-            columnName="gid"
-            defaultValueSequenceNext="fmz_seq"
-            tableName="fmz"/>
-	</changeSet>
 	
     <changeSet author="dubduan" id="1461802134891-9" dbms="oracle">
 	<createProcedure>
@@ -53,4 +54,27 @@
             END trg_fmz;
         </createProcedure>		
     </changeSet>	
+	
+	
+<!--	<changeSet author="dubduan" id="1kk230sds-31" dbms="postgresql">
+	
+        <createProcedure>
+
+            CREATE OR REPLACE FUNCTION inc_fmz_sq()
+            RETURNS "trigger" AS
+            $BODY$
+            BEGIN
+            New.gid:=nextval('fmz_seq');
+            Return NEW;
+            END;
+            $BODY$
+            LANGUAGE 'plpgsql' VOLATILE;
+
+            CREATE TRIGGER trg_fmz
+            before insert on fmz
+            for each row EXECUTE procedure inc_fmz_sq()
+			
+        </createProcedure>			
+    </changeSet>-->
+	
 </databaseChangeLog>

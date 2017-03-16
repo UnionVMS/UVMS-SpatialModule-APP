@@ -34,14 +34,15 @@
                                  referencedTableName="user_areas"/>
     </changeSet>
 
+    <changeSet author="dubduan" id="76834618168717" dbms="postgresql">
+        <addDefaultValue
+                columnDataType="BIGINT"
+                columnName="id"
+                defaultValueSequenceNext="user_scope_seq"
+                tableName="user_scope"/>
+    </changeSet>
+
 	
-	<changeSet author="dubduan" id="76834618168717" dbms="postgresql">
-    <addDefaultValue 
-            columnDataType="BIGINT"
-            columnName="id"
-            defaultValueSequenceNext="user_scope_seq"
-            tableName="user_scope"/>
-	</changeSet>
 	
     <changeSet author="dubduan" id="141521316574-24" dbms="oracle">
         <createProcedure>
@@ -55,5 +56,27 @@
             END trg_user_scope;
         </createProcedure>				
     </changeSet>	
+	
+<!--	<changeSet author="dubduan" id="1980997ks-31" dbms="postgresql">
+	
+        <createProcedure>
+
+            CREATE OR REPLACE FUNCTION inc_user_scope_sq()
+            RETURNS "trigger" AS
+            $BODY$
+            BEGIN
+            New.gid:=nextval('user_scope_seq');
+            Return NEW;
+            END;
+            $BODY$
+            LANGUAGE 'plpgsql' VOLATILE;
+
+            CREATE TRIGGER trg_user_scope
+            before insert on user_scope
+            for each row EXECUTE procedure inc_user_scope_sq()
+			
+        </createProcedure>			
+    </changeSet>-->
+	
 	
 </databaseChangeLog>
