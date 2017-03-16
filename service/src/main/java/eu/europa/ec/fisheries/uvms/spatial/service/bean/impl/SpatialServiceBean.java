@@ -96,13 +96,30 @@ public class SpatialServiceBean implements SpatialService {
 
     private static final String MULTIPOINT = "MULTIPOINT";
 
-    private @PersistenceContext(unitName = "spatialPU") EntityManager em;
+    private EntityManager em;
+	
+    @PersistenceContext(unitName = "spatialPUpostgres")
+    private EntityManager postgres;
+
+    @PersistenceContext(unitName = "spatialPUoracle")
+    private EntityManager oracle;	
+	
     private @EJB SpatialRepository repository;
     private @EJB PropertiesBean properties;
     private DatabaseDialect dialect;
 
+    public void initEntityManager() {
+        String dbDialect = System.getProperty("db.dialect");
+        if ("oracle".equalsIgnoreCase(dbDialect)) {
+            em = oracle;
+        } else {
+            em = postgres;
+        }
+    }
+	
     @PostConstruct
     public void init(){
+		initEntityManager();
         dialect = new DatabaseDialectFactory(properties).getInstance();
     }
 

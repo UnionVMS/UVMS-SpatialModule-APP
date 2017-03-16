@@ -141,7 +141,7 @@ public class UserAreaServiceTest extends BaseUnitilsTest {
         namesServiceMock.returns(Arrays.asList(dto)).listUserAreaLayerMapping();
 
         UserAreasEntity userAreasEntity = new UserAreasEntity();
-        Field id = userAreasEntity.getClass().getSuperclass().getSuperclass().getDeclaredField("id");
+        Field id = userAreasEntity.getClass().getDeclaredField("id");
         TestToolBox.makeModifiable(id);
         TestToolBox.setValue(userAreasEntity, id, 2L);
         repoMock.returns(Arrays.asList(userAreasEntity)).findUserAreaByUserNameAndScopeName(null, null);
@@ -170,7 +170,7 @@ public class UserAreaServiceTest extends BaseUnitilsTest {
         // Given
         UserAreaGeoJsonDto userAreaDto = createUserArea("name", UUID.randomUUID().toString(), "desc", null);
         UserAreasEntity userAreasEntity = new UserAreasEntity();
-        Field id = userAreasEntity.getClass().getSuperclass().getSuperclass().getDeclaredField("id");
+        Field id = userAreasEntity.getClass().getDeclaredField("id");
         TestToolBox.makeModifiable(id);
         TestToolBox.setValue(userAreasEntity, id, 2L);
         repoMock.returns(userAreasEntity).save(null);
@@ -192,7 +192,7 @@ public class UserAreaServiceTest extends BaseUnitilsTest {
         UserAreaGeoJsonDto userAreaDto = createUserArea("name", UUID.randomUUID().toString(), "desc", null);
         UserAreasEntity userAreasEntity = new UserAreasEntity();
         userAreasEntity.setDatasetName("dataSet");
-        Field id = userAreasEntity.getClass().getSuperclass().getSuperclass().getDeclaredField("id");
+        Field id = userAreasEntity.getClass().getDeclaredField("id");
         TestToolBox.makeModifiable(id);
         TestToolBox.setValue(userAreasEntity, id, 2L);
         repoMock.returns(userAreasEntity).save(null);
@@ -215,7 +215,7 @@ public class UserAreaServiceTest extends BaseUnitilsTest {
         userAreaDto.setId(2L);
         UserAreasEntity userAreasEntity = new UserAreasEntity();
         userAreasEntity.setDatasetName("dataSet");
-        Field id = userAreasEntity.getClass().getSuperclass().getSuperclass().getDeclaredField("id");
+        Field id = userAreasEntity.getClass().getDeclaredField("id");
         TestToolBox.makeModifiable(id);
         TestToolBox.setValue(userAreasEntity, id, 2L);
 

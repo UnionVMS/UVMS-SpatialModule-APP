@@ -18,6 +18,12 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Column;
+
 @Entity
 @NamedQueries({
 		@NamedQuery(name = CountryEntity.FIND_ALL,
@@ -27,6 +33,12 @@ import javax.persistence.Table;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class CountryEntity extends BaseAreaEntity {
+
+	@Id
+	@Column(name = "gid")
+	@SequenceGenerator(name="SEQ_GEN", sequenceName="countries_seq")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN")
+	private Long id;
 
     public static final String FIND_ALL = "countryEntity.findAll";
 

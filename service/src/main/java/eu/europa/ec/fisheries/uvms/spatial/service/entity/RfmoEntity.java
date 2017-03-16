@@ -25,6 +25,12 @@ import java.util.Map;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+
+
 @Entity
 @NamedQueries({
         @NamedQuery(name = RfmoEntity.RFMO_BY_COORDINATE,
@@ -48,6 +54,13 @@ public class RfmoEntity extends BaseAreaEntity {
 
     private static final String TUNA = "tuna";
 
+	@Id
+	@Column(name = "gid")
+	@SequenceGenerator(name="SEQ_GEN", sequenceName="rfmo_seq")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN")
+	private Long id;
+	
+	
     @Column(length = 10)
     @ColumnAliasName(aliasName = TUNA)
     private String tuna;

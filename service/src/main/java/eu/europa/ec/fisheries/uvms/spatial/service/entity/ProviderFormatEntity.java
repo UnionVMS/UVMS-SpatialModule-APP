@@ -24,12 +24,23 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+
 @Entity
 @Table(name = "provider_format")
 @EqualsAndHashCode(callSuper = true, exclude = "serviceLayers")
 @Data
 @ToString(exclude = "serviceLayers")
 public class ProviderFormatEntity extends BaseEntity {
+
+	@Id
+	@Column(name = "id")
+	@SequenceGenerator(name="SEQ_GEN", sequenceName="provider_format_seq")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN")
+	private Long id;
 
 	@Column(name = "service_type", nullable = false, length = 10)
 	private String serviceType;

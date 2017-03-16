@@ -25,6 +25,12 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+
+
 @Entity
 @Table(name = "report_connect_service_area")
 @NamedQueries({
@@ -41,6 +47,13 @@ public class ReportConnectServiceAreasEntity extends BaseEntity implements Compa
     public static final String DELETE_BY_REPORT_CONNECT_SPATIAL_ID = "ReportLayerConfig.deleteByReportConnectSpatialId";
     public static final String FIND_REPORT_SERVICE_AREAS = "ReportLayerConfig.findReportConnectServiceAreas";
 
+	@Id
+	@Column(name = "id")
+	@SequenceGenerator(name="SEQ_GEN", sequenceName="report_connect_service_area_seq")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN")
+	private Long id;
+	
+	
 	@ManyToOne
 	@JoinColumn(name = "report_connect_spatial_id", nullable = false)
 	private ReportConnectSpatialEntity reportConnectSpatial;

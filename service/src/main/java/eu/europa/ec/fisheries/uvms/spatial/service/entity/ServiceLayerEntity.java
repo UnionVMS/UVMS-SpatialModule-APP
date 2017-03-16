@@ -33,6 +33,12 @@ import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+
+
 @Entity
 @Table(name = "service_layer")
 @NamedQueries({
@@ -58,6 +64,13 @@ public class ServiceLayerEntity extends BaseEntity {
     public static final String BY_SYSTEM_AREA_TYPE = "serviceLayer.bySystemAreaType";
     public static final String FIND_SERVICE_LAYERS_BY_ID ="ReportLayerConfig.findServiceLayerById";
 
+	@Id
+	@Column(name = "id")
+	@SequenceGenerator(name="SEQ_GEN", sequenceName="service_layer_seq")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN")
+	private Long id;
+	
+	
     @ManyToOne
     @JoinColumn(name = "provider_format_id", nullable = false)
     private ProviderFormatEntity providerFormat;

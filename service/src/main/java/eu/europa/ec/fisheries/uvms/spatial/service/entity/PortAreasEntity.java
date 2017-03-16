@@ -23,6 +23,12 @@ import java.util.Map;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Column;
+
 @Entity
 @NamedQueries({
         @NamedQuery(name = PortAreasEntity.PORT_AREA_BY_COORDINATE,
@@ -42,6 +48,12 @@ public class PortAreasEntity extends BaseAreaEntity {
     public static final String SEARCH_PORT_AREA_NAMES_BY_CODE = "portAreaEntity.searchNamesByCode";
     public static final String PORTAREA_COLUMNS = "portAreaEntity.portAreaColumns";
 
+	@Id
+	@Column(name = "gid")
+	@SequenceGenerator(name="SEQ_GEN", sequenceName="port_area_seq")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN")
+	private Long id;
+	
     public PortAreasEntity() {
         // why JPA why
     }

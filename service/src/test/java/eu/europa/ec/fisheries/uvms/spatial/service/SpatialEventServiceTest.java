@@ -69,7 +69,7 @@ public class SpatialEventServiceTest extends BaseUnitilsTest {
         service.getAreaTypeNames(message);
 
         verify(areaTypeNamesService, times(1)).listAllAreaTypeNames();
-        verify(messageProducer, times(1)).sendModuleResponseMessage(eq(textMessage), anyString());
+        verify(messageProducer, times(1)).sendModuleResponseMessage(eq(textMessage), anyString(), anyString());
         verify(spatialErrorEvent, times(0)).fire(message);
     }
 
@@ -82,7 +82,7 @@ public class SpatialEventServiceTest extends BaseUnitilsTest {
         service.getSpatialEnrichment(message);
 
         verify(enrichmentService, times(1)).getSpatialEnrichment(any(SpatialEnrichmentRQ.class));
-        verify(messageProducer, times(1)).sendModuleResponseMessage(eq(textMessage), anyString());
+        verify(messageProducer, times(1)).sendModuleResponseMessage(eq(textMessage), anyString(), anyString());
         verify(spatialErrorEvent, times(0)).fire(message);
     }
 
@@ -95,7 +95,7 @@ public class SpatialEventServiceTest extends BaseUnitilsTest {
         service.getSpatialEnrichment(message);
 
         verify(enrichmentService, times(1)).getSpatialEnrichment(any(SpatialEnrichmentRQ.class));
-        verify(messageProducer, times(0)).sendModuleResponseMessage(eq(textMessage), anyString());
+        verify(messageProducer, times(0)).sendModuleResponseMessage(eq(textMessage), anyString(), anyString());
         verify(spatialErrorEvent, times(1)).fire(any(SpatialMessageEvent.class));
     }
 
@@ -105,7 +105,7 @@ public class SpatialEventServiceTest extends BaseUnitilsTest {
 
         service.ping(message);
 
-        verify(messageProducer, times(1)).sendModuleResponseMessage(eq(textMessage), anyString());
+        verify(messageProducer, times(1)).sendModuleResponseMessage(eq(textMessage), anyString(), anyString());
         verify(spatialErrorEvent, times(0)).fire(message);
     }
 }

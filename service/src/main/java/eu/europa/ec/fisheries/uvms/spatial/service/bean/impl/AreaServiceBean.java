@@ -86,8 +86,15 @@ import org.opengis.referencing.operation.TransformException;
 @Slf4j
 public class AreaServiceBean implements AreaService {
 
-    private @PersistenceContext(unitName = "spatialPU") EntityManager em;
+    private EntityManager em;
 
+    @PersistenceContext(unitName = "spatialPUpostgres")
+    private EntityManager postgres;
+
+    @PersistenceContext(unitName = "spatialPUoracle")
+    private EntityManager oracle;	
+
+	
     private static final String GID = "gid";
     private static final String AREA_TYPE = "areaType";
 
@@ -99,8 +106,21 @@ public class AreaServiceBean implements AreaService {
     private @EJB PropertiesBean properties;
     private DatabaseDialect databaseDialect;
 
+	
+    public void initEntityManager() {
+        String dbDialect = System.getProperty("db.dialect");
+        if ("oracle".equalsIgnoreCase(dbDialect)) {
+            em = oracle;
+        } else {
+            em = postgres;
+        }
+    }
+		
+	
+	
     @PostConstruct
     public void init(){
+		initEntityManager();
         databaseDialect = new DatabaseDialectFactory(properties).getInstance();
     }
 

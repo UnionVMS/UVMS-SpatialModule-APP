@@ -7,14 +7,7 @@
     <version>0.5.6-SNAPSHOT</version>
     <packaging>pom</packaging>
     <description>Maven projekt-archetype for UnionVms modules</description>
-    <url>http://www.your.site.com/</url>
 
-    <developers>
-        <developer>
-            <name>Gregory Rinaldi</name>
-            <email>rinaldi.gregory@gmail.com</email>
-        </developer>
-    </developers>
 
     <properties>
 
@@ -37,10 +30,10 @@
         <hibernate.version>4.3.5.Final</hibernate.version>
         <hibernate-spatial.version>4.3</hibernate-spatial.version>
         <geotools.version>14-M1</geotools.version>
-        <uvms.commons.version>2.0.19-SNAPSHOT</uvms.commons.version>
+        <uvms.commons.version>2.0.20-SNAPSHOT</uvms.commons.version>
         <uvms.test.version>0.0.4</uvms.test.version>
         <hibernate.validator.version>5.2.1.Final</hibernate.validator.version>
-        <usm4uvms.version>2.0.17</usm4uvms.version>
+        <usm4uvms.version>2.0.18-SNAPSHOT</usm4uvms.version>
         <usm_deployment_descriptor_force_update>false</usm_deployment_descriptor_force_update>
         <release.branch.name>uvms-1.0.0</release.branch.name>
         <maven.release.plugin.version>2.5.2</maven.release.plugin.version>
@@ -90,7 +83,7 @@
         
         	<dependency>
                 <groupId>eu.europa.ec.fisheries.uvms</groupId>
-                <artifactId>usm4uvms-wildfly</artifactId>
+                <artifactId>usm4uvms</artifactId>
                 <version>${usm4uvms.version}</version>
 				<optional>true</optional>				
             </dependency>
@@ -103,7 +96,7 @@
 
             <dependency>
                 <groupId>eu.europa.ec.fisheries.uvms</groupId>
-                <artifactId>uvms-commons-wildfly</artifactId>
+                <artifactId>uvms-commons</artifactId>
                 <version>${uvms.commons.version}</version>
 				<optional>true</optional>
 			</dependency>

@@ -21,11 +21,8 @@ import javax.jms.Destination;
 @Local
 public class UploadConsumerBean extends AbstractConsumer {
 
-    @Resource(mappedName = MessageConstants.UPLOAD_QUEUE)
-    private Destination destination;
+	public String getDestinationName(){
+		return MessageConstants.UPLOAD_QUEUE;
+	}	
 
-    @Override
-    public Destination getDestination() {
-        return destination;
-    }
 }

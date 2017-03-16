@@ -24,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ExceptionInterceptor extends UnionVMSResource {
 	
 	@AroundInvoke
-	public Object createResponse(final InvocationContext ic) {
+	public Object createResponse(final InvocationContext ic) throws Exception {
 		log.info("ExceptionInterceptor received");	
 		try {
 			return ic.proceed();
