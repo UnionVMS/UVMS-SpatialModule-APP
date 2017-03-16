@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>eu.europa.ec.fisheries.uvms.spatial</groupId>
@@ -11,12 +11,10 @@
 
     <properties>
 
-        <sonar.exclusions>src/main/webapp/apidocs/**/*</sonar.exclusions>
-
         <!-- The spatial name is used as a common point to rename the application alias visible in USM-->
         <spatial.name>Spatial</spatial.name>
-        <spatial.model>0.5.6</spatial.model>
-        <reporting.model>0.5.6</reporting.model>
+        <spatial.model>1.0.4-SNAPSHOT</spatial.model>
+        <reporting.model>1.0.2-SNAPSHOT</reporting.model>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <jts.version>1.13</jts.version>
@@ -32,7 +30,7 @@
         <hibernate.version>4.3.5.Final</hibernate.version>
         <hibernate-spatial.version>4.3</hibernate-spatial.version>
         <geotools.version>14-M1</geotools.version>
-        <uvms.commons.version>2.0.16-SNAPSHOT</uvms.commons.version>
+        <uvms.commons.version>2.0.20-SNAPSHOT</uvms.commons.version>
         <uvms.test.version>0.0.4</uvms.test.version>
         <hibernate.validator.version>5.2.1.Final</hibernate.validator.version>
         <usm4uvms.version>2.0.18-SNAPSHOT</usm4uvms.version>
@@ -42,9 +40,16 @@
         <maven.scm.provider.version>2.1.1</maven.scm.provider.version>
         <javaee.version>7.0</javaee.version>
         <mapstruct.version>1.0.0.Final</mapstruct.version>
-        <uvms-wildfly-weblogic-convertor>1.7.2</uvms-wildfly-weblogic-convertor>
-
+        <uvms-wildfly-weblogic-convertor>1.7.4-SNAPSHOT</uvms-wildfly-weblogic-convertor>
+        <database.dialect>oracle</database.dialect>
         <scm.connection>scm:git:https://github.com/UnionVMS/UVMS-SpatialModule-APP.git</scm.connection>
+
+        <!-- sonar properties -->
+        <sonar.exclusions>**/generated-sources/**</sonar.exclusions>
+        <sonar.sourceEncoding>UTF-8</sonar.sourceEncoding>
+        <sonar.flex.cobertura.reportPath>**/target/site/cobertura/coverage.xml</sonar.flex.cobertura.reportPath>
+        <sonar.java.source>1.7</sonar.java.source>
+
     </properties>
 
     <dependencyManagement>
@@ -55,13 +60,6 @@
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
                 <version>1.7.12</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.pitest</groupId>
-                <artifactId>pitest-parent</artifactId>
-                <version>1.1.10</version>
-                <type>pom</type>
             </dependency>
 
             <dependency>
@@ -257,6 +255,11 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-project-info-reports-plugin</artifactId>
+                    <version>2.9</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
                     <version>2.0.4</version>
                     <executions>
@@ -271,13 +274,25 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-ejb-plugin</artifactId>
+                    <version>2.3</version>
+                    <configuration>
+                        <ejbVersion>3.1</ejbVersion>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>2.10.4</version>
                     <executions>
                         <execution>
                             <id>attach-javadocs</id>
                             <goals>
                                 <goal>jar</goal>
                             </goals>
+                            <configuration>
+                                <additionalparam>${javadoc.opts}</additionalparam>
+                            </configuration>
                         </execution>
                     </executions>
                 </plugin>
@@ -285,6 +300,16 @@
         </pluginManagement>
 
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-plugin-plugin</artifactId>
@@ -299,17 +324,6 @@
                 <artifactId>sonar-maven-plugin</artifactId>
                 <version>3.0.1</version>
             </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-                <version>2.7</version>
-                <configuration>
-                    <check>true</check>
-                    <format>xml</format>
-                    <aggregate>true</aggregate>
-                </configuration>
-            </plugin>
-			
 			 <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
@@ -324,14 +338,6 @@
                 <configuration>
                     <tagNameFormat>@{project.artifactId}-@{project.version}</tagNameFormat>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.pitest</groupId>
-                <artifactId>pitest-maven</artifactId>
-                <version>1.1.10</version>
-                <configuration>
-                    <failWhenNoMutations>false</failWhenNoMutations>
                 </configuration>
             </plugin>
         </plugins>
@@ -355,6 +361,21 @@
     </repositories>
 	
 	<profiles>
+        <profile>
+            <id>postgres</id>
+            <properties>
+                <database.dialect>postgres</database.dialect>
+            </properties>
+        </profile>
+        <profile>
+            <id>doclint-java8-disable</id>
+            <activation>
+                <jdk>[1.8,)</jdk>
+            </activation>
+            <properties>
+                <javadoc.opts>-Xdoclint:none</javadoc.opts>
+            </properties>
+        </profile>
         <profile>
             <id>dg-mare</id>
             <distributionManagement>

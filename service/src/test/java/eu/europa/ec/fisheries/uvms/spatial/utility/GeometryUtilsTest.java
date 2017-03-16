@@ -11,9 +11,10 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.utility;
 
 import eu.europa.ec.fisheries.uvms.BaseUnitilsTest;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.impl.GeometryUtils;
+import eu.europa.ec.fisheries.uvms.common.utils.GeometryUtils;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
+import lombok.SneakyThrows;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -24,14 +25,16 @@ public class GeometryUtilsTest extends BaseUnitilsTest {
 
     @Test(expected = IllegalArgumentException.class)
     @Parameters(method = "parameterValues")
+    @SneakyThrows
     public void shouldThrowIllegalArgumentException(double latitude, double longitude, int crs) {
-        GeometryUtils.toWgs84Point(latitude, longitude, crs);
+        GeometryUtils.toGeographic(latitude, longitude, crs);
     }
 
     @Test
+    @SneakyThrows
     public void test2() {
 
-        System.out.println(GeometryUtils.toWgs84Point(-21, 50, 3216));
+        System.out.println(GeometryUtils.toGeographic(-21D, 50D, 3216));
     }
 
     protected Object[] parameterValues(){

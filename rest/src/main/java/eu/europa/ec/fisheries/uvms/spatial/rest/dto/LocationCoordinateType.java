@@ -25,10 +25,12 @@ public class LocationCoordinateType extends GeoCoordinateType {
 	@NotNull
 	private Boolean isGeom = false;
 
+	@Override
 	public String getId() {
 		return id;
 	}
 
+	@Override
 	public void setId(String id) {
 		this.id = id;
 	}

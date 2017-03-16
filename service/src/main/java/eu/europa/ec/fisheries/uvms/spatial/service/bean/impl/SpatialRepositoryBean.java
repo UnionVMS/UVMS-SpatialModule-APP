@@ -13,6 +13,9 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.impl;
 
 import com.vividsolutions.jts.geom.Point;
+import eu.europa.ec.fisheries.uvms.spatial.service.dao.OracleUtilsDao;
+import eu.europa.ec.fisheries.uvms.spatial.service.dao.PostgresUtilsDao;
+import eu.europa.ec.fisheries.uvms.spatial.service.dao.UtilsDao;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.QueryParameter;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.AbstractAreaDao;
@@ -29,6 +32,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.dao.SysConfigDao;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.UserAreaDao;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DatabaseDialect;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.AreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.bookmark.Bookmark;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.ServiceLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.BookmarkEntity;
@@ -40,7 +44,6 @@ import eu.europa.ec.fisheries.uvms.spatial.service.entity.ReportConnectSpatialEn
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.ServiceLayerEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.SysConfigEntity;
-import eu.europa.ec.fisheries.uvms.spatial.model.bookmark.Bookmark;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialRepository;
@@ -49,6 +52,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.UserAreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.ProjectionDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.BookmarkMapper;
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -83,6 +87,10 @@ public class SpatialRepositoryBean implements SpatialRepository {
     private ReportConnectServiceAreaDao connectServiceAreaDao;
     private PortDao portDao;
     private CountryDao countryDao;
+    private UtilsDao utilsDao;
+
+    @EJB
+    private PropertiesBean properties;
 
     public void initEntityManager() {
         String dbDialect = System.getProperty("db.dialect");
@@ -107,6 +115,12 @@ public class SpatialRepositoryBean implements SpatialRepository {
         connectServiceAreaDao = new ReportConnectServiceAreaDao(em);
         portDao = new PortDao(em);
         countryDao = new CountryDao(em);
+        utilsDao = new PostgresUtilsDao(em);
+
+        if ("oracle".equals(properties.getProperty("database.dialect"))){
+            utilsDao = new OracleUtilsDao(em);
+        }
+
     }
 
     @Override
@@ -418,6 +432,21 @@ public class SpatialRepositoryBean implements SpatialRepository {
     @Override
     public List areaByCode(List<AreaSimpleType> areaSimpleTypeList) throws ServiceException {
         return  ((AbstractAreaDao) portDao).byCode(areaSimpleTypeList);
+    }
+
+    @Override
+    public Integer mapToEpsgSRID(Integer srid) throws ServiceException {
+        return utilsDao.mapDefaultSRIDToEPSG(srid);
+    }
+
+    @Override
+    public Boolean isOracle() {
+        return "oracle".equals(properties.getProperty("database.dialect"));
+    }
+
+    @Override
+    public Integer mapEpsgToSRID(Integer epsg) {
+        return utilsDao.mapEPSGtoDefaultSRID(epsg);
     }
 
 }

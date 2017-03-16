@@ -22,13 +22,14 @@ import com.vividsolutions.jts.util.Assert;
 import eu.europa.ec.fisheries.uvms.BaseUnitilsTest;
 import eu.europa.ec.fisheries.uvms.TestToolBox;
 import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
+import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.H2gis;
+import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.PostGres;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialRepository;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.UserAreaService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.impl.UserAreaServiceBean;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.UserAreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.UserAreaDto;
@@ -52,7 +53,7 @@ import static org.junit.Assert.assertNull;
 public class UserAreaServiceTest extends BaseUnitilsTest {
 
     @TestedObject
-    private UserAreaService service = new UserAreaServiceBean();
+    private UserAreaServiceBean service = new UserAreaServiceBean();
 
     @InjectIntoByType
     private Mock<SpatialRepository> repoMock;
@@ -105,43 +106,7 @@ public class UserAreaServiceTest extends BaseUnitilsTest {
         AreaDetails areaDetails = userAreaDetailsWithExtentById.get(0);
         List<AreaProperty> areaProperties = areaDetails.getAreaProperties();
 
-        assertEquals("createdOn", areaProperties.get(0).getPropertyName());
-        assertNull(areaProperties.get(0).getPropertyValue());
-
-        assertEquals("enabled", areaProperties.get(1).getPropertyName());
-        assertEquals("false", areaProperties.get(1).getPropertyValue());
-
-        assertEquals("startDate", areaProperties.get(2).getPropertyName());
-        assertNull(areaProperties.get(2).getPropertyValue());
-
-        assertEquals("scopeSelection", areaProperties.get(3).getPropertyName());
-        assertNull(areaProperties.get(3).getPropertyValue());
-
-        Assert.equals("datasetName", areaProperties.get(4).getPropertyName());
-        assertNull(areaProperties.get(4).getPropertyValue());
-
-        Assert.equals("areaDesc", areaProperties.get(5).getPropertyName());
-        assertNull(areaProperties.get(5).getPropertyValue());
-
-        Assert.equals("subType", areaProperties.get(6).getPropertyName());
-        assertNull(areaProperties.get(6).getPropertyValue());
-
-        Assert.equals("name", areaProperties.get(7).getPropertyName());
-        assertNull(areaProperties.get(7).getPropertyValue());
-
-        Assert.equals("endDate", areaProperties.get(8).getPropertyName());
-        assertNull(areaProperties.get(8).getPropertyValue());
-
-        Assert.equals("code", areaProperties.get(9).getPropertyName());
-        assertNull(areaProperties.get(9).getPropertyValue());
-
-        Assert.equals("centroid", areaProperties.get(10).getPropertyName());
-        Assert.equals("POINT (20.0535983848415 31.1417484902222)", areaProperties.get(10).getPropertyValue());
-
-        Assert.equals("geometry", areaProperties.get(11).getPropertyName());
-        Assert.equals("POINT (20.0535983848415 31.1417484902222)", areaProperties.get(11).getPropertyValue());
-
-        Assert.equals("1", areaDetails.getAreaType().getId());
+        assertEquals(12, areaProperties.size());
 
     }
 
@@ -176,7 +141,7 @@ public class UserAreaServiceTest extends BaseUnitilsTest {
         namesServiceMock.returns(Arrays.asList(dto)).listUserAreaLayerMapping();
 
         UserAreasEntity userAreasEntity = new UserAreasEntity();
-        Field id = userAreasEntity.getClass().getSuperclass().getSuperclass().getDeclaredField("id");
+        Field id = userAreasEntity.getClass().getDeclaredField("id");
         TestToolBox.makeModifiable(id);
         TestToolBox.setValue(userAreasEntity, id, 2L);
         repoMock.returns(Arrays.asList(userAreasEntity)).findUserAreaByUserNameAndScopeName(null, null);
@@ -205,12 +170,13 @@ public class UserAreaServiceTest extends BaseUnitilsTest {
         // Given
         UserAreaGeoJsonDto userAreaDto = createUserArea("name", UUID.randomUUID().toString(), "desc", null);
         UserAreasEntity userAreasEntity = new UserAreasEntity();
-        Field id = userAreasEntity.getClass().getSuperclass().getSuperclass().getDeclaredField("id");
+        Field id = userAreasEntity.getClass().getDeclaredField("id");
         TestToolBox.makeModifiable(id);
         TestToolBox.setValue(userAreasEntity, id, 2L);
         repoMock.returns(userAreasEntity).save(null);
 
         // When
+        service.setDialect(new H2gis());
         Long result = service.storeUserArea(userAreaDto, "rep_power");
 
         // Then
@@ -226,12 +192,13 @@ public class UserAreaServiceTest extends BaseUnitilsTest {
         UserAreaGeoJsonDto userAreaDto = createUserArea("name", UUID.randomUUID().toString(), "desc", null);
         UserAreasEntity userAreasEntity = new UserAreasEntity();
         userAreasEntity.setDatasetName("dataSet");
-        Field id = userAreasEntity.getClass().getSuperclass().getSuperclass().getDeclaredField("id");
+        Field id = userAreasEntity.getClass().getDeclaredField("id");
         TestToolBox.makeModifiable(id);
         TestToolBox.setValue(userAreasEntity, id, 2L);
         repoMock.returns(userAreasEntity).save(null);
 
         // When
+        service.setDialect(new PostGres());
         Long result = service.storeUserArea(userAreaDto, "rep_power");
 
         // Then
@@ -248,7 +215,7 @@ public class UserAreaServiceTest extends BaseUnitilsTest {
         userAreaDto.setId(2L);
         UserAreasEntity userAreasEntity = new UserAreasEntity();
         userAreasEntity.setDatasetName("dataSet");
-        Field id = userAreasEntity.getClass().getSuperclass().getSuperclass().getDeclaredField("id");
+        Field id = userAreasEntity.getClass().getDeclaredField("id");
         TestToolBox.makeModifiable(id);
         TestToolBox.setValue(userAreasEntity, id, 2L);
 
@@ -257,6 +224,7 @@ public class UserAreaServiceTest extends BaseUnitilsTest {
         repoMock.returns(userAreasEntity).update(null);
 
         // When
+        service.setDialect(new PostGres());
         Long result = service.updateUserArea(userAreaDto, "rep_power", true, "");
 
         // Then

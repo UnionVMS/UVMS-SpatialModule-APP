@@ -29,6 +29,7 @@ import javax.persistence.UniqueConstraint;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.hibernate.annotations.Where;
 import java.util.Date;
 import java.util.Map;
@@ -101,6 +102,7 @@ import javax.persistence.SequenceGenerator;
 })
 @EqualsAndHashCode(callSuper = true, exclude = "scopeSelection")
 @Data
+@ToString(exclude = "scopeSelection")
 public class UserAreasEntity extends BaseAreaEntity {
 
     public static final String FIND_ALL_USER_AREAS = "userArea.findAllUserAreas";
@@ -129,7 +131,7 @@ public class UserAreasEntity extends BaseAreaEntity {
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN")
 	private Long id;	
 	
-    @Column(length = 255)
+    @Column(name = "type")
     @ColumnAliasName(aliasName = "subType")
     private String type;
 
@@ -143,7 +145,7 @@ public class UserAreasEntity extends BaseAreaEntity {
     @ColumnAliasName(aliasName = "endDate")
     private Date endDate;
 
-    @Column(name = "user_name", nullable = false, length = 255)
+    @Column(name = "user_name", nullable = false)
     private String userName;
 
     @Column(columnDefinition = "text", name = "area_desc")

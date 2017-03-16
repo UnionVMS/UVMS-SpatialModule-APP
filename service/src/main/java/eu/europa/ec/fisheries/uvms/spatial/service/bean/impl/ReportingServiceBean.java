@@ -8,6 +8,8 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
+
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.impl;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
@@ -28,9 +30,6 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.TextMessage;
 
-/**
- * Created by padhyad on 3/21/2016.
- */
 @Stateless
 @Local(ReportingService.class)
 @Slf4j

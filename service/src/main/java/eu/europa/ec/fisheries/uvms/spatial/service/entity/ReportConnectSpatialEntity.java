@@ -17,6 +17,8 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ScaleBarUnits;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
 import java.io.Serializable;
 import java.util.Set;
 import javax.persistence.CascadeType;
@@ -59,6 +61,7 @@ import javax.persistence.SequenceGenerator;
 })
 @EqualsAndHashCode(exclude = {"id", "reportConnectServiceAreas"})
 @Data
+@ToString(exclude = {"reportConnectServiceAreas"})
 public class ReportConnectSpatialEntity implements Serializable {
 
     public static final String FIND_BY_ID = "reportConnectSpatialEntity.findById";
@@ -87,20 +90,20 @@ public class ReportConnectSpatialEntity implements Serializable {
 	@Column(name = "report_id", nullable = false)
 	private Long reportId;
 	
-	@Column(name = "map_center", length = 255)
+	@Column(name = "map_center")
 	private String mapCenter;
 	
 	@Column(name = "map_zoom")
 	private Integer mapZoom;
 	
-	@Column(name = "display_format", length = 255)
+	@Column(name = "display_format")
     @Enumerated(EnumType.STRING)
 	private CoordinatesFormat displayFormatType;
 	
-	@Column(name = "measurement_units", length = 255)
+	@Column(name = "measurement_units")
 	private String measurementUnits;
 	
-	@Column(name = "scalebar_units", length = 255)
+	@Column(name = "scalebar_units")
     @Enumerated(EnumType.STRING)
     private ScaleBarUnits scaleBarType;
 
@@ -113,7 +116,7 @@ public class ReportConnectSpatialEntity implements Serializable {
 	@Column(columnDefinition = "text", name = "reference_data")
 	private String referenceData;
 
-	@Column(name = "app_version", nullable = false, length = 255)
+	@Column(name = "app_version", nullable = false)
 	private String appVersion;
 	
 	@OneToMany(orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "reportConnectSpatial", cascade = CascadeType.ALL)

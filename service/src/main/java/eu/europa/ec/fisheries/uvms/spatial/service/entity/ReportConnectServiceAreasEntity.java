@@ -15,6 +15,8 @@ package eu.europa.ec.fisheries.uvms.spatial.service.entity;
 import eu.europa.ec.fisheries.uvms.domain.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -37,8 +39,9 @@ import javax.persistence.SequenceGenerator;
 		@NamedQuery(name = ReportConnectServiceAreasEntity.DELETE_BY_REPORT_CONNECT_SPATIAL_ID,
 				query = "DELETE FROM ReportConnectServiceAreasEntity rcsa WHERE rcsa.id = :id")
 })
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = false, exclude = {"reportConnectSpatial", "serviceLayer" })
 @Data
+@ToString(exclude = {"reportConnectSpatial", "serviceLayer" })
 public class ReportConnectServiceAreasEntity extends BaseEntity implements Comparable<ReportConnectServiceAreasEntity> {
 
     public static final String DELETE_BY_REPORT_CONNECT_SPATIAL_ID = "ReportLayerConfig.deleteByReportConnectSpatialId";

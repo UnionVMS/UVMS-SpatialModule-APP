@@ -30,6 +30,8 @@ import javax.persistence.Table;
 import eu.europa.ec.fisheries.uvms.domain.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -54,6 +56,7 @@ import javax.persistence.SequenceGenerator;
 })
 @EqualsAndHashCode(callSuper = true, exclude = {"reportConnectServiceAreas"})
 @Data
+@ToString(exclude = {"reportConnectServiceAreas"})
 public class ServiceLayerEntity extends BaseEntity {
 
     public static final String FIND_SERVICE_LAYER_BY_SUBTYPE = "serviceLayer.findServiceLayerBySubType";
@@ -75,22 +78,22 @@ public class ServiceLayerEntity extends BaseEntity {
     @Column(name = "user_id")
     private Long userId;
 
-    @Column(name = "name", nullable = false, length = 255)
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "layer_desc", length = 255)
+    @Column(name = "layer_desc")
     private String layerDesc;
 
     @Column(name = "service_url")
     private String serviceUrl;
 
-    @Column(name = "geo_name", length = 255)
+    @Column(name = "geo_name")
     private String geoName;
 
     @Column(name = "srs_code")
     private Integer srsCode;
 
-    @Column(name = "short_copyright", length = 255)
+    @Column(name = "short_copyright")
     private String shortCopyright;
 
     @Column(columnDefinition = "text", name = "long_copyright")
@@ -100,16 +103,16 @@ public class ServiceLayerEntity extends BaseEntity {
     @Column(name = "is_internal", nullable = false, length = 1)
     private Boolean isInternal = false;
     
-    @Column(name = "style_geom", length = 255)
+    @Column(name = "style_geom")
     private String styleGeom;
     
-    @Column(name = "style_label", length = 255)
+    @Column(name = "style_label")
     private String styleLabel;
     
-    @Column(name = "style_label_geom", length = 255)
+    @Column(name = "style_label_geom")
     private String styleLabelGeom;
 
-    @Column(name = "subtype", length = 255)
+    @Column(name = "subtype")
     private String subType;
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "serviceLayer", cascade = CascadeType.ALL)
@@ -121,4 +124,5 @@ public class ServiceLayerEntity extends BaseEntity {
     public ServiceLayerEntity() {
         // why JPA why.
     }
+
 }

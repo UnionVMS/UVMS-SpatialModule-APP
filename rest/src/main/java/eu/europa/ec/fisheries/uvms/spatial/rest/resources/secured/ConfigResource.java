@@ -63,7 +63,7 @@ public class ConfigResource extends UnionVMSResource {
         String applicationName = request.getServletContext().getInitParameter("usmApplication");
         String adminPref = usmService.getOptionDefaultValue(DEFAULT_CONFIG, applicationName);
         String userPref = usmService.getUserPreference(USER_CONFIG, username, applicationName, roleName, scopeName);
-        log.info("Getting map configuration for report with id = {}", id);
+        log.info("Getting mapDefaultSRIDToEPSG configuration for report with id = {}", id);
 
         Collection<String> permittedLayersNames = ServiceLayerUtils.getUserPermittedLayersNames(usmService, username, roleName, scopeName);
 
