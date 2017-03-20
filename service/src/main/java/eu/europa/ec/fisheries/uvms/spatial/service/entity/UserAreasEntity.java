@@ -127,7 +127,7 @@ public class UserAreasEntity extends BaseAreaEntity {
 
 	@Id
 	@Column(name = "gid")
-	@SequenceGenerator(name="SEQ_GEN", sequenceName="user_areas_seq")
+	@SequenceGenerator(name="SEQ_GEN", sequenceName="user_areas_seq", allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN")
 	private Long id;	
 	

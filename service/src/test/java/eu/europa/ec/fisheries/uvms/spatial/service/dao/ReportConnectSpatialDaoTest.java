@@ -81,7 +81,7 @@ public class ReportConnectSpatialDaoTest extends BaseSpatialDaoTest {
 
         tx.begin();
 
-        dao.deleteById(Arrays.asList(1L, 2L));
+        dao.deleteById(Arrays.asList(100L, 200L));
 
         tx.commit();
 

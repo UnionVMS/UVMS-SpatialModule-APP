@@ -125,8 +125,8 @@ public abstract class BaseSpatialDaoTest extends BaseDAOTest {
                     .build(),
             insertInto("spatial.report_connect_spatial")
                     .columns("ID", "APP_VERSION", "REPORT_ID")
-                    .values(1L, "1", 123)
-                    .values(2L, "2", 1234)
+                    .values(100L, "1", 123)
+                    .values(200L, "2", 1234)
                     .build(),
             insertInto("spatial.provider_format")
                     .columns("ID", "SERVICE_TYPE")

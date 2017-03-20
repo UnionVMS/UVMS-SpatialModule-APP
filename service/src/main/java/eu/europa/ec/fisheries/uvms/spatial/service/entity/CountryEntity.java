@@ -36,7 +36,7 @@ public class CountryEntity extends BaseAreaEntity {
 
 	@Id
 	@Column(name = "gid")
-	@SequenceGenerator(name="SEQ_GEN", sequenceName="countries_seq")
+	@SequenceGenerator(name="SEQ_GEN", sequenceName="countries_seq", allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN")
 	private Long id;
 
