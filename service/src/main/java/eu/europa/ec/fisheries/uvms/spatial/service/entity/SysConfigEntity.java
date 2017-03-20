@@ -41,7 +41,7 @@ public class SysConfigEntity extends BaseEntity {
 
 	@Id
 	@Column(name = "id")
-	@SequenceGenerator(name="SEQ_GEN", sequenceName="system_configurations_seq")
+	@SequenceGenerator(name="SEQ_GEN", sequenceName="system_configurations_seq", allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN")
 	private Long id;
 	

@@ -75,7 +75,7 @@ public class AreaLocationTypesEntity extends BaseEntity {
 	
 	@Id
 	@Column(name = "id")
-	@SequenceGenerator(name="SEQ_GEN", sequenceName="area_location_types_seq")
+	@SequenceGenerator(name="SEQ_GEN", sequenceName="area_location_types_seq", allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN")
 	private Long id;
 	

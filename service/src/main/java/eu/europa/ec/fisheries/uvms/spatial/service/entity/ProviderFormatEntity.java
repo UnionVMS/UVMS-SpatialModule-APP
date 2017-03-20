@@ -38,7 +38,7 @@ public class ProviderFormatEntity extends BaseEntity {
 
 	@Id
 	@Column(name = "id")
-	@SequenceGenerator(name="SEQ_GEN", sequenceName="provider_format_seq")
+	@SequenceGenerator(name="SEQ_GEN", sequenceName="provider_format_seq", allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN")
 	private Long id;
 
