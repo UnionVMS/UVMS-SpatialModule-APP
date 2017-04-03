@@ -9,26 +9,19 @@ details. You should have received a copy of the GNU General Public License along
 
  */
 
-
 package eu.europa.ec.fisheries.uvms.spatial.rest.dto;
 
-import javax.validation.constraints.NotNull;
+import lombok.NoArgsConstructor;
 
-import org.hibernate.validator.constraints.NotEmpty;
-
+@NoArgsConstructor
 public class FilterType {
 
-	@NotNull
-	@NotEmpty
-	protected String filter;
-	
-	public FilterType() {
-	}
-	
-	public FilterType(String filter) {
-		this.filter = filter;
-	}
-	
+    private String filter;
+
+    public FilterType(String filter) {
+        this.filter = filter;
+    }
+
 	public String getFilter() {
 		return filter;
 	}

@@ -9,12 +9,9 @@ details. You should have received a copy of the GNU General Public License along
 
  */
 
-
 package eu.europa.ec.fisheries.uvms.spatial.rest.constants;
 
 public final class RestConstants {
-
-    private RestConstants(){}
 
     public static final String REST_URL = "/rest";
     public static final String IMAGE_URL = "/image";
@@ -25,5 +22,8 @@ public final class RestConstants {
     public static final String VIEW = "view";
     public static final String SYSTEM_AREA_TYPE = "systemAreaType";
     public static final String PUBLIC = "PUBLIC";
+
+    private RestConstants() {
+    }
 
 }

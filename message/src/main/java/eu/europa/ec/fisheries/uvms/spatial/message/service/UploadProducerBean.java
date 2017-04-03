@@ -8,21 +8,21 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
 package eu.europa.ec.fisheries.uvms.spatial.message.service;
+
+import javax.ejb.Local;
+import javax.ejb.Stateless;
 
 import eu.europa.ec.fisheries.uvms.message.AbstractProducer;
 import eu.europa.ec.fisheries.uvms.message.MessageConstants;
-import javax.annotation.Resource;
-import javax.ejb.Local;
-import javax.ejb.Stateless;
-import javax.jms.Destination;
 
 @Stateless
 @Local
 public class UploadProducerBean extends AbstractProducer {
 
-
-	public String getDestinationName(){
+    @Override
+    public String getDestinationName(){
 		return MessageConstants.UPLOAD_EVENT_QUEUE;
 	}	
 
