@@ -68,11 +68,20 @@ import org.apache.commons.lang.StringUtils;
 @Stateless
 public class AreaResource extends UnionVMSResource {
 
-    private @EJB AreaTypeNamesService areaTypeService;
-    private @EJB AreaService areaService;
-    private @EJB UserAreaService userAreaService;
-    private @EJB SpatialService spatialService;
-    private @EJB USMService usmService;
+    @EJB
+    private AreaTypeNamesService areaTypeService;
+
+    @EJB
+    private AreaService areaService;
+
+    @EJB
+    private UserAreaService userAreaService;
+
+    @EJB
+    private SpatialService spatialService;
+
+    @EJB
+    private USMService usmService;
 
     private AreaLocationMapper mapper = AreaLocationMapper.mapper();
 

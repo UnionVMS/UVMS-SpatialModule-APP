@@ -9,8 +9,28 @@ details. You should have received a copy of the GNU General Public License along
 
  */
 
-
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.impl;
+
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
+import javax.ejb.Local;
+import javax.ejb.Stateless;
+import javax.interceptor.Interceptors;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.FileAttribute;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.common.ZipExtractor;
@@ -19,10 +39,15 @@ import eu.europa.ec.fisheries.uvms.domain.BaseEntity;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.interceptors.SimpleTracingInterceptor;
 import eu.europa.ec.fisheries.uvms.mapper.GeometryMapper;
+import eu.europa.ec.fisheries.uvms.spatial.message.service.UploadConsumerBean;
+import eu.europa.ec.fisheries.uvms.spatial.message.service.UploadProducerBean;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DAOFactory;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DatabaseDialect;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DatabaseDialectFactory;
@@ -33,22 +58,10 @@ import eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTypesEntit
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.BaseAreaEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.CountryEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.EntityFactory;
-import eu.europa.ec.fisheries.uvms.spatial.message.service.UploadConsumerBean;
-import eu.europa.ec.fisheries.uvms.spatial.message.service.UploadProducerBean;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialRepository;
+import eu.europa.ec.fisheries.uvms.spatial.service.enums.SpatialTypeEnum;
 import eu.europa.ec.fisheries.uvms.spatial.service.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.exception.SpatialServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.service.enums.SpatialTypeEnum;
 import eu.europa.ec.fisheries.uvms.spatial.service.util.UploadUtil;
-import java.io.IOException;
-import java.security.InvalidParameterException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.geotools.data.DataStore;
@@ -64,20 +77,6 @@ import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.filter.Filter;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
-import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
-import javax.ejb.Local;
-import javax.ejb.Stateless;
-import javax.interceptor.Interceptors;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
-import java.io.File;
-import java.lang.reflect.Field;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.attribute.FileAttribute;
 import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
 
@@ -86,27 +85,37 @@ import org.opengis.referencing.operation.TransformException;
 @Slf4j
 public class AreaServiceBean implements AreaService {
 
+    private static final String GID = "gid";
+    private static final String AREA_TYPE = "areaType";
+
     private EntityManager em;
 
     @PersistenceContext(unitName = "spatialPUpostgres")
     private EntityManager postgres;
 
     @PersistenceContext(unitName = "spatialPUoracle")
-    private EntityManager oracle;	
+    private EntityManager oracle;
 
-	
-    private static final String GID = "gid";
-    private static final String AREA_TYPE = "areaType";
+    @EJB
+    private AreaTypeNamesService areaTypeService;
 
-    private @EJB AreaTypeNamesService areaTypeService;
-    private @EJB AreaService areaService;
-    private @EJB SpatialRepository repository;
-    private @EJB UploadProducerBean uploadSender;
-    private @EJB UploadConsumerBean uploadReceiver;
-    private @EJB PropertiesBean properties;
+    @EJB
+    private AreaService areaService;
+
+    @EJB
+    private SpatialRepository repository;
+
+    @EJB
+    private UploadProducerBean uploadSender;
+
+    @EJB
+    private UploadConsumerBean uploadReceiver;
+
+    @EJB
+    private PropertiesBean properties;
+
     private DatabaseDialect databaseDialect;
 
-	
     public void initEntityManager() {
         String dbDialect = System.getProperty("db.dialect");
         if ("oracle".equalsIgnoreCase(dbDialect)) {
@@ -115,9 +124,7 @@ public class AreaServiceBean implements AreaService {
             em = postgres;
         }
     }
-		
-	
-	
+
     @PostConstruct
     public void init(){
 		initEntityManager();
