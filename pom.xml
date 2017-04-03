@@ -45,10 +45,13 @@
         <scm.connection>scm:git:https://github.com/UnionVMS/UVMS-SpatialModule-APP.git</scm.connection>
 
         <!-- sonar properties -->
-        <sonar.exclusions>**/generated-sources/**</sonar.exclusions>
+        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+        <sonar.exclusions>**/generated-sources/**,**/*.js</sonar.exclusions>
         <sonar.sourceEncoding>UTF-8</sonar.sourceEncoding>
-        <sonar.flex.cobertura.reportPath>**/target/site/cobertura/coverage.xml</sonar.flex.cobertura.reportPath>
         <sonar.java.source>1.7</sonar.java.source>
+        <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+        <sonar.jacoco.reportPath>${project.basedir}/target/coverage-reports/jacoco-unit.exec</sonar.jacoco.reportPath>
+        <sonar.language>java</sonar.language>
 
     </properties>
 
@@ -293,6 +296,30 @@
                             <configuration>
                                 <additionalparam>${javadoc.opts}</additionalparam>
                             </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>0.7.6.201602180812</version>
+                    <configuration>
+                        <destFile>${sonar.jacoco.reportPath}</destFile>
+                        <append>true</append>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>jacoco-initialize</id>
+                            <goals>
+                                <goal>prepare-agent</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>jacoco-site</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>report</goal>
+                            </goals>
                         </execution>
                     </executions>
                 </plugin>

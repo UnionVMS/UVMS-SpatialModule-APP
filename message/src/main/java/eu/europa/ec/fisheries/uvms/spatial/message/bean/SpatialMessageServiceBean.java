@@ -9,15 +9,7 @@ details. You should have received a copy of the GNU General Public License along
 
  */
 
-
 package eu.europa.ec.fisheries.uvms.spatial.message.bean;
-
-import eu.europa.ec.fisheries.uvms.message.AbstractProducer;
-import eu.europa.ec.fisheries.uvms.message.MessageConstants;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageErrorEvent;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageEvent;
-import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMarshallException;
-import eu.europa.ec.fisheries.uvms.spatial.model.mapper.JAXBMarshaller;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -28,15 +20,23 @@ import javax.jms.JMSException;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 
+import eu.europa.ec.fisheries.uvms.message.AbstractProducer;
+import eu.europa.ec.fisheries.uvms.message.MessageConstants;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageErrorEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageEvent;
+import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMarshallException;
+import eu.europa.ec.fisheries.uvms.spatial.model.mapper.JAXBMarshaller;
+
 @Stateless
 @LocalBean
 public class SpatialMessageServiceBean extends AbstractProducer {
 
     private static final String MODULE_NAME = "spatial";
 
-	public String getDestinationName(){
-		return MessageConstants.QUEUE_MODULE_SPATIAL;
-	}
+    @Override
+    public String getDestinationName(){
+        return MessageConstants.QUEUE_MODULE_SPATIAL;
+    }
 
     public String getModuleName() {
         return MODULE_NAME;

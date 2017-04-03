@@ -9,7 +9,6 @@ details. You should have received a copy of the GNU General Public License along
 
  */
 
-
 package eu.europa.ec.fisheries.uvms.spatial.rest.dto;
 
 import javax.validation.constraints.NotNull;
@@ -21,15 +20,6 @@ public class AreaFilterType extends FilterType {
 	@NotNull
 	@NotEmpty
 	private String areaType;
-	
-	public AreaFilterType() {
-		super();
-	}
-
-	public AreaFilterType(String areaType, String filter) {
-		super(filter);
-		this.areaType = areaType;
-	}
 
 	public String getAreaType() {
 		return areaType;
