@@ -12,45 +12,8 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.impl;
 
-import com.vividsolutions.jts.geom.Point;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.OracleUtilsDao;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.PostgresUtilsDao;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.UtilsDao;
-import eu.europa.ec.fisheries.uvms.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.service.QueryParameter;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.AbstractAreaDao;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.AreaLocationTypesDao;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.BookmarkDao;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.CountryDao;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.EezDao;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.PortDao;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.ProjectionDao;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.ReportConnectServiceAreaDao;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.ReportConnectSpatialDao;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.ServiceLayerDao;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.SysConfigDao;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.UserAreaDao;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DatabaseDialect;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.AreaDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.bookmark.Bookmark;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.ServiceLayerDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTypesEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.BookmarkEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.CountryEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.PortEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.ProjectionEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.ReportConnectServiceAreasEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.ReportConnectSpatialEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.ServiceLayerEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.SysConfigEntity;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialRepository;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.AreaLayerDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.UserAreaLayerDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.ProjectionDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.mapper.BookmarkMapper;
+import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
+
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Local;
@@ -62,7 +25,45 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
+import com.vividsolutions.jts.geom.Point;
+import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.service.QueryParameter;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialRepository;
+import eu.europa.ec.fisheries.uvms.spatial.service.dao.AbstractAreaDao;
+import eu.europa.ec.fisheries.uvms.spatial.service.dao.AreaLocationTypesDao;
+import eu.europa.ec.fisheries.uvms.spatial.service.dao.BookmarkDao;
+import eu.europa.ec.fisheries.uvms.spatial.service.dao.CountryDao;
+import eu.europa.ec.fisheries.uvms.spatial.service.dao.EezDao;
+import eu.europa.ec.fisheries.uvms.spatial.service.dao.OracleUtilsDao;
+import eu.europa.ec.fisheries.uvms.spatial.service.dao.PortDao;
+import eu.europa.ec.fisheries.uvms.spatial.service.dao.PostgresUtilsDao;
+import eu.europa.ec.fisheries.uvms.spatial.service.dao.ProjectionDao;
+import eu.europa.ec.fisheries.uvms.spatial.service.dao.ReportConnectServiceAreaDao;
+import eu.europa.ec.fisheries.uvms.spatial.service.dao.ReportConnectSpatialDao;
+import eu.europa.ec.fisheries.uvms.spatial.service.dao.ServiceLayerDao;
+import eu.europa.ec.fisheries.uvms.spatial.service.dao.SysConfigDao;
+import eu.europa.ec.fisheries.uvms.spatial.service.dao.UserAreaDao;
+import eu.europa.ec.fisheries.uvms.spatial.service.dao.UtilsDao;
+import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DatabaseDialect;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.AreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.AreaLayerDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.bookmark.Bookmark;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.ProjectionDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.ServiceLayerDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.UserAreaLayerDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTypesEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.BookmarkEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.CountryEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.PortEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.ProjectionEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.ReportConnectServiceAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.ReportConnectSpatialEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.ServiceLayerEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.SysConfigEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.mapper.BookmarkMapper;
 
 @Stateless
 @Local(value = SpatialRepository.class)
@@ -302,20 +303,6 @@ public class SpatialRepositoryBean implements SpatialRepository {
     }
 
     @Override
-    public void deleteReportConnectServiceAreas(Long id) {
-        connectServiceAreaDao.deleteReportConnectServiceAreas(id);
-    }
-
-    @Override
-    public void deleteReportConnectServiceAreas(Set<ReportConnectServiceAreasEntity> reportConnectServiceAreases) {
-        if (!reportConnectServiceAreases.isEmpty()) {
-            for (ReportConnectServiceAreasEntity entity : reportConnectServiceAreases) {
-                connectServiceAreaDao.delete(entity);
-            }
-        }
-    }
-
-    @Override
     public ReportConnectSpatialEntity findReportConnectSpatialByReportIdAndConnectId(final Long reportId, final Long id) throws ServiceException {
         List<ReportConnectSpatialEntity> list = reportConnectSpatialDao.findByReportIdAndConnectId(reportId, id);
         if (isNotEmpty(list)) {
@@ -357,11 +344,6 @@ public class SpatialRepositoryBean implements SpatialRepository {
     @Override
     public UserAreasEntity update(UserAreasEntity entity) throws ServiceException {
         return userAreaDao.update(entity);
-    }
-
-    @Override
-    public void deleteEntity(ReportConnectSpatialEntity entity) {
-        reportConnectSpatialDao.deleteEntity(ReportConnectSpatialEntity.class, entity.getId());
     }
 
     @Override
@@ -447,6 +429,10 @@ public class SpatialRepositoryBean implements SpatialRepository {
     @Override
     public Integer mapEpsgToSRID(Integer epsg) {
         return utilsDao.mapEPSGtoDefaultSRID(epsg);
+    }
+
+    @Override public void deleteReportConnectServiceAreas(List<Long> spatialConnectIds) throws ServiceException {
+        reportConnectSpatialDao.deleteById(spatialConnectIds);
     }
 
 }

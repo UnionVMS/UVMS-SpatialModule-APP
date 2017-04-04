@@ -12,17 +12,39 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service;
 
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.uvms.BaseUnitilsTest;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.*;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.CoordinatesFormat;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ScaleBarUnits;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialDeleteMapConfigurationRQ;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.impl.MapConfigServiceBean;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.*;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.DisplayProjectionDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.MapConfigDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.MapDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.ProjectionDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.ServiceLayersDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.ConfigurationDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTypesEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.ProjectionEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.ProviderFormatEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.ReportConnectServiceAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.ReportConnectSpatialEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.ServiceLayerEntity;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -33,13 +55,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.*;
-
-import static org.junit.Assert.assertNotNull;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MapConfigServiceTest extends BaseUnitilsTest {
@@ -53,6 +68,34 @@ public class MapConfigServiceTest extends BaseUnitilsTest {
     @Before
     public void initMocks() {
         MockitoAnnotations.initMocks(this);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testHandleDeleteMapConfigurationWithNull() throws ServiceException {
+        mapConfigServiceBean.handleDeleteMapConfiguration(null);
+    }
+
+    @Test
+    public void testHandleDeleteMapConfigurationWithIdList() throws ServiceException {
+
+        SpatialDeleteMapConfigurationRQ rq = new SpatialDeleteMapConfigurationRQ();
+        rq.setSpatialConnectIds(Arrays.asList(100L, 200L));
+
+        mapConfigServiceBean.handleDeleteMapConfiguration(rq);
+
+        verify(repository, times(1)).deleteReportConnectServiceAreas(Arrays.asList(100L, 200L));
+
+    }
+
+    @Test
+    public void testHandleDeleteMapConfigurationWithEmptyIdList() throws ServiceException {
+
+        SpatialDeleteMapConfigurationRQ rq = new SpatialDeleteMapConfigurationRQ();
+
+        mapConfigServiceBean.handleDeleteMapConfiguration(rq);
+
+        verify(repository, times(0)).deleteReportConnectServiceAreas(Mockito.anyList());
+
     }
 
     @Test
