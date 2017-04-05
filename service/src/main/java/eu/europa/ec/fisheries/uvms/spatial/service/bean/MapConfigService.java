@@ -10,6 +10,10 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
+import javax.ejb.Local;
+import java.util.Collection;
+import java.util.List;
+
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.MapConfigurationType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialDeleteMapConfigurationRQ;
@@ -22,10 +26,6 @@ import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.MapConfigDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.ProjectionDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.ConfigurationDto;
 
-import java.util.Collection;
-import java.util.List;
-import javax.ejb.Local;
-
 @Local
 public interface MapConfigService {
 
@@ -37,6 +37,15 @@ public interface MapConfigService {
 
     MapConfigDto getBasicReportConfig(String userPreferences, String adminPreferences);
 
+    /**
+     * On the run report the method fetches the map configurations and enriches with values from
+     * different tables from the spatial database.
+     * The method is also responsible for filtering out layer settings based on restriction from USM.
+     *
+     * @param mapConfigurationRQ
+     * @return
+     * @throws ServiceException
+     */
     SpatialGetMapConfigurationRS getMapConfiguration(SpatialGetMapConfigurationRQ mapConfigurationRQ) throws ServiceException;
 
     SpatialSaveOrUpdateMapConfigurationRS handleSaveOrUpdateSpatialMapConfiguration(SpatialSaveOrUpdateMapConfigurationRQ spatialSaveMapConfigurationRQ);

@@ -123,35 +123,55 @@ public class MapConfigServiceBean implements MapConfigService {
 
     @Override
     public MapConfigurationType getMapConfigurationType(final Long reportId, Collection<String> permittedServiceLayers) throws ServiceException {
-        SpatialValidator.validate(reportId);
+
+        if (reportId == null) {
+            throw new IllegalArgumentException("ARGUMENT CAN NOT BE NULL");
+        }
+
         ReportConnectSpatialEntity entity = repository.findReportConnectSpatialByReportId(reportId);
+
         if (entity == null) {
             return null;
         }
-        MapConfigurationType mapConfigurationType = ReportConnectSpatialMapper.INSTANCE.reportConnectSpatialEntityToMapConfigurationType(entity);
-        VisibilitySettingsDto visibilitySettings = MapConfigHelper.getVisibilitySettings(entity.getVisibilitySettings());
-        mapConfigurationType.setVisibilitySettings(MapConfigMapper.INSTANCE.getVisibilitySettingsType(visibilitySettings));
-        StyleSettingsDto styleSettingsDto = MapConfigHelper.getStyleSettings(entity.getStyleSettings());
-        mapConfigurationType.setStyleSettings(MapConfigMapper.INSTANCE.getStyleSettingsType(styleSettingsDto));
+
         LayerSettingsDto layerSettingsDto = MapConfigHelper.getLayerSettingsForMap(entity.getReportConnectServiceAreas());
+
+        MapConfigurationType result = ReportConnectSpatialMapper.INSTANCE.reportConnectSpatialEntityToMapConfigurationType(entity);
+        VisibilitySettingsDto visibilitySettings = MapConfigHelper.getVisibilitySettings(entity.getVisibilitySettings());
+        result.setVisibilitySettings(MapConfigMapper.INSTANCE.getVisibilitySettingsType(visibilitySettings));
+        StyleSettingsDto styleSettingsDto = MapConfigHelper.getStyleSettings(entity.getStyleSettings());
+        result.setStyleSettings(MapConfigMapper.INSTANCE.getStyleSettingsType(styleSettingsDto));
+
         updateLayerSettings(layerSettingsDto, permittedServiceLayers);
-        mapConfigurationType.setLayerSettings(MapConfigMapper.INSTANCE.getLayerSettingsType(layerSettingsDto));
+
+        result.setLayerSettings(MapConfigMapper.INSTANCE.getLayerSettingsType(layerSettingsDto));
         Map<String, ReferenceDataPropertiesDto> referenceData = MapConfigHelper.getReferenceDataSettings(entity.getReferenceData());
+
         updateReferenceDataSettings(referenceData, permittedServiceLayers);
-        mapConfigurationType.setReferenceDatas(MapConfigMapper.INSTANCE.getReferenceDataType(referenceData));
-        return mapConfigurationType;
+
+        result.setReferenceDatas(MapConfigMapper.INSTANCE.getReferenceDataType(referenceData));
+
+        return result;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public SpatialGetMapConfigurationRS getMapConfiguration(SpatialGetMapConfigurationRQ mapConfigurationRQ) throws ServiceException {
+
+        if (mapConfigurationRQ == null) {
+            throw new IllegalArgumentException("MAP CONFIGURATION CAN NOT BE NULL");
+        }
+
         long reportId = mapConfigurationRQ.getReportId();
         Collection<String> permittedServiceLayers = mapConfigurationRQ.getPermittedServiceLayers();
         return new SpatialGetMapConfigurationRS(getMapConfigurationType(reportId, permittedServiceLayers));
     }
 
     @Override
-     @SneakyThrows
+    @SneakyThrows
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public SpatialSaveOrUpdateMapConfigurationRS handleSaveOrUpdateSpatialMapConfiguration(final SpatialSaveOrUpdateMapConfigurationRQ request) {
         SpatialValidator.validate(request);
@@ -461,7 +481,7 @@ public class MapConfigServiceBean implements MapConfigService {
             for (LayersDto layersDto : layers) {
                 for (ServiceLayerEntity serviceLayerEntity : serviceLayers) {
                     if (Long.parseLong(layersDto.getServiceLayerId()) == serviceLayerEntity.getId()) {
-                        if (serviceLayerEntity.getProviderFormat().getServiceType().equalsIgnoreCase(PROVIDER_FORMAT_BING) && bingApiKey == null) {
+                        if (serviceLayerEntity.getProviderFormat() != null && PROVIDER_FORMAT_BING.equalsIgnoreCase(serviceLayerEntity.getProviderFormat().getServiceType()) && bingApiKey == null) {
                             layersToExclude.add(layersDto);
                         } else {
                             layersDto.setName(serviceLayerEntity.getName());

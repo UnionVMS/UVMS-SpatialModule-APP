@@ -8,25 +8,19 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
 package eu.europa.ec.fisheries.uvms.spatial.service.enums;
 
-/**
- * Created by padhyad on 3/2/2016.
- */
 public enum AreaTypeEnum {
 
     sysarea("sysarea"),
     userarea("userarea"),
     areagroup("areagroup");
 
-    private AreaTypeEnum(String type) {
-        this.type = type;
-    }
-
     private String type;
 
-    public String getType() {
-        return type;
+    AreaTypeEnum(String type) {
+        this.type = type;
     }
 
     public static AreaTypeEnum getEnumFromValue(String value) {
@@ -36,5 +30,9 @@ public enum AreaTypeEnum {
             }
         }
         return null;
+    }
+
+    public String getType() {
+        return type;
     }
 }
