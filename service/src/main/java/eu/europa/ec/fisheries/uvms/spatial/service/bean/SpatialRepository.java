@@ -12,10 +12,22 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DatabaseDialect;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.AreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.AreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.bookmark.Bookmark;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.ProjectionDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.ServiceLayerDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.UserAreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.BookmarkEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.CountryEntity;
@@ -24,19 +36,8 @@ import eu.europa.ec.fisheries.uvms.spatial.service.entity.ProjectionEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.ReportConnectServiceAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.ReportConnectSpatialEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.ServiceLayerEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.SysConfigEntity;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.AreaLayerDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.UserAreaLayerDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.ProjectionDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.AreaDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.ServiceLayerDto;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity;
 
 public interface SpatialRepository {
 
@@ -96,10 +97,6 @@ public interface SpatialRepository {
 
     List<ProjectionEntity> findProjection() throws ServiceException;
 
-    void deleteReportConnectServiceAreas(Long id);
-
-    void deleteReportConnectServiceAreas(Set<ReportConnectServiceAreasEntity> reportConnectServiceAreas);
-
     ReportConnectSpatialEntity findReportConnectSpatialByReportIdAndConnectId(Long reportId, Long id) throws ServiceException;
 
     AreaLocationTypesEntity findAreaLocationTypeByTypeName(String typeName) throws ServiceException;
@@ -125,8 +122,6 @@ public interface SpatialRepository {
     UserAreasEntity save(UserAreasEntity userAreasEntity) throws ServiceException;
 
     UserAreasEntity update(UserAreasEntity userAreasEntity) throws ServiceException;
-
-    void deleteEntity(ReportConnectSpatialEntity entity);
 
     List closestArea(List<AreaLocationTypesEntity> entities, DatabaseDialect spatialFunction, Point point);
 
@@ -182,4 +177,6 @@ public interface SpatialRepository {
     Boolean isOracle();
 
     Integer mapEpsgToSRID(Integer epsg);
+
+    void deleteReportConnectServiceAreas(List<Long> spatialConnectIds) throws ServiceException;
 }

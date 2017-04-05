@@ -12,24 +12,36 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.util;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.LayerDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.StylesDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.ConfigurationDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.LayerAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.LayerSettingsDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.LayersDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.ReferenceDataPropertiesDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.StyleSettingsDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.VisibilitySettingsDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.ReportConnectServiceAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.ServiceLayerEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.LayerDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.StylesDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.enums.AreaTypeEnum;
 import eu.europa.ec.fisheries.uvms.spatial.service.enums.LayerTypeEnum;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.util.*;
 
 public class MapConfigHelper {
 
@@ -214,39 +226,54 @@ public class MapConfigHelper {
     }
 
     public static LayerSettingsDto getLayerSettingsForMap(Set<ReportConnectServiceAreasEntity> reportConnectServiceArea) {
-        LayerSettingsDto layerSettingsDto = new LayerSettingsDto();
-        for (ReportConnectServiceAreasEntity layer : reportConnectServiceArea) {
-            LayerTypeEnum layerTypeEnum = LayerTypeEnum.getLayerType(layer.getLayerType());
-            switch (layerTypeEnum) {
-                case BASE:
-                    LayersDto baseLayersDto = new LayersDto(layer.getServiceLayer().getName(), String.valueOf(layer.getServiceLayer().getId()), layer.getServiceLayer().getSubType(),Long.valueOf(layer.getLayerOrder()));
-                    layerSettingsDto.addBaseLayer(baseLayersDto);
-                    break;
-                case ADDITIONAL:
-                    LayersDto additionalLayersDto = new LayersDto(layer.getServiceLayer().getName(), String.valueOf(layer.getServiceLayer().getId()), layer.getServiceLayer().getSubType(), Long.valueOf(layer.getLayerOrder()));
-                    layerSettingsDto.addAdditionalLayer(additionalLayersDto);
-                    break;
-                case PORT:
-                    LayersDto portLayersDto = new LayersDto(layer.getServiceLayer().getName(), String.valueOf(layer.getServiceLayer().getId()), layer.getServiceLayer().getSubType(), Long.valueOf(layer.getLayerOrder()));
-                    layerSettingsDto.addPortLayer(portLayersDto);
-                    break;
-                case AREA:
-                    AreaTypeEnum areaTypeEnum = AreaTypeEnum.valueOf(layer.getAreaType());
-                    LayerAreaDto areaLayersDto = new LayerAreaDto(areaTypeEnum, String.valueOf(layer.getServiceLayer().getId()), Long.valueOf(layer.getLayerOrder()));
-                    areaLayersDto.setName(layer.getServiceLayer().getName());
-                    areaLayersDto.setSubType(layer.getServiceLayer().getSubType());
 
-                    if (areaTypeEnum.equals(AreaTypeEnum.userarea)) {
-                        areaLayersDto.setGid(Long.parseLong(layer.getSqlFilter()));
-                    }
-                    if (areaTypeEnum.equals(AreaTypeEnum.areagroup)) {
-                        areaLayersDto.setAreaGroupName(layer.getSqlFilter());
-                    }
-                    layerSettingsDto.addAreaLayer(areaLayersDto);
-                    break;
+        LayerSettingsDto result = new LayerSettingsDto();
+
+        if (!CollectionUtils.isEmpty(reportConnectServiceArea)) {
+
+            for (ReportConnectServiceAreasEntity layer : reportConnectServiceArea) {
+
+                LayerTypeEnum layerTypeEnum = LayerTypeEnum.getLayerType(layer.getLayerType());
+
+                if (layerTypeEnum == null) {
+                    continue;
+                }
+
+                switch (layerTypeEnum) {
+                    case BASE:
+                        LayersDto baseLayersDto = new LayersDto(layer.getServiceLayer().getName(), String.valueOf(layer.getServiceLayer().getId()), layer.getServiceLayer().getSubType(), Long.valueOf(layer.getLayerOrder()));
+                        result.addBaseLayer(baseLayersDto);
+                        break;
+                    case ADDITIONAL:
+                        LayersDto additionalLayersDto = new LayersDto(layer.getServiceLayer().getName(), String.valueOf(layer.getServiceLayer().getId()), layer.getServiceLayer().getSubType(), Long.valueOf(layer.getLayerOrder()));
+                        result.addAdditionalLayer(additionalLayersDto);
+                        break;
+                    case PORT:
+                        LayersDto portLayersDto = new LayersDto(layer.getServiceLayer().getName(), String.valueOf(layer.getServiceLayer().getId()), layer.getServiceLayer().getSubType(), Long.valueOf(layer.getLayerOrder()));
+                        result.addPortLayer(portLayersDto);
+                        break;
+                    case AREA:
+                        addAreaLayer(result, layer);
+                        break;
+                }
             }
         }
-        return layerSettingsDto;
+        return result;
+    }
+
+    private static void addAreaLayer(LayerSettingsDto layerSettingsDto, ReportConnectServiceAreasEntity layer) {
+        AreaTypeEnum areaTypeEnum = AreaTypeEnum.getEnumFromValue(layer.getAreaType());
+        LayerAreaDto areaLayersDto = new LayerAreaDto(areaTypeEnum, String.valueOf(layer.getServiceLayer().getId()), (long) layer.getLayerOrder());
+        areaLayersDto.setName(layer.getServiceLayer().getName());
+        areaLayersDto.setSubType(layer.getServiceLayer().getSubType());
+
+        if (AreaTypeEnum.userarea.equals(areaTypeEnum)) {
+            areaLayersDto.setGid(Long.parseLong(layer.getSqlFilter()));
+        }
+        if (AreaTypeEnum.areagroup.equals(areaTypeEnum)) {
+            areaLayersDto.setAreaGroupName(layer.getSqlFilter());
+        }
+        layerSettingsDto.addAreaLayer(areaLayersDto);
     }
 
     public static List<Long> getServiceLayerIds(List<? extends LayersDto> layers) {
@@ -255,7 +282,10 @@ public class MapConfigHelper {
         }
         List<Long> ids = new ArrayList<>();
         for (LayersDto layer : layers) {
-            ids.add(Long.parseLong(layer.getServiceLayerId()));
+            String serviceLayerId = layer.getServiceLayerId();
+            if (serviceLayerId != null) {
+                ids.add(Long.parseLong(serviceLayerId));
+            }
         }
         return ids;
     }
@@ -266,7 +296,7 @@ public class MapConfigHelper {
         }
         List<Long> userAreaIds = new ArrayList<>();
         for (LayerAreaDto layerDto : layers) {
-            if (layerDto.getAreaType().getType().equalsIgnoreCase(USER_AREA)) {
+            if (layerDto.getAreaType() != null && USER_AREA.equalsIgnoreCase(layerDto.getAreaType().getType())) {
                 userAreaIds.add(layerDto.getGid());
             }
         }

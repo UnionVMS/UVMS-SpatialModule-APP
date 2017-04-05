@@ -12,14 +12,28 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.impl;
 
+import static eu.europa.ec.fisheries.uvms.spatial.service.mapper.ConfigurationMapper.getDefaultNodeConfiguration;
+import static eu.europa.ec.fisheries.uvms.spatial.service.mapper.ConfigurationMapper.mergeConfiguration;
+import static eu.europa.ec.fisheries.uvms.spatial.service.mapper.ConfigurationMapper.mergeNoMapConfiguration;
+import static eu.europa.ec.fisheries.uvms.spatial.service.mapper.ConfigurationMapper.mergeUserConfiguration;
+import static eu.europa.ec.fisheries.uvms.spatial.service.mapper.ConfigurationMapper.resetUserConfiguration;
+
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.reporting.model.schemas.ReportGetStartAndEndDateRS;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.AreaDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.ProjectionEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.ReportConnectServiceAreasEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.ReportConnectSpatialEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.ServiceLayerEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.mapper.ReportConnectSpatialMapper;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.CoordinatesFormat;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.MapConfigurationType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ScaleBarUnits;
@@ -31,6 +45,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveOrUpdateMapC
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.MapConfigService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.ReportingService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialRepository;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.AreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.ConfigDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.ControlDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.DisplayProjectionDto;
@@ -51,29 +66,20 @@ import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.ReportProperties;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.StyleSettingsDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.SystemSettingsDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.VisibilitySettingsDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.util.MapConfigHelper;
-import eu.europa.ec.fisheries.uvms.spatial.service.mapper.MapConfigMapper;
-import eu.europa.ec.fisheries.uvms.spatial.service.mapper.ProjectionMapper;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.ProjectionEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.ReportConnectServiceAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.ReportConnectSpatialEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.ServiceLayerEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.enums.AreaTypeEnum;
 import eu.europa.ec.fisheries.uvms.spatial.service.enums.LayerTypeEnum;
+import eu.europa.ec.fisheries.uvms.spatial.service.mapper.MapConfigMapper;
+import eu.europa.ec.fisheries.uvms.spatial.service.mapper.ProjectionMapper;
+import eu.europa.ec.fisheries.uvms.spatial.service.mapper.ReportConnectSpatialMapper;
+import eu.europa.ec.fisheries.uvms.spatial.service.util.MapConfigHelper;
 import eu.europa.ec.fisheries.uvms.spatial.service.util.SpatialValidator;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.transaction.Transactional;
-
-import static eu.europa.ec.fisheries.uvms.spatial.service.mapper.ConfigurationMapper.*;
+import org.apache.commons.collections.CollectionUtils;
 
 @Stateless
 @Transactional
@@ -108,53 +114,64 @@ public class MapConfigServiceBean implements MapConfigService {
             throw new IllegalArgumentException("ARGUMENT CAN NOT BE NULL");
         }
 
-        for (Long id : request.getSpatialConnectIds()) {
-            List<ReportConnectSpatialEntity> entityList = repository.findReportConnectSpatialByConnectId(id);
+        List<Long> spatialConnectIds = request.getSpatialConnectIds();
 
-            ReportConnectSpatialEntity entity = null;
-
-            if (entityList != null && !entityList.isEmpty()) {
-                entity = entityList.get(0);
-            }
-
-            if (entity != null) {
-                repository.deleteReportConnectServiceAreas(entity.getReportConnectServiceAreas());
-                repository.deleteEntity(entity);
-            }
+        if (!CollectionUtils.isEmpty(spatialConnectIds)) {
+            repository.deleteReportConnectServiceAreas(spatialConnectIds);
         }
     }
 
     @Override
     public MapConfigurationType getMapConfigurationType(final Long reportId, Collection<String> permittedServiceLayers) throws ServiceException {
-        SpatialValidator.validate(reportId);
+
+        if (reportId == null) {
+            throw new IllegalArgumentException("ARGUMENT CAN NOT BE NULL");
+        }
+
         ReportConnectSpatialEntity entity = repository.findReportConnectSpatialByReportId(reportId);
+
         if (entity == null) {
             return null;
         }
-        MapConfigurationType mapConfigurationType = ReportConnectSpatialMapper.INSTANCE.reportConnectSpatialEntityToMapConfigurationType(entity);
-        VisibilitySettingsDto visibilitySettings = MapConfigHelper.getVisibilitySettings(entity.getVisibilitySettings());
-        mapConfigurationType.setVisibilitySettings(MapConfigMapper.INSTANCE.getVisibilitySettingsType(visibilitySettings));
-        StyleSettingsDto styleSettingsDto = MapConfigHelper.getStyleSettings(entity.getStyleSettings());
-        mapConfigurationType.setStyleSettings(MapConfigMapper.INSTANCE.getStyleSettingsType(styleSettingsDto));
+
         LayerSettingsDto layerSettingsDto = MapConfigHelper.getLayerSettingsForMap(entity.getReportConnectServiceAreas());
+
+        MapConfigurationType result = ReportConnectSpatialMapper.INSTANCE.reportConnectSpatialEntityToMapConfigurationType(entity);
+        VisibilitySettingsDto visibilitySettings = MapConfigHelper.getVisibilitySettings(entity.getVisibilitySettings());
+        result.setVisibilitySettings(MapConfigMapper.INSTANCE.getVisibilitySettingsType(visibilitySettings));
+        StyleSettingsDto styleSettingsDto = MapConfigHelper.getStyleSettings(entity.getStyleSettings());
+        result.setStyleSettings(MapConfigMapper.INSTANCE.getStyleSettingsType(styleSettingsDto));
+
         updateLayerSettings(layerSettingsDto, permittedServiceLayers);
-        mapConfigurationType.setLayerSettings(MapConfigMapper.INSTANCE.getLayerSettingsType(layerSettingsDto));
+
+        result.setLayerSettings(MapConfigMapper.INSTANCE.getLayerSettingsType(layerSettingsDto));
         Map<String, ReferenceDataPropertiesDto> referenceData = MapConfigHelper.getReferenceDataSettings(entity.getReferenceData());
+
         updateReferenceDataSettings(referenceData, permittedServiceLayers);
-        mapConfigurationType.setReferenceDatas(MapConfigMapper.INSTANCE.getReferenceDataType(referenceData));
-        return mapConfigurationType;
+
+        result.setReferenceDatas(MapConfigMapper.INSTANCE.getReferenceDataType(referenceData));
+
+        return result;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public SpatialGetMapConfigurationRS getMapConfiguration(SpatialGetMapConfigurationRQ mapConfigurationRQ) throws ServiceException {
+
+        if (mapConfigurationRQ == null) {
+            throw new IllegalArgumentException("MAP CONFIGURATION CAN NOT BE NULL");
+        }
+
         long reportId = mapConfigurationRQ.getReportId();
         Collection<String> permittedServiceLayers = mapConfigurationRQ.getPermittedServiceLayers();
         return new SpatialGetMapConfigurationRS(getMapConfigurationType(reportId, permittedServiceLayers));
     }
 
     @Override
-     @SneakyThrows
+    @SneakyThrows
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public SpatialSaveOrUpdateMapConfigurationRS handleSaveOrUpdateSpatialMapConfiguration(final SpatialSaveOrUpdateMapConfigurationRQ request) {
         SpatialValidator.validate(request);
@@ -306,7 +323,13 @@ public class MapConfigServiceBean implements MapConfigService {
         if (entity != null) {
             entity.setScaleBarType(request.getMapConfiguration().getScaleBarUnits());
             entity.setDisplayFormatType(request.getMapConfiguration().getCoordinatesFormat());
-            repository.deleteReportConnectServiceAreas(entity.getReportConnectServiceAreas());
+
+            Set<ReportConnectServiceAreasEntity> reportConnectServiceAreas = entity.getReportConnectServiceAreas();
+            List<Long> ids = new ArrayList();
+            for (ReportConnectServiceAreasEntity r : reportConnectServiceAreas) {
+                ids.add(r.getId());
+            }
+            repository.deleteReportConnectServiceAreas(ids);
         } else {
             entity = ReportConnectSpatialMapper.INSTANCE.mapConfigurationTypeToReportConnectSpatialEntity(request.getMapConfiguration());
         }
@@ -458,7 +481,7 @@ public class MapConfigServiceBean implements MapConfigService {
             for (LayersDto layersDto : layers) {
                 for (ServiceLayerEntity serviceLayerEntity : serviceLayers) {
                     if (Long.parseLong(layersDto.getServiceLayerId()) == serviceLayerEntity.getId()) {
-                        if (serviceLayerEntity.getProviderFormat().getServiceType().equalsIgnoreCase(PROVIDER_FORMAT_BING) && bingApiKey == null) {
+                        if (serviceLayerEntity.getProviderFormat() != null && PROVIDER_FORMAT_BING.equalsIgnoreCase(serviceLayerEntity.getProviderFormat().getServiceType()) && bingApiKey == null) {
                             layersToExclude.add(layersDto);
                         } else {
                             layersDto.setName(serviceLayerEntity.getName());

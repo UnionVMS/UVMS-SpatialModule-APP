@@ -8,11 +8,9 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
 package eu.europa.ec.fisheries.uvms.spatial.service.enums;
 
-/**
- * Created by padhyad on 3/7/2016.
- */
 public enum LayerTypeEnum {
 
     BASE("base"),
@@ -26,10 +24,6 @@ public enum LayerTypeEnum {
         this.type = type;
     }
 
-    public String getType() {
-        return type;
-    }
-
     public static LayerTypeEnum getLayerType(String type) {
         for (LayerTypeEnum layer : LayerTypeEnum.values()) {
             if (layer.getType().equals(type)) {
@@ -39,4 +33,7 @@ public enum LayerTypeEnum {
         return null;
     }
 
+    public String getType() {
+        return type;
+    }
 }

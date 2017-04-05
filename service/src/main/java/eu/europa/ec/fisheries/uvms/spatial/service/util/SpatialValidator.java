@@ -49,7 +49,4 @@ public class SpatialValidator {
         validateNull(request);
     }
 
-    public static void validate(Long reportId) {
-        validateNull(reportId);
-    }
 }

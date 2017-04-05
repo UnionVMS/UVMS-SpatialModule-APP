@@ -12,31 +12,29 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.entity;
 
-import eu.europa.ec.fisheries.uvms.domain.CharBooleanConverter;
-
-import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import java.util.Set;
+
 import eu.europa.ec.fisheries.uvms.domain.BaseEntity;
+import eu.europa.ec.fisheries.uvms.domain.CharBooleanConverter;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.RequiredArgsConstructor;
 import lombok.ToString;
-
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 
 
 @Entity
@@ -69,8 +67,7 @@ public class ServiceLayerEntity extends BaseEntity {
 	@SequenceGenerator(name="SEQ_GEN", sequenceName="service_layer_seq", allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN")
 	private Long id;
-	
-	
+
     @ManyToOne
     @JoinColumn(name = "provider_format_id", nullable = false)
     private ProviderFormatEntity providerFormat;

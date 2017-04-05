@@ -8,17 +8,27 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
-package eu.europa.ec.fisheries.uvms.spatial.message.event;
 
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
+package eu.europa.ec.fisheries.uvms.spatial.message.event;
 
 import javax.jms.TextMessage;
 
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AllAreaTypesRequest;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByCodeRequest;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestLocationSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.PingRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialDeleteMapConfigurationRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialFault;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialGetMapConfigurationRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveOrUpdateMapConfigurationRQ;
+
 public class SpatialMessageEvent {
 
-
     private TextMessage message;
-
     private AreaByLocationSpatialRQ areaByLocationSpatialRQ;
     private ClosestAreaSpatialRQ closestAreaSpatialRQ;
     private SpatialEnrichmentRQ spatialEnrichmentRQ;
