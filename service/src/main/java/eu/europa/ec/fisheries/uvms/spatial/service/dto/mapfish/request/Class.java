@@ -25,7 +25,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 public class Class {
 
     @JsonProperty("color")
-    private String color;
+    private String color = "#000000";
     @JsonProperty("text")
     private String text;
     @JsonIgnore
