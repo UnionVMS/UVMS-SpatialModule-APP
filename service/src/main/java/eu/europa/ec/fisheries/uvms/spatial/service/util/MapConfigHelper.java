@@ -46,12 +46,14 @@ import org.slf4j.LoggerFactory;
 public class MapConfigHelper {
 
     private static final String USER_AREA = "userarea";
-
     private static final String PROVIDER_FORMAT_BING = "BING";
-
     private static final String GEOSERVER = "geoserver";
-
     private static Logger LOGGER =  LoggerFactory.getLogger(LoggerFactory.class);
+
+
+    private MapConfigHelper() {
+
+    }
 
     public static boolean isVisibilitySettingsOverriddenByReport(VisibilitySettingsDto visibilitySettingsDto) {
         boolean isOverridden = false;
@@ -239,26 +241,33 @@ public class MapConfigHelper {
                     continue;
                 }
 
-                switch (layerTypeEnum) {
-                    case BASE:
-                        LayersDto baseLayersDto = new LayersDto(layer.getServiceLayer().getName(), String.valueOf(layer.getServiceLayer().getId()), layer.getServiceLayer().getSubType(), Long.valueOf(layer.getLayerOrder()));
-                        result.addBaseLayer(baseLayersDto);
-                        break;
-                    case ADDITIONAL:
-                        LayersDto additionalLayersDto = new LayersDto(layer.getServiceLayer().getName(), String.valueOf(layer.getServiceLayer().getId()), layer.getServiceLayer().getSubType(), Long.valueOf(layer.getLayerOrder()));
-                        result.addAdditionalLayer(additionalLayersDto);
-                        break;
-                    case PORT:
-                        LayersDto portLayersDto = new LayersDto(layer.getServiceLayer().getName(), String.valueOf(layer.getServiceLayer().getId()), layer.getServiceLayer().getSubType(), Long.valueOf(layer.getLayerOrder()));
-                        result.addPortLayer(portLayersDto);
-                        break;
-                    case AREA:
-                        addAreaLayer(result, layer);
-                        break;
+                ServiceLayerEntity serviceLayer = layer.getServiceLayer();
+                if (serviceLayer != null) {
+                    addLayer(result, serviceLayer, layerTypeEnum, layer);
                 }
             }
         }
         return result;
+    }
+
+    private static void addLayer(LayerSettingsDto result, ServiceLayerEntity serviceLayerEntity, LayerTypeEnum layerTypeEnum, ReportConnectServiceAreasEntity layer) {
+        switch (layerTypeEnum) {
+            case BASE:
+                LayersDto baseLayersDto = new LayersDto(serviceLayerEntity.getName(), String.valueOf(serviceLayerEntity.getId()), serviceLayerEntity.getSubType(), Long.valueOf(layer.getLayerOrder()));
+                result.addBaseLayer(baseLayersDto);
+                break;
+            case ADDITIONAL:
+                LayersDto additionalLayersDto = new LayersDto(serviceLayerEntity.getName(), String.valueOf(serviceLayerEntity.getId()), serviceLayerEntity.getSubType(), Long.valueOf(layer.getLayerOrder()));
+                result.addAdditionalLayer(additionalLayersDto);
+                break;
+            case PORT:
+                LayersDto portLayersDto = new LayersDto(serviceLayerEntity.getName(), String.valueOf(serviceLayerEntity.getId()), serviceLayerEntity.getSubType(), Long.valueOf(layer.getLayerOrder()));
+                result.addPortLayer(portLayersDto);
+                break;
+            case AREA:
+                addAreaLayer(result, layer);
+                break;
+        }
     }
 
     private static void addAreaLayer(LayerSettingsDto layerSettingsDto, ReportConnectServiceAreasEntity layer) {

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>eu.europa.ec.fisheries.uvms.spatial</groupId>
@@ -13,7 +14,7 @@
 
         <!-- The spatial name is used as a common point to rename the application alias visible in USM-->
         <spatial.name>Spatial</spatial.name>
-        <spatial.model>1.0.4</spatial.model>
+        <spatial.model>1.0.5-SNAPSHOT</spatial.model>
         <reporting.model>1.0.2</reporting.model>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -30,7 +31,7 @@
         <hibernate.version>4.3.5.Final</hibernate.version>
         <hibernate-spatial.version>4.3</hibernate-spatial.version>
         <geotools.version>14-M1</geotools.version>
-        <uvms.commons.version>2.0.20</uvms.commons.version>
+        <uvms.commons.version>2.0.18-SNAPSHOT</uvms.commons.version>
         <uvms.test.version>0.0.4</uvms.test.version>
         <hibernate.validator.version>5.2.1.Final</hibernate.validator.version>
         <usm4uvms.version>2.0.19</usm4uvms.version>
