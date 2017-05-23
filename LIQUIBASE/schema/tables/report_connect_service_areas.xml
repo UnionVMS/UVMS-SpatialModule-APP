@@ -16,7 +16,9 @@
             <column name="report_connect_spatial_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="service_layer_id" remarks="soft link to the Layers table" type="TINYINT" nullable="false"/>
+            <column name="service_layer_id" remarks="soft link to the Layers table" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
             <column name="sql_filter" remarks="this will contain the actual area ID in a particular area table" type="CLOB"/>
             <column name="layer_order" remarks="The order of the layer group" type="TINYINT">
                 <constraints nullable="false"/>
