@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
     <changeSet author="emrinalgr" id="1">
@@ -16,7 +16,7 @@
             <column name="report_connect_spatial_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="service_layer_id" remarks="soft link to the Layers table" type="TINYINT"/>
+            <column name="service_layer_id" remarks="soft link to the Layers table" type="TINYINT" nullable="false"/>
             <column name="sql_filter" remarks="this will contain the actual area ID in a particular area table" type="CLOB"/>
             <column name="layer_order" remarks="The order of the layer group" type="TINYINT">
                 <constraints nullable="false"/>
