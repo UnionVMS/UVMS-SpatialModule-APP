@@ -26,9 +26,11 @@ import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageErrorEven
 import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageEvent;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMarshallException;
 import eu.europa.ec.fisheries.uvms.spatial.model.mapper.JAXBMarshaller;
+import lombok.extern.slf4j.Slf4j;
 
 @Stateless
 @LocalBean
+@Slf4j
 public class SpatialMessageServiceBean extends AbstractProducer {
 
     private static final String MODULE_NAME = "spatial";
@@ -45,7 +47,7 @@ public class SpatialMessageServiceBean extends AbstractProducer {
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void sendModuleErrorResponseMessage(@Observes @SpatialMessageErrorEvent SpatialMessageEvent message){
         try {
-            LOG.info("Sending message back to recipient from SpatialModule with correlationId {} on queue: {}", message.getMessage().getJMSMessageID(),
+            log.debug("Sending message back to recipient from SpatialModule with correlationId {} on queue: {}", message.getMessage().getJMSMessageID(),
                     message.getMessage().getJMSReplyTo());
             connectToQueue();
             Session session = getSession();
@@ -54,8 +56,8 @@ public class SpatialMessageServiceBean extends AbstractProducer {
             response.setJMSCorrelationID(message.getMessage().getJMSMessageID());
             session.createProducer(message.getMessage().getJMSReplyTo()).send(response);
         } catch (JMSException | SpatialModelMarshallException e) {
-            LOG.error("Error when returning module spatial request", e);
-            LOG.error("[ Error when returning module spatial request. ] {} {}", e.getMessage(), e.getStackTrace());
+            log.error("Error when returning module spatial request", e);
+            log.error("[ Error when returning module spatial request. ] {} {}", e.getMessage(), e.getStackTrace());
         } finally {
             disconnectQueue();
         }

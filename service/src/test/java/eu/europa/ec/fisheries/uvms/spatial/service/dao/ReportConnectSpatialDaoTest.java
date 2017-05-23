@@ -10,25 +10,25 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.service.dao;
 
+import static com.ninja_squad.dbsetup.Operations.sequenceOf;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
+import javax.persistence.EntityTransaction;
+import java.util.Arrays;
+
 import com.ninja_squad.dbsetup.DbSetup;
 import com.ninja_squad.dbsetup.destination.DataSourceDestination;
 import com.ninja_squad.dbsetup.operation.Operation;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.ProjectionEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.ReportConnectSpatialEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.CoordinatesFormat;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ScaleBarUnits;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.ProjectionEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.ReportConnectSpatialEntity;
 import eu.europa.ec.fisheries.uvms.spatial.utility.BaseSpatialDaoTest;
 import lombok.SneakyThrows;
 import org.junit.Before;
 import org.junit.Test;
-
-import javax.persistence.EntityTransaction;
-
-import java.util.Arrays;
-
-import static com.ninja_squad.dbsetup.Operations.sequenceOf;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
 
 public class ReportConnectSpatialDaoTest extends BaseSpatialDaoTest {
 
@@ -68,7 +68,6 @@ public class ReportConnectSpatialDaoTest extends BaseSpatialDaoTest {
         assertEquals(ScaleBarUnits.IMPERIAL, entity.getScaleBarType());
         assertNotNull(entity.getId());
 
-
     }
 
     @Test
@@ -76,16 +75,23 @@ public class ReportConnectSpatialDaoTest extends BaseSpatialDaoTest {
     public void shouldDeleteReports(){
 
         EntityTransaction tx = em.getTransaction();
-
         assertEquals(2, dao.findAllEntity(ReportConnectSpatialEntity.class).size());
-
         tx.begin();
-
         dao.deleteById(Arrays.asList(100L, 200L));
-
         tx.commit();
-
         assertEquals(0, dao.findAllEntity(ReportConnectSpatialEntity.class).size());
 
+    }
+
+    @Test
+    @SneakyThrows
+    public void deleteByIdWithNullShouldNotThrowError() {
+        dao.deleteById(null);
+    }
+
+    @Test
+    @SneakyThrows
+    public void findByReportIdWithNonExistentReportShouldReturnNull() {
+        assertNull(dao.findByReportId(1221020L));
     }
 }

@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -106,7 +107,7 @@ public class MapConfigServiceTest extends BaseUnitilsTest {
         areasEntity.setServiceLayer(layer2);
         entity.setReportConnectServiceAreas(newSet(areasEntity));
 
-        when(repository.findServiceLayerEntityByIds(Arrays.asList(1L))).thenReturn(Arrays.asList(layer2));
+        when(repository.findServiceLayerEntityByIds(Collections.singletonList(1L))).thenReturn(Collections.singletonList(layer2));
         when(repository.findReportConnectSpatialByReportId(100L)).thenReturn(entity);
 
         SpatialGetMapConfigurationRS mapConfiguration = mapConfigServiceBean.getMapConfiguration(rq);
@@ -115,8 +116,6 @@ public class MapConfigServiceTest extends BaseUnitilsTest {
 
         assertEquals(1, layerSettings.getPortLayers().size());
         assertEquals("LAYER2", layerSettings.getPortLayers().get(0).getName());
-
-        System.out.println(mapConfiguration);
 
     }
 

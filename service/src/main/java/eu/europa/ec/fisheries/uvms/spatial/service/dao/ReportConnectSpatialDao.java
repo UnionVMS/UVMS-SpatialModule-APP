@@ -12,25 +12,26 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.dao;
 
-import com.google.common.collect.ImmutableMap;
-import eu.europa.ec.fisheries.uvms.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.ReportConnectSpatialEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.ProjectionDto;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.transform.Transformers;
+import static eu.europa.ec.fisheries.uvms.service.QueryParameter.with;
+import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
+
 import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Map;
 
-import static eu.europa.ec.fisheries.uvms.service.QueryParameter.with;
+import com.google.common.collect.ImmutableMap;
+import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.ProjectionDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.ReportConnectSpatialEntity;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.transform.Transformers;
 
 public class ReportConnectSpatialDao extends AbstractDAO<ReportConnectSpatialEntity> {
 
-    private EntityManager em;
-
     private static final String REPORT_ID = "reportId";
+    private EntityManager em;
 
     public ReportConnectSpatialDao(EntityManager em) {
         this.em = em;
@@ -44,12 +45,14 @@ public class ReportConnectSpatialDao extends AbstractDAO<ReportConnectSpatialEnt
 
     public ReportConnectSpatialEntity findByReportId(Long reportId) throws ServiceException {
 
+        ReportConnectSpatialEntity entity = null;
         List<ReportConnectSpatialEntity> list =
                 findEntityByNamedQuery(ReportConnectSpatialEntity.class,
                         ReportConnectSpatialEntity.FIND_BY_REPORT_ID, with(REPORT_ID, reportId).parameters(), 1);
-
-        return list.get(0);
-
+        if (isNotEmpty(list)) {
+            entity = list.get(0);
+        }
+        return entity;
     }
 
     public List<ReportConnectSpatialEntity> findByConnectId(Long id) throws ServiceException {
@@ -65,9 +68,11 @@ public class ReportConnectSpatialDao extends AbstractDAO<ReportConnectSpatialEnt
 
     public void deleteById(List<Long> reportIds) throws ServiceException {
 
-        deleteEntityByNamedQuery(ReportConnectSpatialEntity.class, ReportConnectSpatialEntity.DELETE_BY_ID_LIST,
-                with("idList", reportIds).parameters()
-        );
+        if (isNotEmpty(reportIds)) {
+            deleteEntityByNamedQuery(ReportConnectSpatialEntity.class, ReportConnectSpatialEntity.DELETE_BY_ID_LIST,
+                    with("idList", reportIds).parameters()
+            );
+        }
     }
 
     public List<ProjectionDto> findProjectionByMap(long reportId) {
