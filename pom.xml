@@ -22,8 +22,8 @@
 
         <!-- The spatial name is used as a common point to rename the application alias visible in USM-->
         <spatial.name>Spatial</spatial.name>
-        <spatial.model>0.5.5-SNAPSHOT</spatial.model>
-        <reporting.model>0.5.6-SNAPSHOT</reporting.model>
+        <spatial.model>0.5.5.presweden</spatial.model>
+        <reporting.model>0.5.6.presweden</reporting.model>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <jts.version>1.13</jts.version>
