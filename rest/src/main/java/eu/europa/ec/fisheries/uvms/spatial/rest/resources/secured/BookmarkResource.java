@@ -29,6 +29,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import eu.europa.ec.fisheries.uvms.constants.AuthConstants;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
@@ -53,7 +54,7 @@ public class BookmarkResource extends UnionVMSResource {
                          @HeaderParam(AuthConstants.HTTP_HEADER_ROLE_NAME) String roleName) throws ServiceException {
 
         final String username = request.getRemoteUser();
-        ArrayList<Bookmark> bookmarks = new ArrayList<>(bookmarkService.listByUsername(username));
+        List<Bookmark> bookmarks = new ArrayList<>(bookmarkService.listByUsername(username));
         Collections.sort(bookmarks);
         return createSuccessResponse(bookmarks);
     }
