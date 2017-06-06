@@ -10,15 +10,16 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.service.mapper;
 
+import java.util.List;
+import java.util.Set;
+
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.bookmark.Bookmark;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.BookmarkEntity;
-import java.util.Set;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
-import java.util.List;
 
 @Mapper
 public interface BookmarkMapper {

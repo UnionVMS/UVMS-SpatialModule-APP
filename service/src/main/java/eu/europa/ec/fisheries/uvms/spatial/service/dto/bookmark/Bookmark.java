@@ -10,8 +10,11 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.service.dto.bookmark;
 
+import static eu.europa.ec.fisheries.uvms.common.DateUtils.stringToDate;
+
 import java.util.HashMap;
 import java.util.Map;
+
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -22,7 +25,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Bookmark {
+public class Bookmark implements Comparable<Bookmark> {
 
     @JsonProperty("id")
     private Long id;
@@ -223,4 +226,11 @@ public class Bookmark {
         return new EqualsBuilder().append(id, rhs.id).append(name, rhs.name).append(srs, rhs.srs).append(extent, rhs.extent).append(createdBy, rhs.createdBy).append(additionalProperties, rhs.additionalProperties).isEquals();
     }
 
+    @Override public int compareTo(Bookmark o) {
+        if (stringToDate(this.createdBy).before(stringToDate(o.createdBy))) {
+            return 1;
+        } else if (stringToDate(this.createdBy).after(stringToDate(o.createdBy))) {
+            return -1;
+        } else return 0;
+    }
 }

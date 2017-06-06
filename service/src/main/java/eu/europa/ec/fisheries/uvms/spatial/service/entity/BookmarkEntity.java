@@ -12,18 +12,18 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.entity;
 
-import eu.europa.ec.fisheries.uvms.domain.BaseEntity;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+import eu.europa.ec.fisheries.uvms.domain.BaseEntity;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Entity
 @Table(name = "bookmark")
@@ -51,5 +51,4 @@ public class BookmarkEntity extends BaseEntity {
 
     @Column(nullable = false)
     private String extent;
-
 }
