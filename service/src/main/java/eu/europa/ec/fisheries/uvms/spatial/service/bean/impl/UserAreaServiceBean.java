@@ -12,30 +12,13 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.impl;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.io.ParseException;
-import eu.europa.ec.fisheries.uvms.common.utils.GeometryUtils;
-import eu.europa.ec.fisheries.uvms.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.mapper.GeometryMapper;
-import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DatabaseDialect;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DatabaseDialectFactory;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.USMSpatial;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserScopeEntity;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialRepository;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.UserAreaService;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.UserAreaLayerDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.UserAreaDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson.UserAreaGeoJsonDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.exception.SpatialServiceErrors;
-import eu.europa.ec.fisheries.uvms.spatial.service.exception.SpatialServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.service.mapper.UserAreaMapper;
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
+import javax.ejb.Local;
+import javax.ejb.Stateless;
+import javax.jms.JMSException;
+import javax.jms.TextMessage;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -44,24 +27,103 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import javax.annotation.PostConstruct;
+
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.io.ParseException;
+import eu.europa.ec.fisheries.uvms.common.utils.GeometryUtils;
+import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.mapper.GeometryMapper;
+import eu.europa.ec.fisheries.uvms.message.MessageException;
+import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
+import eu.europa.ec.fisheries.uvms.spatial.message.service.SpatialConsumerBean;
+import eu.europa.ec.fisheries.uvms.spatial.message.service.UserProducerBean;
+import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMapperException;
+import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMarshallException;
+import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelValidationException;
+import eu.europa.ec.fisheries.uvms.spatial.model.mapper.JAXBMarshaller;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialFault;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialRepository;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.UserAreaService;
+import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DatabaseDialect;
+import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DatabaseDialectFactory;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.UserAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson.UserAreaGeoJsonDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.UserAreaLayerDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.USMSpatial;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserScopeEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.exception.SpatialServiceErrors;
+import eu.europa.ec.fisheries.uvms.spatial.service.exception.SpatialServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.service.mapper.UserAreaMapper;
+import eu.europa.ec.fisheries.uvms.user.model.exception.ModelMarshallException;
+import eu.europa.ec.fisheries.uvms.user.model.mapper.UserModuleRequestMapper;
+import eu.europa.ec.fisheries.wsdl.user.module.CreateDatasetResponse;
+import eu.europa.ec.fisheries.wsdl.user.module.FilterDatasetResponse;
+import eu.europa.ec.fisheries.wsdl.user.types.DatasetExtension;
+import eu.europa.ec.fisheries.wsdl.user.types.DatasetFilter;
+import eu.europa.ec.fisheries.wsdl.user.types.DatasetList;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
-import javax.ejb.EJB;
-import javax.ejb.Local;
-import javax.ejb.Stateless;
-import javax.transaction.Transactional;
 
 @Stateless
 @Local(UserAreaService.class)
 @Slf4j
 public class UserAreaServiceBean implements UserAreaService {
 
-    private @EJB SpatialRepository repository;
-    private @EJB AreaTypeNamesService areaTypeNamesService;
-    private @EJB USMService usmService;
-    private @EJB PropertiesBean properties;
+    public static final String ERROR_WHEN_MARSHALLING_DATA = "[ Error when marshalling data. ] {}";
+    public static final String ERROR_WHEN_MARSHALLING_OBJECT_TO_STRING = "Error when marshalling object to String";
+    @EJB
+    private SpatialRepository repository;
+
+    @EJB
+    private AreaTypeNamesService areaTypeNamesService;
+
+    @EJB
+    private USMService usmService;
+
+    @EJB
+    private PropertiesBean properties;
+
+    @EJB
+    private UserProducerBean userProducer;
+
+    @EJB
+    private SpatialConsumerBean consumer;
+
     private DatabaseDialect dialect;
+
+    private static void validateResponse(TextMessage response, String correlationId) throws SpatialModelValidationException {
+
+        try {
+            if (response == null) {
+                throw new SpatialModelValidationException("Error when validating response in ResponseMapper: Response is Null");
+            }
+
+            if (response.getJMSCorrelationID() == null) {
+                throw new SpatialModelValidationException("No correlationId in response (Null) . Expected was: " + correlationId);
+            }
+
+            if (!correlationId.equalsIgnoreCase(response.getJMSCorrelationID())) {
+                throw new SpatialModelValidationException("Wrong correlationId in response. Expected was: " + correlationId + " But actual was: " + response.getJMSCorrelationID());
+            }
+
+            try {
+                SpatialFault fault = JAXBMarshaller.unmarshall(response, SpatialFault.class);
+                throw new SpatialModelValidationException(fault.getCode() + " : " + fault.getFault());
+            } catch (SpatialModelMarshallException e) {
+                log.info("Expected Exception"); // Exception received in case if the validation is success
+            }
+
+        } catch (JMSException e) {
+            log.error("JMS exception during validation ", e);
+            throw new SpatialModelValidationException("JMS exception during validation " + e.getMessage());
+        }
+    }
 
     @PostConstruct
     public void init(){
@@ -72,29 +134,88 @@ public class UserAreaServiceBean implements UserAreaService {
     @Transactional
     public Long storeUserArea(UserAreaGeoJsonDto userAreaDto, String userName) throws ServiceException {
 
-        UserAreasEntity userAreaByUserNameAndName = repository.getUserAreaByUserNameAndName(userName, userAreaDto.getName());
+        UserAreasEntity persistedEntity;
 
-        if (userAreaByUserNameAndName != null){
-            throw new SpatialServiceException(SpatialServiceErrors.USER_AREA_ALREADY_EXISTING);
-        }
+        try {
 
-        else {
+            DatasetList datasetList = fetchSpatialDatasetListFromUSM();
 
-            userAreaDto.getGeometry().setSRID(dialect.defaultSRID());
-            UserAreasEntity userAreasEntity = UserAreaMapper.mapper().fromDtoToEntity(userAreaDto);
-            userAreasEntity.setUserName(userName);
-            userAreasEntity.setCreatedOn(new Date());
-
-            UserAreasEntity persistedEntity = repository.save(userAreasEntity);
-
-            if (StringUtils.isNotBlank(persistedEntity.getDatasetName())) {
-                usmService.createDataset(USMSpatial.APPLICATION_NAME, persistedEntity.getDatasetName(), createDescriminator(persistedEntity), USMSpatial.USM_DATASET_CATEGORY, USMSpatial.USM_DATASET_DESCRIPTION);
+            for (DatasetExtension extension : datasetList.getList()) {
+                if (extension != null && extension.getName().equals(userAreaDto.getDatasetName())) {
+                    throw new SpatialServiceException(SpatialServiceErrors.DATA_SET_NAME_ALREADY_IN_USE);
+                }
             }
-            return persistedEntity.getId();
+
+            persistedEntity = repository.getUserAreaByUserNameAndName(userName, userAreaDto.getName());
+
+            if (persistedEntity != null) {
+                throw new SpatialServiceException(SpatialServiceErrors.USER_AREA_ALREADY_EXISTING);
+            } else {
+
+                userAreaDto.getGeometry().setSRID(dialect.defaultSRID());
+                UserAreasEntity userAreasEntity = UserAreaMapper.mapper().fromDtoToEntity(userAreaDto);
+                userAreasEntity.setUserName(userName);
+                userAreasEntity.setCreatedOn(new Date());
+
+                persistedEntity = repository.save(userAreasEntity);
+
+                if (StringUtils.isNotBlank(persistedEntity.getDatasetName())) {
+                    persistDatasetInUSM(persistedEntity);
+                }
+            }
+        } catch (MessageException | ModelMarshallException | SpatialModelMapperException e) {
+            throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
         }
+
+        return persistedEntity.getId();
 
     }
 
+    private DatasetList fetchSpatialDatasetListFromUSM() throws ModelMarshallException, MessageException, SpatialModelMapperException {
+        DatasetFilter filter = new DatasetFilter();
+        filter.setApplicationName(USMSpatial.APPLICATION_NAME);
+        filter.setCategory(USMSpatial.USM_DATASET_CATEGORY);
+
+        String request = UserModuleRequestMapper.mapToFindDatasetRequest(filter);
+        String correlationId = userProducer.sendModuleMessage(request, consumer.getDestination());
+        TextMessage message = consumer.getMessage(correlationId, TextMessage.class);
+        return mapToFindDatasetResponse(message, correlationId);
+    }
+
+    private void persistDatasetInUSM(UserAreasEntity persistedEntity) throws ModelMarshallException, MessageException, SpatialModelMapperException {
+        DatasetExtension dataset = new DatasetExtension();
+        dataset.setApplicationName(USMSpatial.APPLICATION_NAME);
+        dataset.setDiscriminator(createDescriminator(persistedEntity));
+        dataset.setName(persistedEntity.getDatasetName());
+        dataset.setCategory(USMSpatial.USM_DATASET_CATEGORY);
+        dataset.setDescription(USMSpatial.USM_DATASET_DESCRIPTION);
+        String payload = UserModuleRequestMapper.mapToCreateDatasetRequest(dataset);
+        String correlationId = userProducer.sendModuleMessage(payload, consumer.getDestination());
+        TextMessage message = consumer.getMessage(correlationId, TextMessage.class);
+        mapToCreateDatasetResponse(message, correlationId);
+    }
+
+    private DatasetList mapToFindDatasetResponse(TextMessage response, String correlationId) throws SpatialModelMapperException {
+        try {
+            validateResponse(response, correlationId);
+            FilterDatasetResponse createDatasetResponse = JAXBMarshaller.unmarshall(response, FilterDatasetResponse.class);
+            return createDatasetResponse.getDatasetList();
+        } catch (SpatialModelMarshallException e) {
+            log.error(ERROR_WHEN_MARSHALLING_DATA, e);
+            throw new SpatialModelMarshallException(ERROR_WHEN_MARSHALLING_OBJECT_TO_STRING, e);
+        }
+    }
+
+    private String mapToCreateDatasetResponse(TextMessage response, String correlationId) throws SpatialModelMapperException {
+        try {
+            validateResponse(response, correlationId);
+            CreateDatasetResponse createDatasetResponse = JAXBMarshaller.unmarshall(response, CreateDatasetResponse.class);
+            return createDatasetResponse.getResponse();
+        } catch (SpatialModelMarshallException e) {
+            log.error(ERROR_WHEN_MARSHALLING_DATA, e);
+            throw new SpatialModelMarshallException(ERROR_WHEN_MARSHALLING_OBJECT_TO_STRING, e);
+        }
+    }
 
     @Override
     @Transactional
