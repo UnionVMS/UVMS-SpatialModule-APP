@@ -39,8 +39,6 @@ import eu.europa.ec.fisheries.uvms.domain.BaseEntity;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.interceptors.SimpleTracingInterceptor;
 import eu.europa.ec.fisheries.uvms.mapper.GeometryMapper;
-import eu.europa.ec.fisheries.uvms.spatial.message.service.UploadConsumerBean;
-import eu.europa.ec.fisheries.uvms.spatial.message.service.UploadProducerBean;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
@@ -104,12 +102,6 @@ public class AreaServiceBean implements AreaService {
 
     @EJB
     private SpatialRepository repository;
-
-    @EJB
-    private UploadProducerBean uploadSender;
-
-    @EJB
-    private UploadConsumerBean uploadReceiver;
 
     @EJB
     private PropertiesBean properties;
