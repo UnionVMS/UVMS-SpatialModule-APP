@@ -75,6 +75,8 @@ import org.apache.commons.lang.StringUtils;
 @Slf4j
 public class UserAreaServiceBean implements UserAreaService {
 
+    public static final String ERROR_WHEN_MARSHALLING_DATA = "[ Error when marshalling data. ] {}";
+    public static final String ERROR_WHEN_MARSHALLING_OBJECT_TO_STRING = "Error when marshalling object to String";
     @EJB
     private SpatialRepository repository;
 
@@ -94,11 +96,6 @@ public class UserAreaServiceBean implements UserAreaService {
     private SpatialConsumerBean consumer;
 
     private DatabaseDialect dialect;
-
-    private static <T> T exception(SpatialModelMarshallException e) throws SpatialModelMarshallException {
-        log.error("[ Error when marshalling data. ] {}", e);
-        throw new SpatialModelMarshallException("Error when marshalling object to String", e);
-    }
 
     private static void validateResponse(TextMessage response, String correlationId) throws SpatialModelValidationException {
 
@@ -204,7 +201,8 @@ public class UserAreaServiceBean implements UserAreaService {
             FilterDatasetResponse createDatasetResponse = JAXBMarshaller.unmarshall(response, FilterDatasetResponse.class);
             return createDatasetResponse.getDatasetList();
         } catch (SpatialModelMarshallException e) {
-            return exception(e);
+            log.error(ERROR_WHEN_MARSHALLING_DATA, e);
+            throw new SpatialModelMarshallException(ERROR_WHEN_MARSHALLING_OBJECT_TO_STRING, e);
         }
     }
 
@@ -214,7 +212,8 @@ public class UserAreaServiceBean implements UserAreaService {
             CreateDatasetResponse createDatasetResponse = JAXBMarshaller.unmarshall(response, CreateDatasetResponse.class);
             return createDatasetResponse.getResponse();
         } catch (SpatialModelMarshallException e) {
-            return exception(e);
+            log.error(ERROR_WHEN_MARSHALLING_DATA, e);
+            throw new SpatialModelMarshallException(ERROR_WHEN_MARSHALLING_OBJECT_TO_STRING, e);
         }
     }
 
