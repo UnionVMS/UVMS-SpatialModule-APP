@@ -1,14 +1,13 @@
 /*
 Developed by the European Commission - Directorate General for Maritime Affairs and Fisheries @ European Union, 2015-2016.
 
-This file is part of the Integrated Fisheries Data Management (IFDM) Suite. The IFDM Suite is free software: you can redistribute it 
-and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of 
-the License, or any later version. The IFDM Suite is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
-without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more 
+This file is part of the Integrated Fisheries Data Management (IFDM) Suite. The IFDM Suite is free software: you can redistribute it
+and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of
+the License, or any later version. The IFDM Suite is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
-
 
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.impl;
 
@@ -63,6 +62,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.mapper.UserAreaMapper;
 import eu.europa.ec.fisheries.uvms.user.model.exception.ModelMarshallException;
 import eu.europa.ec.fisheries.uvms.user.model.mapper.UserModuleRequestMapper;
 import eu.europa.ec.fisheries.wsdl.user.module.CreateDatasetResponse;
+import eu.europa.ec.fisheries.wsdl.user.module.DeleteDatasetResponse;
 import eu.europa.ec.fisheries.wsdl.user.module.FilterDatasetResponse;
 import eu.europa.ec.fisheries.wsdl.user.types.DatasetExtension;
 import eu.europa.ec.fisheries.wsdl.user.types.DatasetFilter;
@@ -75,8 +75,9 @@ import org.apache.commons.lang.StringUtils;
 @Slf4j
 public class UserAreaServiceBean implements UserAreaService {
 
-    public static final String ERROR_WHEN_MARSHALLING_DATA = "[ Error when marshalling data. ] {}";
-    public static final String ERROR_WHEN_MARSHALLING_OBJECT_TO_STRING = "Error when marshalling object to String";
+    public static final String NOK = "NOK";
+    private static final String ERROR_WHEN_MARSHALLING_DATA = "[ Error when marshalling data. ] {}";
+    private static final String ERROR_WHEN_MARSHALLING_OBJECT_TO_STRING = "Error when marshalling object to String";
     @EJB
     private SpatialRepository repository;
 
@@ -138,13 +139,7 @@ public class UserAreaServiceBean implements UserAreaService {
 
         try {
 
-            DatasetList datasetList = fetchSpatialDatasetListFromUSM();
-
-            for (DatasetExtension extension : datasetList.getList()) {
-                if (extension != null && extension.getName().equals(userAreaDto.getDatasetName())) {
-                    throw new SpatialServiceException(SpatialServiceErrors.DATA_SET_NAME_ALREADY_IN_USE);
-                }
-            }
+            checkIfContainsDataSetName(userAreaDto, fetchSpatialDatasetListFromUSM());
 
             persistedEntity = repository.getUserAreaByUserNameAndName(userName, userAreaDto.getName());
 
@@ -163,6 +158,7 @@ public class UserAreaServiceBean implements UserAreaService {
                     persistDatasetInUSM(persistedEntity);
                 }
             }
+
         } catch (MessageException | ModelMarshallException | SpatialModelMapperException e) {
             throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
         }
@@ -171,11 +167,18 @@ public class UserAreaServiceBean implements UserAreaService {
 
     }
 
+    private void checkIfContainsDataSetName(UserAreaGeoJsonDto userAreaDto, DatasetList datasetList) {
+        for (DatasetExtension extension : datasetList.getList()) {
+            if (extension != null && extension.getName().equals(userAreaDto.getDatasetName())) {
+                throw new SpatialServiceException(SpatialServiceErrors.DATA_SET_NAME_ALREADY_IN_USE);
+            }
+        }
+    }
+
     private DatasetList fetchSpatialDatasetListFromUSM() throws ModelMarshallException, MessageException, SpatialModelMapperException {
         DatasetFilter filter = new DatasetFilter();
         filter.setApplicationName(USMSpatial.APPLICATION_NAME);
         filter.setCategory(USMSpatial.USM_DATASET_CATEGORY);
-
         String request = UserModuleRequestMapper.mapToFindDatasetRequest(filter);
         String correlationId = userProducer.sendModuleMessage(request, consumer.getDestination());
         TextMessage message = consumer.getMessage(correlationId, TextMessage.class);
@@ -195,11 +198,40 @@ public class UserAreaServiceBean implements UserAreaService {
         mapToCreateDatasetResponse(message, correlationId);
     }
 
+    private String deleteDataSetNameFromUSM(String previousDataSetName, String applicationName) throws ModelMarshallException, MessageException, SpatialModelMapperException {
+        String result = NOK;
+        if (StringUtils.isNotBlank(previousDataSetName)) {
+            DatasetExtension extension = new DatasetExtension();
+            extension.setName(previousDataSetName);
+            extension.setApplicationName(applicationName);
+            String request = UserModuleRequestMapper.mapToDeleteDatasetRequest(extension);
+            String correlationId = userProducer.sendModuleMessage(request, consumer.getDestination());
+            TextMessage message = consumer.getMessage(correlationId, TextMessage.class);
+            result = mapToDeleteDataSetResponse(message, correlationId);
+        }
+
+        if (result.equals(NOK)) {
+            throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
+        }
+        return result;
+    }
+
+    private String mapToDeleteDataSetResponse(TextMessage response, String correlationId) throws SpatialModelMapperException {
+        try {
+            validateResponse(response, correlationId);
+            DeleteDatasetResponse deleteDatasetResponse = JAXBMarshaller.unmarshall(response, DeleteDatasetResponse.class);
+            return deleteDatasetResponse.getResponse();
+        } catch (SpatialModelMarshallException e) {
+            log.error(ERROR_WHEN_MARSHALLING_DATA, e);
+            throw new SpatialModelMarshallException(ERROR_WHEN_MARSHALLING_OBJECT_TO_STRING, e);
+        }
+    }
+
     private DatasetList mapToFindDatasetResponse(TextMessage response, String correlationId) throws SpatialModelMapperException {
         try {
             validateResponse(response, correlationId);
-            FilterDatasetResponse createDatasetResponse = JAXBMarshaller.unmarshall(response, FilterDatasetResponse.class);
-            return createDatasetResponse.getDatasetList();
+            FilterDatasetResponse createDataSetResponse = JAXBMarshaller.unmarshall(response, FilterDatasetResponse.class);
+            return createDataSetResponse.getDatasetList();
         } catch (SpatialModelMarshallException e) {
             log.error(ERROR_WHEN_MARSHALLING_DATA, e);
             throw new SpatialModelMarshallException(ERROR_WHEN_MARSHALLING_OBJECT_TO_STRING, e);
@@ -220,36 +252,53 @@ public class UserAreaServiceBean implements UserAreaService {
     @Override
     @Transactional
     public Long updateUserArea(UserAreaGeoJsonDto userAreaDto, String userName, boolean isPowerUser, String scopeName) throws ServiceException {
-        Long id = userAreaDto.getId();
 
-        if (userName == null) {
-            throw new IllegalArgumentException("USER CANNOT BE NULL");
+        UserAreasEntity persistedUpdatedEntity;
+
+        try {
+
+            Long id = userAreaDto.getId();
+
+            if (userName == null) {
+                throw new IllegalArgumentException("USER CANNOT BE NULL");
+            }
+
+            if (id == null) {
+                throw new SpatialServiceException(SpatialServiceErrors.MISSING_USER_AREA_ID);
+            }
+
+            UserAreasEntity userAreaById = repository.findUserAreaById(id, userName, isPowerUser, scopeName);
+
+            if (userAreaById == null) {
+                throw new SpatialServiceException(SpatialServiceErrors.USER_AREA_DOES_NOT_EXIST, userAreaById);
+            }
+
+            if (!(userName).equals(userAreaById.getUserName()) && !isPowerUser) {
+                throw new ServiceException("user_not_authorised");
+            }
+
+            String newDataSetName = userAreaDto.getDatasetName();
+            String previousDataSetName = userAreaById.getDatasetName();
+
+            if (newDataSetName != null && !newDataSetName.equals(previousDataSetName)) {
+                checkIfContainsDataSetName(userAreaDto, fetchSpatialDatasetListFromUSM());
+            } else {
+                deleteDataSetNameFromUSM(previousDataSetName, USMSpatial.APPLICATION_NAME);
+            }
+
+            if (StringUtils.isNotBlank(userAreaDto.getDatasetName()) && !userAreaDto.getDatasetName().equals(userAreaById.getDatasetName())) {
+                updateUSMDataset(userAreaById, userAreaDto.getDatasetName());
+            }
+
+            UserAreaMapper.mapper().updateUserAreaEntity(userAreaDto, userAreaById);
+            userAreaById.getGeom().setSRID(dialect.defaultSRID());
+            createScopeSelection(userAreaDto, userAreaById);
+            persistedUpdatedEntity = repository.update(userAreaById);
+
+        } catch (ModelMarshallException | MessageException | SpatialModelMapperException e) {
+            throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
         }
 
-        if (id == null) {
-            throw new SpatialServiceException(SpatialServiceErrors.MISSING_USER_AREA_ID);
-        }
-
-        UserAreasEntity userAreaById = repository.findUserAreaById(id, userName, isPowerUser, scopeName);
-
-        if (userAreaById == null) {
-            throw new SpatialServiceException(SpatialServiceErrors.USER_AREA_DOES_NOT_EXIST, userAreaById);
-        }
-
-        if (!(userName).equals(userAreaById.getUserName()) && !isPowerUser) {
-            throw new ServiceException("user_not_authorised");
-        }
-
-        if (StringUtils.isNotBlank(userAreaDto.getDatasetName()) && !userAreaDto.getDatasetName().equals(userAreaById.getDatasetName())) {
-            updateUSMDataset(userAreaById, userAreaDto.getDatasetName());
-        }
-        UserAreaMapper.mapper().updateUserAreaEntity(userAreaDto, userAreaById);
-
-        userAreaById.getGeom().setSRID(dialect.defaultSRID());
-
-        createScopeSelection(userAreaDto, userAreaById);
-
-        UserAreasEntity persistedUpdatedEntity = repository.update(userAreaById);
         return persistedUpdatedEntity.getId();
     }
 
@@ -264,6 +313,13 @@ public class UserAreaServiceBean implements UserAreaService {
         if (!userAreaById.getUserName().equals(userName) && !isPowerUser) {
             throw new ServiceException("user_not_authorised");
         }
+
+        try {
+            deleteDataSetNameFromUSM(userAreaById.getDatasetName(), USMSpatial.APPLICATION_NAME);
+        } catch (ModelMarshallException | SpatialModelMapperException | MessageException e) {
+            throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
+        }
+
         repository.deleteUserArea(userAreaById);
     }
 
@@ -353,7 +409,6 @@ public class UserAreaServiceBean implements UserAreaService {
             repository.updateUserAreaForUser(remoteUser, startDate, endDate, type);
         }
     }
-
 
     private String createDescriminator(UserAreasEntity persistedEntity) {
         return AreaType.USERAREA.value() + USMSpatial.DELIMITER + persistedEntity.getId();
