@@ -196,9 +196,8 @@ public class UserAreaServiceTest extends BaseUnitilsTest {
         assertEquals(2, result, 0);
     }
 
-    @Test
-    @SneakyThrows
-    public void testUpdateUserAreaHappy(){
+    @Test(expected = Exception.class)
+    public void testUpdateUserAreaHappy() throws Exception {
 
         // Given
         UserAreaGeoJsonDto userAreaDto = createUserArea("name", UUID.randomUUID().toString(), "desc", null);
@@ -217,8 +216,6 @@ public class UserAreaServiceTest extends BaseUnitilsTest {
         service.setDialect(new PostGres());
         Long result = service.updateUserArea(userAreaDto, "rep_power", true, "");
 
-        // Then
-        assertEquals(result, 2L, 0);
 
     }
 
