@@ -8,11 +8,10 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
 package eu.europa.ec.fisheries.uvms.spatial.rest.constants;
 
 public final class RestConstants {
-
-    private RestConstants(){}
 
     public static final String REST_URL = "/rest";
     public static final String IMAGE_URL = "/image";
@@ -21,15 +20,10 @@ public final class RestConstants {
     public static final String MODULE_NAME = "spatial";
 
     public static final String VIEW = "view";
-    public static final String LOCATION_TYPE = "locationType";
+    public static final String SYSTEM_AREA_TYPE = "systemAreaType";
     public static final String PUBLIC = "PUBLIC";
 
-    public static final String ACCESS_CONTROL_ALLOW_ORIGIN = "Access-ControlDto-Allow-Origin";
-    public static final String ACCESS_CONTROL_ALLOW_METHODS_ALL = "*";
-    
-    public static final String ACCESS_CONTROL_ALLOW_METHODS = "Access-ControlDto-Allow-Methods";
-    public static final String ACCESS_CONTROL_ALLOWED_METHODS = "GET, POST, DELETE, PUT, OPTIONS";
-    
-    public static final String ACCESS_CONTROL_ALLOW_HEADERS = "Access-ControlDto-Allow-Headers";
-    public static final String ACCESS_CONTROL_ALLOW_HEADERS_ALL = "Content-Type";
+    private RestConstants() {
+    }
+
 }

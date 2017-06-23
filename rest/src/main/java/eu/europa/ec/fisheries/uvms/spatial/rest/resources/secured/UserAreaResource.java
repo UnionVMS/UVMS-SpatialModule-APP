@@ -18,36 +18,29 @@ import eu.europa.ec.fisheries.uvms.rest.FeatureToGeoJsonJacksonMapper;
 import eu.europa.ec.fisheries.uvms.rest.constants.ErrorCodes;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.service.interceptor.ValidationInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.model.constants.USMSpatial;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Coordinate;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialFeaturesEnum;
-import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.AreaLocationDtoMapper;
-import eu.europa.ec.fisheries.uvms.spatial.rest.type.FilterType;
-import eu.europa.ec.fisheries.uvms.spatial.rest.type.geocoordinate.UserAreaCoordinateType;
+import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.AreaLocationMapper;
+import eu.europa.ec.fisheries.uvms.spatial.rest.dto.FilterType;
+import eu.europa.ec.fisheries.uvms.spatial.rest.dto.UserAreaCoordinateType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.service.SpatialService;
-import eu.europa.ec.fisheries.uvms.spatial.service.UserAreaService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.UserAreaUpdateDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.areaServices.UserAreaDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.AreaDetailsGeoJsonDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.UserAreaGeoJsonDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.UserAreaService;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.UserAreaUpdateDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.UserAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson.AreaDetailsGeoJsonDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson.UserAreaGeoJsonDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.USMSpatial;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
+
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -67,7 +60,7 @@ public class UserAreaResource extends UnionVMSResource {
     @EJB
     private SpatialService spatialService;
 
-    private AreaLocationDtoMapper areaLocationMapper = AreaLocationDtoMapper.mapper();
+    private AreaLocationMapper areaLocationMapper = AreaLocationMapper.mapper();
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -147,7 +140,7 @@ public class UserAreaResource extends UnionVMSResource {
     @Interceptors(value = {ExceptionInterceptor.class})
     public Response getUserAreaLayerMapping(@Context HttpServletRequest request, @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName) {
         log.debug("UserName from security : " + request.getRemoteUser());
-        return createSuccessResponse(userAreaService.getUserAreaLayerDefination(request.getRemoteUser(), scopeName));
+        return createSuccessResponse(userAreaService.getUserAreaLayerDefinition(request.getRemoteUser(), scopeName));
     }
 
     @POST
@@ -206,7 +199,7 @@ public class UserAreaResource extends UnionVMSResource {
             areaDetailsGeoJsonDto.removeGeometry();
             return createSuccessResponse(areaDetailsGeoJsonDto.getProperties());
         } else {
-            AreaTypeEntry areaTypeEntry = AreaLocationDtoMapper.mapper().getAreaTypeEntry(userAreaTypeDto);
+            AreaTypeEntry areaTypeEntry = AreaLocationMapper.mapper().getAreaTypeEntry(userAreaTypeDto);
             List<AreaDetails> userAreaDetails = userAreaService.getUserAreaDetailsById(areaTypeEntry, userName, isPowerUser, scopeName);
             AreaDetailsGeoJsonDto areaDetailsGeoJsonDto = areaLocationMapper.getAreaDetailsDtoForAllAreas(userAreaDetails, userAreaTypeDto);
 
@@ -229,7 +222,7 @@ public class UserAreaResource extends UnionVMSResource {
                 List<UserAreaDto> userAreaDetails = spatialService.getUserAreaDetailsWithExtentByLocation(coordinate, userName);
                 return createSuccessResponse(userAreaDetails);
             } else {
-                AreaTypeEntry areaTypeEntry = AreaLocationDtoMapper.mapper().getAreaTypeEntry(userAreaTypeDto);
+                AreaTypeEntry areaTypeEntry = AreaLocationMapper.mapper().getAreaTypeEntry(userAreaTypeDto);
                 List<AreaDetails> userAreaDetails = spatialService.getUserAreaDetailsByLocation(areaTypeEntry, userName);
                 AreaDetailsGeoJsonDto areaDetailsGeoJsonDto = areaLocationMapper.getAreaDetailsDtoForAllAreas(userAreaDetails, userAreaTypeDto);
 

@@ -21,8 +21,6 @@ import javax.ejb.EJB;
 import javax.ejb.EJBException;
 
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
-import eu.europa.ec.fisheries.uvms.spatial.service.AreaService;
-import eu.europa.ec.fisheries.uvms.spatial.service.SpatialService;
 import lombok.SneakyThrows;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
@@ -31,7 +29,7 @@ import org.junit.runner.RunWith;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetailsSpatialRequest;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.service.exception.SpatialServiceException;
 
 /*** Arquillian integration test for GetAreaDetails API
  */

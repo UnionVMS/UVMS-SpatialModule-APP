@@ -12,8 +12,8 @@ package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
-import eu.europa.ec.fisheries.uvms.spatial.service.SpatialEnrichmentService;
-import eu.europa.ec.fisheries.uvms.spatial.service.SpatialService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialEnrichmentService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialService;
 import lombok.extern.slf4j.Slf4j;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
@@ -49,7 +49,7 @@ public class XMLResource {
     @Path("/filter-areas")
     public FilterAreasSpatialRS computeAreaFilter(FilterAreasSpatialRQ request) throws ServiceException {
 
-        return  spatialService.computeAreaFilter(request);
+        return spatialService.computeAreaFilter(request);
 
     }
 

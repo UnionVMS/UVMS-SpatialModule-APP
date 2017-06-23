@@ -8,16 +8,14 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
+
 package eu.europa.ec.fisheries.uvms.spatial.service.mapper;
 
-/**
- * Created by padhyad on 11/26/2015.
- */
-
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.*;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.*;
-import eu.europa.ec.fisheries.uvms.spatial.util.AreaTypeEnum;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.*;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.*;
+import eu.europa.ec.fisheries.uvms.spatial.service.enums.AreaTypeEnum;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -25,7 +23,7 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.*;
 
-@Mapper(componentModel = "cdi")
+@Mapper
 public abstract class MapConfigMapper {
 
     public static final MapConfigMapper INSTANCE = Mappers.getMapper(MapConfigMapper.class);

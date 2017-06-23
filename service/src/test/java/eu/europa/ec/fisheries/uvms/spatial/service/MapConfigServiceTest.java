@@ -8,22 +8,52 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
+
 package eu.europa.ec.fisheries.uvms.spatial.service;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.internal.util.collections.Sets.newSet;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.uvms.BaseUnitilsTest;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.entity.*;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.CoordinatesFormat;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LayerSettingsType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ScaleBarUnits;
-import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.MapConfigServiceBean;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.*;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.ConfigurationDto;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialDeleteMapConfigurationRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialGetMapConfigurationRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialGetMapConfigurationRS;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialRepository;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.impl.MapConfigServiceBean;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.DisplayProjectionDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.MapConfigDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.MapDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.ProjectionDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.ServiceLayersDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.ConfigurationDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTypesEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.ProjectionEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.ProviderFormatEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.ReportConnectServiceAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.ReportConnectSpatialEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.ServiceLayerEntity;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -32,16 +62,6 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.*;
-
-import static org.junit.Assert.assertNotNull;
-
-/**
- * Created by padhyad on 11/23/2015.
- */
 @RunWith(MockitoJUnitRunner.class)
 public class MapConfigServiceTest extends BaseUnitilsTest {
 
@@ -54,6 +74,105 @@ public class MapConfigServiceTest extends BaseUnitilsTest {
     @Before
     public void initMocks() {
         MockitoAnnotations.initMocks(this);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testHandleDeleteMapConfigurationWithNull() throws ServiceException {
+        mapConfigServiceBean.handleDeleteMapConfiguration(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetMapConfigurationWithNull() throws ServiceException {
+        mapConfigServiceBean.getMapConfiguration(null);
+    }
+
+    @Test
+    public void testGetMapConfigurationWithPortLayerShouldNotFilterPort() throws ServiceException {
+
+        SpatialGetMapConfigurationRQ rq = new SpatialGetMapConfigurationRQ();
+        rq.setPermittedServiceLayers(Arrays.asList("LAYER1", "LAYER2"));
+        rq.setReportId(100L);
+
+        ReportConnectSpatialEntity entity = new ReportConnectSpatialEntity();
+        ReportConnectServiceAreasEntity areasEntity = new ReportConnectServiceAreasEntity();
+        ServiceLayerEntity layer2 = new ServiceLayerEntity();
+        layer2.setId(1L);
+        layer2.setName("LAYER2");
+        areasEntity.setServiceLayer(layer2);
+        areasEntity.setLayerType("port");
+        AreaLocationTypesEntity typesEntity = new AreaLocationTypesEntity();
+        typesEntity.setTypeName("LAYER2");
+        typesEntity.setServiceLayer(layer2);
+        layer2.setAreaType(typesEntity);
+        areasEntity.setServiceLayer(layer2);
+        entity.setReportConnectServiceAreas(newSet(areasEntity));
+
+        when(repository.findServiceLayerEntityByIds(Collections.singletonList(1L))).thenReturn(Collections.singletonList(layer2));
+        when(repository.findReportConnectSpatialByReportId(100L)).thenReturn(entity);
+
+        SpatialGetMapConfigurationRS mapConfiguration = mapConfigServiceBean.getMapConfiguration(rq);
+
+        LayerSettingsType layerSettings = mapConfiguration.getMapConfiguration().getLayerSettings();
+
+        assertEquals(1, layerSettings.getPortLayers().size());
+        assertEquals("LAYER2", layerSettings.getPortLayers().get(0).getName());
+
+    }
+
+    @Test
+    public void testGetMapConfigurationWithPortLayerShouldFilterPort() throws ServiceException {
+
+        SpatialGetMapConfigurationRQ rq = new SpatialGetMapConfigurationRQ();
+        rq.setPermittedServiceLayers(Arrays.asList("LAYER1", "LAYER3"));
+        rq.setReportId(100L);
+
+        ReportConnectSpatialEntity entity = new ReportConnectSpatialEntity();
+        ReportConnectServiceAreasEntity areasEntity = new ReportConnectServiceAreasEntity();
+        ServiceLayerEntity layer2 = new ServiceLayerEntity();
+        layer2.setId(1L);
+        areasEntity.setServiceLayer(layer2);
+        areasEntity.setLayerType("port");
+        AreaLocationTypesEntity typesEntity = new AreaLocationTypesEntity();
+        typesEntity.setTypeName("LAYER2");
+        typesEntity.setServiceLayer(layer2);
+        layer2.setAreaType(typesEntity);
+        areasEntity.setServiceLayer(layer2);
+        entity.setReportConnectServiceAreas(newSet(areasEntity));
+
+        when(repository.findServiceLayerEntityByIds(Arrays.asList(1L))).thenReturn(Arrays.asList(layer2));
+        when(repository.findReportConnectSpatialByReportId(100L)).thenReturn(entity);
+
+        SpatialGetMapConfigurationRS mapConfiguration = mapConfigServiceBean.getMapConfiguration(rq);
+
+        LayerSettingsType layerSettings = mapConfiguration.getMapConfiguration().getLayerSettings();
+
+        assertEquals(0, layerSettings.getPortLayers().size());
+
+        System.out.println(mapConfiguration);
+
+    }
+
+    @Test
+    public void testHandleDeleteMapConfigurationWithIdList() throws ServiceException {
+
+        SpatialDeleteMapConfigurationRQ rq = new SpatialDeleteMapConfigurationRQ();
+        rq.setSpatialConnectIds(Arrays.asList(100L, 200L));
+
+        mapConfigServiceBean.handleDeleteMapConfiguration(rq);
+
+        verify(repository, times(1)).deleteReportConnectServiceAreas(Arrays.asList(100L, 200L));
+
+    }
+
+    @Test
+    public void testHandleDeleteMapConfigurationWithEmptyIdList() throws ServiceException {
+
+        SpatialDeleteMapConfigurationRQ rq = new SpatialDeleteMapConfigurationRQ();
+
+        mapConfigServiceBean.handleDeleteMapConfiguration(rq);
+
+        verify(repository, times(0)).deleteReportConnectServiceAreas(Mockito.anyList());
+
     }
 
     @Test
@@ -124,7 +243,6 @@ public class MapConfigServiceTest extends BaseUnitilsTest {
     }
 
     @Test
-    @Ignore
     public void testGetMapConfigWithoutDefaultConfig() throws IOException, ServiceException {
         //mock
         mockGenMapProjectionWithoutDefaultConfig();
@@ -144,18 +262,18 @@ public class MapConfigServiceTest extends BaseUnitilsTest {
     }
 
     private void mockGenMapProjectionWithDefaultConfig() throws IOException, ServiceException {
-        Mockito.when(repository.findProjectionByMap(Mockito.any(Integer.class))).thenReturn(null);
-        Mockito.when(repository.findProjectionById(Mockito.any(Long.class))).thenReturn(Arrays.asList(getProjectionDto()));
-        Mockito.when(repository.findReportConnectServiceAreas(Mockito.any(Integer.class))).thenReturn(null);
-        Mockito.when(repository.findReportConnectSpatialByReportId(Mockito.any(Long.class))).thenReturn(null);
-        Mockito.when(repository.findSystemConfigByName(Mockito.any(String.class))).thenReturn("http://localhost:8080/geoserver/");
-        Mockito.when(repository.findServiceLayerEntityByIds(Mockito.any(List.class))).thenReturn(getServiceLayers());
+        when(repository.findProjectionByMap(Mockito.any(Integer.class))).thenReturn(null);
+        when(repository.findProjectionById(Mockito.any(Long.class))).thenReturn(Arrays.asList(getProjectionDto()));
+        when(repository.findReportConnectServiceAreas(Mockito.any(Integer.class))).thenReturn(null);
+        when(repository.findReportConnectSpatialByReportId(Mockito.any(Long.class))).thenReturn(null);
+        when(repository.findSystemConfigByName(Mockito.any(String.class))).thenReturn("http://localhost:8080/geoserver/");
+        when(repository.findServiceLayerEntityByIds(Mockito.any(List.class))).thenReturn(getServiceLayers());
     }
     private void mockGenMapProjectionWithoutDefaultConfig() throws IOException, ServiceException {
-        Mockito.when(repository.findProjectionByMap(Mockito.any(Integer.class))).thenReturn(Arrays.asList(getProjectionDto()));
-        Mockito.when(repository.findReportConnectSpatialByReportId(Mockito.any(Long.class))).thenReturn(getReportConnectSpatialEntity());
-        Mockito.when(repository.findReportConnectServiceAreas(Mockito.any(Integer.class))).thenReturn(getReportConnectServiceAreas());
-        Mockito.when(repository.findSystemConfigByName(Mockito.any(String.class))).thenReturn("http://localhost:8080/geoserver/");
+        when(repository.findProjectionByMap(Mockito.any(Integer.class))).thenReturn(Arrays.asList(getProjectionDto()));
+        when(repository.findReportConnectSpatialByReportId(Mockito.any(Long.class))).thenReturn(getReportConnectSpatialEntity());
+        when(repository.findReportConnectServiceAreas(Mockito.any(Integer.class))).thenReturn(getReportConnectServiceAreas());
+        when(repository.findSystemConfigByName(Mockito.any(String.class))).thenReturn("http://localhost:8080/geoserver/");
     }
 
     private List<ServiceLayerEntity> getServiceLayers() {

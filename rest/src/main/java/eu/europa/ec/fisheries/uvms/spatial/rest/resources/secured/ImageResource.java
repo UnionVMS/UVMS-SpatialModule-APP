@@ -8,21 +8,22 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
+
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import static org.apache.commons.lang3.StringUtils.*;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
-import eu.europa.ec.fisheries.uvms.spatial.model.mapfish.request.Class;
-import eu.europa.ec.fisheries.uvms.spatial.model.mapfish.request.Cluster;
-import eu.europa.ec.fisheries.uvms.spatial.model.mapfish.request.Icons;
-import eu.europa.ec.fisheries.uvms.spatial.model.mapfish.response.ImageResponse;
-import eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured.AlarmResource;
 import eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured.LegendResource;
 import eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured.PositionResource;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ImageEncoderFactory;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.mapfish.request.Class;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.mapfish.request.Cluster;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.mapfish.request.Icons;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.mapfish.response.ImageResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.batik.transcoder.TranscoderException;
 import org.apache.commons.collections.CollectionUtils;
@@ -149,7 +150,7 @@ public class ImageResource extends UnionVMSResource {
             String lineStyle = payload.getSegments().getLineStyle();
             List<ImageEncoderFactory.LegendEntry> temp = new ArrayList<>();
 
-            for (Class clazz : payload.getSegments().getClasses()) {
+            for (eu.europa.ec.fisheries.uvms.spatial.service.dto.mapfish.request.Class clazz : payload.getSegments().getClasses()) {
 
                 ImageEncoderFactory.LegendEntry legendEntry = new ImageEncoderFactory.LegendEntry();
                 legendEntry.setMsg(clazz.getText());

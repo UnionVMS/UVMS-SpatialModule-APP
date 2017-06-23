@@ -8,25 +8,26 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
+
 package eu.europa.ec.fisheries.uvms.spatial.service.mapper;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.vividsolutions.jts.geom.Geometry;
-import eu.europa.ec.fisheries.uvms.spatial.entity.UserAreasEntity;
-import eu.europa.ec.fisheries.uvms.spatial.entity.UserScopeEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.UserAreaGeoJsonDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserScopeEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson.UserAreaGeoJsonDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
-import java.util.Date;
+
 import java.util.List;
 import java.util.Set;
 
-import static eu.europa.ec.fisheries.uvms.common.DateUtils.UI_FORMATTER;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static eu.europa.ec.fisheries.uvms.common.DateUtils.DATE_TIME_UI_FORMAT;
 
 @Mapper
 public abstract class UserAreaMapper {
@@ -38,34 +39,23 @@ public abstract class UserAreaMapper {
     }
 
     @Mappings({
-            @Mapping(target = "name", expression = "java(userAreaDto.getName())"),
-            @Mapping(target = "type", expression = "java(userAreaDto.getSubType())"),
-            @Mapping(target = "areaDesc", expression = "java(userAreaDto.getDesc())"),
+            @Mapping(target = "type", source = "subType"),
+            @Mapping(target = "areaDesc", source = "desc"),
             @Mapping(source = "geometry", target = "geom"),
-            @Mapping(target = "startDate", expression = "java(stringToDate(userAreaDto.getStartDate()))"),
-            @Mapping(target = "endDate", expression = "java(stringToDate(userAreaDto.getEndDate()))"),
+            @Mapping(target = "startDate", dateFormat = DATE_TIME_UI_FORMAT),
+            @Mapping(target = "endDate", dateFormat = DATE_TIME_UI_FORMAT),
             @Mapping(target = "scopeSelection", expression = "java(fromScopeArrayToEntity(userAreaDto.getScopeSelection()))"),
-            @Mapping(target = "datasetName", expression = "java(userAreaDto.getDatasetName())"),
     })
     public abstract UserAreasEntity fromDtoToEntity(UserAreaGeoJsonDto userAreaDto);
 
     @Mappings({
-            @Mapping(target = "name", expression = "java(userAreaDto.getName())"),
-            @Mapping(target = "type", expression = "java(userAreaDto.getSubType())"),
-            @Mapping(target = "areaDesc", expression = "java(userAreaDto.getDesc())"),
+            @Mapping(target = "type", source = "subType"),
+            @Mapping(target = "areaDesc", source = "desc"),
             @Mapping(source = "geometry", target = "geom"),
-            @Mapping(target = "startDate", expression = "java(stringToDate(userAreaDto.getStartDate()))"),
-            @Mapping(target = "endDate", expression = "java(stringToDate(userAreaDto.getEndDate()))"),
-            @Mapping(target = "datasetName", expression = "java(userAreaDto.getDatasetName())")
+            @Mapping(target = "startDate", dateFormat = DATE_TIME_UI_FORMAT),
+            @Mapping(target = "endDate", dateFormat = DATE_TIME_UI_FORMAT),
     })
     public abstract void updateUserAreaEntity(UserAreaGeoJsonDto userAreaDto, @MappingTarget UserAreasEntity userAreasEntity);
-
-    protected Date stringToDate(String date) {
-        if (isEmpty(date)) {
-            return null;
-        }
-        return UI_FORMATTER.parseDateTime(date).toDate();
-    }
 
     public static Set<UserScopeEntity> fromScopeArrayToEntity(List<String> scopeSelection) {
         Set<UserScopeEntity> userScopeEntities = Sets.newHashSet();

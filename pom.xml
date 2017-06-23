@@ -1,42 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>eu.europa.ec.fisheries.uvms.spatial</groupId>
     <artifactId>spatial</artifactId>
-    <version>0.5.6-SNAPSHOT</version>
+    <version>0.5.7-SNAPSHOT</version>
     <packaging>pom</packaging>
     <description>Maven projekt-archetype for UnionVms modules</description>
 
-    <developers>
-        <developer>
-            <name>Gregory Rinaldi</name>
-            <email>gregory.rinaldi@ordina.be</email>
-        </developer>
-		<developer>
-            <name>Georgi Georgiev</name>
-            <email>georgi.georgiev@ordina.be</email>
-        </developer>
-    </developers>
 
     <properties>
 
-        <sonar.exclusions>src/main/webapp/apidocs/**/*</sonar.exclusions>
-
         <!-- The spatial name is used as a common point to rename the application alias visible in USM-->
         <spatial.name>Spatial</spatial.name>
-        <spatial.model>0.5.5-SNAPSHOT</spatial.model>
-        <reporting.model>0.5.4</reporting.model>
+        <spatial.model>1.0.5-SNAPSHOT</spatial.model>
+        <reporting.model>1.0.2</reporting.model>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <javaee.version>7.0</javaee.version>
-        <sl4j.version>1.7.12</sl4j.version>
-        <logback.version>1.1.2</logback.version>
-        <mapstruct.version>1.0.0.Final</mapstruct.version>
+        <jts.version>1.13</jts.version>
         <jackson.version>2.6.0</jackson.version>
         <logback.core.version>1.1.2</logback.core.version>
-        <asset.module.version>2.0.6</asset.module.version>
-        <movement.model.version>2.0.6</movement.model.version>
+        <asset.module.version>3.0.0</asset.module.version>
+        <movement.model.version>3.0.4</movement.model.version>
         <application.name>${project.parent.artifactId}</application.name>
         <application.version>${project.parent.version}</application.version>
         <application.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}.log</application.logfile>
@@ -45,15 +31,28 @@
         <hibernate.version>4.3.5.Final</hibernate.version>
         <hibernate-spatial.version>4.3</hibernate-spatial.version>
         <geotools.version>14-M1</geotools.version>
-        <uvms.commons.version>2.0.10</uvms.commons.version>
-        <uvms.test.version>0.0.3</uvms.test.version>
+        <uvms.commons.version>2.0.18-SNAPSHOT</uvms.commons.version>
+        <uvms.test.version>0.0.4</uvms.test.version>
         <hibernate.validator.version>5.2.1.Final</hibernate.validator.version>
-        <usm4uvms.version>2.0.16</usm4uvms.version>
+        <usm4uvms.version>2.0.19</usm4uvms.version>
         <usm_deployment_descriptor_force_update>false</usm_deployment_descriptor_force_update>
         <release.branch.name>uvms-1.0.0</release.branch.name>
         <maven.release.plugin.version>2.5.2</maven.release.plugin.version>
         <maven.scm.provider.version>2.1.1</maven.scm.provider.version>
+        <javaee.version>7.0</javaee.version>
+        <mapstruct.version>1.0.0.Final</mapstruct.version>
         <database.dialect>oracle</database.dialect>
+        <scm.connection>scm:git:https://github.com/UnionVMS/UVMS-SpatialModule-APP.git</scm.connection>
+
+        <!-- sonar properties -->
+        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+        <sonar.exclusions>**/generated-sources/**,**/*.js</sonar.exclusions>
+        <sonar.sourceEncoding>UTF-8</sonar.sourceEncoding>
+        <sonar.java.source>1.7</sonar.java.source>
+        <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+        <sonar.jacoco.reportPath>${project.basedir}/target/coverage-reports/jacoco-unit.exec</sonar.jacoco.reportPath>
+        <sonar.language>java</sonar.language>
+
     </properties>
 
     <dependencyManagement>
@@ -61,10 +60,16 @@
         <dependencies>
 
             <dependency>
-                <groupId>org.pitest</groupId>
-                <artifactId>pitest-parent</artifactId>
-                <version>1.1.10</version>
-                <type>pom</type>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>1.7.12</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.vividsolutions</groupId>
+                <artifactId>jts</artifactId>
+                <version>${jts.version}</version>
+                <scope>provided</scope>
             </dependency>
 
             <dependency>
@@ -83,6 +88,7 @@
                 <groupId>eu.europa.ec.fisheries.uvms</groupId>
                 <artifactId>usm4uvms</artifactId>
                 <version>${usm4uvms.version}</version>
+				<optional>true</optional>				
             </dependency>
             
             <dependency>
@@ -95,7 +101,8 @@
                 <groupId>eu.europa.ec.fisheries.uvms</groupId>
                 <artifactId>uvms-commons</artifactId>
                 <version>${uvms.commons.version}</version>
-            </dependency>
+				<optional>true</optional>
+			</dependency>
 
             <dependency>
                 <groupId>eu.europa.ec.fisheries.uvms</groupId>
@@ -120,12 +127,14 @@
                 <groupId>eu.europa.ec.fisheries.uvms.movement</groupId>
                 <artifactId>movement-model</artifactId>
                 <version>${movement.model.version}</version>
+                <classifier>xmlgregoriancalendar</classifier>
             </dependency>
 
             <dependency>
                 <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
                 <artifactId>asset-model</artifactId>
                 <version>${asset.module.version}</version>
+				<classifier>date</classifier>
             </dependency>
             
 	        <dependency>
@@ -133,50 +142,6 @@
 				<artifactId>hibernate-validator</artifactId>
 				<version>${hibernate.validator.version}</version>
 			</dependency>
-
-            <dependency>
-                <groupId>org.mapstruct</groupId>
-                <artifactId>mapstruct</artifactId>
-                <version>${mapstruct.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.mapstruct</groupId>
-                <artifactId>mapstruct-processor</artifactId>
-                <version>${mapstruct.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>commons-collections</groupId>
-                <artifactId>commons-collections</artifactId>
-                <version>3.2.1</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.wololo</groupId>
-                <artifactId>jts2geojson</artifactId>
-                <version>0.7.0</version>
-            </dependency>
-            <!-- don't delete needed for org.wololo -->
-            <dependency>
-                <groupId>com.vividsolutions</groupId>
-                <artifactId>jts</artifactId>
-                <version>1.13</version>
-                <scope>provided</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>commons-io</groupId>
-                <artifactId>commons-io</artifactId>
-                <version>2.4</version>
-            </dependency>
-
-            <dependency>
-                <groupId>javax</groupId>
-                <artifactId>javaee-api</artifactId>
-                <version>${javaee.version}</version>
-                <scope>provided</scope>
-            </dependency>
 
             <!-- Hibernate JPA provider provided by WildFly -->
             <dependency>
@@ -190,6 +155,12 @@
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-spatial</artifactId>
                 <version>4.3</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.vividsolutions</groupId>
+                        <artifactId>jts</artifactId>
+                    </exclusion>
+                </exclusions>
                 <scope>provided</scope>
             </dependency>
 
@@ -197,6 +168,12 @@
                 <groupId>org.geotools</groupId>
                 <artifactId>gt-geojson</artifactId>
                 <version>${geotools.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.vividsolutions</groupId>
+                        <artifactId>jts</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <dependency>
@@ -212,28 +189,10 @@
             </dependency>
 
             <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>1.16.4</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>18.0</version>
-            </dependency>
-
-            <dependency>
             	<groupId>org.jboss.resteasy</groupId>
 			    <artifactId>resteasy-jaxb-provider</artifactId>
 			  	<version>3.0.11.Final</version>
 			</dependency>
-
-            <dependency>
-                <groupId>org.jboss.resteasy</groupId>
-                <artifactId>resteasy-multipart-provider</artifactId>
-                <version>3.0.11.Final</version>
-            </dependency>
 
 			<dependency>
 			    <groupId>org.jboss.resteasy</groupId>
@@ -241,54 +200,47 @@
 			    <version>3.0.11.Final</version>
 			</dependency>
 
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct</artifactId>
+                <version>${mapstruct.version}</version>
+            </dependency>
 
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct-processor</artifactId>
+                <version>${mapstruct.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>javax</groupId>
+                <artifactId>javaee-api</artifactId>
+                <version>${javaee.version}</version>
+                <scope>provided</scope>
+            </dependency>
 
         </dependencies>
 
     </dependencyManagement>
 
-    <dependencies>
+    <scm>
+        <connection>${scm.connection}</connection>
+        <tag>HEAD</tag>
+    </scm>
 
-        <!-- LOGGING DEPENDENCIES -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${sl4j.version}</version>
-        </dependency>
 
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${logback.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-core</artifactId>
-            <version>${logback.core.version}</version>
-        </dependency> 
-    </dependencies>
-
-    	
     <distributionManagement>
         <repository>
-            <id>digit-releases</id>
-            <name>DG DIGIT Repository</name>
-            <url>https://webgate.ec.europa.eu/CITnet/nexus/content/repositories/mare/</url>
+            <id>focus-releases</id>
+            <name>UnionVms Repository</name>
+            <url>http://nexus.focus.fish/nexus/content/repositories/releases/</url>
         </repository>
         <snapshotRepository>
-            <id>digit-snapshots</id>
-            <name>DG DIGIT Snapshot Repository</name>
-            <url>https://webgate.ec.europa.eu/CITnet/nexus/content/repositories/mare-snapshots/</url>
+            <id>focus-snapshots</id>
+            <name>UnionVms Snapshot Repository</name>
+            <url>http://nexus.focus.fish/nexus/content/repositories/snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
-
-       
-	<scm>
-		 <connection>scm:git:https:///emserveje@webgate.ec.europa.eu/CITnet/stash/scm/unionvms/uvms-spatialmodule-app.git</connection>
-		 <developerConnection>scm:git:https:///emserveje@webgate.ec.europa.eu/CITnet/stash/scm/unionvms/uvms-spatialmodule-app.git</developerConnection>
-		 <url>https://emserveje@webgate.ec.europa.eu/CITnet/stash/scm/unionvms/</url>
-	</scm>
 
     <build>
         <pluginManagement>
@@ -306,6 +258,11 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-project-info-reports-plugin</artifactId>
+                    <version>2.9</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
                     <version>2.0.4</version>
                     <executions>
@@ -320,13 +277,25 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-ejb-plugin</artifactId>
+                    <version>2.3</version>
+                    <configuration>
+                        <ejbVersion>3.1</ejbVersion>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>2.10.4</version>
                     <executions>
                         <execution>
                             <id>attach-javadocs</id>
                             <goals>
                                 <goal>jar</goal>
                             </goals>
+                            <configuration>
+                                <additionalparam>${javadoc.opts}</additionalparam>
+                            </configuration>
                         </execution>
                     </executions>
                 </plugin>
@@ -334,6 +303,16 @@
         </pluginManagement>
 
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-plugin-plugin</artifactId>
@@ -349,17 +328,15 @@
                 <version>3.0.1</version>
             </plugin>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-                <version>2.7</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                    <check>true</check>
-                    <format>xml</format>
-                    <aggregate>true</aggregate>
+                    <excludes>
+                        <exclude>**/*ITest.java</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
-			
-			 <plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
                 <version>${maven.release.plugin.version}</version>
@@ -371,17 +348,33 @@
                     </dependency>
                 </dependencies>
                 <configuration>
-                    <tagNameFormat>@{project.artifactId}-@{project.version}</tagNameFormat>
+                    <tagNameFormat>${project.artifactId}-${project.version}</tagNameFormat>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.pitest</groupId>
-                <artifactId>pitest-maven</artifactId>
-                <version>1.1.10</version>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.7.6.201602180812</version>
                 <configuration>
-                    <failWhenNoMutations>false</failWhenNoMutations>
+                    <destFile>${sonar.jacoco.reportPath}</destFile>
+                    <append>true</append>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>jacoco-initialize</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>jacoco-site</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
@@ -404,57 +397,48 @@
     </repositories>
 	
 	<profiles>
-		<profile>
+        <profile>
             <id>postgres</id>
             <properties>
-                <database.dialect>postgres</database.dialect> <!-- the record -->
+                <database.dialect>postgres</database.dialect>
             </properties>
         </profile>
-		
-		<profile>
-				<id>weblogic</id>
-				<properties>
-					<database.dialect>oracle</database.dialect> <!-- the record -->
-					<configDirectory>${basedir}/../container-conf/oracle</configDirectory>
-					<earSourceDirectory>${basedir}/../deploy/src/main/application/META-INF</earSourceDirectory>
-					<jndiReferenceName>jdbc/uvms_spatial</jndiReferenceName>				
-				</properties>				
-					<dependencies>				
-						
-						<dependency>
-							<groupId>io.jsonwebtoken</groupId>
-							<artifactId>jjwt</artifactId>
-						</dependency>
-						<dependency>
-							<groupId>javax</groupId>
-							<artifactId>javaee-api</artifactId>
-						</dependency>
-						<dependency>
-							<groupId>org.mapstruct</groupId>
-							<artifactId>mapstruct</artifactId>
-						</dependency>
-						<dependency>
-							<groupId>org.mapstruct</groupId>
-							<artifactId>mapstruct-processor</artifactId>
-						</dependency>
-						<dependency>
-							<groupId>org.hibernate</groupId>
-							<artifactId>hibernate-validator</artifactId>
-						</dependency>
-					
-					</dependencies>
-				
-				
-		</profile>
-		
-		
-			
+        <profile>
+            <id>doclint-java8-disable</id>
+            <activation>
+                <jdk>[1.8,)</jdk>
+            </activation>
+            <properties>
+                <javadoc.opts>-Xdoclint:none</javadoc.opts>
+            </properties>
+        </profile>
+        <profile>
+            <id>dg-mare</id>
+            <distributionManagement>
+                <repository>
+                    <id>digit-releases</id>
+                    <name>DG DIGIT Repository</name>
+                    <url>https://webgate.ec.europa.eu/CITnet/nexus/content/repositories/mare/</url>
+                </repository>
+                <snapshotRepository>
+                    <id>digit-snapshots</id>
+                    <name>DG DIGIT Snapshot Repository</name>
+                    <url>https://webgate.ec.europa.eu/CITnet/nexus/content/repositories/mare-snapshots/</url>
+                </snapshotRepository>
+            </distributionManagement>
+
+            <properties>
+                <scm.connection>scm:git:https://emserveje@webgate.ec.europa.eu/CITnet/stash/scm/unionvms/uvms-spatialmodule-app.git</scm.connection>
+            </properties>
+        </profile>
+
 	</profiles>
 
     <modules>
         <module>rest</module>
         <module>service</module>
         <module>message</module>
-        <module>deploy</module>
+        <module>deploy-wildfly</module>
+        <module>deploy-weblogic</module>
     </modules>
 </project>

@@ -8,14 +8,40 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
+
 package eu.europa.ec.fisheries.uvms.spatial.message.bean;
 
-import eu.europa.ec.fisheries.uvms.spatial.message.event.*;
-import eu.europa.ec.fisheries.uvms.spatial.model.FaultCode;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.AreaByCodeEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.DeleteMapConfigurationEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.GetAreaByLocationEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.GetAreaTypeNamesEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.GetClosestAreaEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.GetClosestLocationEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.GetFilterAreaEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.GetMapConfigurationEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.GetSpatialEnrichmentEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.PingEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.SaveOrUpdateMapConfigurationEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageErrorEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageEvent;
+import eu.europa.ec.fisheries.uvms.spatial.model.enums.FaultCode;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMapperException;
 import eu.europa.ec.fisheries.uvms.spatial.model.mapper.JAXBMarshaller;
 import eu.europa.ec.fisheries.uvms.spatial.model.mapper.SpatialModuleResponseMapper;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AllAreaTypesRequest;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByCodeRequest;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestLocationSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.PingRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialDeleteMapConfigurationRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialGetMapConfigurationRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialModuleMethod;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialModuleRequest;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveOrUpdateMapConfigurationRQ;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.ejb.ActivationConfigProperty;

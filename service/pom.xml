@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>service</artifactId>
@@ -9,10 +10,15 @@
     <parent>
         <groupId>eu.europa.ec.fisheries.uvms.spatial</groupId>
         <artifactId>spatial</artifactId>
-        <version>0.5.6-SNAPSHOT</version>
+        <version>0.5.7-SNAPSHOT</version>
     </parent>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.reporting</groupId>
@@ -32,12 +38,14 @@
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.movement</groupId>
             <artifactId>movement-model</artifactId>
+			<classifier>xmlgregoriancalendar</classifier>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
             <artifactId>asset-model</artifactId>
+			<classifier>date</classifier>
             <scope>provided</scope>
         </dependency>
 
@@ -48,19 +56,8 @@
         </dependency>
 
         <dependency>
-            <groupId>org.wololo</groupId>
-            <artifactId>jts2geojson</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>message</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-api</artifactId>
             <scope>provided</scope>
         </dependency>
 
@@ -82,17 +79,6 @@
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms</groupId>
             <artifactId>uvms-test</artifactId>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
         </dependency>
 
         <dependency>
@@ -103,16 +89,6 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-spatial</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.mapstruct</groupId>
-            <artifactId>mapstruct</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.mapstruct</groupId>
-            <artifactId>mapstruct-processor</artifactId>
         </dependency>
 
         <dependency>
@@ -131,16 +107,6 @@
             <groupId>org.apache.xmlgraphics</groupId>
             <artifactId>batik-codec</artifactId>
             <version>1.8</version>
-        </dependency>
-
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>commons-collections</groupId>
-            <artifactId>commons-collections</artifactId>
         </dependency>
 
     </dependencies>
@@ -168,6 +134,43 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>default-compile</id>
+                        <phase>none</phase>
+                    </execution>
+                    <execution>
+                        <id>Normal compilation (excluding mappers)</id>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <configuration>
+                            <excludes>
+                                <exclude>**/**/mapper/**/*</exclude>
+                            </excludes>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>MapStruct mappers</id>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <configuration>
+                            <compilerArgs>
+                                <compilerArg>
+
+                                </compilerArg>
+                            </compilerArgs>
+                            <includes>
+                                <include>**/**/mapper/**/*</include>
+                                <include>${project.build.directory}/classes/**/*</include>
+                            </includes>
+                            <annotationProcessors>
+                                <processor>org.mapstruct.ap.MappingProcessor</processor>
+                            </annotationProcessors>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -194,28 +197,6 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.pitest</groupId>
-                <artifactId>pitest-maven</artifactId>
-                <version>1.1.10</version>
-                <configuration>
-
-                    <timestampedReports>false</timestampedReports>
-                    <verbose>true</verbose>
-                    <avoidCallsTo>
-                        <avoidCallsTo>java.util.logging</avoidCallsTo>
-                        <avoidCallsTo>org.apache.log4j</avoidCallsTo>
-                        <avoidCallsTo>org.slf4j</avoidCallsTo>
-                        <avoidCallsTo>org.apache.commons.logging</avoidCallsTo>
-                    </avoidCallsTo>
-                    <targetClasses>
-                        <param>eu.europa.ec.fisheries.uvms.spatial.dao.*</param>
-                    </targetClasses>
-                    <targetTests>
-                        <param>eu.europa.ec.fisheries.uvms.spatial.dao.*</param>
-                    </targetTests>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
             </plugin>
@@ -223,8 +204,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
             </plugin>
-	
-			
         </plugins>
 
         <pluginManagement>

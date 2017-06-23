@@ -17,12 +17,12 @@ import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
 import eu.europa.ec.fisheries.uvms.service.interceptor.ValidationInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialFeaturesEnum;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.service.MapConfigService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ConfigResourceDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.MapConfigDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ProjectionDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.ConfigurationDto;
-import eu.europa.ec.fisheries.uvms.spatial.util.ServiceLayerUtils;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.MapConfigService;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.ConfigResourceDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.MapConfigDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.ProjectionDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.ConfigurationDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.util.ServiceLayerUtils;
 import lombok.extern.slf4j.Slf4j;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -63,7 +63,7 @@ public class ConfigResource extends UnionVMSResource {
         String applicationName = request.getServletContext().getInitParameter("usmApplication");
         String adminPref = usmService.getOptionDefaultValue(DEFAULT_CONFIG, applicationName);
         String userPref = usmService.getUserPreference(USER_CONFIG, username, applicationName, roleName, scopeName);
-        log.info("Getting map configuration for report with id = {}", id);
+        log.info("Getting mapDefaultSRIDToEPSG configuration for report with id = {}", id);
 
         Collection<String> permittedLayersNames = ServiceLayerUtils.getUserPermittedLayersNames(usmService, username, roleName, scopeName);
 
@@ -166,7 +166,7 @@ public class ConfigResource extends UnionVMSResource {
         String adminPref = usmService.getOptionDefaultValue(DEFAULT_CONFIG, applicationName);
         String userPref = usmService.getUserPreference(USER_CONFIG, username, applicationName, roleName, scopeName);
         Collection<String> permittedLayersNames = ServiceLayerUtils.getUserPermittedLayersNames(usmService, username, roleName, scopeName);
-        return createSuccessResponse(mapConfigService.retrieveUserConfiguration(userPref, adminPref, username, permittedLayersNames));
+        return createSuccessResponse(mapConfigService. retrieveUserConfiguration(userPref, adminPref, username, permittedLayersNames));
     }
 
     @POST

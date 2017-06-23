@@ -8,34 +8,9 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.vividsolutions.jts.io.ParseException;
-import eu.europa.ec.fisheries.uvms.constants.AuthConstants;
-import eu.europa.ec.fisheries.uvms.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.rest.FeatureToGeoJsonJacksonMapper;
-import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
-import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
-import eu.europa.ec.fisheries.uvms.service.interceptor.ValidationInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.model.area.*;
-import eu.europa.ec.fisheries.uvms.spatial.model.area.AreaType;
-import eu.europa.ec.fisheries.uvms.spatial.model.constants.USMSpatial;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
-import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.AreaLocationDtoMapper;
-import eu.europa.ec.fisheries.uvms.spatial.rest.type.AreaFilterType;
-import eu.europa.ec.fisheries.uvms.spatial.rest.type.geocoordinate.AreaCoordinateType;
-import eu.europa.ec.fisheries.uvms.spatial.rest.type.geocoordinate.LocationCoordinateType;
-import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.service.AreaService;
-import eu.europa.ec.fisheries.uvms.spatial.service.AreaTypeNamesService;
-import eu.europa.ec.fisheries.uvms.spatial.service.SpatialService;
-import eu.europa.ec.fisheries.uvms.spatial.service.UserAreaService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.AreaDetailsGeoJsonDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.geojson.LocationDetailsGeoJsonDto;
-import eu.europa.ec.fisheries.uvms.spatial.util.ServiceLayerUtils;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
@@ -51,23 +26,64 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.vividsolutions.jts.io.ParseException;
+import eu.europa.ec.fisheries.uvms.constants.AuthConstants;
+import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.mapper.GeometryMapper;
+import eu.europa.ec.fisheries.uvms.rest.FeatureToGeoJsonJacksonMapper;
+import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
+import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
+import eu.europa.ec.fisheries.uvms.service.interceptor.ValidationInterceptor;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationDetails;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationTypeEntry;
+import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaCoordinateType;
+import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaFilterType;
+import eu.europa.ec.fisheries.uvms.spatial.rest.dto.LocationCoordinateType;
+import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.AreaLocationMapper;
+import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.UserAreaService;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.AreaByCodeJsonPayload;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson.AreaDetailsGeoJsonDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson.LocationDetailsGeoJsonDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.USMSpatial;
+import eu.europa.ec.fisheries.uvms.spatial.service.util.ServiceLayerUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 
 @Path("/area")
 @Slf4j
 @Stateless
 public class AreaResource extends UnionVMSResource {
 
-    private @EJB AreaTypeNamesService areaTypeService;
-    private @EJB AreaService areaService;
-    private @EJB UserAreaService userAreaService;
-    private @EJB SpatialService spatialService;
-    private @EJB USMService usmService;
+    @EJB
+    private AreaTypeNamesService areaTypeService;
 
-    private AreaLocationDtoMapper mapper = AreaLocationDtoMapper.mapper();
+    @EJB
+    private AreaService areaService;
+
+    @EJB
+    private UserAreaService userAreaService;
+
+    @EJB
+    private SpatialService spatialService;
+
+    @EJB
+    private USMService usmService;
+
+    private AreaLocationMapper mapper = AreaLocationMapper.mapper();
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
@@ -93,8 +109,9 @@ public class AreaResource extends UnionVMSResource {
                 locationDetailsGeoJsonDto.removeGeometry();
                 return createSuccessResponse(locationDetailsGeoJsonDto.getProperties());
             }
-            ObjectNode nodes = new FeatureToGeoJsonJacksonMapper().convert(locationDetailsGeoJsonDto.toFeature());
-            return createSuccessResponse(nodes);
+            StringWriter writer = new StringWriter();
+            GeometryMapper.INSTANCE.simpleFeatureToGeoJson(locationDetailsGeoJsonDto.toFeature(), writer);
+            return Response.ok(writer.toString()).build();
         } catch (ServiceException | ParseException | IOException e) {
             throw new ServiceException(e.getMessage(), e);
         }
@@ -107,6 +124,7 @@ public class AreaResource extends UnionVMSResource {
     @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
     public Response getAreaDetails(AreaCoordinateType areaDto) throws ServiceException {
         Response response;
+        StringWriter writer = new StringWriter();
         try {
             if (areaDto.getId() != null) {
 
@@ -116,7 +134,9 @@ public class AreaResource extends UnionVMSResource {
                     areaDetailsGeoJsonDto.removeGeometry();
                     return createSuccessResponse(areaDetailsGeoJsonDto.getProperties());
                 }
-                response = createSuccessResponse(new FeatureToGeoJsonJacksonMapper().convert(areaDetailsGeoJsonDto.toFeature()));
+                GeometryMapper.INSTANCE.simpleFeatureToGeoJson(areaDetailsGeoJsonDto.toFeature(), writer);
+                response = Response.ok(writer.toString()).build();
+
             } else {
                 List<AreaDetails> areaDetailsList = spatialService.getAreaDetailsByLocation(mapper.getAreaTypeEntry(areaDto));
                 AreaDetailsGeoJsonDto areaDetailsGeoJsonDto = mapper.getAreaDetailsDtoForAllAreas(areaDetailsList, areaDto);
@@ -127,7 +147,7 @@ public class AreaResource extends UnionVMSResource {
                 List<ObjectNode> nodeList = new ArrayList<>();
 
                 for (Map<String, Object> featureMap : areaDetailsGeoJsonDto.getAllAreaProperties()) {
-                    ObjectNode convert = new FeatureToGeoJsonJacksonMapper().convert(areaDetailsGeoJsonDto.toFeature(featureMap));
+                    ObjectNode convert = new FeatureToGeoJsonJacksonMapper().convert(areaDetailsGeoJsonDto.toFeature(featureMap)); // TODO remove JacksonMapper
                     nodeList.add(convert);
                 }
                 response = createSuccessResponse(nodeList);
@@ -193,8 +213,8 @@ public class AreaResource extends UnionVMSResource {
     }
 
     @POST
-    @Consumes((MediaType.APPLICATION_JSON))
-    @Produces((MediaType.APPLICATION_JSON))
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     @Path("/datasets/{areaType}/{areaGid}/{datasetName}")
     @Interceptors(value = {ExceptionInterceptor.class})
         public Response createDataset(@PathParam("areaType") String areaType,
@@ -220,8 +240,8 @@ public class AreaResource extends UnionVMSResource {
     public Response byCode(AreaByCodeJsonPayload payload) throws ServiceException {
 
         List<AreaSimpleType> request = new ArrayList<>();
-        List<AreaType> areaTypeList = payload.getAreaTypes();
-        for (AreaType areaType : areaTypeList){
+        List<eu.europa.ec.fisheries.uvms.spatial.service.dto.area.AreaType> areaTypeList = payload.getAreaTypes();
+        for (eu.europa.ec.fisheries.uvms.spatial.service.dto.area.AreaType areaType : areaTypeList){
             request.add(new AreaSimpleType(areaType.getAreaType(), areaType.getAreaCode(), null));
         }
         List<AreaSimpleType> response = areaService.byCode(request);

@@ -18,12 +18,12 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AllAreaTypesRequest;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.PingRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRS;
-import eu.europa.ec.fisheries.uvms.spatial.service.AreaTypeNamesService;
-import eu.europa.ec.fisheries.uvms.spatial.service.SpatialEnrichmentService;
-import eu.europa.ec.fisheries.uvms.spatial.service.SpatialEventService;
-import eu.europa.ec.fisheries.uvms.spatial.service.SpatialService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialEventServiceBean;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialEnrichmentService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialEventService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.impl.SpatialEventServiceBean;
+import eu.europa.ec.fisheries.uvms.spatial.service.exception.SpatialServiceException;
 import lombok.SneakyThrows;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -69,7 +69,7 @@ public class SpatialEventServiceTest extends BaseUnitilsTest {
         service.getAreaTypeNames(message);
 
         verify(areaTypeNamesService, times(1)).listAllAreaTypeNames();
-        verify(messageProducer, times(1)).sendModuleResponseMessage(eq(textMessage), anyString());
+        verify(messageProducer, times(1)).sendModuleResponseMessage(eq(textMessage), anyString(), anyString());
         verify(spatialErrorEvent, times(0)).fire(message);
     }
 
@@ -82,7 +82,7 @@ public class SpatialEventServiceTest extends BaseUnitilsTest {
         service.getSpatialEnrichment(message);
 
         verify(enrichmentService, times(1)).getSpatialEnrichment(any(SpatialEnrichmentRQ.class));
-        verify(messageProducer, times(1)).sendModuleResponseMessage(eq(textMessage), anyString());
+        verify(messageProducer, times(1)).sendModuleResponseMessage(eq(textMessage), anyString(), anyString());
         verify(spatialErrorEvent, times(0)).fire(message);
     }
 
@@ -95,7 +95,7 @@ public class SpatialEventServiceTest extends BaseUnitilsTest {
         service.getSpatialEnrichment(message);
 
         verify(enrichmentService, times(1)).getSpatialEnrichment(any(SpatialEnrichmentRQ.class));
-        verify(messageProducer, times(0)).sendModuleResponseMessage(eq(textMessage), anyString());
+        verify(messageProducer, times(0)).sendModuleResponseMessage(eq(textMessage), anyString(), anyString());
         verify(spatialErrorEvent, times(1)).fire(any(SpatialMessageEvent.class));
     }
 
@@ -105,7 +105,7 @@ public class SpatialEventServiceTest extends BaseUnitilsTest {
 
         service.ping(message);
 
-        verify(messageProducer, times(1)).sendModuleResponseMessage(eq(textMessage), anyString());
+        verify(messageProducer, times(1)).sendModuleResponseMessage(eq(textMessage), anyString(), anyString());
         verify(spatialErrorEvent, times(0)).fire(message);
     }
 }

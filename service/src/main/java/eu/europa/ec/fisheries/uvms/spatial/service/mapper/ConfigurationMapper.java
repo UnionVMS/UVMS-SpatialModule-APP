@@ -8,16 +8,13 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
+
 package eu.europa.ec.fisheries.uvms.spatial.service.mapper;
 
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.config.ConfigDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.ConfigurationDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.MapSettingsDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.usm.SystemSettingsDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.ConfigDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.ConfigurationDto;
 
-/**
- * Created by padhyad on 11/26/2015.
- */
 public class ConfigurationMapper {
 
     public static ConfigurationDto mergeConfiguration(ConfigurationDto source, ConfigurationDto target) {

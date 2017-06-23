@@ -8,18 +8,21 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
+
 package eu.europa.ec.fisheries.uvms.spatial.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import eu.europa.ec.fisheries.uvms.BaseUnitilsTest;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialRepository;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import eu.europa.ec.fisheries.uvms.spatial.entity.PortEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialServiceBean;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.PortEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.impl.SpatialServiceBean;
 import lombok.SneakyThrows;
 import org.geotools.geometry.jts.GeometryBuilder;
 import org.junit.Before;
@@ -32,15 +35,12 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.vividsolutions.jts.geom.Point;
-
-import eu.europa.ec.fisheries.uvms.spatial.entity.AreaLocationTypesEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationProperty;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationTypeEntry;
-import eu.europa.ec.fisheries.uvms.spatial.service.SpatialRepository;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.exception.SpatialServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.service.exception.SpatialServiceException;
 
 @RunWith(MockitoJUnitRunner.class)
 @Ignore("WILL FIX LATER")

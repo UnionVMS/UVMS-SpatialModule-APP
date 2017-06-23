@@ -1,3 +1,6 @@
 *.iml
+*.ddl
 target
 target/*
+container-conf/lib/*
+logging.properties

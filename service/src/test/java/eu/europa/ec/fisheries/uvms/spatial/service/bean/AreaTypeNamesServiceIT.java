@@ -8,18 +8,19 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
+
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.service.AreaTypeNamesService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.AreaServiceLayerDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.LayerSubTypeEnum;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.layers.ServiceLayerDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.AreaServiceLayerDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.ServiceLayerDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.enums.LayerSubTypeEnum;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.dto.AreaLayerDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.AreaLayerDto;
 
 import javax.ejb.EJB;
 import java.util.Collections;

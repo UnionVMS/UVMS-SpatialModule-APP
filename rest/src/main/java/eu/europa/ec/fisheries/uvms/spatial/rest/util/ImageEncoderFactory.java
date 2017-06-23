@@ -8,8 +8,11 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
+
 package eu.europa.ec.fisheries.uvms.spatial.rest.util;
 
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.batik.anim.dom.SAXSVGDocumentFactory;
 import org.apache.batik.transcoder.SVGAbstractTranscoder;
@@ -37,6 +40,8 @@ import javax.imageio.ImageIO;
 @Slf4j
 public class ImageEncoderFactory {
 
+    private static int LINE_HEIGHT = 12;
+    private static Font FONT_NORMAL = new Font("Arial", Font.PLAIN, LINE_HEIGHT);
     private static final String STROKE_DASH_ARRAY = "stroke-dasharray";
     private static final String STROKE = "stroke";
     private static final String POSITION = "position";
@@ -49,11 +54,7 @@ public class ImageEncoderFactory {
     private static final String CLUSTER_SVG = "/cluster.svg";
     private static final String TRANSFORM = "transform";
     private static final String FILL = "fill:";
-    private static final int LINE_HEIGHT = 12;
     public static final String CIRCLE = "circle";
-    private static Font FONT_BOLD = new Font("Arial", Font.BOLD, LINE_HEIGHT);
-    private static Font FONT_NORMAL = new Font("Arial", Font.PLAIN, LINE_HEIGHT);
-    private static int OFFSET = 0;
     private static final int LINE_SPACING = 13;
     private static final int TITLE_OFFSET = 10;
     private static final int WIDTH = 200;
@@ -118,7 +119,7 @@ public class ImageEncoderFactory {
         return ImageIO.read(new ByteArrayInputStream(resultByteStream.toByteArray()));
     }
 
-    static public void embedIcon(BufferedImage mainImage, BufferedImage icon, int imageX, int imageY, int reductionScale){
+    public static void embedIcon(BufferedImage mainImage, BufferedImage icon, int imageX, int imageY, int reductionScale){
         for (int i=0;i<icon.getWidth();i=i+reductionScale){
             for (int j=0;j<icon.getHeight();j=j+reductionScale){
                 int localRGB = icon.getRGB(i, j);
@@ -143,7 +144,7 @@ public class ImageEncoderFactory {
         return null;
     }
 
-    static public BufferedImage renderLegend(List<LegendEntry> legendEntries, String title, int iconAndTextOffset) {
+    public static BufferedImage renderLegend(List<LegendEntry> legendEntries, String title, int iconAndTextOffset) {
 
         int height = 20 + (LINE_HEIGHT+ LINE_SPACING) * legendEntries.size();
 
@@ -158,6 +159,7 @@ public class ImageEncoderFactory {
         int increment = TITLE_OFFSET + 2 * LINE_SPACING;
 
         ig2.setPaint(Color.black);
+        int OFFSET = 0;
         ig2.drawString(title, OFFSET, TITLE_OFFSET);
 
         for (LegendEntry entry:legendEntries){
@@ -177,17 +179,9 @@ public class ImageEncoderFactory {
 
     }
 
+    @Data
     public static class LegendEntry {
-
         private BufferedImage icon;
         private String msg;
-
-        public void setIcon(BufferedImage icon) {
-            this.icon = icon;
-        }
-
-        public void setMsg(String msg) {
-            this.msg = msg;
-        }
     }
 }
