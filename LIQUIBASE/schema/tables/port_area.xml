@@ -34,13 +34,14 @@
         </spatial:createSpatialIndex>
     </changeSet>
 
-	<changeSet author="dubduan" id="76834618168717" dbms="postgresql">
-    <addDefaultValue 
-            columnDataType="BIGINT"
-            columnName="gid"
-            defaultValueSequenceNext="port_area_seq"
-            tableName="port_area"/>
-	</changeSet>
+
+    <changeSet author="dubduan" id="76834618168717" dbms="postgresql">
+        <addDefaultValue
+                columnDataType="BIGINT"
+                columnName="gid"
+                defaultValueSequenceNext="port_area_seq"
+                tableName="port_area"/>
+    </changeSet>
 
 	
     <changeSet author="dubduan" id="1439190741706-31" dbms="oracle">
@@ -55,4 +56,27 @@
             END trg_port_area;
         </createProcedure>		
     </changeSet>	
+	
+	
+<!--	<changeSet author="dubduan" id="1879830sds-31" dbms="postgresql">
+	
+        <createProcedure>
+
+            CREATE OR REPLACE FUNCTION inc_port_area_sq()
+            RETURNS "trigger" AS
+            $BODY$
+            BEGIN
+            New.gid:=nextval('port_area_seq');
+            Return NEW;
+            END;
+            $BODY$
+            LANGUAGE 'plpgsql' VOLATILE;
+
+            CREATE TRIGGER trg_port_area
+            before insert on port_area
+            for each row EXECUTE procedure inc_port_area_sq()
+			
+        </createProcedure>			
+    </changeSet>-->
+	
 </databaseChangeLog>

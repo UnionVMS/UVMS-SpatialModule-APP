@@ -50,14 +50,15 @@
             <column name="geom" />
         </spatial:createSpatialIndex>
     </changeSet>
-	
-	<changeSet author="dubduan" id="76834618168717" dbms="postgresql">
-    <addDefaultValue 
-            columnDataType="BIGINT"
-            columnName="gid"
-            defaultValueSequenceNext="fao_seq"
-            tableName="fao"/>
-	</changeSet>
+
+
+    <changeSet author="dubduan" id="76834618168717" dbms="postgresql">
+        <addDefaultValue
+                columnDataType="BIGINT"
+                columnName="gid"
+                defaultValueSequenceNext="fao_seq"
+                tableName="fao"/>
+    </changeSet>
 	
 	<changeSet author="dubduan" id="1462199386163-8" dbms="oracle">
 	
@@ -72,4 +73,27 @@
             END trg_fao;
         </createProcedure>
 	</changeSet>	
+	
+<!--	<changeSet author="dubduan" id="142230sds-31" dbms="postgresql">
+	
+        <createProcedure>
+
+            CREATE OR REPLACE FUNCTION inc_fao_sq()
+            RETURNS "trigger" AS
+            $BODY$
+            BEGIN
+            New.gid:=nextval('fao_seq');
+            Return NEW;
+            END;
+            $BODY$
+            LANGUAGE 'plpgsql' VOLATILE;
+
+            CREATE TRIGGER trg_fao
+            before insert on fao
+            for each row EXECUTE procedure inc_fao_sq()
+
+			
+        </createProcedure>			
+    </changeSet>-->
+	
 </databaseChangeLog>
