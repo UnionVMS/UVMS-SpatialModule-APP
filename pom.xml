@@ -1,21 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>fish.focus.uvms.maven</groupId>
+		<artifactId>uvms-pom</artifactId>
+		<version>1.8</version>
+	</parent>
 
     <groupId>eu.europa.ec.fisheries.uvms.spatial</groupId>
     <artifactId>spatial</artifactId>
-    <version>0.5.7-SNAPSHOT</version>
+    <version>0.5.9-SNAPSHOT</version>
     <packaging>pom</packaging>
     <description>Maven projekt-archetype for UnionVms modules</description>
 
 
-    <properties>
+  <properties>
 
         <!-- The spatial name is used as a common point to rename the application alias visible in USM-->
         <spatial.name>Spatial</spatial.name>
-        <spatial.model>1.0.5-SNAPSHOT</spatial.model>
-        <reporting.model>1.0.2</reporting.model>
+        <spatial.model>1.0.5</spatial.model>
+        <reporting.model>1.0.3</reporting.model>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <jts.version>1.13</jts.version>
@@ -31,13 +36,12 @@
         <hibernate.version>4.3.5.Final</hibernate.version>
         <hibernate-spatial.version>4.3</hibernate-spatial.version>
         <geotools.version>14-M1</geotools.version>
-        <uvms.commons.version>2.0.18-SNAPSHOT</uvms.commons.version>
+        <uvms.commons.version>2.0.25</uvms.commons.version>
         <uvms.test.version>0.0.4</uvms.test.version>
         <hibernate.validator.version>5.2.1.Final</hibernate.validator.version>
-        <usm4uvms.version>2.0.19</usm4uvms.version>
+        <usm4uvms.version>3.0.6</usm4uvms.version>
         <usm_deployment_descriptor_force_update>false</usm_deployment_descriptor_force_update>
         <release.branch.name>uvms-1.0.0</release.branch.name>
-        <maven.release.plugin.version>2.5.2</maven.release.plugin.version>
         <maven.scm.provider.version>2.1.1</maven.scm.provider.version>
         <javaee.version>7.0</javaee.version>
         <mapstruct.version>1.0.0.Final</mapstruct.version>
@@ -58,6 +62,12 @@
     <dependencyManagement>
 
         <dependencies>
+			<dependency>
+				<groupId>fish.focus.uvms.maven</groupId>
+				<artifactId>uvms-pom-monitoring-deps</artifactId>
+				<version>1.8</version>
+				<type>pom</type>
+			</dependency>
 
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -245,17 +255,6 @@
     <build>
         <pluginManagement>
             <plugins>
-                <!-- compiler plugin -->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.1</version>
-                    <configuration>
-                        <source>1.7</source>
-                        <target>1.7</target>
-                        <encoding>${project.build.sourceEncoding}</encoding>
-                    </configuration>
-                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-project-info-reports-plugin</artifactId>
@@ -278,7 +277,6 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-ejb-plugin</artifactId>
-                    <version>2.3</version>
                     <configuration>
                         <ejbVersion>3.1</ejbVersion>
                     </configuration>
@@ -305,16 +303,6 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
-                <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-plugin-plugin</artifactId>
                 <version>3.4</version>
                 <configuration>
@@ -339,18 +327,13 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
-                <version>${maven.release.plugin.version}</version>
-                <dependencies>
+               <dependencies>
                     <dependency>
-                        <groupId>com.google.code.maven-scm-provider-svnjava</groupId>
-                        <artifactId>maven-scm-provider-svnjava</artifactId>
-                        <version>${maven.scm.provider.version}</version>
+                        <groupId>org.apache.maven.scm</groupId>
+                        <artifactId>maven-scm-provider-gitexe</artifactId>
+                        <version>1.8.1</version>
                     </dependency>
                 </dependencies>
-                <configuration>
-                    <tagNameFormat>${project.artifactId}-${project.version}</tagNameFormat>
-                    <autoVersionSubmodules>true</autoVersionSubmodules>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>

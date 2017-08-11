@@ -9,7 +9,7 @@
     <parent>
         <groupId>eu.europa.ec.fisheries.uvms.spatial</groupId>
         <artifactId>spatial</artifactId>
-        <version>0.5.7-SNAPSHOT</version>
+        <version>0.5.9-SNAPSHOT</version>
     </parent>
 
     <build>
@@ -19,7 +19,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-ear-plugin</artifactId>
-                <version>2.7</version>
                 <configuration>
                     <modules>
                         <ejbModule>
@@ -65,6 +64,13 @@
             <artifactId>uvms-commons</artifactId>
             <version>${uvms.commons.version}</version>
         </dependency>
+        
+        <dependency>
+			<groupId>fish.focus.uvms.maven</groupId>
+			<artifactId>uvms-pom-monitoring-deps</artifactId>
+			<type>pom</type>
+		</dependency>
+        
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>message</artifactId>
