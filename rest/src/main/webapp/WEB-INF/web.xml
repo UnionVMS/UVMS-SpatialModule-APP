@@ -4,7 +4,7 @@
 
     <context-param>
         <param-name>javamelody.datasources</param-name>
-        <param-value>java:/jdbc/uvms_spatial</param-value>
+        <param-value>java:jboss/datasources/uvms_spatial</param-value>
     </context-param>
 	<listener>
 		<listener-class>net.bull.javamelody.SessionListener</listener-class>
@@ -27,7 +27,7 @@
 		</init-param>
 		<init-param>
 			<param-name>datasources</param-name>
-			<param-value>java:/jdbc/uvms_spatial</param-value>
+			<param-value>java:jboss/datasources/uvms_spatial</param-value>
 		</init-param>						
 	</filter>
 	<filter-mapping>
