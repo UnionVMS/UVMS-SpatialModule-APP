@@ -46,17 +46,17 @@ public class PostGres extends AbstractGisFunction {
         return DEFAULT_WILDFLY_SRID;
     }
 
-    @Override
     public String closestAreaToPoint(int index,String typeName, String tableName, Double latitude, Double longitude, Integer limit) {
         StringBuilder sb = new StringBuilder();
-    	sb.append("(SELECT '").append(typeName).append("' AS type, gid, code, name,");
-    	sb.append(" ST_ClosestPoint(geom, ST_GeomFromText(CAST ('POINT(").append(longitude).append(" ").append(latitude).append(")' AS TEXT), 4326))" );
-    	sb.append(" AS closest, ");
-    	sb.append(" ST_Distance(geom, ST_GeomFromText(CAST ('POINT(").append(longitude).append(" ").append(latitude).append(")' AS TEXT), 4326),true) as dist ");
-    	sb.append(" FROM spatial.").append(tableName);
-    	sb.append(" WHERE NOT ST_IsEmpty(geom) AND enabled = 'Y' ORDER BY dist,gid ");
-    	sb.append(" LIMIT ").append(limit).append(")");
-    	return sb.toString();
+        sb.append("(WITH closest_candidates AS (SELECT '").append(typeName).append("' AS type, gid, code, name, geom");
+        sb.append(" FROM spatial.").append(tableName).append(" subset ");
+        sb.append("ORDER BY subset.geom <-> 'SRID=4326;POINT(").append(longitude).append(" ").append(latitude).append(")'::geometry ").append("LIMIT 100)");
+        sb.append(" SELECT '").append(typeName).append("' AS type, gid, code, name, ");
+        sb.append("ST_ClosestPoint(geom, 'SRID=4326;POINT(").append(longitude).append(" ").append(latitude).append(")'::geometry) AS closest ");
+        sb.append(" FROM spatial.").append(tableName);
+        sb.append(" WHERE NOT ST_IsEmpty(geom) AND enabled = 'Y' ORDER BY ");
+        sb.append("ST_Distance(geom, 'SRID=4326;POINT(").append(longitude).append(" ").append(latitude).append(")'::geometry),gid ").append("LIMIT ").append(limit).append(')');
+        return sb.toString();
     }
 
     @Override
