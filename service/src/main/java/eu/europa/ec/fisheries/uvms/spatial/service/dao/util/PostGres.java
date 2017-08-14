@@ -48,7 +48,7 @@ public class PostGres extends AbstractGisFunction {
 
     public String closestAreaToPoint(int index,String typeName, String tableName, Double latitude, Double longitude, Integer limit) {
         StringBuilder sb = new StringBuilder();
-        sb.append("(WITH closest_candidates AS (SELECT '").append(typeName).append("' AS type, gid, code, name, geom");
+        sb.append("(WITH closest_candidates_").append(typeName).append(" AS (SELECT '").append(typeName).append("' AS type, gid, code, name, geom");
         sb.append(" FROM spatial.").append(tableName).append(" subset ");
         sb.append("ORDER BY subset.geom <-> 'SRID=4326;POINT(").append(longitude).append(" ").append(latitude).append(")'::geometry ").append("LIMIT 100)");
         sb.append(" SELECT '").append(typeName).append("' AS type, gid, code, name, ");
