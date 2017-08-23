@@ -218,7 +218,7 @@ public abstract class AbstractAreaDao<E extends BaseAreaEntity> extends Abstract
             while (it.hasNext()) {
                 AreaLocationTypesEntity next = it.next();
                 String typeName = next.getTypeName();
-                sb.append(spatialFunction.closestPointToPoint(typeName, next.getAreaDbTable(), longitude, latitude, 10));
+                sb.append(spatialFunction.closestPointToPoint(typeName, next.getAreaDbTable(), latitude, longitude, 10));
                 it.remove(); // avoids a ConcurrentModificationException
                 if (it.hasNext()) {
                     sb.append(UNION_ALL);
