@@ -10,6 +10,11 @@
         <artifactId>spatial</artifactId>
         <version>0.5.9-SNAPSHOT</version>
     </parent>
+    
+	<properties>
+        <docker.dev.stop.phase>verify</docker.dev.stop.phase>
+        <docker.dev.prestop.phase>install</docker.dev.prestop.phase>        	
+	</properties>
 
     <dependencies>
 
