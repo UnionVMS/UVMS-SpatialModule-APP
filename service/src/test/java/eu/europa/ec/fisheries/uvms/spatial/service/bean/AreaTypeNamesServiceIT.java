@@ -23,7 +23,8 @@ import org.junit.runner.RunWith;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.AreaLayerDto;
 
 import javax.ejb.EJB;
-import java.util.Collections;
+
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertFalse;
@@ -48,7 +49,7 @@ public class AreaTypeNamesServiceIT extends BaseSpatialArquillianTest {
     @Test
     public void shouldReturnAreaLayerMappings() {
         // when
-        List<AreaLayerDto> areaLayerMappings = areaTypeNamesService.listSystemAreaLayerMapping(Collections.EMPTY_LIST);
+        List<AreaLayerDto> areaLayerMappings = areaTypeNamesService.listSystemAreaLayerMapping(Arrays.asList(new String[] {"PORT","RFMO"}));
 
         //then
         assertNotNull(areaLayerMappings);
