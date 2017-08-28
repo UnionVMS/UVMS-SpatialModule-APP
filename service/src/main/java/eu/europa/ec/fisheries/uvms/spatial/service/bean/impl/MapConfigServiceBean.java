@@ -444,7 +444,7 @@ public class MapConfigServiceBean implements MapConfigService {
         updateLayer(layerSettingsDto.getAreaLayers(), serviceLayers, bingApiKey);
         updateAreaLayer(layerSettingsDto.getAreaLayers());
 
-        if (permittedServiceLayers != null) {
+        if (permittedServiceLayers != null && !permittedServiceLayers.isEmpty()) {
             filterAllForbiddenLayers(layerSettingsDto, permittedServiceLayers);
         }
     }

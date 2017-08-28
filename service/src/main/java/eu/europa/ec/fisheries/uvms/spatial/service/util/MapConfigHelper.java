@@ -380,11 +380,13 @@ public class MapConfigHelper {
     }
 
     public static boolean isServiceLayerPermitted(String serviceLayerName, Collection<String> permittedServiceLayers) {
-        for (String layer : permittedServiceLayers) {
-            if (serviceLayerName.equalsIgnoreCase(layer)) {
-                return true;
-            }
-        }
+    	if (permittedServiceLayers != null && !permittedServiceLayers.isEmpty()) {
+	        for (String layer : permittedServiceLayers) {
+	            if (serviceLayerName.equalsIgnoreCase(layer)) {
+	                return true;
+	            }
+	        }
+    	}
         return false;
     }
 }
