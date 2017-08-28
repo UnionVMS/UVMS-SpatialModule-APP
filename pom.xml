@@ -325,28 +325,6 @@
             </plugin>
         </plugins>
     </build>
-	<profiles>
-		<profile>
-			<id>arquillian-test</id>
-			<build>
-				<plugins>
-		            <plugin>
-		                <groupId>org.apache.maven.plugins</groupId>
-		                <artifactId>maven-surefire-plugin</artifactId>
-		                <configuration>
-		                    <excludes>
-		                        <exclude>**/*ITest.java</exclude>
-		                    </excludes>
-		                    <includes>
-		                    	<include>**/*Test.java</include>
-		                    	<include>**/*IT.java</include>                   	
-		                    </includes>
-		                </configuration>
-		            </plugin>				
-				</plugins>				
-			</build>
-		</profile>	
-	</profiles>
     <!-- add repositories for JTS and Hibernate Spatial and Hibernate (JBoss) -->
     <repositories>
         <repository>
@@ -380,6 +358,26 @@
                 <javadoc.opts>-Xdoclint:none</javadoc.opts>
             </properties>
         </profile>
+        <profile>
+			<id>arquillian-test</id>
+			<build>
+				<plugins>
+		            <plugin>
+		                <groupId>org.apache.maven.plugins</groupId>
+		                <artifactId>maven-surefire-plugin</artifactId>
+		                <configuration>
+		                    <excludes>
+		                        <exclude>**/*ITest.java</exclude>
+		                    </excludes>
+		                    <includes>
+		                    	<include>**/*Test.java</include>
+		                    	<include>**/*IT.java</include>                   	
+		                    </includes>
+		                </configuration>
+		            </plugin>				
+				</plugins>				
+			</build>
+		</profile>	        
         <profile>
             <id>dg-mare</id>
             <distributionManagement>
