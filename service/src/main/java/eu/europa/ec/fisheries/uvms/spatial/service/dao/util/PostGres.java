@@ -66,7 +66,7 @@ public class PostGres extends AbstractGisFunction {
     public String closestPointToPoint(String typeName, String tableName, Double latitude, Double longitude, Integer limit) {
         StringBuilder sb = new StringBuilder();
         sb.append("(SELECT '").append(typeName).append("' as type, gid, code, name, geom,");
-        sb.append(" ST_Distance(geom, ST_GeomFromText(CAST ('POINT(").append(longitude).append(" ").append(latitude).append(")' AS TEXT), 4326),true)");
+        sb.append(" ST_Distance(geom, ST_GeomFromText(CAST ('POINT(").append(longitude).append(" ").append(latitude).append(")' AS TEXT), 4326),true) as distance");
         sb.append(" FROM spatial.").append(tableName).append(" WHERE enabled = 'Y' AND");
         sb.append(" ST_DWithin(ST_GeomFromText(CAST ('POINT(").append(longitude).append(" ").append(latitude).append(")' AS TEXT), 4326), geom, 0.1)");
         sb.append(" ORDER BY gid ASC LIMIT ").append(limit).append(" )");
