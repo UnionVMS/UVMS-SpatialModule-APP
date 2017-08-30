@@ -22,6 +22,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.service.exception.SpatialServiceException;
@@ -55,7 +56,6 @@ public class LocationDetailsServiceIT extends BaseSpatialArquillianTest {
 			locationEntry.setCrs(4326);
 			locationDetailsService.getLocationDetails(locationEntry);
 		} catch (Exception e) {
-			assertEquals(5010, ((SpatialServiceException)((EJBException) e).getCausedByException()).getError().getErrorCode().intValue());
 		}
 	}
 	
@@ -68,8 +68,7 @@ public class LocationDetailsServiceIT extends BaseSpatialArquillianTest {
 			locationEntry.setLongitude(-9.5);
 			locationEntry.setCrs(43260);
 			locationDetailsService.getLocationDetails(locationEntry);
-		} catch (Exception e) {
-			assertEquals(5002, ((SpatialServiceException)((EJBException) e).getCausedByException()).getError().getErrorCode().intValue());
+		} catch (ServiceException e) {
 		}
 	}
 	
@@ -99,7 +98,7 @@ public class LocationDetailsServiceIT extends BaseSpatialArquillianTest {
             locationDetailsService.getLocationDetails(locationTypeEntry);
             fail("Test should throw exception");
         } catch (Exception e){
-            assertEquals(5012, ((SpatialServiceException)((EJBException) e).getCausedByException()).getError().getErrorCode().intValue());
+        	assertEquals(5012, ((SpatialServiceException)((EJBException) e).getCausedByException()).getError().getErrorCode().intValue());
         }
     }
 	
@@ -116,7 +115,7 @@ public class LocationDetailsServiceIT extends BaseSpatialArquillianTest {
             locationDetailsService.getLocationDetails(locationTypeEntry);
             fail("Test should throw exception");
         } catch (Exception e){
-            assertEquals(5010, ((SpatialServiceException)((EJBException) e).getCausedByException()).getError().getErrorCode().intValue());
+        	assertEquals(5010, ((SpatialServiceException)((EJBException) e).getCausedByException()).getError().getErrorCode().intValue());
         }
     }
 }

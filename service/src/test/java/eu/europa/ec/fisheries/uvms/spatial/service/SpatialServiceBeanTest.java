@@ -31,9 +31,9 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.PointType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ScopeAreasType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.UnitType;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.EezEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.impl.SpatialServiceBean;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.UserAreaDto;
@@ -92,7 +92,7 @@ public class SpatialServiceBeanTest extends BaseUnitilsTest {
         repo.returns(asList(areas)).closestArea(null, null, null);
 
         List<Area> closestArea = service.getClosestArea(closestAreaRequest);
-        assertEquals(18267.45280663312, closestArea.get(0).getDistance());
+        assertEquals(18267.452806634894, closestArea.get(0).getDistance());
     }
 
     @Test
@@ -150,7 +150,7 @@ public class SpatialServiceBeanTest extends BaseUnitilsTest {
 
         assertEquals("4610", closestPointToPointByType.get(0).getId());
         assertEquals("Moroni", closestPointToPointByType.get(0).getName());
-        assertEquals(1498.670248831626, closestPointToPointByType.get(0).getDistance());
+        assertEquals(1498.670248834928, closestPointToPointByType.get(0).getDistance());
         assertEquals(UnitType.KILOMETERS, closestPointToPointByType.get(0).getUnit());
         assertEquals(LocationType.PORT, closestPointToPointByType.get(0).getLocationType());
 

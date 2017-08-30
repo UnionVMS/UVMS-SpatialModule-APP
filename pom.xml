@@ -5,12 +5,12 @@
 	<parent>
 		<groupId>fish.focus.uvms.maven</groupId>
 		<artifactId>uvms-pom</artifactId>
-		<version>1.8</version>
+		<version>1.9</version>
 	</parent>
 
     <groupId>eu.europa.ec.fisheries.uvms.spatial</groupId>
     <artifactId>spatial</artifactId>
-    <version>0.5.9-SNAPSHOT</version>
+    <version>0.5.10-SNAPSHOT</version>
     <packaging>pom</packaging>
     <description>Maven projekt-archetype for UnionVms modules</description>
 
@@ -19,6 +19,7 @@
 
         <!-- The spatial name is used as a common point to rename the application alias visible in USM-->
         <spatial.name>Spatial</spatial.name>
+        <docker.dev.version>3.7.0</docker.dev.version>
         <spatial.model>1.0.5</spatial.model>
         <reporting.model>1.0.3</reporting.model>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -35,11 +36,11 @@
         <application.logfile.boot>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}-boot.log</application.logfile.boot>
         <hibernate.version>4.3.5.Final</hibernate.version>
         <hibernate-spatial.version>4.3</hibernate-spatial.version>
-        <geotools.version>14-M1</geotools.version>
-        <uvms.commons.version>2.0.25</uvms.commons.version>
+        <geotools.version>14.4</geotools.version>
+        <uvms.commons.version>2.0.27</uvms.commons.version>
         <uvms.test.version>0.0.4</uvms.test.version>
         <hibernate.validator.version>5.2.1.Final</hibernate.validator.version>
-        <usm4uvms.version>3.0.6</usm4uvms.version>
+        <usm4uvms.version>3.0.8</usm4uvms.version>
         <usm_deployment_descriptor_force_update>false</usm_deployment_descriptor_force_update>
         <release.branch.name>uvms-1.0.0</release.branch.name>
         <maven.scm.provider.version>2.1.1</maven.scm.provider.version>
@@ -65,7 +66,7 @@
 			<dependency>
 				<groupId>fish.focus.uvms.maven</groupId>
 				<artifactId>uvms-pom-monitoring-deps</artifactId>
-				<version>1.8</version>
+				<version>1.9</version>
 				<type>pom</type>
 			</dependency>
 
@@ -311,57 +312,19 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.sonarsource.scanner.maven</groupId>
-                <artifactId>sonar-maven-plugin</artifactId>
-                <version>3.0.1</version>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <excludes>
                         <exclude>**/*ITest.java</exclude>
                     </excludes>
+                    <includes>
+                    	<include>**/*Test.java</include>
+                    </includes>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-               <dependencies>
-                    <dependency>
-                        <groupId>org.apache.maven.scm</groupId>
-                        <artifactId>maven-scm-provider-gitexe</artifactId>
-                        <version>1.8.1</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.7.6.201602180812</version>
-                <configuration>
-                    <destFile>${sonar.jacoco.reportPath}</destFile>
-                    <append>true</append>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>jacoco-initialize</id>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>jacoco-site</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
-
     <!-- add repositories for JTS and Hibernate Spatial and Hibernate (JBoss) -->
     <repositories>
         <repository>
@@ -395,6 +358,26 @@
                 <javadoc.opts>-Xdoclint:none</javadoc.opts>
             </properties>
         </profile>
+        <profile>
+			<id>arquillian-test</id>
+			<build>
+				<plugins>
+		            <plugin>
+		                <groupId>org.apache.maven.plugins</groupId>
+		                <artifactId>maven-surefire-plugin</artifactId>
+		                <configuration>
+		                    <excludes>
+		                        <exclude>**/*ITest.java</exclude>
+		                    </excludes>
+		                    <includes>
+		                    	<include>**/*Test.java</include>
+		                    	<include>**/*IT.java</include>                   	
+		                    </includes>
+		                </configuration>
+		            </plugin>				
+				</plugins>				
+			</build>
+		</profile>	        
         <profile>
             <id>dg-mare</id>
             <distributionManagement>
