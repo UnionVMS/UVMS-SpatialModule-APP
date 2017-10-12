@@ -10,9 +10,9 @@
 
     <groupId>eu.europa.ec.fisheries.uvms.spatial</groupId>
     <artifactId>spatial</artifactId>
-    <version>0.5.11-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <description>Maven projekt-archetype for UnionVms modules</description>
+    <description>Maven project-archetype for UnionVms modules</description>
 
 
   <properties>
@@ -27,7 +27,7 @@
         <jts.version>1.13</jts.version>
         <jackson.version>2.6.0</jackson.version>
         <logback.core.version>1.1.2</logback.core.version>
-        <asset.module.version>3.0.0</asset.module.version>
+        <asset.model.version>3.0.0</asset.model.version>
         <movement.model.version>3.0.4</movement.model.version>
         <application.name>${project.parent.artifactId}</application.name>
         <application.version>${project.parent.version}</application.version>
@@ -37,10 +37,10 @@
         <hibernate.version>4.3.5.Final</hibernate.version>
         <hibernate-spatial.version>4.3</hibernate-spatial.version>
         <geotools.version>14.4</geotools.version>
-        <uvms.commons.version>2.0.30-SNAPSHOT</uvms.commons.version>
-        <uvms.test.version>0.0.4</uvms.test.version>
+        <uvms.commons.version>2.0.30</uvms.commons.version>
+        <uvms.test.version>0.0.8</uvms.test.version>
         <hibernate.validator.version>5.2.1.Final</hibernate.validator.version>
-        <usm4uvms.version>3.0.8</usm4uvms.version>
+        <usm4uvms.version>3.0.9</usm4uvms.version>
         <usm_deployment_descriptor_force_update>false</usm_deployment_descriptor_force_update>
         <release.branch.name>uvms-1.0.0</release.branch.name>
         <maven.scm.provider.version>2.1.1</maven.scm.provider.version>
@@ -99,7 +99,7 @@
                 <groupId>eu.europa.ec.fisheries.uvms</groupId>
                 <artifactId>usm4uvms</artifactId>
                 <version>${usm4uvms.version}</version>
-				<optional>true</optional>				
+				<optional>true</optional>
             </dependency>
             
             <dependency>
@@ -144,7 +144,7 @@
             <dependency>
                 <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
                 <artifactId>asset-model</artifactId>
-                <version>${asset.module.version}</version>
+                <version>${asset.model.version}</version>
 				<classifier>date</classifier>
             </dependency>
             
@@ -371,13 +371,13 @@
 		                    </excludes>
 		                    <includes>
 		                    	<include>**/*Test.java</include>
-		                    	<include>**/*IT.java</include>                   	
+		                    	<include>**/*IT.java</include>
 		                    </includes>
 		                </configuration>
-		            </plugin>				
-				</plugins>				
+		            </plugin>
+				</plugins>
 			</build>
-		</profile>	        
+		</profile>
         <profile>
             <id>dg-mare</id>
             <distributionManagement>
