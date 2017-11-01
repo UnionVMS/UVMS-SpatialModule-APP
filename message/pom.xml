@@ -33,7 +33,6 @@
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.movement</groupId>
             <artifactId>movement-model</artifactId>
-			<classifier>xmlgregoriancalendar</classifier>
             <scope>provided</scope>
         </dependency>
         

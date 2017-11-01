@@ -50,18 +50,41 @@
             <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
             <artifactId>uvms-commons-message</artifactId>
         </dependency>
+        <dependency>
+            <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
+            <artifactId>uvms-commons-domain</artifactId>
+            <version>${uvms.commons.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
+            <artifactId>uvms-commons-service</artifactId>
+            <version>${uvms.commons.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
+            <artifactId>uvms-commons-geometry</artifactId>
+            <version>${uvms.commons.version}</version>
+        </dependency>        
+        <dependency>
+            <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
+            <artifactId>uvms-commons-date</artifactId>
+            <version>${uvms.commons.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
+            <artifactId>uvms-commons-dao</artifactId>
+            <version>${uvms.commons.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.movement</groupId>
             <artifactId>movement-model</artifactId>
-			<classifier>xmlgregoriancalendar</classifier>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
             <artifactId>asset-model</artifactId>
-			<classifier>date</classifier>
             <scope>provided</scope>
         </dependency>
 
