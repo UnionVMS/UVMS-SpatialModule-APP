@@ -32,7 +32,7 @@ import com.vividsolutions.jts.io.ParseException;
 import eu.europa.ec.fisheries.uvms.common.utils.GeometryUtils;
 import eu.europa.ec.fisheries.uvms.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.mapper.GeometryMapper;
-import eu.europa.ec.fisheries.uvms.message.MessageException;
+import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
 import eu.europa.ec.fisheries.uvms.spatial.message.service.SpatialConsumerBean;
 import eu.europa.ec.fisheries.uvms.spatial.message.service.UserProducerBean;
