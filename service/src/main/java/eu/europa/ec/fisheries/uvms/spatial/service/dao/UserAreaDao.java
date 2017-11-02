@@ -14,7 +14,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.dao;
 
 import com.google.common.collect.ImmutableMap;
 import com.vividsolutions.jts.geom.Geometry;
-import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.service.QueryParameter;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.AreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadMappingProperty;

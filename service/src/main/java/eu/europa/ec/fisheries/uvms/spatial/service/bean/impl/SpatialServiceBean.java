@@ -19,7 +19,7 @@ import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 import eu.europa.ec.fisheries.uvms.common.utils.GeometryUtils;
-import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.interceptors.TracingInterceptor;
 import eu.europa.ec.fisheries.uvms.mapper.GeometryMapper;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.AbstractAreaDao;

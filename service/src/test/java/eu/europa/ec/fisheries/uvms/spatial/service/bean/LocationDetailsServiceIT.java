@@ -22,7 +22,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.service.exception.SpatialServiceException;
