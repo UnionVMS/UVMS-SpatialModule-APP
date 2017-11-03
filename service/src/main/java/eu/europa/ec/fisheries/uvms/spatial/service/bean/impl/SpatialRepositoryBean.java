@@ -27,7 +27,7 @@ import java.util.Set;
 
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.service.QueryParameter;
+import eu.europa.ec.fisheries.uvms.commons.service.dao.QueryParameter;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialRepository;

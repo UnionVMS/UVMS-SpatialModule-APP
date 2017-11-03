@@ -12,7 +12,7 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.dao;
 
-import static eu.europa.ec.fisheries.uvms.service.QueryParameter.with;
+import static eu.europa.ec.fisheries.uvms.commons.service.dao.QueryParameter.with;
 import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 
 import javax.persistence.EntityManager;
@@ -21,7 +21,7 @@ import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
+import eu.europa.ec.fisheries.uvms.commons.service.dao.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.ProjectionDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.ReportConnectSpatialEntity;
 import org.hibernate.Query;

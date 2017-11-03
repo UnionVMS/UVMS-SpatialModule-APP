@@ -11,7 +11,7 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.service.dao;
 
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
+import eu.europa.ec.fisheries.uvms.commons.service.dao.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.AreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.UserAreaLayerDto;
@@ -22,7 +22,7 @@ import org.hibernate.transform.Transformers;
 import javax.persistence.EntityManager;
 import java.util.List;
 
-import static eu.europa.ec.fisheries.uvms.service.QueryParameter.*;
+import static eu.europa.ec.fisheries.uvms.commons.service.dao.QueryParameter.*;
 import static eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTypesEntity.*;
 
 public class AreaLocationTypesDao extends AbstractDAO<AreaLocationTypesEntity> {

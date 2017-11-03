@@ -17,7 +17,9 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
 import com.vividsolutions.jts.io.WKTWriter;
-import eu.europa.ec.fisheries.uvms.deserializer.GeometryDeserializer;
+
+import eu.europa.ec.fisheries.uvms.commons.geometry.deserializer.GeometryDeserializer;
+
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.referencing.crs.DefaultGeographicCRS;

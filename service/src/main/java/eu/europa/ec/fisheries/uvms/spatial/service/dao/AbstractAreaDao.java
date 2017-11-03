@@ -14,8 +14,8 @@ package eu.europa.ec.fisheries.uvms.spatial.service.dao;
 
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
-import eu.europa.ec.fisheries.uvms.service.QueryParameter;
+import eu.europa.ec.fisheries.uvms.commons.service.dao.AbstractDAO;
+import eu.europa.ec.fisheries.uvms.commons.service.dao.QueryParameter;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DatabaseDialect;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadMappingProperty;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTypesEntity;

@@ -10,7 +10,7 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.service.entity;
 
-import eu.europa.ec.fisheries.uvms.domain.BaseEntity;
+import eu.europa.ec.fisheries.uvms.commons.domain.BaseEntity;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 
 public abstract class EntityFactory {

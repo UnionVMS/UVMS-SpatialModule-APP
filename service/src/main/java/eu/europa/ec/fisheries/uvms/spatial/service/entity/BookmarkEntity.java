@@ -21,7 +21,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import eu.europa.ec.fisheries.uvms.domain.BaseEntity;
+import eu.europa.ec.fisheries.uvms.commons.domain.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

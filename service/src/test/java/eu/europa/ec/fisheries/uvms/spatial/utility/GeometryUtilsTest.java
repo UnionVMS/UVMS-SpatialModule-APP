@@ -11,7 +11,7 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.utility;
 
 import eu.europa.ec.fisheries.uvms.BaseUnitilsTest;
-import eu.europa.ec.fisheries.uvms.common.utils.GeometryUtils;
+import eu.europa.ec.fisheries.uvms.commons.geometry.utils.GeometryUtils;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import lombok.SneakyThrows;

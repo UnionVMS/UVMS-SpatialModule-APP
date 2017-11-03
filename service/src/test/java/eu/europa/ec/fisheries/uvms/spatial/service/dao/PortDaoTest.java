@@ -13,7 +13,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.dao;
 import com.ninja_squad.dbsetup.DbSetup;
 import com.ninja_squad.dbsetup.destination.DataSourceDestination;
 import com.ninja_squad.dbsetup.operation.Operation;
-import eu.europa.ec.fisheries.uvms.service.QueryParameter;
+import eu.europa.ec.fisheries.uvms.commons.service.dao.QueryParameter;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.PortEntity;
 import eu.europa.ec.fisheries.uvms.spatial.utility.BaseSpatialDaoTest;
 import lombok.SneakyThrows;
