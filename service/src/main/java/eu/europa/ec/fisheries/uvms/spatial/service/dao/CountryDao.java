@@ -10,7 +10,7 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.service.dao;
 
-import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
+import eu.europa.ec.fisheries.uvms.commons.service.dao.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.CountryEntity;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;

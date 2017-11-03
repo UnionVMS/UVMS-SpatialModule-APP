@@ -16,7 +16,7 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.io.WKTReader;
 import eu.europa.ec.fisheries.uvms.BaseUnitilsTest;
-import eu.europa.ec.fisheries.uvms.common.utils.GeometryUtils;
+import eu.europa.ec.fisheries.uvms.commons.geometry.utils.GeometryUtils;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Area;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaExtendedIdentifierType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaIdentifierType;

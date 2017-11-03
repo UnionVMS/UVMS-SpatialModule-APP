@@ -14,8 +14,8 @@ import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 
-import eu.europa.ec.fisheries.uvms.rest.constants.ErrorCodes;
-import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
+import eu.europa.ec.fisheries.uvms.commons.rest.constants.ErrorCodes;
+import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.spatial.service.exception.SpatialServiceException;
 import lombok.extern.slf4j.Slf4j;
 

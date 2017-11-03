@@ -18,10 +18,11 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
-import eu.europa.ec.fisheries.uvms.common.utils.GeometryUtils;
-import eu.europa.ec.fisheries.uvms.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.interceptors.TracingInterceptor;
-import eu.europa.ec.fisheries.uvms.mapper.GeometryMapper;
+
+import eu.europa.ec.fisheries.uvms.commons.geometry.mapper.GeometryMapper;
+import eu.europa.ec.fisheries.uvms.commons.geometry.utils.GeometryUtils;
+import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.commons.service.interceptor.TracingInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.AbstractAreaDao;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DAOFactory;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DatabaseDialect;
@@ -81,7 +82,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.vividsolutions.jts.operation.distance.DistanceOp.nearestPoints;
-import static eu.europa.ec.fisheries.uvms.common.utils.GeometryUtils.*;
+import static eu.europa.ec.fisheries.uvms.commons.geometry.utils.GeometryUtils.*;
 import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 import static org.geotools.geometry.jts.JTS.orthodromicDistance;
 

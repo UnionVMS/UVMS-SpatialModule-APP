@@ -10,8 +10,8 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
-import eu.europa.ec.fisheries.uvms.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
+import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
+import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
 import javax.ws.rs.GET;

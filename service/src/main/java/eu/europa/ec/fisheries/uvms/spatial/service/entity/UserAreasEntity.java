@@ -13,7 +13,7 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.service.entity;
 
 import com.vividsolutions.jts.geom.Geometry;
-import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.util.ColumnAliasName;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;

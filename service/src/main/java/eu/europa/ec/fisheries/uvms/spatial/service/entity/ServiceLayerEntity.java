@@ -30,8 +30,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import java.util.Set;
 
-import eu.europa.ec.fisheries.uvms.domain.BaseEntity;
-import eu.europa.ec.fisheries.uvms.domain.CharBooleanConverter;
+import eu.europa.ec.fisheries.uvms.commons.domain.BaseEntity;
+import eu.europa.ec.fisheries.uvms.commons.domain.CharBooleanConverter;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

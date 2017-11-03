@@ -12,10 +12,11 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.rest.util;
 
-import eu.europa.ec.fisheries.uvms.CommonConstants;
 import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import eu.europa.ec.fisheries.uvms.commons.rest.filter.CommonConstants;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;

@@ -27,7 +27,7 @@ import org.mapstruct.factory.Mappers;
 import java.util.List;
 import java.util.Set;
 
-import static eu.europa.ec.fisheries.uvms.common.DateUtils.DATE_TIME_UI_FORMAT;
+import static eu.europa.ec.fisheries.uvms.commons.date.DateUtils.DATE_TIME_UI_FORMAT;
 
 @Mapper
 public abstract class UserAreaMapper {

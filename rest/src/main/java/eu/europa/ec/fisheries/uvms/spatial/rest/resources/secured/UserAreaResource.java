@@ -13,11 +13,12 @@ package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.vividsolutions.jts.io.ParseException;
-import eu.europa.ec.fisheries.uvms.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.rest.FeatureToGeoJsonJacksonMapper;
-import eu.europa.ec.fisheries.uvms.rest.constants.ErrorCodes;
-import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
-import eu.europa.ec.fisheries.uvms.service.interceptor.ValidationInterceptor;
+
+import eu.europa.ec.fisheries.uvms.commons.geometry.mapper.FeatureToGeoJsonJacksonMapper;
+import eu.europa.ec.fisheries.uvms.commons.rest.constants.ErrorCodes;
+import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
+import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.commons.service.interceptor.ValidationInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Coordinate;
