@@ -40,7 +40,8 @@ public enum SpatialServiceErrors implements Serializable {
     INVALID_UPLOAD_AREA_DATA("INVALID_UPLOAD_AREA_DATA", 5018, "Invalid upload area data.", "Wrong argument."),
     INVALID_USER_AREA_ID("INVALID_USER_AREA_ID", 5019, "Invalid user area id.", "Wrong argument."),
     USER_AREA_ALREADY_EXISTING("USER_AREA_ALREADY_EXISTING", 5020, "There is already an area with the same name. Please rename your new area and try again."),
-    DATA_SET_NAME_ALREADY_IN_USE("DATA_SET_NAME_ALREADY_IN_USE", 5021, "Dataset name already in use. Please choose another dataset name and try again.");
+    DATA_SET_NAME_ALREADY_IN_USE("DATA_SET_NAME_ALREADY_IN_USE", 5021, "Dataset name already in use. Please choose another dataset name and try again."),
+    DATA_SET_NAME_INVALID("INVALID_DATASET_NAME", 5022, "Dataset name invalid. Please set a dataset name and try again.");
 
 
     private final Integer errorCode;

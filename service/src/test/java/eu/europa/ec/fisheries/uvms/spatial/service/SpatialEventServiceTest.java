@@ -10,8 +10,18 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.service;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import javax.enterprise.event.Event;
+import javax.jms.TextMessage;
+
 import eu.europa.ec.fisheries.uvms.BaseUnitilsTest;
-import eu.europa.ec.fisheries.uvms.spatial.message.bean.SpatialMessageServiceBean;
+import eu.europa.ec.fisheries.uvms.spatial.message.bean.SpatialProducer;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageEvent;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMarshallException;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AllAreaTypesRequest;
@@ -31,13 +41,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import javax.enterprise.event.Event;
-import javax.jms.TextMessage;
-
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
-
 @RunWith(MockitoJUnitRunner.class)
 public class SpatialEventServiceTest extends BaseUnitilsTest {
 
@@ -56,7 +59,7 @@ public class SpatialEventServiceTest extends BaseUnitilsTest {
     @Mock
     private AreaTypeNamesService areaTypeNamesService;
     @Mock
-    private SpatialMessageServiceBean messageProducer;
+    private SpatialProducer messageProducer;
     @Mock
     private SpatialService filterAreasService;
     @Mock

@@ -12,7 +12,13 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.impl;
 
-import eu.europa.ec.fisheries.uvms.spatial.message.bean.SpatialMessageServiceBean;
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.enterprise.event.Observes;
+import java.util.List;
+
+import eu.europa.ec.fisheries.uvms.commons.message.model.Fault;
+import eu.europa.ec.fisheries.uvms.spatial.message.bean.SpatialProducer;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.AreaByCodeEvent;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.DeleteMapConfigurationEvent;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.GetAreaByLocationEvent;
@@ -24,7 +30,6 @@ import eu.europa.ec.fisheries.uvms.spatial.message.event.GetMapConfigurationEven
 import eu.europa.ec.fisheries.uvms.spatial.message.event.GetSpatialEnrichmentEvent;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.PingEvent;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.SaveOrUpdateMapConfigurationEvent;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageErrorEvent;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageEvent;
 import eu.europa.ec.fisheries.uvms.spatial.model.enums.FaultCode;
 import eu.europa.ec.fisheries.uvms.spatial.model.mapper.SpatialModuleMapper;
@@ -50,29 +55,27 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialEventService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialService;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.enterprise.event.Event;
-import javax.enterprise.event.Observes;
-import javax.inject.Inject;
-import java.util.List;
-
 @Stateless
 @Slf4j
 public class SpatialEventServiceBean implements SpatialEventService {
 
-    @Inject @SpatialMessageErrorEvent Event<SpatialMessageEvent> spatialErrorEvent;
-    private @EJB
-    SpatialService spatialService;
-    private @EJB
-    SpatialEnrichmentService enrichmentService;
-    private @EJB
-    AreaService areaService;
-    private @EJB
-    MapConfigService mapConfigService;
-    private @EJB
-    AreaTypeNamesService areaTypeNamesService;
-    private @EJB SpatialMessageServiceBean messageProducer;
+    @EJB
+    private SpatialService spatialService;
+
+    @EJB
+    private SpatialEnrichmentService enrichmentService;
+
+    @EJB
+    private AreaService areaService;
+
+    @EJB
+    private MapConfigService mapConfigService;
+
+    @EJB
+    private AreaTypeNamesService areaTypeNamesService;
+
+    @EJB
+    private SpatialProducer messageProducer;
 
     @Override
     public void getAreaByLocation(@Observes @GetAreaByLocationEvent SpatialMessageEvent message) {
@@ -100,7 +103,7 @@ public class SpatialEventServiceBean implements SpatialEventService {
 
     private void sendError(SpatialMessageEvent message, Exception e) {
         log.error("[ Error in spatial module. ] ", e);
-        spatialErrorEvent.fire(new SpatialMessageEvent(message.getMessage(), SpatialModuleResponseMapper.createFaultMessage(FaultCode.SPATIAL_MESSAGE, "Exception in spatial [ " + e.getMessage())));
+        messageProducer.sendFault(message.getMessage(), new Fault(FaultCode.SPATIAL_MESSAGE.getCode(),"Exception in spatial [ " + e.getMessage()));
     }
 
     @Override

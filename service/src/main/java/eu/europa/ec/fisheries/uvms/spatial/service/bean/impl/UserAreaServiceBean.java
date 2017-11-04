@@ -29,10 +29,11 @@ import java.util.Set;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.ParseException;
-import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.commons.geometry.mapper.GeometryMapper;
 import eu.europa.ec.fisheries.uvms.commons.geometry.utils.GeometryUtils;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
+import eu.europa.ec.fisheries.uvms.commons.message.model.Fault;
+import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
 import eu.europa.ec.fisheries.uvms.spatial.message.service.SpatialConsumerBean;
 import eu.europa.ec.fisheries.uvms.spatial.message.service.UserProducerBean;
@@ -44,7 +45,6 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialFault;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.UserAreaService;
@@ -114,7 +114,7 @@ public class UserAreaServiceBean implements UserAreaService {
             }
 
             try {
-                SpatialFault fault = JAXBMarshaller.unmarshall(response, SpatialFault.class);
+                Fault fault = JAXBMarshaller.unmarshall(response, Fault.class);
                 throw new SpatialModelValidationException(fault.getCode() + " : " + fault.getFault());
             } catch (SpatialModelMarshallException e) {
                 log.info("Expected Exception"); // Exception received in case if the validation is success
@@ -168,8 +168,13 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     private void checkIfContainsDataSetName(UserAreaGeoJsonDto userAreaDto, DatasetList datasetList) {
+        String datasetName = userAreaDto.getDatasetName();
+        if(datasetName == null){
+            throw new SpatialServiceException(SpatialServiceErrors.DATA_SET_NAME_INVALID);
+        }
         for (DatasetExtension extension : datasetList.getList()) {
-            if (extension != null && extension.getName().equals(userAreaDto.getDatasetName())) {
+
+            if (extension != null && extension.getName().equals(datasetName)) {
                 throw new SpatialServiceException(SpatialServiceErrors.DATA_SET_NAME_ALREADY_IN_USE);
             }
         }

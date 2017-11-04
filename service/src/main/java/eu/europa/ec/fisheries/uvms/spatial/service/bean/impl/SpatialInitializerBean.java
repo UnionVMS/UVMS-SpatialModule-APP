@@ -10,11 +10,12 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.impl;
 
+import javax.ejb.Singleton;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-import javax.ejb.Singleton;
+
 import eu.europa.ec.fisheries.uvms.init.AbstractModuleInitializerBean;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -26,12 +27,10 @@ public class SpatialInitializerBean extends AbstractModuleInitializerBean {
     public static final String PROP_FILE_NAME = "config.properties";
     public static final String PROP_USM_DESCRIPTOR_FORCE_UPDATE = "usm_deployment_descriptor_force_update";
 
-    @Override
     protected InputStream getDeploymentDescriptorRequest() {
-        return this.getClass().getClassLoader().getResourceAsStream("usmDeploymentDescriptor.xml");
+        return SpatialInitializerBean.class.getClassLoader().getResourceAsStream("usmDeploymentDescriptor.xml");
     }
 
-    @Override
     protected boolean mustRedeploy() {
         boolean isMustRedploy = false;
         String envVariable = System.getenv().get(PROP_USM_DESCRIPTOR_FORCE_UPDATE);
@@ -55,7 +54,7 @@ public class SpatialInitializerBean extends AbstractModuleInitializerBean {
 
     private Properties retrieveModuleConfigs() throws IOException {
         Properties prop = new Properties();
-        InputStream properties = getClass().getClassLoader().getResourceAsStream(PROP_FILE_NAME);
+        InputStream properties = SpatialInitializerBean.class.getClassLoader().getResourceAsStream(PROP_FILE_NAME);
         if (properties != null) {
             prop.load(properties);
             return prop;
