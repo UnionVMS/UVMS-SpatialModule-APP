@@ -18,6 +18,7 @@ import static eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants.Q
 import static eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants.QUEUE_MODULE_SPATIAL_NAME;
 
 import javax.ejb.ActivationConfigProperty;
+import javax.ejb.EJB;
 import javax.ejb.MessageDriven;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -110,7 +111,7 @@ public class SpatialEventMDB implements MessageListener {
     @AreaByCodeEvent
     private Event<SpatialMessageEvent> areaByCodeSpatialEvent;
 
-    @Inject
+    @EJB
     private SpatialProducer spatialProducer;
 
     @Override
