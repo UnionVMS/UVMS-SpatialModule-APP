@@ -11,26 +11,27 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.message.bean;
 
+import static eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants.QUEUE_MODULE_SPATIAL;
+
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 
-import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
-import eu.europa.ec.fisheries.uvms.commons.message.api.MessageProducer;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
 import lombok.extern.slf4j.Slf4j;
 
 @Stateless
 @LocalBean
 @Slf4j
-public class SpatialProducer extends AbstractProducer implements MessageProducer {
+public class SpatialProducer extends AbstractProducer {
 
     private static final String MODULE_NAME = "spatial";
 
     @Override
     public String getDestinationName(){
-        return MessageConstants.QUEUE_MODULE_SPATIAL;
+        return QUEUE_MODULE_SPATIAL;
     }
 
+    @Override
     public String getModuleName() {
         return MODULE_NAME;
     }
