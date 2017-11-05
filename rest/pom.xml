@@ -36,12 +36,12 @@
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
             <artifactId>uvms-commons-rest</artifactId>
-            <version>3.0.2</version>
+            <version>${uvms.commons.version}</version>
         </dependency>
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
             <artifactId>uvms-commons-geometry</artifactId>
-            <version>3.0.2</version>
+            <version>${uvms.commons.version}</version>
         </dependency>
 		<dependency>
 		    <groupId>org.apache.xmlgraphics</groupId>
