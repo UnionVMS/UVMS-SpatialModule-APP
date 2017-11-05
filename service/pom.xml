@@ -9,7 +9,7 @@
     <parent>
         <groupId>eu.europa.ec.fisheries.uvms.spatial</groupId>
         <artifactId>spatial</artifactId>
-        <version>1.0.3-SNAPSHOT</version>
+        <version>1.0.5-SNAPSHOT</version>
     </parent>
 
 	<properties>
@@ -64,6 +64,12 @@
             <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
             <artifactId>uvms-commons-geometry</artifactId>
             <version>${uvms.commons.version}</version>
+            <exclusions>
+				<exclusion>
+					<groupId>com.vividsolutions</groupId>
+					<artifactId>jts</artifactId>
+				</exclusion>
+			</exclusions>			            
         </dependency>        
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
@@ -80,6 +86,11 @@
             <artifactId>uvms-commons-rest</artifactId>
             <version>${uvms.commons.version}</version>
         </dependency>
+		<dependency>
+		    <groupId>org.apache.xmlgraphics</groupId>
+		    <artifactId>batik-transcoder</artifactId>
+		    <version>1.8</version>
+		</dependency>
 
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.movement</groupId>
