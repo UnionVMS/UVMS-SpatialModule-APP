@@ -15,13 +15,14 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
+import eu.europa.ec.fisheries.uvms.commons.message.api.MessageProducer;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
 import lombok.extern.slf4j.Slf4j;
 
 @Stateless
 @LocalBean
 @Slf4j
-public class SpatialProducer extends AbstractProducer {
+public class SpatialProducer extends AbstractProducer implements MessageProducer {
 
     private static final String MODULE_NAME = "spatial";
 

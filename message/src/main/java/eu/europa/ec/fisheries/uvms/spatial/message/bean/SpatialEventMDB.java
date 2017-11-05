@@ -18,7 +18,6 @@ import static eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants.Q
 import static eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants.QUEUE_MODULE_SPATIAL_NAME;
 
 import javax.ejb.ActivationConfigProperty;
-import javax.ejb.EJB;
 import javax.ejb.MessageDriven;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -111,8 +110,8 @@ public class SpatialEventMDB implements MessageListener {
     @AreaByCodeEvent
     private Event<SpatialMessageEvent> areaByCodeSpatialEvent;
 
-    @EJB
-    private SpatialProducer spatialProducer;
+    @Inject
+    private SpatialProducer producer;
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -184,12 +183,12 @@ public class SpatialEventMDB implements MessageListener {
                 default:
                     log.error("[ Not implemented method consumed: {} ]", method);
                     Fault fault = new Fault(FaultCode.SPATIAL_MESSAGE.getCode(), "Method not implemented");
-                    spatialProducer.sendFault(textMessage,fault);
+                    producer.sendFault(textMessage,fault);
             }
 
         } catch (SpatialModelMapperException e) {
             Fault fault = new Fault(FaultCode.SPATIAL_MESSAGE.getCode(), "ERROR OCCURRED IN SPATIAL MDB");
-            spatialProducer.sendFault(textMessage, fault);
+            producer.sendFault(textMessage, fault);
         }
     }
 }
