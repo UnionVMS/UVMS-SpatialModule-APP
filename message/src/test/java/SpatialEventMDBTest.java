@@ -8,8 +8,20 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import javax.enterprise.event.Event;
+import javax.jms.JMSException;
+import javax.jms.TextMessage;
+import java.util.Arrays;
+
 import eu.europa.ec.fisheries.uvms.BaseUnitilsTest;
+import eu.europa.ec.fisheries.uvms.commons.message.api.Fault;
 import eu.europa.ec.fisheries.uvms.spatial.message.bean.SpatialEventMDB;
+import eu.europa.ec.fisheries.uvms.spatial.message.bean.SpatialProducer;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageEvent;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMarshallException;
 import eu.europa.ec.fisheries.uvms.spatial.model.mapper.JAXBMarshaller;
@@ -32,14 +44,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import javax.enterprise.event.Event;
-import javax.jms.JMSException;
-import javax.jms.TextMessage;
-import java.util.Arrays;
-
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
-
 @RunWith(MockitoJUnitRunner.class)
 public class SpatialEventMDBTest extends BaseUnitilsTest {
 
@@ -48,6 +52,9 @@ public class SpatialEventMDBTest extends BaseUnitilsTest {
 
     @InjectMocks
     private SpatialEventMDB mdb = new SpatialEventMDB();
+
+    @Mock
+    private SpatialProducer producer;
 
     @Mock
     private Event<SpatialMessageEvent> areaByLocationSpatialEvent;
@@ -68,9 +75,6 @@ public class SpatialEventMDBTest extends BaseUnitilsTest {
     private Event<SpatialMessageEvent> filterAreaSpatialEvent;
 
     @Mock
-    private Event<SpatialMessageEvent> spatialErrorEvent;
-
-    @Mock
     TextMessage textMessage;
 
     @Test
@@ -89,21 +93,7 @@ public class SpatialEventMDBTest extends BaseUnitilsTest {
         mdb.onMessage(textMessage);
 
         verify(areaByLocationSpatialEvent, times(1)).fire(any(SpatialMessageEvent.class));
-        verify(spatialErrorEvent, times(0)).fire(any(SpatialMessageEvent.class));
-    }
-
-    @Test
-    public void testOnMessageWithAllAreaTypesRequest() throws SpatialModelMarshallException, JMSException {
-        String requestString = SpatialModuleRequestMapper.mapToCreateAllAreaTypesRequest();
-        when(textMessage.getText()).thenReturn(requestString);
-
-        SpatialModuleRequest request = new AreaByLocationSpatialRQ();
-        request.setMethod(SpatialModuleMethod.GET_AREA_TYPES);
-
-        mdb.onMessage(textMessage);
-
-        verify(typeNamesEvent, times(1)).fire(any(SpatialMessageEvent.class));
-        verify(spatialErrorEvent, times(0)).fire(any(SpatialMessageEvent.class));
+        verify(producer, times(0)).sendFault(any(TextMessage.class), any(Fault.class));
     }
 
     @Test
@@ -122,7 +112,7 @@ public class SpatialEventMDBTest extends BaseUnitilsTest {
         mdb.onMessage(textMessage);
 
         verify(closestAreaSpatialEvent, times(1)).fire(any(SpatialMessageEvent.class));
-        verify(spatialErrorEvent, times(0)).fire(any(SpatialMessageEvent.class));
+        verify(producer, times(0)).sendFault(any(TextMessage.class), any(Fault.class));
     }
 
     @Test
@@ -141,7 +131,7 @@ public class SpatialEventMDBTest extends BaseUnitilsTest {
         mdb.onMessage(textMessage);
 
         verify(closestLocationSpatialEvent, times(1)).fire(any(SpatialMessageEvent.class));
-        verify(spatialErrorEvent, times(0)).fire(any(SpatialMessageEvent.class));
+        verify(producer, times(0)).sendFault(any(TextMessage.class), any(Fault.class));
     }
 
     @Test
@@ -160,7 +150,7 @@ public class SpatialEventMDBTest extends BaseUnitilsTest {
         mdb.onMessage(textMessage);
 
         verify(enrichmentSpatialEvent, times(1)).fire(any(SpatialMessageEvent.class));
-        verify(spatialErrorEvent, times(0)).fire(any(SpatialMessageEvent.class));
+        verify(producer, times(0)).sendFault(any(TextMessage.class), any(Fault.class));
     }
 
     @Test
@@ -176,7 +166,7 @@ public class SpatialEventMDBTest extends BaseUnitilsTest {
 
         mdb.onMessage(textMessage);
 
-        verify(spatialErrorEvent, times(1)).fire(any(SpatialMessageEvent.class));
+        verify(producer, times(1)).sendFault(any(TextMessage.class), any(Fault.class));
     }
 
     @Test
@@ -194,7 +184,7 @@ public class SpatialEventMDBTest extends BaseUnitilsTest {
         mdb.onMessage(textMessage);
 
         verify(filterAreaSpatialEvent, times(1)).fire(any(SpatialMessageEvent.class));
-        verify(spatialErrorEvent, times(0)).fire(any(SpatialMessageEvent.class));
+        verify(producer, times(0)).sendFault(any(TextMessage.class), any(Fault.class));
     }
 
 }

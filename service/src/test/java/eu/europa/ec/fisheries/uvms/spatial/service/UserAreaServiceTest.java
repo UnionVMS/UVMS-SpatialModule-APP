@@ -13,7 +13,6 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.service;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
 
 import javax.jms.Destination;
 import javax.jms.JMSException;
@@ -34,7 +33,6 @@ import com.vividsolutions.jts.io.WKTReader;
 import com.vividsolutions.jts.util.Assert;
 import eu.europa.ec.fisheries.uvms.BaseUnitilsTest;
 import eu.europa.ec.fisheries.uvms.TestToolBox;
-import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractConsumer;
 import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
 import eu.europa.ec.fisheries.uvms.spatial.message.service.SpatialConsumerBean;
 import eu.europa.ec.fisheries.uvms.spatial.message.service.UserProducerBean;
@@ -44,7 +42,6 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.impl.UserAreaServiceBean;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.H2gis;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.PostGres;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.UserAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson.UserAreaGeoJsonDto;
@@ -52,13 +49,10 @@ import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.UserAreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity;
 import lombok.SneakyThrows;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.unitils.inject.annotation.InjectIntoByType;
 import org.unitils.inject.annotation.TestedObject;
 import org.unitils.mock.Mock;
-import org.unitils.mock.mockbehavior.MockBehavior;
-import org.unitils.mock.mockbehavior.impl.NoopMockBehavior;
 
 public class UserAreaServiceTest extends BaseUnitilsTest {
 
@@ -177,33 +171,6 @@ public class UserAreaServiceTest extends BaseUnitilsTest {
         assertEquals(dto.getServiceUrl(), response.getServiceUrl());
         assertEquals(dto.getTypeName(), response.getTypeName());
 
-    }
-
-    @Test
-    public void testStoreUserArea() throws Exception {
-
-        // Given
-        UserAreaGeoJsonDto userAreaDto = createUserArea("name", UUID.randomUUID().toString(), "desc", null);
-        UserAreasEntity userAreasEntity = new UserAreasEntity();
-        Field id = userAreasEntity.getClass().getDeclaredField("id");
-        TestToolBox.makeModifiable(id);
-        TestToolBox.setValue(userAreasEntity, id, 2L);
-        repoMock.returns(userAreasEntity).save(null);
-
-        userProducer.returns("whatever").sendModuleMessage(null, null);
-        spatialConsumerBeanMock.returns(new TestTextMessage()).getMessage("whatever", TextMessage.class);
-		
-        Field declaredField = AbstractConsumer.class.getDeclaredField("destination");
-        TestToolBox.makeModifiable(declaredField);
-        TestToolBox.setValue(spatialConsumerBeanMock.getMock(), declaredField, mock( Destination.class));
-        spatialConsumerBeanMock.getMock().getDestination();        
-        
-        // When
-        service.setDialect(new H2gis());
-        Long result = service.storeUserArea(userAreaDto, "rep_power");
-
-        // Then
-        assertEquals(2, result, 0);
     }
 
     @Test(expected = Exception.class)

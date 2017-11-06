@@ -44,7 +44,7 @@
             <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
             <artifactId>uvms-commons-geometry</artifactId>
             <version>${uvms.commons.version}</version>
- 			<scope>provided</scope>
+ 			      <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms</groupId>

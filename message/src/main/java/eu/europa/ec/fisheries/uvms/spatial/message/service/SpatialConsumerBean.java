@@ -24,6 +24,6 @@ public class SpatialConsumerBean extends AbstractConsumer {
 	@Override
 	public String getDestinationName(){
 		return MessageConstants.QUEUE_SPATIAL;
-	}		
-	
+	}
+
 }
