@@ -320,7 +320,9 @@ public class UserAreaServiceBean implements UserAreaService {
         }
 
         try {
-            deleteDataSetNameFromUSM(userAreaById.getDatasetName(), USMSpatial.APPLICATION_NAME);
+            if(userAreaById.getDatasetName() != null){
+                deleteDataSetNameFromUSM(userAreaById.getDatasetName(), USMSpatial.APPLICATION_NAME);
+            }
         } catch (ModelMarshallException | SpatialModelMapperException | MessageException e) {
             throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
         }
