@@ -24,16 +24,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SpatialProducer extends AbstractProducer {
 
-    private static final String MODULE_NAME = "spatial";
-
     @Override
     public String getDestinationName(){
         return QUEUE_MODULE_SPATIAL;
-    }
-
-    @Override
-    public String getModuleName() {
-        return MODULE_NAME;
     }
     
 }

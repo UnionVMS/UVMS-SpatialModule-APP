@@ -27,7 +27,7 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 
-import eu.europa.ec.fisheries.uvms.commons.message.model.Fault;
+import eu.europa.ec.fisheries.uvms.commons.message.api.Fault;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.AreaByCodeEvent;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.DeleteMapConfigurationEvent;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.GetAreaByLocationEvent;
