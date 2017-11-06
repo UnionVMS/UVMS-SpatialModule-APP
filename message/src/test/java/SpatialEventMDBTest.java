@@ -20,11 +20,11 @@ import java.util.Arrays;
 
 import eu.europa.ec.fisheries.uvms.BaseUnitilsTest;
 import eu.europa.ec.fisheries.uvms.commons.message.api.Fault;
+import eu.europa.ec.fisheries.uvms.commons.message.impl.JAXBUtils;
 import eu.europa.ec.fisheries.uvms.spatial.message.bean.SpatialEventMDB;
 import eu.europa.ec.fisheries.uvms.spatial.message.bean.SpatialProducer;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageEvent;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMarshallException;
-import eu.europa.ec.fisheries.uvms.spatial.model.mapper.JAXBMarshaller;
 import eu.europa.ec.fisheries.uvms.spatial.model.mapper.SpatialModuleRequestMapper;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaIdentifierType;
@@ -38,6 +38,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialModuleMethod;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialModuleRequest;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.UnitType;
+import lombok.SneakyThrows;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -154,6 +155,7 @@ public class SpatialEventMDBTest extends BaseUnitilsTest {
     }
 
     @Test
+    @SneakyThrows
     public void testOnMessageWithUnimplementedMethod() throws SpatialModelMarshallException, JMSException {
         PointType point = new PointType();
         point.setLongitude(LONGITUDE);
@@ -162,7 +164,7 @@ public class SpatialEventMDBTest extends BaseUnitilsTest {
 
         SpatialModuleRequest request = new SpatialEnrichmentRQ();
         request.setMethod(SpatialModuleMethod.GET_BUFFER_GEOM);
-        when(textMessage.getText()).thenReturn(JAXBMarshaller.marshall(request));
+        when(textMessage.getText()).thenReturn(JAXBUtils.marshallJaxBObjectToString(request));
 
         mdb.onMessage(textMessage);
 

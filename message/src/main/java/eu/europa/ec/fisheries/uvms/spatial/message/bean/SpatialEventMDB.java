@@ -23,11 +23,14 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
+import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
+import javax.xml.bind.JAXBException;
 
 import eu.europa.ec.fisheries.uvms.commons.message.api.Fault;
+import eu.europa.ec.fisheries.uvms.commons.message.impl.JAXBUtils;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.AreaByCodeEvent;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.DeleteMapConfigurationEvent;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.GetAreaByLocationEvent;
@@ -41,8 +44,6 @@ import eu.europa.ec.fisheries.uvms.spatial.message.event.PingEvent;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.SaveOrUpdateMapConfigurationEvent;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageEvent;
 import eu.europa.ec.fisheries.uvms.spatial.model.enums.FaultCode;
-import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMapperException;
-import eu.europa.ec.fisheries.uvms.spatial.model.mapper.JAXBMarshaller;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AllAreaTypesRequest;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByCodeRequest;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
@@ -121,62 +122,62 @@ public class SpatialEventMDB implements MessageListener {
 
         try {
 
-            SpatialModuleRequest request = JAXBMarshaller.unmarshall(textMessage, SpatialModuleRequest.class);
+            SpatialModuleRequest request = JAXBUtils.unMarshallMessage(textMessage.getText(), SpatialModuleRequest.class);
             SpatialModuleMethod method = request.getMethod();
 
             switch (method) {
                 case GET_AREA_BY_LOCATION:
-                    AreaByLocationSpatialRQ byLocationSpatialRQ = JAXBMarshaller.unmarshall(textMessage, AreaByLocationSpatialRQ.class);
+                    AreaByLocationSpatialRQ byLocationSpatialRQ = JAXBUtils.unMarshallMessage(textMessage.getText(), AreaByLocationSpatialRQ.class);
                     SpatialMessageEvent areaByLocationEvent = new SpatialMessageEvent(textMessage, byLocationSpatialRQ);
                     areaByLocationSpatialEvent.fire(areaByLocationEvent);
                     break;
                 case GET_AREA_TYPES:
-                    AllAreaTypesRequest allAreaTypesRequest = JAXBMarshaller.unmarshall(textMessage, AllAreaTypesRequest.class);
+                    AllAreaTypesRequest allAreaTypesRequest = JAXBUtils.unMarshallMessage(textMessage.getText(), AllAreaTypesRequest.class);
                     SpatialMessageEvent areaTypeNamesEvent = new SpatialMessageEvent(textMessage, allAreaTypesRequest);
                     typeNamesEvent.fire(areaTypeNamesEvent);
                     break;
                 case GET_CLOSEST_AREA:
-                    ClosestAreaSpatialRQ closestAreaSpatialRQ = JAXBMarshaller.unmarshall(textMessage, ClosestAreaSpatialRQ.class);
+                    ClosestAreaSpatialRQ closestAreaSpatialRQ = JAXBUtils.unMarshallMessage(textMessage.getText(), ClosestAreaSpatialRQ.class);
                     SpatialMessageEvent closestAreaEvent = new SpatialMessageEvent(textMessage, closestAreaSpatialRQ);
                     closestAreaSpatialEvent.fire(closestAreaEvent);
                     break;
                 case GET_CLOSEST_LOCATION:
-                    ClosestLocationSpatialRQ closestLocationSpatialRQ = JAXBMarshaller.unmarshall(textMessage, ClosestLocationSpatialRQ.class);
+                    ClosestLocationSpatialRQ closestLocationSpatialRQ = JAXBUtils.unMarshallMessage(textMessage.getText(), ClosestLocationSpatialRQ.class);
                     SpatialMessageEvent closestLocationEvent = new SpatialMessageEvent(textMessage, closestLocationSpatialRQ);
                     closestLocationSpatialEvent.fire(closestLocationEvent);
                     break;
                 case GET_ENRICHMENT:
-                    SpatialEnrichmentRQ spatialEnrichmentRQ = JAXBMarshaller.unmarshall(textMessage, SpatialEnrichmentRQ.class);
+                    SpatialEnrichmentRQ spatialEnrichmentRQ = JAXBUtils.unMarshallMessage(textMessage.getText(), SpatialEnrichmentRQ.class);
                     SpatialMessageEvent spatialEnrichmentEvent = new SpatialMessageEvent(textMessage, spatialEnrichmentRQ);
                     enrichmentSpatialEvent.fire(spatialEnrichmentEvent);
                     break;
                 case GET_FILTER_AREA:
-                    FilterAreasSpatialRQ filterAreasSpatialRQ = JAXBMarshaller.unmarshall(textMessage, FilterAreasSpatialRQ.class);
+                    FilterAreasSpatialRQ filterAreasSpatialRQ = JAXBUtils.unMarshallMessage(textMessage.getText(), FilterAreasSpatialRQ.class);
                     SpatialMessageEvent filterAreaEvent = new SpatialMessageEvent(textMessage, filterAreasSpatialRQ);
                     filterAreaSpatialEvent.fire(filterAreaEvent);
                     break;
                 case GET_MAP_CONFIGURATION:
-                    SpatialGetMapConfigurationRQ spatialGetMapConfigurationRQ = JAXBMarshaller.unmarshall(textMessage, SpatialGetMapConfigurationRQ.class);
+                    SpatialGetMapConfigurationRQ spatialGetMapConfigurationRQ = JAXBUtils.unMarshallMessage(textMessage.getText(), SpatialGetMapConfigurationRQ.class);
                     SpatialMessageEvent getMapConfigurationEvent = new SpatialMessageEvent(textMessage, spatialGetMapConfigurationRQ);
                     getMapConfigurationSpatialEvent.fire(getMapConfigurationEvent);
                     break;
                 case SAVE_OR_UPDATE_MAP_CONFIGURATION:
-                    SpatialSaveOrUpdateMapConfigurationRQ spatialSaveMapConfigurationRQ = JAXBMarshaller.unmarshall(textMessage, SpatialSaveOrUpdateMapConfigurationRQ.class);
+                    SpatialSaveOrUpdateMapConfigurationRQ spatialSaveMapConfigurationRQ = JAXBUtils.unMarshallMessage(textMessage.getText(), SpatialSaveOrUpdateMapConfigurationRQ.class);
                     SpatialMessageEvent saveMapConfigurationEvent = new SpatialMessageEvent(textMessage, spatialSaveMapConfigurationRQ);
                     saveOrUpdateMapConfigurationSpatialEvent.fire(saveMapConfigurationEvent);
                     break;
                 case DELETE_MAP_CONFIGURATION:
-                    SpatialDeleteMapConfigurationRQ mapConfigurationRQ = JAXBMarshaller.unmarshall(textMessage, SpatialDeleteMapConfigurationRQ.class);
+                    SpatialDeleteMapConfigurationRQ mapConfigurationRQ = JAXBUtils.unMarshallMessage(textMessage.getText(), SpatialDeleteMapConfigurationRQ.class);
                     SpatialMessageEvent spatialMessageEvent = new SpatialMessageEvent(textMessage, mapConfigurationRQ);
                     deleteMapConfigurationSpatialEvent.fire(spatialMessageEvent);
                     break;
                 case PING:
-                    PingRQ pingRQ = JAXBMarshaller.unmarshall(textMessage, PingRQ.class);
+                    PingRQ pingRQ = JAXBUtils.unMarshallMessage(textMessage.getText(), PingRQ.class);
                     SpatialMessageEvent pingEvent = new SpatialMessageEvent(textMessage, pingRQ);
                     pingSpatialEvent.fire(pingEvent);
                     break;
                 case GET_AREA_BY_CODE:
-                    AreaByCodeRequest areaByCodeRequest = JAXBMarshaller.unmarshall(textMessage, AreaByCodeRequest.class);
+                    AreaByCodeRequest areaByCodeRequest = JAXBUtils.unMarshallMessage(textMessage.getText(), AreaByCodeRequest.class);
                     SpatialMessageEvent areaByCodeEvent = new SpatialMessageEvent(textMessage, areaByCodeRequest);
                     areaByCodeSpatialEvent.fire(areaByCodeEvent);
                     break;
@@ -186,7 +187,7 @@ public class SpatialEventMDB implements MessageListener {
                     producer.sendFault(textMessage,fault);
             }
 
-        } catch (SpatialModelMapperException e) {
+        } catch (JMSException | JAXBException e) {
             Fault fault = new Fault(FaultCode.SPATIAL_MESSAGE.getCode(), "ERROR OCCURRED IN SPATIAL MDB");
             producer.sendFault(textMessage, fault);
         }

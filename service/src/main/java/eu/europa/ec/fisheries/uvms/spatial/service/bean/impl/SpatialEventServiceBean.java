@@ -18,6 +18,7 @@ import javax.enterprise.event.Observes;
 import java.util.List;
 
 import eu.europa.ec.fisheries.uvms.commons.message.api.Fault;
+import eu.europa.ec.fisheries.uvms.commons.message.impl.JAXBUtils;
 import eu.europa.ec.fisheries.uvms.spatial.message.bean.SpatialProducer;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.AreaByCodeEvent;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.DeleteMapConfigurationEvent;
@@ -32,7 +33,6 @@ import eu.europa.ec.fisheries.uvms.spatial.message.event.PingEvent;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.SaveOrUpdateMapConfigurationEvent;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageEvent;
 import eu.europa.ec.fisheries.uvms.spatial.model.enums.FaultCode;
-import eu.europa.ec.fisheries.uvms.spatial.model.mapper.SpatialModuleMapper;
 import eu.europa.ec.fisheries.uvms.spatial.model.mapper.SpatialModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Area;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByCodeRequest;
@@ -169,7 +169,7 @@ public class SpatialEventServiceBean implements SpatialEventService {
         try {
             mapConfigService.handleDeleteMapConfiguration(message.getSpatialDeleteMapConfigurationRQ());
             log.debug("Send back mapDefaultSRIDToEPSG configurations response.");
-            String value = SpatialModuleMapper.INSTANCE.marshal(new SpatialDeleteMapConfigurationRS()).getValue();
+            String value = JAXBUtils.marshallJaxBObjectToString(JAXBUtils.marshallJaxBObjectToString(new SpatialDeleteMapConfigurationRS()));
             messageProducer.sendModuleResponseMessage(message.getMessage(), value, MODULE_NAME);
         } catch (Exception e) {
             sendError(message, e);
