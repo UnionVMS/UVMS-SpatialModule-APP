@@ -18,6 +18,7 @@ import javax.ejb.Stateless;
 import javax.jms.JMSException;
 import javax.jms.TextMessage;
 import javax.transaction.Transactional;
+import javax.xml.bind.JAXBException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -31,8 +32,9 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.ParseException;
 import eu.europa.ec.fisheries.uvms.commons.geometry.mapper.GeometryMapper;
 import eu.europa.ec.fisheries.uvms.commons.geometry.utils.GeometryUtils;
-import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.commons.message.api.Fault;
+import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
+import eu.europa.ec.fisheries.uvms.commons.message.impl.JAXBUtils;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
 import eu.europa.ec.fisheries.uvms.spatial.message.service.SpatialConsumerBean;
@@ -40,7 +42,6 @@ import eu.europa.ec.fisheries.uvms.spatial.message.service.UserProducerBean;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMapperException;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMarshallException;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelValidationException;
-import eu.europa.ec.fisheries.uvms.spatial.model.mapper.JAXBMarshaller;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
@@ -114,9 +115,9 @@ public class UserAreaServiceBean implements UserAreaService {
             }
 
             try {
-                Fault fault = JAXBMarshaller.unmarshall(response, Fault.class);
+                Fault fault = JAXBUtils.unMarshallMessage(response.getText(), Fault.class);
                 throw new SpatialModelValidationException(fault.getCode() + " : " + fault.getFault());
-            } catch (SpatialModelMarshallException e) {
+            } catch (JAXBException e) {
                 log.info("Expected Exception"); // Exception received in case if the validation is success
             }
 
@@ -224,9 +225,9 @@ public class UserAreaServiceBean implements UserAreaService {
     private String mapToDeleteDataSetResponse(TextMessage response, String correlationId) throws SpatialModelMapperException {
         try {
             validateResponse(response, correlationId);
-            DeleteDatasetResponse deleteDatasetResponse = JAXBMarshaller.unmarshall(response, DeleteDatasetResponse.class);
+            DeleteDatasetResponse deleteDatasetResponse = JAXBUtils.unMarshallMessage(response.getText(), DeleteDatasetResponse.class);
             return deleteDatasetResponse.getResponse();
-        } catch (SpatialModelMarshallException e) {
+        } catch (JMSException | JAXBException e) {
             log.error(ERROR_WHEN_MARSHALLING_DATA, e);
             throw new SpatialModelMarshallException(ERROR_WHEN_MARSHALLING_OBJECT_TO_STRING, e);
         }
@@ -235,9 +236,9 @@ public class UserAreaServiceBean implements UserAreaService {
     private DatasetList mapToFindDatasetResponse(TextMessage response, String correlationId) throws SpatialModelMapperException {
         try {
             validateResponse(response, correlationId);
-            FilterDatasetResponse createDataSetResponse = JAXBMarshaller.unmarshall(response, FilterDatasetResponse.class);
+            FilterDatasetResponse createDataSetResponse = JAXBUtils.unMarshallMessage(response.getText(), FilterDatasetResponse.class);
             return createDataSetResponse.getDatasetList();
-        } catch (SpatialModelMarshallException e) {
+        } catch (JMSException | JAXBException e) {
             log.error(ERROR_WHEN_MARSHALLING_DATA, e);
             throw new SpatialModelMarshallException(ERROR_WHEN_MARSHALLING_OBJECT_TO_STRING, e);
         }
@@ -246,9 +247,9 @@ public class UserAreaServiceBean implements UserAreaService {
     private String mapToCreateDatasetResponse(TextMessage response, String correlationId) throws SpatialModelMapperException {
         try {
             validateResponse(response, correlationId);
-            CreateDatasetResponse createDatasetResponse = JAXBMarshaller.unmarshall(response, CreateDatasetResponse.class);
+            CreateDatasetResponse createDatasetResponse = JAXBUtils.unMarshallMessage(response.getText(), CreateDatasetResponse.class);
             return createDatasetResponse.getResponse();
-        } catch (SpatialModelMarshallException e) {
+        } catch (JMSException | JAXBException e) {
             log.error(ERROR_WHEN_MARSHALLING_DATA, e);
             throw new SpatialModelMarshallException(ERROR_WHEN_MARSHALLING_OBJECT_TO_STRING, e);
         }
