@@ -17,11 +17,9 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 
 import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
-import lombok.extern.slf4j.Slf4j;
 
 @Stateless
 @LocalBean
-@Slf4j
 public class SpatialProducer extends AbstractProducer {
 
     @Override

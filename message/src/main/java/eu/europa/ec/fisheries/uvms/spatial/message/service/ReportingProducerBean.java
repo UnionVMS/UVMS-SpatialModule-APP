@@ -19,8 +19,7 @@ import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
 
 @Stateless
 @Local
-public class
-ReportingProducerBean extends AbstractProducer {
+public class ReportingProducerBean extends AbstractProducer {
 
 	@Override
 	public String getDestinationName(){
