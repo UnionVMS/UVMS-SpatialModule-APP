@@ -19,7 +19,7 @@
         <!-- The spatial name is used as a common point to rename the application alias visible in USM-->
         <spatial.name>Spatial</spatial.name>
         <docker.dev.version>3.17.0</docker.dev.version>
-        <spatial.model>1.0.6-SNAPSHOT</spatial.model>
+        <spatial.model>1.0.6</spatial.model>
         <reporting.model>1.0.3</reporting.model>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
