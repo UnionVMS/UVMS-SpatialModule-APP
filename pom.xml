@@ -18,9 +18,9 @@
   <properties>
         <!-- The spatial name is used as a common point to rename the application alias visible in USM-->
         <spatial.name>Spatial</spatial.name>
-        <docker.dev.version>3.17.0</docker.dev.version>
-        <spatial.model>1.0.6</spatial.model>
-        <reporting.model>1.0.3</reporting.model>
+        <docker.dev.version>3.18.0</docker.dev.version>
+        <spatial.model>1.0.7</spatial.model>
+        <reporting.model>1.0.4</reporting.model>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <jts.version>1.13</jts.version>
@@ -59,8 +59,14 @@
 
     </properties>
 
-    <dependencyManagement>
+	<dependencies>
+		<dependency>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+		</dependency>
+	</dependencies>
 
+    <dependencyManagement>
         <dependencies>
 			<dependency>
 				<groupId>fish.focus.uvms.maven</groupId>

@@ -39,6 +39,12 @@
             <artifactId>uvms-commons-rest</artifactId>
             <version>${uvms.commons.version}</version>
             <scope>provided</scope>
+            <exclusions>
+            	<exclusion>
+            	  <groupId>com.fasterxml.jackson.core</groupId>
+  				  <artifactId>jackson-databind</artifactId>            	
+            	</exclusion>            
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
@@ -51,6 +57,11 @@
             <artifactId>usm4uvms</artifactId>
             <scope>provided</scope>
         </dependency>
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-annotations</artifactId>
+		    <version>2.6.0</version>
+		</dependency>
         
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
