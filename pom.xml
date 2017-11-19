@@ -2,427 +2,77 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>fish.focus.uvms.maven</groupId>
-		<artifactId>uvms-pom</artifactId>
-		<version>1.14</version>
-	</parent>
+    <artifactId>message</artifactId>
+    <name>${project.parent.artifactId}-message</name>
+    <packaging>ejb</packaging>
 
-    <groupId>eu.europa.ec.fisheries.uvms.spatial</groupId>
-    <artifactId>spatial</artifactId>
-    <version>1.0.8-SNAPSHOT</version>
-    <packaging>pom</packaging>
-    <description>Maven project-archetype for UnionVms modules</description>
+    <parent>
+        <groupId>eu.europa.ec.fisheries.uvms.spatial</groupId>
+        <artifactId>spatial</artifactId>
+        <version>1.0.7-SNAPSHOT</version>
+    </parent>
+    
+    <dependencies>
 
+        <dependency>
+            <groupId>eu.europa.ec.fisheries.uvms</groupId>
+            <artifactId>uvms-test</artifactId>
+        </dependency>
 
-  <properties>
-        <!-- The spatial name is used as a common point to rename the application alias visible in USM-->
-        <spatial.name>Spatial</spatial.name>
-        <docker.dev.version>3.18.0</docker.dev.version>
-        <spatial.model>1.0.7</spatial.model>
-        <reporting.model>1.0.4</reporting.model>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <jts.version>1.13</jts.version>
-        <jackson.version>2.6.0</jackson.version>
-        <logback.core.version>1.2.3</logback.core.version>
-        <asset.model.version>4.0.0</asset.model.version>
-        <movement.model.version>4.0.0</movement.model.version>
-        <application.name>${project.parent.artifactId}</application.name>
-        <application.version>${project.parent.version}</application.version>
-        <application.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}.log</application.logfile>
-        <application.error.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}-error.log</application.error.logfile>
-        <application.logfile.boot>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}-boot.log</application.logfile.boot>
-        <hibernate.version>4.3.11.Final</hibernate.version>
-        <hibernate-spatial.version>4.3</hibernate-spatial.version>
-        <geotools.version>14.4</geotools.version>
-        <uvms.commons.version>3.0.5</uvms.commons.version>
-        <uvms.test.version>0.0.8</uvms.test.version>
-        <hibernate.validator.version>5.2.1.Final</hibernate.validator.version>
-        <usm4uvms.version>4.0.4</usm4uvms.version>
-        <usm_deployment_descriptor_force_update>false</usm_deployment_descriptor_force_update>
-        <release.branch.name>uvms-1.0.0</release.branch.name>
-        <maven.scm.provider.version>2.1.1</maven.scm.provider.version>
-        <javaee.version>7.0</javaee.version>
-        <mapstruct.version>1.1.0.Final</mapstruct.version>
-        <database.dialect>oracle</database.dialect>
-        <scm.connection>scm:git:https://github.com/UnionVMS/UVMS-SpatialModule-APP.git</scm.connection>
+        <dependency>
+            <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
+            <artifactId>uvms-commons-message</artifactId>
+        </dependency>
 
-        <!-- sonar properties -->
-        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
-        <sonar.exclusions>**/generated-sources/**,**/*.js</sonar.exclusions>
-        <sonar.sourceEncoding>UTF-8</sonar.sourceEncoding>
-        <sonar.java.source>1.7</sonar.java.source>
-        <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
-        <sonar.jacoco.reportPath>${project.basedir}/target/coverage-reports/jacoco-unit.exec</sonar.jacoco.reportPath>
-        <sonar.language>java</sonar.language>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>spatial-model</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
-    </properties>
-
-	<dependencies>
-		<dependency>
-			<groupId>javax</groupId>
-			<artifactId>javaee-api</artifactId>
-		</dependency>
-	</dependencies>
-
-    <dependencyManagement>
-        <dependencies>
-			<dependency>
-				<groupId>fish.focus.uvms.maven</groupId>
-				<artifactId>uvms-pom-monitoring-deps</artifactId>
-				<version>1.14</version>
-				<type>pom</type>
-			</dependency>
-
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>1.7.25</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.vividsolutions</groupId>
-                <artifactId>jts</artifactId>
-                <version>${jts.version}</version>
-                <scope>provided</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>eu.europa.ec.fisheries.uvms.reporting</groupId>
-                <artifactId>reporting-model</artifactId>
-                <version>${reporting.model}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>eu.europa.ec.fisheries.uvms.spatial</groupId>
-                <artifactId>spatial-model</artifactId>
-                <version>${spatial.model}</version>
-            </dependency>
+        <dependency>
+            <groupId>eu.europa.ec.fisheries.uvms.movement</groupId>
+            <artifactId>movement-model</artifactId>
+            <scope>provided</scope>
+        </dependency>
         
-        	<dependency>
-                <groupId>eu.europa.ec.fisheries.uvms</groupId>
-                <artifactId>usm4uvms</artifactId>
-                <version>${usm4uvms.version}</version>
-				<optional>true</optional>
-            </dependency>
-            
-            <dependency>
-                <groupId>io.jsonwebtoken</groupId>
-                <artifactId>jjwt</artifactId>
-                <version>0.4</version>
-            </dependency>
+        <dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.16.18</version>
+		</dependency>
 
-            <dependency>
-	            <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
-	            <artifactId>uvms-commons-message</artifactId>
-                <version>${uvms.commons.version}</version>
-			</dependency>
-
-            <dependency>
-                <groupId>eu.europa.ec.fisheries.uvms</groupId>
-                <artifactId>uvms-test</artifactId>
-                <version>${uvms.test.version}</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>service</artifactId>
-                <version>${project.parent.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>message</artifactId>
-                <version>${project.parent.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>eu.europa.ec.fisheries.uvms.movement</groupId>
-                <artifactId>movement-model</artifactId>
-                <version>${movement.model.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
-                <artifactId>asset-model</artifactId>
-                <version>${asset.model.version}</version>
-            </dependency>
-            
-	        <dependency>
-				<groupId>org.hibernate</groupId>
-				<artifactId>hibernate-validator</artifactId>
-				<version>${hibernate.validator.version}</version>
-			</dependency>
-
-            <!-- Hibernate JPA provider provided by WildFly -->
-            <dependency>
-                <groupId>org.hibernate</groupId>
-                <artifactId>hibernate-entitymanager</artifactId>
-                <version>${hibernate.version}</version>
-                <scope>provided</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.hibernate</groupId>
-                <artifactId>hibernate-spatial</artifactId>
-                <version>4.3</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>com.vividsolutions</groupId>
-                        <artifactId>jts</artifactId>
-                    </exclusion>
-                </exclusions>
-                <scope>provided</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.geotools</groupId>
-                <artifactId>gt-geojson</artifactId>
-                <version>${geotools.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>com.vividsolutions</groupId>
-                        <artifactId>jts</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-
-            <dependency>
-                <groupId>org.geotools</groupId>
-                <artifactId>gt-shapefile</artifactId>
-                <version>${geotools.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.geotools</groupId>
-                <artifactId>gt-epsg-hsql</artifactId>
-                <version>${geotools.version}</version>
-            </dependency>
-
-            <dependency>
-            	<groupId>org.jboss.resteasy</groupId>
-			    <artifactId>resteasy-jaxb-provider</artifactId>
-			  	<version>3.0.11.Final</version>
-			  	<exclusions>
-			  		<exclusion>
-					    <groupId>com.sun.xml.bind</groupId>
-					    <artifactId>jaxb-impl</artifactId>			  		
-			  		</exclusion>
-			  	</exclusions>
-			</dependency>
-			
-			<dependency>
-			    <groupId>org.jboss.resteasy</groupId>
-			    <artifactId>jaxrs-api</artifactId>
-			    <version>3.0.11.Final</version>
-			</dependency>
-
-            <dependency>
-                <groupId>org.mapstruct</groupId>
-                <artifactId>mapstruct</artifactId>
-                <version>${mapstruct.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.mapstruct</groupId>
-                <artifactId>mapstruct-processor</artifactId>
-                <version>${mapstruct.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>javax</groupId>
-                <artifactId>javaee-api</artifactId>
-                <version>${javaee.version}</version>
-                <scope>provided</scope>
-            </dependency>
-	        <dependency>
-	            <groupId>ch.qos.logback</groupId>
-	            <artifactId>logback-classic</artifactId>
-	            <version>${logback.core.version}</version>
-	        </dependency>
-	        <dependency>
-	            <groupId>ch.qos.logback</groupId>
-	            <artifactId>logback-core</artifactId>
-	            <version>${logback.core.version}</version>
-	        </dependency>
-
-        </dependencies>
-
-    </dependencyManagement>
-
-    <scm>
-        <connection>${scm.connection}</connection>
-        <tag>HEAD</tag>
-    </scm>
-
-
-    <distributionManagement>
-        <repository>
-            <id>focus-releases</id>
-            <name>UnionVms Repository</name>
-            <url>http://nexus.focus.fish/nexus/content/repositories/releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>focus-snapshots</id>
-            <name>UnionVms Snapshot Repository</name>
-            <url>http://nexus.focus.fish/nexus/content/repositories/snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
+    </dependencies>
 
     <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-project-info-reports-plugin</artifactId>
-                    <version>2.9</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-source-plugin</artifactId>
-                    <version>2.0.4</version>
-                    <executions>
-                        <execution>
-                            <!-- This id must match the -Prelease-profile id value or else sources will be "uploaded" twice, which causes Nexus to fail -->
-                            <id>attach-sources</id>
-                            <goals>
-                                <goal>jar</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-ejb-plugin</artifactId>
-                    <configuration>
-                        <ejbVersion>3.1</ejbVersion>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>2.10.4</version>
-                    <executions>
-                        <execution>
-                            <id>attach-javadocs</id>
-                            <goals>
-                                <goal>jar</goal>
-                            </goals>
-                            <configuration>
-                                <additionalparam>${javadoc.opts}</additionalparam>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-
+        <finalName>${project.name}-${project.version}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-plugin-plugin</artifactId>
-                <version>3.4</version>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-ejb-plugin</artifactId>
+                <version>2.5.1</version>
                 <configuration>
-                    <goalPrefix>plugin</goalPrefix>
-                    <outputDirectory>target/dir</outputDirectory>
+                    <ejbVersion>3.1</ejbVersion>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>**/*ITest.java</exclude>
-                    </excludes>
-                    <includes>
-                    	<include>**/*Test.java</include>
-                    </includes>
-                </configuration>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.9</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
-    <!-- add repositories for JTS and Hibernate Spatial and Hibernate (JBoss) -->
-    <repositories>
-        <repository>
-            <id>OSGEO GeoTools repo</id>
-            <url>http://download.osgeo.org/webdav/geotools</url>
-        </repository>
-        <repository>
-            <id>Hibernate Spatial repo</id>
-            <url>http://www.hibernatespatial.org/repository</url>
-        </repository>
-        <!-- add JBOSS repository for easy access to Hibernate libraries -->
-        <repository>
-            <id>JBOSS</id>
-            <url>https://repository.jboss.org/nexus/content/repositories/releases/</url>
-        </repository>
-    </repositories>
-	
-	<profiles>
-        <profile>
-            <id>postgres</id>
-            <properties>
-                <database.dialect>postgres</database.dialect>
-            </properties>
-        </profile>
-        <profile>
-            <id>doclint-java8-disable</id>
-            <activation>
-                <jdk>[1.8,)</jdk>
-            </activation>
-            <properties>
-                <javadoc.opts>-Xdoclint:none</javadoc.opts>
-            </properties>
-        </profile>
-        <profile>
-			<id>arquillian-test</id>
-			<build>
-				<plugins>
-		            <plugin>
-		                <groupId>org.apache.maven.plugins</groupId>
-		                <artifactId>maven-surefire-plugin</artifactId>
-		                <configuration>
-		                    <excludes>
-		                        <exclude>**/*ITest.java</exclude>
-		                    </excludes>
-		                    <includes>
-		                    	<include>**/*Test.java</include>
-		                    	<include>**/*IT.java</include>
-		                    </includes>
-		                </configuration>
-		            </plugin>
-				</plugins>
-			</build>
-		</profile>
-        <profile>
-            <id>dg-mare</id>
-            <distributionManagement>
-                <repository>
-                    <id>digit-releases</id>
-                    <name>DG DIGIT Repository</name>
-                    <url>https://webgate.ec.europa.eu/CITnet/nexus/content/repositories/mare/</url>
-                </repository>
-                <snapshotRepository>
-                    <id>digit-snapshots</id>
-                    <name>DG DIGIT Snapshot Repository</name>
-                    <url>https://webgate.ec.europa.eu/CITnet/nexus/content/repositories/mare-snapshots/</url>
-                </snapshotRepository>
-            </distributionManagement>
-
-            <properties>
-                <scm.connection>scm:git:https://emserveje@webgate.ec.europa.eu/CITnet/stash/scm/unionvms/uvms-spatialmodule-app.git</scm.connection>
-            </properties>
-        </profile>
-
-	</profiles>
-
-    <modules>
-        <module>rest</module>
-        <module>service</module>
-        <module>message</module>
-        <module>deploy-wildfly</module>
-        <module>deploy-weblogic</module>
-    </modules>
+    
 </project>
