@@ -36,6 +36,7 @@
             <property name="hibernate.hbm2ddl.auto" value="create"/>
             <property name="hibernate.connection.username" value="sa"/>
             <property name="hibernate.connection.password" value=""/>
+            <property name="show_sql" value="false" />
         </properties>
     </persistence-unit>
  </persistence>

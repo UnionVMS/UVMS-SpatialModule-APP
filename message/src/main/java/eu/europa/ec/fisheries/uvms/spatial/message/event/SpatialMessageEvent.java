@@ -22,7 +22,6 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.PingRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialDeleteMapConfigurationRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialFault;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialGetMapConfigurationRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveOrUpdateMapConfigurationRQ;
 
@@ -41,16 +40,9 @@ public class SpatialMessageEvent {
     private PingRQ pingRQ;
     private AreaByCodeRequest areaByCodeRequest;
 
-    private SpatialFault fault;
-
     public SpatialMessageEvent(TextMessage message, AreaByLocationSpatialRQ areaByLocationSpatialRQ) {
         this.message = message;
         this.areaByLocationSpatialRQ = areaByLocationSpatialRQ;
-    }
-
-    public SpatialMessageEvent(TextMessage message, SpatialFault fault) {
-        this.message = message;
-        this.fault = fault;
     }
 
     public SpatialMessageEvent(TextMessage message, ClosestAreaSpatialRQ closestAreaSpatialRQ) {
@@ -117,10 +109,6 @@ public class SpatialMessageEvent {
 
     public SpatialEnrichmentRQ getSpatialEnrichmentRQ() {
         return spatialEnrichmentRQ;
-    }
-
-    public SpatialFault getFault() {
-        return fault;
     }
 
     public ClosestLocationSpatialRQ getClosestLocationSpatialRQ() {

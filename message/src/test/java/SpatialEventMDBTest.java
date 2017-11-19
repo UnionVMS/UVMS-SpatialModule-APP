@@ -8,11 +8,23 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import javax.enterprise.event.Event;
+import javax.jms.JMSException;
+import javax.jms.TextMessage;
+import java.util.Arrays;
+
 import eu.europa.ec.fisheries.uvms.BaseUnitilsTest;
+import eu.europa.ec.fisheries.uvms.commons.message.api.Fault;
+import eu.europa.ec.fisheries.uvms.commons.message.impl.JAXBUtils;
 import eu.europa.ec.fisheries.uvms.spatial.message.bean.SpatialEventMDB;
+import eu.europa.ec.fisheries.uvms.spatial.message.bean.SpatialProducer;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageEvent;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMarshallException;
-import eu.europa.ec.fisheries.uvms.spatial.model.mapper.JAXBMarshaller;
 import eu.europa.ec.fisheries.uvms.spatial.model.mapper.SpatialModuleRequestMapper;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaIdentifierType;
@@ -26,19 +38,12 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialModuleMethod;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialModuleRequest;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.UnitType;
+import lombok.SneakyThrows;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import javax.enterprise.event.Event;
-import javax.jms.JMSException;
-import javax.jms.TextMessage;
-import java.util.Arrays;
-
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SpatialEventMDBTest extends BaseUnitilsTest {
@@ -48,6 +53,9 @@ public class SpatialEventMDBTest extends BaseUnitilsTest {
 
     @InjectMocks
     private SpatialEventMDB mdb = new SpatialEventMDB();
+
+    @Mock
+    private SpatialProducer producer;
 
     @Mock
     private Event<SpatialMessageEvent> areaByLocationSpatialEvent;
@@ -68,9 +76,6 @@ public class SpatialEventMDBTest extends BaseUnitilsTest {
     private Event<SpatialMessageEvent> filterAreaSpatialEvent;
 
     @Mock
-    private Event<SpatialMessageEvent> spatialErrorEvent;
-
-    @Mock
     TextMessage textMessage;
 
     @Test
@@ -89,21 +94,7 @@ public class SpatialEventMDBTest extends BaseUnitilsTest {
         mdb.onMessage(textMessage);
 
         verify(areaByLocationSpatialEvent, times(1)).fire(any(SpatialMessageEvent.class));
-        verify(spatialErrorEvent, times(0)).fire(any(SpatialMessageEvent.class));
-    }
-
-    @Test
-    public void testOnMessageWithAllAreaTypesRequest() throws SpatialModelMarshallException, JMSException {
-        String requestString = SpatialModuleRequestMapper.mapToCreateAllAreaTypesRequest();
-        when(textMessage.getText()).thenReturn(requestString);
-
-        SpatialModuleRequest request = new AreaByLocationSpatialRQ();
-        request.setMethod(SpatialModuleMethod.GET_AREA_TYPES);
-
-        mdb.onMessage(textMessage);
-
-        verify(typeNamesEvent, times(1)).fire(any(SpatialMessageEvent.class));
-        verify(spatialErrorEvent, times(0)).fire(any(SpatialMessageEvent.class));
+        verify(producer, times(0)).sendFault(any(TextMessage.class), any(Fault.class));
     }
 
     @Test
@@ -122,7 +113,7 @@ public class SpatialEventMDBTest extends BaseUnitilsTest {
         mdb.onMessage(textMessage);
 
         verify(closestAreaSpatialEvent, times(1)).fire(any(SpatialMessageEvent.class));
-        verify(spatialErrorEvent, times(0)).fire(any(SpatialMessageEvent.class));
+        verify(producer, times(0)).sendFault(any(TextMessage.class), any(Fault.class));
     }
 
     @Test
@@ -141,7 +132,7 @@ public class SpatialEventMDBTest extends BaseUnitilsTest {
         mdb.onMessage(textMessage);
 
         verify(closestLocationSpatialEvent, times(1)).fire(any(SpatialMessageEvent.class));
-        verify(spatialErrorEvent, times(0)).fire(any(SpatialMessageEvent.class));
+        verify(producer, times(0)).sendFault(any(TextMessage.class), any(Fault.class));
     }
 
     @Test
@@ -160,10 +151,11 @@ public class SpatialEventMDBTest extends BaseUnitilsTest {
         mdb.onMessage(textMessage);
 
         verify(enrichmentSpatialEvent, times(1)).fire(any(SpatialMessageEvent.class));
-        verify(spatialErrorEvent, times(0)).fire(any(SpatialMessageEvent.class));
+        verify(producer, times(0)).sendFault(any(TextMessage.class), any(Fault.class));
     }
 
     @Test
+    @SneakyThrows
     public void testOnMessageWithUnimplementedMethod() throws SpatialModelMarshallException, JMSException {
         PointType point = new PointType();
         point.setLongitude(LONGITUDE);
@@ -172,11 +164,11 @@ public class SpatialEventMDBTest extends BaseUnitilsTest {
 
         SpatialModuleRequest request = new SpatialEnrichmentRQ();
         request.setMethod(SpatialModuleMethod.GET_BUFFER_GEOM);
-        when(textMessage.getText()).thenReturn(JAXBMarshaller.marshall(request));
+        when(textMessage.getText()).thenReturn(JAXBUtils.marshallJaxBObjectToString(request));
 
         mdb.onMessage(textMessage);
 
-        verify(spatialErrorEvent, times(1)).fire(any(SpatialMessageEvent.class));
+        verify(producer, times(1)).sendFault(any(TextMessage.class), any(Fault.class));
     }
 
     @Test
@@ -194,7 +186,7 @@ public class SpatialEventMDBTest extends BaseUnitilsTest {
         mdb.onMessage(textMessage);
 
         verify(filterAreaSpatialEvent, times(1)).fire(any(SpatialMessageEvent.class));
-        verify(spatialErrorEvent, times(0)).fire(any(SpatialMessageEvent.class));
+        verify(producer, times(0)).sendFault(any(TextMessage.class), any(Fault.class));
     }
 
 }

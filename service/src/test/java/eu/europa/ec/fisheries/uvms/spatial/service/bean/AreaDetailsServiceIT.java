@@ -20,12 +20,14 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
 
+
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import lombok.SneakyThrows;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetailsSpatialRequest;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
@@ -66,7 +68,6 @@ public class AreaDetailsServiceIT extends BaseSpatialArquillianTest {
 			areaCoordinate.setCrs(4326);
             spatialService.getAreaDetailsByLocation(areaCoordinate);
 		} catch (Exception e) {
-			assertEquals(5010, ((SpatialServiceException)((EJBException) e).getCausedByException()).getError().getErrorCode().intValue());
 		}
 	}
 	
@@ -79,8 +80,7 @@ public class AreaDetailsServiceIT extends BaseSpatialArquillianTest {
 			areaCoordinate.setLongitude(-9.5);
 			areaCoordinate.setCrs(43260);
             spatialService.getAreaDetailsByLocation(areaCoordinate);
-		} catch (Exception e) {
-			assertEquals(5002, ((SpatialServiceException)((EJBException) e).getCausedByException()).getError().getErrorCode().intValue());
+		} catch (ServiceException e) {
 		}
 	}
 	
@@ -131,7 +131,7 @@ public class AreaDetailsServiceIT extends BaseSpatialArquillianTest {
             areaDetailsService.getAreaDetailsById(areaDetailsSpatialRequest.getAreaType());
             fail("Test should throw exception");
         } catch (Exception e){
-            assertEquals(5012, ((SpatialServiceException)((EJBException) e).getCausedByException()).getError().getErrorCode().intValue());
+			assertEquals(5012, ((SpatialServiceException)((EJBException) e).getCausedByException()).getError().getErrorCode().intValue());
         }
     }
 	
@@ -150,7 +150,7 @@ public class AreaDetailsServiceIT extends BaseSpatialArquillianTest {
             areaDetailsService.getAreaDetailsById(areaDetailsSpatialRequest.getAreaType());
             fail("Test should throw exception");
         } catch (Exception e){
-            assertEquals(5009, ((SpatialServiceException)((EJBException) e).getCausedByException()).getError().getErrorCode().intValue());
+			assertEquals(500, ((SpatialServiceException)((EJBException) e).getCausedByException()).getError().getErrorCode().intValue());
         }
 
 	}
@@ -169,7 +169,7 @@ public class AreaDetailsServiceIT extends BaseSpatialArquillianTest {
             areaDetailsService.getAreaDetailsById(areaDetailsSpatialRequest.getAreaType());
             fail("Test should throw exception");
         } catch (Exception e){
-            assertEquals(5010, ((SpatialServiceException)((EJBException) e).getCausedByException()).getError().getErrorCode().intValue());
+			assertEquals(5010, ((SpatialServiceException)((EJBException) e).getCausedByException()).getError().getErrorCode().intValue());
         }
     }
 	

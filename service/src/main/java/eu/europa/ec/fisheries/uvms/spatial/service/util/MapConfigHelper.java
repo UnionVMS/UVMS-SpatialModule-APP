@@ -23,7 +23,7 @@ import java.util.Set;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.LayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.StylesDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.ConfigurationDto;
@@ -380,11 +380,13 @@ public class MapConfigHelper {
     }
 
     public static boolean isServiceLayerPermitted(String serviceLayerName, Collection<String> permittedServiceLayers) {
-        for (String layer : permittedServiceLayers) {
-            if (serviceLayerName.equalsIgnoreCase(layer)) {
-                return true;
-            }
-        }
+    	if (permittedServiceLayers != null && !permittedServiceLayers.isEmpty()) {
+	        for (String layer : permittedServiceLayers) {
+	            if (serviceLayerName.equalsIgnoreCase(layer)) {
+	                return true;
+	            }
+	        }
+    	}
         return false;
     }
 }

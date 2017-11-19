@@ -8,15 +8,23 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
-package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.reporting.model.schemas.ReportGetStartAndEndDateRS;
+package eu.europa.ec.fisheries.uvms.spatial.message.bean;
 
-/**
- * Created by padhyad on 3/21/2016.
- */
-public interface ReportingService {
+import static eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants.QUEUE_MODULE_SPATIAL;
 
-    ReportGetStartAndEndDateRS getReportDates(Integer reportId, String userName, String scopeName, String timeStamp) throws ServiceException;
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
+
+import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
+
+@Stateless
+@LocalBean
+public class SpatialProducer extends AbstractProducer {
+
+    @Override
+    public String getDestinationName(){
+        return QUEUE_MODULE_SPATIAL;
+    }
+    
 }

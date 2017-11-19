@@ -12,7 +12,7 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.AreaServiceLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.ServiceLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.enums.LayerSubTypeEnum;
@@ -23,7 +23,8 @@ import org.junit.runner.RunWith;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.AreaLayerDto;
 
 import javax.ejb.EJB;
-import java.util.Collections;
+
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertFalse;
@@ -48,7 +49,7 @@ public class AreaTypeNamesServiceIT extends BaseSpatialArquillianTest {
     @Test
     public void shouldReturnAreaLayerMappings() {
         // when
-        List<AreaLayerDto> areaLayerMappings = areaTypeNamesService.listSystemAreaLayerMapping(Collections.EMPTY_LIST);
+        List<AreaLayerDto> areaLayerMappings = areaTypeNamesService.listSystemAreaLayerMapping(Arrays.asList(new String[] {"PORT","RFMO"}));
 
         //then
         assertNotNull(areaLayerMappings);

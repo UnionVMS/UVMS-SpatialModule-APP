@@ -13,9 +13,9 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.service.dao;
 
 import com.vividsolutions.jts.geom.Point;
-import eu.europa.ec.fisheries.uvms.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.service.AbstractDAO;
-import eu.europa.ec.fisheries.uvms.service.QueryParameter;
+import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.commons.service.dao.AbstractDAO;
+import eu.europa.ec.fisheries.uvms.commons.service.dao.QueryParameter;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DatabaseDialect;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadMappingProperty;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTypesEntity;
@@ -218,7 +218,7 @@ public abstract class AbstractAreaDao<E extends BaseAreaEntity> extends Abstract
             while (it.hasNext()) {
                 AreaLocationTypesEntity next = it.next();
                 String typeName = next.getTypeName();
-                sb.append(spatialFunction.closestPointToPoint(typeName, next.getAreaDbTable(), longitude, latitude, 10));
+                sb.append(spatialFunction.closestPointToPoint(typeName, next.getAreaDbTable(), latitude, longitude, 10));
                 it.remove(); // avoids a ConcurrentModificationException
                 if (it.hasNext()) {
                     sb.append(UNION_ALL);

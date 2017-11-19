@@ -12,7 +12,7 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson;
 
-import eu.europa.ec.fisheries.uvms.common.DateUtils;
+import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.spatial.service.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.exception.SpatialServiceException;
 import org.apache.commons.lang3.StringUtils;

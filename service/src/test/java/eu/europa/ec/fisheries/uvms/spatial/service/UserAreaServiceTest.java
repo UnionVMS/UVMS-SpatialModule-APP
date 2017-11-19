@@ -42,7 +42,6 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.impl.UserAreaServiceBean;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.H2gis;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.PostGres;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.UserAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson.UserAreaGeoJsonDto;
@@ -172,28 +171,6 @@ public class UserAreaServiceTest extends BaseUnitilsTest {
         assertEquals(dto.getServiceUrl(), response.getServiceUrl());
         assertEquals(dto.getTypeName(), response.getTypeName());
 
-    }
-
-    @Test
-    public void testStoreUserArea() throws Exception {
-
-        // Given
-        UserAreaGeoJsonDto userAreaDto = createUserArea("name", UUID.randomUUID().toString(), "desc", null);
-        UserAreasEntity userAreasEntity = new UserAreasEntity();
-        Field id = userAreasEntity.getClass().getDeclaredField("id");
-        TestToolBox.makeModifiable(id);
-        TestToolBox.setValue(userAreasEntity, id, 2L);
-        repoMock.returns(userAreasEntity).save(null);
-
-        userProducer.returns("whatever").sendModuleMessage(null, null);
-        spatialConsumerBeanMock.returns(new TestTextMessage()).getMessage("whatever", TextMessage.class);
-
-        // When
-        service.setDialect(new H2gis());
-        Long result = service.storeUserArea(userAreaDto, "rep_power");
-
-        // Then
-        assertEquals(2, result, 0);
     }
 
     @Test(expected = Exception.class)

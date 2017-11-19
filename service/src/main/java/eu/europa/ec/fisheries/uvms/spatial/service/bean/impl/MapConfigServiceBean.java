@@ -32,7 +32,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import eu.europa.ec.fisheries.uvms.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.reporting.model.schemas.ReportGetStartAndEndDateRS;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.CoordinatesFormat;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.MapConfigurationType;
@@ -444,7 +444,7 @@ public class MapConfigServiceBean implements MapConfigService {
         updateLayer(layerSettingsDto.getAreaLayers(), serviceLayers, bingApiKey);
         updateAreaLayer(layerSettingsDto.getAreaLayers());
 
-        if (permittedServiceLayers != null) {
+        if (permittedServiceLayers != null && !permittedServiceLayers.isEmpty()) {
             filterAllForbiddenLayers(layerSettingsDto, permittedServiceLayers);
         }
     }

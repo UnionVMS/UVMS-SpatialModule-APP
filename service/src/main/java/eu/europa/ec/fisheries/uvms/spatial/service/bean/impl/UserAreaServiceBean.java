@@ -18,6 +18,7 @@ import javax.ejb.Stateless;
 import javax.jms.JMSException;
 import javax.jms.TextMessage;
 import javax.transaction.Transactional;
+import javax.xml.bind.JAXBException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -29,22 +30,22 @@ import java.util.Set;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.ParseException;
-import eu.europa.ec.fisheries.uvms.common.utils.GeometryUtils;
-import eu.europa.ec.fisheries.uvms.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.mapper.GeometryMapper;
-import eu.europa.ec.fisheries.uvms.message.MessageException;
+import eu.europa.ec.fisheries.uvms.commons.geometry.mapper.GeometryMapper;
+import eu.europa.ec.fisheries.uvms.commons.geometry.utils.GeometryUtils;
+import eu.europa.ec.fisheries.uvms.commons.message.api.Fault;
+import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
+import eu.europa.ec.fisheries.uvms.commons.message.impl.JAXBUtils;
+import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
 import eu.europa.ec.fisheries.uvms.spatial.message.service.SpatialConsumerBean;
 import eu.europa.ec.fisheries.uvms.spatial.message.service.UserProducerBean;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMapperException;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMarshallException;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelValidationException;
-import eu.europa.ec.fisheries.uvms.spatial.model.mapper.JAXBMarshaller;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialFault;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.UserAreaService;
@@ -114,9 +115,9 @@ public class UserAreaServiceBean implements UserAreaService {
             }
 
             try {
-                SpatialFault fault = JAXBMarshaller.unmarshall(response, SpatialFault.class);
+                Fault fault = JAXBUtils.unMarshallMessage(response.getText(), Fault.class);
                 throw new SpatialModelValidationException(fault.getCode() + " : " + fault.getFault());
-            } catch (SpatialModelMarshallException e) {
+            } catch (JAXBException e) {
                 log.info("Expected Exception"); // Exception received in case if the validation is success
             }
 
@@ -168,8 +169,13 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     private void checkIfContainsDataSetName(UserAreaGeoJsonDto userAreaDto, DatasetList datasetList) {
+        String datasetName = userAreaDto.getDatasetName();
+        if(datasetName == null){
+            throw new SpatialServiceException(SpatialServiceErrors.DATA_SET_NAME_INVALID);
+        }
         for (DatasetExtension extension : datasetList.getList()) {
-            if (extension != null && extension.getName().equals(userAreaDto.getDatasetName())) {
+
+            if (extension != null && extension.getName().equals(datasetName)) {
                 throw new SpatialServiceException(SpatialServiceErrors.DATA_SET_NAME_ALREADY_IN_USE);
             }
         }
@@ -219,9 +225,9 @@ public class UserAreaServiceBean implements UserAreaService {
     private String mapToDeleteDataSetResponse(TextMessage response, String correlationId) throws SpatialModelMapperException {
         try {
             validateResponse(response, correlationId);
-            DeleteDatasetResponse deleteDatasetResponse = JAXBMarshaller.unmarshall(response, DeleteDatasetResponse.class);
+            DeleteDatasetResponse deleteDatasetResponse = JAXBUtils.unMarshallMessage(response.getText(), DeleteDatasetResponse.class);
             return deleteDatasetResponse.getResponse();
-        } catch (SpatialModelMarshallException e) {
+        } catch (JMSException | JAXBException e) {
             log.error(ERROR_WHEN_MARSHALLING_DATA, e);
             throw new SpatialModelMarshallException(ERROR_WHEN_MARSHALLING_OBJECT_TO_STRING, e);
         }
@@ -230,9 +236,9 @@ public class UserAreaServiceBean implements UserAreaService {
     private DatasetList mapToFindDatasetResponse(TextMessage response, String correlationId) throws SpatialModelMapperException {
         try {
             validateResponse(response, correlationId);
-            FilterDatasetResponse createDataSetResponse = JAXBMarshaller.unmarshall(response, FilterDatasetResponse.class);
+            FilterDatasetResponse createDataSetResponse = JAXBUtils.unMarshallMessage(response.getText(), FilterDatasetResponse.class);
             return createDataSetResponse.getDatasetList();
-        } catch (SpatialModelMarshallException e) {
+        } catch (JMSException | JAXBException e) {
             log.error(ERROR_WHEN_MARSHALLING_DATA, e);
             throw new SpatialModelMarshallException(ERROR_WHEN_MARSHALLING_OBJECT_TO_STRING, e);
         }
@@ -241,9 +247,9 @@ public class UserAreaServiceBean implements UserAreaService {
     private String mapToCreateDatasetResponse(TextMessage response, String correlationId) throws SpatialModelMapperException {
         try {
             validateResponse(response, correlationId);
-            CreateDatasetResponse createDatasetResponse = JAXBMarshaller.unmarshall(response, CreateDatasetResponse.class);
+            CreateDatasetResponse createDatasetResponse = JAXBUtils.unMarshallMessage(response.getText(), CreateDatasetResponse.class);
             return createDatasetResponse.getResponse();
-        } catch (SpatialModelMarshallException e) {
+        } catch (JMSException | JAXBException e) {
             log.error(ERROR_WHEN_MARSHALLING_DATA, e);
             throw new SpatialModelMarshallException(ERROR_WHEN_MARSHALLING_OBJECT_TO_STRING, e);
         }
@@ -315,7 +321,9 @@ public class UserAreaServiceBean implements UserAreaService {
         }
 
         try {
-            deleteDataSetNameFromUSM(userAreaById.getDatasetName(), USMSpatial.APPLICATION_NAME);
+            if(userAreaById.getDatasetName() != null){
+                deleteDataSetNameFromUSM(userAreaById.getDatasetName(), USMSpatial.APPLICATION_NAME);
+            }
         } catch (ModelMarshallException | SpatialModelMapperException | MessageException e) {
             throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
         }

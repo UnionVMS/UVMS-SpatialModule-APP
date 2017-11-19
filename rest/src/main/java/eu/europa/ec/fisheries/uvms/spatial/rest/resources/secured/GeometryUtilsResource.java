@@ -11,9 +11,10 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import com.vividsolutions.jts.geom.Geometry;
-import eu.europa.ec.fisheries.uvms.rest.resource.UnionVMSResource;
+
+import eu.europa.ec.fisheries.uvms.commons.geometry.utils.GeometryUtils;
+import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialService;
-import eu.europa.ec.fisheries.uvms.common.utils.GeometryUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.geotools.geometry.jts.WKTReader2;
 import org.geotools.geometry.jts.WKTWriter2;

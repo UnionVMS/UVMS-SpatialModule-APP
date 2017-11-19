@@ -20,12 +20,12 @@ import org.junit.runner.RunWith;
 
 import javax.ejb.EJB;
 
+import static org.junit.Assert.*;
+
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
 @RunWith(Arquillian.class)
 public class MapConfigServiceIT extends BaseSpatialArquillianTest {
@@ -36,7 +36,7 @@ public class MapConfigServiceIT extends BaseSpatialArquillianTest {
     @Test
     public void testGetAdminConfig() throws IOException {
         //Given
-        ConfigurationDto configurationDto = mapConfigService.retrieveAdminConfiguration(getConfig("/Config.json"), null);
+        ConfigurationDto configurationDto = mapConfigService.retrieveAdminConfiguration(getConfig("/Config.json"), new ArrayList<String>());
 
         //test
         assertNotNull(configurationDto);
@@ -46,7 +46,7 @@ public class MapConfigServiceIT extends BaseSpatialArquillianTest {
     @Test
     public void testGetUserConfig() throws IOException {
         //Given
-        ConfigurationDto configurationDto = mapConfigService.retrieveUserConfiguration(getConfig("/UserConfig.json"), getConfig("/Config.json"), "rep_power", null);
+        ConfigurationDto configurationDto = mapConfigService.retrieveUserConfiguration(getConfig("/UserConfig.json"), getConfig("/Config.json"), "rep_power", new ArrayList<String>());
 
         //test
         assertNotNull(configurationDto);
@@ -56,7 +56,7 @@ public class MapConfigServiceIT extends BaseSpatialArquillianTest {
     @Test
     public void testGetMapConfig() throws IOException {
         //given
-        MapConfigDto mapConfigDto = mapConfigService.getReportConfig(1, getConfig("/UserConfig.json"), getConfig("/Config.json"), "rep_power", "EC", new Date().toString(), null);
+        MapConfigDto mapConfigDto = mapConfigService.getReportConfig(1, getConfig("/UserConfig.json"), getConfig("/Config.json"), "rep_power", "EC", new Date().toString(), new ArrayList<String>());
 
         //test
         assertNotNull(mapConfigDto.getMap().getProjectionDto());
@@ -67,12 +67,16 @@ public class MapConfigServiceIT extends BaseSpatialArquillianTest {
     @Test
     public void testInvalidMapConfig() throws IOException {
         //given
-        MapConfigDto mapConfigDto = mapConfigService.getReportConfig(1000000, getConfig("/UserConfig.json"), getConfig("/Config.json"), "rep_power", "EC", new Date().toString(), null);
+        MapConfigDto mapConfigDto = mapConfigService.getReportConfig(-11000000, getConfig("/UserConfig.json"), getConfig("/Config.json"), "rep_power", "EC", new Date().toString(), new ArrayList<String>());
 
         //test
-        assertNull(mapConfigDto.getMap().getProjectionDto());
+        assertNotNull(mapConfigDto.getMap().getProjectionDto());
         ServiceLayersDto serviceLayersDto =  mapConfigDto.getMap().getServiceLayers();
-        assertNull(serviceLayersDto);
+        assertNotNull(serviceLayersDto);
+        assertTrue(serviceLayersDto.getAdditionalLayers().isEmpty());
+        assertTrue(serviceLayersDto.getBaseLayers().isEmpty());
+        assertTrue(serviceLayersDto.getPortLayers().isEmpty());
+        assertTrue(serviceLayersDto.getSystemLayers().isEmpty());
     }
 
     private String getConfig(String file) throws IOException {

@@ -14,8 +14,8 @@ package eu.europa.ec.fisheries.uvms.spatial.message.service;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 
-import eu.europa.ec.fisheries.uvms.message.AbstractProducer;
-import eu.europa.ec.fisheries.uvms.message.MessageConstants;
+import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
+import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
 
 @Stateless
 @Local
@@ -24,7 +24,7 @@ public class ReportingProducerBean extends AbstractProducer {
 	@Override
 	public String getDestinationName(){
 		return MessageConstants.QUEUE_REPORTING_EVENT;
-	}		
-	
+	}
+
 
 }
