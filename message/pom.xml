@@ -11,7 +11,7 @@
         <artifactId>spatial</artifactId>
         <version>1.0.7-SNAPSHOT</version>
     </parent>
-    
+
     <dependencies>
 
         <dependency>
