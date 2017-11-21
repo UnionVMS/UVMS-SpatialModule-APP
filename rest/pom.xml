@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
     <modelVersion>4.0.0</modelVersion>
     <artifactId>rest</artifactId>
     <name>${project.parent.artifactId}-rest</name>
@@ -9,9 +8,9 @@
     <parent>
         <groupId>eu.europa.ec.fisheries.uvms.spatial</groupId>
         <artifactId>spatial</artifactId>
-        <version>1.0.7-SNAPSHOT</version>
+        <version>1.0.8-SNAPSHOT</version>
     </parent>
-
+    
 	<properties>
         <docker.dev.stop.phase>verify</docker.dev.stop.phase>
         <docker.dev.prestop.phase>install</docker.dev.prestop.phase>        	
@@ -40,6 +39,12 @@
             <artifactId>uvms-commons-rest</artifactId>
             <version>${uvms.commons.version}</version>
             <scope>provided</scope>
+            <exclusions>
+            	<exclusion>
+            	  <groupId>com.fasterxml.jackson.core</groupId>
+  				  <artifactId>jackson-databind</artifactId>            	
+            	</exclusion>            
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
@@ -52,6 +57,11 @@
             <artifactId>usm4uvms</artifactId>
             <scope>provided</scope>
         </dependency>
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-annotations</artifactId>
+		    <version>2.6.0</version>
+		</dependency>
         
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
