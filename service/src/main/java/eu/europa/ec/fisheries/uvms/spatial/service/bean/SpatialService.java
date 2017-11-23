@@ -30,8 +30,8 @@ import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.GenericSystemAreaDto
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.SystemAreaNamesDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.UserAreaDto;
 
-import java.util.List;
 import javax.ejb.Local;
+import java.util.List;
 
 @Local
 public interface SpatialService {
@@ -76,5 +76,7 @@ public interface SpatialService {
     List<AreaDetails> getUserAreaDetailsByLocation(AreaTypeEntry areaTypeEntry, String userName) throws ServiceException;
 
     String calculateBuffer(Double latitude, Double longitude, Double buffer);
+
+    String getGemotryForPort(String portCode);
 
 }
