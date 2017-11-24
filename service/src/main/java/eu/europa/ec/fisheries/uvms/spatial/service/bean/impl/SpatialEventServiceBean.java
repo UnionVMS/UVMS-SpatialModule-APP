@@ -243,7 +243,7 @@ public class SpatialEventServiceBean implements SpatialEventService {
             GeometryByPortCodeResponse geometryByPortCodeResponse = new GeometryByPortCodeResponse();
             geometryByPortCodeResponse.setPortGeometry(geometry);
 
-            messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapGeometryByPortCodeResponseToString(geometryByPortCodeResponse), MODULE_NAME);
+            messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapGeometryByPortCodeResponse(geometryByPortCodeResponse), MODULE_NAME);
 
         } catch (Exception e) {
             log.error("[ Error when responding to area by code. ] ", e);
