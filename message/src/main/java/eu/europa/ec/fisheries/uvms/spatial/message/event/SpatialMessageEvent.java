@@ -11,19 +11,20 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.message.event;
 
-import javax.jms.TextMessage;
-
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AllAreaTypesRequest;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByCodeRequest;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestLocationSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GeometryByPortCodeRequest;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.PingRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialDeleteMapConfigurationRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialGetMapConfigurationRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveOrUpdateMapConfigurationRQ;
+
+import javax.jms.TextMessage;
 
 public class SpatialMessageEvent {
 
@@ -39,6 +40,7 @@ public class SpatialMessageEvent {
     private SpatialGetMapConfigurationRQ spatialGetMapConfigurationRQ;
     private PingRQ pingRQ;
     private AreaByCodeRequest areaByCodeRequest;
+    private GeometryByPortCodeRequest geometryByPortCodeRequest;
 
     public SpatialMessageEvent(TextMessage message, AreaByLocationSpatialRQ areaByLocationSpatialRQ) {
         this.message = message;
@@ -95,6 +97,11 @@ public class SpatialMessageEvent {
         this.areaByCodeRequest = areaByCodeRequest;
     }
 
+    public SpatialMessageEvent(TextMessage textMessage, GeometryByPortCodeRequest geometryByPortCodeRequest) {
+        this.message = textMessage;
+        this.geometryByPortCodeRequest = geometryByPortCodeRequest;
+    }
+
     public TextMessage getMessage() {
         return message;
     }
@@ -142,5 +149,9 @@ public class SpatialMessageEvent {
     public AreaByCodeRequest getAreaByCodeRequest() {
 
         return areaByCodeRequest;
+    }
+
+    public GeometryByPortCodeRequest getGeometryByPortCodeRequest() {
+        return geometryByPortCodeRequest;
     }
 }

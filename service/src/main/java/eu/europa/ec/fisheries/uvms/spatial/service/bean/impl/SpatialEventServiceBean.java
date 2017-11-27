@@ -12,11 +12,6 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.impl;
 
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.enterprise.event.Observes;
-import java.util.List;
-
 import eu.europa.ec.fisheries.uvms.commons.message.api.Fault;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.JAXBUtils;
 import eu.europa.ec.fisheries.uvms.spatial.message.bean.SpatialProducer;
@@ -27,6 +22,7 @@ import eu.europa.ec.fisheries.uvms.spatial.message.event.GetAreaTypeNamesEvent;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.GetClosestAreaEvent;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.GetClosestLocationEvent;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.GetFilterAreaEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.GetGeometryByPortCodeEvent;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.GetMapConfigurationEvent;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.GetSpatialEnrichmentEvent;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.PingEvent;
@@ -41,6 +37,8 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaExtendedIdentifierT
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GeometryByPortCodeRequest;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GeometryByPortCodeResponse;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Location;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.PingRS;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialDeleteMapConfigurationRS;
@@ -54,6 +52,11 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialEnrichmentService
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialEventService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialService;
 import lombok.extern.slf4j.Slf4j;
+
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.enterprise.event.Observes;
+import java.util.List;
 
 @Stateless
 @Slf4j
@@ -224,6 +227,26 @@ public class SpatialEventServiceBean implements SpatialEventService {
             messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapPingResponse(pingRS), MODULE_NAME);
         } catch (Exception e) {
             log.error("[ Error when responding to ping. ] ", e);
+            sendError(message, e);
+        }
+    }
+
+
+    @Override
+    public void getGeometryForPortCode(@Observes @GetGeometryByPortCodeEvent SpatialMessageEvent message) {
+        log.info("Getting area by code");
+        try {
+            GeometryByPortCodeRequest geometryByPortCodeRequest = message.getGeometryByPortCodeRequest();
+            String portCode=geometryByPortCodeRequest.getPortCode();
+            String geometry= spatialService.getGemotryForPort(portCode);
+
+            GeometryByPortCodeResponse geometryByPortCodeResponse = new GeometryByPortCodeResponse();
+            geometryByPortCodeResponse.setPortGeometry(geometry);
+
+            messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapGeometryByPortCodeResponse(geometryByPortCodeResponse), MODULE_NAME);
+
+        } catch (Exception e) {
+            log.error("[ Error when responding to area by code. ] ", e);
             sendError(message, e);
         }
     }

@@ -654,4 +654,32 @@ public class SpatialServiceBean implements SpatialService {
 
     }
 
+    @Override
+    public String getGemotryForPort(String portCode){
+        if(portCode ==null){
+            return null;
+        }
+        log.debug("Port code received in getGemotryForPort :"+portCode);
+        String geomWkt=null;
+        try {
+            List<BaseAreaEntity> baseEntities = DAOFactory.getAbstractSpatialDao(em, "port").searchNameByCode(portCode);
+
+            if(CollectionUtils.isNotEmpty(baseEntities)){
+                for(BaseAreaEntity baseAreaEntity : baseEntities){
+                   if(baseAreaEntity.getGeom() !=null){
+                       Geometry geometry = baseAreaEntity.getGeom();
+                       geomWkt = GeometryMapper.INSTANCE.geometryToWkt(geometry).getValue();
+                       log.debug("geomWkt received :"+geomWkt);
+                       break;
+                   }
+                }
+            }
+        } catch (ServiceException e) {
+            log.error("Could not fetch geometry for the portCode:"+portCode,e);
+        }
+
+
+        return geomWkt;
+    }
+
 }
