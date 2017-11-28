@@ -8,7 +8,7 @@
     <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
     <jta-data-source>java:jboss/datasources/uvms_spatial</jta-data-source>
     <properties>
-        <property name="hibernate.dialect" value="org.hibernate.spatial.dialect.postgis.PostgisDialect"/>
+        <property name="hibernate.dialect" value="${hibernate.spatial.dialect}"/>
         <property name="hibernate.default_schema" value="spatial"/>
         <property name="show_sql" value="false" />
         <property name="format_sql" value="false" />
