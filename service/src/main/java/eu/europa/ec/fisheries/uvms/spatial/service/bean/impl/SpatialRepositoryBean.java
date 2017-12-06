@@ -342,11 +342,6 @@ public class SpatialRepositoryBean implements SpatialRepository {
     }
 
     @Override
-    public UserAreasEntity update(UserAreasEntity entity) throws ServiceException {
-        return userAreaDao.update(entity);
-    }
-
-    @Override
     public List closestArea(List<AreaLocationTypesEntity> entities, DatabaseDialect spatialFunction, Point point) {
         return abstractAreaDao.closestArea(entities, spatialFunction, point);
     }

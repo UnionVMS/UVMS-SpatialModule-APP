@@ -12,15 +12,15 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
+import java.util.Date;
+import java.util.List;
+
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.UserAreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.UserAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson.UserAreaGeoJsonDto;
-
-import java.util.Date;
-import java.util.List;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.UserAreaLayerDto;
 
 public interface UserAreaService {
 
@@ -40,7 +40,7 @@ public interface UserAreaService {
      * @return user area id
      * @throws ServiceException
      */
-	Long storeUserArea(UserAreaGeoJsonDto userAreaDto, String userName) throws ServiceException;
+	Long createUserArea(UserAreaGeoJsonDto userAreaDto, String userName) throws ServiceException;
 
     Long updateUserArea(UserAreaGeoJsonDto userAreaDto, String userName, boolean isPowerUser, String scopeName) throws ServiceException;
 

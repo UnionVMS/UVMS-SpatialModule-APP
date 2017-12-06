@@ -12,31 +12,23 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.mapper;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-import com.vividsolutions.jts.geom.Geometry;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserScopeEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson.UserAreaGeoJsonDto;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.Mappings;
-import org.mapstruct.factory.Mappers;
+import static eu.europa.ec.fisheries.uvms.commons.date.DateUtils.DATE_TIME_UI_FORMAT;
 
 import java.util.List;
 import java.util.Set;
 
-import static eu.europa.ec.fisheries.uvms.commons.date.DateUtils.DATE_TIME_UI_FORMAT;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import com.vividsolutions.jts.geom.Geometry;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson.UserAreaGeoJsonDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserScopeEntity;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
-@Mapper
+@Mapper(componentModel = "cdi")
 public abstract class UserAreaMapper {
-
-    private static UserAreaMapper INSTANCE = Mappers.getMapper(UserAreaMapper.class);
-
-    public static UserAreaMapper mapper() {
-        return INSTANCE;
-    }
 
     @Mappings({
             @Mapping(target = "type", source = "subType"),
@@ -48,15 +40,6 @@ public abstract class UserAreaMapper {
     })
     public abstract UserAreasEntity fromDtoToEntity(UserAreaGeoJsonDto userAreaDto);
 
-    @Mappings({
-            @Mapping(target = "type", source = "subType"),
-            @Mapping(target = "areaDesc", source = "desc"),
-            @Mapping(source = "geometry", target = "geom"),
-            @Mapping(target = "startDate", dateFormat = DATE_TIME_UI_FORMAT),
-            @Mapping(target = "endDate", dateFormat = DATE_TIME_UI_FORMAT),
-    })
-    public abstract void updateUserAreaEntity(UserAreaGeoJsonDto userAreaDto, @MappingTarget UserAreasEntity userAreasEntity);
-
     public static Set<UserScopeEntity> fromScopeArrayToEntity(List<String> scopeSelection) {
         Set<UserScopeEntity> userScopeEntities = Sets.newHashSet();
 
@@ -64,21 +47,6 @@ public abstract class UserAreaMapper {
             for (String scope : scopeSelection) {
                 UserScopeEntity userScopeEntity = new UserScopeEntity();
                 userScopeEntity.setName(scope);
-                userScopeEntities.add(userScopeEntity);
-            }
-        }
-
-        return userScopeEntities;
-    }
-
-    public static Set<UserScopeEntity> fromScopeArrayToEntity(List<String> scopeSelection, UserAreasEntity userAreasEntity) {
-        Set<UserScopeEntity> userScopeEntities = Sets.newHashSet();
-
-        if (scopeSelection != null) {
-            for (String scope : scopeSelection) {
-                UserScopeEntity userScopeEntity = new UserScopeEntity();
-                userScopeEntity.setName(scope);
-                userScopeEntity.setUserAreas(userAreasEntity);
                 userScopeEntities.add(userScopeEntity);
             }
         }

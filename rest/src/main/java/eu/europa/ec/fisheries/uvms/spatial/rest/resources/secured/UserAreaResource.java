@@ -10,10 +10,30 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.interceptor.Interceptors;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.vividsolutions.jts.io.ParseException;
-
 import eu.europa.ec.fisheries.uvms.commons.geometry.mapper.FeatureToGeoJsonJacksonMapper;
 import eu.europa.ec.fisheries.uvms.commons.rest.constants.ErrorCodes;
 import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
@@ -23,32 +43,19 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Coordinate;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialFeaturesEnum;
-import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.AreaLocationMapper;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.FilterType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.UserAreaCoordinateType;
+import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.AreaLocationMapper;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.UserAreaService;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.UserAreaUpdateDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.UserAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.UserAreaUpdateDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson.AreaDetailsGeoJsonDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson.UserAreaGeoJsonDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.USMSpatial;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
-
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.interceptor.Interceptors;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 @Path("/userarea")
 @Slf4j
@@ -73,7 +80,7 @@ public class UserAreaResource extends UnionVMSResource {
                                   @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName) throws ServiceException {
         if (request.isUserInRole("MANAGE_USER_DEFINED_AREAS")) {
             String userName = request.getRemoteUser();
-            log.info("{} is requesting storeUserArea(...)", userName);
+            log.info("{} is requesting createUserArea(...)", userName);
 
             if (StringUtils.isNotBlank(userAreaGeoJsonDto.getDatasetName()) && !request.isUserInRole("CREATE_USER_AREA_DATASET")) {
                 return createErrorResponse("user_area_dataset_creation_not_allowed");
@@ -83,7 +90,7 @@ public class UserAreaResource extends UnionVMSResource {
                 return createErrorResponse("user_area_sharing_not_allowed");
             }
 
-            long gid = userAreaService.storeUserArea(userAreaGeoJsonDto, userName);
+            long gid = userAreaService.createUserArea(userAreaGeoJsonDto, userName);
             return createSuccessResponse(gid);
         } else {
             return createErrorResponse("user_areas_management_not_allowed");
@@ -100,7 +107,7 @@ public class UserAreaResource extends UnionVMSResource {
                                    @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName) throws ServiceException {
         if (request.isUserInRole(SpatialFeaturesEnum.MANAGE_USER_DEFINED_AREAS.toString())) {
             String userName = request.getRemoteUser();
-            log.info("{} is requesting storeUserArea(...)", userName);
+            log.info("{} is requesting createUserArea(...)", userName);
 
             if (StringUtils.isNotBlank(userAreaGeoJsonDto.getDatasetName()) && !request.isUserInRole(SpatialFeaturesEnum.CREATE_USER_AREA_DATASET.toString())) {
                 return createErrorResponse("user_area_dataset_creation_not_allowed");
