@@ -121,8 +121,6 @@ public interface SpatialRepository {
 
     UserAreasEntity save(UserAreasEntity userAreasEntity) throws ServiceException;
 
-    UserAreasEntity update(UserAreasEntity userAreasEntity) throws ServiceException;
-
     List closestArea(List<AreaLocationTypesEntity> entities, DatabaseDialect spatialFunction, Point point);
 
     List closestPoint(List<AreaLocationTypesEntity> typeEntities, DatabaseDialect spatialFunction, Point incomingPoint);

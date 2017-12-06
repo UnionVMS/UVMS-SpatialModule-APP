@@ -9,7 +9,6 @@ details. You should have received a copy of the GNU General Public License along
 
 */
 
-
 package eu.europa.ec.fisheries.uvms.spatial.service;
 
 import static org.junit.Assert.assertEquals;
@@ -120,7 +119,6 @@ public class UserAreaServiceTest extends BaseUnitilsTest {
 
     }
 
-
     @Test
     @SneakyThrows
     public void getUserAreaDetailsWithExtentByIdWithoutId(){
@@ -138,7 +136,6 @@ public class UserAreaServiceTest extends BaseUnitilsTest {
         Assert.equals(0, areaProperties.size());
 
     }
-
 
     @Test
     @SneakyThrows
@@ -187,12 +184,9 @@ public class UserAreaServiceTest extends BaseUnitilsTest {
 
         repoMock.returns(userAreasEntity).findUserAreaById(null, null, null, null);
 
-        repoMock.returns(userAreasEntity).update(null);
-
         // When
         service.setDialect(new PostGres());
-        Long result = service.updateUserArea(userAreaDto, "rep_power", true, "");
-
+        service.updateUserArea(userAreaDto, "rep_power", true, "");
 
     }
 

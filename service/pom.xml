@@ -200,47 +200,6 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>default-compile</id>
-                        <phase>none</phase>
-                    </execution>
-                    <execution>
-                        <id>Normal compilation (excluding mappers)</id>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                        <configuration>
-                            <excludes>
-                                <exclude>**/**/mapper/**/*</exclude>
-                            </excludes>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>MapStruct mappers</id>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                        <configuration>
-                            <compilerArgs>
-                                <compilerArg>
-
-                                </compilerArg>
-                            </compilerArgs>
-                            <includes>
-                                <include>**/**/mapper/**/*</include>
-                                <include>${project.build.directory}/classes/**/*</include>
-                            </includes>
-                            <annotationProcessors>
-                                <processor>org.mapstruct.ap.MappingProcessor</processor>
-                            </annotationProcessors>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-ejb-plugin</artifactId>
                 <configuration>
                     <ejbVersion>3.1</ejbVersion>
