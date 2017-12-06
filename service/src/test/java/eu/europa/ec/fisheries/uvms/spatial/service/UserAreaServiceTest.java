@@ -32,8 +32,6 @@ import com.vividsolutions.jts.io.WKTReader;
 import com.vividsolutions.jts.util.Assert;
 import eu.europa.ec.fisheries.uvms.BaseUnitilsTest;
 import eu.europa.ec.fisheries.uvms.TestToolBox;
-import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
-import eu.europa.ec.fisheries.uvms.spatial.message.service.SpatialConsumerBean;
 import eu.europa.ec.fisheries.uvms.spatial.message.service.UserProducerBean;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
@@ -65,14 +63,8 @@ public class UserAreaServiceTest extends BaseUnitilsTest {
     private Mock<AreaTypeNamesService> namesServiceMock;
 
     @InjectIntoByType
-    private Mock<USMService> usmServiceMock;
-
-    @InjectIntoByType
     private Mock<UserProducerBean> userProducer;
-
-    @InjectIntoByType
-    private Mock<SpatialConsumerBean> spatialConsumerBeanMock;
-
+    
     private GeometryFactory geomFactory = new GeometryFactory();
 
     private Point point;
