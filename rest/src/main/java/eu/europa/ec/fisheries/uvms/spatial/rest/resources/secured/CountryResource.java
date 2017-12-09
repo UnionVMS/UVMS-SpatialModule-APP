@@ -10,20 +10,26 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.interceptor.Interceptors;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
 import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import lombok.extern.slf4j.Slf4j;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.interceptor.Interceptors;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
+/**
+ * @implicitParam roleName|string||true||||||
+ * @implicitParam scopeName|string||true|EC|||||
+ * @implicitParam authorization|string||true||||||jwt token
+ */
 @Path("/countries")
 @Slf4j
 @Stateless
