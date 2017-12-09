@@ -32,17 +32,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.io.ParseException;
-import eu.europa.ec.fisheries.uvms.constants.AuthConstants;
-import eu.europa.ec.fisheries.uvms.commons.geometry.mapper.FeatureToGeoJsonJacksonMapper;
 import eu.europa.ec.fisheries.uvms.commons.geometry.mapper.GeometryMapper;
 import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.commons.service.interceptor.ValidationInterceptor;
+import eu.europa.ec.fisheries.uvms.constants.AuthConstants;
 import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationDetails;
@@ -57,7 +54,6 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.UserAreaService;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.AreaByCodeJsonPayload;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson.AreaDetailsGeoJsonDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson.LocationDetailsGeoJsonDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.USMSpatial;
 import eu.europa.ec.fisheries.uvms.spatial.service.util.ServiceLayerUtils;
@@ -69,9 +65,9 @@ import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.feature.simple.SimpleFeatureType;
 
 /**
- * @implicitParam roleName|string|header|true|rep_power_role|||||The role name
- * @implicitParam scopeName|string|header|true|EC|||||The scope name
- * @implicitParam authorization|string|header|true||||||jwt token
+ * @implicitParam roleName|string||true||||||
+ * @implicitParam scopeName|string||true|EC|||||
+ * @implicitParam authorization|string||true||||||jwt token
  */
 @Path("/area")
 @Slf4j
@@ -98,9 +94,6 @@ public class AreaResource extends UnionVMSResource {
     /**
      * Return the list of all area types.
      *
-     * @param id blah blah blah
-     * @param boolean blah blah blahb
-     * @return {@link blab}
      *
      * @responseMessage 200 ok
      * @responseMessage 404 not found
@@ -119,7 +112,7 @@ public class AreaResource extends UnionVMSResource {
      * Endpoint to get location details for given coordinate
      *
      * @param locationDto locationDto
-     * @return {@link blab}
+     *
      * @responseMessage 200 ok
      * @responseMessage 404 not found
      */

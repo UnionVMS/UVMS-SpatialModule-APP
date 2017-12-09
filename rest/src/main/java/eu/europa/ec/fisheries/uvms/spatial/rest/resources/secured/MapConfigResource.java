@@ -10,6 +10,19 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.util.Collection;
+
 import eu.europa.ec.fisheries.uvms.commons.rest.constants.ErrorCodes;
 import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
@@ -20,15 +33,12 @@ import eu.europa.ec.fisheries.uvms.spatial.rest.dto.MapSettingsType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.MapConfigService;
 import eu.europa.ec.fisheries.uvms.spatial.service.util.ServiceLayerUtils;
 import lombok.extern.slf4j.Slf4j;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.util.Collection;
 
+/**
+ * @implicitParam roleName|string||true||||||
+ * @implicitParam scopeName|string||true|EC|||||
+ * @implicitParam authorization|string||true||||||jwt token
+ */
 @Path("/mapconfig")
 @Slf4j
 @Stateless

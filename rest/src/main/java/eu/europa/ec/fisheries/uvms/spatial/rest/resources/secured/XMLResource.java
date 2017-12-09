@@ -23,10 +23,14 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
+
 /**
- * This class is a resource to call services exposed tru the JMS channel
- */
-@Path("/xml")
+ *
+ *
+ * @implicitParam roleName|string||true||||||
+ * @implicitParam scopeName|string||true|EC|||||
+ * @implicitParam authorization|string||true||||||jwt token
+ */xml")
 @Slf4j
 public class XMLResource {
 

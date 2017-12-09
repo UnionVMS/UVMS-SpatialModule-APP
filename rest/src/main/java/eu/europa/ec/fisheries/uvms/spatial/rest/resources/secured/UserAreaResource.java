@@ -57,6 +57,11 @@ import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.USMSpatial;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 
+/**
+ * @implicitParam roleName|string||true||||||
+ * @implicitParam scopeName|string||true|EC|||||
+ * @implicitParam authorization|string||true||||||jwt token
+ */
 @Path("/userarea")
 @Slf4j
 @Stateless
