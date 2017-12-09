@@ -13,6 +13,7 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.service.entity;
 
 import static eu.europa.ec.fisheries.uvms.commons.date.DateUtils.DATE_TIME_UI_FORMAT;
+import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -31,22 +32,24 @@ import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vividsolutions.jts.geom.Geometry;
+import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson.UserAreaGeoJsonDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.util.ColumnAliasName;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.apache.commons.collections.CollectionUtils;
 import org.hibernate.annotations.Where;
 
 
@@ -68,7 +71,7 @@ import org.hibernate.annotations.Where;
                 query = "SELECT area FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection " +
                         "WHERE area.userName = :userName OR scopeSelection.name = :scopeName"),
         @NamedQuery(name = UserAreasEntity.USER_AREA_DETAILS_BY_LOCATION,
-                query = "FROM UserAreasEntity userArea WHERE userArea.userName = :userName AND intersects(userArea.geom, :shape) = true AND userArea.enabled = 'Y' GROUP BY userArea.id"),
+                query = "FROM UserAreasEntity userArea WHERE intersects(userArea.geom, :shape) = true AND userArea.enabled = 'Y' GROUP BY userArea.id"),
         @NamedQuery(name = UserAreasEntity.USER_AREA_BY_COORDINATE,
                 query = "FROM UserAreasEntity WHERE intersects(geom, :shape) = true AND enabled = 'Y'"),
         @NamedQuery(name = UserAreasEntity.FIND_USER_AREA_BY_ID,
@@ -142,38 +145,47 @@ public class UserAreasEntity extends BaseAreaEntity {
     private Long id;
 
     @Column(name = "type")
-    @ColumnAliasName(aliasName = "subType")
+    @JsonProperty("subType")
     private String type;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "start_date")
-    @ColumnAliasName(aliasName = "startDate")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DateUtils.DATE_TIME_UI_FORMAT)
     private Date startDate;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "end_date")
-    @ColumnAliasName(aliasName = "endDate")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DateUtils.DATE_TIME_UI_FORMAT)
     private Date endDate;
 
     @Column(name = "user_name", nullable = false)
     private String userName;
 
     @Column(columnDefinition = "text", name = "area_desc")
-    @ColumnAliasName(aliasName = "areaDesc")
     private String areaDesc;
 
     @Column(columnDefinition = "text", name = "dataset_name")
-    @ColumnAliasName(aliasName = "datasetName")
     private String datasetName;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_on", nullable = false)
-    @ColumnAliasName(aliasName = "createdOn")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DateUtils.DATE_TIME_UI_FORMAT)
     private Date createdOn;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAreas", cascade = CascadeType.ALL, orphanRemoval = true)
-    @ColumnAliasName(aliasName = "scopeSelection")
+    @JsonIgnore
     private Set<UserScopeEntity> scopeSelection = new HashSet<>();
+
+    @JsonProperty("scopeSelection")
+    public List<String> getScopeSelectionAsString(){
+        List<String> list = new ArrayList<>();
+        if (isNotEmpty(scopeSelection)){
+            for (UserScopeEntity entity :scopeSelection){
+                list.add(entity.getName());
+            }
+        }
+        return list;
+    }
 
     @Builder
     private UserAreasEntity(String type, Date startDate, Date endDate, String userName, String areaDesc,
@@ -226,7 +238,7 @@ public class UserAreasEntity extends BaseAreaEntity {
 
         scopeSelection.clear();
 
-        if (CollectionUtils.isNotEmpty(scopeSelectionDto)){
+        if (isNotEmpty(scopeSelectionDto)){
             for (String scope : scopeSelectionDto){
                 UserScopeEntity userScopeEntity = new UserScopeEntity();
                 userScopeEntity.setName(scope);

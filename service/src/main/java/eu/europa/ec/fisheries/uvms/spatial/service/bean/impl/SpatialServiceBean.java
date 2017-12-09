@@ -14,7 +14,6 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean.impl;
 
 import static com.vividsolutions.jts.operation.distance.DistanceOp.nearestPoints;
 import static eu.europa.ec.fisheries.uvms.commons.geometry.utils.GeometryUtils.isDefaultEpsgSRID;
-import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 import static org.geotools.geometry.jts.JTS.orthodromicDistance;
 
 import javax.annotation.PostConstruct;
@@ -33,7 +32,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
@@ -45,10 +43,8 @@ import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.commons.service.interceptor.TracingInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Area;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaExtendedIdentifierType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaIdentifierType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialRQ;
@@ -57,8 +53,6 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Coordinate;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRS;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Location;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationDetails;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationProperty;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ScopeAreasType;
@@ -72,7 +66,6 @@ import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DatabaseDialect;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DatabaseDialectFactory;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.GenericSystemAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.SystemAreaNamesDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.UserAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.BaseAreaEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.PortEntity;
@@ -211,58 +204,37 @@ public class SpatialServiceBean implements SpatialService {
     }
 
     @Override
-    @Transactional
-    public List<UserAreaDto> getUserAreaDetailsWithExtentByLocation(Coordinate coordinate, String userName) throws ServiceException {
+    public List<Map<String, Object>> getUserAreaDetailsWithExtentByLocation(Coordinate coordinate, String userName) throws ServiceException {
 
         Point point = (Point) GeometryUtils.toGeographic(coordinate.getLatitude(), coordinate.getLongitude(), coordinate.getCrs());
 
         List<UserAreasEntity> userAreaDetailsWithExtentByLocation = repository.findUserAreaDetailsByLocation(userName, point);
 
-        List<UserAreaDto> userAreaDtos = new ArrayList<>();
+        List<Map<String, Object>> mapList = new ArrayList<>();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
         for (UserAreasEntity userAreaDetails : userAreaDetailsWithExtentByLocation){
-            UserAreaDto userAreaDto = new UserAreaDto();
-            userAreaDto.setGid(userAreaDetails.getId());
-            userAreaDto.setDesc(userAreaDetails.getAreaDesc());
-            userAreaDto.setExtent(GeometryMapper.INSTANCE.geometryToWkt(userAreaDetails.getGeom().getEnvelope()).getValue());
-            userAreaDto.setName(userAreaDetails.getName());
-            userAreaDto.setAreaType(userAreaDetails.getType());
-            userAreaDtos.add(userAreaDto);
+            mapList.add(objectMapper.convertValue(userAreaDetails, Map.class));
         }
 
-        return userAreaDtos;
+        return mapList;
     }
 
     @Override
-    @Transactional
-    public List<AreaDetails> getUserAreaDetailsByLocation(AreaTypeEntry areaTypeEntry, String userName) throws ServiceException {
+    public List<Map<String, Object>> getUserAreaDetailsByLocation(AreaTypeEntry areaTypeEntry, String userName) throws ServiceException {
         Point point = (Point) GeometryUtils.toGeographic(areaTypeEntry.getLatitude(), areaTypeEntry.getLongitude(), areaTypeEntry.getCrs());
         List<UserAreasEntity> userAreaDetails = repository.findUserAreaDetailsByLocation(userName, point);
-        try {
-            List<AreaDetails> areaDetailsList = Lists.newArrayList();
-            for (UserAreasEntity userAreaDetail : userAreaDetails) {
-                Map<String, Object> properties = userAreaDetail.getFieldMap();
-                addCentroidToProperties(properties);
 
-                List<AreaProperty> areaProperties = new ArrayList<>();
-                for (Map.Entry<String, Object> entry : properties.entrySet()) {
-                    AreaProperty areaProperty = new AreaProperty();
-                    areaProperty.setPropertyName(entry.getKey());
-                    areaProperty.setPropertyValue(entry.getValue());
-                    areaProperties.add(areaProperty);
-                }
+        List<Map<String, Object>> mapList = new ArrayList<>();
 
-                AreaDetails areaDetails = new AreaDetails();
-                areaDetails.setAreaType(areaTypeEntry);
-                areaDetails.getAreaProperties().addAll(areaProperties);
-                areaDetailsList.add(areaDetails);
-            }
-            return areaDetailsList;
+        ObjectMapper objectMapper = new ObjectMapper();
 
-        } catch (ParseException e) {
-            String error = "Error while trying to parse geometry";
-            log.error(error);
-            throw new ServiceException(error);
+        for (UserAreasEntity areasEntity : userAreaDetails){
+            mapList.add(objectMapper.convertValue(areasEntity, Map.class));
         }
+
+        return mapList;
     }
 
     private void addCentroidToProperties(Map<String, Object> properties) throws ParseException {
@@ -542,16 +514,16 @@ public class SpatialServiceBean implements SpatialService {
     }
 
     @Override
-    public LocationDetails getLocationDetails(final LocationTypeEntry locationTypeEntry) throws ServiceException {
+    public Map<String, Object> getLocationDetails(final LocationTypeEntry locationTypeEntry) throws ServiceException {
 
-        final GeodeticCalculator calc = new GeodeticCalculator(GeometryUtils.toDefaultCoordinateReferenceSystem());
-        final Map<String, Object> properties;
-        final String id = locationTypeEntry.getId();
-        final String locationType = locationTypeEntry.getLocationType();
-        final List<LocationProperty> locationProperties = new ArrayList<>();
+        BaseAreaEntity match = null;
+
+        GeodeticCalculator calc = new GeodeticCalculator(GeometryUtils.toDefaultCoordinateReferenceSystem());
+        String id = locationTypeEntry.getId();
+        String locationType = locationTypeEntry.getLocationType();
         AreaLocationTypesEntity locationTypesEntity;
-        final Double incomingLatitude = locationTypeEntry.getLatitude();
-        final Double incomingLongitude = locationTypeEntry.getLongitude();
+        Double incomingLatitude = locationTypeEntry.getLatitude();
+        Double incomingLongitude = locationTypeEntry.getLongitude();
 
         if (id != null && !StringUtils.isNumeric(id)) {
             throw new SpatialServiceException(SpatialServiceErrors.INVALID_ID_TYPE, id);
@@ -567,27 +539,20 @@ public class SpatialServiceBean implements SpatialService {
         }
 
         if (locationTypeEntry.getId() != null) {
-
             AbstractAreaDao dao = DAOFactory.getAbstractSpatialDao(em, locationTypesEntity.getTypeName());
             BaseAreaEntity areaEntity = dao.findOne(Long.parseLong(locationTypeEntry.getId()));
-
             if (areaEntity == null) {
                 throw new SpatialServiceException(SpatialServiceErrors.ENTITY_NOT_FOUND, locationTypesEntity.getTypeName());
             }
-
-            properties = areaEntity.getFieldMap();
-
+            match = areaEntity;
         }
-
         else {
 
-            Map<String, Object> fieldMap = new HashMap<>();
-            List list = new ArrayList();
             Point point = (Point) GeometryUtils.toGeographic(incomingLatitude, incomingLongitude, locationTypeEntry.getCrs());
 
             List<PortEntity> records = repository.listClosestPorts(point, 5);
-            PortEntity closestLocation = null;
             Double closestDistance = Double.MAX_VALUE;
+
             for (PortEntity portsEntity : records) {
 
                 final Geometry geometry = portsEntity.getGeom();
@@ -598,31 +563,13 @@ public class SpatialServiceBean implements SpatialService {
 
                 if (closestDistance > orthodromicDistance) {
                     closestDistance = orthodromicDistance;
-                    closestLocation = portsEntity;
+                    match = portsEntity;
                 }
             }
-
-            if (closestLocation != null){
-                list.add(closestLocation);
-            }
-            if (isNotEmpty(list)) {
-                fieldMap = ((BaseAreaEntity)list.iterator().next()).getFieldMap();
-            }
-            properties = fieldMap;
-
         }
-
-        for (Map.Entry<String, Object> entry : properties.entrySet()) {
-            LocationProperty locationProperty = new LocationProperty();
-            locationProperty.setPropertyName(entry.getKey());
-            locationProperty.setPropertyValue(entry.getValue()!=null?entry.getValue().toString():null);
-            locationProperties.add(locationProperty);
-        }
-
-        LocationDetails locationDetails = new LocationDetails();
-        locationDetails.setLocationType(locationTypeEntry);
-        locationDetails.getLocationProperties().addAll(locationProperties);
-        return locationDetails;
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map map = objectMapper.convertValue(match, Map.class);
+        return map;
     }
 
     @Override

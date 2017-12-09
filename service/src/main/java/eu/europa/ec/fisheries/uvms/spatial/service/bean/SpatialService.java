@@ -19,7 +19,6 @@ import java.util.Map;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Area;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaExtendedIdentifierType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialRQ;
@@ -28,11 +27,9 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Coordinate;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRS;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Location;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.GenericSystemAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.SystemAreaNamesDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.UserAreaDto;
 
 @Local
 public interface SpatialService {
@@ -68,13 +65,13 @@ public interface SpatialService {
      */
     List<SystemAreaNamesDto> searchAreasByCode(String areaType, String filter) throws ServiceException;
 
-    LocationDetails getLocationDetails(LocationTypeEntry locationTypeEntry) throws ServiceException;
+    Map<String, Object> getLocationDetails(LocationTypeEntry locationTypeEntry) throws ServiceException;
 
     List<Map<String, Object> > getAreaDetailsByLocation(AreaTypeEntry areaTypeEntry) throws ServiceException;
 
-    List<UserAreaDto> getUserAreaDetailsWithExtentByLocation(Coordinate coordinate, String userName) throws ServiceException;
+    List<Map<String, Object>> getUserAreaDetailsWithExtentByLocation(Coordinate coordinate, String userName) throws ServiceException; // FIXME Duplicated by getUserAreaDetailsByLocation
 
-    List<AreaDetails> getUserAreaDetailsByLocation(AreaTypeEntry areaTypeEntry, String userName) throws ServiceException;
+    List<Map<String, Object>> getUserAreaDetailsByLocation(AreaTypeEntry areaTypeEntry, String userName) throws ServiceException;
 
     String calculateBuffer(Double latitude, Double longitude, Double buffer);
 

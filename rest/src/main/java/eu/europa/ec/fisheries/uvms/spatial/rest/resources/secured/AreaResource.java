@@ -33,7 +33,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.io.ParseException;
 import eu.europa.ec.fisheries.uvms.commons.geometry.mapper.GeometryMapper;
 import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
@@ -42,7 +41,6 @@ import eu.europa.ec.fisheries.uvms.constants.AuthConstants;
 import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationDetails;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaCoordinateType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaFilterType;
@@ -54,7 +52,6 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.UserAreaService;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.AreaByCodeJsonPayload;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson.LocationDetailsGeoJsonDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.USMSpatial;
 import eu.europa.ec.fisheries.uvms.spatial.service.util.ServiceLayerUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -124,16 +121,20 @@ public class AreaResource extends UnionVMSResource {
     public Response getLocationDetails(LocationCoordinateType locationDto) throws ServiceException {
         try {
             LocationTypeEntry locationTypeEntry = mapper.getLocationTypeEntry(locationDto);
-            LocationDetails locationDetails = spatialService.getLocationDetails(locationTypeEntry);
-            LocationDetailsGeoJsonDto locationDetailsGeoJsonDto = mapper.getLocationDetailsDto(locationDetails);
-            if(!locationDto.getIsGeom()) {
-                //locationDetailsGeoJsonDto.removeGeometry();
-                return createSuccessResponse(locationDetailsGeoJsonDto.getProperties());
+            Map<String, Object> locationDetails = spatialService.getLocationDetails(locationTypeEntry);
+            if (!locationDto.getIsGeom()) {
+                return createSuccessResponse(locationDetails);
             }
             StringWriter writer = new StringWriter();
-            GeometryMapper.INSTANCE.simpleFeatureToGeoJson(locationDetailsGeoJsonDto.toFeature(), writer);
+            SimpleFeatureBuilder featureBuilder = new SimpleFeatureBuilder(build(MultiPolygon.class, locationDetails, "geometry"));
+
+            for (Map.Entry<String, Object> entrySet : locationDetails.entrySet()) {
+                if (!entrySet.getKey().equals("extent") && !entrySet.getKey().equals("centroid")) // TODO check with HUGO if really necessary
+                    featureBuilder.set(entrySet.getKey(), entrySet.getValue());
+            }
+            GeometryMapper.INSTANCE.simpleFeatureToGeoJson(featureBuilder.buildFeature(null), writer);
             return Response.ok(writer.toString()).build();
-        } catch (ServiceException | ParseException | IOException e) {
+        } catch (ServiceException  | IOException e) {
             throw new ServiceException(e.getMessage(), e);
         }
     }

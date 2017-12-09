@@ -11,25 +11,23 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadMappingProperty;
-import eu.europa.ec.fisheries.uvms.spatial.service.util.ColumnAliasName;
-import java.util.List;
-import java.util.Map;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import java.util.List;
+import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadMappingProperty;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Entity
 @Table(name = "stat_rect")
@@ -51,11 +49,6 @@ public class StatRectEntity extends BaseAreaEntity {
     public static final String SEARCH_STATRECT_NAMES_BY_CODE = "statrectEntity.searchNamesByCode";
     public static final String STATRECT_COLUMNS = "statrectEntity.statRectColumns";
 
-    public static final String NORTH = "north";
-    public static final String SOUTH = "south";
-    public static final String EAST = "east";
-    public static final String WEST = "west";
-
 	@Id
 	@Column(name = "gid")
 	@SequenceGenerator(name="SEQ_GEN", sequenceName="stat_rect_seq", allocationSize = 1)
@@ -63,20 +56,12 @@ public class StatRectEntity extends BaseAreaEntity {
     @JsonProperty("gid")
     private Long id;
 	
-    @Column(name = "north")
-    @ColumnAliasName(aliasName = NORTH)
     private Double north;
 
-    @Column(name = "south")
-    @ColumnAliasName(aliasName = SOUTH)
     private Double south;
 
-    @Column(name = "east")
-    @ColumnAliasName(aliasName = EAST)
     private Double east;
 
-    @Column(name = "west")
-    @ColumnAliasName(aliasName = WEST)
     private Double west;
 
     public StatRectEntity() {
