@@ -1,0 +1,20 @@
+{
+  "apiVersion" : "1.0.9-SNAPSHOT",
+  "swaggerVersion" : "1.2",
+  "basePath" : "/spatial/rest",
+  "resourcePath" : "/alarm",
+  "apis" : [ {
+    "path" : "/alarm/{key}",
+    "operations" : [ {
+      "method" : "GET",
+      "nickname" : "getPositionEntry",
+      "type" : "void",
+      "parameters" : [ {
+        "type" : "string",
+        "paramType" : "path",
+        "name" : "key",
+        "required" : true
+      } ]
+    } ]
+  } ]
+}
