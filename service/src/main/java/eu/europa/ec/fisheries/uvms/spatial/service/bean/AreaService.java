@@ -10,15 +10,14 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
-
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadMapping;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadMetadata;
 import java.util.List;
 import java.util.Map;
+
+import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadMapping;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadMetadata;
 
 public interface AreaService {
 
@@ -26,9 +25,9 @@ public interface AreaService {
 
     UploadMetadata metadata(byte[] data, String areaType) throws ServiceException;
 
-    AreaDetails getAreaDetailsById(AreaTypeEntry areaTypeEntry) throws ServiceException;
+    Map<String, Object> getAreaDetailsById(AreaTypeEntry areaTypeEntry) throws ServiceException;
 
-    public Map<String, String> getAllCountriesDesc() throws ServiceException;
+    Map<String, String> getAllCountriesDesc() throws ServiceException;
 
     void upload(UploadMapping mapping, String type, Integer code) throws ServiceException;
 

@@ -196,7 +196,6 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     @Override
-    @Transactional
     public List<String> getUserAreaTypes(String userName, String scopeName, boolean isPowerUser) throws ServiceException {
         Set<String> stringSet = new LinkedHashSet<>();
         List<UserAreasEntity> userArea = repository.findUserArea(userName, scopeName, isPowerUser);
@@ -207,7 +206,6 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     @Override
-    @Transactional
     public UserAreaLayerDto getUserAreaLayerDefinition(String userName, String scopeName) {
         List<UserAreaLayerDto> userAreaLayerDtoList = areaTypeNamesService.listUserAreaLayerMapping();
         UserAreaLayerDto userAreaLayerDto = userAreaLayerDtoList.get(0);
@@ -216,7 +214,6 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     @Override
-    @Transactional
     public List<AreaDetails> getUserAreaDetailsWithExtentById(AreaTypeEntry areaTypeEntry, String userName, boolean isPowerUser, String scopeName) throws ServiceException {
 
         UserAreasEntity userAreaById = repository.findUserAreaById(Long.parseLong(areaTypeEntry.getId()), userName, isPowerUser, scopeName);
@@ -244,7 +241,6 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     @Override
-    @Transactional
     public List<AreaDetails> getUserAreaDetailsById(AreaTypeEntry areaTypeEntry, String userName, boolean isPowerUser, String scopeName) throws ServiceException {
 
         UserAreasEntity userAreaById = repository.findUserAreaById(Long.parseLong(areaTypeEntry.getId()), userName, isPowerUser, scopeName);
@@ -317,7 +313,6 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     @Override
-    @Transactional
     public List<eu.europa.ec.fisheries.uvms.spatial.service.dto.area.UserAreaDto> searchUserAreasByCriteria(String userName, String scopeName, String searchCriteria, boolean isPowerUser) throws ServiceException {
 
         List<UserAreasEntity> userAreas = repository.listUserAreaByCriteria(userName, scopeName, searchCriteria, isPowerUser);
@@ -339,7 +334,6 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     @Override
-    @Transactional
     public List<UserAreaGeoJsonDto> searchUserAreasByType(String userName, String scopeName, String type, boolean isPowerUser) throws ServiceException {
         List<UserAreasEntity> userAreas = repository.findUserAreasByType(userName, scopeName, type, isPowerUser);
         return mapper.fromEntityListToDtoList(userAreas, false);

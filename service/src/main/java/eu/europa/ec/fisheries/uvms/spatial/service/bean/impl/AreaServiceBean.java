@@ -18,7 +18,6 @@ import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -32,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.commons.domain.BaseEntity;
 import eu.europa.ec.fisheries.uvms.commons.geometry.mapper.GeometryMapper;
@@ -39,8 +39,6 @@ import eu.europa.ec.fisheries.uvms.commons.geometry.utils.GeometryUtils;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.commons.service.fileutils.ZipExtractor;
 import eu.europa.ec.fisheries.uvms.commons.service.interceptor.SimpleTracingInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
@@ -134,7 +132,6 @@ public class AreaServiceBean implements AreaService {
     }
 
     @Override
-    @Transactional
     public List<Map<String, String>> getSelectedAreaColumns(final List<AreaTypeEntry> areaTypes) throws ServiceException {
 
         List<Map<String, String>> areaColumnsList = new ArrayList<>();
@@ -288,8 +285,7 @@ public class AreaServiceBean implements AreaService {
     }
 
     @Override
-    @Transactional
-    public AreaDetails getAreaDetailsById(AreaTypeEntry areaTypeEntry) throws ServiceException {
+    public Map<String, Object> getAreaDetailsById(AreaTypeEntry areaTypeEntry) throws ServiceException {
 
         if (areaTypeEntry.getAreaType() == null) {
             throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR, StringUtils.EMPTY);
@@ -309,30 +305,11 @@ public class AreaServiceBean implements AreaService {
             throw new SpatialServiceException(SpatialServiceErrors.ENTITY_NOT_FOUND, areaLocationTypesEntity.getTypeName());
         }
 
-        Map<String, Object> properties = area.getFieldMap();
-
-        List<AreaProperty> areaProperties = new ArrayList<>();
-        for (Map.Entry<String, Object> entry : properties.entrySet()) {
-            AreaProperty areaProperty = new AreaProperty();
-            areaProperty.setPropertyName(entry.getKey());
-            areaProperty.setPropertyValue(entry.getValue());
-            areaProperties.add(areaProperty);
-        }
-        if (!properties.isEmpty()) {
-            AreaProperty areaProperty = new AreaProperty();
-            areaProperty.setPropertyName(GID);
-            areaProperty.setPropertyValue(String.valueOf(area.getId()));
-            areaProperties.add(areaProperty);
-        }
-
-        AreaDetails areaDetails = new AreaDetails();
-        areaDetails.setAreaType(areaTypeEntry);
-        areaDetails.getAreaProperties().addAll(areaProperties);
-        return areaDetails;
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.convertValue(area, Map.class);
     }
 
     @Override
-    @Transactional
     public List<AreaSimpleType> byCode(List<AreaSimpleType> areaSimpleTypeList) throws ServiceException {
 
         List records = repository.areaByCode(areaSimpleTypeList);

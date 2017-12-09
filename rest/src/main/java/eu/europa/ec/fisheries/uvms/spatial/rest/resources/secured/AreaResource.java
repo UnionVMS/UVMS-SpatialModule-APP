@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.io.ParseException;
 import eu.europa.ec.fisheries.uvms.constants.AuthConstants;
 import eu.europa.ec.fisheries.uvms.commons.geometry.mapper.FeatureToGeoJsonJacksonMapper;
@@ -62,7 +63,16 @@ import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.USMSpatial;
 import eu.europa.ec.fisheries.uvms.spatial.service.util.ServiceLayerUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
+import org.geotools.feature.simple.SimpleFeatureBuilder;
+import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
+import org.opengis.feature.simple.SimpleFeatureType;
 
+/**
+ * @implicitParam roleName|string|header|true|rep_power_role|||||The role name
+ * @implicitParam scopeName|string|header|true|EC|||||The scope name
+ * @implicitParam authorization|string|header|true||||||jwt token
+ */
 @Path("/area")
 @Slf4j
 @Stateless
@@ -85,6 +95,16 @@ public class AreaResource extends UnionVMSResource {
 
     private AreaLocationMapper mapper = AreaLocationMapper.mapper();
 
+    /**
+     * Return the list of all area types.
+     *
+     * @param id blah blah blah
+     * @param boolean blah blah blahb
+     * @return {@link blab}
+     *
+     * @responseMessage 200 ok
+     * @responseMessage 404 not found
+     */
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Interceptors(value = {ExceptionInterceptor.class})
@@ -95,6 +115,14 @@ public class AreaResource extends UnionVMSResource {
         return createSuccessResponse(areaTypes);
     }
 
+    /**
+     * Endpoint to get location details for given coordinate
+     *
+     * @param locationDto locationDto
+     * @return {@link blab}
+     * @responseMessage 200 ok
+     * @responseMessage 404 not found
+     */
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
@@ -106,7 +134,7 @@ public class AreaResource extends UnionVMSResource {
             LocationDetails locationDetails = spatialService.getLocationDetails(locationTypeEntry);
             LocationDetailsGeoJsonDto locationDetailsGeoJsonDto = mapper.getLocationDetailsDto(locationDetails);
             if(!locationDto.getIsGeom()) {
-                locationDetailsGeoJsonDto.removeGeometry();
+                //locationDetailsGeoJsonDto.removeGeometry();
                 return createSuccessResponse(locationDetailsGeoJsonDto.getProperties());
             }
             StringWriter writer = new StringWriter();
@@ -121,44 +149,59 @@ public class AreaResource extends UnionVMSResource {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/details")
-    @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
+    @Interceptors(value = {ExceptionInterceptor.class})
     public Response getAreaDetails(AreaCoordinateType areaDto) throws ServiceException {
         Response response;
         StringWriter writer = new StringWriter();
         try {
             if (areaDto.getId() != null) {
 
-                AreaDetails areaDetails = areaService.getAreaDetailsById(mapper.getAreaTypeEntry(areaDto));
-                AreaDetailsGeoJsonDto areaDetailsGeoJsonDto = mapper.getAreaDetailsDto(areaDetails);
+                Map<String, Object> areaDetailsById = areaService.getAreaDetailsById(mapper.getAreaTypeEntry(areaDto));
                 if (!areaDto.getIsGeom()) {
-                    areaDetailsGeoJsonDto.removeGeometry();
-                    return createSuccessResponse(areaDetailsGeoJsonDto.getProperties());
+                    return createSuccessResponse(areaDetailsById);
                 }
-                GeometryMapper.INSTANCE.simpleFeatureToGeoJson(areaDetailsGeoJsonDto.toFeature(), writer);
+
+                SimpleFeatureBuilder featureBuilder = new SimpleFeatureBuilder(build(MultiPolygon.class, areaDetailsById, "geometry"));
+
+                for (Map.Entry<String, Object> entrySet : areaDetailsById.entrySet()) {
+                    if(!entrySet.getKey().equals("extent") && !entrySet.getKey().equals("centroid")) // TODO check with HUGO if really necessary
+                        featureBuilder.set(entrySet.getKey(), entrySet.getValue());
+                }
+
+                GeometryMapper.INSTANCE.simpleFeatureToGeoJson(featureBuilder.buildFeature(null), writer);
                 response = Response.ok(writer.toString()).build();
 
             } else {
-                List<AreaDetails> areaDetailsList = spatialService.getAreaDetailsByLocation(mapper.getAreaTypeEntry(areaDto));
-                AreaDetailsGeoJsonDto areaDetailsGeoJsonDto = mapper.getAreaDetailsDtoForAllAreas(areaDetailsList, areaDto);
-                if (!areaDto.getIsGeom()) {
-                    areaDetailsGeoJsonDto.removeGeometryAllAreas();
-                    return createSuccessResponse(areaDetailsGeoJsonDto.getAllAreaProperties());
-                }
-                List<ObjectNode> nodeList = new ArrayList<>();
-
-                for (Map<String, Object> featureMap : areaDetailsGeoJsonDto.getAllAreaProperties()) {
-                    ObjectNode convert = new FeatureToGeoJsonJacksonMapper().convert(areaDetailsGeoJsonDto.toFeature(featureMap)); // TODO remove JacksonMapper
-                    nodeList.add(convert);
-                }
-                response = createSuccessResponse(nodeList);
+                List<Map<String, Object>> areaDetailsByLocation = spatialService.getAreaDetailsByLocation(mapper.getAreaTypeEntry(areaDto));
+                response = createSuccessResponse(areaDetailsByLocation);
             }
-        } catch (ServiceException | ParseException | IOException e) {
+        } catch (ServiceException | IOException e) {
             throw new ServiceException(e.getMessage(), e);
         }
 
         return response;
     }
-    
+
+    private SimpleFeatureType build(Class geometryType, Map<String, Object> properties, String geometryFieldName) {
+        SimpleFeatureTypeBuilder sb = new SimpleFeatureTypeBuilder();
+        sb.setCRS(DefaultGeographicCRS.WGS84);
+        sb.setName("MULTIPOLIGON");
+        for (String key : properties.keySet()) {
+            if (key.equalsIgnoreCase(geometryFieldName)) {
+                sb.add(key, geometryType);
+            } else {
+                Class propClass = String.class;
+                Object propValue = properties.get(key);
+
+                if (propValue != null) {
+                    propClass = propValue.getClass();
+                }
+                sb.add(key, propClass);
+            }
+        }
+        return sb.buildFeatureType();
+    }
+
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})

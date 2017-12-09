@@ -166,8 +166,6 @@
             </plugin>
         </plugins>
     </build>
-
-    <!-- USE following command to run this profile: mvn clean install -P generate-rest-doc -Dhostname=127.0.0.1 -Dport=8080  -->
     <profiles>
         <profile>
             <id>generate-rest-doc</id>
@@ -186,7 +184,7 @@
                                     <docletArtifact>
                                         <groupId>com.carma</groupId>
                                         <artifactId>swagger-doclet</artifactId>
-                                        <version>1.0.4.1</version>
+                                        <version>1.1.2</version>
                                     </docletArtifact>
                                     <reportOutputDirectory>src/main/webapp</reportOutputDirectory>
                                     <useStandardDocletOptions>false</useStandardDocletOptions>
@@ -203,41 +201,6 @@
                 </plugins>
             </build>
         </profile>
-		<!--<profile>
-            <id>weblogic-weblogic</id>
-            <build>
-                <plugins>		
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-war-plugin</artifactId>
-						<version>2.4</version>
-						<configuration>
-                            <classifier>weblogic-weblogic</classifier>
-							<generateApplicationXml>false</generateApplicationXml>						
-							<packagingExcludes>WEB-INF/lib/*.jar</packagingExcludes>	
-						</configuration>
-					</plugin>
-					
-	            </plugins>							
-            </build>				
-		</profile>
-		<profile>
-            <id>weblogic-activemq</id>
-            <build>
-                <plugins>		
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-war-plugin</artifactId>
-						<version>2.4</version>
-						<configuration>
-                            <classifier>weblogic-activemq</classifier>
-							<generateApplicationXml>false</generateApplicationXml>						
-							<packagingExcludes>WEB-INF/lib/*.jar</packagingExcludes>	
-						</configuration>
-					</plugin>
-	            </plugins>							
-            </build>				
-		</profile>-->
     </profiles>
 
 </project>

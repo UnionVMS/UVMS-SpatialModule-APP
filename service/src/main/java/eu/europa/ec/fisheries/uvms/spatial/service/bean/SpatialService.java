@@ -12,6 +12,10 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
+import javax.ejb.Local;
+import java.util.List;
+import java.util.Map;
+
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Area;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
@@ -29,9 +33,6 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.GenericSystemAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.SystemAreaNamesDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.UserAreaDto;
-
-import javax.ejb.Local;
-import java.util.List;
 
 @Local
 public interface SpatialService {
@@ -69,7 +70,7 @@ public interface SpatialService {
 
     LocationDetails getLocationDetails(LocationTypeEntry locationTypeEntry) throws ServiceException;
 
-    List<AreaDetails> getAreaDetailsByLocation(AreaTypeEntry areaTypeEntry) throws ServiceException;
+    List<Map<String, Object> > getAreaDetailsByLocation(AreaTypeEntry areaTypeEntry) throws ServiceException;
 
     List<UserAreaDto> getUserAreaDetailsWithExtentByLocation(Coordinate coordinate, String userName) throws ServiceException;
 

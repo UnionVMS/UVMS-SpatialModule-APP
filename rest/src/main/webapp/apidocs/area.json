@@ -1,0 +1,465 @@
+{
+  "apiVersion" : "1.0.9-SNAPSHOT",
+  "swaggerVersion" : "1.2",
+  "basePath" : "/spatial/rest",
+  "resourcePath" : "/area",
+  "apis" : [ {
+    "path" : "/area/bycode",
+    "operations" : [ {
+      "method" : "POST",
+      "nickname" : "searchAreaNamesByCode",
+      "type" : "Response",
+      "parameters" : [ {
+        "type" : "AreaFilterType",
+        "paramType" : "body",
+        "name" : "areaFilterType",
+        "required" : true
+      }, {
+        "type" : "string",
+        "description" : "The role name",
+        "defaultValue" : "rep_power_role",
+        "paramType" : "header",
+        "name" : "roleName",
+        "required" : true
+      }, {
+        "type" : "string",
+        "description" : "The scope name",
+        "defaultValue" : "EC",
+        "paramType" : "header",
+        "name" : "scopeName",
+        "required" : true
+      }, {
+        "type" : "string",
+        "description" : "jwt token",
+        "paramType" : "header",
+        "name" : "authorization",
+        "required" : true
+      } ],
+      "consumes" : [ "application/json" ],
+      "produces" : [ "application/json" ]
+    } ]
+  }, {
+    "path" : "/area/byfilter",
+    "operations" : [ {
+      "method" : "POST",
+      "nickname" : "searchAreasByNameOrCode",
+      "type" : "Response",
+      "parameters" : [ {
+        "type" : "AreaFilterType",
+        "paramType" : "body",
+        "name" : "areaFilterType",
+        "required" : true
+      }, {
+        "type" : "string",
+        "description" : "The role name",
+        "defaultValue" : "rep_power_role",
+        "paramType" : "header",
+        "name" : "roleName",
+        "required" : true
+      }, {
+        "type" : "string",
+        "description" : "The scope name",
+        "defaultValue" : "EC",
+        "paramType" : "header",
+        "name" : "scopeName",
+        "required" : true
+      }, {
+        "type" : "string",
+        "description" : "jwt token",
+        "paramType" : "header",
+        "name" : "authorization",
+        "required" : true
+      } ],
+      "consumes" : [ "application/json" ],
+      "produces" : [ "application/json" ]
+    } ]
+  }, {
+    "path" : "/area/datasets/{areaType}/{areaGid}/{datasetName}",
+    "operations" : [ {
+      "method" : "POST",
+      "nickname" : "createDataset",
+      "type" : "Response",
+      "parameters" : [ {
+        "type" : "string",
+        "paramType" : "path",
+        "name" : "areaType",
+        "required" : true
+      }, {
+        "type" : "string",
+        "paramType" : "path",
+        "name" : "areaGid",
+        "required" : true
+      }, {
+        "type" : "string",
+        "paramType" : "path",
+        "name" : "datasetName",
+        "required" : true
+      }, {
+        "type" : "string",
+        "description" : "The role name",
+        "defaultValue" : "rep_power_role",
+        "paramType" : "header",
+        "name" : "roleName",
+        "required" : true
+      }, {
+        "type" : "string",
+        "description" : "The scope name",
+        "defaultValue" : "EC",
+        "paramType" : "header",
+        "name" : "scopeName",
+        "required" : true
+      }, {
+        "type" : "string",
+        "description" : "jwt token",
+        "paramType" : "header",
+        "name" : "authorization",
+        "required" : true
+      } ],
+      "consumes" : [ "application/json" ],
+      "produces" : [ "application/json" ]
+    } ]
+  }, {
+    "path" : "/area/details",
+    "operations" : [ {
+      "method" : "POST",
+      "nickname" : "getAreaDetails",
+      "type" : "Response",
+      "parameters" : [ {
+        "type" : "AreaCoordinateType",
+        "paramType" : "body",
+        "name" : "areaDto",
+        "required" : true
+      }, {
+        "type" : "string",
+        "description" : "The role name",
+        "defaultValue" : "rep_power_role",
+        "paramType" : "header",
+        "name" : "roleName",
+        "required" : true
+      }, {
+        "type" : "string",
+        "description" : "The scope name",
+        "defaultValue" : "EC",
+        "paramType" : "header",
+        "name" : "scopeName",
+        "required" : true
+      }, {
+        "type" : "string",
+        "description" : "jwt token",
+        "paramType" : "header",
+        "name" : "authorization",
+        "required" : true
+      } ],
+      "consumes" : [ "application/json" ],
+      "produces" : [ "application/json" ]
+    } ]
+  }, {
+    "path" : "/area/layers",
+    "operations" : [ {
+      "method" : "GET",
+      "nickname" : "getSystemAreaLayerMapping",
+      "type" : "Response",
+      "parameters" : [ {
+        "type" : "string",
+        "paramType" : "header",
+        "name" : "scopeName"
+      }, {
+        "type" : "string",
+        "paramType" : "header",
+        "name" : "roleName"
+      }, {
+        "type" : "string",
+        "description" : "jwt token",
+        "paramType" : "header",
+        "name" : "authorization",
+        "required" : true
+      } ],
+      "produces" : [ "application/json" ]
+    } ]
+  }, {
+    "path" : "/area/location/details",
+    "operations" : [ {
+      "method" : "POST",
+      "nickname" : "getLocationDetails",
+      "type" : "Response",
+      "parameters" : [ {
+        "type" : "LocationCoordinateType",
+        "description" : "locationDto",
+        "paramType" : "body",
+        "name" : "locationDto",
+        "required" : true
+      }, {
+        "type" : "string",
+        "description" : "The role name",
+        "defaultValue" : "rep_power_role",
+        "paramType" : "header",
+        "name" : "roleName",
+        "required" : true
+      }, {
+        "type" : "string",
+        "description" : "The scope name",
+        "defaultValue" : "EC",
+        "paramType" : "header",
+        "name" : "scopeName",
+        "required" : true
+      }, {
+        "type" : "string",
+        "description" : "jwt token",
+        "paramType" : "header",
+        "name" : "authorization",
+        "required" : true
+      } ],
+      "summary" : "Endpoint to get location details for given coordinate",
+      "responseMessages" : [ {
+        "code" : 200,
+        "message" : "ok"
+      }, {
+        "code" : 404,
+        "message" : "not found"
+      } ],
+      "consumes" : [ "application/json" ],
+      "produces" : [ "application/json" ]
+    } ]
+  }, {
+    "path" : "/area/locationlayers",
+    "operations" : [ {
+      "method" : "GET",
+      "nickname" : "getSystemAreaAndLocationLayerMapping",
+      "type" : "Response",
+      "parameters" : [ {
+        "type" : "string",
+        "paramType" : "header",
+        "name" : "scopeName"
+      }, {
+        "type" : "string",
+        "paramType" : "header",
+        "name" : "roleName"
+      }, {
+        "type" : "string",
+        "description" : "jwt token",
+        "paramType" : "header",
+        "name" : "authorization",
+        "required" : true
+      } ],
+      "produces" : [ "application/json" ]
+    } ]
+  }, {
+    "path" : "/area/properties",
+    "operations" : [ {
+      "method" : "POST",
+      "nickname" : "getAreaProperties",
+      "type" : "Response",
+      "parameters" : [ {
+        "type" : "array",
+        "items" : {
+          "$ref" : "AreaCoordinateType"
+        },
+        "paramType" : "body",
+        "name" : "areaDtoList",
+        "required" : true
+      }, {
+        "type" : "string",
+        "description" : "The role name",
+        "defaultValue" : "rep_power_role",
+        "paramType" : "header",
+        "name" : "roleName",
+        "required" : true
+      }, {
+        "type" : "string",
+        "description" : "The scope name",
+        "defaultValue" : "EC",
+        "paramType" : "header",
+        "name" : "scopeName",
+        "required" : true
+      }, {
+        "type" : "string",
+        "description" : "jwt token",
+        "paramType" : "header",
+        "name" : "authorization",
+        "required" : true
+      } ],
+      "consumes" : [ "application/json" ],
+      "produces" : [ "application/json" ]
+    } ]
+  }, {
+    "path" : "/area/type/code",
+    "operations" : [ {
+      "method" : "POST",
+      "nickname" : "byCode",
+      "type" : "Response",
+      "parameters" : [ {
+        "type" : "AreaByCodeJsonPayload",
+        "paramType" : "body",
+        "name" : "payload",
+        "required" : true
+      }, {
+        "type" : "string",
+        "description" : "The role name",
+        "defaultValue" : "rep_power_role",
+        "paramType" : "header",
+        "name" : "roleName",
+        "required" : true
+      }, {
+        "type" : "string",
+        "description" : "The scope name",
+        "defaultValue" : "EC",
+        "paramType" : "header",
+        "name" : "scopeName",
+        "required" : true
+      }, {
+        "type" : "string",
+        "description" : "jwt token",
+        "paramType" : "header",
+        "name" : "authorization",
+        "required" : true
+      } ],
+      "consumes" : [ "application/json" ],
+      "produces" : [ "application/json" ]
+    } ]
+  }, {
+    "path" : "/area/types",
+    "operations" : [ {
+      "method" : "GET",
+      "nickname" : "getAreaTypes",
+      "type" : "Response",
+      "parameters" : [ {
+        "type" : "string",
+        "description" : "The role name",
+        "defaultValue" : "rep_power_role",
+        "paramType" : "header",
+        "name" : "roleName",
+        "required" : true
+      }, {
+        "type" : "string",
+        "description" : "The scope name",
+        "defaultValue" : "EC",
+        "paramType" : "header",
+        "name" : "scopeName",
+        "required" : true
+      }, {
+        "type" : "string",
+        "description" : "jwt token",
+        "paramType" : "header",
+        "name" : "authorization",
+        "required" : true
+      } ],
+      "summary" : "Return the list of all area types.",
+      "responseMessages" : [ {
+        "code" : 200,
+        "message" : "ok"
+      }, {
+        "code" : 404,
+        "message" : "not found"
+      } ],
+      "produces" : [ "application/json" ]
+    } ]
+  } ],
+  "models" : {
+    "AreaFilterType" : {
+      "id" : "AreaFilterType",
+      "properties" : {
+        "filter" : {
+          "type" : "string"
+        },
+        "areaType" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "areaType" ]
+    },
+    "AreaType" : {
+      "id" : "AreaType",
+      "properties" : {
+        "areaType" : {
+          "type" : "string"
+        },
+        "areaCode" : {
+          "type" : "string"
+        },
+        "additionalProperty" : {
+          "type" : "void"
+        }
+      }
+    },
+    "LocationCoordinateType" : {
+      "id" : "LocationCoordinateType",
+      "properties" : {
+        "id" : {
+          "type" : "string"
+        },
+        "longitude" : {
+          "type" : "number",
+          "format" : "double"
+        },
+        "latitude" : {
+          "type" : "number",
+          "format" : "double"
+        },
+        "crs" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "gid" : {
+          "type" : "string"
+        },
+        "inputValid" : {
+          "type" : "boolean"
+        },
+        "locationType" : {
+          "type" : "string"
+        },
+        "isGeom" : {
+          "type" : "boolean"
+        }
+      },
+      "required" : [ "locationType", "isGeom" ]
+    },
+    "AreaCoordinateType" : {
+      "id" : "AreaCoordinateType",
+      "properties" : {
+        "id" : {
+          "type" : "string"
+        },
+        "longitude" : {
+          "type" : "number",
+          "format" : "double"
+        },
+        "latitude" : {
+          "type" : "number",
+          "format" : "double"
+        },
+        "crs" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "gid" : {
+          "type" : "string"
+        },
+        "inputValid" : {
+          "type" : "boolean"
+        },
+        "areaType" : {
+          "type" : "string"
+        },
+        "isGeom" : {
+          "type" : "boolean"
+        }
+      },
+      "required" : [ "areaType", "isGeom" ]
+    },
+    "AreaByCodeJsonPayload" : {
+      "id" : "AreaByCodeJsonPayload",
+      "properties" : {
+        "areaTypes" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "AreaType"
+          }
+        },
+        "additionalProperty" : {
+          "type" : "void"
+        }
+      }
+    }
+  }
+}
