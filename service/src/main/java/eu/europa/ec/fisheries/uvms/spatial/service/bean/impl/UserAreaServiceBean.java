@@ -25,7 +25,6 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -33,16 +32,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.io.ParseException;
 import eu.europa.ec.fisheries.uvms.commons.geometry.mapper.GeometryMapper;
-import eu.europa.ec.fisheries.uvms.commons.geometry.utils.GeometryUtils;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.message.service.UserProducerBean;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMapperException;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaProperty;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialRepository;
@@ -214,52 +210,10 @@ public class UserAreaServiceBean implements UserAreaService {
     }
 
     @Override
-    public List<AreaDetails> getUserAreaDetailsWithExtentById(AreaTypeEntry areaTypeEntry, String userName, boolean isPowerUser, String scopeName) throws ServiceException {
-
+    public Map<String, Object> getUserAreaDetailsWithExtentById(AreaTypeEntry areaTypeEntry, String userName, boolean isPowerUser, String scopeName) throws ServiceException {
         UserAreasEntity userAreaById = repository.findUserAreaById(Long.parseLong(areaTypeEntry.getId()), userName, isPowerUser, scopeName);
-        List<AreaDetails> areaDetailsList;
-
-        try {
-            if (userAreaById != null) {
-                areaDetailsList = new ArrayList<>();
-                Map<String, Object> properties = userAreaById.getFieldMap();
-                addCentroidToProperties(properties);
-                areaDetailsList.add(createAreaDetailsSpatialResponse(properties, areaTypeEntry));
-
-            } else {
-                AreaDetails areaDetails = new AreaDetails();
-                areaDetails.setAreaType(areaTypeEntry);
-                areaDetailsList = Arrays.asList(areaDetails);
-            }
-            return areaDetailsList;
-
-        } catch (ParseException e) {
-            String error = "Error while trying to parse geometry";
-            log.error(error, e);
-            throw new ServiceException(error);
-        }
-    }
-
-    @Override
-    public List<AreaDetails> getUserAreaDetailsById(AreaTypeEntry areaTypeEntry, String userName, boolean isPowerUser, String scopeName) throws ServiceException {
-
-        UserAreasEntity userAreaById = repository.findUserAreaById(Long.parseLong(areaTypeEntry.getId()), userName, isPowerUser, scopeName);
-        try {
-            List<AreaDetails> areaDetailsList = new ArrayList<>();
-
-            if (userAreaById != null){
-                Map<String, Object> properties = userAreaById.getFieldMap();
-                addCentroidToProperties(properties);
-                areaDetailsList.add(createAreaDetailsSpatialResponse(properties, areaTypeEntry));
-            }
-
-            return areaDetailsList;
-
-        } catch (ParseException e) {
-            String error = "Error while trying to parse geometry";
-            log.error(error, e);
-            throw new ServiceException(error);
-        }
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.convertValue(userAreaById, Map.class);
     }
 
     /**
@@ -272,29 +226,6 @@ public class UserAreaServiceBean implements UserAreaService {
         } else {
             repository.updateUserAreaForUser(remoteUser, startDate, endDate, type);
         }
-    }
-
-    private void addCentroidToProperties(Map<String, Object> properties) throws ParseException {
-
-        Object geometry = properties.get("geometry");
-
-        if (geometry != null){
-            properties.put("centroid", GeometryUtils.wktToCentroidWkt(String.valueOf(geometry)));
-        }
-    }
-
-    private AreaDetails createAreaDetailsSpatialResponse(Map<String, Object> properties, AreaTypeEntry areaTypeEntry) {
-        List<AreaProperty> areaProperties = new ArrayList<>();
-        for (Map.Entry<String, Object> entry : properties.entrySet()) {
-            AreaProperty areaProperty = new AreaProperty();
-            areaProperty.setPropertyName(entry.getKey());
-            areaProperty.setPropertyValue(entry.getValue());
-            areaProperties.add(areaProperty);
-        }
-        AreaDetails areaDetails = new AreaDetails();
-        areaDetails.setAreaType(areaTypeEntry);
-        areaDetails.getAreaProperties().addAll(areaProperties);
-        return areaDetails;
     }
 
     @SuppressWarnings("unchecked")

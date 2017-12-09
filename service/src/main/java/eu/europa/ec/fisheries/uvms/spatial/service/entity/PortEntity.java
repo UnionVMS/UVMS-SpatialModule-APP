@@ -9,7 +9,6 @@ details. You should have received a copy of the GNU General Public License along
 
  */
 
-
 package eu.europa.ec.fisheries.uvms.spatial.service.entity;
 
 import javax.persistence.Column;
@@ -27,7 +26,6 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadMappingProperty;
-import eu.europa.ec.fisheries.uvms.spatial.service.util.ColumnAliasName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -49,11 +47,6 @@ public class PortEntity extends BaseAreaEntity {
     public static final String SEARCH_PORT = "portEntity.searchPortByNameOrCode";
     public static final String SEARCH_PORT_NAMES_BY_CODE = "portEntity.searchNamesByCode";
 
-    private static final String COUNTRY_CO = "country_co";
-    private static final String FISHING_PO = "fishing_po";
-    private static final String LANDING_PL = "landing_pl";
-    private static final String COMMERCIAL = "commercial";
-
 	@Id
 	@Column(name = "gid")
 	@SequenceGenerator(name="SEQ_GEN", sequenceName="port_seq", allocationSize = 1)
@@ -62,19 +55,15 @@ public class PortEntity extends BaseAreaEntity {
     private Long id;
 	
     @Column(name = "country_code", length = 3)
-    @ColumnAliasName(aliasName = "countrycode")
     private String countryCode;
 
     @Column(name = "fishing_port", length = 1)
-    @ColumnAliasName(aliasName = "fishingport")
     private String fishingPort;
 
     @Column(name = "landing_place")
-    @ColumnAliasName(aliasName = "landingplace")
     private String landingPlace;
 
     @Column(name = "commercial_port")
-    @ColumnAliasName(aliasName = "commercialport")
     private String commercialPort;
 
     public PortEntity() {

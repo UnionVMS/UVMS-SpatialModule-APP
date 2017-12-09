@@ -9,25 +9,22 @@ details. You should have received a copy of the GNU General Public License along
 
  */
 
-
 package eu.europa.ec.fisheries.uvms.spatial.service.entity;
 
-import eu.europa.ec.fisheries.uvms.commons.domain.BaseEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.util.ColumnAliasName;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import lombok.ToString;
-
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
+import eu.europa.ec.fisheries.uvms.commons.domain.BaseEntity;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Entity
 @Table(name = "user_scope")
@@ -42,13 +39,11 @@ public class UserScopeEntity extends BaseEntity {
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN")
 	private Long id;
 
-
     @ManyToOne
     @JoinColumn(name = "user_area_id", nullable = false)
     private UserAreasEntity userAreas;
 
-    @Column(name = "scope_name", nullable = false, length = 255)
-    @ColumnAliasName(aliasName ="scope_name")
+    @Column(name = "scope_name", nullable = false)
     private String name;
 
 }
