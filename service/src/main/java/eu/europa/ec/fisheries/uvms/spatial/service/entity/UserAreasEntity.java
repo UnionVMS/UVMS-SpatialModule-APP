@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson.UserAreaGeoJsonDto;
@@ -137,6 +138,7 @@ public class UserAreasEntity extends BaseAreaEntity {
     @Column(name = "gid")
     @SequenceGenerator(name = "SEQ_GEN", sequenceName = "user_areas_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_GEN")
+    @JsonProperty("gid")
     private Long id;
 
     @Column(name = "type")

@@ -39,6 +39,11 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.BookmarkService;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.bookmark.Bookmark;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * @implicitParam roleName|string||true|rep_power_role|||||The role name
+ * @implicitParam scopeName|string||true|EC|||||The scope name
+ * @implicitParam authorization|string||true||||||jwt token
+ */
 @Path("/bookmark")
 @Slf4j
 public class BookmarkResource extends UnionVMSResource {

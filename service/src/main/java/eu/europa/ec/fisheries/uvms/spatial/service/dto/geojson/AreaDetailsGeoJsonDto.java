@@ -12,12 +12,13 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson;
 
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.io.ParseException;
-import org.opengis.feature.simple.SimpleFeature;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import com.vividsolutions.jts.geom.MultiPolygon;
+import com.vividsolutions.jts.io.ParseException;
+import org.opengis.feature.simple.SimpleFeature;
 
 public class AreaDetailsGeoJsonDto extends GeoJsonDto {
 
@@ -39,12 +40,4 @@ public class AreaDetailsGeoJsonDto extends GeoJsonDto {
         this.allAreaProperties = allAreaProperties;
     }
 
-    public void removeGeometryAllAreas() {
-        for (Map<String, Object> props : allAreaProperties) {
-            if (props.containsKey(GEOMETRY)) {
-                props.put(EXTENT, getExtend(props.get(GEOMETRY)));
-                props.remove(GEOMETRY);
-            }
-        }
-    }
 }

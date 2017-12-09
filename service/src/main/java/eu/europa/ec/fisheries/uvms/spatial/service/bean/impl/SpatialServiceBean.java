@@ -12,25 +12,37 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.impl;
 
+import static com.vividsolutions.jts.operation.distance.DistanceOp.nearestPoints;
+import static eu.europa.ec.fisheries.uvms.commons.geometry.utils.GeometryUtils.isDefaultEpsgSRID;
+import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
+import static org.geotools.geometry.jts.JTS.orthodromicDistance;
+
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.interceptor.Interceptors;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
-
 import eu.europa.ec.fisheries.uvms.commons.geometry.mapper.GeometryMapper;
 import eu.europa.ec.fisheries.uvms.commons.geometry.utils.GeometryUtils;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.commons.service.interceptor.TracingInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.AbstractAreaDao;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DAOFactory;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DatabaseDialect;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DatabaseDialectFactory;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTypesEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.BaseAreaEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.PortEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Area;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
@@ -54,37 +66,27 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.UnitType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.UserAreasType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialService;
+import eu.europa.ec.fisheries.uvms.spatial.service.dao.AbstractAreaDao;
+import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DAOFactory;
+import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DatabaseDialect;
+import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DatabaseDialectFactory;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.GenericSystemAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.SystemAreaNamesDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.UserAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTypesEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.BaseAreaEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.PortEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.enums.MeasurementUnit;
 import eu.europa.ec.fisheries.uvms.spatial.service.exception.SpatialServiceErrors;
 import eu.europa.ec.fisheries.uvms.spatial.service.exception.SpatialServiceException;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.geotools.geometry.jts.JTSFactoryFinder;
 import org.geotools.referencing.GeodeticCalculator;
 import org.opengis.referencing.operation.TransformException;
-import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.interceptor.Interceptors;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import static com.vividsolutions.jts.operation.distance.DistanceOp.nearestPoints;
-import static eu.europa.ec.fisheries.uvms.commons.geometry.utils.GeometryUtils.*;
-import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
-import static org.geotools.geometry.jts.JTS.orthodromicDistance;
 
 /**
  * This class groups all the spatial operations on the spatial database.
@@ -183,8 +185,8 @@ public class SpatialServiceBean implements SpatialService {
     }
 
     @Override
-    @Transactional
-    public List<AreaDetails> getAreaDetailsByLocation(AreaTypeEntry areaTypeEntry) throws ServiceException {
+    @SneakyThrows
+    public List<Map<String, Object> > getAreaDetailsByLocation(AreaTypeEntry areaTypeEntry) throws ServiceException {
 
         AreaType areaType = areaTypeEntry.getAreaType();
 
@@ -196,33 +198,16 @@ public class SpatialServiceBean implements SpatialService {
 
         Point point = (Point) GeometryUtils.toGeographic(areaTypeEntry.getLatitude(), areaTypeEntry.getLongitude(), areaTypeEntry.getCrs());
 
-        List list = DAOFactory.getAbstractSpatialDao(em, areaLocationTypesEntity.getTypeName()).findByIntersect(point);
-        List<AreaDetails> areaDetailsList = new ArrayList<>();
+        List byIntersect = DAOFactory.getAbstractSpatialDao(em, areaLocationTypesEntity.getTypeName()).findByIntersect(point);
 
-        for (Object area : list) {
-            Map<String, Object> properties = ((BaseAreaEntity)area).getFieldMap();
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<Map<String, Object>> objectAsMap = new ArrayList<>();
 
-            List<AreaProperty> areaProperties = new ArrayList<>();
-            for (Map.Entry<String, Object> entry : properties.entrySet()) {
-                AreaProperty areaProperty = new AreaProperty();
-                areaProperty.setPropertyName(entry.getKey());
-                areaProperty.setPropertyValue(entry.getValue());
-                areaProperties.add(areaProperty);
-            }
-            if (!properties.isEmpty()) {
-                AreaProperty areaProperty = new AreaProperty();
-                areaProperty.setPropertyName("gid");
-                areaProperty.setPropertyValue(String.valueOf(((BaseAreaEntity) area).getId()));
-                areaProperties.add(areaProperty);
-            }
-
-            AreaDetails areaDetails = new AreaDetails();
-            areaDetails.setAreaType(areaTypeEntry);
-            areaDetails.getAreaProperties().addAll(areaProperties);
-            areaDetailsList.add(areaDetails);
+        for(Object o : byIntersect){
+            objectAsMap.add(objectMapper.convertValue(o, Map.class));
         }
-        return areaDetailsList;
 
+        return objectAsMap;
     }
 
     @Override
@@ -503,9 +488,6 @@ public class SpatialServiceBean implements SpatialService {
 
         AreaLocationTypesEntity areaLocationType = repository.findAreaLocationTypeByTypeName(areaType.toUpperCase());
 
-        if (areaLocationType == null) {
-            throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
-        }
         final ArrayList<GenericSystemAreaDto> systemAreaByFilterRecords = new ArrayList<>();
 
         List<BaseAreaEntity> baseEntities = DAOFactory.getAbstractSpatialDao(em, areaLocationType.getTypeName()).searchEntity(filter);
@@ -560,7 +542,6 @@ public class SpatialServiceBean implements SpatialService {
     }
 
     @Override
-    @Transactional
     public LocationDetails getLocationDetails(final LocationTypeEntry locationTypeEntry) throws ServiceException {
 
         final GeodeticCalculator calc = new GeodeticCalculator(GeometryUtils.toDefaultCoordinateReferenceSystem());

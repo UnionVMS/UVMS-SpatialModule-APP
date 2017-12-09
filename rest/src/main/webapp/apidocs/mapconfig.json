@@ -1,0 +1,30 @@
+{
+  "apiVersion" : "1.0.9-SNAPSHOT",
+  "swaggerVersion" : "1.2",
+  "basePath" : "/spatial/rest",
+  "resourcePath" : "/mapconfig",
+  "apis" : [ {
+    "path" : "/mapconfig/{id}",
+    "operations" : [ {
+      "method" : "GET",
+      "nickname" : "getMapConfigBy",
+      "type" : "Response",
+      "parameters" : [ {
+        "type" : "integer",
+        "format" : "int32",
+        "paramType" : "path",
+        "name" : "id",
+        "required" : true
+      }, {
+        "type" : "string",
+        "paramType" : "header",
+        "name" : "scopeName"
+      }, {
+        "type" : "string",
+        "paramType" : "header",
+        "name" : "roleName"
+      } ],
+      "produces" : [ "application/json" ]
+    } ]
+  } ]
+}
