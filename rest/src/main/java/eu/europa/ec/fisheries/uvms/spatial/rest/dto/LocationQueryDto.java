@@ -14,14 +14,18 @@ package eu.europa.ec.fisheries.uvms.spatial.rest.dto;
 
 import javax.validation.constraints.NotNull;
 
+import lombok.Data;
 import org.hibernate.validator.constraints.NotEmpty;
 
-public class LocationCoordinateType extends GeoCoordinateType {
+@Data
+public class LocationQueryDto extends GeoCoordinateType {
 
-	@NotNull
 	@NotEmpty
 	private String locationType;
 
+    /**
+     *  Return GeoJSON
+     */
 	@NotNull
 	private Boolean isGeom = false;
 
@@ -35,19 +39,4 @@ public class LocationCoordinateType extends GeoCoordinateType {
 		this.id = id;
 	}
 
-	public String getLocationType() {
-		return locationType;
-	}
-
-	public void setLocationType(String locationType) {
-		this.locationType = locationType;
-	}
-
-	public Boolean getIsGeom() {
-		return isGeom;
-	}
-
-	public void setIsGeom(Boolean isGeom) {
-		this.isGeom = isGeom;
-	}
 }

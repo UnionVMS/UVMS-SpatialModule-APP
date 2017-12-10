@@ -5,5 +5,5 @@ target/*
 container-conf/lib/*
 logging.properties
 .idea
-webapp
-webapp/*
+webapp/apidocs
+webapp/apidocs/*

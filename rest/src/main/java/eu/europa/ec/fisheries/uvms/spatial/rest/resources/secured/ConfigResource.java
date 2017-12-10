@@ -56,6 +56,18 @@ public class ConfigResource extends UnionVMSResource {
     private static final String DEFAULT_CONFIG = "DEFAULT_CONFIG";
     private static final String USER_CONFIG = "USER_CONFIG";
 
+    @HeaderParam("authorization")
+    private String authorization;
+
+    @HeaderParam("scopeName")
+    private String scopeName;
+
+    @HeaderParam("roleName")
+    private String roleName;
+
+    @Context
+    private HttpServletRequest servletRequest;
+
     @EJB
     private MapConfigService mapConfigService;
 
@@ -67,12 +79,9 @@ public class ConfigResource extends UnionVMSResource {
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Path("{id}")
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response getReportMapConfig(@Context HttpServletRequest request,
-                                       @HeaderParam(AuthConstants.HTTP_HEADER_SCOPE_NAME) String scopeName,
-                                       @HeaderParam(AuthConstants.HTTP_HEADER_ROLE_NAME) String roleName,
-                                       @PathParam("id") int id, ConfigResourceDto config) throws ServiceException {
-        final String username = request.getRemoteUser();
-        String applicationName = request.getServletContext().getInitParameter("usmApplication");
+    public Response getReportMapConfig(@PathParam("id") int id, ConfigResourceDto config) throws ServiceException {
+        final String username = servletRequest.getRemoteUser();
+        String applicationName = servletRequest.getServletContext().getInitParameter("usmApplication");
         String adminPref = usmService.getOptionDefaultValue(DEFAULT_CONFIG, applicationName);
         String userPref = usmService.getUserPreference(USER_CONFIG, username, applicationName, roleName, scopeName);
         log.info("Getting mapDefaultSRIDToEPSG configuration for report with id = {}", id);
@@ -87,11 +96,9 @@ public class ConfigResource extends UnionVMSResource {
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Path("/basic")
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response getBasicReportMapConfig(@Context HttpServletRequest request,
-                                            @HeaderParam(AuthConstants.HTTP_HEADER_SCOPE_NAME) String scopeName,
-                                            @HeaderParam(AuthConstants.HTTP_HEADER_ROLE_NAME) String roleName) throws ServiceException {
-        final String username = request.getRemoteUser();
-        String applicationName = request.getServletContext().getInitParameter("usmApplication");
+    public Response getBasicReportMapConfig() throws ServiceException {
+        final String username = servletRequest.getRemoteUser();
+        String applicationName = servletRequest.getServletContext().getInitParameter("usmApplication");
         String adminPref = usmService.getOptionDefaultValue(DEFAULT_CONFIG, applicationName);
         String userPref = usmService.getUserPreference(USER_CONFIG, username, applicationName, roleName, scopeName);
         MapConfigDto mapConfig = mapConfigService.getBasicReportConfig(userPref, adminPref);
@@ -103,15 +110,12 @@ public class ConfigResource extends UnionVMSResource {
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Path("/fromreport")
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response getReportMapConfigWithoutSave(@Context HttpServletRequest request,
-                                                  @HeaderParam(AuthConstants.HTTP_HEADER_SCOPE_NAME) String scopeName,
-                                                  @HeaderParam(AuthConstants.HTTP_HEADER_ROLE_NAME) String roleName,
-                                                  ConfigurationDto configurationDto) throws ServiceException {
-        final String username = request.getRemoteUser();
+    public Response getReportMapConfigWithoutSave(ConfigurationDto configurationDto) throws ServiceException {
+        final String username = servletRequest.getRemoteUser();
         Collection<String> permittedLayersNames = ServiceLayerUtils.getUserPermittedLayersNames(usmService, username, roleName, scopeName);
 
 
-        MapConfigDto mapConfig = mapConfigService.getReportConfigWithoutSave(configurationDto, request.getRemoteUser(), scopeName, permittedLayersNames);
+        MapConfigDto mapConfig = mapConfigService.getReportConfigWithoutSave(configurationDto, servletRequest.getRemoteUser(), scopeName, permittedLayersNames);
         return createSuccessResponse(mapConfig);
     }
 
@@ -119,11 +123,9 @@ public class ConfigResource extends UnionVMSResource {
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Path("/report")
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response getReportConfig(@Context HttpServletRequest request,
-                                    @HeaderParam(AuthConstants.HTTP_HEADER_SCOPE_NAME) String scopeName,
-                                    @HeaderParam(AuthConstants.HTTP_HEADER_ROLE_NAME) String roleName) throws ServiceException {
-        final String username = request.getRemoteUser();
-        String applicationName = request.getServletContext().getInitParameter("usmApplication");
+    public Response getReportConfig() throws ServiceException {
+        final String username = servletRequest.getRemoteUser();
+        String applicationName = servletRequest.getServletContext().getInitParameter("usmApplication");
         String adminPref = usmService.getOptionDefaultValue(DEFAULT_CONFIG, applicationName);
         String userPref = usmService.getUserPreference(USER_CONFIG, username, applicationName, roleName, scopeName);
         return createSuccessResponse(mapConfigService.getReportConfigWithoutMap(userPref, adminPref));
@@ -133,12 +135,10 @@ public class ConfigResource extends UnionVMSResource {
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Path("/admin")
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response getAdminPreferences(@Context HttpServletRequest request,
-                                        @HeaderParam(AuthConstants.HTTP_HEADER_SCOPE_NAME) String scopeName,
-                                        @HeaderParam(AuthConstants.HTTP_HEADER_ROLE_NAME) String roleName) throws ServiceException, IOException {
-        String applicationName = request.getServletContext().getInitParameter("usmApplication");
+    public Response getAdminPreferences() throws ServiceException, IOException {
+        String applicationName = servletRequest.getServletContext().getInitParameter("usmApplication");
         String adminConfig = usmService.getOptionDefaultValue(DEFAULT_CONFIG, applicationName);
-        Collection<String> permittedLayersNames = ServiceLayerUtils.getUserPermittedLayersNames(usmService, request.getRemoteUser(), roleName, scopeName);
+        Collection<String> permittedLayersNames = ServiceLayerUtils.getUserPermittedLayersNames(usmService, servletRequest.getRemoteUser(), roleName, scopeName);
         return createSuccessResponse(mapConfigService.retrieveAdminConfiguration(adminConfig, permittedLayersNames));
     }
 
@@ -147,15 +147,13 @@ public class ConfigResource extends UnionVMSResource {
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Path("/admin/save")
     @Interceptors(value = {ExceptionInterceptor.class, ValidationInterceptor.class})
-    public Response saveAdminPreferences(@Context HttpServletRequest request, ConfigurationDto configurationDto,
-                                         @HeaderParam(AuthConstants.HTTP_HEADER_SCOPE_NAME) String scopeName,
-                                         @HeaderParam(AuthConstants.HTTP_HEADER_ROLE_NAME) String roleName) throws ServiceException, IOException {
+    public Response saveAdminPreferences(ConfigurationDto configurationDto) throws ServiceException, IOException {
         Response response;
 
-        if (request.isUserInRole(SpatialFeaturesEnum.MANAGE_SYSTEM_SPATIAL_CONFIGURATIONS.toString())) {
-            String applicationName = request.getServletContext().getInitParameter("usmApplication");
+        if (servletRequest.isUserInRole(SpatialFeaturesEnum.MANAGE_SYSTEM_SPATIAL_CONFIGURATIONS.toString())) {
+            String applicationName = servletRequest.getServletContext().getInitParameter("usmApplication");
             String defaultConfig = usmService.getOptionDefaultValue(DEFAULT_CONFIG, applicationName);
-            Collection<String> permittedLayersNames = ServiceLayerUtils.getUserPermittedLayersNames(usmService, request.getRemoteUser(), roleName, scopeName);
+            Collection<String> permittedLayersNames = ServiceLayerUtils.getUserPermittedLayersNames(usmService, servletRequest.getRemoteUser(), roleName, scopeName);
             String json = mapConfigService.saveAdminJson(configurationDto, defaultConfig, permittedLayersNames);
             usmService.setOptionDefaultValue(DEFAULT_CONFIG, json, applicationName);
             response = createSuccessResponse();
@@ -170,11 +168,9 @@ public class ConfigResource extends UnionVMSResource {
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Path("/user")
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response getUserPreferences(@Context HttpServletRequest request,
-                                       @HeaderParam(AuthConstants.HTTP_HEADER_SCOPE_NAME) String scopeName,
-                                       @HeaderParam(AuthConstants.HTTP_HEADER_ROLE_NAME) String roleName) throws ServiceException, IOException {
-        String applicationName = request.getServletContext().getInitParameter("usmApplication");
-        final String username = request.getRemoteUser();
+    public Response getUserPreferences() throws ServiceException, IOException {
+        String applicationName = servletRequest.getServletContext().getInitParameter("usmApplication");
+        final String username = servletRequest.getRemoteUser();
         String adminPref = usmService.getOptionDefaultValue(DEFAULT_CONFIG, applicationName);
         String userPref = usmService.getUserPreference(USER_CONFIG, username, applicationName, roleName, scopeName);
         Collection<String> permittedLayersNames = ServiceLayerUtils.getUserPermittedLayersNames(usmService, username, roleName, scopeName);
@@ -203,12 +199,9 @@ public class ConfigResource extends UnionVMSResource {
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Path("/user/reset")
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response resetUserPreferences(@Context HttpServletRequest request,
-                                         @HeaderParam(AuthConstants.HTTP_HEADER_SCOPE_NAME) String scopeName,
-                                         @HeaderParam(AuthConstants.HTTP_HEADER_ROLE_NAME) String roleName,
-                                         ConfigurationDto configurationDto) throws ServiceException {
-        String applicationName = request.getServletContext().getInitParameter("usmApplication");
-        final String username = request.getRemoteUser();
+    public Response resetUserPreferences(ConfigurationDto configurationDto) throws ServiceException {
+        String applicationName = servletRequest.getServletContext().getInitParameter("usmApplication");
+        final String username = servletRequest.getRemoteUser();
         String userPref = usmService.getUserPreference(USER_CONFIG, username, applicationName, roleName, scopeName);
         String json = mapConfigService.resetUserJson(configurationDto, userPref);
         usmService.putUserPreference(USER_CONFIG, json, applicationName, scopeName, roleName, username);

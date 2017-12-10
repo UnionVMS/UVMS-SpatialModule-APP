@@ -15,6 +15,7 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -44,7 +45,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaCoordinateType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaFilterType;
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.LocationCoordinateType;
+import eu.europa.ec.fisheries.uvms.spatial.rest.dto.LocationQueryDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.AreaLocationMapper;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
@@ -108,7 +109,9 @@ public class AreaResource extends UnionVMSResource {
     /**
      * Endpoint to get location details for given coordinate
      *
-     * @param locationDto locationDto
+     * @param query
+     *
+     * @see LocationQueryDto
      *
      * @responseMessage 200 ok
      * @responseMessage 404 not found
@@ -118,11 +121,11 @@ public class AreaResource extends UnionVMSResource {
     @Produces({MediaType.APPLICATION_JSON})
     @Interceptors(value = {ExceptionInterceptor.class})
     @Path("/location/details")
-    public Response getLocationDetails(LocationCoordinateType locationDto) throws ServiceException {
+    public Response getLocationDetails(@Valid LocationQueryDto query) throws ServiceException {
         try {
-            LocationTypeEntry locationTypeEntry = mapper.getLocationTypeEntry(locationDto);
+            LocationTypeEntry locationTypeEntry = mapper.getLocationTypeEntry(query);
             Map<String, Object> locationDetails = spatialService.getLocationDetails(locationTypeEntry);
-            if (!locationDto.getIsGeom()) {
+            if (!query.getIsGeom()) {
                 return createSuccessResponse(locationDetails);
             }
             StringWriter writer = new StringWriter();
@@ -139,11 +142,19 @@ public class AreaResource extends UnionVMSResource {
         }
     }
 
+    /**
+     *
+     * @param areaDto
+     *
+     * @see
+     * @return
+     * @throws ServiceException
+     */
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/details")
-    @Interceptors(value = {ExceptionInterceptor.class})
+    @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
     public Response getAreaDetails(AreaCoordinateType areaDto) throws ServiceException {
         Response response;
         StringWriter writer = new StringWriter();
