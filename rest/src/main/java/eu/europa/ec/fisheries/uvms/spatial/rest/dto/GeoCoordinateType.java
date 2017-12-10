@@ -9,14 +9,12 @@ details. You should have received a copy of the GNU General Public License along
 
  */
 
-
 package eu.europa.ec.fisheries.uvms.spatial.rest.dto;
 
-import org.hibernate.validator.constraints.ScriptAssert;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 
-@ScriptAssert(script="_this.isInputValid(_this.id,_this.crs,_this.longitude,_this.latitude)", lang = "javascript")
+@Data
 public class GeoCoordinateType {
 
 	protected String id;
@@ -47,36 +45,5 @@ public class GeoCoordinateType {
 		this.id = gid;
 	}
 
-	public Double getLongitude() {
-		return longitude;
-	}
 
-	public void setLongitude(Double longitude) {
-		this.longitude = longitude;
-	}
-
-	public Double getLatitude() {
-		return latitude;
-	}
-
-	public void setLatitude(Double latitude) {
-		this.latitude = latitude;
-	}
-
-	public Integer getCrs() {
-		return crs;
-	}
-
-	public void setCrs(Integer crs) {
-		this.crs = crs;
-	}
-	
-	public boolean isInputValid(Object id, Object crs, Object longitude, Object latitude) {
-		if (id != null) {
-			return true;
-		} else if (crs != null && longitude != null && latitude != null) {
-			return true;
-		}
-		return false;
-	}
 }

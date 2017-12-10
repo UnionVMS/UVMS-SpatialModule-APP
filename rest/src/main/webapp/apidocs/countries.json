@@ -1,0 +1,33 @@
+{
+  "apiVersion" : "1.0.9-SNAPSHOT",
+  "swaggerVersion" : "1.2",
+  "basePath" : "/spatial/rest",
+  "resourcePath" : "/countries",
+  "apis" : [ {
+    "path" : "/countries",
+    "operations" : [ {
+      "method" : "GET",
+      "nickname" : "getAllCountriesDesc",
+      "type" : "Response",
+      "parameters" : [ {
+        "type" : "string",
+        "paramType" : "",
+        "name" : "roleName",
+        "required" : true
+      }, {
+        "type" : "string",
+        "defaultValue" : "EC",
+        "paramType" : "",
+        "name" : "scopeName",
+        "required" : true
+      }, {
+        "type" : "string",
+        "description" : "jwt token",
+        "paramType" : "",
+        "name" : "authorization",
+        "required" : true
+      } ],
+      "produces" : [ "application/json" ]
+    } ]
+  } ]
+}

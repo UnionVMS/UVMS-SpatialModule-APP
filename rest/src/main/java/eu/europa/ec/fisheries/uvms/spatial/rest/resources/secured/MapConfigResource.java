@@ -26,7 +26,6 @@ import java.util.Collection;
 import eu.europa.ec.fisheries.uvms.commons.rest.constants.ErrorCodes;
 import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.constants.AuthConstants;
 import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.MapConfigurationType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.MapSettingsType;
@@ -50,33 +49,35 @@ public class MapConfigResource extends UnionVMSResource {
     @EJB
     private USMService usmService;
 
+    @HeaderParam("authorization")
+    private String authorization;
+
+    @HeaderParam("scopeName")
+    private String scopeName;
+
+    @HeaderParam("roleName")
+    private String roleName;
+
+    @Context
+    private HttpServletRequest servletRequest;
+
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Path("{id}")
-    public Response getMapConfigBy(@PathParam("id") Integer reportId,
-                                   @Context HttpServletRequest request,
-                                   @HeaderParam(AuthConstants.HTTP_HEADER_SCOPE_NAME) String scopeName,
-                                   @HeaderParam(AuthConstants.HTTP_HEADER_ROLE_NAME) String roleName) {
+    public Response getMapConfigBy(@PathParam("id") Integer reportId) {
 
         log.info("Getting mapDefaultSRIDToEPSG settings for report with id = {}", reportId);
-
         Response response;
 
         try {
-            Collection<String> permittedLayersNames = ServiceLayerUtils.getUserPermittedLayersNames(usmService, request.getRemoteUser(), roleName, scopeName);
-
+            Collection<String> permittedLayersNames = ServiceLayerUtils.getUserPermittedLayersNames(usmService, servletRequest.getRemoteUser(), roleName, scopeName);
             MapConfigurationType mapConfigurationType = mapConfigService.getMapConfigurationType(Long.valueOf(reportId), permittedLayersNames);
-
             response = createSuccessResponse(new MapSettingsType(mapConfigurationType));
 
         } catch (ServiceException ex) {
-
             log.error("[ Error when getting mapDefaultSRIDToEPSG settings. ] ", ex);
-
             response = createErrorResponse(ErrorCodes.INTERNAL_SERVER_ERROR);
-
         }
-
         return response;
 
     }

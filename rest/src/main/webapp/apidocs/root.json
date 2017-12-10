@@ -1,0 +1,508 @@
+{
+  "apiVersion" : "1.0.9-SNAPSHOT",
+  "swaggerVersion" : "1.2",
+  "basePath" : "/spatial/rest",
+  "resourcePath" : "/root",
+  "apis" : [ {
+    "path" : "/areas-by-location",
+    "operations" : [ {
+      "method" : "POST",
+      "nickname" : "getAreasByPoint",
+      "type" : "AreaByLocationSpatialRS",
+      "parameters" : [ {
+        "type" : "AreaByLocationSpatialRQ",
+        "paramType" : "body",
+        "name" : "request",
+        "required" : true
+      }, {
+        "type" : "string",
+        "paramType" : "",
+        "name" : "roleName",
+        "required" : true
+      }, {
+        "type" : "string",
+        "defaultValue" : "EC",
+        "paramType" : "",
+        "name" : "scopeName",
+        "required" : true
+      }, {
+        "type" : "string",
+        "description" : "jwt token",
+        "paramType" : "",
+        "name" : "authorization",
+        "required" : true
+      } ],
+      "consumes" : [ "application/xml" ],
+      "produces" : [ "application/xml" ]
+    } ]
+  }, {
+    "path" : "/closest-areas",
+    "operations" : [ {
+      "method" : "POST",
+      "nickname" : "getClosestAreasToPointByType",
+      "type" : "ClosestAreaSpatialRS",
+      "parameters" : [ {
+        "type" : "ClosestAreaSpatialRQ",
+        "paramType" : "body",
+        "name" : "request",
+        "required" : true
+      }, {
+        "type" : "string",
+        "paramType" : "",
+        "name" : "roleName",
+        "required" : true
+      }, {
+        "type" : "string",
+        "defaultValue" : "EC",
+        "paramType" : "",
+        "name" : "scopeName",
+        "required" : true
+      }, {
+        "type" : "string",
+        "description" : "jwt token",
+        "paramType" : "",
+        "name" : "authorization",
+        "required" : true
+      } ],
+      "consumes" : [ "application/xml" ],
+      "produces" : [ "application/xml" ]
+    } ]
+  }, {
+    "path" : "/closest-locations",
+    "operations" : [ {
+      "method" : "POST",
+      "nickname" : "getClosestPointToPointByType",
+      "type" : "ClosestLocationSpatialRS",
+      "parameters" : [ {
+        "type" : "ClosestLocationSpatialRQ",
+        "paramType" : "body",
+        "name" : "request",
+        "required" : true
+      }, {
+        "type" : "string",
+        "paramType" : "",
+        "name" : "roleName",
+        "required" : true
+      }, {
+        "type" : "string",
+        "defaultValue" : "EC",
+        "paramType" : "",
+        "name" : "scopeName",
+        "required" : true
+      }, {
+        "type" : "string",
+        "description" : "jwt token",
+        "paramType" : "",
+        "name" : "authorization",
+        "required" : true
+      } ],
+      "consumes" : [ "application/xml" ],
+      "produces" : [ "application/xml" ]
+    } ]
+  }, {
+    "path" : "/enrichment",
+    "operations" : [ {
+      "method" : "POST",
+      "nickname" : "spatialEnrichment",
+      "type" : "SpatialEnrichmentRS",
+      "parameters" : [ {
+        "type" : "SpatialEnrichmentRQ",
+        "paramType" : "body",
+        "name" : "request",
+        "required" : true
+      }, {
+        "type" : "string",
+        "paramType" : "",
+        "name" : "roleName",
+        "required" : true
+      }, {
+        "type" : "string",
+        "defaultValue" : "EC",
+        "paramType" : "",
+        "name" : "scopeName",
+        "required" : true
+      }, {
+        "type" : "string",
+        "description" : "jwt token",
+        "paramType" : "",
+        "name" : "authorization",
+        "required" : true
+      } ],
+      "consumes" : [ "application/xml" ],
+      "produces" : [ "application/xml" ]
+    } ]
+  }, {
+    "path" : "/filter-areas",
+    "operations" : [ {
+      "method" : "POST",
+      "nickname" : "computeAreaFilter",
+      "type" : "FilterAreasSpatialRS",
+      "parameters" : [ {
+        "type" : "FilterAreasSpatialRQ",
+        "paramType" : "body",
+        "name" : "request",
+        "required" : true
+      }, {
+        "type" : "string",
+        "paramType" : "",
+        "name" : "roleName",
+        "required" : true
+      }, {
+        "type" : "string",
+        "defaultValue" : "EC",
+        "paramType" : "",
+        "name" : "scopeName",
+        "required" : true
+      }, {
+        "type" : "string",
+        "description" : "jwt token",
+        "paramType" : "",
+        "name" : "authorization",
+        "required" : true
+      } ],
+      "consumes" : [ "application/xml" ],
+      "produces" : [ "application/xml" ]
+    } ]
+  } ],
+  "models" : {
+    "AreaByLocationSpatialRS" : {
+      "id" : "AreaByLocationSpatialRS",
+      "properties" : {
+        "AreasByLocation" : {
+          "type" : "AreasByLocationType"
+        }
+      }
+    },
+    "SpatialEnrichmentRQ-LocationTypes" : {
+      "id" : "SpatialEnrichmentRQ-LocationTypes",
+      "properties" : {
+        "LocationType" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "enum" : [ "PORT" ]
+          }
+        }
+      }
+    },
+    "ClosestLocationsType" : {
+      "id" : "ClosestLocationsType",
+      "properties" : {
+        "ClosestLocations" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "Location"
+          }
+        }
+      }
+    },
+    "SpatialEnrichmentRQ" : {
+      "id" : "SpatialEnrichmentRQ",
+      "properties" : {
+        "method" : {
+          "type" : "string",
+          "enum" : [ "GET_AREA_TYPES", "GET_AREA_BY_LOCATION", "GET_CLOSEST_LOCATION", "GET_CLOSEST_AREA", "GET_BUFFER_GEOM", "GET_ENRICHMENT", "GET_FILTER_AREA", "GET_MAP_CONFIGURATION", "SAVE_OR_UPDATE_MAP_CONFIGURATION", "DELETE_MAP_CONFIGURATION", "PING", "GET_AREA_BY_CODE", "GET_GEOMETRY_BY_PORT_CODE" ]
+        },
+        "Point" : {
+          "type" : "PointType"
+        },
+        "AreaTypes" : {
+          "type" : "SpatialEnrichmentRQ-AreaTypes"
+        },
+        "LocationTypes" : {
+          "type" : "SpatialEnrichmentRQ-LocationTypes"
+        },
+        "Unit" : {
+          "type" : "string",
+          "enum" : [ "METERS", "KILOMETERS", "MILES", "NAUTICAL_MILES" ]
+        }
+      }
+    },
+    "SpatialEnrichmentRQ-AreaTypes" : {
+      "id" : "SpatialEnrichmentRQ-AreaTypes",
+      "properties" : {
+        "AreaType" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "enum" : [ "FMZ", "EEZ", "FAO", "GFCM", "COUNTRY", "RFMO", "STATRECT", "USERAREA", "PORT", "PORTAREA" ]
+          }
+        }
+      }
+    },
+    "AreaByLocationSpatialRQ" : {
+      "id" : "AreaByLocationSpatialRQ",
+      "properties" : {
+        "method" : {
+          "type" : "string",
+          "enum" : [ "GET_AREA_TYPES", "GET_AREA_BY_LOCATION", "GET_CLOSEST_LOCATION", "GET_CLOSEST_AREA", "GET_BUFFER_GEOM", "GET_ENRICHMENT", "GET_FILTER_AREA", "GET_MAP_CONFIGURATION", "SAVE_OR_UPDATE_MAP_CONFIGURATION", "DELETE_MAP_CONFIGURATION", "PING", "GET_AREA_BY_CODE", "GET_GEOMETRY_BY_PORT_CODE" ]
+        },
+        "Point" : {
+          "type" : "PointType"
+        }
+      }
+    },
+    "SpatialEnrichmentRS" : {
+      "id" : "SpatialEnrichmentRS",
+      "properties" : {
+        "AreasByLocation" : {
+          "type" : "AreasByLocationType"
+        },
+        "ClosestAreas" : {
+          "type" : "ClosestAreasType"
+        },
+        "ClosestLocations" : {
+          "type" : "ClosestLocationsType"
+        }
+      }
+    },
+    "ScopeAreasType" : {
+      "id" : "ScopeAreasType",
+      "properties" : {
+        "ScopeArea" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "AreaIdentifierType"
+          }
+        }
+      }
+    },
+    "AreasByLocationType" : {
+      "id" : "AreasByLocationType",
+      "properties" : {
+        "Area" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "AreaExtendedIdentifierType"
+          }
+        }
+      }
+    },
+    "UserAreasType" : {
+      "id" : "UserAreasType",
+      "properties" : {
+        "UserArea" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "AreaIdentifierType"
+          }
+        }
+      }
+    },
+    "FilterAreasSpatialRQ" : {
+      "id" : "FilterAreasSpatialRQ",
+      "properties" : {
+        "method" : {
+          "type" : "string",
+          "enum" : [ "GET_AREA_TYPES", "GET_AREA_BY_LOCATION", "GET_CLOSEST_LOCATION", "GET_CLOSEST_AREA", "GET_BUFFER_GEOM", "GET_ENRICHMENT", "GET_FILTER_AREA", "GET_MAP_CONFIGURATION", "SAVE_OR_UPDATE_MAP_CONFIGURATION", "DELETE_MAP_CONFIGURATION", "PING", "GET_AREA_BY_CODE", "GET_GEOMETRY_BY_PORT_CODE" ]
+        },
+        "UserAreas" : {
+          "type" : "UserAreasType"
+        },
+        "ScopeAreas" : {
+          "type" : "ScopeAreasType"
+        }
+      }
+    },
+    "ClosestAreaSpatialRS" : {
+      "id" : "ClosestAreaSpatialRS",
+      "properties" : {
+        "ClosestArea" : {
+          "type" : "ClosestAreasType"
+        }
+      }
+    },
+    "Area" : {
+      "id" : "Area",
+      "properties" : {
+        "Id" : {
+          "type" : "string"
+        },
+        "AreaType" : {
+          "type" : "string",
+          "enum" : [ "FMZ", "EEZ", "FAO", "GFCM", "COUNTRY", "RFMO", "STATRECT", "USERAREA", "PORT", "PORTAREA" ]
+        },
+        "Code" : {
+          "type" : "string"
+        },
+        "Name" : {
+          "type" : "string"
+        },
+        "Distance" : {
+          "type" : "number",
+          "format" : "double"
+        },
+        "Unit" : {
+          "type" : "string",
+          "enum" : [ "METERS", "KILOMETERS", "MILES", "NAUTICAL_MILES" ]
+        }
+      }
+    },
+    "FilterAreasSpatialRS" : {
+      "id" : "FilterAreasSpatialRS",
+      "properties" : {
+        "Geometry" : {
+          "type" : "string"
+        },
+        "Code" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      }
+    },
+    "ClosestAreaSpatialRQ" : {
+      "id" : "ClosestAreaSpatialRQ",
+      "properties" : {
+        "method" : {
+          "type" : "string",
+          "enum" : [ "GET_AREA_TYPES", "GET_AREA_BY_LOCATION", "GET_CLOSEST_LOCATION", "GET_CLOSEST_AREA", "GET_BUFFER_GEOM", "GET_ENRICHMENT", "GET_FILTER_AREA", "GET_MAP_CONFIGURATION", "SAVE_OR_UPDATE_MAP_CONFIGURATION", "DELETE_MAP_CONFIGURATION", "PING", "GET_AREA_BY_CODE", "GET_GEOMETRY_BY_PORT_CODE" ]
+        },
+        "Point" : {
+          "type" : "PointType"
+        },
+        "AreaTypes" : {
+          "type" : "ClosestAreaSpatialRQ-AreaTypes"
+        },
+        "Unit" : {
+          "type" : "string",
+          "enum" : [ "METERS", "KILOMETERS", "MILES", "NAUTICAL_MILES" ]
+        }
+      }
+    },
+    "ClosestLocationSpatialRQ" : {
+      "id" : "ClosestLocationSpatialRQ",
+      "properties" : {
+        "method" : {
+          "type" : "string",
+          "enum" : [ "GET_AREA_TYPES", "GET_AREA_BY_LOCATION", "GET_CLOSEST_LOCATION", "GET_CLOSEST_AREA", "GET_BUFFER_GEOM", "GET_ENRICHMENT", "GET_FILTER_AREA", "GET_MAP_CONFIGURATION", "SAVE_OR_UPDATE_MAP_CONFIGURATION", "DELETE_MAP_CONFIGURATION", "PING", "GET_AREA_BY_CODE", "GET_GEOMETRY_BY_PORT_CODE" ]
+        },
+        "Point" : {
+          "type" : "PointType"
+        },
+        "LocationTypes" : {
+          "type" : "ClosestLocationSpatialRQ-LocationTypes"
+        },
+        "Unit" : {
+          "type" : "string",
+          "enum" : [ "METERS", "KILOMETERS", "MILES", "NAUTICAL_MILES" ]
+        }
+      }
+    },
+    "AreaExtendedIdentifierType" : {
+      "id" : "AreaExtendedIdentifierType",
+      "properties" : {
+        "Id" : {
+          "type" : "string"
+        },
+        "AreaType" : {
+          "type" : "string",
+          "enum" : [ "FMZ", "EEZ", "FAO", "GFCM", "COUNTRY", "RFMO", "STATRECT", "USERAREA", "PORT", "PORTAREA" ]
+        },
+        "Code" : {
+          "type" : "string"
+        },
+        "Name" : {
+          "type" : "string"
+        }
+      }
+    },
+    "ClosestLocationSpatialRS" : {
+      "id" : "ClosestLocationSpatialRS",
+      "properties" : {
+        "ClosestLocations" : {
+          "type" : "ClosestLocationsType"
+        }
+      }
+    },
+    "PointType" : {
+      "id" : "PointType",
+      "properties" : {
+        "Longitude" : {
+          "type" : "number",
+          "format" : "double"
+        },
+        "Latitude" : {
+          "type" : "number",
+          "format" : "double"
+        },
+        "Crs" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      }
+    },
+    "ClosestLocationSpatialRQ-LocationTypes" : {
+      "id" : "ClosestLocationSpatialRQ-LocationTypes",
+      "properties" : {
+        "LocationType" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "enum" : [ "PORT" ]
+          }
+        }
+      }
+    },
+    "ClosestAreasType" : {
+      "id" : "ClosestAreasType",
+      "properties" : {
+        "ClosestArea" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "Area"
+          }
+        }
+      }
+    },
+    "AreaIdentifierType" : {
+      "id" : "AreaIdentifierType",
+      "properties" : {
+        "Id" : {
+          "type" : "string"
+        },
+        "AreaType" : {
+          "type" : "string",
+          "enum" : [ "FMZ", "EEZ", "FAO", "GFCM", "COUNTRY", "RFMO", "STATRECT", "USERAREA", "PORT", "PORTAREA" ]
+        }
+      }
+    },
+    "ClosestAreaSpatialRQ-AreaTypes" : {
+      "id" : "ClosestAreaSpatialRQ-AreaTypes",
+      "properties" : {
+        "AreaType" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "enum" : [ "FMZ", "EEZ", "FAO", "GFCM", "COUNTRY", "RFMO", "STATRECT", "USERAREA", "PORT", "PORTAREA" ]
+          }
+        }
+      }
+    },
+    "Location" : {
+      "id" : "Location",
+      "properties" : {
+        "Id" : {
+          "type" : "string"
+        },
+        "LocationType" : {
+          "type" : "string",
+          "enum" : [ "PORT" ]
+        },
+        "Code" : {
+          "type" : "string"
+        },
+        "Name" : {
+          "type" : "string"
+        },
+        "Distance" : {
+          "type" : "number",
+          "format" : "double"
+        },
+        "Unit" : {
+          "type" : "string",
+          "enum" : [ "METERS", "KILOMETERS", "MILES", "NAUTICAL_MILES" ]
+        }
+      }
+    }
+  }
+}

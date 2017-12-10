@@ -28,7 +28,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationProperty;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaCoordinateType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.GeoCoordinateType;
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.LocationCoordinateType;
+import eu.europa.ec.fisheries.uvms.spatial.rest.dto.LocationQueryDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson.AreaDetailsGeoJsonDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson.LocationDetailsGeoJsonDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserScopeEntity;
@@ -57,7 +57,7 @@ public abstract class AreaLocationMapper {
 	})
 	public abstract AreaTypeEntry getAreaTypeEntry(AreaCoordinateType areaDto);
 
-	public abstract LocationTypeEntry getLocationTypeEntry(LocationCoordinateType locationDto);
+	public abstract LocationTypeEntry getLocationTypeEntry(LocationQueryDto locationDto);
 	
 	@Mappings( {
 		@Mapping(target = "properties", expression = "java(extractProperties(locationDetails))"),
