@@ -22,6 +22,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.UserAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson.UserAreaGeoJsonDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.UserAreaLayerDto;
 
+//FIXME move methods to AreaService as a UserArea is a Area
 public interface UserAreaService {
 
     UserAreaLayerDto getUserAreaLayerDefinition(String userName, String scopeName);

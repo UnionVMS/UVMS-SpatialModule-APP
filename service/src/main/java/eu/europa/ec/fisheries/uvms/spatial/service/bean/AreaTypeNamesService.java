@@ -9,19 +9,17 @@ details. You should have received a copy of the GNU General Public License along
 
  */
 
-
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.AreaServiceLayerDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.ServiceLayerDto;
 import java.util.Collection;
 import java.util.List;
 
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.AreaLayerDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.enums.LayerSubTypeEnum;
-
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.AreaServiceLayerDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.ServiceLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.UserAreaLayerDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.enums.LayerSubTypeEnum;
 
 public interface AreaTypeNamesService {
 

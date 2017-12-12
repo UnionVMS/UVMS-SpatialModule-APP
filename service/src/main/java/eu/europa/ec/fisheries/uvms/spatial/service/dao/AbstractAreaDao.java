@@ -12,21 +12,31 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.dao;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import com.vividsolutions.jts.geom.Point;
-import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.commons.service.dao.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.commons.service.dao.QueryParameter;
+import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DatabaseDialect;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadMappingProperty;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.BaseAreaEntity;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
-import org.hibernate.*;
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
+import org.hibernate.Session;
+import org.hibernate.StatelessSession;
+import org.hibernate.Transaction;
 import org.hibernate.spatial.GeometryType;
 import org.hibernate.transform.AliasToEntityMapResultTransformer;
 import org.hibernate.type.DoubleType;
@@ -34,9 +44,6 @@ import org.hibernate.type.IntegerType;
 import org.hibernate.type.StandardBasicTypes;
 import org.hibernate.type.StringType;
 import org.opengis.feature.Property;
-
-import java.io.Serializable;
-import java.util.*;
 
 @Slf4j
 public abstract class AbstractAreaDao<E extends BaseAreaEntity> extends AbstractDAO<E> {
@@ -90,16 +97,23 @@ public abstract class AbstractAreaDao<E extends BaseAreaEntity> extends Abstract
 
     protected abstract String getSearchNameByCodeQuery();
 
+    @Deprecated
     protected abstract Class<E> getClazz();
 
     protected abstract BaseAreaEntity createEntity(Map<String, Object> values, List<UploadMappingProperty> mapping) throws ServiceException;
 
     protected abstract String getDisableAreaNamedQuery();
 
+    @Deprecated
     public BaseAreaEntity findOne(final Long id) throws ServiceException {
         return findEntityById(getClazz(), id);
     }
 
+    public BaseAreaEntity findOne(Class clazz, final Long id) throws ServiceException {
+        return findEntityById(clazz, id);
+    }
+
+    @Deprecated
     public List findByIntersect(Point point) throws ServiceException {
         return findEntityByNamedQuery(getClazz(), getIntersectNamedQuery(), QueryParameter.with(SHAPE, point).parameters());
     }
@@ -196,13 +210,14 @@ public abstract class AbstractAreaDao<E extends BaseAreaEntity> extends Abstract
         return resultList;
     }
 
-    public List<Map<String, String>> findSelectedAreaColumns(String namedQueryString, List<Long> gids) {
+    public List<Map<String, Object>> findSelectedAreaColumns(String namedQueryString, List<Long> gids) {
         Query query = getEntityManager().unwrap(Session.class).getNamedQuery(namedQueryString);
         query.setParameterList("ids", gids);
         query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
         return query.list();
     }
 
+    // FIXME duplicated functionality with AreaServeBean getClosestPointByPoint
     public List<BaseAreaEntity> closestPoint(final List<AreaLocationTypesEntity> entities, final DatabaseDialect spatialFunction, final Point point){
 
         List resultList = new ArrayList();

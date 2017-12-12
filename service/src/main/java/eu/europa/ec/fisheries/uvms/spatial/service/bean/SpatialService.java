@@ -9,72 +9,14 @@ details. You should have received a copy of the GNU General Public License along
 
  */
 
-
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import javax.ejb.Local;
-import java.util.List;
-import java.util.Map;
-
-import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Area;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaExtendedIdentifierType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestLocationSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Coordinate;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRS;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Location;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationTypeEntry;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.GenericSystemAreaDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.SystemAreaNamesDto;
 
 @Local
 public interface SpatialService {
 
-    List<Location> getClosestPointToPointByType(ClosestLocationSpatialRQ request) throws ServiceException;
-
-    List<Area> getClosestArea(ClosestAreaSpatialRQ request) throws ServiceException;
-
-    List<AreaExtendedIdentifierType> getAreasByPoint(AreaByLocationSpatialRQ request) throws ServiceException;
-
-    FilterAreasSpatialRS computeAreaFilter(FilterAreasSpatialRQ filterAreasSpatialRQ) throws ServiceException;
-
-    /**
-     * This API search for all the AREAS that has a matching <code>NAME</> or <code>CODE</> by Area Type and Filter in the input
-     *
-     * @param areaType Area Type to search
-     * @param filter Filter code
-     * @return Collection of Gid, code, area Type, extent of the area and Name
-     * @throws ServiceException Exception
-     */
-    List<GenericSystemAreaDto> searchAreasByNameOrCode(String areaType, String filter) throws ServiceException;
-
-    /**
-     * <p>This API search for all the unique <code>AREA CODES<code/> and corresponding <code>AREA NAMES<code/> by Area Type and Filter text received.
-     * It groups the Area Code and the mapped Areas Names and combines with the extent of the areas.
-     * <p/>
-     * @param areaType Area Type to search
-     * @param filter Filter code
-     * @return Collection of area Names, combined extend and search code
-     * @throws ServiceException Exception
-     *
-     * @see SpatialService#searchAreasByNameOrCode(String, String)
-     */
-    List<SystemAreaNamesDto> searchAreasByCode(String areaType, String filter) throws ServiceException;
-
-    Map<String, Object> getLocationDetails(LocationTypeEntry locationTypeEntry) throws ServiceException;
-
-    List<Map<String, Object> > getAreaDetailsByLocation(AreaTypeEntry areaTypeEntry) throws ServiceException;
-
-    List<Map<String, Object>> getUserAreaDetailsWithExtentByLocation(Coordinate coordinate, String userName) throws ServiceException; // FIXME Duplicated by getUserAreaDetailsByLocation
-
-    List<Map<String, Object>> getUserAreaDetailsByLocation(AreaTypeEntry areaTypeEntry, String userName) throws ServiceException;
-
     String calculateBuffer(Double latitude, Double longitude, Double buffer);
 
-    String getGemotryForPort(String portCode);
 
 }

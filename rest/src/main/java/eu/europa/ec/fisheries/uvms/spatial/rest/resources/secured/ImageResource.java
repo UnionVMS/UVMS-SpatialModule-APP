@@ -42,9 +42,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.batik.transcoder.TranscoderException;
 
 /**
- * @implicitParam roleName|string||true||||||
- * @implicitParam scopeName|string||true|EC|||||
- * @implicitParam authorization|string||true||||||jwt token
+ * @implicitParam roleName|string|header|true||||||
+ * @implicitParam scopeName|string|header|true|EC|||||
+ * @implicitParam authorization|string|header|true||||||jwt token
  */
 @Path("/image")
 @Slf4j

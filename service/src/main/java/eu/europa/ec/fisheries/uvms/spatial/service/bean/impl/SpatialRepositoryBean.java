@@ -26,8 +26,8 @@ import java.util.Map;
 import java.util.Set;
 
 import com.vividsolutions.jts.geom.Point;
-import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.commons.service.dao.QueryParameter;
+import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialRepository;
@@ -54,8 +54,10 @@ import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.ProjectionDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.ServiceLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.UserAreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTypesEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.BaseAreaEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.BookmarkEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.CountryEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.EntityMapper;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.PortEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.ProjectionEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.ReportConnectServiceAreasEntity;
@@ -78,7 +80,7 @@ public class SpatialRepositoryBean implements SpatialRepository {
     private EntityManager oracle;	
 	
     private UserAreaDao userAreaDao;
-    private AbstractAreaDao abstractAreaDao;
+    private AbstractAreaDao areaDao;
     private SysConfigDao sysConfigDao;
     private ReportConnectSpatialDao reportConnectSpatialDao;
     private BookmarkDao bookmarkDao;
@@ -104,8 +106,8 @@ public class SpatialRepositoryBean implements SpatialRepository {
 	
     @PostConstruct
     public void init() {
-		initEntityManager();	
-        abstractAreaDao = new EezDao(em);
+		initEntityManager();
+        areaDao = new EezDao(em); // FIXME create generic one to avoid confusion
         userAreaDao = new UserAreaDao(em);
         sysConfigDao = new SysConfigDao(em);
         reportConnectSpatialDao = new ReportConnectSpatialDao(em);
@@ -122,6 +124,11 @@ public class SpatialRepositoryBean implements SpatialRepository {
             utilsDao = new OracleUtilsDao(em);
         }
 
+    }
+
+    @Override
+    public BaseAreaEntity findAreaById(Long id, AreaType type) throws ServiceException {
+        return areaDao.findOne(EntityMapper.map(type), id);
     }
 
     @Override
@@ -145,8 +152,8 @@ public class SpatialRepositoryBean implements SpatialRepository {
     }
 
     @Override
-    public List<Map<String, String>> findSelectedAreaColumns(String namedQueryString, List<Long> gids) {
-        return abstractAreaDao.findSelectedAreaColumns(namedQueryString, gids);
+    public List<Map<String, Object>> findSelectedAreaColumns(String namedQueryString, List<Long> gids) {
+        return areaDao.findSelectedAreaColumns(namedQueryString, gids);
     }
 
     @Override
@@ -204,7 +211,7 @@ public class SpatialRepositoryBean implements SpatialRepository {
             SysConfigEntity sysConfigEntity = new SysConfigEntity();
             sysConfigEntity.setName(name);
             sysConfigEntity.setValue(value);
-            sysConfigDao.saveOrUpdateEntity(sysConfigEntity);
+            sysConfigDao.saveOrUpdateEntity(sysConfigEntity); // FIXME change to createEntity
         }
     }
 
@@ -293,7 +300,7 @@ public class SpatialRepositoryBean implements SpatialRepository {
     }
 
     @Override
-    public List<AreaLocationTypesEntity> findAllIsPointIsSystemWide(Boolean isLocation, Boolean isSystemWide) throws ServiceException {
+    public List<AreaLocationTypesEntity> findByIsLocationAndIsSystemWide(Boolean isLocation, Boolean isSystemWide) throws ServiceException {
         return areaLocationTypeDao.findByIsLocationAndIsSystemWide(isLocation, isSystemWide);
     }
 
@@ -342,18 +349,18 @@ public class SpatialRepositoryBean implements SpatialRepository {
     }
 
     @Override
-    public List closestArea(List<AreaLocationTypesEntity> entities, DatabaseDialect spatialFunction, Point point) {
-        return abstractAreaDao.closestArea(entities, spatialFunction, point);
+    public List closestAreaByPoint(List<AreaLocationTypesEntity> entities, DatabaseDialect spatialFunction, Point point) {
+        return areaDao.closestArea(entities, spatialFunction, point);
     }
 
     @Override
-    public List closestPoint(List<AreaLocationTypesEntity> entities, DatabaseDialect spatialFunction, Point incomingPoint) {
-        return abstractAreaDao.closestPoint(entities, spatialFunction, incomingPoint);
+    public List closestPointByPoint(List<AreaLocationTypesEntity> entities, DatabaseDialect spatialFunction, Point incomingPoint) {
+        return areaDao.closestPoint(entities, spatialFunction, incomingPoint);
     }
 
     @Override
     public List intersectingArea(List<AreaLocationTypesEntity> entities, DatabaseDialect spatialFunction, Point point) {
-        return abstractAreaDao.intersectingArea(entities, spatialFunction, point);
+        return areaDao.intersectingArea(entities, spatialFunction, point);
     }
 
     @Override
@@ -384,12 +391,12 @@ public class SpatialRepositoryBean implements SpatialRepository {
 
     @Override
     public List listBaseAreaList(final String query) throws ServiceException {
-        return abstractAreaDao.listBaseAreas(query);
+        return areaDao.listBaseAreas(query);
     }
 
     @Override
     public void makeGeomValid(String areaDbTable, DatabaseDialect dialect) {
-        abstractAreaDao.makeGeomValid(areaDbTable, dialect);
+        areaDao.makeGeomValid(areaDbTable, dialect);
     }
 
     /**
@@ -408,7 +415,7 @@ public class SpatialRepositoryBean implements SpatialRepository {
 
     @Override
     public List areaByCode(List<AreaSimpleType> areaSimpleTypeList) throws ServiceException {
-        return  ((AbstractAreaDao) portDao).byCode(areaSimpleTypeList);
+        return areaDao.byCode(areaSimpleTypeList);
     }
 
     @Override

@@ -12,6 +12,11 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.impl;
 
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.enterprise.event.Observes;
+import java.util.List;
+
 import eu.europa.ec.fisheries.uvms.commons.message.api.Fault;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.JAXBUtils;
 import eu.europa.ec.fisheries.uvms.spatial.message.bean.SpatialProducer;
@@ -35,6 +40,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByCodeRequest;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByCodeResponse;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaExtendedIdentifierType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRS;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GeometryByPortCodeRequest;
@@ -45,6 +51,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialDeleteMapConfigu
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRS;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialGetMapConfigurationRS;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveOrUpdateMapConfigurationRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.UnitType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.MapConfigService;
@@ -52,11 +59,6 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialEnrichmentService
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialEventService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialService;
 import lombok.extern.slf4j.Slf4j;
-
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.enterprise.event.Observes;
-import java.util.List;
 
 @Stateless
 @Slf4j
@@ -86,7 +88,7 @@ public class SpatialEventServiceBean implements SpatialEventService {
     public void getAreaByLocation(@Observes @GetAreaByLocationEvent SpatialMessageEvent message) {
         log.info("Getting area by location.");
         try {
-            List<AreaExtendedIdentifierType> areaTypesByLocation = spatialService.getAreasByPoint(message.getAreaByLocationSpatialRQ());
+            List<AreaExtendedIdentifierType> areaTypesByLocation = areaService.getAreasByPoint(message.getAreaByLocationSpatialRQ());
             log.debug("Send back areaByLocation response.");
             messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapAreaByLocationResponse(areaTypesByLocation), MODULE_NAME);
         } catch (Exception e) {
@@ -115,7 +117,12 @@ public class SpatialEventServiceBean implements SpatialEventService {
     public void getClosestArea(@Observes @GetClosestAreaEvent SpatialMessageEvent message) {
         log.info("Getting closest area.");
         try {
-            List<Area> closestAreas = spatialService.getClosestArea(message.getClosestAreaSpatialRQ());
+            ClosestAreaSpatialRQ request = message.getClosestAreaSpatialRQ();
+            Double lat = request.getPoint().getLatitude();
+            Double lon = request.getPoint().getLongitude();
+            Integer crs = request.getPoint().getCrs();
+            UnitType unit = request.getUnit();
+            List<Area> closestAreas = areaService.getClosestArea(lon, lat, crs, unit);
             log.debug("Send back closestAreas response.");
             messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapClosestAreaResponse(closestAreas), MODULE_NAME);
         } catch (Exception e) {
@@ -127,7 +134,7 @@ public class SpatialEventServiceBean implements SpatialEventService {
     public void getClosestLocation(@Observes @GetClosestLocationEvent SpatialMessageEvent message) {
         log.info("Getting closest locations.");
         try {
-            List<Location> closestLocations = spatialService.getClosestPointToPointByType(message.getClosestLocationSpatialRQ());
+            List<Location> closestLocations = areaService.getClosestPointByPoint(message.getClosestLocationSpatialRQ());
             log.debug("Send back closest locations response.");
             messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapClosestLocationResponse(closestLocations), MODULE_NAME);
         } catch (Exception e) {
@@ -141,7 +148,7 @@ public class SpatialEventServiceBean implements SpatialEventService {
         try {
             AreaByCodeRequest areaByCodeRequest = message.getAreaByCodeRequest();
             List<AreaSimpleType> areaSimples = areaByCodeRequest.getAreaSimples();
-            List<AreaSimpleType> areaSimpleTypeList = areaService.byCode(areaSimples);
+            List<AreaSimpleType> areaSimpleTypeList = areaService.getAreasByCode(areaSimples);
 
             AreaByCodeResponse areaByCodeRes = new AreaByCodeResponse();
             areaByCodeRes.setAreaSimples(areaSimpleTypeList);
@@ -184,7 +191,7 @@ public class SpatialEventServiceBean implements SpatialEventService {
         log.info("Getting Filter Areas");
         try {
             FilterAreasSpatialRQ filterAreaSpatialRQ = message.getFilterAreasSpatialRQ();
-            FilterAreasSpatialRS filterAreasSpatialRS = spatialService.computeAreaFilter(filterAreaSpatialRQ);
+            FilterAreasSpatialRS filterAreasSpatialRS = areaService.computeAreaFilter(filterAreaSpatialRQ);
             log.debug("Send back filtered Areas");
             messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapFilterAreasResponse(filterAreasSpatialRS), MODULE_NAME);
         } catch (Exception e) {
@@ -238,7 +245,7 @@ public class SpatialEventServiceBean implements SpatialEventService {
         try {
             GeometryByPortCodeRequest geometryByPortCodeRequest = message.getGeometryByPortCodeRequest();
             String portCode=geometryByPortCodeRequest.getPortCode();
-            String geometry= spatialService.getGemotryForPort(portCode);
+            String geometry= areaService.getGeometryForPort(portCode);
 
             GeometryByPortCodeResponse geometryByPortCodeResponse = new GeometryByPortCodeResponse();
             geometryByPortCodeResponse.setPortGeometry(geometry);
