@@ -39,18 +39,20 @@ import eu.europa.ec.fisheries.uvms.commons.rest.constants.ErrorCodes;
 import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.commons.service.interceptor.ValidationInterceptor;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Coordinate;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialFeaturesEnum;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.FilterType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.UserAreaCoordinateType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.AreaLocationMapper;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.UserAreaService;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.UserAreaUpdateDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson.UserAreaGeoJsonDto;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
@@ -58,9 +60,9 @@ import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.feature.simple.SimpleFeatureType;
 
 /**
- * @implicitParam roleName|string||true||||||
- * @implicitParam scopeName|string||true|EC|||||
- * @implicitParam authorization|string||true||||||jwt token
+ * @implicitParam roleName|string|header|true||||||
+ * @implicitParam scopeName|string|header|true|EC|||||
+ * @implicitParam authorization|string|header|true||||||jwt token
  */
 @Path("/userarea")
 @Slf4j
@@ -69,6 +71,9 @@ public class UserAreaResource extends UnionVMSResource {
 
     @EJB
     private UserAreaService userAreaService;
+
+    @EJB
+    private AreaService areaService;
 
     @EJB
     private SpatialService spatialService;
@@ -144,16 +149,18 @@ public class UserAreaResource extends UnionVMSResource {
         SimpleFeatureTypeBuilder sb = new SimpleFeatureTypeBuilder();
         sb.setCRS(DefaultGeographicCRS.WGS84);
         sb.setName("MULTIPOLIGON");
-        for (String key : properties.keySet()) {
-            if (key.equalsIgnoreCase(geometryFieldName)) {
-                sb.add(key, geometryType);
-            } else {
-                Class propClass = String.class;
-                Object propValue = properties.get(key);
-                if (propValue != null) {
-                    propClass = propValue.getClass();
+        if (MapUtils.isNotEmpty(properties)){
+            for (String key : properties.keySet()) {
+                if (key.equalsIgnoreCase(geometryFieldName)) {
+                    sb.add(key, geometryType);
+                } else {
+                    Class propClass = String.class;
+                    Object propValue = properties.get(key);
+                    if (propValue != null) {
+                        propClass = propValue.getClass();
+                    }
+                    sb.add(key, propClass);
                 }
-                sb.add(key, propClass);
             }
         }
         return sb.buildFeatureType();
@@ -257,15 +264,16 @@ public class UserAreaResource extends UnionVMSResource {
     private Response getUserAreaDetailsByLocation(UserAreaCoordinateType userAreaTypeDto, String userName) throws ServiceException {
 
         try {
-            if (!userAreaTypeDto.getIsGeom()) {
-                Coordinate coordinate = areaLocationMapper.getCoordinateFromDto(userAreaTypeDto);
-                List<Map<String, Object>> userAreaDetails = spatialService.getUserAreaDetailsWithExtentByLocation(coordinate, userName);
+            String areaType = userAreaTypeDto.getAreaType();
+            Integer crs = userAreaTypeDto.getCrs();
+            Boolean isGeom = userAreaTypeDto.getIsGeom();
+            Double latitude = userAreaTypeDto.getLatitude();
+            Double longitude = userAreaTypeDto.getLongitude();
+            List<Map<String, Object>> userAreaDetails = areaService.getAreasByPoint(latitude, longitude, crs, userName, AreaType.USERAREA);
+
+            if (!isGeom) {
                 return createSuccessResponse(userAreaDetails);
             } else {
-                AreaTypeEntry areaTypeEntry = AreaLocationMapper.mapper().getAreaTypeEntry(userAreaTypeDto);
-                List<Map<String, Object>> userAreaDetails = spatialService.getUserAreaDetailsByLocation(areaTypeEntry, userName);
-
-
                 List<List<JsonNode>> lists = new ArrayList<>();
 
                 for (Map<String, Object> stringObjectMap : userAreaDetails){

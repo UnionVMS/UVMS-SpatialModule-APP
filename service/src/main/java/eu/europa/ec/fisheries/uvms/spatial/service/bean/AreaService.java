@@ -10,27 +10,61 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Map;
 
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Area;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaExtendedIdentifierType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestLocationSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Location;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationTypeEntry;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.UnitType;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.GenericSystemAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.SystemAreaNamesDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadMapping;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadMetadata;
 
 public interface AreaService {
 
-    List<Map<String, String>> getSelectedAreaColumns(List<AreaTypeEntry> areaTypes) throws ServiceException;
+    // FIXME reuse searchAreasByCode somehow
+    String getGeometryForPort(String portCode);
+
+    Map<String, Object> getLocationDetails(LocationTypeEntry locationTypeEntry) throws ServiceException;
+
+    List<Map<String, Object> > getAreasByPoint(@NotNull Double latitude, @NotNull Double longitude, @NotNull Integer crs, @NotNull String userName, @NotNull AreaType areaType) throws ServiceException;
+
+    List<GenericSystemAreaDto> searchAreasByNameOrCode(@NotNull String areaType, @NotNull String filter) throws ServiceException;
+
+    List<SystemAreaNamesDto> searchAreasByCode(String areaType, String filter) throws ServiceException;
+
+    FilterAreasSpatialRS computeAreaFilter(FilterAreasSpatialRQ filterAreasSpatialRQ) throws ServiceException;
+
+    List<Map<String, Object>> getSelectedAreaColumns(List<AreaTypeEntry> areaTypes) throws ServiceException;
 
     UploadMetadata metadata(byte[] data, String areaType) throws ServiceException;
 
-    Map<String, Object> getAreaDetailsById(AreaTypeEntry areaTypeEntry) throws ServiceException;
+    Map<String, Object> getAreaById(@NotNull Long id, @NotNull AreaType areaType) throws ServiceException;
+
+    Map<String, Object> getClosestPointByPoint(@NotNull Double longitude, @NotNull Double latitude, @NotNull Integer crs) throws ServiceException;
+
+    List<Area> getClosestArea(@NotNull Double longitude, @NotNull Double latitude, @NotNull Integer crs, @NotNull UnitType unit) throws ServiceException;
+
+    List<AreaExtendedIdentifierType> getAreasByPoint(AreaByLocationSpatialRQ request) throws ServiceException;
+
+    List<Location> getClosestPointByPoint(ClosestLocationSpatialRQ request) throws ServiceException;
 
     Map<String, String> getAllCountriesDesc() throws ServiceException;
 
     void upload(UploadMapping mapping, String type, Integer code) throws ServiceException;
 
-    List<AreaSimpleType> byCode(List<AreaSimpleType> areaSimpleTypeList) throws ServiceException;
+    List<AreaSimpleType> getAreasByCode(List<AreaSimpleType> areaSimpleTypeList) throws ServiceException;
 
 }

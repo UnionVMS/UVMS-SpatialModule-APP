@@ -26,9 +26,9 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * @implicitParam roleName|string||true||||||
- * @implicitParam scopeName|string||true|EC|||||
- * @implicitParam authorization|string||true||||||jwt token
+ * @implicitParam roleName|string|header|true||||||
+ * @implicitParam scopeName|string|header|true|EC|||||
+ * @implicitParam authorization|string|header|true||||||jwt token
  */
 @Path("/countries")
 @Slf4j

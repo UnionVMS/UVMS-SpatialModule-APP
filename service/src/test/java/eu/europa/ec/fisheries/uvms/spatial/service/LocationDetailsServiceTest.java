@@ -9,7 +9,6 @@ details. You should have received a copy of the GNU General Public License along
 
  */
 
-
 package eu.europa.ec.fisheries.uvms.spatial.service;
 
 import java.util.ArrayList;
@@ -19,8 +18,8 @@ import java.util.List;
 import eu.europa.ec.fisheries.uvms.BaseUnitilsTest;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationTypeEntry;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialRepository;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.impl.SpatialServiceBean;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.PortEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.exception.SpatialServiceException;
@@ -44,9 +43,8 @@ public class LocationDetailsServiceTest extends BaseUnitilsTest {
 	private SpatialRepository repository;
 	
 	@InjectMocks
-	private SpatialServiceBean locationDetailsServiceBean;
-	
-	
+	private AreaService areaService;
+
 	@Before
     public void initMocks() {
         MockitoAnnotations.initMocks(this);
@@ -124,8 +122,8 @@ public class LocationDetailsServiceTest extends BaseUnitilsTest {
 		setMocks(getMockedPortsEntity());		
 		LocationTypeEntry locationEntry = new LocationTypeEntry();
 		locationEntry.setId("INVALID_ROW");
-		locationEntry.setLocationType("PORT");        
-        locationDetailsServiceBean.getLocationDetails(locationEntry);
+		locationEntry.setLocationType("PORT");
+		areaService.getLocationDetails(locationEntry);
 	}	
 	
 	/**
@@ -137,8 +135,8 @@ public class LocationDetailsServiceTest extends BaseUnitilsTest {
 		setMocks(null);	
 		LocationTypeEntry locationEntry = new LocationTypeEntry();
 		locationEntry.setId("100000");
-		locationEntry.setLocationType("PORT");        
-        locationDetailsServiceBean.getLocationDetails(locationEntry);
+		locationEntry.setLocationType("PORT");
+		areaService.getLocationDetails(locationEntry);
 	}
 	
 	/**
@@ -149,8 +147,8 @@ public class LocationDetailsServiceTest extends BaseUnitilsTest {
     public void invalidTypeTest() {
 		LocationTypeEntry locationEntry = new LocationTypeEntry();
 		locationEntry.setId("1");
-		locationEntry.setLocationType("INVALID_PORT");        
-        locationDetailsServiceBean.getLocationDetails(locationEntry);
+		locationEntry.setLocationType("INVALID_PORT");
+		areaService.getLocationDetails(locationEntry);
 	}
 	
 	private void setMocks(PortEntity portsEntity) {

@@ -99,10 +99,10 @@ public abstract class BaseSpatialDaoTest extends BaseDAOTest {
                             "103.079231596 -12.82837266, 102.56917584 -8.87249927999994," +
                             "106.867924148 -9.16467987999994)))", "N", "disabled").build());
 
-    //protected static final Operation INSERT_FAO_REFERENCE_DATA = sequenceOf(insertInto("spatial.fao").
-    //        columns("ENABLED", "GID", FaoEntity.OCEAN, FaoEntity.ELE_LABEL, FaoEntity.AREA_L, FaoEntity.F_AREA, FaoEntity.DIVISION_L, FaoEntity.DIVISION_N, FaoEntity.F_LABEL)
-         //   .values("Y", 1L,  FaoEntity.OCEAN, FaoEntity.ELE_LABEL, FaoEntity.AREA_L, FaoEntity.F_AREA, FaoEntity.DIVISION_L, FaoEntity.DIVISION_N, //FaoEntity.F_LABEL)
-    //        .build());
+    protected static final Operation INSERT_FAO_REFERENCE_DATA = sequenceOf(insertInto("spatial.fao").
+            columns("ENABLED", "GID", "ocean", "ele_name", "area_l", "f_area", "division_l", "division_n")
+         .values("Y", 1L,  "", "", "", "", "division_l","division_n")
+            .build());
 
     protected static final Operation INSERT_USER_AREA_REFERENCE_DATA = sequenceOf(
             insertInto("spatial.user_areas")

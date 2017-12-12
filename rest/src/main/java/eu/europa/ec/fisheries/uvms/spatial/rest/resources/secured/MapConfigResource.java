@@ -34,9 +34,9 @@ import eu.europa.ec.fisheries.uvms.spatial.service.util.ServiceLayerUtils;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * @implicitParam roleName|string||true||||||
- * @implicitParam scopeName|string||true|EC|||||
- * @implicitParam authorization|string||true||||||jwt token
+ * @implicitParam roleName|string|header|true||||||
+ * @implicitParam scopeName|string|header|true|EC|||||
+ * @implicitParam authorization|string|header|true||||||jwt token
  */
 @Path("/mapconfig")
 @Slf4j

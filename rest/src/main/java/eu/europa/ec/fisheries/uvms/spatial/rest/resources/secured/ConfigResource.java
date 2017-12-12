@@ -44,9 +44,9 @@ import eu.europa.ec.fisheries.uvms.spatial.service.util.ServiceLayerUtils;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * @implicitParam roleName|string||true|rep_power_role|||||The role name
- * @implicitParam scopeName|string||true|EC|||||The scope name
- * @implicitParam authorization|string||true||||||jwt token
+ * @implicitParam roleName|string|header|true||||||
+ * @implicitParam scopeName|string|header|true|EC|||||
+ * @implicitParam authorization|string|header|true||||||jwt token
  */
 @Path("/config")
 @Slf4j

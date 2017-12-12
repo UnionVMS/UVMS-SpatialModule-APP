@@ -31,9 +31,9 @@ import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadMetadata;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 /**
- * @implicitParam roleName|string||true||||||
- * @implicitParam scopeName|string||true|EC|||||
- * @implicitParam authorization|string||true||||||jwt token
+ * @implicitParam roleName|string|header|true||||||
+ * @implicitParam scopeName|string|header|true|EC|||||
+ * @implicitParam authorization|string|header|true||||||jwt token
  */
 @Path("/files")
 public class FileUploadResource extends UnionVMSResource {

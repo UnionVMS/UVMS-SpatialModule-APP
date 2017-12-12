@@ -15,7 +15,6 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -41,8 +40,8 @@ import eu.europa.ec.fisheries.uvms.commons.service.interceptor.ValidationInterce
 import eu.europa.ec.fisheries.uvms.constants.AuthConstants;
 import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaCoordinateType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaFilterType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.LocationQueryDto;
@@ -63,9 +62,9 @@ import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.feature.simple.SimpleFeatureType;
 
 /**
- * @implicitParam roleName|string||true||||||
- * @implicitParam scopeName|string||true|EC|||||
- * @implicitParam authorization|string||true||||||jwt token
+ * @implicitParam roleName|string|header|true||||||
+ * @implicitParam scopeName|string|header|true|EC|||||
+ * @implicitParam authorization|string|header|true||||||jwt token
  */
 @Path("/area")
 @Slf4j
@@ -86,6 +85,9 @@ public class AreaResource extends UnionVMSResource {
 
     @EJB
     private USMService usmService;
+
+    @Context
+    private HttpServletRequest servletRequest;
 
     private AreaLocationMapper mapper = AreaLocationMapper.mapper();
 
@@ -121,11 +123,27 @@ public class AreaResource extends UnionVMSResource {
     @Produces({MediaType.APPLICATION_JSON})
     @Interceptors(value = {ExceptionInterceptor.class})
     @Path("/location/details")
-    public Response getLocationDetails(@Valid LocationQueryDto query) throws ServiceException {
+    public Response getLocationDetails(LocationQueryDto query) throws ServiceException {
         try {
-            LocationTypeEntry locationTypeEntry = mapper.getLocationTypeEntry(query);
-            Map<String, Object> locationDetails = spatialService.getLocationDetails(locationTypeEntry);
-            if (!query.getIsGeom()) {
+            String id = query.getId();
+            Boolean isGeom = query.getIsGeom();
+            String locationType = query.getLocationType();
+            Integer crs = query.getCrs();
+            String gid = query.getGid();
+            Double latitude = query.getLatitude();
+            Double longitude = query.getLongitude();
+
+            Map<String, Object> locationDetails;
+
+            if (id != null){
+                locationDetails = areaService.getAreaById(Long.valueOf(id), AreaType.valueOf(locationType));
+            }
+
+            else {
+                locationDetails = areaService.getClosestPointByPoint(longitude, latitude, crs);
+            }
+            //LocationTypeEntry locationTypeEntry = mapper.getLocationTypeEntry(query);
+            if (!isGeom) {
                 return createSuccessResponse(locationDetails);
             }
             StringWriter writer = new StringWriter();
@@ -161,7 +179,8 @@ public class AreaResource extends UnionVMSResource {
         try {
             if (areaDto.getId() != null) {
 
-                Map<String, Object> areaDetailsById = areaService.getAreaDetailsById(mapper.getAreaTypeEntry(areaDto));
+                Map<String, Object> areaDetailsById =
+                        areaService.getAreaById(Long.valueOf(areaDto.getId()), AreaType.valueOf(areaDto.getAreaType()));
                 if (!areaDto.getIsGeom()) {
                     return createSuccessResponse(areaDetailsById);
                 }
@@ -177,7 +196,7 @@ public class AreaResource extends UnionVMSResource {
                 response = Response.ok(writer.toString()).build();
 
             } else {
-                List<Map<String, Object>> areaDetailsByLocation = spatialService.getAreaDetailsByLocation(mapper.getAreaTypeEntry(areaDto));
+                List<Map<String, Object>> areaDetailsByLocation = areaService.getAreasByPoint(areaDto.getLatitude(), areaDto.getLongitude(),areaDto.getCrs(), servletRequest.getRemoteUser(), AreaType.valueOf(areaDto.getAreaType()));
                 response = createSuccessResponse(areaDetailsByLocation);
             }
         } catch (ServiceException | IOException e) {
@@ -214,7 +233,7 @@ public class AreaResource extends UnionVMSResource {
     @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
     public Response getAreaProperties(List<AreaCoordinateType> areaDtoList) throws ServiceException {
         List<AreaTypeEntry> areaTypeEntryList = mapper.getAreaTypeEntryList(areaDtoList);
-        List<Map<String, String>> selectedAreaColumns = areaService.getSelectedAreaColumns(areaTypeEntryList);
+        List<Map<String, Object>> selectedAreaColumns = areaService.getSelectedAreaColumns(areaTypeEntryList);
         return createSuccessResponse(selectedAreaColumns);
     }
    
@@ -248,7 +267,7 @@ public class AreaResource extends UnionVMSResource {
     @Path("/byfilter")
     @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
     public Response searchAreasByNameOrCode(AreaFilterType areaFilterType) throws ServiceException {
-    	return createSuccessResponse(spatialService.searchAreasByNameOrCode(areaFilterType.getAreaType(), areaFilterType.getFilter()));
+    	return createSuccessResponse(areaService.searchAreasByNameOrCode(areaFilterType.getAreaType(), areaFilterType.getFilter()));
     }
 
     @POST
@@ -257,7 +276,7 @@ public class AreaResource extends UnionVMSResource {
     @Path("/bycode")
     @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
     public Response searchAreaNamesByCode(AreaFilterType areaFilterType) throws ServiceException {
-        return createSuccessResponse(spatialService.searchAreasByCode(areaFilterType.getAreaType(), areaFilterType.getFilter()));
+        return createSuccessResponse(areaService.searchAreasByCode(areaFilterType.getAreaType(), areaFilterType.getFilter()));
     }
 
     @POST
@@ -267,13 +286,13 @@ public class AreaResource extends UnionVMSResource {
     @Interceptors(value = {ExceptionInterceptor.class})
         public Response createDataset(@PathParam("areaType") String areaType,
                                       @PathParam("areaGid") String  areaGid,
-                                      @PathParam("datasetName") String   datasetName,
+                                      @PathParam("datasetName") String dataSetName,
                                       @Context HttpServletRequest request ) throws ServiceException {
         if (!request.isUserInRole("CREATE_USER_AREA_DATASET")) {
             return createErrorResponse("user_area_dataset_creation_not_allowed");
         }
-        if (StringUtils.isNotBlank(datasetName)) {
-            usmService.createDataset(USMSpatial.APPLICATION_NAME, datasetName,  areaType + USMSpatial.DELIMITER + areaGid, USMSpatial.USM_DATASET_CATEGORY, USMSpatial.USM_DATASET_DESCRIPTION);
+        if (StringUtils.isNotBlank(dataSetName)) {
+            usmService.createDataset(USMSpatial.APPLICATION_NAME, dataSetName,  areaType + USMSpatial.DELIMITER + areaGid, USMSpatial.USM_DATASET_CATEGORY, USMSpatial.USM_DATASET_DESCRIPTION);
         } else {
             throw new IllegalArgumentException("datasetName is missing");
         }
@@ -292,7 +311,7 @@ public class AreaResource extends UnionVMSResource {
         for (eu.europa.ec.fisheries.uvms.spatial.service.dto.area.AreaType areaType : areaTypeList){
             request.add(new AreaSimpleType(areaType.getAreaType(), areaType.getAreaCode(), null));
         }
-        List<AreaSimpleType> response = areaService.byCode(request);
+        List<AreaSimpleType> response = areaService.getAreasByCode(request);
         return createSuccessResponse(response);
     }
 

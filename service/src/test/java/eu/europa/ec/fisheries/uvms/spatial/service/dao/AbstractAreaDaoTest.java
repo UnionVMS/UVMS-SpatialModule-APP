@@ -26,7 +26,6 @@ import com.ninja_squad.dbsetup.operation.Operation;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DAOFactory;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.H2gis;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.PostGres;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.BaseAreaEntity;
@@ -40,7 +39,6 @@ import lombok.SneakyThrows;
 import org.geotools.geometry.jts.GeometryBuilder;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -52,7 +50,7 @@ public class AbstractAreaDaoTest extends BaseSpatialDaoTest {
 
         Operation operation = sequenceOf(DELETE_ALL, INSERT_EEZ_REFERENCE_DATA,
                 INSERT_RFMO_REFERENCE_DATA, INSERT_PORT_AREA_REFERENCE_DATA,
-                INSERT_COUNTRY_REFERENCE_DATA);
+                INSERT_COUNTRY_REFERENCE_DATA, INSERT_FAO_REFERENCE_DATA);
         DbSetup dbSetup = new DbSetup(new DataSourceDestination(ds), operation);
         dbSetupTracker.launchIfNecessary(dbSetup);
     }
@@ -73,10 +71,9 @@ public class AbstractAreaDaoTest extends BaseSpatialDaoTest {
 
     @Test
     @SneakyThrows
-    @Ignore
     public void shouldReturnIntersectedFao(){
         AbstractAreaDao fao = DAOFactory.getAbstractSpatialDao(em, "FAO");
-        FaoEntity faoOne = (FaoEntity)fao.findOne(1L);
+        FaoEntity faoOne = (FaoEntity)fao.findOne(FaoEntity.class, 1L);
         assertEquals(faoOne.getDivisionL(), "division_l");
         assertEquals(faoOne.getDivisionN(), "division_n");
 
@@ -138,35 +135,6 @@ public class AbstractAreaDaoTest extends BaseSpatialDaoTest {
         Assert.assertEquals(2, list.size());
     }
 
-    @Test
-    @SneakyThrows
-    @Ignore
-    public void testClosestArea(){
-        // TODO: This test uses H2 for testing more advanced postgresql queries. Makes no sense.
-        dbSetupTracker.skipNextLaunch();
-
-        List<AreaLocationTypesEntity> entities = new ArrayList<>();
-        AreaLocationTypesEntity eezLocationTypesEntity = new AreaLocationTypesEntity();
-        eezLocationTypesEntity.setAreaDbTable("eez");
-        eezLocationTypesEntity.setTypeName("EEZ");
-        entities.add(eezLocationTypesEntity);
-
-        AreaLocationTypesEntity rfmoLocationTypesEntity = new AreaLocationTypesEntity();
-        rfmoLocationTypesEntity.setAreaDbTable("rfmo");
-        rfmoLocationTypesEntity.setTypeName("RFMO");
-        entities.add(rfmoLocationTypesEntity);
-
-        AreaLocationTypesEntity portAreaLocationTypesEntity = new AreaLocationTypesEntity();
-        portAreaLocationTypesEntity.setAreaDbTable("port_area");
-        portAreaLocationTypesEntity.setTypeName("PORT_AREA");
-        entities.add(portAreaLocationTypesEntity);
-
-        List list = DAOFactory.getAbstractSpatialDao(em, "EEZ").closestArea(entities, new H2gis(), new GeometryBuilder().point(-8, 40));
-
-        Assert.assertEquals(8, list.size());
-        // TODO continue test what is inside the collection
-
-    }
 
     @Test
     @SneakyThrows
