@@ -27,7 +27,7 @@
         <jackson.version>2.6.0</jackson.version>
         <logback.core.version>1.2.3</logback.core.version>
         <asset.model.version>4.0.0</asset.model.version>
-        <movement.model.version>4.0.0</movement.model.version>
+        <movement.model.version>4.0.10-SNAPSHOT</movement.model.version>
         <application.name>${project.parent.artifactId}</application.name>
         <application.version>${project.parent.version}</application.version>
         <application.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}.log</application.logfile>

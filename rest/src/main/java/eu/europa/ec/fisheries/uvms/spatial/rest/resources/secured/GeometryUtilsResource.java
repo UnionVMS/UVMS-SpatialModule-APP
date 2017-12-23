@@ -13,19 +13,33 @@ package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.MultiPoint;
+import eu.europa.ec.fisheries.uvms.commons.geometry.mapper.GeometryMapper;
+import eu.europa.ec.fisheries.uvms.commons.geometry.model.GeometryWrapper;
 import eu.europa.ec.fisheries.uvms.commons.geometry.utils.GeometryUtils;
 import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialService;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.PortEntity;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.geotools.geometry.jts.WKTReader2;
 import org.geotools.geometry.jts.WKTWriter2;
 
@@ -40,6 +54,12 @@ public class GeometryUtilsResource extends UnionVMSResource {
 
     @EJB
     private SpatialService service;
+
+    @EJB
+    private AreaService areaService;
+
+    @EJB
+    private SpatialRepository repository;
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -118,5 +138,34 @@ public class GeometryUtilsResource extends UnionVMSResource {
             response = createErrorResponse(error);
         }
         return response;
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/generatePoints/{code}/{n_points}")
+    @SneakyThrows
+    public Response generatePoints(@PathParam("code") String code, @PathParam("n_points") Integer points){
+
+        AreaSimpleType areaSimpleType = new AreaSimpleType();
+        areaSimpleType.setAreaCode(code);
+        areaSimpleType.setAreaType("EEZ");
+
+        List<AreaSimpleType> areasByCode = areaService.getAreasByCode(Arrays.asList(areaSimpleType));
+
+        MultiPoint multiPoint = null;
+        AreaSimpleType response;
+        List<PortEntity> portEntities = null;
+        if (CollectionUtils.isNotEmpty(areasByCode)){
+            response = areasByCode.get(0);
+            String wkt = response.getWkt();
+            portEntities = repository.listClosestPorts(GeometryMapper.INSTANCE.wktToGeometry(wkt).getValue().getCentroid(), 1);
+            multiPoint = repository.generatePoints(wkt, points);
+        }
+
+        Coordinate[] coordinates = multiPoint.getCoordinates();
+        GeometryWrapper geometryWrapper = GeometryMapper.INSTANCE.wktToGeometry(portEntities.get(0).getCentroid());
+        coordinates[1] = geometryWrapper.getValue().getCoordinate();
+        return createSuccessResponse(coordinates);
+
     }
 }

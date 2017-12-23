@@ -13,8 +13,17 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.service.dao;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
+
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.MultiPoint;
+import org.hibernate.SQLQuery;
+import org.hibernate.spatial.GeometryType;
+import org.hibernate.type.TimestampType;
 
 public class PostgresUtilsDao extends UtilsDao {
+
+    private String GENERATE_POINTS =  "";
 
     private EntityManager em;
 
@@ -30,5 +39,22 @@ public class PostgresUtilsDao extends UtilsDao {
     @Override
     public Integer mapEPSGtoDefaultSRID(Integer epsg) {
         return epsg;
+    }
+
+    @Override public MultiPoint generatePoints(String wkt, Integer numberOfPoints) {
+
+        Query nativeQuery = em.createNativeQuery("SELECT ST_GeneratePoints(ST_Buffer(ST_GeomFromText(:wkt), 10, 'endcap=round join=round'), :nbrPoints);");
+
+        nativeQuery.setParameter("wkt", wkt);
+        nativeQuery.setParameter("nbrPoints", numberOfPoints);
+
+        SQLQuery unwrap = nativeQuery.unwrap(SQLQuery.class);
+
+        unwrap.addScalar("st_generatepoints", GeometryType.INSTANCE);
+
+        Object singleResult = nativeQuery.getSingleResult();
+
+        Geometry geometry = (Geometry) singleResult;
+        return (MultiPoint) geometry;
     }
 }
