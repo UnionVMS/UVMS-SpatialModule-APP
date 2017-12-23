@@ -311,8 +311,7 @@ public class AreaResource extends UnionVMSResource {
         for (eu.europa.ec.fisheries.uvms.spatial.service.dto.area.AreaType areaType : areaTypeList){
             request.add(new AreaSimpleType(areaType.getAreaType(), areaType.getAreaCode(), null));
         }
-        List<AreaSimpleType> response = areaService.getAreasByCode(request);
-        return createSuccessResponse(response);
+        return createSuccessResponse(areaService.getAreasByCode(request));
     }
 
 }

@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.vividsolutions.jts.geom.MultiPoint;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
@@ -178,6 +179,8 @@ public interface SpatialRepository {
     Boolean isOracle();
 
     Integer mapEpsgToSRID(Integer epsg);
+
+    MultiPoint generatePoints(String wkt, Integer points);
 
     void deleteReportConnectServiceAreas(List<Long> spatialConnectIds) throws ServiceException;
 }

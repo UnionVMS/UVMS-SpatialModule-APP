@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.vividsolutions.jts.geom.MultiPoint;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.commons.service.dao.QueryParameter;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
@@ -433,8 +434,14 @@ public class SpatialRepositoryBean implements SpatialRepository {
         return utilsDao.mapEPSGtoDefaultSRID(epsg);
     }
 
+    @Override public MultiPoint generatePoints(String wkt, Integer points) {
+        return utilsDao.generatePoints(wkt,points);
+    }
+
     @Override public void deleteReportConnectServiceAreas(List<Long> spatialConnectIds) throws ServiceException {
         reportConnectSpatialDao.deleteById(spatialConnectIds);
     }
+
+
 
 }
