@@ -354,8 +354,7 @@ public class AreaServiceBean implements AreaService {
         return simpleTypeList;
     }
 
-    @Override
-    @Transactional(Transactional.TxType.REQUIRES_NEW) // Fixme duplicated method
+    @Override// Fixme duplicated method
     public List<Location> getClosestPointByPoint(final ClosestLocationSpatialRQ request) throws ServiceException {
 
         Double lat = request.getPoint().getLatitude();
