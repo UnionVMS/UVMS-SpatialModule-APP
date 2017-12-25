@@ -28,8 +28,6 @@ import java.util.Map;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.MultiPoint;
-import eu.europa.ec.fisheries.uvms.commons.geometry.mapper.GeometryMapper;
-import eu.europa.ec.fisheries.uvms.commons.geometry.model.GeometryWrapper;
 import eu.europa.ec.fisheries.uvms.commons.geometry.utils.GeometryUtils;
 import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
@@ -158,13 +156,13 @@ public class GeometryUtilsResource extends UnionVMSResource {
         if (CollectionUtils.isNotEmpty(areasByCode)){
             response = areasByCode.get(0);
             String wkt = response.getWkt();
-            portEntities = repository.listClosestPorts(GeometryMapper.INSTANCE.wktToGeometry(wkt).getValue().getCentroid(), 1);
+            //portEntities = repository.listClosestPorts(GeometryMapper.INSTANCE.wktToGeometry(wkt).getValue().getCentroid(), 1);
             multiPoint = repository.generatePoints(wkt, points);
         }
 
         Coordinate[] coordinates = multiPoint.getCoordinates();
-        GeometryWrapper geometryWrapper = GeometryMapper.INSTANCE.wktToGeometry(portEntities.get(0).getCentroid());
-        coordinates[1] = geometryWrapper.getValue().getCoordinate();
+        //GeometryWrapper geometryWrapper = GeometryMapper.INSTANCE.wktToGeometry(portEntities.get(0).getCentroid());
+        //coordinates[1] = geometryWrapper.getValue().getCoordinate();
         return createSuccessResponse(coordinates);
 
     }

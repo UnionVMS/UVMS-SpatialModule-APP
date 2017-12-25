@@ -43,7 +43,7 @@ public class PostgresUtilsDao extends UtilsDao {
 
     @Override public MultiPoint generatePoints(String wkt, Integer numberOfPoints) {
 
-        Query nativeQuery = em.createNativeQuery("SELECT ST_GeneratePoints(ST_Buffer(ST_GeomFromText(:wkt), 10, 'endcap=round join=round'), :nbrPoints);");
+        Query nativeQuery = em.createNativeQuery("SELECT ST_GeneratePoints(ST_GeomFromText(:wkt), :nbrPoints);");
 
         nativeQuery.setParameter("wkt", wkt);
         nativeQuery.setParameter("nbrPoints", numberOfPoints);
