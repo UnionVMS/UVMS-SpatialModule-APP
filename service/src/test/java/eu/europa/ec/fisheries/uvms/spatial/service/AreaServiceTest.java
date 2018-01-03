@@ -107,7 +107,7 @@ public class AreaServiceTest extends BaseUnitilsTest {
     @SneakyThrows
     @Ignore
     public void testGetSelectedAreaColumns(){
-        service.getSelectedAreaColumns(null);
+        service.getAreasByIds(null);
     }
 
     @Test

@@ -170,7 +170,7 @@ public class AreaServiceBean implements AreaService {
 
     @Override
     // FIXME rewrite me please and re use existing code
-    public List<Map<String, Object>> getSelectedAreaColumns(final List<AreaTypeEntry> areaTypes) throws ServiceException {
+    public List<Map<String, Object>> getAreasByIds(final List<AreaTypeEntry> areaTypes) throws ServiceException {
 
         List<Map<String, Object>> areaColumnsList = new ArrayList<>();
         Map<String, List<Long>> areaTypeGidMap = new HashMap<>();
@@ -195,6 +195,7 @@ public class AreaServiceBean implements AreaService {
             }
         }
 
+
         for (Map.Entry<String, List<Long>> entry : areaTypeGidMap.entrySet()) { // FIXME looping and querying should be avoided
             String namedQuery = null;
             for (SpatialTypeEnum type : SpatialTypeEnum.values()) {
@@ -203,7 +204,7 @@ public class AreaServiceBean implements AreaService {
                 }
             }
             if (namedQuery != null) {
-                List<Map<String, Object>> selectedAreaColumns = repository.findSelectedAreaColumns(namedQuery, entry.getValue());
+                List<Map<String, Object>> selectedAreaColumns = repository.getAreasByIds(namedQuery, entry.getValue());
                 for (Map<String, Object> columnMap : selectedAreaColumns) {
                     columnMap.put(AREA_TYPE, entry.getKey().toUpperCase());
                 }
@@ -582,41 +583,6 @@ public class AreaServiceBean implements AreaService {
     }
 
     @Override
-    public List<SystemAreaNamesDto> searchAreasByCode(String areaType, String filter) throws ServiceException {
-        AreaLocationTypesEntity areaLocationType = repository.findAreaLocationTypeByTypeName(areaType.toUpperCase());
-
-        if (areaLocationType == null) {
-            throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
-        }
-        List<BaseAreaEntity> baseEntities = DAOFactory.getAbstractSpatialDao(em, areaLocationType.getTypeName()).searchNameByCode(filter);
-
-        List<SystemAreaNamesDto> systemAreas = new ArrayList<>();
-        for (BaseAreaEntity baseEntity : baseEntities) {
-            boolean isAdded = false;
-            for (SystemAreaNamesDto systemAreaNamesDto : systemAreas) {
-                if (systemAreaNamesDto.getCode().equalsIgnoreCase(baseEntity.getCode())) {
-                    systemAreaNamesDto.getAreaNames().add(baseEntity.getName());
-                    List<Geometry> geometries = systemAreaNamesDto.getGeoms();
-                    Geometry geometry = baseEntity.getGeom();
-                    geometries.add(geometry);
-                    isAdded = true;
-                }
-            }
-            if (!isAdded) {
-                systemAreas.add(new SystemAreaNamesDto(baseEntity.getCode(), new HashSet<>(Arrays.asList(baseEntity.getName())), new ArrayList(Arrays.asList(baseEntity.getGeom()))));
-            }
-        }
-
-        for (SystemAreaNamesDto systemAreaNamesDto : systemAreas) {
-            GeometryFactory geometryFactory = JTSFactoryFinder.getGeometryFactory();
-            Geometry unionGeom = geometryFactory.buildGeometry(systemAreaNamesDto.getGeoms()).union();
-            systemAreaNamesDto.setExtent(GeometryMapper.INSTANCE.geometryToWkt(unionGeom.getEnvelope()).getValue());
-        }
-
-        return systemAreas;
-    }
-
-    @Override
     public Map<String, Object> getLocationDetails(final LocationTypeEntry locationTypeEntry) throws ServiceException {
 
         BaseAreaEntity match = null;
@@ -673,6 +639,42 @@ public class AreaServiceBean implements AreaService {
         ObjectMapper objectMapper = new ObjectMapper();
         Map map = objectMapper.convertValue(match, Map.class);
         return map;
+    }
+
+
+    @Override
+    public List<SystemAreaNamesDto> searchAreasByCode(String areaType, String filter) throws ServiceException {
+        AreaLocationTypesEntity areaLocationType = repository.findAreaLocationTypeByTypeName(areaType.toUpperCase());
+
+        if (areaLocationType == null) {
+            throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
+        }
+        List<BaseAreaEntity> baseEntities = DAOFactory.getAbstractSpatialDao(em, areaLocationType.getTypeName()).searchNameByCode(filter);
+
+        List<SystemAreaNamesDto> systemAreas = new ArrayList<>();
+        for (BaseAreaEntity baseEntity : baseEntities) {
+            boolean isAdded = false;
+            for (SystemAreaNamesDto systemAreaNamesDto : systemAreas) {
+                if (systemAreaNamesDto.getCode().equalsIgnoreCase(baseEntity.getCode())) {
+                    systemAreaNamesDto.getAreaNames().add(baseEntity.getName());
+                    List<Geometry> geometries = systemAreaNamesDto.getGeoms();
+                    Geometry geometry = baseEntity.getGeom();
+                    geometries.add(geometry);
+                    isAdded = true;
+                }
+            }
+            if (!isAdded) {
+                systemAreas.add(new SystemAreaNamesDto(baseEntity.getCode(), new HashSet<>(Arrays.asList(baseEntity.getName())), new ArrayList(Arrays.asList(baseEntity.getGeom()))));
+            }
+        }
+
+        for (SystemAreaNamesDto systemAreaNamesDto : systemAreas) {
+            GeometryFactory geometryFactory = JTSFactoryFinder.getGeometryFactory();
+            Geometry unionGeom = geometryFactory.buildGeometry(systemAreaNamesDto.getGeoms()).union();
+            systemAreaNamesDto.setExtent(GeometryMapper.INSTANCE.geometryToWkt(unionGeom.getEnvelope()).getValue());
+        }
+
+        return systemAreas;
     }
 
     @Override
