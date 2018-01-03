@@ -55,6 +55,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.AreaByCodeJsonPayloa
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.USMSpatial;
 import eu.europa.ec.fisheries.uvms.spatial.service.util.ServiceLayerUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
@@ -160,6 +161,35 @@ public class AreaResource extends UnionVMSResource {
         }
     }
 
+    @POST
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/properties")
+    @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
+    public Response getAreaProperties(List<AreaCoordinateType> areaDtoList) throws ServiceException {
+        List<AreaTypeEntry> areaTypeEntryList = null;
+
+        if (CollectionUtils.isNotEmpty(areaDtoList)) {
+            areaTypeEntryList = new ArrayList<>( areaDtoList.size() );
+            for ( AreaCoordinateType areaCoordinateType : areaDtoList ) {
+
+                AreaTypeEntry areaTypeEntry = new AreaTypeEntry();
+
+                areaTypeEntry.setLongitude( areaCoordinateType.getLongitude() );
+                areaTypeEntry.setLatitude( areaCoordinateType.getLatitude() );
+                areaTypeEntry.setCrs( areaCoordinateType.getCrs() );
+                areaTypeEntry.setId( areaCoordinateType.getId() );
+
+                areaTypeEntry.setAreaType(  Enum.valueOf( AreaType.class, areaCoordinateType.getAreaType().toUpperCase()));
+
+                areaTypeEntryList.add(areaTypeEntry);
+            }
+        }
+
+        List<Map<String, Object>> selectedAreaColumns = areaService.getAreasByIds(areaTypeEntryList);
+        return createSuccessResponse(selectedAreaColumns);
+    }
+
     /**
      *
      * @param areaDto
@@ -188,7 +218,7 @@ public class AreaResource extends UnionVMSResource {
                 SimpleFeatureBuilder featureBuilder = new SimpleFeatureBuilder(build(MultiPolygon.class, areaDetailsById, "geometry"));
 
                 for (Map.Entry<String, Object> entrySet : areaDetailsById.entrySet()) {
-                    if(!entrySet.getKey().equals("extent") && !entrySet.getKey().equals("centroid")) // TODO check with HUGO if really necessary
+                    if(!entrySet.getKey().equals("extent") && !entrySet.getKey().equals("centroid")) // TODO check if really needed in webapp
                         featureBuilder.set(entrySet.getKey(), entrySet.getValue());
                 }
 
@@ -226,16 +256,6 @@ public class AreaResource extends UnionVMSResource {
         return sb.buildFeatureType();
     }
 
-    @POST
-    @Consumes({MediaType.APPLICATION_JSON})
-    @Produces({MediaType.APPLICATION_JSON})
-    @Path("/properties")
-    @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
-    public Response getAreaProperties(List<AreaCoordinateType> areaDtoList) throws ServiceException {
-        List<AreaTypeEntry> areaTypeEntryList = mapper.getAreaTypeEntryList(areaDtoList);
-        List<Map<String, Object>> selectedAreaColumns = areaService.getSelectedAreaColumns(areaTypeEntryList);
-        return createSuccessResponse(selectedAreaColumns);
-    }
    
     @GET
     @Produces({MediaType.APPLICATION_JSON})

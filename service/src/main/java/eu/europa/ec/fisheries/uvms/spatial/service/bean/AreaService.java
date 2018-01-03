@@ -47,7 +47,7 @@ public interface AreaService {
 
     FilterAreasSpatialRS computeAreaFilter(FilterAreasSpatialRQ filterAreasSpatialRQ) throws ServiceException;
 
-    List<Map<String, Object>> getSelectedAreaColumns(List<AreaTypeEntry> areaTypes) throws ServiceException;
+    List<Map<String, Object>> getAreasByIds(List<AreaTypeEntry> areaTypes) throws ServiceException;
 
     UploadMetadata metadata(byte[] data, String areaType) throws ServiceException;
 
