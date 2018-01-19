@@ -27,7 +27,7 @@
         <jackson.version>2.6.0</jackson.version>
         <logback.core.version>1.2.3</logback.core.version>
         <asset.model.version>4.0.0</asset.model.version>
-        <movement.model.version>4.0.10-SNAPSHOT</movement.model.version>
+        <movement.model.version>4.0.9</movement.model.version>
         <application.name>${project.parent.artifactId}</application.name>
         <application.version>${project.parent.version}</application.version>
         <application.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}.log</application.logfile>
@@ -36,10 +36,10 @@
         <hibernate.version>4.3.11.Final</hibernate.version>
         <hibernate-spatial.version>4.3</hibernate-spatial.version>
         <geotools.version>14.4</geotools.version>
-        <uvms.commons.version>3.0.8-SNAPSHOT</uvms.commons.version>
+        <uvms.commons.version>3.0.8</uvms.commons.version>
         <uvms.test.version>0.0.8</uvms.test.version>
         <hibernate.validator.version>5.2.1.Final</hibernate.validator.version>
-        <usm4uvms.version>4.0.6</usm4uvms.version>
+        <usm4uvms.version>3.0.8</usm4uvms.version>
         <usm_deployment_descriptor_force_update>false</usm_deployment_descriptor_force_update>
         <release.branch.name>uvms-1.0.0</release.branch.name>
         <maven.scm.provider.version>2.1.1</maven.scm.provider.version>
