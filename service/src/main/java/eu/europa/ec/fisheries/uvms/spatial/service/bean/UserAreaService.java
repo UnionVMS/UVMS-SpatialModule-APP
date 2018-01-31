@@ -12,23 +12,22 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.UserAreaLayerDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.UserAreaDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson.UserAreaGeoJsonDto;
-
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
+import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.UserAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson.UserAreaGeoJsonDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.UserAreaLayerDto;
+
+//FIXME move methods to AreaService as a UserArea is a Area
 public interface UserAreaService {
 
     UserAreaLayerDto getUserAreaLayerDefinition(String userName, String scopeName);
 
-	List<AreaDetails> getUserAreaDetailsWithExtentById(AreaTypeEntry areaTypeEntry, String userName, boolean isPowerUser, String scopeName) throws ServiceException;
-
-	List<AreaDetails> getUserAreaDetailsById(AreaTypeEntry areaTypeEntry, String userName, boolean isPowerUser, String scopeName) throws ServiceException;
+	Map<String, Object> getUserAreaDetailsWithExtentById(AreaTypeEntry areaTypeEntry, String userName, boolean isPowerUser, String scopeName) throws ServiceException;
 
 	List<UserAreaDto> searchUserAreasByCriteria(String userName, String scopeName, String searchCriteria, boolean isPowerUser) throws ServiceException;
 
@@ -40,7 +39,7 @@ public interface UserAreaService {
      * @return user area id
      * @throws ServiceException
      */
-	Long storeUserArea(UserAreaGeoJsonDto userAreaDto, String userName) throws ServiceException;
+	Long createUserArea(UserAreaGeoJsonDto userAreaDto, String userName) throws ServiceException;
 
     Long updateUserArea(UserAreaGeoJsonDto userAreaDto, String userName, boolean isPowerUser, String scopeName) throws ServiceException;
 

@@ -11,18 +11,19 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.entity;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
-import javax.persistence.Column;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Entity
 @NamedQueries({
@@ -38,6 +39,7 @@ public class CountryEntity extends BaseAreaEntity {
 	@Column(name = "gid")
 	@SequenceGenerator(name="SEQ_GEN", sequenceName="countries_seq", allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN")
+	@JsonProperty("gid")
 	private Long id;
 
     public static final String FIND_ALL = "countryEntity.findAll";

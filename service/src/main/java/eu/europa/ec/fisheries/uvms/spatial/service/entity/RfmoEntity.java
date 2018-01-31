@@ -9,27 +9,25 @@ details. You should have received a copy of the GNU General Public License along
 
  */
 
-
 package eu.europa.ec.fisheries.uvms.spatial.service.entity;
 
-import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadMappingProperty;
-import eu.europa.ec.fisheries.uvms.spatial.service.util.ColumnAliasName;
-import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-import java.util.Map;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import java.util.List;
+import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadMappingProperty;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Entity
 @NamedQueries({
@@ -52,17 +50,15 @@ public class RfmoEntity extends BaseAreaEntity {
     public static final String SEARCH_RFMO_NAMES_BY_CODE = "rfmoEntity.searchNamesByCode";
     public static final String RFMO_COLUMNS = "rfmoEntity.findSelectedColumns";
 
-    private static final String TUNA = "tuna";
-
 	@Id
 	@Column(name = "gid")
 	@SequenceGenerator(name="SEQ_GEN", sequenceName="rfmo_seq", allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN")
-	private Long id;
+    @JsonProperty("gid")
+    private Long id;
 	
 	
     @Column(length = 10)
-    @ColumnAliasName(aliasName = TUNA)
     private String tuna;
 
     public RfmoEntity() {

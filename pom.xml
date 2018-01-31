@@ -10,7 +10,7 @@
 
     <groupId>eu.europa.ec.fisheries.uvms.spatial</groupId>
     <artifactId>spatial</artifactId>
-    <version>1.0.8-SNAPSHOT</version>
+    <version>1.0.11-SNAPSHOT</version>
     <packaging>pom</packaging>
     <description>Maven project-archetype for UnionVms modules</description>
 
@@ -18,8 +18,8 @@
   <properties>
         <!-- The spatial name is used as a common point to rename the application alias visible in USM-->
         <spatial.name>Spatial</spatial.name>
-        <docker.dev.version>3.18.0</docker.dev.version>
-        <spatial.model>1.0.7</spatial.model>
+        <docker.dev.version>3.20.0</docker.dev.version>
+        <spatial.model>1.0.8</spatial.model>
         <reporting.model>1.0.4</reporting.model>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -27,7 +27,7 @@
         <jackson.version>2.6.0</jackson.version>
         <logback.core.version>1.2.3</logback.core.version>
         <asset.model.version>4.0.0</asset.model.version>
-        <movement.model.version>4.0.0</movement.model.version>
+        <movement.model.version>4.0.9</movement.model.version>
         <application.name>${project.parent.artifactId}</application.name>
         <application.version>${project.parent.version}</application.version>
         <application.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}.log</application.logfile>
@@ -36,26 +36,17 @@
         <hibernate.version>4.3.11.Final</hibernate.version>
         <hibernate-spatial.version>4.3</hibernate-spatial.version>
         <geotools.version>14.4</geotools.version>
-        <uvms.commons.version>3.0.5</uvms.commons.version>
+        <uvms.commons.version>3.0.8</uvms.commons.version>
         <uvms.test.version>0.0.8</uvms.test.version>
         <hibernate.validator.version>5.2.1.Final</hibernate.validator.version>
-        <usm4uvms.version>4.0.4</usm4uvms.version>
+        <usm4uvms.version>4.0.8</usm4uvms.version>
         <usm_deployment_descriptor_force_update>false</usm_deployment_descriptor_force_update>
         <release.branch.name>uvms-1.0.0</release.branch.name>
         <maven.scm.provider.version>2.1.1</maven.scm.provider.version>
         <javaee.version>7.0</javaee.version>
-        <mapstruct.version>1.1.0.Final</mapstruct.version>
+        <mapstruct.version>1.2.0.Final</mapstruct.version>
         <database.dialect>oracle</database.dialect>
         <scm.connection>scm:git:https://github.com/UnionVMS/UVMS-SpatialModule-APP.git</scm.connection>
-
-        <!-- sonar properties -->
-        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
-        <sonar.exclusions>**/generated-sources/**,**/*.js</sonar.exclusions>
-        <sonar.sourceEncoding>UTF-8</sonar.sourceEncoding>
-        <sonar.java.source>1.7</sonar.java.source>
-        <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
-        <sonar.jacoco.reportPath>${project.basedir}/target/coverage-reports/jacoco-unit.exec</sonar.jacoco.reportPath>
-        <sonar.language>java</sonar.language>
 
     </properties>
 

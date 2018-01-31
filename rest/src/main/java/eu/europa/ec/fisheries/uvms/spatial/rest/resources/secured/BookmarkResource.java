@@ -33,15 +33,31 @@ import java.util.List;
 
 import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.constants.AuthConstants;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.BookmarkService;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.bookmark.Bookmark;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * @implicitParam roleName|string|header|true||||||
+ * @implicitParam scopeName|string|header|true|EC|||||
+ * @implicitParam authorization|string|header|true||||||jwt token
+ */
 @Path("/bookmark")
 @Slf4j
 public class BookmarkResource extends UnionVMSResource {
+
+    @HeaderParam("authorization")
+    private String authorization;
+
+    @HeaderParam("scopeName")
+    private String scopeName;
+
+    @HeaderParam("roleName")
+    private String roleName;
+
+    @Context
+    private HttpServletRequest servletRequest;
 
     @EJB
     private BookmarkService bookmarkService;
@@ -49,11 +65,9 @@ public class BookmarkResource extends UnionVMSResource {
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response list(@Context HttpServletRequest request,
-                         @HeaderParam(AuthConstants.HTTP_HEADER_SCOPE_NAME) String scopeName,
-                         @HeaderParam(AuthConstants.HTTP_HEADER_ROLE_NAME) String roleName) throws ServiceException {
+    public Response list() throws ServiceException {
 
-        final String username = request.getRemoteUser();
+        final String username = servletRequest.getRemoteUser();
         List<Bookmark> bookmarks = new ArrayList<>(bookmarkService.listByUsername(username));
         Collections.sort(bookmarks);
         return createSuccessResponse(bookmarks);
@@ -63,12 +77,9 @@ public class BookmarkResource extends UnionVMSResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response createBookmark(@Context HttpServletRequest request,
-                                   @HeaderParam(AuthConstants.HTTP_HEADER_SCOPE_NAME) String scopeName,
-                                   @HeaderParam(AuthConstants.HTTP_HEADER_ROLE_NAME) String roleName,
-                                   final Bookmark bookmark) throws ServiceException {
+    public Response createBookmark(final Bookmark bookmark) throws ServiceException {
 
-        final String username = request.getRemoteUser();
+        final String username = servletRequest.getRemoteUser();
         final Bookmark result = bookmarkService.create(bookmark, username);
         return createSuccessResponse(result);
     }
@@ -77,12 +88,9 @@ public class BookmarkResource extends UnionVMSResource {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response deleteReport(@Context HttpServletRequest request,
-                                 @PathParam("id") Long id,
-                                 @HeaderParam(AuthConstants.HTTP_HEADER_SCOPE_NAME) String scopeName,
-                                 @HeaderParam(AuthConstants.HTTP_HEADER_ROLE_NAME) String roleName) throws ServiceException {
+    public Response deleteReport(@PathParam("id") Long id) throws ServiceException {
 
-        final String username = request.getRemoteUser();
+        final String username = servletRequest.getRemoteUser();
         bookmarkService.delete(id, username);
         return createSuccessResponse();
     }
@@ -92,12 +100,9 @@ public class BookmarkResource extends UnionVMSResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response updateBookmark(@Context HttpServletRequest request,
-                                   Bookmark bookmark, @PathParam("id") Long id,
-                                   @HeaderParam(AuthConstants.HTTP_HEADER_SCOPE_NAME) String scopeName,
-                                   @HeaderParam(AuthConstants.HTTP_HEADER_ROLE_NAME) String roleName) throws ServiceException {
+    public Response updateBookmark(Bookmark bookmark, @PathParam("id") Long id) throws ServiceException {
 
-        final String username = request.getRemoteUser();
+        final String username = servletRequest.getRemoteUser();
         bookmark.setId(id);
         bookmarkService.update(bookmark, username);
         return createSuccessResponse();

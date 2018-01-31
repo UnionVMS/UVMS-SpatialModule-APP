@@ -12,33 +12,45 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.entity;
 
-import com.vividsolutions.jts.geom.Geometry;
-import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.service.util.ColumnAliasName;
+import static eu.europa.ec.fisheries.uvms.commons.date.DateUtils.DATE_TIME_UI_FORMAT;
+import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import org.hibernate.annotations.Where;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vividsolutions.jts.geom.Geometry;
+import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
+import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson.UserAreaGeoJsonDto;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where;
 
 
 @Entity
@@ -59,7 +71,7 @@ import javax.persistence.SequenceGenerator;
                 query = "SELECT area FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection " +
                         "WHERE area.userName = :userName OR scopeSelection.name = :scopeName"),
         @NamedQuery(name = UserAreasEntity.USER_AREA_DETAILS_BY_LOCATION,
-                query = "FROM UserAreasEntity userArea WHERE userArea.userName = :userName AND intersects(userArea.geom, :shape) = true AND userArea.enabled = 'Y' GROUP BY userArea.id"),
+                query = "FROM UserAreasEntity userArea WHERE intersects(userArea.geom, :shape) = true AND userArea.enabled = 'Y' GROUP BY userArea.id"),
         @NamedQuery(name = UserAreasEntity.USER_AREA_BY_COORDINATE,
                 query = "FROM UserAreasEntity WHERE intersects(geom, :shape) = true AND enabled = 'Y'"),
         @NamedQuery(name = UserAreasEntity.FIND_USER_AREA_BY_ID,
@@ -97,12 +109,12 @@ import javax.persistence.SequenceGenerator;
                         "where userarea.userName = :userName and userarea.type = :type")
 })
 @Where(clause = "enabled = 'Y'")
-@Table(name="user_areas", uniqueConstraints = {
-        @UniqueConstraint(columnNames={"name", "user_name"})
+@Table(name = "user_areas", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"name", "user_name"})
 })
 @EqualsAndHashCode(callSuper = true, exclude = "scopeSelection")
 @Data
-@ToString(exclude = "scopeSelection")
+@NoArgsConstructor
 public class UserAreasEntity extends BaseAreaEntity {
 
     public static final String FIND_ALL_USER_AREAS = "userArea.findAllUserAreas";
@@ -125,48 +137,54 @@ public class UserAreasEntity extends BaseAreaEntity {
     public static final String UPDATE_USERAREA_FORUSER = "userAreaEntity.updateUserAreaForUser";
     public static final String USERAREA_COLUMNS = "userAreasEntity.findSelectedColumns";
 
-	@Id
-	@Column(name = "gid")
-	@SequenceGenerator(name="SEQ_GEN", sequenceName="user_areas_seq", allocationSize = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN")
-	private Long id;	
-	
+    @Id
+    @Column(name = "gid")
+    @SequenceGenerator(name = "SEQ_GEN", sequenceName = "user_areas_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_GEN")
+    @JsonProperty("gid")
+    private Long id;
+
     @Column(name = "type")
-    @ColumnAliasName(aliasName = "subType")
+    @JsonProperty("subType")
     private String type;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "start_date")
-    @ColumnAliasName(aliasName = "startDate")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DateUtils.DATE_TIME_UI_FORMAT)
     private Date startDate;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "end_date")
-    @ColumnAliasName(aliasName = "endDate")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DateUtils.DATE_TIME_UI_FORMAT)
     private Date endDate;
 
     @Column(name = "user_name", nullable = false)
     private String userName;
 
     @Column(columnDefinition = "text", name = "area_desc")
-    @ColumnAliasName(aliasName = "areaDesc")
     private String areaDesc;
 
     @Column(columnDefinition = "text", name = "dataset_name")
-    @ColumnAliasName(aliasName = "datasetName")
     private String datasetName;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_on", nullable = false)
-    @ColumnAliasName(aliasName = "createdOn")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DateUtils.DATE_TIME_UI_FORMAT)
     private Date createdOn;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAreas", cascade = CascadeType.ALL, orphanRemoval = true)
-    @ColumnAliasName(aliasName = "scopeSelection")
-    private Set<UserScopeEntity> scopeSelection;
+    @JsonIgnore
+    private Set<UserScopeEntity> scopeSelection = new HashSet<>();
 
-    public UserAreasEntity() {
-        // why JPA why
+    @JsonProperty("scopeSelection")
+    public List<String> getScopeSelectionAsString(){
+        List<String> list = new ArrayList<>();
+        if (isNotEmpty(scopeSelection)){
+            for (UserScopeEntity entity :scopeSelection){
+                list.add(entity.getName());
+            }
+        }
+        return list;
     }
 
     @Builder
@@ -188,6 +206,16 @@ public class UserAreasEntity extends BaseAreaEntity {
         super(values, null);
     }
 
+    public void addUserScope(UserScopeEntity scope) {
+        scopeSelection.add(scope);
+        scope.setUserAreas(this);
+    }
+
+    public void removeScope(UserScopeEntity scope) {
+        scopeSelection.remove(scope);
+        scope.setUserAreas(null);
+    }
+
     public void setScopeSelection(Set<UserScopeEntity> scopeSelection) {
         if (scopeSelection != null) {
             for (UserScopeEntity userScopeEntity : scopeSelection) {
@@ -195,5 +223,44 @@ public class UserAreasEntity extends BaseAreaEntity {
             }
             this.scopeSelection = scopeSelection;
         }
+    }
+
+    public void merge(UserAreaGeoJsonDto dto) {
+        if (dto == null) {
+            return;
+        }
+        this.setAreaDesc(dto.getDesc());
+        this.setType(dto.getSubType());
+        this.setGeom(dto.getGeometry());
+        this.setName(dto.getName());
+        this.setId(dto.getId());
+        List<String> scopeSelectionDto = dto.getScopeSelection();
+
+        scopeSelection.clear();
+
+        if (isNotEmpty(scopeSelectionDto)){
+            for (String scope : scopeSelectionDto){
+                UserScopeEntity userScopeEntity = new UserScopeEntity();
+                userScopeEntity.setName(scope);
+                this.addUserScope(userScopeEntity);
+            }
+        }
+
+        try {
+            if (dto.getStartDate() != null) {
+                dto.setStartDate(new SimpleDateFormat(DATE_TIME_UI_FORMAT).parse(dto.getStartDate()));
+            }
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            if (dto.getEndDate() != null) {
+
+                dto.setEndDate(new SimpleDateFormat(DATE_TIME_UI_FORMAT).parse(dto.getEndDate()));
+            }
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        this.setDatasetName(dto.getDatasetName());
     }
 }

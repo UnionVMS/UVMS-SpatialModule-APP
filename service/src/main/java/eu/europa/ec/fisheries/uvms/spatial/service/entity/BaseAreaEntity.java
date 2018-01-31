@@ -9,7 +9,6 @@ details. You should have received a copy of the GNU General Public License along
 
  */
 
-
 package eu.europa.ec.fisheries.uvms.spatial.service.entity;
 
 import javax.persistence.AttributeOverride;
@@ -18,32 +17,27 @@ import javax.persistence.Convert;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Field;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Maps;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTWriter;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.commons.domain.BaseEntity;
 import eu.europa.ec.fisheries.uvms.commons.domain.CharBooleanConverter;
+import eu.europa.ec.fisheries.uvms.commons.geometry.mapper.GeometryMapper;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadMappingProperty;
-import eu.europa.ec.fisheries.uvms.spatial.service.exception.SpatialServiceErrors;
-import eu.europa.ec.fisheries.uvms.spatial.service.exception.SpatialServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.service.util.ColumnAliasName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.hibernate.annotations.Type;
-import org.joda.time.DateTime;
 import org.opengis.feature.Property;
 
 @MappedSuperclass
@@ -57,26 +51,52 @@ public class BaseAreaEntity extends BaseEntity {
     private static final String ISO_8859_1 = "ISO-8859-1";
     private static final String UTF_8 = "UTF-8";
 
+    @JsonIgnore
     @Type(type = "org.hibernate.spatial.GeometryType")
-    @ColumnAliasName(aliasName = "geometry")
     private Geometry geom;
 
-    @Column(length = 255)
-    @ColumnAliasName(aliasName="name")
     private String name;
 
     @Column(length = 20)
-    @ColumnAliasName(aliasName = "code")
     private String code;
 
     @Convert(converter = CharBooleanConverter.class)
     @Column(nullable = false, length = 1)
-    @ColumnAliasName(aliasName = "enabled")
     private Boolean enabled = true;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "enabled_on")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DateUtils.DATE_TIME_UI_FORMAT)
     private Date enabledOn;
+
+    public String getGeometry(){
+        return GeometryMapper.INSTANCE.geometryToWkt(geom).getValue();
+    }
+
+    @JsonIgnore
+    public String getGeometryType(){
+        String geometryType = null;
+        if (geom !=null){
+            geometryType = geom.getGeometryType();
+        }
+        return geometryType;
+    }
+
+    public String getExtent() {
+        String extent = null;
+        if (geom != null) {
+            extent = new WKTWriter().write(geom.getEnvelope());
+        }
+        return extent;
+    }
+
+    public String getCentroid(){
+        String centroid = null;
+        if (geom != null) {
+            centroid = new WKTWriter().write(geom.getCentroid());
+        }
+        return centroid;
+    }
 
     public BaseAreaEntity(Map<String, Object> values, List<UploadMappingProperty> mapping) throws ServiceException {
 
@@ -112,14 +132,6 @@ public class BaseAreaEntity extends BaseEntity {
         // why JPA why
     }
 
-    protected String readStringProperty(Map<String, Object> values, String propertyName) throws ServiceException {
-        try {
-            return new String(((String) values.get(propertyName)).getBytes(ISO_8859_1), UTF_8);
-        } catch (UnsupportedEncodingException e) {
-            throw new ServiceException("Area upload media not supported", e);
-        }
-    }
-
     public static Map<String, Object> createAttributesMap(List<Property> properties) {
         Map<String, Object> resultMap = Maps.newHashMap();
         for (Property property : properties) {
@@ -128,42 +140,5 @@ public class BaseAreaEntity extends BaseEntity {
             resultMap.put(name, value);
         }
         return resultMap;
-    }
-
-    public Map<String, Object> getFieldMap(){
-        Map<String, Object> map = new HashMap<>();
-
-        try {
-            Field[] declaredFields = this.getClass().getDeclaredFields();
-            Field[] superDeclaredFields = this.getClass().getSuperclass().getDeclaredFields();
-            Field[] fields = ArrayUtils.addAll(declaredFields, superDeclaredFields);
-            for (Field field : fields) {
-                field.setAccessible(true);
-                if (field.isAnnotationPresent(ColumnAliasName.class)) {
-                    String aliasName = field.getAnnotation(ColumnAliasName.class).aliasName();
-
-                    log.info("Alias Name : " + aliasName);
-                    Object value;
-                    if (field.get(this) instanceof Number) {
-                        Number numberVal = (Number) field.get(this);
-                        value = String.valueOf(numberVal);
-                    } else if (field.get(this) instanceof Geometry) {
-                        Geometry geometry = (Geometry) field.get(this);
-                        value = new WKTWriter().write(geometry);
-                    } else if (field.get(this) instanceof Date) {
-                        value = DateUtils.UI_FORMATTER.print(new DateTime(field.get(this)));
-                    } else if (field.get(this) instanceof Boolean) {
-                        value = Boolean.toString((Boolean) field.get(this));
-                    } else {
-                        value = field.get(this);
-                    }
-                    map.put(aliasName, value);
-                }
-            }
-        } catch (IllegalAccessException e) {
-            log.error("Illegal access exception : ", e);
-            throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
-        }
-        return map;
     }
 }

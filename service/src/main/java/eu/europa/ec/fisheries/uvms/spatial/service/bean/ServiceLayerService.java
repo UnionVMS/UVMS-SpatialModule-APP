@@ -18,7 +18,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.ServiceLayer;
 
 public interface ServiceLayerService {
 
-    public ServiceLayer findBy(AreaType areaType) throws ServiceException;
+    ServiceLayer findBy(AreaType areaType) throws ServiceException;
 
     void update(ServiceLayer serviceLayer) throws ServiceException;
 }

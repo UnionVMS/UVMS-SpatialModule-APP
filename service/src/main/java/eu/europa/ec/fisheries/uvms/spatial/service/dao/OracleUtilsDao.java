@@ -15,7 +15,9 @@ package eu.europa.ec.fisheries.uvms.spatial.service.dao;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import com.vividsolutions.jts.geom.MultiPoint;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.NotImplementedException;
 
 @Slf4j
 public class OracleUtilsDao extends UtilsDao {
@@ -52,6 +54,10 @@ public class OracleUtilsDao extends UtilsDao {
     public Integer mapEPSGtoDefaultSRID(Integer epsg) {
         mapEpsgToDefaultSrid.setParameter("epsg", epsg);
         return (Integer) mapEpsgToDefaultSrid.getSingleResult();
+    }
+
+    @Override public MultiPoint generatePoints(String wkt, Integer numberOfPoints) {
+        throw new NotImplementedException();
     }
 
 }

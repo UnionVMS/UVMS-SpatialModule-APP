@@ -12,10 +12,37 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.message.bean;
 
-import static eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants.CONNECTION_TYPE;
-import static eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants.DESTINATION_TYPE_QUEUE;
-import static eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants.QUEUE_MODULE_SPATIAL;
-import static eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants.QUEUE_MODULE_SPATIAL_NAME;
+import eu.europa.ec.fisheries.uvms.commons.message.api.Fault;
+import eu.europa.ec.fisheries.uvms.commons.message.impl.JAXBUtils;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.AreaByCodeEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.DeleteMapConfigurationEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.GetAreaByLocationEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.GetAreaTypeNamesEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.GetClosestAreaEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.GetClosestLocationEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.GetFilterAreaEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.GetGeometryByPortCodeEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.GetMapConfigurationEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.GetSpatialEnrichmentEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.PingEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.SaveOrUpdateMapConfigurationEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageEvent;
+import eu.europa.ec.fisheries.uvms.spatial.model.enums.FaultCode;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AllAreaTypesRequest;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByCodeRequest;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestLocationSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GeometryByPortCodeRequest;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.PingRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialDeleteMapConfigurationRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialGetMapConfigurationRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialModuleMethod;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialModuleRequest;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveOrUpdateMapConfigurationRQ;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.MessageDriven;
@@ -29,35 +56,10 @@ import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 import javax.xml.bind.JAXBException;
 
-import eu.europa.ec.fisheries.uvms.commons.message.api.Fault;
-import eu.europa.ec.fisheries.uvms.commons.message.impl.JAXBUtils;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.AreaByCodeEvent;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.DeleteMapConfigurationEvent;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.GetAreaByLocationEvent;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.GetAreaTypeNamesEvent;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.GetClosestAreaEvent;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.GetClosestLocationEvent;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.GetFilterAreaEvent;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.GetMapConfigurationEvent;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.GetSpatialEnrichmentEvent;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.PingEvent;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.SaveOrUpdateMapConfigurationEvent;
-import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageEvent;
-import eu.europa.ec.fisheries.uvms.spatial.model.enums.FaultCode;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AllAreaTypesRequest;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByCodeRequest;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestLocationSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.PingRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialDeleteMapConfigurationRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialGetMapConfigurationRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialModuleMethod;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialModuleRequest;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveOrUpdateMapConfigurationRQ;
-import lombok.extern.slf4j.Slf4j;
+import static eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants.CONNECTION_TYPE;
+import static eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants.DESTINATION_TYPE_QUEUE;
+import static eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants.QUEUE_MODULE_SPATIAL;
+import static eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants.QUEUE_MODULE_SPATIAL_NAME;
 
 @MessageDriven(mappedName = QUEUE_MODULE_SPATIAL, activationConfig = {
         @ActivationConfigProperty(propertyName = "messagingType", propertyValue = CONNECTION_TYPE),
@@ -110,6 +112,10 @@ public class SpatialEventMDB implements MessageListener {
     @Inject
     @AreaByCodeEvent
     private Event<SpatialMessageEvent> areaByCodeSpatialEvent;
+
+    @Inject
+    @GetGeometryByPortCodeEvent
+    private Event<SpatialMessageEvent> geometryByPortCodeSpatialEvent;
 
     @Inject
     private SpatialProducer producer;
@@ -180,6 +186,11 @@ public class SpatialEventMDB implements MessageListener {
                     AreaByCodeRequest areaByCodeRequest = JAXBUtils.unMarshallMessage(textMessage.getText(), AreaByCodeRequest.class);
                     SpatialMessageEvent areaByCodeEvent = new SpatialMessageEvent(textMessage, areaByCodeRequest);
                     areaByCodeSpatialEvent.fire(areaByCodeEvent);
+                    break;
+                case GET_GEOMETRY_BY_PORT_CODE:
+                    GeometryByPortCodeRequest geometryByPortCodeRequest = JAXBUtils.unMarshallMessage(textMessage.getText(), GeometryByPortCodeRequest.class);
+                    SpatialMessageEvent geometryByPortCodeEvent = new SpatialMessageEvent(textMessage, geometryByPortCodeRequest);
+                    geometryByPortCodeSpatialEvent.fire(geometryByPortCodeEvent);
                     break;
                 default:
                     log.error("[ Not implemented method consumed: {} ]", method);

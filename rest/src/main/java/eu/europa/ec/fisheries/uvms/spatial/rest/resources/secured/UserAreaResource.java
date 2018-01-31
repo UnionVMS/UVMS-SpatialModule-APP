@@ -10,38 +10,19 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.vividsolutions.jts.io.ParseException;
-
-import eu.europa.ec.fisheries.uvms.commons.geometry.mapper.FeatureToGeoJsonJacksonMapper;
-import eu.europa.ec.fisheries.uvms.commons.rest.constants.ErrorCodes;
-import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
-import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.commons.service.interceptor.ValidationInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaDetails;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Coordinate;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialFeaturesEnum;
-import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.AreaLocationMapper;
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.FilterType;
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.UserAreaCoordinateType;
-import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.UserAreaService;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.UserAreaUpdateDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.UserAreaDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson.AreaDetailsGeoJsonDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson.UserAreaGeoJsonDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.USMSpatial;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
-
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -50,6 +31,39 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.vividsolutions.jts.geom.MultiPolygon;
+import com.vividsolutions.jts.io.ParseException;
+import eu.europa.ec.fisheries.uvms.commons.geometry.mapper.FeatureToGeoJsonJacksonMapper;
+import eu.europa.ec.fisheries.uvms.commons.rest.constants.ErrorCodes;
+import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
+import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.commons.service.interceptor.ValidationInterceptor;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialFeaturesEnum;
+import eu.europa.ec.fisheries.uvms.spatial.rest.dto.FilterType;
+import eu.europa.ec.fisheries.uvms.spatial.rest.dto.UserAreaCoordinateType;
+import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.AreaLocationMapper;
+import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.UserAreaService;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.UserAreaUpdateDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson.UserAreaGeoJsonDto;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang.StringUtils;
+import org.geotools.feature.simple.SimpleFeatureBuilder;
+import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
+import org.opengis.feature.simple.SimpleFeatureType;
+
+/**
+ * @implicitParam roleName|string|header|true||||||
+ * @implicitParam scopeName|string|header|true|EC|||||
+ * @implicitParam authorization|string|header|true||||||jwt token
+ */
 @Path("/userarea")
 @Slf4j
 @Stateless
@@ -59,31 +73,44 @@ public class UserAreaResource extends UnionVMSResource {
     private UserAreaService userAreaService;
 
     @EJB
+    private AreaService areaService;
+
+    @EJB
     private SpatialService spatialService;
 
     private AreaLocationMapper areaLocationMapper = AreaLocationMapper.mapper();
+
+    @HeaderParam("authorization")
+    private String authorization;
+
+    @HeaderParam("scopeName")
+    private String scopeName;
+
+    @HeaderParam("roleName")
+    private String roleName;
+
+    @Context
+    private HttpServletRequest servletRequest;
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/")
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response storeUserArea(@Context HttpServletRequest request,
-                                  UserAreaGeoJsonDto userAreaGeoJsonDto,
-                                  @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName) throws ServiceException {
-        if (request.isUserInRole("MANAGE_USER_DEFINED_AREAS")) {
-            String userName = request.getRemoteUser();
-            log.info("{} is requesting storeUserArea(...)", userName);
+    public Response storeUserArea(UserAreaGeoJsonDto userAreaGeoJsonDto) throws ServiceException {
+        if (servletRequest.isUserInRole("MANAGE_USER_DEFINED_AREAS")) {
+            String userName = servletRequest.getRemoteUser();
+            log.info("{} is requesting createUserArea(...)", userName);
 
-            if (StringUtils.isNotBlank(userAreaGeoJsonDto.getDatasetName()) && !request.isUserInRole("CREATE_USER_AREA_DATASET")) {
+            if (StringUtils.isNotBlank(userAreaGeoJsonDto.getDatasetName()) && !servletRequest.isUserInRole("CREATE_USER_AREA_DATASET")) {
                 return createErrorResponse("user_area_dataset_creation_not_allowed");
             }
 
-            if (userAreaGeoJsonDto.getScopeSelection() != null && !userAreaGeoJsonDto.getScopeSelection().isEmpty() && !request.isUserInRole("SHARE_USER_DEFINED_AREAS")) {
+            if (userAreaGeoJsonDto.getScopeSelection() != null && !userAreaGeoJsonDto.getScopeSelection().isEmpty() && !servletRequest.isUserInRole("SHARE_USER_DEFINED_AREAS")) {
                 return createErrorResponse("user_area_sharing_not_allowed");
             }
 
-            long gid = userAreaService.storeUserArea(userAreaGeoJsonDto, userName);
+            long gid = userAreaService.createUserArea(userAreaGeoJsonDto, userName);
             return createSuccessResponse(gid);
         } else {
             return createErrorResponse("user_areas_management_not_allowed");
@@ -95,42 +122,59 @@ public class UserAreaResource extends UnionVMSResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response updateUserArea(@Context HttpServletRequest request,
-                                   UserAreaGeoJsonDto userAreaGeoJsonDto,
-                                   @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName) throws ServiceException {
-        if (request.isUserInRole(SpatialFeaturesEnum.MANAGE_USER_DEFINED_AREAS.toString())) {
-            String userName = request.getRemoteUser();
-            log.info("{} is requesting storeUserArea(...)", userName);
+    public Response updateUserArea(UserAreaGeoJsonDto userAreaGeoJsonDto) throws ServiceException {
+        if (servletRequest.isUserInRole(SpatialFeaturesEnum.MANAGE_USER_DEFINED_AREAS.toString())) {
+            String userName = servletRequest.getRemoteUser();
+            log.info("{} is requesting createUserArea(...)", userName);
 
-            if (StringUtils.isNotBlank(userAreaGeoJsonDto.getDatasetName()) && !request.isUserInRole(SpatialFeaturesEnum.CREATE_USER_AREA_DATASET.toString())) {
+            if (StringUtils.isNotBlank(userAreaGeoJsonDto.getDatasetName()) && !servletRequest.isUserInRole(SpatialFeaturesEnum.CREATE_USER_AREA_DATASET.toString())) {
                 return createErrorResponse("user_area_dataset_creation_not_allowed");
             }
 
-            if (userAreaGeoJsonDto.getScopeSelection() != null && !userAreaGeoJsonDto.getScopeSelection().isEmpty() && !request.isUserInRole(SpatialFeaturesEnum.SHARE_USER_DEFINED_AREAS.toString())) {
+            if (userAreaGeoJsonDto.getScopeSelection() != null && !userAreaGeoJsonDto.getScopeSelection().isEmpty() && !servletRequest.isUserInRole(SpatialFeaturesEnum.SHARE_USER_DEFINED_AREAS.toString())) {
                 return createErrorResponse("user_area_sharing_not_allowed");
             }
 
-            boolean isPowerUser = isPowerUser(request);
+            boolean isPowerUser = isPowerUser(servletRequest);
             log.info("{} is requesting updateUserArea(...), with a ID={}. Spatial power user: {}", userName, Long.toString(userAreaGeoJsonDto.getId()), isPowerUser);
 
-            long gid = userAreaService.updateUserArea(userAreaGeoJsonDto, request.getRemoteUser(), isPowerUser, scopeName);
+            long gid = userAreaService.updateUserArea(userAreaGeoJsonDto, servletRequest.getRemoteUser(), isPowerUser, scopeName);
             return createSuccessResponse(gid);
         } else {
             return createErrorResponse("user_areas_management_not_allowed");
         }
     }
 
+    private SimpleFeatureType build(Class geometryType, Map<String, Object> properties, String geometryFieldName) {
+        SimpleFeatureTypeBuilder sb = new SimpleFeatureTypeBuilder();
+        sb.setCRS(DefaultGeographicCRS.WGS84);
+        sb.setName("MULTIPOLIGON");
+        if (MapUtils.isNotEmpty(properties)){
+            for (String key : properties.keySet()) {
+                if (key.equalsIgnoreCase(geometryFieldName)) {
+                    sb.add(key, geometryType);
+                } else {
+                    Class propClass = String.class;
+                    Object propValue = properties.get(key);
+                    if (propValue != null) {
+                        propClass = propValue.getClass();
+                    }
+                    sb.add(key, propClass);
+                }
+            }
+        }
+        return sb.buildFeatureType();
+    }
+
     @DELETE
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response deleteUserArea(@Context HttpServletRequest request,
-                                   @PathParam("id") Long userAreaId,
-                                   @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName) throws ServiceException {
-        String userName = request.getRemoteUser();
+    public Response deleteUserArea(@PathParam("id") Long userAreaId) throws ServiceException {
+        String userName = servletRequest.getRemoteUser();
         log.info("{} is requesting deleteUserArea(...), with a ID={} and scopeName={}", userName, userAreaId, scopeName);
 
-        boolean isPowerUser = isPowerUser(request);
+        boolean isPowerUser = isPowerUser(servletRequest);
         userAreaService.deleteUserArea(userAreaId, userName, isPowerUser, null); // we pass NULL for scope because deletion shouldn't happen on shared areas, unless you are a power user
         return createSuccessResponse();
     }
@@ -139,22 +183,22 @@ public class UserAreaResource extends UnionVMSResource {
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/layers")
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response getUserAreaLayerMapping(@Context HttpServletRequest request, @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName) {
-        log.debug("UserName from security : " + request.getRemoteUser());
-        return createSuccessResponse(userAreaService.getUserAreaLayerDefinition(request.getRemoteUser(), scopeName));
+    public Response getUserAreaLayerMapping() {
+        log.debug("UserName from security : " + servletRequest.getRemoteUser());
+        return createSuccessResponse(userAreaService.getUserAreaLayerDefinition(servletRequest.getRemoteUser(), scopeName));
     }
 
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/details")
-    @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
-    public Response getUserAreaDetails(UserAreaCoordinateType userAreaTypeDto, @Context HttpServletRequest request, @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName) throws IOException, ParseException, ServiceException {
+    @Interceptors(value = {ExceptionInterceptor.class})
+    public Response getUserAreaDetails(UserAreaCoordinateType userAreaTypeDto) throws IOException, ParseException, ServiceException {
         Response response;
-        boolean isPowerUser = isPowerUser(request);
+        boolean isPowerUser = isPowerUser(servletRequest);
         if (userAreaTypeDto.getId() != null) {
-            response = getUserAreaDetailsById(userAreaTypeDto, request.getRemoteUser(), isPowerUser, scopeName);
+            response = getUserAreaDetailsById(userAreaTypeDto, servletRequest.getRemoteUser(), isPowerUser, scopeName);
         } else {
-            response = getUserAreaDetailsByLocation(userAreaTypeDto, request.getRemoteUser());
+            response = getUserAreaDetailsByLocation(userAreaTypeDto, servletRequest.getRemoteUser());
         }
         return response;
     }
@@ -163,28 +207,27 @@ public class UserAreaResource extends UnionVMSResource {
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/types")
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response getUserAreaTypes(@Context HttpServletRequest request, @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName) throws ServiceException {
-        log.debug("UserName from security : " + request.getRemoteUser());
+    public Response getUserAreaTypes() throws ServiceException {
+        log.debug("UserName from security : " + servletRequest.getRemoteUser());
         boolean isPowerUser = false;
 
-        if (request.isUserInRole(SpatialFeaturesEnum.MANAGE_ANY_USER_AREA.value())) {
+        if (servletRequest.isUserInRole(SpatialFeaturesEnum.MANAGE_ANY_USER_AREA.value())) {
             isPowerUser = true;
         }
 
-        return createSuccessResponse(userAreaService.getUserAreaTypes(request.getRemoteUser(), scopeName, isPowerUser));
+        return createSuccessResponse(userAreaService.getUserAreaTypes(servletRequest.getRemoteUser(), scopeName, isPowerUser));
     }
 
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/updatedate")
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response updateUserAreaDates(@Context HttpServletRequest request,
-                                        UserAreaUpdateDto userAreaUpdateDto) throws ServiceException {
+    public Response updateUserAreaDates(UserAreaUpdateDto userAreaUpdateDto) throws ServiceException {
         boolean isPowerUser = false;
-        if (request.isUserInRole(SpatialFeaturesEnum.MANAGE_ANY_USER_AREA.value())) {
+        if (servletRequest.isUserInRole(SpatialFeaturesEnum.MANAGE_ANY_USER_AREA.value())) {
             isPowerUser = true;
         }
-        userAreaService.updateUserAreaDates(request.getRemoteUser(), userAreaUpdateDto.getStartDate(), userAreaUpdateDto.getEndDate(), userAreaUpdateDto.getType(), isPowerUser);
+        userAreaService.updateUserAreaDates(servletRequest.getRemoteUser(), userAreaUpdateDto.getStartDate(), userAreaUpdateDto.getEndDate(), userAreaUpdateDto.getType(), isPowerUser);
         return createSuccessResponse();
     }
 
@@ -195,21 +238,24 @@ public class UserAreaResource extends UnionVMSResource {
     private Response getUserAreaDetailsById(UserAreaCoordinateType userAreaTypeDto, String userName, boolean isPowerUser, String scopeName) throws ServiceException, IOException, ParseException {
         if (!userAreaTypeDto.getIsGeom()) {
             AreaTypeEntry areaTypeEntry = areaLocationMapper.getAreaTypeEntry(userAreaTypeDto);
-            List<AreaDetails> userAreaDetailsWithExtentById = userAreaService.getUserAreaDetailsWithExtentById(areaTypeEntry, userName, isPowerUser, scopeName);
-            AreaDetailsGeoJsonDto areaDetailsGeoJsonDto = areaLocationMapper.getAreaDetailsDto(userAreaDetailsWithExtentById.get(0));
-            areaDetailsGeoJsonDto.removeGeometry();
-            return createSuccessResponse(areaDetailsGeoJsonDto.getProperties());
+            Map<String, Object> userAreaDetailsWithExtentById = userAreaService.getUserAreaDetailsWithExtentById(areaTypeEntry, userName, isPowerUser, scopeName);
+            return createSuccessResponse(userAreaDetailsWithExtentById);
         } else {
             AreaTypeEntry areaTypeEntry = AreaLocationMapper.mapper().getAreaTypeEntry(userAreaTypeDto);
-            List<AreaDetails> userAreaDetails = userAreaService.getUserAreaDetailsById(areaTypeEntry, userName, isPowerUser, scopeName);
-            AreaDetailsGeoJsonDto areaDetailsGeoJsonDto = areaLocationMapper.getAreaDetailsDtoForAllAreas(userAreaDetails, userAreaTypeDto);
+            Map<String, Object> userAreaDetailsWithExtentById = userAreaService.getUserAreaDetailsWithExtentById(areaTypeEntry, userName, isPowerUser, scopeName);
+
+            SimpleFeatureBuilder featureBuilder = new SimpleFeatureBuilder(build(MultiPolygon.class, userAreaDetailsWithExtentById, "geometry"));
+
+           for (Map.Entry<String, Object> entrySet : userAreaDetailsWithExtentById.entrySet()) {
+                if(!entrySet.getKey().equals("extent") && !entrySet.getKey().equals("centroid")){
+                    featureBuilder.set(entrySet.getKey(), entrySet.getValue());
+                } // TODO check with HUGO if really necessary
+           }
 
             List<JsonNode> nodeList = new ArrayList<>();
 
-            for (Map<String, Object> featureMap : areaDetailsGeoJsonDto.getAllAreaProperties()) {
-                JsonNode jsonNode = new FeatureToGeoJsonJacksonMapper().convert(areaDetailsGeoJsonDto.toFeature(featureMap));
-                nodeList.add(jsonNode);
-            }
+            JsonNode jsonNode = new FeatureToGeoJsonJacksonMapper().convert(featureBuilder.buildFeature(null));
+            nodeList.add(jsonNode);
 
             return createSuccessResponse(nodeList);
         }
@@ -218,25 +264,37 @@ public class UserAreaResource extends UnionVMSResource {
     private Response getUserAreaDetailsByLocation(UserAreaCoordinateType userAreaTypeDto, String userName) throws ServiceException {
 
         try {
-            if (!userAreaTypeDto.getIsGeom()) {
-                Coordinate coordinate = areaLocationMapper.getCoordinateFromDto(userAreaTypeDto);
-                List<UserAreaDto> userAreaDetails = spatialService.getUserAreaDetailsWithExtentByLocation(coordinate, userName);
+            String areaType = userAreaTypeDto.getAreaType();
+            Integer crs = userAreaTypeDto.getCrs();
+            Boolean isGeom = userAreaTypeDto.getIsGeom();
+            Double latitude = userAreaTypeDto.getLatitude();
+            Double longitude = userAreaTypeDto.getLongitude();
+            List<Map<String, Object>> userAreaDetails = areaService.getAreasByPoint(latitude, longitude, crs, userName, AreaType.USERAREA);
+
+            if (!isGeom) {
                 return createSuccessResponse(userAreaDetails);
             } else {
-                AreaTypeEntry areaTypeEntry = AreaLocationMapper.mapper().getAreaTypeEntry(userAreaTypeDto);
-                List<AreaDetails> userAreaDetails = spatialService.getUserAreaDetailsByLocation(areaTypeEntry, userName);
-                AreaDetailsGeoJsonDto areaDetailsGeoJsonDto = areaLocationMapper.getAreaDetailsDtoForAllAreas(userAreaDetails, userAreaTypeDto);
+                List<List<JsonNode>> lists = new ArrayList<>();
 
-                List<ObjectNode> nodeList = new ArrayList<>();
+                for (Map<String, Object> stringObjectMap : userAreaDetails){
 
-                for (Map<String, Object> featureMap : areaDetailsGeoJsonDto.getAllAreaProperties()) {
-                    ObjectNode convert = new FeatureToGeoJsonJacksonMapper().convert(areaDetailsGeoJsonDto.toFeature(featureMap));
-                    nodeList.add(convert);
+                    List<JsonNode> nodeList = new ArrayList<>();
+
+                    SimpleFeatureBuilder featureBuilder = new SimpleFeatureBuilder(build(MultiPolygon.class, stringObjectMap, "geometry"));
+
+                    for (Map.Entry<String, Object> entrySet : stringObjectMap.entrySet()) {
+                        if(!entrySet.getKey().equals("extent") && !entrySet.getKey().equals("centroid")){
+                            featureBuilder.set(entrySet.getKey(), entrySet.getValue());
+                        } // TODO check with HUGO if really necessary
+                    }
+
+                    JsonNode jsonNode = new FeatureToGeoJsonJacksonMapper().convert(featureBuilder.buildFeature(null));
+                    nodeList.add(jsonNode);
+                    lists.add(nodeList);
                 }
-
-                return createSuccessResponse(nodeList);
+                return createSuccessResponse(lists);
             }
-        } catch (IOException | ParseException e) {
+        } catch (IOException e) {
             throw new ServiceException(e.getMessage(), e);
         }
     }
@@ -245,18 +303,18 @@ public class UserAreaResource extends UnionVMSResource {
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/byfilter")
     @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
-    public Response searchUserAreas(FilterType filter, @Context HttpServletRequest request, @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName) throws ServiceException {
-        return createSuccessResponse(userAreaService.searchUserAreasByCriteria(request.getRemoteUser(), scopeName, filter.getFilter(), isPowerUser(request)));
+    public Response searchUserAreas(FilterType filter) throws ServiceException {
+        return createSuccessResponse(userAreaService.searchUserAreasByCriteria(servletRequest.getRemoteUser(), scopeName, filter.getFilter(), isPowerUser(servletRequest)));
     }
 
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/list")
-    public Response listUserAreas(@Context HttpServletRequest request, @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName) throws ServiceException {
+    public Response listUserAreas() throws ServiceException {
         Response response;
 
-        if (request.isUserInRole(SpatialFeaturesEnum.MANAGE_USER_DEFINED_AREAS.toString())) {
-            response = createSuccessResponse(userAreaService. searchUserAreasByCriteria(request.getRemoteUser(), scopeName, StringUtils.EMPTY, isPowerUser(request)));
+        if (servletRequest.isUserInRole(SpatialFeaturesEnum.MANAGE_USER_DEFINED_AREAS.toString())) {
+            response = createSuccessResponse(userAreaService. searchUserAreasByCriteria(servletRequest.getRemoteUser(), scopeName, StringUtils.EMPTY, isPowerUser(servletRequest)));
         } else {
             response = createErrorResponse(ErrorCodes.NOT_AUTHORIZED);
         }
@@ -266,10 +324,10 @@ public class UserAreaResource extends UnionVMSResource {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/list/{type}")
-    public Response listUserAreas(@Context HttpServletRequest request, @HeaderParam(USMSpatial.SCOPE_NAME) String scopeName, @PathParam("type") String userAreaType) throws ServiceException {
+    public Response listUserAreas(@PathParam("type") String userAreaType) throws ServiceException {
         Response response;
-        if (request.isUserInRole(SpatialFeaturesEnum.MANAGE_USER_DEFINED_AREAS.toString())) {
-            List<UserAreaGeoJsonDto> userAreas = userAreaService.searchUserAreasByType(request.getRemoteUser(), scopeName, userAreaType, isPowerUser(request));
+        if (servletRequest.isUserInRole(SpatialFeaturesEnum.MANAGE_USER_DEFINED_AREAS.toString())) {
+            List<UserAreaGeoJsonDto> userAreas = userAreaService.searchUserAreasByType(servletRequest.getRemoteUser(), scopeName, userAreaType, isPowerUser(servletRequest));
             response = createSuccessResponse(userAreas);
         } else {
             response = createErrorResponse(ErrorCodes.NOT_AUTHORIZED);

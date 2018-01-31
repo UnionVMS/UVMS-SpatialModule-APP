@@ -9,22 +9,23 @@ details. You should have received a copy of the GNU General Public License along
 
  */
 
-
 package eu.europa.ec.fisheries.uvms.spatial.service.dao;
 
-import com.google.common.collect.ImmutableMap;
-import com.vividsolutions.jts.geom.Geometry;
-import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.commons.service.dao.QueryParameter;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.AreaDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadMappingProperty;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.transform.Transformers;
+import static eu.europa.ec.fisheries.uvms.commons.service.dao.QueryParameter.with;
+import static eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity.BY_INTERSECT;
+import static eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity.DISABLE;
+import static eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity.FIND_BY_USERNAME_AND_NAME;
+import static eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity.FIND_BY_USER_NAME_AND_SCOPE_NAME;
+import static eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity.FIND_GID_FOR_SHARED_AREA;
+import static eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity.FIND_USER_AREA_BY_ID;
+import static eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity.FIND_USER_AREA_BY_TYPE;
+import static eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity.FIND_USER_AREA_BY_USER;
+import static eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity.SEARCH_BY_CRITERIA;
+import static eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity.SEARCH_USERAREA;
+import static eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity.SEARCH_USERAREA_NAMES_BY_CODE;
+import static eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity.USER_AREA_BY_COORDINATE;
+import static eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity.USER_AREA_DETAILS_BY_LOCATION;
+
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import java.util.ArrayList;
@@ -32,8 +33,18 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import static eu.europa.ec.fisheries.uvms.commons.service.dao.QueryParameter.with;
-import static eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity.*;
+import com.google.common.collect.ImmutableMap;
+import com.vividsolutions.jts.geom.Geometry;
+import eu.europa.ec.fisheries.uvms.commons.service.dao.QueryParameter;
+import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.AreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadMappingProperty;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.transform.Transformers;
 
 @Slf4j
 public class UserAreaDao extends AbstractAreaDao<UserAreasEntity> {
@@ -98,9 +109,9 @@ public class UserAreaDao extends AbstractAreaDao<UserAreasEntity> {
 
         List<UserAreasEntity> entityList = new ArrayList<>();
 
-        if (!StringUtils.isBlank(userName) && shape != null ){
+        if (shape != null ){
             entityList = findEntityByNamedQuery(UserAreasEntity.class, USER_AREA_DETAILS_BY_LOCATION,
-                    with("shape", shape).and(USER_NAME, userName).parameters());
+                    with("shape", shape).parameters());
         }
         return entityList;
     }

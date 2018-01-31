@@ -40,4 +40,6 @@ public interface SpatialEventService {
 
     void areaByCode(@Observes @AreaByCodeEvent SpatialMessageEvent message);
 
+    void getGeometryForPortCode(@Observes @GetGeometryByPortCodeEvent SpatialMessageEvent message);
+
 }

@@ -9,28 +9,26 @@ details. You should have received a copy of the GNU General Public License along
 
  */
 
-
 package eu.europa.ec.fisheries.uvms.spatial.service.entity;
 
-import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadMappingProperty;
-import eu.europa.ec.fisheries.uvms.spatial.service.util.ColumnAliasName;
-import java.util.List;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-import java.math.BigDecimal;
-import java.util.Map;
-
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadMappingProperty;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Entity
 @NamedQueries({
@@ -51,66 +49,42 @@ public class EezEntity extends BaseAreaEntity {
     public static final String SEARCH_EEZ_NAMES_BY_CODE = "eezEntity.searchNameByCode";
     public static final String EEZ_COLUMNS = "eezEntity.findSelectedColumns";
 
-    private static final String COUNTRY_ALIAS = "country";
-    private static final String SOVEREIGN_ALIAS = "sovereign";
-    private static final String REMARKS_ALIAS = "remarks";
-    private static final String SOV_ID = "sov_id";
-    private static final String EEZ_ID = "eez_id";
-    private static final String MRGID = "mrgid";
-    private static final String DATE_CHANG = "date_chang";
-    private static final String AREA_M_2 = "area_m2";
-    private static final String LONGITUDE_ALIAS = "longitude";
-    private static final String LATITUDE_ALIAS = "latitude";
-    private static final String MRGID_EEZ = "mrgid_eez";
-
 	@Id
 	@Column(name = "gid")
 	@SequenceGenerator(name="SEQ_GEN", sequenceName="eez_seq", allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN")
-	private Long id;
+    @JsonProperty("gid")
+    private Long id;
 	
     @Column(length = 100)
-    @ColumnAliasName(aliasName = COUNTRY_ALIAS)
     private String country;
 
     @Column(length = 100)
-    @ColumnAliasName(aliasName = SOVEREIGN_ALIAS)
     private String sovereign;
 
     @Column(length = 150)
-    @ColumnAliasName(aliasName = REMARKS_ALIAS)
     private String remarks;
 
-    @Column(name = SOV_ID)
-    @ColumnAliasName(aliasName = "sovId")
+    @Column(name = "sov_id")
     private Long sovId;
 
-    @Column(name = EEZ_ID)
-    @ColumnAliasName(aliasName = "eezId")
+    @Column(name = "eez_id")
     private Long eezId;
 
-    @Column(name = MRGID)
-    @ColumnAliasName(aliasName = MRGID)
+    @Column(name = "mrgid")
     private BigDecimal mrGid;
 
     @Column(name = "date_chang", length = 50)
-    @ColumnAliasName(aliasName = "dateChang")
     private String dateChang;
 
-    @Column(name = AREA_M_2)
-    @ColumnAliasName(aliasName = "areaM2")
+    @Column(name = "area_m2")
     private Double areaM2;
 
-    @Column(name = LONGITUDE_ALIAS)
-    @ColumnAliasName(aliasName = LONGITUDE_ALIAS)
     private Double longitude;
 
-    @Column(name = LATITUDE_ALIAS)
-    @ColumnAliasName(aliasName = LATITUDE_ALIAS)
     private Double latitude;
 
     @Column(name = "mrgid_eez")
-    @ColumnAliasName(aliasName = "mrgidEez")
     private Long mrgidEez;
 
     public EezEntity() {

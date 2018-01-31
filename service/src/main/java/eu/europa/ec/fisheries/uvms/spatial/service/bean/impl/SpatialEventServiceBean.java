@@ -27,6 +27,7 @@ import eu.europa.ec.fisheries.uvms.spatial.message.event.GetAreaTypeNamesEvent;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.GetClosestAreaEvent;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.GetClosestLocationEvent;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.GetFilterAreaEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.GetGeometryByPortCodeEvent;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.GetMapConfigurationEvent;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.GetSpatialEnrichmentEvent;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.PingEvent;
@@ -39,14 +40,18 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByCodeRequest;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByCodeResponse;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaExtendedIdentifierType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GeometryByPortCodeRequest;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GeometryByPortCodeResponse;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Location;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.PingRS;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialDeleteMapConfigurationRS;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRS;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialGetMapConfigurationRS;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveOrUpdateMapConfigurationRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.UnitType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.MapConfigService;
@@ -83,7 +88,7 @@ public class SpatialEventServiceBean implements SpatialEventService {
     public void getAreaByLocation(@Observes @GetAreaByLocationEvent SpatialMessageEvent message) {
         log.info("Getting area by location.");
         try {
-            List<AreaExtendedIdentifierType> areaTypesByLocation = spatialService.getAreasByPoint(message.getAreaByLocationSpatialRQ());
+            List<AreaExtendedIdentifierType> areaTypesByLocation = areaService.getAreasByPoint(message.getAreaByLocationSpatialRQ());
             log.debug("Send back areaByLocation response.");
             messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapAreaByLocationResponse(areaTypesByLocation), MODULE_NAME);
         } catch (Exception e) {
@@ -112,7 +117,12 @@ public class SpatialEventServiceBean implements SpatialEventService {
     public void getClosestArea(@Observes @GetClosestAreaEvent SpatialMessageEvent message) {
         log.info("Getting closest area.");
         try {
-            List<Area> closestAreas = spatialService.getClosestArea(message.getClosestAreaSpatialRQ());
+            ClosestAreaSpatialRQ request = message.getClosestAreaSpatialRQ();
+            Double lat = request.getPoint().getLatitude();
+            Double lon = request.getPoint().getLongitude();
+            Integer crs = request.getPoint().getCrs();
+            UnitType unit = request.getUnit();
+            List<Area> closestAreas = areaService.getClosestArea(lon, lat, crs, unit);
             log.debug("Send back closestAreas response.");
             messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapClosestAreaResponse(closestAreas), MODULE_NAME);
         } catch (Exception e) {
@@ -124,7 +134,7 @@ public class SpatialEventServiceBean implements SpatialEventService {
     public void getClosestLocation(@Observes @GetClosestLocationEvent SpatialMessageEvent message) {
         log.info("Getting closest locations.");
         try {
-            List<Location> closestLocations = spatialService.getClosestPointToPointByType(message.getClosestLocationSpatialRQ());
+            List<Location> closestLocations = areaService.getClosestPointByPoint(message.getClosestLocationSpatialRQ());
             log.debug("Send back closest locations response.");
             messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapClosestLocationResponse(closestLocations), MODULE_NAME);
         } catch (Exception e) {
@@ -138,7 +148,7 @@ public class SpatialEventServiceBean implements SpatialEventService {
         try {
             AreaByCodeRequest areaByCodeRequest = message.getAreaByCodeRequest();
             List<AreaSimpleType> areaSimples = areaByCodeRequest.getAreaSimples();
-            List<AreaSimpleType> areaSimpleTypeList = areaService.byCode(areaSimples);
+            List<AreaSimpleType> areaSimpleTypeList = areaService.getAreasByCode(areaSimples);
 
             AreaByCodeResponse areaByCodeRes = new AreaByCodeResponse();
             areaByCodeRes.setAreaSimples(areaSimpleTypeList);
@@ -181,7 +191,7 @@ public class SpatialEventServiceBean implements SpatialEventService {
         log.info("Getting Filter Areas");
         try {
             FilterAreasSpatialRQ filterAreaSpatialRQ = message.getFilterAreasSpatialRQ();
-            FilterAreasSpatialRS filterAreasSpatialRS = spatialService.computeAreaFilter(filterAreaSpatialRQ);
+            FilterAreasSpatialRS filterAreasSpatialRS = areaService.computeAreaFilter(filterAreaSpatialRQ);
             log.debug("Send back filtered Areas");
             messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapFilterAreasResponse(filterAreasSpatialRS), MODULE_NAME);
         } catch (Exception e) {
@@ -224,6 +234,26 @@ public class SpatialEventServiceBean implements SpatialEventService {
             messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapPingResponse(pingRS), MODULE_NAME);
         } catch (Exception e) {
             log.error("[ Error when responding to ping. ] ", e);
+            sendError(message, e);
+        }
+    }
+
+
+    @Override
+    public void getGeometryForPortCode(@Observes @GetGeometryByPortCodeEvent SpatialMessageEvent message) {
+        log.info("Getting area by code");
+        try {
+            GeometryByPortCodeRequest geometryByPortCodeRequest = message.getGeometryByPortCodeRequest();
+            String portCode=geometryByPortCodeRequest.getPortCode();
+            String geometry= areaService.getGeometryForPort(portCode);
+
+            GeometryByPortCodeResponse geometryByPortCodeResponse = new GeometryByPortCodeResponse();
+            geometryByPortCodeResponse.setPortGeometry(geometry);
+
+            messageProducer.sendModuleResponseMessage(message.getMessage(), SpatialModuleResponseMapper.mapGeometryByPortCodeResponse(geometryByPortCodeResponse), MODULE_NAME);
+
+        } catch (Exception e) {
+            log.error("[ Error when responding to area by code. ] ", e);
             sendError(message, e);
         }
     }

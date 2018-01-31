@@ -8,30 +8,19 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+package eu.europa.ec.fisheries.uvms.spatial.message.event;
 
+import javax.inject.Qualifier;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-package eu.europa.ec.fisheries.uvms.spatial.service.entity;
-
-import eu.europa.ec.fisheries.uvms.BaseUnitilsTest;
-import org.junit.Test;
-
-
-public class ServiceLayerEntityTest extends BaseUnitilsTest {
-
-    @Test
-    public void testToString()
-    {
-
-        ServiceLayerEntity serviceLayerEntity = new ServiceLayerEntity();
-        serviceLayerEntity.setGeoName("geom");
-        serviceLayerEntity.setIsInternal(true);
-
-
-        AreaLocationTypesEntity areaLocationTypesEntity = new AreaLocationTypesEntity();
-        areaLocationTypesEntity.setServiceLayer(serviceLayerEntity);
-        serviceLayerEntity.setAreaType(areaLocationTypesEntity);
-        System.out.printf(serviceLayerEntity.toString());
-
-        serviceLayerEntity.equals(serviceLayerEntity);
-    }
+/**
+ * Created by sanera on 23/11/2017.
+ */
+@Qualifier
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE})
+public @interface GetGeometryByPortCodeEvent {
 }

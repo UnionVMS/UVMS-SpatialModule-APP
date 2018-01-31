@@ -10,6 +10,12 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.impl;
 
+import javax.ejb.EJB;
+import javax.ejb.Local;
+import javax.ejb.Stateless;
+import javax.transaction.Transactional;
+import java.util.List;
+
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Area;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
@@ -24,22 +30,17 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Location;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRS;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialEnrichmentService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialService;
 import lombok.extern.slf4j.Slf4j;
-import javax.ejb.EJB;
-import javax.ejb.Local;
-import javax.ejb.Stateless;
-import javax.transaction.Transactional;
-import java.util.List;
 
 @Stateless
 @Local(SpatialEnrichmentService.class)
 @Slf4j
 public class SpatialEnrichmentServiceBean implements SpatialEnrichmentService {
 
-    private @EJB
-    SpatialService spatialService;
+    @EJB
+    private AreaService areaService;
 
     @Override
     @Transactional(Transactional.TxType.REQUIRES_NEW)
@@ -47,7 +48,7 @@ public class SpatialEnrichmentServiceBean implements SpatialEnrichmentService {
 
         AreaByLocationSpatialRQ areaByLocationSpatialRQ = new AreaByLocationSpatialRQ();
         areaByLocationSpatialRQ.setPoint(request.getPoint());
-        List<AreaExtendedIdentifierType> areaTypesByLocation = spatialService.getAreasByPoint(areaByLocationSpatialRQ);
+        List<AreaExtendedIdentifierType> areaTypesByLocation = areaService.getAreasByPoint(areaByLocationSpatialRQ);
 
         List<AreaType> areaTypes = request.getAreaTypes().getAreaTypes();
         ClosestAreaSpatialRQ closestAreaSpatialRQ = new ClosestAreaSpatialRQ();
@@ -57,7 +58,7 @@ public class SpatialEnrichmentServiceBean implements SpatialEnrichmentService {
         closestAreaSpatialRQ.setUnit(request.getUnit());
         closestAreaSpatialRQ.setPoint(request.getPoint());
 
-        List<Area> closestAreas = spatialService.getClosestArea(closestAreaSpatialRQ);
+        List<Area> closestAreas = areaService.getClosestArea(request.getPoint().getLongitude(), request.getPoint().getLatitude(), 3857, request.getUnit());
 
         List<LocationType> locationTypes = request.getLocationTypes().getLocationTypes();
         ClosestLocationSpatialRQ closestLocationSpatialRQ = new ClosestLocationSpatialRQ();
@@ -67,7 +68,7 @@ public class SpatialEnrichmentServiceBean implements SpatialEnrichmentService {
         locationTp.getLocationTypes().addAll(locationTypes);
         closestLocationSpatialRQ.setLocationTypes(locationTp);
 
-        List<Location> closestLocations = spatialService.getClosestPointToPointByType(closestLocationSpatialRQ);
+        List<Location> closestLocations = areaService.getClosestPointByPoint(closestLocationSpatialRQ);
 
         SpatialEnrichmentRS response = new SpatialEnrichmentRS();
 

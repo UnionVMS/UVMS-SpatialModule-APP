@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.vividsolutions.jts.geom.MultiPoint;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
@@ -29,6 +30,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.ProjectionDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.ServiceLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.UserAreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTypesEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.BaseAreaEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.BookmarkEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.CountryEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.PortEntity;
@@ -41,13 +43,17 @@ import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity;
 
 public interface SpatialRepository {
 
+    List closestPointByPoint(List<AreaLocationTypesEntity> typeEntities, DatabaseDialect spatialFunction, Point incomingPoint);
+
+    BaseAreaEntity findAreaById(Long id, AreaType type) throws ServiceException;
+
     List<AreaLayerDto> findSystemAreaLayerMapping();
 
     List<AreaLayerDto> findSystemAreaAndLocationLayerMapping();
 
     List<UserAreaLayerDto> findUserAreaLayerMapping();
 
-    List<Map<String, String>> findSelectedAreaColumns(String namedQueryString, List<Long> gids);
+    List<Map<String, Object>> getAreasByIds(String namedQueryString, List<Long> gids);
 
     List<ProjectionDto> findProjectionByMap(long reportId);
 
@@ -101,7 +107,7 @@ public interface SpatialRepository {
 
     AreaLocationTypesEntity findAreaLocationTypeByTypeName(String typeName) throws ServiceException;
 
-    List<AreaLocationTypesEntity> findAllIsPointIsSystemWide(Boolean isLocation, Boolean isSystemWide) throws ServiceException;
+    List<AreaLocationTypesEntity> findByIsLocationAndIsSystemWide(Boolean isLocation, Boolean isSystemWide) throws ServiceException;
 
     List<AreaLocationTypesEntity> findAllIsLocation(Boolean isLocation) throws ServiceException;
 
@@ -121,13 +127,9 @@ public interface SpatialRepository {
 
     UserAreasEntity save(UserAreasEntity userAreasEntity) throws ServiceException;
 
-    UserAreasEntity update(UserAreasEntity userAreasEntity) throws ServiceException;
+    List closestAreaByPoint(List<AreaLocationTypesEntity> entities, DatabaseDialect spatialFunction, Point point);
 
-    List closestArea(List<AreaLocationTypesEntity> entities, DatabaseDialect spatialFunction, Point point);
-
-    List closestPoint(List<AreaLocationTypesEntity> typeEntities, DatabaseDialect spatialFunction, Point incomingPoint);
-
-    List intersectingArea( List<AreaLocationTypesEntity> entities, DatabaseDialect spatialFunction, Point point);
+    List intersectingArea(List<AreaLocationTypesEntity> entities, DatabaseDialect spatialFunction, Point point);
 
     List<AreaLocationTypesEntity> listAllArea() throws ServiceException;
 
@@ -177,6 +179,8 @@ public interface SpatialRepository {
     Boolean isOracle();
 
     Integer mapEpsgToSRID(Integer epsg);
+
+    MultiPoint generatePoints(String wkt, Integer points);
 
     void deleteReportConnectServiceAreas(List<Long> spatialConnectIds) throws ServiceException;
 }

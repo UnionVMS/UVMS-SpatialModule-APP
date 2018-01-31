@@ -9,34 +9,20 @@ details. You should have received a copy of the GNU General Public License along
 
  */
 
-
 package eu.europa.ec.fisheries.uvms.spatial.rest.dto;
 
 import javax.validation.constraints.NotNull;
+
+import lombok.Data;
 import org.hibernate.validator.constraints.NotEmpty;
 
+@Data
 public class AreaCoordinateType extends GeoCoordinateType {
 
-	@NotNull
 	@NotEmpty
 	private String areaType;
 	
 	@NotNull
 	private Boolean isGeom = false;
-	
-	public String getAreaType() {
-		return areaType;
-	}
 
-	public void setAreaType(String areaType) {
-		this.areaType = areaType;
-	}
-
-	public Boolean getIsGeom() {
-		return isGeom;
-	}
-
-	public void setIsGeom(Boolean isGeom) {
-		this.isGeom = isGeom;
-	}
 }

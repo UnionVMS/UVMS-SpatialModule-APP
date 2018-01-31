@@ -12,6 +12,12 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.dao.util;
 
+import javax.persistence.EntityManager;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.AbstractAreaDao;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.EezDao;
@@ -23,11 +29,6 @@ import eu.europa.ec.fisheries.uvms.spatial.service.dao.PortDao;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.RfmoDao;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.StatRectDao;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.UserAreaDao;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import javax.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -60,6 +61,7 @@ public class DAOFactory {
 
     }
 
+    @Deprecated
     public static AbstractAreaDao getAbstractSpatialDao(final EntityManager em, final String name) throws ServiceException {
 
         AbstractAreaDao dao;

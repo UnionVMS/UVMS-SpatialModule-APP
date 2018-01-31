@@ -16,6 +16,8 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.vividsolutions.jts.geom.MultiPoint;
+
 public abstract class UtilsDao {
 
     Map<Integer, Integer> SRID_EPSG_MAP = Collections.synchronizedMap(new LinkedHashMap() {
@@ -43,4 +45,12 @@ public abstract class UtilsDao {
     public abstract Integer mapDefaultSRIDToEPSG(Integer srid);
 
     public abstract Integer mapEPSGtoDefaultSRID(Integer epsg);
+
+    /**
+     * Converts a polygon or multi-polygon into a multi-point composed of randomly location points within the original areas.
+     * @param wkt
+     * @return
+     */
+    public abstract MultiPoint generatePoints(String wkt, Integer numberOfPoints);
+
 }

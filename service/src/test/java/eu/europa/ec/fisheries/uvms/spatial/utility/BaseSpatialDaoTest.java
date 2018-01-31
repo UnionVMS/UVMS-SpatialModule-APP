@@ -10,13 +10,12 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.utility;
 
-import com.ninja_squad.dbsetup.operation.Operation;
-import eu.europa.ec.fisheries.uvms.BaseDAOTest;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.FaoEntity;
-
 import static com.ninja_squad.dbsetup.Operations.deleteAllFrom;
 import static com.ninja_squad.dbsetup.Operations.insertInto;
 import static com.ninja_squad.dbsetup.Operations.sequenceOf;
+
+import com.ninja_squad.dbsetup.operation.Operation;
+import eu.europa.ec.fisheries.uvms.BaseDAOTest;
 
 public abstract class BaseSpatialDaoTest extends BaseDAOTest {
 
@@ -101,8 +100,8 @@ public abstract class BaseSpatialDaoTest extends BaseDAOTest {
                             "106.867924148 -9.16467987999994)))", "N", "disabled").build());
 
     protected static final Operation INSERT_FAO_REFERENCE_DATA = sequenceOf(insertInto("spatial.fao").
-            columns("ENABLED", "GID", FaoEntity.OCEAN, FaoEntity.ELE_LABEL, FaoEntity.AREA_L, FaoEntity.F_AREA, FaoEntity.DIVISION_L, FaoEntity.DIVISION_N, FaoEntity.F_LABEL)
-            .values("Y", 1L,  FaoEntity.OCEAN, FaoEntity.ELE_LABEL, FaoEntity.AREA_L, FaoEntity.F_AREA, FaoEntity.DIVISION_L, FaoEntity.DIVISION_N, FaoEntity.F_LABEL)
+            columns("ENABLED", "GID", "ocean", "ele_name", "area_l", "f_area", "division_l", "division_n")
+         .values("Y", 1L,  "", "", "", "", "division_l","division_n")
             .build());
 
     protected static final Operation INSERT_USER_AREA_REFERENCE_DATA = sequenceOf(

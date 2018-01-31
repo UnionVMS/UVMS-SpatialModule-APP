@@ -8,13 +8,9 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
+
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
-import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialEnrichmentService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialService;
-import lombok.extern.slf4j.Slf4j;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -23,24 +19,45 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
+import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Area;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaExtendedIdentifierType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreasByLocationType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreasType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestLocationSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestLocationSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestLocationsType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Location;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.UnitType;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialEnrichmentService;
+import lombok.extern.slf4j.Slf4j;
+
 /**
- * This class is a resource to call services exposed tru the JMS channel
+ * @implicitParam roleName|string|header|true||||||
+ * @implicitParam scopeName|string|header|true|EC|||||
+ * @implicitParam authorization|string|header|true||||||jwt token
  */
-@Path("/xml")
 @Slf4j
 public class XMLResource {
 
     private @EJB SpatialEnrichmentService enrichmentService;
-    private @EJB SpatialService spatialService;
+    private @EJB AreaService areaService;
 
     @POST
     @Produces(value = {MediaType.APPLICATION_XML})
     @Consumes(value = {MediaType.APPLICATION_XML})
     @Path("/enrichment")
     public SpatialEnrichmentRS spatialEnrichment(SpatialEnrichmentRQ request) throws ServiceException {
-
         return enrichmentService.getSpatialEnrichment(request);
-
     }
 
     @POST
@@ -48,9 +65,7 @@ public class XMLResource {
     @Consumes(value = {MediaType.APPLICATION_XML})
     @Path("/filter-areas")
     public FilterAreasSpatialRS computeAreaFilter(FilterAreasSpatialRQ request) throws ServiceException {
-
-        return spatialService.computeAreaFilter(request);
-
+        return areaService.computeAreaFilter(request);
     }
 
     @POST
@@ -60,7 +75,7 @@ public class XMLResource {
     public AreaByLocationSpatialRS getAreasByPoint(AreaByLocationSpatialRQ request) throws ServiceException {
 
         AreaByLocationSpatialRS response = new AreaByLocationSpatialRS();
-        List<AreaExtendedIdentifierType> areaTypesByLocation = spatialService.getAreasByPoint(request);
+        List<AreaExtendedIdentifierType> areaTypesByLocation = areaService.getAreasByPoint(request);
 
         if(areaTypesByLocation != null){
             AreasByLocationType areasByLocationType = new AreasByLocationType();
@@ -79,7 +94,11 @@ public class XMLResource {
     public ClosestAreaSpatialRS getClosestAreasToPointByType(ClosestAreaSpatialRQ request) throws ServiceException {
 
         ClosestAreaSpatialRS response = new ClosestAreaSpatialRS();
-        List<Area> closestAreas = spatialService.getClosestArea(request);
+        Double lat = request.getPoint().getLatitude();
+        Double lon = request.getPoint().getLongitude();
+        Integer crs = request.getPoint().getCrs();
+        UnitType unit = request.getUnit();
+        List<Area> closestAreas = areaService.getClosestArea(lon, lat, crs, unit);
 
         if (closestAreas != null) {
             ClosestAreasType closestAreasType = new ClosestAreasType();
@@ -98,7 +117,7 @@ public class XMLResource {
     public ClosestLocationSpatialRS getClosestPointToPointByType(ClosestLocationSpatialRQ request) throws ServiceException {
 
         ClosestLocationSpatialRS response = new ClosestLocationSpatialRS();
-        List<Location> closestLocations = spatialService.getClosestPointToPointByType(request);
+        List<Location> closestLocations = areaService.getClosestPointByPoint(request);
 
         if (closestLocations != null){
             ClosestLocationsType locationType = new ClosestLocationsType();
