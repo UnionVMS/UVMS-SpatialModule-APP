@@ -48,6 +48,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DatabaseDialectFacto
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson.UserAreaGeoJsonDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.UserAreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.exception.DataSetNotFoundException;
 import eu.europa.ec.fisheries.uvms.spatial.service.exception.SpatialServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.UserAreaMapper;
 import eu.europa.ec.fisheries.uvms.user.model.exception.ModelMarshallException;
@@ -99,11 +100,11 @@ public class UserAreaServiceBean implements UserAreaService {
             String newDataSetName = dto.getDatasetName();
             String oldDataSetName = userAreaToBeUpdated.getDatasetName();
             if (newDataSetName == null) {
-                spatialUSMServiceBean.deleteDataSetNameFromUSM(oldDataSetName, APPLICATION_NAME, USERAREA.value() + DELIMITER + userAreaToBeUpdated.getId());
+                tryToDeleteDatasetFromUSM(userAreaToBeUpdated, oldDataSetName);
             }
             else if (!newDataSetName.equals(oldDataSetName)) {
                 if (dataSetNameUnique(newDataSetName)){
-                    spatialUSMServiceBean.deleteDataSetNameFromUSM(oldDataSetName, APPLICATION_NAME, USERAREA.value() + DELIMITER + userAreaToBeUpdated.getId());
+                    tryToDeleteDatasetFromUSM(userAreaToBeUpdated, oldDataSetName);
                     spatialUSMServiceBean.persistDataSetInUSM(newDataSetName, USERAREA.value() + DELIMITER + userAreaToBeUpdated.getId());
                 }
                 else {
@@ -116,6 +117,14 @@ public class UserAreaServiceBean implements UserAreaService {
             throw new SpatialServiceException(INTERNAL_APPLICATION_ERROR);
         }
         return userAreaToBeUpdated.getId();
+    }
+
+    private void tryToDeleteDatasetFromUSM(UserAreasEntity userAreaToBeUpdated, String oldDataSetName) {
+        try {
+            spatialUSMServiceBean.deleteDataSetNameFromUSM(oldDataSetName, APPLICATION_NAME, USERAREA.value() + DELIMITER + userAreaToBeUpdated.getId());
+        } catch (DataSetNotFoundException e) {
+            log.warn(e.getMessage(), e);
+        }
     }
 
     @Override
@@ -185,8 +194,8 @@ public class UserAreaServiceBean implements UserAreaService {
                 spatialUSMServiceBean.deleteDataSetNameFromUSM(userAreaById.getDatasetName(),
                         APPLICATION_NAME, USERAREA.value() + DELIMITER + userAreaById.getId());
             }
-        } catch (ModelMarshallException | SpatialModelMapperException | MessageException e) {
-            throw new SpatialServiceException(INTERNAL_APPLICATION_ERROR);
+        } catch (DataSetNotFoundException e) {
+            log.warn("DATA SET NOT FOUND IN USM", e);
         }
         repository.deleteUserArea(userAreaById);
     }
