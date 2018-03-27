@@ -10,5 +10,5 @@
 
 package eu.europa.ec.fisheries.uvms.spatial.service.exception;
 
-public class DataSetNotFountException extends Throwable {
+public class DataSetNotFoundException extends Exception {
 }

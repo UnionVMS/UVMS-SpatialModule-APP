@@ -28,8 +28,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMapperExc
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMarshallException;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelValidationException;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.USMSpatial;
-import eu.europa.ec.fisheries.uvms.spatial.service.exception.SpatialServiceErrors;
-import eu.europa.ec.fisheries.uvms.spatial.service.exception.SpatialServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.service.exception.DataSetNotFoundException;
 import eu.europa.ec.fisheries.uvms.user.model.exception.ModelMarshallException;
 import eu.europa.ec.fisheries.uvms.user.model.mapper.UserModuleRequestMapper;
 import eu.europa.ec.fisheries.wsdl.user.module.CreateDatasetResponse;
@@ -78,33 +77,30 @@ public class SpatialUserServiceBean {
         mapToCreateDatasetResponse(message, correlationId);
     }
 
-    private String mapToDeleteDataSetResponse(TextMessage response, String correlationId) throws SpatialModelMapperException {
-        try {
-            validateResponse(response, correlationId);
-            DeleteDatasetResponse deleteDatasetResponse = JAXBUtils.unMarshallMessage(response.getText(), DeleteDatasetResponse.class);
-            return deleteDatasetResponse.getResponse();
-        } catch (JMSException | JAXBException e) {
-            log.error(ERROR_WHEN_MARSHALLING_DATA, e);
-            throw new SpatialModelMarshallException(ERROR_WHEN_MARSHALLING_OBJECT_TO_STRING, e);
-        }
-    }
-
-    public String deleteDataSetNameFromUSM(String previousDataSetName, String applicationName, String discriminator) throws ModelMarshallException, MessageException, SpatialModelMapperException {
+    public String deleteDataSetNameFromUSM(String previousDataSetName, String applicationName, String discriminator) throws DataSetNotFoundException {
         String result = NOK;
         if (StringUtils.isNotBlank(previousDataSetName)) {
             DatasetExtension extension = new DatasetExtension();
             extension.setName(previousDataSetName);
             extension.setDiscriminator(discriminator);
             extension.setApplicationName(applicationName);
-            String request = UserModuleRequestMapper.mapToDeleteDatasetRequest(extension);
-            String correlationId = userProducer.sendModuleMessage(request, consumer.getDestination());
-            TextMessage message = consumer.getMessage(correlationId, TextMessage.class);
-            result = mapToDeleteDataSetResponse(message, correlationId);
+
+            try {
+                String request = UserModuleRequestMapper.mapToDeleteDatasetRequest(extension);
+                String correlationId = userProducer.sendModuleMessage(request, consumer.getDestination());
+                TextMessage message = consumer.getMessage(correlationId, TextMessage.class, 4000L);
+                validateResponse(message, correlationId);
+                DeleteDatasetResponse deleteDatasetResponse = JAXBUtils.unMarshallMessage(message.getText(), DeleteDatasetResponse.class);
+                return deleteDatasetResponse.getResponse();
+            }
+            catch (MessageException e){
+                log.warn(e.getMessage(), e);
+                throw new DataSetNotFoundException();
+            } catch (SpatialModelMapperException | JMSException | JAXBException | ModelMarshallException e) {
+                log.error(e.getMessage(), e);
+            }
         }
 
-        if (result.equals(NOK)) {
-            throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
-        }
         return result;
     }
 
