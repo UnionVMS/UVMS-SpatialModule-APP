@@ -39,6 +39,7 @@ import eu.europa.ec.fisheries.uvms.commons.rest.constants.ErrorCodes;
 import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.commons.service.interceptor.ValidationInterceptor;
+import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialFeaturesEnum;
@@ -51,7 +52,10 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.UserAreaService;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.UserAreaUpdateDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson.UserAreaGeoJsonDto;
+import eu.europa.ec.fisheries.wsdl.user.types.ContextSet;
+import eu.europa.ec.fisheries.wsdl.user.types.UserContext;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
@@ -68,6 +72,9 @@ import org.opengis.feature.simple.SimpleFeatureType;
 @Slf4j
 @Stateless
 public class UserAreaResource extends UnionVMSResource {
+
+    @EJB
+    private USMService usmService;
 
     @EJB
     private UserAreaService userAreaService;
@@ -106,15 +113,49 @@ public class UserAreaResource extends UnionVMSResource {
                 return createErrorResponse("user_area_dataset_creation_not_allowed");
             }
 
-            if (userAreaGeoJsonDto.getScopeSelection() != null && !userAreaGeoJsonDto.getScopeSelection().isEmpty() && !servletRequest.isUserInRole("SHARE_USER_DEFINED_AREAS")) {
+            List<String> scopeSelection = userAreaGeoJsonDto.getScopeSelection();
+
+            if (isAllowedToShareScopes(userName, scopeSelection)) {
+                long gid = userAreaService.createUserArea(userAreaGeoJsonDto, userName);
+                return createSuccessResponse(gid);
+            }
+            else {
                 return createErrorResponse("user_area_sharing_not_allowed");
             }
-
-            long gid = userAreaService.createUserArea(userAreaGeoJsonDto, userName);
-            return createSuccessResponse(gid);
-        } else {
-            return createErrorResponse("user_areas_management_not_allowed");
         }
+
+        return createErrorResponse("user_areas_management_not_allowed");
+
+    }
+
+    private Boolean isAllowedToShareScopes(String userName, List<String> scopeSelection) throws ServiceException {
+
+        Boolean isAllowedToShareScopes = false;
+
+        if (CollectionUtils.isEmpty(scopeSelection)){
+            isAllowedToShareScopes = true;
+        }
+
+        else if (servletRequest.isUserInRole("SHARE_USER_DEFINED_AREAS")) {
+
+            UserContext usmApplication = usmService.getFullUserContext(userName, servletRequest.getServletContext().getInitParameter("usmApplication"));
+
+            ContextSet contextSet = usmApplication.getContextSet();
+
+            List<eu.europa.ec.fisheries.wsdl.user.types.Context> contexts = contextSet.getContexts();
+
+            List<String> userScopes = new ArrayList<>();
+
+            if (CollectionUtils.isNotEmpty(contexts)){
+                for (eu.europa.ec.fisheries.wsdl.user.types.Context context : contexts) {
+                    userScopes.add(context.getScope().getScopeName());
+                }
+            }
+
+            isAllowedToShareScopes = CollectionUtils.containsAny(userScopes, scopeSelection);
+
+        }
+        return isAllowedToShareScopes;
     }
 
     @PUT
@@ -131,15 +172,18 @@ public class UserAreaResource extends UnionVMSResource {
                 return createErrorResponse("user_area_dataset_creation_not_allowed");
             }
 
-            if (userAreaGeoJsonDto.getScopeSelection() != null && !userAreaGeoJsonDto.getScopeSelection().isEmpty() && !servletRequest.isUserInRole(SpatialFeaturesEnum.SHARE_USER_DEFINED_AREAS.toString())) {
+            List<String> scopeSelection = userAreaGeoJsonDto.getScopeSelection();
+            boolean isPowerUser = isPowerUser(servletRequest);
+
+            if (isAllowedToShareScopes(userName, scopeSelection)) {
+                long gid = userAreaService.updateUserArea(userAreaGeoJsonDto, servletRequest.getRemoteUser(), isPowerUser, scopeName);
+                log.info("{} is requesting updateUserArea(...), with a ID={}. Spatial power user: {}", userName, Long.toString(userAreaGeoJsonDto.getId()), isPowerUser);
+                return createSuccessResponse(gid);
+            }
+            else {
                 return createErrorResponse("user_area_sharing_not_allowed");
             }
 
-            boolean isPowerUser = isPowerUser(servletRequest);
-            log.info("{} is requesting updateUserArea(...), with a ID={}. Spatial power user: {}", userName, Long.toString(userAreaGeoJsonDto.getId()), isPowerUser);
-
-            long gid = userAreaService.updateUserArea(userAreaGeoJsonDto, servletRequest.getRemoteUser(), isPowerUser, scopeName);
-            return createSuccessResponse(gid);
         } else {
             return createErrorResponse("user_areas_management_not_allowed");
         }
