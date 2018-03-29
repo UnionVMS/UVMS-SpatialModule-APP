@@ -16,15 +16,9 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static junitparams.JUnitParamsRunner.$;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.ninja_squad.dbsetup.DbSetup;
 import com.ninja_squad.dbsetup.destination.DataSourceDestination;
 import com.ninja_squad.dbsetup.operation.Operation;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DAOFactory;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.PostGres;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTypesEntity;
@@ -33,6 +27,9 @@ import eu.europa.ec.fisheries.uvms.spatial.service.entity.EezEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.FaoEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.PortAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.utility.BaseSpatialDaoTest;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import lombok.SneakyThrows;
@@ -103,36 +100,6 @@ public class AbstractAreaDaoTest extends BaseSpatialDaoTest {
         dbSetupTracker.skipNextLaunch();
         List list = DAOFactory.getAbstractSpatialDao(em, "EEZ").closestArea(null, null, null);
         assertTrue(list.isEmpty());
-    }
-
-    @Test
-    @SneakyThrows
-    public void testGetNameAndCode(){
-        dbSetupTracker.skipNextLaunch();
-        List<AreaTypeEntry> areaTypeEntries = new ArrayList<>();
-        AreaTypeEntry eez = new AreaTypeEntry();
-        eez.setId("1");
-        eez.setAreaType(AreaType.EEZ);
-        areaTypeEntries.add(eez);
-        AreaTypeEntry country = new AreaTypeEntry();
-        country.setId("1");
-        country.setAreaType(AreaType.COUNTRY);
-        areaTypeEntries.add(country);
-
-        List<AreaLocationTypesEntity> locationTypesEntities = new ArrayList<>();
-
-        AreaLocationTypesEntity entity = new AreaLocationTypesEntity();
-        entity.setTypeName("EEZ");
-        entity.setAreaDbTable("eez");
-        locationTypesEntities.add(entity);
-
-        AreaLocationTypesEntity entity1 = new AreaLocationTypesEntity();
-        entity1.setTypeName("COUNTRY");
-        entity1.setAreaDbTable("countries");
-        locationTypesEntities.add(entity1);
-
-        List list = DAOFactory.getAbstractSpatialDao(em, "EEZ").getNameAndCode(locationTypesEntities, areaTypeEntries);
-        Assert.assertEquals(2, list.size());
     }
 
 

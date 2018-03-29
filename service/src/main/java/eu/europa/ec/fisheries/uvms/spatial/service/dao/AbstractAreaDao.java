@@ -12,24 +12,20 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.dao;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.commons.service.dao.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.commons.service.dao.QueryParameter;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DatabaseDialect;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadMappingProperty;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.BaseAreaEntity;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.hibernate.Query;
@@ -139,17 +135,12 @@ public abstract class AbstractAreaDao<E extends BaseAreaEntity> extends Abstract
     }
 
     public List<E> byCode(List<AreaSimpleType> areaSimpleTypeList) throws ServiceException {
-
         if (areaSimpleTypeList == null || areaSimpleTypeList.isEmpty()) {
             throw new IllegalArgumentException("LIST CAN NOT BE EMPTY OR NULL");
         }
-
         final StringBuilder sb = new StringBuilder();
-
         List resultList;
-
         Iterator<AreaSimpleType> iterator = areaSimpleTypeList.iterator();
-
         while (iterator.hasNext()) {
             AreaSimpleType next = iterator.next();
             sb.append("SELECT '")
@@ -163,9 +154,7 @@ public abstract class AbstractAreaDao<E extends BaseAreaEntity> extends Abstract
                 sb.append(UNION_ALL);
             }
         }
-
         log.debug(QUERY, sb.toString());
-
         final javax.persistence.Query emNativeQuery = getEntityManager().createNativeQuery(sb.toString());
         emNativeQuery.unwrap(SQLQuery.class)
                 .addScalar("type", StringType.INSTANCE)
@@ -173,40 +162,6 @@ public abstract class AbstractAreaDao<E extends BaseAreaEntity> extends Abstract
                 .addScalar(GEOM, org.hibernate.spatial.GeometryType.INSTANCE);
 
         resultList = emNativeQuery.getResultList();
-
-        return resultList;
-    }
-
-
-    public List getNameAndCode(final List<AreaLocationTypesEntity> entities, List<AreaTypeEntry> areaTypes) {
-
-        List resultList;
-        final StringBuilder sb = new StringBuilder();
-        Iterator<AreaTypeEntry> it = areaTypes.iterator();
-
-        Map<String, AreaLocationTypesEntity> typesEntityMap = new HashMap<>();
-        for(AreaLocationTypesEntity entity : entities){
-            typesEntityMap.put(entity.getTypeName(), entity);
-        }
-
-        while (it.hasNext()) {
-            AreaTypeEntry next = it.next();
-            AreaType areaType = next.getAreaType();
-            Long id = Long.valueOf(next.getId());
-            sb.append("(SELECT '").append(areaType.value()).append("' as type, area.name AS name, area.code AS code FROM spatial."
-                    + typesEntityMap.get(areaType.value()).getAreaDbTable() + " AS area WHERE area.gid = " + id + ")");
-            it.remove(); // avoids a ConcurrentModificationException
-            if (it.hasNext()) {
-                sb.append(UNION_ALL);
-            }
-        }
-
-        log.debug(QUERY, sb.toString());
-
-        final javax.persistence.Query emNativeQuery = getEntityManager().createNativeQuery(sb.toString());
-        emNativeQuery.unwrap(SQLQuery.class).addScalar("type", StringType.INSTANCE).addScalar("name", StringType.INSTANCE).addScalar("code", StringType.INSTANCE);
-        resultList = emNativeQuery.getResultList();
-
         return resultList;
     }
 
@@ -219,17 +174,12 @@ public abstract class AbstractAreaDao<E extends BaseAreaEntity> extends Abstract
 
     // FIXME duplicated functionality with AreaServeBean getClosestPointByPoint
     public List<BaseAreaEntity> closestPoint(final List<AreaLocationTypesEntity> entities, final DatabaseDialect spatialFunction, final Point point){
-
         List resultList = new ArrayList();
-
         if (spatialFunction != null && CollectionUtils.isNotEmpty(entities) && (point != null && !point.isEmpty())) {
-
             final StringBuilder sb = new StringBuilder();
             final Double longitude = point.getX();
             final Double latitude = point.getY();
-
             Iterator<AreaLocationTypesEntity> it = entities.iterator();
-
             while (it.hasNext()) {
                 AreaLocationTypesEntity next = it.next();
                 String typeName = next.getTypeName();
@@ -239,29 +189,22 @@ public abstract class AbstractAreaDao<E extends BaseAreaEntity> extends Abstract
                     sb.append(UNION_ALL);
                 }
             }
-
             log.debug(QUERY, spatialFunction.getClass().getSimpleName().toUpperCase(), sb.toString());
-
             final javax.persistence.Query emNativeQuery = getEntityManager().createNativeQuery(sb.toString());
             emNativeQuery.unwrap(SQLQuery.class).addScalar("type", StringType.INSTANCE).addScalar(GID, IntegerType.INSTANCE)
                     .addScalar(CODE, StringType.INSTANCE).addScalar(NAME, StringType.INSTANCE).addScalar(GEOM, GeometryType.INSTANCE)
                     .addScalar("distance", DoubleType.INSTANCE);
-
             resultList = emNativeQuery.getResultList();
         }
         return resultList;
     }
 
     public List<BaseAreaEntity> closestArea(final List<AreaLocationTypesEntity> entities, final DatabaseDialect dialect, final Point point){
-
         List resultList = new ArrayList();
-
         if (dialect != null && CollectionUtils.isNotEmpty(entities) && (point != null && !point.isEmpty())) {
-
             final StringBuilder sb = new StringBuilder();
             final Double longitude = point.getX();
             final Double latitude = point.getY();
-
             Iterator<AreaLocationTypesEntity> it = entities.iterator();
             sb.append(dialect.closestAreaToPointPrefix());
             int index = 0;
@@ -276,42 +219,29 @@ public abstract class AbstractAreaDao<E extends BaseAreaEntity> extends Abstract
                     sb.append(UNION_ALL);
                 }
             }
-
             sb.append(dialect.closestAreaToPointSuffix());
-
             log.debug(QUERY, dialect.getClass().getSimpleName().toUpperCase(), sb.toString());
-
             javax.persistence.Query emNativeQuery = getEntityManager().createNativeQuery(sb.toString());
-
             emNativeQuery.unwrap(SQLQuery.class)
                     .addScalar(TYPE, StandardBasicTypes.STRING)
                     .addScalar(GID, StandardBasicTypes.INTEGER)
                     .addScalar(CODE, StandardBasicTypes.STRING)
                     .addScalar(NAME, StandardBasicTypes.STRING)
                     .addScalar(CLOSEST, org.hibernate.spatial.GeometryType.INSTANCE);
-
             resultList = emNativeQuery.getResultList();
         }
-
         return resultList;
-
     }
 
     public List<BaseAreaEntity> intersectingArea(final List<AreaLocationTypesEntity> entities, final DatabaseDialect dialect, final Point point){
-
         List resultList = new ArrayList();
         int index = 1;
-
         if (dialect != null && CollectionUtils.isNotEmpty(entities) && (point != null && !point.isEmpty())) {
-
             final StringBuilder sb = new StringBuilder();
             final Double longitude = point.getX();
             final Double latitude = point.getY();
-
             Iterator<AreaLocationTypesEntity> it = entities.iterator();
-
             sb.append("select * from  (");
-
             while (it.hasNext()) {
                 AreaLocationTypesEntity next = it.next();
                 final String areaDbTable = next.getAreaDbTable();
@@ -325,20 +255,14 @@ public abstract class AbstractAreaDao<E extends BaseAreaEntity> extends Abstract
                     sb.append(UNION_ALL);
                 }
             }
-
-
             sb.append(") a ORDER BY indexRS, gid ASC ");
-
             log.debug(QUERY, dialect.getClass().getSimpleName().toUpperCase(), sb.toString());
-
             javax.persistence.Query emNativeQuery = getEntityManager().createNativeQuery(sb.toString());
-
             emNativeQuery.unwrap(SQLQuery.class)
                     .addScalar(TYPE, StandardBasicTypes.STRING)
                     .addScalar(GID, StandardBasicTypes.INTEGER)
                     .addScalar(CODE, StandardBasicTypes.STRING)
                     .addScalar(NAME, StandardBasicTypes.STRING);
-
             resultList = emNativeQuery.getResultList();
         }
 
