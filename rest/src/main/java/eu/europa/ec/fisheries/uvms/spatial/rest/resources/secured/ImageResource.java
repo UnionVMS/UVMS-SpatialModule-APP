@@ -14,6 +14,7 @@ package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
+import javax.ejb.EJB;
 import javax.interceptor.Interceptors;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.POST;
@@ -34,6 +35,7 @@ import eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured.LegendResour
 import eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured.PositionResource;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ImageEncoderFactory;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.impl.PropertiesBean;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.mapfish.request.Class;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.mapfish.request.Cluster;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.mapfish.request.Icons;
@@ -53,6 +55,9 @@ public class ImageResource extends UnionVMSResource {
     public static final String SCALE_1_3 = "scale(1.3)";
     public static final String SCALE_0_3 = "scale(0.3)";
 
+    @EJB
+    private PropertiesBean propertiesBean;
+
     @Path("/position")
     @Produces(MediaType.APPLICATION_JSON)
     public Response listPositionEntryKeys() throws IOException {
@@ -65,7 +70,7 @@ public class ImageResource extends UnionVMSResource {
     public Response renderImages(@Context HttpServletRequest request, Icons payload) throws ServiceException {
 
         ImageResponse response = new ImageResponse();
-        response.getLegend().withBase("/spatial/image/legend/");
+        response.getLegend().withBase("/" + propertiesBean.getProperty("context.root") + "/spatial/image/legend/");
 
         if (payload.getPositions() != null){
             handlePositions(payload, response);
@@ -107,7 +112,7 @@ public class ImageResource extends UnionVMSResource {
 
     private void handlePositions(Icons payload, ImageResponse response) throws ServiceException {
         try {
-            response.getMap().getVmspos().withBase("/spatial/image/position/");
+            response.getMap().getVmspos().withBase("/" + propertiesBean.getProperty("context.root") + "/spatial/image/position/");
             List<ImageEncoderFactory.LegendEntry> temp = new ArrayList<>();
 
             for (Class clazz : payload.getPositions().getClasses()) { // TODO validate hex value
