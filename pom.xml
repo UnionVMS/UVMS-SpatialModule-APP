@@ -29,7 +29,6 @@
         <asset.model.version>4.0.0</asset.model.version>
         <movement.model.version>4.0.9</movement.model.version>
         <application.name>${project.parent.artifactId}</application.name>
-        <context.root>{$context.root}</context.root>
         <application.version>${project.parent.version}</application.version>
         <application.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}.log</application.logfile>
         <application.error.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}-error.log</application.error.logfile>
