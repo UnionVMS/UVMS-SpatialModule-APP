@@ -53,8 +53,6 @@ public interface AreaService {
 
     Map<String, Object> getAreaById(@NotNull Long id, @NotNull AreaType areaType) throws ServiceException;
 
-    Map<String, Object> getClosestPointByPoint(@NotNull Double longitude, @NotNull Double latitude, @NotNull Integer crs) throws ServiceException;
-
     List<Area> getClosestArea(@NotNull Double longitude, @NotNull Double latitude, @NotNull Integer crs, @NotNull UnitType unit) throws ServiceException;
 
     List<AreaExtendedIdentifierType> getAreasByPoint(AreaByLocationSpatialRQ request) throws ServiceException;

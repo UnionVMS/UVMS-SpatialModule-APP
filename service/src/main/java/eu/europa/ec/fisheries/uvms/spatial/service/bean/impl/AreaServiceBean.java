@@ -355,7 +355,7 @@ public class AreaServiceBean implements AreaService {
         return simpleTypeList;
     }
 
-    @Override// Fixme duplicated method
+    @Override
     public List<Location> getClosestPointByPoint(final ClosestLocationSpatialRQ request) throws ServiceException {
 
         Double lat = request.getPoint().getLatitude();
@@ -369,13 +369,14 @@ public class AreaServiceBean implements AreaService {
         Map<String, Location> distancePerTypeMap = new HashMap<>();
         MeasurementUnit measurementUnit = MeasurementUnit.getMeasurement(unit.name());
         GeodeticCalculator calc = new GeodeticCalculator(GeometryUtils.toDefaultCoordinateReferenceSystem());
-        List<AreaLocationTypesEntity> typeEntities = repository.findByIsLocationAndIsSystemWide(true, true);
+        List<AreaLocationTypesEntity> typeEntities = repository.findByIsLocationAndIsSystemWide(true, true); // Can thi query be avoided?
 
         List records = repository.closestPointByPoint(typeEntities, databaseDialect, incoming);
 
         for (Object record : records) {
             Object[] result = (Object[]) record;
-            Point centroid = ((Geometry) result[4]).getCentroid();
+            Geometry geometry = (Geometry) result[4];
+            Point centroid = geometry.getCentroid();
             calc.setStartingGeographicPoint(centroid.getX(), centroid.getY());
             calc.setDestinationGeographicPoint(incomingLongitude, incomingLatitude);
             Double orthodromicDistance = calc.getOrthodromicDistance();
@@ -387,39 +388,23 @@ public class AreaServiceBean implements AreaService {
                     closest = new Location();
                 }
                 closest.setDistance(orthodromicDistance);
-                closest.setId(result[1].toString());
+                closest.setCentroid(centroid.toText());
+                closest.setExtent(GeometryMapper.INSTANCE.geometryToWkt(geometry.getEnvelope()).getValue());
+                String id = result[1].toString();
+                closest.setId(id);
+                closest.setGid(id);
                 closest.setDistance(orthodromicDistance / measurementUnit.getRatio());
                 closest.setUnit(unit);
+                closest.setEnabled(true);
+                closest.setWkt(GeometryMapper.INSTANCE.geometryToWkt(geometry).getValue());
                 closest.setCode(result[2].toString());
                 closest.setName(result[3].toString());
                 closest.setLocationType(LocationType.fromValue(type));
                 distancePerTypeMap.put(type, closest);
+                // TODO enrich with MDR LOCATION LISt DATA
             }
         }
         return new ArrayList<>(distancePerTypeMap.values());
-    }
-
-    @Override
-    public Map<String, Object> getClosestPointByPoint(@NotNull Double longitude, @NotNull Double latitude, @NotNull Integer crs) throws ServiceException {
-        Point point = (Point) GeometryUtils.toGeographic(latitude, longitude, crs);
-        GeodeticCalculator calc = new GeodeticCalculator(GeometryUtils.toDefaultCoordinateReferenceSystem());
-        List<PortEntity> records = repository.listClosestPorts(point, 5);
-        Double closestDistance = Double.MAX_VALUE;
-        PortEntity match = null;
-        for (PortEntity portsEntity : records) {
-            Geometry geometry = portsEntity.getGeom();
-            Point centroid = geometry.getCentroid();
-            calc.setStartingGeographicPoint(centroid.getX(), centroid.getY());
-            calc.setDestinationGeographicPoint(point.getX(), point.getY());
-            Double orthodromicDistance = calc.getOrthodromicDistance();
-            if (closestDistance > orthodromicDistance) {
-                closestDistance = orthodromicDistance;
-                match = portsEntity;
-            }
-        }
-        ObjectMapper objectMapper = new ObjectMapper();
-        Map map = objectMapper.convertValue(match, Map.class);
-        return map;
     }
 
     @Override

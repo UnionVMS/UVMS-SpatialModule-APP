@@ -32,6 +32,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import eu.europa.ec.fisheries.uvms.commons.geometry.mapper.GeometryMapper;
 import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
@@ -39,9 +40,24 @@ import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.commons.service.interceptor.ValidationInterceptor;
 import eu.europa.ec.fisheries.uvms.constants.AuthConstants;
 import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Area;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaExtendedIdentifierType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreasByLocationType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreasType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestLocationSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestLocationSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestLocationsType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Location;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.PointType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.UnitType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaCoordinateType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaFilterType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.LocationQueryDto;
@@ -124,26 +140,37 @@ public class AreaResource extends UnionVMSResource {
     @Produces({MediaType.APPLICATION_JSON})
     @Interceptors(value = {ExceptionInterceptor.class})
     @Path("/location/details")
-    public Response getLocationDetails(LocationQueryDto query) throws ServiceException {
+    public Response getLocationByPointOrById(LocationQueryDto query) throws ServiceException {
         try {
             String id = query.getId();
             Boolean isGeom = query.getIsGeom();
             String locationType = query.getLocationType();
             Integer crs = query.getCrs();
-            String gid = query.getGid();
             Double latitude = query.getLatitude();
             Double longitude = query.getLongitude();
 
             Map<String, Object> locationDetails;
-
             if (id != null){
                 locationDetails = areaService.getAreaById(Long.valueOf(id), AreaType.valueOf(locationType));
             }
 
             else {
-                locationDetails = areaService.getClosestPointByPoint(longitude, latitude, crs);
+                ClosestLocationSpatialRQ closestLocationSpatialRQ = new ClosestLocationSpatialRQ();
+                ClosestLocationSpatialRQ.LocationTypes locationTypes = new ClosestLocationSpatialRQ.LocationTypes();
+                locationTypes.getLocationTypes().add(LocationType.PORT);
+                closestLocationSpatialRQ.setLocationTypes(locationTypes);
+                PointType pointType = new PointType();
+                pointType.setCrs(crs);
+                pointType.setLatitude(latitude);
+                pointType.setLongitude(longitude);
+                closestLocationSpatialRQ.setPoint(pointType);
+                closestLocationSpatialRQ.setUnit(UnitType.NAUTICAL_MILES);
+                List<Location> closestPointByPoint = areaService.getClosestPointByPoint(closestLocationSpatialRQ);
+                Location location = closestPointByPoint.get(0);
+                ObjectMapper oMapper = new ObjectMapper();
+                locationDetails = oMapper.convertValue(location, Map.class);
+
             }
-            //LocationTypeEntry locationTypeEntry = mapper.getLocationTypeEntry(query);
             if (!isGeom) {
                 return createSuccessResponse(locationDetails);
             }
@@ -159,6 +186,25 @@ public class AreaResource extends UnionVMSResource {
         } catch (ServiceException  | IOException e) {
             throw new ServiceException(e.getMessage(), e);
         }
+    }
+
+    @POST
+    @Produces(value = {MediaType.APPLICATION_XML})
+    @Consumes(value = {MediaType.APPLICATION_XML})
+    @Path("/location/details")
+    public ClosestLocationSpatialRS getLocationByPoint(ClosestLocationSpatialRQ request) throws ServiceException {
+
+        ClosestLocationSpatialRS response = new ClosestLocationSpatialRS();
+        List<Location> closestLocations = areaService.getClosestPointByPoint(request);
+
+        if (closestLocations != null){
+            ClosestLocationsType locationType = new ClosestLocationsType();
+            locationType.getClosestLocations().addAll(closestLocations);
+            response.setClosestLocations(locationType);
+        }
+
+        return response;
+
     }
 
     @POST
@@ -203,7 +249,7 @@ public class AreaResource extends UnionVMSResource {
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/details")
     @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
-    public Response getAreaDetails(AreaCoordinateType areaDto) throws ServiceException {
+    public Response getAreasByPointOrById(AreaCoordinateType areaDto) throws ServiceException {
         Response response;
         StringWriter writer = new StringWriter();
         try {
@@ -233,6 +279,44 @@ public class AreaResource extends UnionVMSResource {
             throw new ServiceException(e.getMessage(), e);
         }
 
+        return response;
+    }
+
+    @POST
+    @Produces(value = {MediaType.APPLICATION_XML})
+    @Consumes(value = {MediaType.APPLICATION_XML})
+    @Path("/details")
+    public AreaByLocationSpatialRS getAreasByPoint(AreaByLocationSpatialRQ request) throws ServiceException {
+
+        AreaByLocationSpatialRS response = new AreaByLocationSpatialRS();
+        List<AreaExtendedIdentifierType> areaTypesByLocation = areaService.getAreasByPoint(request);
+
+        if(areaTypesByLocation != null){
+            AreasByLocationType areasByLocationType = new AreasByLocationType();
+            areasByLocationType.getAreas().addAll(areaTypesByLocation);
+            response.setAreasByLocation(areasByLocationType);
+        }
+
+        return response;
+
+    }
+
+    @POST
+    @Produces(value = {MediaType.APPLICATION_XML})
+    @Consumes(value = {MediaType.APPLICATION_XML})
+    @Path("/closest")
+    public ClosestAreaSpatialRS getClosestAreasToPointByType(ClosestAreaSpatialRQ request) throws ServiceException {
+        ClosestAreaSpatialRS response = new ClosestAreaSpatialRS();
+        Double lat = request.getPoint().getLatitude();
+        Double lon = request.getPoint().getLongitude();
+        Integer crs = request.getPoint().getCrs();
+        UnitType unit = request.getUnit();
+        List<Area> closestAreas = areaService.getClosestArea(lon, lat, crs, unit);
+        if (closestAreas != null) {
+            ClosestAreasType closestAreasType = new ClosestAreasType();
+            closestAreasType.getClosestAreas().addAll(closestAreas);
+            response.setClosestArea(closestAreasType);
+        }
         return response;
     }
 
@@ -333,5 +417,4 @@ public class AreaResource extends UnionVMSResource {
         }
         return createSuccessResponse(areaService.getAreasByCode(request));
     }
-
 }

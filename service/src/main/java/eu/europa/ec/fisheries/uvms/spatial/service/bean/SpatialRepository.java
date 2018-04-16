@@ -45,6 +45,8 @@ public interface SpatialRepository {
 
     List closestPointByPoint(List<AreaLocationTypesEntity> typeEntities, DatabaseDialect spatialFunction, Point incomingPoint);
 
+    List<PortEntity> listClosestPorts(Point point, Integer limit) throws ServiceException;
+
     BaseAreaEntity findAreaById(Long id, AreaType type) throws ServiceException;
 
     List<AreaLayerDto> findSystemAreaLayerMapping();
@@ -136,8 +138,6 @@ public interface SpatialRepository {
     void deleteUserArea(UserAreasEntity userAreaById);
 
     List<UserAreasEntity> findUserAreaByUserNameAndScopeName(String userName, String scopeName) throws ServiceException;
-
-    List<PortEntity> listClosestPorts(Point point, Integer limit) throws ServiceException;
 
     List<CountryEntity> findAllCountries() throws ServiceException;
 

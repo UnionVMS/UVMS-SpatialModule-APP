@@ -354,10 +354,17 @@ public class SpatialRepositoryBean implements SpatialRepository {
         return areaDao.closestArea(entities, spatialFunction, point);
     }
 
-    @Override
+    @Override // FIXME duplicated functionality with method listClosestPorts
     public List closestPointByPoint(List<AreaLocationTypesEntity> entities, DatabaseDialect spatialFunction, Point incomingPoint) {
         return areaDao.closestPoint(entities, spatialFunction, incomingPoint);
     }
+
+    @Override
+    public List<PortEntity> listClosestPorts(final Point point, final Integer limit) throws ServiceException {
+        final Map parameters = QueryParameter.with("shape", point).parameters();
+        return portDao.findEntityByNamedQuery(PortEntity.class, PortEntity.LIST_ORDERED_BY_DISTANCE, parameters, limit);
+    }
+
 
     @Override
     public List intersectingArea(List<AreaLocationTypesEntity> entities, DatabaseDialect spatialFunction, Point point) {
@@ -377,12 +384,6 @@ public class SpatialRepositoryBean implements SpatialRepository {
     @Override
     public List<UserAreasEntity> findUserAreaByUserNameAndScopeName(String userName, String scopeName) throws ServiceException {
         return userAreaDao.findByUserNameAndScopeName(userName, scopeName);
-    }
-
-    @Override
-    public List<PortEntity> listClosestPorts(final Point point, final Integer limit) throws ServiceException {
-        final Map parameters = QueryParameter.with("shape", point).parameters();
-        return portDao.findEntityByNamedQuery(PortEntity.class, PortEntity.LIST_ORDERED_BY_DISTANCE, parameters, limit);
     }
 
     @Override
