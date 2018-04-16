@@ -20,23 +20,14 @@ import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Area;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRS;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaExtendedIdentifierType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreasByLocationType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialRS;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreasType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestLocationSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestLocationSpatialRS;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestLocationsType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRS;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Location;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRS;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.UnitType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialEnrichmentService;
 import lombok.extern.slf4j.Slf4j;
@@ -47,6 +38,7 @@ import lombok.extern.slf4j.Slf4j;
  * @implicitParam authorization|string|header|true||||||jwt token
  */
 @Slf4j
+@Path("/xml")
 public class XMLResource {
 
     private @EJB SpatialEnrichmentService enrichmentService;
@@ -81,48 +73,6 @@ public class XMLResource {
             AreasByLocationType areasByLocationType = new AreasByLocationType();
             areasByLocationType.getAreas().addAll(areaTypesByLocation);
             response.setAreasByLocation(areasByLocationType);
-        }
-
-        return response;
-
-    }
-
-    @POST
-    @Produces(value = {MediaType.APPLICATION_XML})
-    @Consumes(value = {MediaType.APPLICATION_XML})
-    @Path("/closest-areas")
-    public ClosestAreaSpatialRS getClosestAreasToPointByType(ClosestAreaSpatialRQ request) throws ServiceException {
-
-        ClosestAreaSpatialRS response = new ClosestAreaSpatialRS();
-        Double lat = request.getPoint().getLatitude();
-        Double lon = request.getPoint().getLongitude();
-        Integer crs = request.getPoint().getCrs();
-        UnitType unit = request.getUnit();
-        List<Area> closestAreas = areaService.getClosestArea(lon, lat, crs, unit);
-
-        if (closestAreas != null) {
-            ClosestAreasType closestAreasType = new ClosestAreasType();
-            closestAreasType.getClosestAreas().addAll(closestAreas);
-            response.setClosestArea(closestAreasType);
-        }
-
-        return response;
-
-    }
-
-    @POST
-    @Produces(value = {MediaType.APPLICATION_XML})
-    @Consumes(value = {MediaType.APPLICATION_XML})
-    @Path("/closest-locations")
-    public ClosestLocationSpatialRS getClosestPointToPointByType(ClosestLocationSpatialRQ request) throws ServiceException {
-
-        ClosestLocationSpatialRS response = new ClosestLocationSpatialRS();
-        List<Location> closestLocations = areaService.getClosestPointByPoint(request);
-
-        if (closestLocations != null){
-            ClosestLocationsType locationType = new ClosestLocationsType();
-            locationType.getClosestLocations().addAll(closestLocations);
-            response.setClosestLocations(locationType);
         }
 
         return response;

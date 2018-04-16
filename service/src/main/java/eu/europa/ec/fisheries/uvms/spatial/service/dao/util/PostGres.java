@@ -48,28 +48,23 @@ public class PostGres extends AbstractGisFunction {
 
     public String closestAreaToPoint(int index,String typeName, String tableName, Double latitude, Double longitude, Integer limit) {
         StringBuilder sb = new StringBuilder();
-        sb.append("(with subset").append(typeName).append(" AS (select p.* from spatial.").append(tableName).append(" pa join spatial.port p on pa.code = p.code ");
-        sb.append("where ST_DWithin(ST_GeomFromText(CAST ('POINT(").append(longitude).append(" ").append(latitude).append(")' AS TEXT), 4326), pa.geom, 0.1))");
-
         sb.append("(SELECT '").append(typeName).append("' AS type, gid, code, name,");
         sb.append(" ST_ClosestPoint(geom, ST_GeomFromText(CAST ('POINT(").append(longitude).append(" ").append(latitude).append(")' AS TEXT), 4326))" );
         sb.append(" AS closest, ");
-        sb.append(" ST_Distance(geom, ST_GeomFromText(CAST ('POINT(").append(longitude).append(" ").append(latitude).append(")' AS TEXT), 4326), true) as dist ");
-        sb.append(" FROM subset").append(typeName);
-        sb.append(" WHERE enabled = 'Y' ORDER BY dist,gid ");
-        sb.append(" LIMIT ").append(limit).append("))");
+        sb.append(" ST_Distance(geom, ST_GeomFromText(CAST ('POINT(").append(longitude).append(" ").append(latitude).append(")' AS TEXT), 4326),true) as dist ");
+        sb.append(" FROM spatial.").append(tableName);
+        sb.append(" WHERE NOT ST_IsEmpty(geom) AND enabled = 'Y' ORDER BY dist,gid ");
+        sb.append(" LIMIT ").append(limit).append(")");
         return sb.toString();
-
     }
 
     @Override
     public String closestPointToPoint(String typeName, String tableName, Double latitude, Double longitude, Integer limit) {
         StringBuilder sb = new StringBuilder();
-        sb.append("(SELECT '").append(typeName).append("' as type, gid, code, name, geom,");
-        sb.append(" ST_Distance(geom, ST_GeomFromText(CAST ('POINT(").append(longitude).append(" ").append(latitude).append(")' AS TEXT), 4326),true) as distance");
-        sb.append(" FROM spatial.").append(tableName).append(" WHERE enabled = 'Y' AND");
-        sb.append(" ST_DWithin(ST_GeomFromText(CAST ('POINT(").append(longitude).append(" ").append(latitude).append(")' AS TEXT), 4326), geom, 0.1)");
-        sb.append(" ORDER BY gid ASC LIMIT ").append(limit).append(" )");
+        sb.append("(SELECT '").append(typeName).append("' as type, gid, code, name, geom, ");
+        sb.append("ST_Distance(geom, ST_GeomFromText(CAST ('POINT(").append(longitude).append(" ").append(latitude).append(")' AS TEXT), 4326),true) ");
+        sb.append("AS distance FROM spatial.").append(tableName).append(" WHERE enabled = 'Y'");
+        sb.append(" ORDER BY distance,gid ASC LIMIT ").append(limit).append(" )");
         return sb.toString();
     }
 
