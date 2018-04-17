@@ -74,6 +74,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.dao.AbstractAreaDao;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DAOFactory;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DatabaseDialect;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DatabaseDialectFactory;
+import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.Oracle;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.GenericSystemAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.SystemAreaNamesDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadMapping;
@@ -416,23 +417,37 @@ public class AreaServiceBean implements AreaService {
             MeasurementUnit measurementUnit = MeasurementUnit.getMeasurement(unit.name());
             List<AreaLocationTypesEntity> typesEntities = repository.findByIsLocationAndIsSystemWide(false, true);
             List records = repository.closestAreaByPoint(typesEntities, databaseDialect, incoming);
-            for (Object record : records) {
-                Object[] result = (Object[]) record;
-                Geometry geom = (Geometry) result[4];
-                if (geom.isEmpty()){
-                    continue;
-                }
-                com.vividsolutions.jts.geom.Coordinate[] coordinates = nearestPoints(geom, incoming);
-                Double orthodromicDistance = orthodromicDistance(coordinates[0], coordinates[1], GeometryUtils.toDefaultCoordinateReferenceSystem());
-                String type = result[0].toString();
-                Area closest = distancePerTypeMap.get(type);
-                if (closest == null || orthodromicDistance / measurementUnit.getRatio() < closest.getDistance()) {
-                    if (closest == null) {
-                        closest = new Area();
+            if (databaseDialect instanceof Oracle){
+                for (Object record : records) {
+                    Object[] result = (Object[]) record;
+                    Geometry geom = (Geometry) result[4];
+                    if (geom.isEmpty()){
+                        continue;
                     }
-                    closest.setDistance(orthodromicDistance);
+                    com.vividsolutions.jts.geom.Coordinate[] coordinates = nearestPoints(geom, incoming);
+                    Double orthodromicDistance = orthodromicDistance(coordinates[0], coordinates[1], GeometryUtils.toDefaultCoordinateReferenceSystem());
+                    String type = result[0].toString();
+                    Area closest = distancePerTypeMap.get(type);
+                    if (closest == null || orthodromicDistance / measurementUnit.getRatio() < closest.getDistance()) {
+                        if (closest == null) {
+                            closest = new Area();
+                        }
+                        closest.setId(result[1].toString());
+                        closest.setDistance(orthodromicDistance / measurementUnit.getRatio());
+                        closest.setUnit(unit);
+                        closest.setCode(result[2] != null ? result[2].toString() : null);
+                        closest.setName(result[3] != null ? result[3].toString() : null);
+                        closest.setAreaType(AreaType.valueOf(type));
+                        distancePerTypeMap.put(type, closest);
+                    }
+                }
+            } else {
+                for (Object record : records) {
+                    Object[] result = (Object[]) record;
+                    String type = result[0].toString();
+                    Area closest = new Area();
+                    closest.setDistance((Double) result[5] / measurementUnit.getRatio());
                     closest.setId(result[1].toString());
-                    closest.setDistance(orthodromicDistance / measurementUnit.getRatio());
                     closest.setUnit(unit);
                     closest.setCode(result[2] != null ? result[2].toString() : null);
                     closest.setName(result[3] != null ? result[3].toString() : null);
@@ -450,59 +465,44 @@ public class AreaServiceBean implements AreaService {
     @Override
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public FilterAreasSpatialRS computeAreaFilter(final FilterAreasSpatialRQ request) throws ServiceException {
-
         final UserAreasType userAreas = request.getUserAreas();
         final ScopeAreasType scopeAreas = request.getScopeAreas();
         final StringBuilder sb = new StringBuilder();
         final List<AreaLocationTypesEntity> typesEntities = repository.findAllIsLocation(false);
         final Map<String, AreaLocationTypesEntity> typesEntityMap = new HashMap<>();
-
         for (AreaLocationTypesEntity typesEntity : typesEntities){
             typesEntityMap.put(typesEntity.getTypeName(), typesEntity);
         }
-
         buildQuery(scopeAreas.getScopeAreas(), sb, "scope", typesEntityMap);
-
         if (userAreas != null) {
             if (CollectionUtils.isNotEmpty(userAreas.getUserAreas()) && StringUtils.isNotEmpty(sb.toString())) {
                 sb.append(" UNION ALL ");
             }
             buildQuery(userAreas.getUserAreas(), sb, "user", typesEntityMap);
         }
-
         log.debug("{} QUERY => {}", sb.toString());
-
         List records = repository.listBaseAreaList(sb.toString());
-
         final List<Geometry> scopeGeometryList = new ArrayList<>();
         final List<Geometry> userGeometryList = new ArrayList<>();
-
         for (Object record : records) {
             final Object[] result = (Object[]) record;
             final String type = (String) result[0];
             Geometry geometry = (Geometry) result[1];
-
             Integer epsgSRID = repository.mapToEpsgSRID(geometry.getSRID());
-
             if (!isDefaultEpsgSRID(epsgSRID)) {
                 geometry = GeometryUtils.toGeographic(geometry, epsgSRID);
             }
-
             if ("user".equals(type)) {
                 userGeometryList.add(geometry);
             } else {
                 scopeGeometryList.add(geometry);
             }
         }
-
         GeometryFactory geometryFactory = JTSFactoryFinder.getGeometryFactory();
-
         Geometry userUnion = geometryFactory.buildGeometry(userGeometryList).union();
         Geometry scopeUnion = geometryFactory.buildGeometry(scopeGeometryList).union();
-
         FilterAreasSpatialRS response = new FilterAreasSpatialRS(null, 0);
         Geometry intersection = null;
-
         if (!userUnion.isEmpty() && !scopeUnion.isEmpty()) {
             intersection = userUnion.intersection(scopeUnion);
             response.setCode(3);
@@ -517,21 +517,17 @@ public class AreaServiceBean implements AreaService {
             intersection = scopeUnion;
             response.setCode(2);
         }
-
         if (intersection != null) {
             if (intersection.getNumPoints() > 20000) {
                 intersection = DouglasPeuckerSimplifier.simplify(intersection, 0.5);
             }
             response.setGeometry(GeometryMapper.INSTANCE.geometryToWkt(intersection).getValue());
         }
-
         return response;
     }
 
     private void buildQuery(List<AreaIdentifierType> typeList, StringBuilder sb, String type, Map<String, AreaLocationTypesEntity> typesEntityMap ) {
-
         Iterator<AreaIdentifierType> it = typeList.iterator();
-
         while (it.hasNext()) {
             AreaIdentifierType next = it.next();
             final String id = next.getId();
@@ -549,9 +545,7 @@ public class AreaServiceBean implements AreaService {
     @Override
     @Interceptors(ValidationInterceptor.class)
     public List<GenericSystemAreaDto> searchAreasByNameOrCode(@NotNull String areaType, @NotNull String filter) throws ServiceException {
-
         AreaLocationTypesEntity areaLocationType = repository.findAreaLocationTypeByTypeName(areaType.toUpperCase());
-
         final ArrayList<GenericSystemAreaDto> systemAreaByFilterRecords = new ArrayList<>();
         //FIXME use generic dao
         List<BaseAreaEntity> baseEntities = DAOFactory.getAbstractSpatialDao(em, areaLocationType.getTypeName()).searchEntity(filter);
@@ -569,9 +563,7 @@ public class AreaServiceBean implements AreaService {
 
     @Override
     public Map<String, Object> getLocationDetails(final LocationTypeEntry locationTypeEntry) throws ServiceException {
-
         BaseAreaEntity match = null;
-
         GeodeticCalculator calc = new GeodeticCalculator(GeometryUtils.toDefaultCoordinateReferenceSystem());
         String id = locationTypeEntry.getId();
         String locationType = locationTypeEntry.getLocationType();
@@ -601,20 +593,15 @@ public class AreaServiceBean implements AreaService {
             match = areaEntity;
         }
         else {
-
             Point point = (Point) GeometryUtils.toGeographic(incomingLatitude, incomingLongitude, locationTypeEntry.getCrs());
-
             List<PortEntity> records = repository.listClosestPorts(point, 5);
             Double closestDistance = Double.MAX_VALUE;
-
             for (PortEntity portsEntity : records) {
-
-                final Geometry geometry = portsEntity.getGeom();
-                final Point centroid = geometry.getCentroid();
+                Geometry geometry = portsEntity.getGeom();
+                Point centroid = geometry.getCentroid();
                 calc.setStartingGeographicPoint(centroid.getX(), centroid.getY());
                 calc.setDestinationGeographicPoint(point.getX(), point.getY());
                 Double orthodromicDistance = calc.getOrthodromicDistance();
-
                 if (closestDistance > orthodromicDistance) {
                     closestDistance = orthodromicDistance;
                     match = portsEntity;
@@ -625,7 +612,6 @@ public class AreaServiceBean implements AreaService {
         Map map = objectMapper.convertValue(match, Map.class);
         return map;
     }
-
 
     @Override
     public List<SystemAreaNamesDto> searchAreasByCode(String areaType, String filter) throws ServiceException {

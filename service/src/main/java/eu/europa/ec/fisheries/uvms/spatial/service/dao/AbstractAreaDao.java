@@ -18,6 +18,7 @@ import eu.europa.ec.fisheries.uvms.commons.service.dao.QueryParameter;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DatabaseDialect;
+import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.Oracle;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadMappingProperty;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.BaseAreaEntity;
@@ -51,6 +52,7 @@ public abstract class AbstractAreaDao<E extends BaseAreaEntity> extends Abstract
     private static final String TYPE = "type";
     private static final String CLOSEST = "closest";
     private static final String GEOM = "geom";
+    private static final String DISTANCE = "dist";
     private static final String UNION_ALL = " UNION ALL ";
     private static final String QUERY = "{} QUERY => {}";
 
@@ -212,7 +214,7 @@ public abstract class AbstractAreaDao<E extends BaseAreaEntity> extends Abstract
                 AreaLocationTypesEntity next = it.next();
                 final String areaDbTable = next.getAreaDbTable();
                 final String typeName = next.getTypeName();
-                sb.append(dialect.closestAreaToPoint(index,typeName, areaDbTable, latitude, longitude, 10));
+                sb.append(dialect.closestAreaToPoint(index,typeName, areaDbTable, latitude, longitude, dialect instanceof Oracle ? 10 : 1));
                 index++;
                 it.remove(); // avoids a ConcurrentModificationException
                 if (it.hasNext()) {
@@ -227,7 +229,9 @@ public abstract class AbstractAreaDao<E extends BaseAreaEntity> extends Abstract
                     .addScalar(GID, StandardBasicTypes.INTEGER)
                     .addScalar(CODE, StandardBasicTypes.STRING)
                     .addScalar(NAME, StandardBasicTypes.STRING)
-                    .addScalar(CLOSEST, org.hibernate.spatial.GeometryType.INSTANCE);
+                    .addScalar(CLOSEST, org.hibernate.spatial.GeometryType.INSTANCE)
+                    .addScalar(DISTANCE, StandardBasicTypes.DOUBLE);
+
             resultList = emNativeQuery.getResultList();
         }
         return resultList;
