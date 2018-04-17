@@ -46,7 +46,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.UnitType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.impl.AreaServiceBean;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DAOFactory;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DatabaseDialect;
+import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.PostGres;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.BaseAreaEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.EezEntity;
@@ -138,19 +138,20 @@ public class AreaServiceTest extends BaseUnitilsTest {
     @SneakyThrows
     public void testGetClosestArea(){
 
-        Object[][] areas  = new Object[1][5];
+        Object[][] areas  = new Object[1][6];
         areas[0][0] = "EEZ";
         areas[0][1] = 231;
         areas[0][2] = "MAR";
         areas[0][3] = "Moroccan Exclusive Zone";
+        areas[0][5] = 12920292.22;
 
         Point point = (Point) new WKTReader().read("POINT (-75.347781567 89.9794456)");
         point.setSRID(4326);
         areas[0][4] = point;
-        when(repository.closestAreaByPoint(anyListOf(AreaLocationTypesEntity.class), any(DatabaseDialect.class), any(Point.class))).thenReturn(asList(areas));
+        when(repository.closestAreaByPoint(anyListOf(AreaLocationTypesEntity.class), any(PostGres.class), any(Point.class))).thenReturn(asList(areas));
 
         List<Area> closestArea = service.getClosestArea(-75.347781567, 88.9794456, point.getSRID(), UnitType.KILOMETERS);
-        assertEquals(28.24670172230647, closestArea.get(0).getDistance());
+        assertEquals(12920.292220000001, closestArea.get(0).getDistance());
     }
 
     @Test
