@@ -518,6 +518,9 @@ public class MapConfigServiceBean implements MapConfigService {
                 return projectionDtoList.get(0);
             }
         }
+        if(configurationDto.getMapSettings() == null){
+            return null;
+        }
         return getProjection(configurationDto.getMapSettings().getMapProjectionId());
     }
 
