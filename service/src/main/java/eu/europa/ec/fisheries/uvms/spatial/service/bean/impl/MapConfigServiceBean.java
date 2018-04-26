@@ -426,6 +426,11 @@ public class MapConfigServiceBean implements MapConfigService {
 
         String bingApiKey = getBingApiKey();
         List<Long> ids = new ArrayList<>(); // Get All the Ids to query for Service layer all together
+
+        if(layerSettingsDto == null){
+            return;
+        }
+
         ids.addAll(MapConfigHelper.getServiceLayerIds(layerSettingsDto.getAdditionalLayers()));
         ids.addAll(MapConfigHelper.getServiceLayerIds(layerSettingsDto.getBaseLayers()));
         ids.addAll(MapConfigHelper.getServiceLayerIds(layerSettingsDto.getPortLayers()));
