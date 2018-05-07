@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>service</artifactId>
@@ -12,18 +13,18 @@
         <version>1.1.6-SNAPSHOT</version>
     </parent>
 
-	<properties>
+    <properties>
         <docker.dev.start.phase>test-compile</docker.dev.start.phase>
-        <docker.dev.prestop.phase>validate</docker.dev.prestop.phase>                        
-	</properties>
+        <docker.dev.prestop.phase>validate</docker.dev.prestop.phase>
+    </properties>
 
     <dependencies>
 
-		<dependency>
-		    <groupId>com.fasterxml.jackson.core</groupId>
-		    <artifactId>jackson-annotations</artifactId>
-		    <version>2.6.0</version>
-		</dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>2.6.0</version>
+        </dependency>
 
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -31,10 +32,10 @@
         </dependency>
 
         <dependency>
-			<groupId>fish.focus.uvms.maven</groupId>
-			<artifactId>uvms-pom-monitoring-deps</artifactId>
-			<type>pom</type>
-		</dependency>
+            <groupId>fish.focus.uvms.maven</groupId>
+            <artifactId>uvms-pom-monitoring-deps</artifactId>
+            <type>pom</type>
+        </dependency>
 
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.reporting</groupId>
@@ -45,10 +46,10 @@
             <groupId>eu.europa.ec.fisheries.uvms</groupId>
             <artifactId>usm4uvms</artifactId>
             <exclusions>
-            	<exclusion>
-            		<groupId>commons-logging</groupId>
-            		<artifactId>commons-logging</artifactId>
-            	</exclusion>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
 
@@ -71,12 +72,12 @@
             <artifactId>uvms-commons-geometry</artifactId>
             <version>${uvms.commons.version}</version>
             <exclusions>
-				<exclusion>
-					<groupId>com.vividsolutions</groupId>
-					<artifactId>jts</artifactId>
-				</exclusion>
-			</exclusions>			            
-        </dependency>        
+                <exclusion>
+                    <groupId>com.vividsolutions</groupId>
+                    <artifactId>jts</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
             <artifactId>uvms-commons-date</artifactId>
@@ -135,10 +136,10 @@
             <groupId>eu.europa.ec.fisheries.uvms</groupId>
             <artifactId>uvms-test</artifactId>
             <exclusions>
-            	<exclusion>
-            		<groupId>commons-logging</groupId>
-            		<artifactId>commons-logging</artifactId>
-            	</exclusion>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
 
@@ -163,10 +164,10 @@
             <artifactId>xmlgraphics-commons</artifactId>
             <version>1.5</version>
             <exclusions>
-            	<exclusion>
-            		<groupId>commons-logging</groupId>
-            		<artifactId>commons-logging</artifactId>
-            	</exclusion>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
 
@@ -185,11 +186,19 @@
                 <usm_deployment_descriptor_force_update>true</usm_deployment_descriptor_force_update>
             </properties>
         </profile>
- 		
+
     </profiles>
     <build>
 
         <finalName>${project.name}-${project.version}</finalName>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
 
         <plugins>
             <plugin>
@@ -253,7 +262,7 @@
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
-        								<ignore />
+                                        <ignore/>
                                     </action>
                                 </pluginExecution>
                             </pluginExecutions>
