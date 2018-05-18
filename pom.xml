@@ -36,7 +36,7 @@
         <hibernate.version>4.3.11.Final</hibernate.version>
         <hibernate-spatial.version>4.3</hibernate-spatial.version>
         <geotools.version>14.4</geotools.version>
-        <uvms.commons.version>3.0.10</uvms.commons.version>
+        <uvms.commons.version>3.0.20-SNAPSHOT</uvms.commons.version>
         <uvms.test.version>0.0.8</uvms.test.version>
         <hibernate.validator.version>5.2.1.Final</hibernate.validator.version>
         <usm4uvms.version>4.0.11-SNAPSHOT</usm4uvms.version>
@@ -45,7 +45,7 @@
         <maven.scm.provider.version>2.1.1</maven.scm.provider.version>
         <javaee.version>7.0</javaee.version>
         <mapstruct.version>1.2.0.Final</mapstruct.version>
-        <database.dialect>oracle</database.dialect>
+        <database.dialect>postgres</database.dialect>
         <scm.connection>scm:git:https://github.com/UnionVMS/UVMS-SpatialModule-APP.git</scm.connection>
 
     </properties>
@@ -196,12 +196,6 @@
             	<groupId>org.jboss.resteasy</groupId>
 			    <artifactId>resteasy-jaxb-provider</artifactId>
 			  	<version>3.0.11.Final</version>
-			  	<exclusions>
-			  		<exclusion>
-					    <groupId>com.sun.xml.bind</groupId>
-					    <artifactId>jaxb-impl</artifactId>			  		
-			  		</exclusion>
-			  	</exclusions>
 			</dependency>
 			
 			<dependency>
@@ -209,6 +203,18 @@
 			    <artifactId>jaxrs-api</artifactId>
 			    <version>3.0.11.Final</version>
 			</dependency>
+
+            <dependency>
+                <groupId>com.sun.xml.bind</groupId>
+                <artifactId>jaxb-impl</artifactId>
+                <version>2.3.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.sun.xml.bind</groupId>
+                <artifactId>jaxb-core</artifactId>
+                <version>2.3.0</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.mapstruct</groupId>

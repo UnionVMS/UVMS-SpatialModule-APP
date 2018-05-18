@@ -43,6 +43,16 @@
         </dependency>
 
         <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-core</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>eu.europa.ec.fisheries.uvms</groupId>
             <artifactId>usm4uvms</artifactId>
             <exclusions>
@@ -192,7 +202,6 @@
 
         <finalName>${project.name}-${project.version}</finalName>
 
-        <!--
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -200,7 +209,6 @@
             </resource>
         </resources>
 
--->
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
