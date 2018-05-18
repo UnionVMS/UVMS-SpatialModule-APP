@@ -39,6 +39,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialModuleMethod;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialModuleRequest;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.UnitType;
 import lombok.SneakyThrows;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -46,6 +47,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
+@Ignore
 public class SpatialEventMDBTest extends BaseUnitilsTest {
 
     private static final double LATITUDE = 45.11557, LONGITUDE = -7.14925;
