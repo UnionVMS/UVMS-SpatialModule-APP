@@ -10,13 +10,12 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured;
 
-import eu.europa.ec.fisheries.uvms.spatial.rest.constants.RestConstants;
-import eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured.LegendResource;
-import eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured.PositionResource;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 import java.util.HashSet;
 import java.util.Set;
+
+import eu.europa.ec.fisheries.uvms.spatial.rest.constants.RestConstants;
 
 @ApplicationPath(RestConstants.IMAGE_URL)
 public class RestActivator extends Application  {

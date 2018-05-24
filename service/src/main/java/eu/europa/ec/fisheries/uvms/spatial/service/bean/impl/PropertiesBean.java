@@ -10,7 +10,6 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.impl;
 
-import lombok.extern.slf4j.Slf4j;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ejb.EJBException;
@@ -19,6 +18,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Stateless
 @Slf4j
@@ -38,6 +39,15 @@ public class PropertiesBean {
             props = new Properties();
 
             props.load(propsStream);
+
+            propsStream.close();
+
+            InputStream propsStream2 =
+                    PropertiesBean.class.getResourceAsStream("/logging.properties");
+
+            props.load(propsStream2);
+            propsStream2.close();
+
         } catch (IOException e) {
             throw new EJBException("PropertiesBean initialization error", e);
         }
