@@ -10,8 +10,6 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured;
 
-import lombok.extern.slf4j.Slf4j;
-
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
@@ -24,6 +22,8 @@ import java.io.OutputStream;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Path("/alarm")
 @SuppressWarnings("unchecked")
