@@ -19,16 +19,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.oracle</groupId>
-    		<artifactId>ojdbc6</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>com.github.lonnyj</groupId>
             <artifactId>liquibase-spatial</artifactId>
         </dependency>
@@ -51,6 +41,12 @@
                 <db.changeLogFile>changelog/db-changelog-master.xml</db.changeLogFile>
                 <db.outputFile>changelog/generatedChangelog.xml</db.outputFile>
             </properties>
+			<dependencies>
+				<dependency>
+					<groupId>com.oracle</groupId>
+					<artifactId>ojdbc6</artifactId>
+				</dependency>
+			</dependencies>
         </profile>
         
         <profile>
@@ -67,6 +63,12 @@
                 <db.changeLogFile>changelog/db-changelog-master.xml</db.changeLogFile>
                 <db.outputFile>changelog/generatedChangelog.xml</db.outputFile>
             </properties>
+			<dependencies>
+				<dependency>
+					<groupId>org.postgresql</groupId>
+					<artifactId>postgresql</artifactId>
+				</dependency>
+			</dependencies>
         </profile>
 
         <profile>
