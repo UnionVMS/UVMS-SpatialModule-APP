@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>fish.focus.uvms.maven</groupId>
 		<artifactId>uvms-pom</artifactId>
-		<version>1.17</version>
+		<version>1.18</version>
 	</parent>
 
     <groupId>eu.europa.ec.fisheries.uvms.spatial</groupId>
@@ -36,7 +36,7 @@
         <hibernate.version>4.3.11.Final</hibernate.version>
         <hibernate-spatial.version>4.3</hibernate-spatial.version>
         <geotools.version>14.4</geotools.version>
-        <uvms.commons.version>3.0.20</uvms.commons.version>
+        <uvms.commons.version>3.0.22</uvms.commons.version>
         <uvms.test.version>0.0.8</uvms.test.version>
         <hibernate.validator.version>5.2.1.Final</hibernate.validator.version>
         <usm4uvms.version>4.0.11</usm4uvms.version>
@@ -62,7 +62,7 @@
 			<dependency>
 				<groupId>fish.focus.uvms.maven</groupId>
 				<artifactId>uvms-pom-monitoring-deps</artifactId>
-				<version>1.14</version>
+				<version>1.18</version>
 				<type>pom</type>
 			</dependency>
 
@@ -380,7 +380,7 @@
 		            <plugin>
 		                <groupId>org.apache.maven.plugins</groupId>
 		                <artifactId>maven-surefire-plugin</artifactId>
-		                <configuration>
+                        <configuration>
 		                    <excludes>
 		                        <exclude>**/*ITest.java</exclude>
 		                    </excludes>
