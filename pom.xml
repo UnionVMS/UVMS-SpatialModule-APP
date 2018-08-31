@@ -134,12 +134,6 @@
                 <artifactId>movement-model</artifactId>
                 <version>${movement.model.version}</version>
             </dependency>
-
-            <dependency>
-                <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
-                <artifactId>asset-model</artifactId>
-                <version>${asset.model.version}</version>
-            </dependency>
             
 	        <dependency>
 				<groupId>org.hibernate</groupId>
