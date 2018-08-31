@@ -11,18 +11,7 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.message.event;
 
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AllAreaTypesRequest;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByCodeRequest;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreaSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestLocationSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GeometryByPortCodeRequest;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.PingRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialDeleteMapConfigurationRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialGetMapConfigurationRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialSaveOrUpdateMapConfigurationRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 
 import javax.jms.TextMessage;
 
@@ -32,6 +21,7 @@ public class SpatialMessageEvent {
     private AreaByLocationSpatialRQ areaByLocationSpatialRQ;
     private ClosestAreaSpatialRQ closestAreaSpatialRQ;
     private SpatialEnrichmentRQ spatialEnrichmentRQ;
+    private BatchSpatialEnrichmentRQ spatialBatchEnrichmentRQ;
     private AllAreaTypesRequest allAreaTypesRequest;
     private ClosestLocationSpatialRQ closestLocationSpatialRQ;
     private FilterAreasSpatialRQ filterAreasSpatialRQ;
@@ -102,6 +92,11 @@ public class SpatialMessageEvent {
         this.geometryByPortCodeRequest = geometryByPortCodeRequest;
     }
 
+    public SpatialMessageEvent(TextMessage textMessage, BatchSpatialEnrichmentRQ spatialBatchEnrichmentRQ) {
+        this.message = textMessage;
+        this.spatialBatchEnrichmentRQ = spatialBatchEnrichmentRQ;
+    }
+
     public TextMessage getMessage() {
         return message;
     }
@@ -116,6 +111,10 @@ public class SpatialMessageEvent {
 
     public SpatialEnrichmentRQ getSpatialEnrichmentRQ() {
         return spatialEnrichmentRQ;
+    }
+
+    public BatchSpatialEnrichmentRQ getSpatialBatchEnrichmentRQ() {
+        return spatialBatchEnrichmentRQ;
     }
 
     public ClosestLocationSpatialRQ getClosestLocationSpatialRQ() {
@@ -147,7 +146,6 @@ public class SpatialMessageEvent {
     }
 
     public AreaByCodeRequest getAreaByCodeRequest() {
-
         return areaByCodeRequest;
     }
 
