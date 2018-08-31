@@ -94,7 +94,7 @@ import org.hibernate.annotations.Where;
         @NamedQuery(name = UserAreasEntity.FIND_GID_FOR_SHARED_AREA,
                 query = "SELECT area.id FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection WHERE (area.userName <> :userName AND area.type = :type AND scopeSelection.name = :scopeName)"),
         @NamedQuery(name = UserAreasEntity.FIND_BY_USERNAME_AND_NAME,
-                query = "FROM UserAreasEntity WHERE userName = :userName AND name = :name)"),
+                query = "FROM UserAreasEntity WHERE userName = :userName AND name = :name"),
         @NamedQuery(name = UserAreasEntity.DISABLE, query = "UPDATE UserAreasEntity SET enabled = 'N'"),
         @NamedQuery(name = UserAreasEntity.BY_INTERSECT, query = "FROM UserAreasEntity WHERE intersects(geom, :shape) = true AND enabled = 'Y'"),
         @NamedQuery(name = UserAreasEntity.SEARCH_USERAREA, query = "FROM UserAreasEntity where (upper(name) like :name OR upper(code) like :code) AND enabled='Y' GROUP BY gid"),
