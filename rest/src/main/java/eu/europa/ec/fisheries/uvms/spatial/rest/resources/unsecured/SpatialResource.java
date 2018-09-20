@@ -54,23 +54,23 @@ public class SpatialResource {
     @Path("getAreaByLocation")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-        public Response getAreaByLocation(String json) throws IOException {
+        public Response getAreaByLocation(String json)  {
 
-        PointType point = MAPPER.readValue(json, PointType.class);
-
-        AreaByLocationSpatialRQ areaByLocationSpatialRQ = new AreaByLocationSpatialRQ();
-        areaByLocationSpatialRQ.setPoint(point);
-        areaByLocationSpatialRQ.setMethod(SpatialModuleMethod.GET_AREA_BY_LOCATION);
 
         try {
+            PointType point = MAPPER.readValue(json, PointType.class);
+            AreaByLocationSpatialRQ areaByLocationSpatialRQ = new AreaByLocationSpatialRQ();
+            areaByLocationSpatialRQ.setPoint(point);
+            areaByLocationSpatialRQ.setMethod(SpatialModuleMethod.GET_AREA_BY_LOCATION);
             List<AreaExtendedIdentifierType> response = areaService.getAreasByPoint(areaByLocationSpatialRQ);
             return Response.ok(response).build();
-        } catch (ServiceException  e) {
+        } catch (ServiceException | IOException e) {
             log.error(e.toString(),e);
             return Response.status(500).build();
         }
     }
 
+    /* TO BE DONE
     @POST
     @Path("getAreaTypes")
     public Response getAreaTypes(AllAreaTypesRequest allAreaTypesRequest) {
@@ -83,12 +83,16 @@ public class SpatialResource {
             return Response.status(500).build();
         }
     }
+    */
 
     @POST
     @Path("getClosestArea")
-    public Response getClosestArea(ClosestAreaSpatialRQ request) {
+    public Response getClosestArea(String json)  {
+
+
 
         try {
+            ClosestAreaSpatialRQ request = MAPPER.readValue(json, ClosestAreaSpatialRQ.class);
             Double lat = request.getPoint().getLatitude();
             Double lon = request.getPoint().getLongitude();
             Integer crs = request.getPoint().getCrs();
@@ -101,11 +105,13 @@ public class SpatialResource {
         }
     }
 
+
     @POST
     @Path("getClosestLocation")
-    public Response getClosestLocation(ClosestLocationSpatialRQ closestLocationSpatialRQ) {
+    public Response getClosestLocation(String json) {
 
         try {
+            ClosestLocationSpatialRQ closestLocationSpatialRQ   = MAPPER.readValue(json, ClosestLocationSpatialRQ.class);
             List<Location> response = areaService.getClosestPointByPoint(closestLocationSpatialRQ);
             return Response.ok(response).build();
         } catch (Exception e) {
@@ -114,11 +120,15 @@ public class SpatialResource {
         }
     }
 
+
+
+
     @POST
     @Path("getEnrichment")
-    public Response getEnrichment(SpatialEnrichmentRQ spatialEnrichmentRQ) {
+    public Response getEnrichment(String json) {
 
         try {
+            SpatialEnrichmentRQ spatialEnrichmentRQ  = MAPPER.readValue(json, SpatialEnrichmentRQ.class);
             SpatialEnrichmentRS response = enrichmentService.getSpatialEnrichment(spatialEnrichmentRQ);
             return Response.ok(response).build();
         } catch (Exception e) {
@@ -127,11 +137,13 @@ public class SpatialResource {
         }
     }
 
+
     @POST
     @Path("getEnrichmentBatch")
-    public Response getEnrichmentBatch(BatchSpatialEnrichmentRQ batchSpatialEnrichmentRQ) throws ServiceException {
+    public Response getEnrichmentBatch(String json){
 
         try {
+            BatchSpatialEnrichmentRQ batchSpatialEnrichmentRQ =  MAPPER.readValue(json, BatchSpatialEnrichmentRQ.class);
             BatchSpatialEnrichmentRS response = enrichmentService.getBatchSpatialEnrichment(batchSpatialEnrichmentRQ);
             return Response.ok(response).build();
         } catch (Exception e) {
@@ -142,9 +154,10 @@ public class SpatialResource {
 
     @POST
     @Path("getFilterArea")
-    public Response getFilterArea(FilterAreasSpatialRQ filterAreasSpatialRQ) {
+    public Response getFilterArea(String json) {
 
         try {
+            FilterAreasSpatialRQ filterAreasSpatialRQ =  MAPPER.readValue(json, FilterAreasSpatialRQ.class);
             FilterAreasSpatialRS response = areaService.computeAreaFilter(filterAreasSpatialRQ);
             return Response.ok(response).build();
         } catch (Exception e) {
@@ -152,6 +165,9 @@ public class SpatialResource {
             return Response.status(500).build();
         }
     }
+
+
+    /*
 
     @POST
     @Path("getMapConfiguration")
@@ -165,6 +181,8 @@ public class SpatialResource {
             return Response.status(500).build();
         }
     }
+    */
+    /*
 
     @POST
     @Path("saveOrUpdateMapConfiguration")
@@ -178,6 +196,8 @@ public class SpatialResource {
             return Response.status(500).build();
         }
     }
+    */
+    /*
 
     @POST
     @Path("deleteMapConfiguration")
@@ -193,12 +213,15 @@ public class SpatialResource {
         }
     }
 
+        */
+
+
+
     @GET
     @Path("ping")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response ping() {
-//        public Response ping(PingRQ pingRQ) {
 
         try {
             return Response.ok("pong").build();
@@ -207,6 +230,8 @@ public class SpatialResource {
             return Response.status(500).build();
         }
     }
+
+    /*
 
     @POST
     @Path("getAreaByCode")
@@ -223,6 +248,8 @@ public class SpatialResource {
             return Response.status(500).build();
         }
     }
+    */
+    /*
 
     @POST
     @Path("getGeometryByPortCode")
@@ -239,4 +266,5 @@ public class SpatialResource {
             return Response.status(500).build();
         }
     }
+    */
 }
