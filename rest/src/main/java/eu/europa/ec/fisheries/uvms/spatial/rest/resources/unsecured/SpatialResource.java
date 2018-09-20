@@ -1,5 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
@@ -12,6 +14,7 @@ import javax.ejb.EJB;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -23,13 +26,15 @@ import java.util.List;
 
 
 @Path("spatial")
-@Consumes(value = {MediaType.APPLICATION_JSON})
-@Produces(value = {MediaType.APPLICATION_JSON})
 @SuppressWarnings("unchecked")
 @Slf4j
 public class SpatialResource {
 
     private static final String MODULE_NAME = "spatial";
+//    private static final ObjectMapper MAPPER = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).registerModule(new JavaTimeModule());
+    private static final ObjectMapper MAPPER = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+
 
     @EJB
     private SpatialEnrichmentServiceBean enrichmentService;
@@ -47,7 +52,15 @@ public class SpatialResource {
 
     @POST
     @Path("getAreaByLocation")
-    public Response getAreaByLocation(AreaByLocationSpatialRQ areaByLocationSpatialRQ) throws ServiceException {
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
+        public Response getAreaByLocation(String json) throws IOException {
+
+        PointType point = MAPPER.readValue(json, PointType.class);
+
+        AreaByLocationSpatialRQ areaByLocationSpatialRQ = new AreaByLocationSpatialRQ();
+        areaByLocationSpatialRQ.setPoint(point);
+        areaByLocationSpatialRQ.setMethod(SpatialModuleMethod.GET_AREA_BY_LOCATION);
 
         try {
             List<AreaExtendedIdentifierType> response = areaService.getAreasByPoint(areaByLocationSpatialRQ);
@@ -182,6 +195,8 @@ public class SpatialResource {
 
     @GET
     @Path("ping")
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response ping() {
 //        public Response ping(PingRQ pingRQ) {
 
