@@ -64,7 +64,7 @@ public class SpatialResource {
             areaByLocationSpatialRQ.setMethod(SpatialModuleMethod.GET_AREA_BY_LOCATION);
             List<AreaExtendedIdentifierType> response = areaService.getAreasByPoint(areaByLocationSpatialRQ);
             return Response.ok(response).build();
-        } catch (ServiceException | IOException e) {
+        } catch (Exception e) {
             log.error(e.toString(),e);
             return Response.status(500).build();
         }
