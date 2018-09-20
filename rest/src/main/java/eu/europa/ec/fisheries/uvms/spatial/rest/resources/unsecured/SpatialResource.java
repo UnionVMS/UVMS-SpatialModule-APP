@@ -30,10 +30,8 @@ import java.util.List;
 @Slf4j
 public class SpatialResource {
 
-    private static final String MODULE_NAME = "spatial";
 //    private static final ObjectMapper MAPPER = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).registerModule(new JavaTimeModule());
     private static final ObjectMapper MAPPER = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
 
 
     @EJB
@@ -54,11 +52,9 @@ public class SpatialResource {
     @Path("getAreaByLocation")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-        public Response getAreaByLocation(String json)  {
-
+        public Response getAreaByLocation( PointType point)  {
 
         try {
-            PointType point = MAPPER.readValue(json, PointType.class);
             AreaByLocationSpatialRQ areaByLocationSpatialRQ = new AreaByLocationSpatialRQ();
             areaByLocationSpatialRQ.setPoint(point);
             areaByLocationSpatialRQ.setMethod(SpatialModuleMethod.GET_AREA_BY_LOCATION);
@@ -70,7 +66,6 @@ public class SpatialResource {
         }
     }
 
-    /* TO BE DONE
     @POST
     @Path("getAreaTypes")
     public Response getAreaTypes(AllAreaTypesRequest allAreaTypesRequest) {
@@ -83,16 +78,12 @@ public class SpatialResource {
             return Response.status(500).build();
         }
     }
-    */
 
     @POST
     @Path("getClosestArea")
-    public Response getClosestArea(String json)  {
-
-
+    public Response getClosestArea(ClosestAreaSpatialRQ request)  {
 
         try {
-            ClosestAreaSpatialRQ request = MAPPER.readValue(json, ClosestAreaSpatialRQ.class);
             Double lat = request.getPoint().getLatitude();
             Double lon = request.getPoint().getLongitude();
             Integer crs = request.getPoint().getCrs();
@@ -108,10 +99,9 @@ public class SpatialResource {
 
     @POST
     @Path("getClosestLocation")
-    public Response getClosestLocation(String json) {
+    public Response getClosestLocation(ClosestLocationSpatialRQ closestLocationSpatialRQ) {
 
         try {
-            ClosestLocationSpatialRQ closestLocationSpatialRQ   = MAPPER.readValue(json, ClosestLocationSpatialRQ.class);
             List<Location> response = areaService.getClosestPointByPoint(closestLocationSpatialRQ);
             return Response.ok(response).build();
         } catch (Exception e) {
@@ -125,10 +115,9 @@ public class SpatialResource {
 
     @POST
     @Path("getEnrichment")
-    public Response getEnrichment(String json) {
+    public Response getEnrichment(SpatialEnrichmentRQ spatialEnrichmentRQ) {
 
         try {
-            SpatialEnrichmentRQ spatialEnrichmentRQ  = MAPPER.readValue(json, SpatialEnrichmentRQ.class);
             SpatialEnrichmentRS response = enrichmentService.getSpatialEnrichment(spatialEnrichmentRQ);
             return Response.ok(response).build();
         } catch (Exception e) {
@@ -140,10 +129,9 @@ public class SpatialResource {
 
     @POST
     @Path("getEnrichmentBatch")
-    public Response getEnrichmentBatch(String json){
+    public Response getEnrichmentBatch(BatchSpatialEnrichmentRQ batchSpatialEnrichmentRQ){
 
         try {
-            BatchSpatialEnrichmentRQ batchSpatialEnrichmentRQ =  MAPPER.readValue(json, BatchSpatialEnrichmentRQ.class);
             BatchSpatialEnrichmentRS response = enrichmentService.getBatchSpatialEnrichment(batchSpatialEnrichmentRQ);
             return Response.ok(response).build();
         } catch (Exception e) {
@@ -154,10 +142,9 @@ public class SpatialResource {
 
     @POST
     @Path("getFilterArea")
-    public Response getFilterArea(String json) {
+    public Response getFilterArea(FilterAreasSpatialRQ filterAreasSpatialRQ) {
 
         try {
-            FilterAreasSpatialRQ filterAreasSpatialRQ =  MAPPER.readValue(json, FilterAreasSpatialRQ.class);
             FilterAreasSpatialRS response = areaService.computeAreaFilter(filterAreasSpatialRQ);
             return Response.ok(response).build();
         } catch (Exception e) {
@@ -166,8 +153,6 @@ public class SpatialResource {
         }
     }
 
-
-    /*
 
     @POST
     @Path("getMapConfiguration")
@@ -181,8 +166,6 @@ public class SpatialResource {
             return Response.status(500).build();
         }
     }
-    */
-    /*
 
     @POST
     @Path("saveOrUpdateMapConfiguration")
@@ -196,8 +179,6 @@ public class SpatialResource {
             return Response.status(500).build();
         }
     }
-    */
-    /*
 
     @POST
     @Path("deleteMapConfiguration")
@@ -212,9 +193,6 @@ public class SpatialResource {
             return Response.status(500).build();
         }
     }
-
-        */
-
 
 
     @GET
@@ -231,7 +209,6 @@ public class SpatialResource {
         }
     }
 
-    /*
 
     @POST
     @Path("getAreaByCode")
@@ -248,8 +225,6 @@ public class SpatialResource {
             return Response.status(500).build();
         }
     }
-    */
-    /*
 
     @POST
     @Path("getGeometryByPortCode")
@@ -266,5 +241,4 @@ public class SpatialResource {
             return Response.status(500).build();
         }
     }
-    */
 }
