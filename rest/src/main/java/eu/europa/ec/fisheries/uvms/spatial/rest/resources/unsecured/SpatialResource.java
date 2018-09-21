@@ -11,6 +11,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.impl.SpatialEnrichmentSe
 import lombok.extern.slf4j.Slf4j;
 
 import javax.ejb.EJB;
+import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -34,17 +35,19 @@ public class SpatialResource {
     private static final ObjectMapper MAPPER = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
 
-    @EJB
+    @Inject
     private SpatialEnrichmentServiceBean enrichmentService;
 
-    @EJB
+    @Inject
     private AreaService areaService;
 
-    @EJB
+    @Inject
     private AreaTypeNamesService areaTypeNamesService;
 
-    @EJB
+    @Inject
     private MapConfigService mapConfigService;
+
+
 
 
 
@@ -68,6 +71,8 @@ public class SpatialResource {
 
     @POST
     @Path("getAreaTypes")
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getAreaTypes(AllAreaTypesRequest allAreaTypesRequest) {
 
         try {
@@ -81,6 +86,8 @@ public class SpatialResource {
 
     @POST
     @Path("getClosestArea")
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getClosestArea(ClosestAreaSpatialRQ request)  {
 
         try {
@@ -99,6 +106,8 @@ public class SpatialResource {
 
     @POST
     @Path("getClosestLocation")
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getClosestLocation(ClosestLocationSpatialRQ closestLocationSpatialRQ) {
 
         try {
@@ -115,6 +124,8 @@ public class SpatialResource {
 
     @POST
     @Path("getEnrichment")
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getEnrichment(SpatialEnrichmentRQ spatialEnrichmentRQ) {
 
         try {
@@ -129,6 +140,8 @@ public class SpatialResource {
 
     @POST
     @Path("getEnrichmentBatch")
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getEnrichmentBatch(BatchSpatialEnrichmentRQ batchSpatialEnrichmentRQ){
 
         try {
@@ -142,6 +155,8 @@ public class SpatialResource {
 
     @POST
     @Path("getFilterArea")
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getFilterArea(FilterAreasSpatialRQ filterAreasSpatialRQ) {
 
         try {
@@ -156,6 +171,8 @@ public class SpatialResource {
 
     @POST
     @Path("getMapConfiguration")
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getMapConfiguration(SpatialGetMapConfigurationRQ spatialGetMapConfigurationRQ) {
 
         try {
@@ -169,6 +186,8 @@ public class SpatialResource {
 
     @POST
     @Path("saveOrUpdateMapConfiguration")
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response saveOrUpdateMapConfiguration(SpatialSaveOrUpdateMapConfigurationRQ
                                                          spatialSaveOrUpdateMapConfigurationRQ) {
         try {
@@ -182,6 +201,8 @@ public class SpatialResource {
 
     @POST
     @Path("deleteMapConfiguration")
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response deleteMapConfiguration(SpatialDeleteMapConfigurationRQ spatialDeleteMapConfigurationRQ) {
 
         try {
@@ -215,6 +236,8 @@ public class SpatialResource {
 
     @POST
     @Path("getAreaByCode")
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getAreaByCode(AreaByCodeRequest areaByCodeRequest) {
 
         try {
@@ -231,6 +254,8 @@ public class SpatialResource {
 
     @POST
     @Path("getGeometryByPortCode")
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getGeometryByPortCode(GeometryByPortCodeRequest geometryByPortCodeRequest) {
         try {
             String portCode=geometryByPortCodeRequest.getPortCode();
