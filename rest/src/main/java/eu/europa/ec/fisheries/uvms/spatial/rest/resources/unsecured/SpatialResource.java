@@ -195,14 +195,17 @@ public class SpatialResource {
     }
 
 
-    @GET
+    @POST
     @Path("ping")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response ping() {
+    public Response ping(PingRQ pingrq) {
 
         try {
-            return Response.ok("pong").build();
+            PingRS response = new PingRS();
+            response.setResponse("pong");
+
+            return Response.ok(response).build();
         } catch (Exception e) {
             log.error(e.toString(), e);
             return Response.status(500).build();
