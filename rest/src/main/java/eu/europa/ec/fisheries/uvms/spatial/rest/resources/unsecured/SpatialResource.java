@@ -26,7 +26,7 @@ import java.util.List;
  */
 
 
-@Path("spatial")
+@Path("json")
 @SuppressWarnings("unchecked")
 @Slf4j
 public class SpatialResource {
@@ -50,7 +50,7 @@ public class SpatialResource {
 
 
 
-
+/*
     @POST
     @Path("getAreaByLocation")
     @Consumes(value = {MediaType.APPLICATION_JSON})
@@ -68,6 +68,24 @@ public class SpatialResource {
             return Response.status(500).build();
         }
     }
+*/
+
+    @POST
+    @Path("getAreaByLocation")
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getAreaByLocation( AreaByLocationSpatialRQ areaByLocationSpatialRQ)  {
+
+        try {
+            List<AreaExtendedIdentifierType> response = areaService.getAreasByPoint(areaByLocationSpatialRQ);
+            return Response.ok(response).build();
+        } catch (Exception e) {
+            log.error(e.toString(),e);
+            return Response.status(500).build();
+        }
+    }
+
+
 
     @POST
     @Path("getAreaTypes")
