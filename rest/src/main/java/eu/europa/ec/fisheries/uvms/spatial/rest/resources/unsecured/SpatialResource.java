@@ -48,28 +48,6 @@ public class SpatialResource {
     private MapConfigService mapConfigService;
 
 
-
-
-/*
-    @POST
-    @Path("getAreaByLocation")
-    @Consumes(value = {MediaType.APPLICATION_JSON})
-    @Produces(value = {MediaType.APPLICATION_JSON})
-        public Response getAreaByLocation( PointType point)  {
-
-        try {
-            AreaByLocationSpatialRQ areaByLocationSpatialRQ = new AreaByLocationSpatialRQ();
-            areaByLocationSpatialRQ.setPoint(point);
-            areaByLocationSpatialRQ.setMethod(SpatialModuleMethod.GET_AREA_BY_LOCATION);
-            List<AreaExtendedIdentifierType> response = areaService.getAreasByPoint(areaByLocationSpatialRQ);
-            return Response.ok(response).build();
-        } catch (Exception e) {
-            log.error(e.toString(),e);
-            return Response.status(500).build();
-        }
-    }
-*/
-
     @POST
     @Path("getAreaByLocation")
     @Consumes(value = {MediaType.APPLICATION_JSON})
@@ -138,8 +116,6 @@ public class SpatialResource {
     }
 
 
-
-
     @POST
     @Path("getEnrichment")
     @Consumes(value = {MediaType.APPLICATION_JSON})
@@ -201,39 +177,7 @@ public class SpatialResource {
             return Response.status(500).build();
         }
     }
-
-    @POST
-    @Path("saveOrUpdateMapConfiguration")
-    @Consumes(value = {MediaType.APPLICATION_JSON})
-    @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response saveOrUpdateMapConfiguration(SpatialSaveOrUpdateMapConfigurationRQ
-                                                         spatialSaveOrUpdateMapConfigurationRQ) {
-        try {
-            SpatialSaveOrUpdateMapConfigurationRS response = mapConfigService.handleSaveOrUpdateSpatialMapConfiguration(spatialSaveOrUpdateMapConfigurationRQ);
-            return Response.ok(response).build();
-        } catch (Exception e) {
-            log.error(e.toString(),e);
-            return Response.status(500).build();
-        }
-    }
-
-    @POST
-    @Path("deleteMapConfiguration")
-    @Consumes(value = {MediaType.APPLICATION_JSON})
-    @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response deleteMapConfiguration(SpatialDeleteMapConfigurationRQ spatialDeleteMapConfigurationRQ) {
-
-        try {
-            mapConfigService.handleDeleteMapConfiguration(spatialDeleteMapConfigurationRQ);
-            SpatialDeleteMapConfigurationRS response =  new SpatialDeleteMapConfigurationRS();
-            return Response.ok(response).build();
-        } catch (Exception e) {
-            log.error(e.toString(),e);
-            return Response.status(500).build();
-        }
-    }
-
-
+    
     @POST
     @Path("ping")
     @Consumes(value = {MediaType.APPLICATION_JSON})
