@@ -393,7 +393,6 @@
         <module>rest</module>
         <module>service</module>
         <module>message</module>
-        <module>deploy-wildfly</module>
-        <module>deploy-weblogic</module>
+        <module>module</module>
     </modules>
 </project>
