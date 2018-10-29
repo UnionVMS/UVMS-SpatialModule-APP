@@ -705,6 +705,31 @@ public class AreaServiceBean implements AreaService {
         return areaTypes;
     }
 
+    @Override // FIXME is kind off a duplicate of List<Map<String, Object>> getAreasByPoint
+    public List<AreaExtendedIdentifierType> getPortAreasByPoint(Point incoming) throws ServiceException {
+
+        Integer crs = 4326;
+
+        AreaLocationTypesEntity typesEntity = repository.findAreaLocationTypeByTypeName("PORTAREA");
+        final List<AreaLocationTypesEntity> typesEntities = new ArrayList<>();
+        typesEntities.add(typesEntity);
+        final List<AreaExtendedIdentifierType> areaTypes = new ArrayList<>();
+
+        List records = repository.intersectingArea(typesEntities, databaseDialect, incoming);
+
+        for (Object record : records) {
+            final Object[] result = (Object[]) record;
+            AreaExtendedIdentifierType area = new AreaExtendedIdentifierType();
+            area.setAreaType(AreaType.valueOf(String.valueOf(result[0])));
+            area.setId(String.valueOf(result[1]));
+            area.setCode(String.valueOf(result[2]));
+            area.setName(String.valueOf(result[3]));
+            areaTypes.add(area);
+        }
+
+        return areaTypes;
+    }
+
     @Override
     public String getGeometryForPort(String portCode){
         if(portCode ==null){

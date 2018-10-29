@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>fish.focus.uvms.maven</groupId>
 		<artifactId>uvms-pom</artifactId>
-		<version>1.18</version>
+		<version>1.21</version>
 	</parent>
 
     <groupId>eu.europa.ec.fisheries.uvms.spatial</groupId>
@@ -18,7 +18,7 @@
   <properties>
         <!-- The spatial name is used as a common point to rename the application alias visible in USM-->
         <spatial.name>Spatial</spatial.name>
-        <docker.dev.version>3.20.0</docker.dev.version>
+        <docker.dev.version>3.29.0.w14</docker.dev.version>
         <spatial.model>1.0.12</spatial.model>
         <reporting.model>1.0.4</reporting.model>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

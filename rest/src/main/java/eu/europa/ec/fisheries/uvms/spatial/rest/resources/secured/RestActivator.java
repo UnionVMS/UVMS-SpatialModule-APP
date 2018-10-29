@@ -11,6 +11,7 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import eu.europa.ec.fisheries.uvms.spatial.rest.constants.RestConstants;
+import eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured.SpatialRestResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.ws.rs.ApplicationPath;
