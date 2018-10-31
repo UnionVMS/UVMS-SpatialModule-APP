@@ -29,12 +29,7 @@
             <artifactId>spatial-model</artifactId>
             <scope>provided</scope>
         </dependency>
-
-        <!--dependency>
-            <groupId>eu.europa.ec.fisheries.uvms.movement</groupId>
-            <artifactId>movement-model</artifactId>
-            <scope>provided</scope>
-        </dependency-->
+        
         
         <dependency>
 			<groupId>org.projectlombok</groupId>
