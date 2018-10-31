@@ -153,6 +153,23 @@ public class SpatialRestResourceTest extends BuildSpatialRestDeployment {
     }
 
     @Test
+    public void getSegmentCategoryTypeExitPortReverseMovementPositionsTest() throws Exception{
+
+
+        MovementType move1 = createBasicMovementType(11.922098, 57.700490);
+        MovementType move2 = createBasicMovementType( 3.786473, 56.565762);
+        move2.setPositionTime(new Date(System.currentTimeMillis() + (1000 * 60 * 30)));
+        List<MovementType> input = new ArrayList<>();
+        input.add(move2);
+        input.add(move1);
+
+
+        SegmentCategoryType output = getSegmentCategoryType(input);
+
+        assertEquals(SegmentCategoryType.EXIT_PORT, output);
+    }
+
+    @Test
     public void getSegmentCategoryTypeEnterPortTest() throws Exception{
 
 
@@ -162,6 +179,23 @@ public class SpatialRestResourceTest extends BuildSpatialRestDeployment {
         List<MovementType> input = new ArrayList<>();
         input.add(move1);
         input.add(move2);
+
+
+        SegmentCategoryType output = getSegmentCategoryType(input);
+
+        assertEquals(SegmentCategoryType.ENTER_PORT, output);
+    }
+
+    @Test
+    public void getSegmentCategoryTypeEnterPortReverseMovementPositionsTest() throws Exception{
+
+
+        MovementType move2 = createBasicMovementType(11.922098, 57.700490);
+        MovementType move1 = createBasicMovementType( 3.786473, 56.565762);
+        move2.setPositionTime(new Date(System.currentTimeMillis() + (1000 * 60 * 30)));
+        List<MovementType> input = new ArrayList<>();
+        input.add(move2);
+        input.add(move1);
 
 
         SegmentCategoryType output = getSegmentCategoryType(input);

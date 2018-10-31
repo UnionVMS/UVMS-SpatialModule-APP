@@ -158,8 +158,15 @@ public class SpatialRestResource {
                 return Response.status(400).entity("Null as indata or not enough movements in the the input list, need at least two").build();
             }
 
-            MovementType move1 = movements.get(0);
-            MovementType move2 = movements.get(1);
+            MovementType move1 = null;
+            MovementType move2 = null;
+            if(movements.get(0).getPositionTime().before(movements.get(1).getPositionTime())) {   //if the first thing in the list is chronologically first as well
+                 move1 = movements.get(0);
+                 move2 = movements.get(1);
+            }else {
+                move1 = movements.get(1);
+                move2 = movements.get(0);
+            }
 
             Point movePoint1 = (Point) GeometryUtils.toGeographic(move1.getPosition().getLatitude(), move1.getPosition().getLongitude(), 4326);     //this magical int is the World Geodetic System 1984, aka EPSG:4326. See: https://en.wikipedia.org/wiki/World_Geodetic_System or http://spatialreference.org/ref/epsg/wgs-84/
             Point movePoint2 = (Point) GeometryUtils.toGeographic(move2.getPosition().getLatitude(), move2.getPosition().getLongitude(), 4326);
