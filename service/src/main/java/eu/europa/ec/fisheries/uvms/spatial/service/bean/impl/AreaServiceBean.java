@@ -113,7 +113,6 @@ import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
 
 @Stateless
-@Local(AreaService.class)
 @Slf4j
 public class AreaServiceBean implements AreaService {
 

@@ -22,6 +22,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.ejb.EJB;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -127,8 +129,11 @@ public class SpatialRestResource {
     }
 
 
-    @Inject
-    PortDao portDao;
+    @PersistenceContext(unitName = "spatialPUpostgres")
+    private EntityManager postgres;
+
+
+    PortDao portDao = new PortDao(postgres);
 
     @POST
     @Path("pong")
@@ -143,7 +148,7 @@ public class SpatialRestResource {
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response pong2() {
-        return Response.ok().build();
+        return Response.ok("Pong2").build();
     }
 
     private static final double DISTANCE_TO_PORT_THRESHOLD_IN_NAUTICAL_MILES = 1.5;   //meters = 2778
@@ -185,6 +190,8 @@ public class SpatialRestResource {
             }
 
             WKTReader reader = new WKTReader();
+
+
             List<PortEntity> portList = portDao.byCode(portRequestList);
             double movePortDistance1 = Math.pow(2778, 2);               // 1.5 nautical miles is 2778 meters, 2778 ^ 2 to make it in the same ballpark as the distance test
             double movePortDistance2 = Math.pow(2778, 2);
@@ -210,7 +217,7 @@ public class SpatialRestResource {
             if(closest1 == null && closest2 == null){
                 if(move1.getPositionTime().getTime() - move2.getPositionTime().getTime() == 0){    //no duration between moves
                     returnVal = SegmentCategoryType.NULL_DUR;
-                }else if(((distanceMeter(movePoint1.getY(), movePoint1.getX(), movePoint2.getY(), movePoint2.getX()) / move1.getPositionTime().getTime() - move2.getPositionTime().getTime()) * FACTOR_METER_PER_SECOND_TO_KNOTS ) == 0){    //if the average speed is zero
+                }else if(((distanceMeter(movePoint1.getY(), movePoint1.getX(), movePoint2.getY(), movePoint2.getX()) / move1.getPositionTime().getTime() - move2.getPositionTime().getTime()) * FACTOR_METER_PER_SECOND_TO_KNOTS ) < 0.00001){    //if the average speed is 'zero'
                     returnVal = SegmentCategoryType.ANCHORED;
                 }else if(((distanceMeter(movePoint1.getY(), movePoint1.getX(), movePoint2.getY(), movePoint2.getX()) / move1.getPositionTime().getTime() - move2.getPositionTime().getTime()) * FACTOR_METER_PER_SECOND_TO_KNOTS ) > 50 ||    //speed is over 50
                         ((distanceMeter(movePoint1.getY(), movePoint1.getX(), movePoint2.getY(), movePoint2.getX()) * NAUTICAL_MILE_ONE_METER) > 250 && Math.abs((move1.getPositionTime().getTime() / 1000) - (move2.getPositionTime().getTime()) / 1000) > 12 )){  //OR distance is grater the n250 nautical miles and duration is longer then 12 seconds (this last one feels wierd)

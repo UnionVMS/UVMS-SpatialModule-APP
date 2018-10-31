@@ -29,84 +29,75 @@
 			<type>pom</type>
 		</dependency>
 
-        <dependency>
+        <!--dependency>
             <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
             <artifactId>uvms-commons-message</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
+        </dependency-->
+        <!--dependency>
             <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
             <artifactId>uvms-commons-rest</artifactId>
             <version>${uvms.commons.version}</version>
-            <scope>provided</scope>
             <exclusions>
             	<exclusion>
             	  <groupId>com.fasterxml.jackson.core</groupId>
   				  <artifactId>jackson-databind</artifactId>            	
             	</exclusion>            
             </exclusions>
-        </dependency>
-        <dependency>
+        </dependency-->
+        <!--dependency>
             <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
             <artifactId>uvms-commons-geometry</artifactId>
             <version>${uvms.commons.version}</version>
- 			      <scope>provided</scope>
-        </dependency>
-        <dependency>
+        </dependency-->
+        <!--dependency>
             <groupId>eu.europa.ec.fisheries.uvms</groupId>
             <artifactId>usm4uvms</artifactId>
-            <scope>provided</scope>
-        </dependency>
+        </dependency-->
 		<dependency>
 		    <groupId>com.fasterxml.jackson.core</groupId>
 		    <artifactId>jackson-annotations</artifactId>
 		    <version>2.6.0</version>
 		</dependency>
         
-        <dependency>
+        <!--dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
-        </dependency>
+        </dependency-->
         
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>spatial-model</artifactId>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>service</artifactId>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>
-            <groupId>eu.europa.ec.fisheries.uvms</groupId>
+            <groupId>eu.europa.ec.fisheries.uvms</groupId>    <!-- this imports vividsolutions, for some reason.....-->
             <artifactId>uvms-test</artifactId>
         </dependency>
+
 
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.movement</groupId>
             <artifactId>movement-model</artifactId>
-            <scope>provided</scope>
         </dependency>
 
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
-			<scope>provided</scope>
 		</dependency>
 		
-         <dependency>
+         <!--dependency>
 			 <groupId>org.jboss.resteasy</groupId>
     		<artifactId>resteasy-jaxb-provider</artifactId>
-    		<scope>provided</scope>
-		</dependency>
+		</dependency-->
 
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>jaxrs-api</artifactId>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.eu.ingwar.tools</groupId>
@@ -118,6 +109,11 @@
             <groupId>com.fasterxml.jackson.jaxrs</groupId>
             <artifactId>jackson-jaxrs-json-provider</artifactId>
             <version>2.9.4</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>message</artifactId>
             <scope>test</scope>
         </dependency>
 
