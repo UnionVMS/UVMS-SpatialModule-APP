@@ -37,39 +37,23 @@ public class SpatialRestResourceTest extends BuildSpatialRestDeployment {
     }
 
     @Test
-    public void pong() throws Exception{
+    public void getSegmentCategoryTypeListWithOneAsInputTest(){
 
+        MovementType move1 = createBasicMovementType(2d, 3d);
         List <MovementType> request = new ArrayList<>();
+        request.add(move1);
         Response response =  getWebTarget()
                 .path("json")
-                .path("pong")
+                .path("getSegmentCategoryType")
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(""), Response.class);
+                .post(Entity.json(request), Response.class);
 
-        System.out.println("Now");
-        //Thread.sleep(1000 * 60 * 5);
-
-        assertEquals(200 ,response.getStatus());
+        assertEquals(400 ,response.getStatus());
     }
 
-    @Test
-    public void pong2() throws Exception{
-
-        List <MovementType> request = new ArrayList<>();
-        Response response =  getWebTarget()
-                .path("json")
-                .path("pong2")
-                .request(MediaType.APPLICATION_JSON)
-                .get();
-
-        System.out.println("Now");
-        //Thread.sleep(1000 * 60 * 10);
-
-        assertEquals(200 ,response.getStatus());
-    }
 
     @Test
-    public void getSegmentCategoryTypeTest(){
+    public void getSegmentCategoryTypeSameTimeTest(){
 
 
         MovementType move1 = createBasicMovementType(2d, 3d);
@@ -80,10 +64,126 @@ public class SpatialRestResourceTest extends BuildSpatialRestDeployment {
 
         SegmentCategoryType output = getSegmentCategoryType(input);
 
-        System.out.println(output);
+        assertEquals(SegmentCategoryType.NULL_DUR, output);
+    }
 
 
+    @Test
+    public void getSegmentCategoryTypeGapTest(){
 
+
+        MovementType move1 = createBasicMovementType(2d, 3d);
+        MovementType move2 = createBasicMovementType(3d, 2d);
+        move2.setPositionTime(new Date(System.currentTimeMillis() + (1000 * 60 * 30)));
+        List<MovementType> input = new ArrayList<>();
+        input.add(move1);
+        input.add(move2);
+
+        SegmentCategoryType output = getSegmentCategoryType(input);
+
+        assertEquals(SegmentCategoryType.GAP, output);
+    }
+
+    @Test
+    public void getSegmentCategoryTypeAnchoredTest(){
+
+
+        MovementType move1 = createBasicMovementType(2d, 3d);
+        MovementType move2 = createBasicMovementType(2d, 3d);
+        move2.setPositionTime(new Date(System.currentTimeMillis() + (1000 * 60 * 30)));
+        List<MovementType> input = new ArrayList<>();
+        input.add(move1);
+        input.add(move2);
+
+        SegmentCategoryType output = getSegmentCategoryType(input);
+
+        assertEquals(SegmentCategoryType.ANCHORED, output);
+    }
+
+
+    @Test
+    public void getSegmentCategoryTypeJumpTest() throws Exception{
+
+
+        MovementType move1 = createBasicMovementType(-15.301291d, 47.006736d);
+        MovementType move2 = createBasicMovementType( -61.214025d, 36.745943d);
+        move2.setPositionTime(new Date(System.currentTimeMillis() + (1000 * 60 * 30)));
+        List<MovementType> input = new ArrayList<>();
+        input.add(move1);
+        input.add(move2);
+
+
+        SegmentCategoryType output = getSegmentCategoryType(input);
+
+        assertEquals(SegmentCategoryType.JUMP, output);
+    }
+
+    @Test
+    public void getSegmentCategoryTypeInPortTest() throws Exception{
+
+
+        MovementType move1 = createBasicMovementType(11.922098, 57.700490);
+        MovementType move2 = createBasicMovementType( 11.928836, 57.693246);
+        move2.setPositionTime(new Date(System.currentTimeMillis() + (1000 * 60 * 30)));
+        List<MovementType> input = new ArrayList<>();
+        input.add(move1);
+        input.add(move2);
+
+
+        SegmentCategoryType output = getSegmentCategoryType(input);
+
+        assertEquals(SegmentCategoryType.IN_PORT, output);
+    }
+
+    @Test
+    public void getSegmentCategoryTypeExitPortTest() throws Exception{
+
+
+        MovementType move1 = createBasicMovementType(11.922098, 57.700490);
+        MovementType move2 = createBasicMovementType( 3.786473, 56.565762);
+        move2.setPositionTime(new Date(System.currentTimeMillis() + (1000 * 60 * 30)));
+        List<MovementType> input = new ArrayList<>();
+        input.add(move1);
+        input.add(move2);
+
+
+        SegmentCategoryType output = getSegmentCategoryType(input);
+
+        assertEquals(SegmentCategoryType.EXIT_PORT, output);
+    }
+
+    @Test
+    public void getSegmentCategoryTypeEnterPortTest() throws Exception{
+
+
+        MovementType move2 = createBasicMovementType(11.922098, 57.700490);
+        MovementType move1 = createBasicMovementType( 3.786473, 56.565762);
+        move2.setPositionTime(new Date(System.currentTimeMillis() + (1000 * 60 * 30)));
+        List<MovementType> input = new ArrayList<>();
+        input.add(move1);
+        input.add(move2);
+
+
+        SegmentCategoryType output = getSegmentCategoryType(input);
+
+        assertEquals(SegmentCategoryType.ENTER_PORT, output);
+    }
+
+    @Test
+    public void getSegmentCategoryTypeTwoDifferentPortsTest() throws Exception{   //Exactly what this is supposed to return is rather unclear
+
+
+        MovementType move1 = createBasicMovementType(11.922098, 57.700490);
+        MovementType move2 = createBasicMovementType( 12.993741, 55.615228);
+        move2.setPositionTime(new Date(System.currentTimeMillis() + (1000 * 60 * 30)));
+        List<MovementType> input = new ArrayList<>();
+        input.add(move1);
+        input.add(move2);
+
+
+        SegmentCategoryType output = getSegmentCategoryType(input);
+
+        assertEquals(SegmentCategoryType.OTHER, output);
     }
 
 

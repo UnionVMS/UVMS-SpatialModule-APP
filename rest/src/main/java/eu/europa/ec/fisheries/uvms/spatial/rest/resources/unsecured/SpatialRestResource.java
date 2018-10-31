@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.MultiPoint;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.io.WKTReader;
 import eu.europa.ec.fisheries.schema.movement.v1.MovementMetaData;
@@ -17,14 +18,17 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.MapConfigService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.impl.SpatialEnrichmentServiceBean;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.PortDao;
+import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DatabaseDialectFactory;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.PortEntity;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.*;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
@@ -129,19 +133,6 @@ public class SpatialRestResource {
     }
 
 
-    @PersistenceContext(unitName = "spatialPUpostgres")
-    private EntityManager postgres;
-
-
-    PortDao portDao = new PortDao(postgres);
-
-    @POST
-    @Path("pong")
-    @Consumes(value = {MediaType.APPLICATION_JSON})
-    @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response pong(String s) {
-        return Response.ok().build();
-    }
 
     @GET
     @Path("pong2")
@@ -192,32 +183,32 @@ public class SpatialRestResource {
             WKTReader reader = new WKTReader();
 
 
-            List<PortEntity> portList = portDao.byCode(portRequestList);
-            double movePortDistance1 = Math.pow(2778, 2);               // 1.5 nautical miles is 2778 meters, 2778 ^ 2 to make it in the same ballpark as the distance test
-            double movePortDistance2 = Math.pow(2778, 2);
-            PortEntity closest1 = null;
-            PortEntity closest2 = null;
-            for(PortEntity port : portList){   //loop over ports
+            List<AreaSimpleType> portList = areaService.getAreasByCode(portRequestList);
+            double movePortDistance1 = 2778d;               // 1.5 nautical miles is 2778 meters, aka the radius of the port area
+            double movePortDistance2 = 2778d;
+            AreaSimpleType closestPort1 = null;
+            AreaSimpleType closestPort2 = null;
+            for(AreaSimpleType port : portList){   //loop over ports
 
-                Point portPoint = (Point)reader.read(port.getGeometry());
-                double dist = distanceWoSquareRoot(portPoint, movePoint1);
+                MultiPoint portMultiPoint = (MultiPoint)reader.read(port.getWkt());  //why do we store single points as multipoints?????
+                GeometryFactory geoFactory = new GeometryFactory();
+                Point portPoint = geoFactory.createPoint(portMultiPoint.getCoordinate());
+
+                double dist = distanceMeter(portPoint.getY(), portPoint.getX(), movePoint1.getY(), movePoint1.getX());
                 if(dist < movePortDistance1){
                     movePortDistance1 = dist;
-                    closest1 = port;
+                    closestPort1 = port;
                 }
+                dist = distanceMeter(portPoint.getY(), portPoint.getX(), movePoint2.getY(), movePoint2.getX());
                 if(dist < movePortDistance2){
                     movePortDistance2 = dist;
-                    closest2 = port;
+                    closestPort2 = port;
                 }
 
             }
 
-            double testDist = distanceMeter(movePoint1.getY(), movePoint1.getX(), movePoint2.getY(), movePoint2.getX());
-            double testTime = move1.getPositionTime().getTime() - move2.getPositionTime().getTime();
-            double testSpeed = ((distanceMeter(movePoint1.getY(), movePoint1.getX(), movePoint2.getY(), movePoint2.getX()) / move1.getPositionTime().getTime() - move2.getPositionTime().getTime()) * FACTOR_METER_PER_SECOND_TO_KNOTS );
-
             //and the logic, first if we are nowhere near a port
-            if(closest1 == null && closest2 == null){
+            if(closestPort1 == null && closestPort2 == null){
                 if(move1.getPositionTime().getTime() - move2.getPositionTime().getTime() == 0){    //no duration between moves
                     returnVal = SegmentCategoryType.NULL_DUR;
                 }else if(((distanceMeter(movePoint1.getY(), movePoint1.getX(), movePoint2.getY(), movePoint2.getX()) / Math.abs(move1.getPositionTime().getTime() - move2.getPositionTime().getTime())) * FACTOR_METER_PER_SECOND_TO_KNOTS ) < 0.00001){    //if the average speed is 'zero'
@@ -229,14 +220,14 @@ public class SpatialRestResource {
                     returnVal = SegmentCategoryType.GAP;
                 }
             }else{   //and if we are
-                if(closest1 != null && closest2 != null){   //if they are both in a port zone
-                    if(closest1.equals(closest2)){          //if they are in the same port zone
+                if(closestPort1 != null && closestPort2 != null){   //if they are both in a port zone
+                    if(closestPort1.equals(closestPort2)){          //if they are in the same port zone
                         returnVal = SegmentCategoryType.IN_PORT;    //if one move is in a port and the other move is in a different port, what kind of category is it supposed to be?????
                     }
 
-                }else if(closest1 != null && closest2 == null){     //start in port
+                }else if(closestPort1 != null && closestPort2 == null){     //start in port
                     returnVal = SegmentCategoryType.EXIT_PORT;
-                }else if(closest1 == null && closest2 != null) {    //end in port
+                }else if(closestPort1 == null && closestPort2 != null) {    //end in port
                     returnVal = SegmentCategoryType.ENTER_PORT;
                 }
             }
@@ -260,10 +251,6 @@ public class SpatialRestResource {
         return Math.acos(Math.sin(lat1Rad) * Math.sin(lat2Rad) + Math.cos(lat1Rad) * Math.cos(lat2Rad)
                 * Math.cos(deltaLonRad))
                 * EARTH_RADIUS_METER;
-    }
-
-    private double distanceWoSquareRoot(Point p1, Point p2){
-        return Math.pow(p1.getX() - p2.getX() , 2) + Math.pow(p1.getY() - p2.getY() , 2);
     }
 
 
