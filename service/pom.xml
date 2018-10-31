@@ -19,11 +19,6 @@
 
     <dependencies>
 
-        <!--dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-            <version>2.6.0</version>
-        </dependency-->
 
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -63,10 +58,6 @@
             </exclusions>
         </dependency>
 
-        <!--dependency>
-            <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
-            <artifactId>uvms-commons-message</artifactId>
-        </dependency-->
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
             <artifactId>uvms-commons-domain</artifactId>
@@ -88,11 +79,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!--dependency>
-            <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
-            <artifactId>uvms-commons-date</artifactId>
-            <version>${uvms.commons.version}</version>
-        </dependency-->
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
             <artifactId>uvms-commons-dao</artifactId>
@@ -103,10 +89,6 @@
             <artifactId>uvms-commons-rest</artifactId>
             <version>${uvms.commons.version}</version>
         </dependency>
-        <!--dependency>
-            <groupId>eu.europa.ec.fisheries.uvms.movement</groupId>
-            <artifactId>movement-model</artifactId>
-        </dependency-->
 
         <dependency>
             <groupId>${project.groupId}</groupId>
