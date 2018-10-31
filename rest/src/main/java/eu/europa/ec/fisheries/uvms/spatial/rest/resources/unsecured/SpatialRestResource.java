@@ -212,14 +212,17 @@ public class SpatialRestResource {
 
             }
 
+            double testDist = distanceMeter(movePoint1.getY(), movePoint1.getX(), movePoint2.getY(), movePoint2.getX());
+            double testTime = move1.getPositionTime().getTime() - move2.getPositionTime().getTime();
+            double testSpeed = ((distanceMeter(movePoint1.getY(), movePoint1.getX(), movePoint2.getY(), movePoint2.getX()) / move1.getPositionTime().getTime() - move2.getPositionTime().getTime()) * FACTOR_METER_PER_SECOND_TO_KNOTS );
 
             //and the logic, first if we are nowhere near a port
             if(closest1 == null && closest2 == null){
                 if(move1.getPositionTime().getTime() - move2.getPositionTime().getTime() == 0){    //no duration between moves
                     returnVal = SegmentCategoryType.NULL_DUR;
-                }else if(((distanceMeter(movePoint1.getY(), movePoint1.getX(), movePoint2.getY(), movePoint2.getX()) / move1.getPositionTime().getTime() - move2.getPositionTime().getTime()) * FACTOR_METER_PER_SECOND_TO_KNOTS ) < 0.00001){    //if the average speed is 'zero'
+                }else if(((distanceMeter(movePoint1.getY(), movePoint1.getX(), movePoint2.getY(), movePoint2.getX()) / Math.abs(move1.getPositionTime().getTime() - move2.getPositionTime().getTime())) * FACTOR_METER_PER_SECOND_TO_KNOTS ) < 0.00001){    //if the average speed is 'zero'
                     returnVal = SegmentCategoryType.ANCHORED;
-                }else if(((distanceMeter(movePoint1.getY(), movePoint1.getX(), movePoint2.getY(), movePoint2.getX()) / move1.getPositionTime().getTime() - move2.getPositionTime().getTime()) * FACTOR_METER_PER_SECOND_TO_KNOTS ) > 50 ||    //speed is over 50
+                }else if(((distanceMeter(movePoint1.getY(), movePoint1.getX(), movePoint2.getY(), movePoint2.getX()) / Math.abs(move1.getPositionTime().getTime() - move2.getPositionTime().getTime())) * FACTOR_METER_PER_SECOND_TO_KNOTS ) > 50 ||    //speed is over 50
                         ((distanceMeter(movePoint1.getY(), movePoint1.getX(), movePoint2.getY(), movePoint2.getX()) * NAUTICAL_MILE_ONE_METER) > 250 && Math.abs((move1.getPositionTime().getTime() / 1000) - (move2.getPositionTime().getTime()) / 1000) > 12 )){  //OR distance is grater the n250 nautical miles and duration is longer then 12 seconds (this last one feels wierd)
                     returnVal = SegmentCategoryType.JUMP;
                 }else if(Math.abs((move1.getPositionTime().getTime() / 1000) - (move2.getPositionTime().getTime()) / 1000) > 12){  //if there is longer then 12 seconds between points
