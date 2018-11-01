@@ -13,6 +13,7 @@ import eu.europa.ec.fisheries.schema.movement.v1.SegmentCategoryType;
 import eu.europa.ec.fisheries.uvms.commons.geometry.utils.GeometryUtils;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
+import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaTransitionsDTO;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.MapConfigService;
@@ -33,6 +34,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -133,14 +135,6 @@ public class SpatialRestResource {
     }
 
 
-
-    @GET
-    @Path("pong2")
-    @Consumes(value = {MediaType.APPLICATION_JSON})
-    @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response pong2() {
-        return Response.ok("Pong2").build();
-    }
 
     private static final double DISTANCE_TO_PORT_THRESHOLD_IN_NAUTICAL_MILES = 1.5;   //meters = 2778
     private static final double FACTOR_METER_PER_SECOND_TO_KNOTS = 1.9438444924574;
@@ -261,6 +255,55 @@ public class SpatialRestResource {
     }
 
 
+    @GET
+    @Path("getEnrichmentAndTransitions")
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getEnrichmentAndTransitions(@QueryParam(value = "firstLongitude") Double firstLongitude, @QueryParam(value = "firstLatitude") Double firstLatitude, @QueryParam(value = "secondLongitude") Double secondLongitude, @QueryParam(value = "secondLatitude") Double secondLatitude) {
+
+        try {
+            if(secondLongitude == null || secondLatitude == null){
+                log.error("Null as indata on the second long or latitude");
+                return Response.status(400).entity("Null as indata on the second long or latitude").build();
+            }
+
+            PointType point;
+            ArrayList<AreaExtendedIdentifierType> firstAreas = new ArrayList<>();
+            if(firstLongitude != null && firstLatitude != null) {
+                 point = new PointType(firstLongitude, firstLatitude, 4326);   //this magical int is the World Geodetic System 1984, aka EPSG:4326. See: https://en.wikipedia.org/wiki/World_Geodetic_System or http://spatialreference.org/ref/epsg/wgs-84/
+                AreaByLocationSpatialRQ request = new AreaByLocationSpatialRQ();
+                request.setPoint(point);
+                firstAreas = (ArrayList<AreaExtendedIdentifierType>) areaService.getAreasByPoint(request);
+            }
+
+            point = new PointType(secondLongitude, secondLatitude, 4326);
+
+            SpatialEnrichmentRQ spatialEnrichmentRQ = new SpatialEnrichmentRQ(null, point, new SpatialEnrichmentRQ.AreaTypes(), new SpatialEnrichmentRQ.LocationTypes(), UnitType.NAUTICAL_MILES);
+            SpatialEnrichmentRS spatialEnrichmentRS = enrichmentService.getSpatialEnrichment(spatialEnrichmentRQ);
+
+            ArrayList<AreaExtendedIdentifierType> secondAreas = (ArrayList<AreaExtendedIdentifierType>)spatialEnrichmentRS.getAreasByLocation().getAreas();
+
+
+            ArrayList<AreaExtendedIdentifierType> exitedAreas = (ArrayList<AreaExtendedIdentifierType>)firstAreas.clone();
+            exitedAreas.removeAll(secondAreas);
+
+            ArrayList<AreaExtendedIdentifierType> enteredAreas = (ArrayList<AreaExtendedIdentifierType>)secondAreas.clone();
+            enteredAreas.removeAll(firstAreas);
+
+            AreaTransitionsDTO response = new AreaTransitionsDTO();
+            response.setExitedAreas(exitedAreas);
+            response.setEnteredAreas(enteredAreas);
+            response.setSpatialEnrichmentRS(spatialEnrichmentRS);
+
+            return Response.ok(response).build();
+
+
+        } catch (Exception e) {
+            log.error(e.toString(),e);
+            return Response.status(500).entity(e.toString()).build();
+        }
+    }
+
     @POST
     @Path("getEnrichment")
     @Consumes(value = {MediaType.APPLICATION_JSON})
@@ -338,6 +381,14 @@ public class SpatialRestResource {
             log.error(e.toString(), e);
             return Response.status(500).build();
         }
+    }
+
+    @GET
+    @Path("ping")
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response pong2() {
+        return Response.ok("Pong").build();
     }
 
 

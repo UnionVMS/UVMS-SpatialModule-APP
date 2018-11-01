@@ -3,6 +3,7 @@ package eu.europe.ec.fisheries.uvms.spatial.rest.resources.unsecured;
 import eu.europa.ec.fisheries.schema.movement.v1.MovementPoint;
 import eu.europa.ec.fisheries.schema.movement.v1.MovementType;
 import eu.europa.ec.fisheries.schema.movement.v1.SegmentCategoryType;
+import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaTransitionsDTO;
 import eu.europe.ec.fisheries.uvms.spatial.rest.BuildSpatialRestDeployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
@@ -17,7 +18,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 @RunAsClient
 @RunWith(Arquillian.class)
@@ -221,6 +224,57 @@ public class SpatialRestResourceTest extends BuildSpatialRestDeployment {
     }
 
 
+    @Test
+    public void getEnrichmentAndTransitionsWOSecondInput(){
+
+
+        Response response =  getWebTarget()
+                .path("json")
+                .path("getEnrichmentAndTransitions")
+                .queryParam("firstLongitude", new Double(0))
+                .queryParam("firstLatitude", new Double(0))
+                .request(MediaType.APPLICATION_JSON)
+                .get(Response.class);
+
+        assertEquals(400 ,response.getStatus());
+
+        response =  getWebTarget()
+                .path("json")
+                .path("getEnrichmentAndTransitions")
+                .queryParam("firstLongitude", new Double(0))
+                .queryParam("firstLatitude", new Double(0))
+                .queryParam("secondLatitude", new Double(0))
+                .request(MediaType.APPLICATION_JSON)
+                .get(Response.class);
+
+        assertEquals(400 ,response.getStatus());
+    }
+
+    @Test
+    public void getEnrichmentAndTransitionsTest(){
+        AreaTransitionsDTO response = getEnrichmentAndTransitions(11.940240, 57.702816, -9.080324, 38.713954);
+
+        assertFalse(response.getExitedAreas().isEmpty());
+        assertFalse(response.getEnteredAreas().isEmpty());
+
+        assertFalse(response.getSpatialEnrichmentRS().getAreasByLocation().getAreas().isEmpty());
+
+    }
+
+    @Test
+    public void getEnrichmentAndTransitionsWOFirstMoveTest(){
+        AreaTransitionsDTO response = getEnrichmentAndTransitions(null, null, -9.080324, 38.713954);
+
+        assertTrue(response.getExitedAreas().isEmpty());
+        assertFalse(response.getEnteredAreas().isEmpty());
+
+        assertFalse(response.getSpatialEnrichmentRS().getAreasByLocation().getAreas().isEmpty());
+    }
+
+
+
+    /*      HELPERS     */
+
     private SegmentCategoryType getSegmentCategoryType( List<MovementType> request){
 
         Response response =  getWebTarget()
@@ -231,6 +285,23 @@ public class SpatialRestResourceTest extends BuildSpatialRestDeployment {
 
         assertEquals(200, response.getStatus());
         return response.readEntity(new GenericType<SegmentCategoryType>() {});
+    }
+
+
+    private AreaTransitionsDTO getEnrichmentAndTransitions(Double firstLongitude, Double firstLatitude, Double secondLongitude, Double secondLatitude){
+
+        Response response =  getWebTarget()
+                .path("json")
+                .path("getEnrichmentAndTransitions")
+                .queryParam("firstLongitude", firstLongitude)
+                .queryParam("firstLatitude", firstLatitude)
+                .queryParam("secondLongitude", secondLongitude)
+                .queryParam("secondLatitude", secondLatitude)
+                .request(MediaType.APPLICATION_JSON)
+                .get(Response.class);
+
+        assertEquals(200 ,response.getStatus());
+        return response.readEntity(new GenericType<AreaTransitionsDTO>() {});
     }
 
     private MovementType createBasicMovementType(double lon, double lat){
