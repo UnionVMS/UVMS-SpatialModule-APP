@@ -35,8 +35,8 @@ public class UserScopeEntity extends BaseEntity {
 
 	@Id
 	@Column(name = "id")
-	@SequenceGenerator(name="SEQ_GEN", sequenceName="user_scope_seq", allocationSize = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN")
+	@SequenceGenerator(name="SEQ_GEN_user_scope", sequenceName="user_scope_seq", allocationSize = 1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN_user_scope")
 	private Long id;
 
     @ManyToOne

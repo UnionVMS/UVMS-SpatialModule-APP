@@ -51,8 +51,8 @@ public class FmzEntity extends BaseAreaEntity {
 
 	@Id
 	@Column(name = "gid")
-	@SequenceGenerator(name="SEQ_GEN", sequenceName="fmz_seq", allocationSize = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN")
+	@SequenceGenerator(name="SEQ_GEN_fmz", sequenceName="fmz_seq", allocationSize = 1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN_fmz")
     @JsonProperty("gid")
     private Long id;
 

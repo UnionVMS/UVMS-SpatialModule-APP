@@ -36,8 +36,8 @@ public class BookmarkEntity extends BaseEntity {
 
 	@Id
 	@Column(name = "id")
-	@SequenceGenerator(name="SEQ_GEN", sequenceName="bookmark_seq", allocationSize = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN")
+	@SequenceGenerator(name="SEQ_GEN_bookmark", sequenceName="bookmark_seq", allocationSize = 1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN_bookmark")
 	private Long id;
 	
     @Column(nullable = false)

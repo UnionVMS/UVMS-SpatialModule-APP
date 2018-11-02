@@ -46,8 +46,8 @@ public class ReportConnectServiceAreasEntity extends BaseEntity implements Compa
 
 	@Id
 	@Column(name = "id")
-    @SequenceGenerator(name = "SEQ_GEN", sequenceName = "report_conn_serv_area_seq", allocationSize = 1)
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN")
+    @SequenceGenerator(name = "SEQ_GEN_report_connect_service_area", sequenceName = "report_conn_serv_area_seq", allocationSize = 1)
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN_report_connect_service_area")
 	private Long id;
 	
 	@ManyToOne

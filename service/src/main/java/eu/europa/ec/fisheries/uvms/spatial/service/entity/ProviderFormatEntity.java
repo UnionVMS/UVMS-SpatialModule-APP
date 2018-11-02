@@ -38,8 +38,8 @@ public class ProviderFormatEntity extends BaseEntity {
 
 	@Id
 	@Column(name = "id")
-	@SequenceGenerator(name="SEQ_GEN", sequenceName="provider_format_seq", allocationSize = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN")
+	@SequenceGenerator(name="SEQ_GEN_provider_format", sequenceName="provider_format_seq", allocationSize = 1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN_provider_format")
 	private Long id;
 
 	@Column(name = "service_type", nullable = false, length = 10)

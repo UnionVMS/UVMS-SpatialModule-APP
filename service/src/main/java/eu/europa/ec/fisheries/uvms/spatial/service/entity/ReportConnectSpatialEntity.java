@@ -73,8 +73,8 @@ public class ReportConnectSpatialEntity implements Serializable {
 	
     @Id
 	@Column(name = "id")
-	@SequenceGenerator(name="SEQ_GEN", sequenceName="report_connect_spatial_seq", allocationSize = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN")
+	@SequenceGenerator(name="SEQ_GEN_report_connect_spatial", sequenceName="report_connect_spatial_seq", allocationSize = 1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN_report_connect_spatial")
 	private Long id;
 	
 	

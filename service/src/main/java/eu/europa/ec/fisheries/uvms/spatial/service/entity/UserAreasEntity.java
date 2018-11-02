@@ -139,8 +139,8 @@ public class UserAreasEntity extends BaseAreaEntity {
 
     @Id
     @Column(name = "gid")
-    @SequenceGenerator(name = "SEQ_GEN", sequenceName = "user_areas_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_GEN")
+    @SequenceGenerator(name = "SEQ_GEN_UserAreasEntity", sequenceName = "user_areas_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_GEN_UserAreasEntity")
     @JsonProperty("gid")
     private Long id;
 

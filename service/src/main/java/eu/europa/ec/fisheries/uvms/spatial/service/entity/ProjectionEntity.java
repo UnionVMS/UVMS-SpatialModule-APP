@@ -53,8 +53,8 @@ public class ProjectionEntity extends BaseEntity {
 	
 	@Id
 	@Column(name = "id")
-	@SequenceGenerator(name="SEQ_GEN", sequenceName="projection_seq", allocationSize = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN")
+	@SequenceGenerator(name="SEQ_GEN_projection", sequenceName="projection_seq", allocationSize = 1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN_projection")
 	private Long id;
 	
 	@Column(unique = true, nullable = false, length = 255)
