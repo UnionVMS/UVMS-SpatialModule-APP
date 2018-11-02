@@ -100,16 +100,11 @@ public class SpatialEventMDB implements MessageListener {
     private SpatialProducer producer;
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void onMessage(Message message) {
-
         TextMessage textMessage = (TextMessage) message;
-
         try {
-
             SpatialModuleRequest request = JAXBUtils.unMarshallMessage(textMessage.getText(), SpatialModuleRequest.class);
             SpatialModuleMethod method = request.getMethod();
-
             switch (method) {
                 case GET_AREA_BY_LOCATION:
                     AreaByLocationSpatialRQ byLocationSpatialRQ = JAXBUtils.unMarshallMessage(textMessage.getText(), AreaByLocationSpatialRQ.class);
@@ -181,7 +176,6 @@ public class SpatialEventMDB implements MessageListener {
                     Fault fault = new Fault(FaultCode.SPATIAL_MESSAGE.getCode(), "Method not implemented");
                     producer.sendFault(textMessage,fault);
             }
-
         } catch (JMSException | JAXBException e) {
             Fault fault = new Fault(FaultCode.SPATIAL_MESSAGE.getCode(), "ERROR OCCURRED IN SPATIAL MDB");
             producer.sendFault(textMessage, fault);

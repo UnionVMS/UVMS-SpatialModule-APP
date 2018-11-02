@@ -164,6 +164,9 @@
     <profiles>
         <profile>
             <id>generate-rest-doc</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
             <build>
                 <plugins>
                     <plugin>
@@ -184,8 +187,8 @@
                                     <reportOutputDirectory>src/main/webapp</reportOutputDirectory>
                                     <useStandardDocletOptions>false</useStandardDocletOptions>
                                     <additionalparam>-apiVersion ${project.version}
-                                        -docBasePath /${project.parent.artifactId}/apidocs
-                                        -apiBasePath /${project.parent.artifactId}/rest</additionalparam>
+                                        -docBasePath /unionvms/${project.parent.artifactId}/apidocs
+                                        -apiBasePath /unionvms/${project.parent.artifactId}/rest</additionalparam>
                                 </configuration>
                                 <goals>
                                     <goal>javadoc</goal>
