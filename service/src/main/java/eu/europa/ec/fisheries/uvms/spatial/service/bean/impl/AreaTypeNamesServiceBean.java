@@ -37,7 +37,6 @@ import java.util.Iterator;
 import java.util.List;
 
 @Stateless
-@Local(AreaTypeNamesService.class)
 @Transactional
 @Slf4j
 public class AreaTypeNamesServiceBean implements AreaTypeNamesService {

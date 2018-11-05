@@ -113,7 +113,6 @@ import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
 
 @Stateless
-@Local(AreaService.class)
 @Slf4j
 public class AreaServiceBean implements AreaService {
 
@@ -688,6 +687,31 @@ public class AreaServiceBean implements AreaService {
 
         final Point incoming = (Point) GeometryUtils.toGeographic(lat, lon, crs);
         final List<AreaLocationTypesEntity> typesEntities = repository.findByIsLocationAndIsSystemWide(false, true);
+        final List<AreaExtendedIdentifierType> areaTypes = new ArrayList<>();
+
+        List records = repository.intersectingArea(typesEntities, databaseDialect, incoming);
+
+        for (Object record : records) {
+            final Object[] result = (Object[]) record;
+            AreaExtendedIdentifierType area = new AreaExtendedIdentifierType();
+            area.setAreaType(AreaType.valueOf(String.valueOf(result[0])));
+            area.setId(String.valueOf(result[1]));
+            area.setCode(String.valueOf(result[2]));
+            area.setName(String.valueOf(result[3]));
+            areaTypes.add(area);
+        }
+
+        return areaTypes;
+    }
+
+    @Override // FIXME is kind off a duplicate of List<Map<String, Object>> getAreasByPoint
+    public List<AreaExtendedIdentifierType> getPortAreasByPoint(Point incoming) throws ServiceException {
+
+        Integer crs = 4326;
+
+        AreaLocationTypesEntity typesEntity = repository.findAreaLocationTypeByTypeName("PORTAREA");
+        final List<AreaLocationTypesEntity> typesEntities = new ArrayList<>();
+        typesEntities.add(typesEntity);
         final List<AreaExtendedIdentifierType> areaTypes = new ArrayList<>();
 
         List records = repository.intersectingArea(typesEntities, databaseDialect, incoming);

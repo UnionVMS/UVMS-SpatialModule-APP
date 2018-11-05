@@ -1,6 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured;
 
-import eu.europa.ec.fisheries.uvms.spatial.rest.constants.RestConstants;
+import eu.europa.ec.fisheries.uvms.spatial.rest.util.ObjectMapperContextResolver;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
@@ -13,7 +13,8 @@ public class RestActivatorSpatial extends Application {
     @Override
     public Set<Class<?>> getClasses() {
         Set<Class<?>> resources = new HashSet<>();
-        resources.add(SpatialResource.class);
+        resources.add(ObjectMapperContextResolver.class);
+        resources.add(SpatialRestResource.class);
         return resources;
     }
 
