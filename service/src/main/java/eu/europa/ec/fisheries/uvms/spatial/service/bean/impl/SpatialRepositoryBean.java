@@ -69,7 +69,6 @@ import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.BookmarkMapper;
 
 @Stateless
-@Local(value = SpatialRepository.class)
 public class SpatialRepositoryBean implements SpatialRepository {
 
     private EntityManager em;

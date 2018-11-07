@@ -137,8 +137,11 @@ public abstract class AbstractAreaDao<E extends BaseAreaEntity> extends Abstract
     }
 
     public List<E> byCode(List<AreaSimpleType> areaSimpleTypeList) throws ServiceException {
-        if (areaSimpleTypeList == null || areaSimpleTypeList.isEmpty()) {
+        if (areaSimpleTypeList == null) {
             throw new IllegalArgumentException("LIST CAN NOT BE EMPTY OR NULL");
+        }
+        if (areaSimpleTypeList.isEmpty()) {
+            return new ArrayList<>();
         }
         final StringBuilder sb = new StringBuilder();
         List resultList;

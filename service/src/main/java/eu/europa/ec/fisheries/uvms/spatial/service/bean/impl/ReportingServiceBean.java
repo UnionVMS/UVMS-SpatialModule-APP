@@ -31,7 +31,6 @@ import javax.jms.Message;
 import javax.jms.TextMessage;
 
 @Stateless
-@Local(ReportingService.class)
 @Slf4j
 public class ReportingServiceBean implements ReportingService {
 

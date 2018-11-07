@@ -18,7 +18,7 @@
   <properties>
         <!-- The spatial name is used as a common point to rename the application alias visible in USM-->
         <spatial.name>Spatial</spatial.name>
-        <docker.dev.version>3.20.0</docker.dev.version>
+        <docker.dev.version>3.29.0.w14</docker.dev.version>
         <spatial.model>1.0.12</spatial.model>
         <reporting.model>1.0.4</reporting.model>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -90,14 +90,7 @@
                 <artifactId>spatial-model</artifactId>
                 <version>${spatial.model}</version>
             </dependency>
-        
-        	<dependency>
-                <groupId>eu.europa.ec.fisheries.uvms</groupId>
-                <artifactId>usm4uvms</artifactId>
-                <version>${usm4uvms.version}</version>
-				<optional>true</optional>
-            </dependency>
-            
+
             <dependency>
                 <groupId>io.jsonwebtoken</groupId>
                 <artifactId>jjwt</artifactId>

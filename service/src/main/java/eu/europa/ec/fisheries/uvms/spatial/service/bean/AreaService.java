@@ -14,6 +14,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Map;
 
+import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Area;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
@@ -40,6 +41,8 @@ public interface AreaService {
     Map<String, Object> getLocationDetails(LocationTypeEntry locationTypeEntry) throws ServiceException;
 
     List<Map<String, Object> > getAreasByPoint(@NotNull Double latitude, @NotNull Double longitude, @NotNull Integer crs, @NotNull String userName, @NotNull AreaType areaType) throws ServiceException;
+
+    List<AreaExtendedIdentifierType> getPortAreasByPoint(Point incoming) throws ServiceException;
 
     List<GenericSystemAreaDto> searchAreasByNameOrCode(@NotNull String areaType, @NotNull String filter) throws ServiceException;
 
