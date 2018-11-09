@@ -43,7 +43,7 @@
         <usm_deployment_descriptor_force_update>false</usm_deployment_descriptor_force_update>
         <release.branch.name>uvms-1.0.0</release.branch.name>
         <maven.scm.provider.version>2.1.1</maven.scm.provider.version>
-        <javaee.version>7.0</javaee.version>
+        <javaee.version>8.0</javaee.version>
         <mapstruct.version>1.2.0.Final</mapstruct.version>
         <database.dialect>postgres</database.dialect>
         <scm.connection>scm:git:https://github.com/UnionVMS/UVMS-SpatialModule-APP.git</scm.connection>
