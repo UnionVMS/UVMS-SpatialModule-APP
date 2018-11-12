@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:spatial="http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-spatial"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd   http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-spatial
+      http://lonnyj.github.com/liquibase-spatial/liquibase-spatial.xsd">
+
+    <changeSet author="emrinalgr" id="11">
+        <createSequence cycle="false" incrementBy="1" maxValue="9223372036854775807" minValue="1"
+                        sequenceName="eez_seq" startValue="1"/>
+    </changeSet>
+
+    <changeSet author="padhyad" id="1439890745706-35">
+        <preConditions>
+            <spatial:spatialSupported/>
+        </preConditions>
+        <createTable tableName="eez">
+            <column name="gid" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="eez_pkey"/>
+            </column>
+            <column name="geom" type="GEOMETRY(Multipolygon, 4326)"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="country" type="VARCHAR(100)"/>
+            <column name="sovereign" type="VARCHAR(100)"/>
+            <column name="remarks" type="VARCHAR(150)"/>
+            <column name="sov_id" type="BIGINT"/>
+            <column name="eez_id" type="BIGINT"/>
+            <column name="code" type="VARCHAR(20)"/>
+            <column name="mrgid" type="DOUBLE"/>
+            <column name="date_chang" type="VARCHAR(50)"/>
+            <column name="area_m2" type="FLOAT"/>
+            <column name="longitude" type="FLOAT"/>
+            <column name="latitude" type="FLOAT"/>
+            <column name="mrgid_eez" type="BIGINT"/>
+			<column name="enabled" type="VARCHAR(1)">
+                <constraints nullable="false"/>
+            </column>
+			<column name="enabled_on" type="TIMESTAMP"/>
+        </createTable>
+
+    </changeSet>
+    <changeSet id="1" author="emrinalgr">
+        <spatial:createSpatialIndex tableName="eez" indexName="eez_geom_index" geometryType="Multipolygon" srid="4326">
+            <column name="geom" />
+        </spatial:createSpatialIndex>
+    </changeSet>
+
+    <changeSet author="dubduan" id="76834618168717" dbms="postgresql">
+        <addDefaultValue
+                columnDataType="BIGINT"
+                columnName="gid"
+                defaultValueSequenceNext="eez_seq"
+                tableName="eez"/>
+    </changeSet>
+	
+	
+    <changeSet author="dubduan" id="1431890745716-31" dbms="oracle">
+
+        <createProcedure>
+            CREATE OR REPLACE TRIGGER trg_eez
+            BEFORE INSERT
+            ON eez
+            FOR EACH ROW
+            DECLARE
+            BEGIN
+            SELECT eez_seq.NEXTVAL INTO :NEW.gid FROM DUAL;
+            END trg_eez;
+        </createProcedure>	
+    </changeSet>	
+	
+<!--	<changeSet author="dubduan" id="1429980sds-31" dbms="postgresql">
+	
+        <createProcedure>
+            CREATE OR REPLACE FUNCTION inc_eez_sq()
+            RETURNS "trigger" AS
+            $BODY$
+            BEGIN
+            New.gid:=nextval('eez_seq');
+            Return NEW;
+            END;
+            $BODY$
+            LANGUAGE 'plpgsql' VOLATILE;
+
+            CREATE TRIGGER trg_eez
+            before insert on eez
+            for each row EXECUTE procedure inc_eez_sq()
+
+			
+        </createProcedure>			
+    </changeSet>-->
+	
+</databaseChangeLog>

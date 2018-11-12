@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet author="emrinalgr" id="1">
+        <createSequence cycle="false" incrementBy="1" maxValue="9223372036854775807" minValue="1"
+                        sequenceName="provider_format_seq" startValue="1"/>
+    </changeSet>
+
+   <changeSet author="padhyad" id="1439890745706-40">
+        <createTable tableName="provider_format">
+            <column name="id" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="provider_format_pkey"/>
+            </column>
+            <column name="service_type" type="VARCHAR(10)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    
+    <changeSet author="padhyad" id="1439890745706-64">
+        <addForeignKeyConstraint baseColumnNames="provider_format_id"
+                                 baseTableName="service_layer"
+                                 constraintName="provider_format_id_fkey"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 onDelete="RESTRICT"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="provider_format"/>
+    </changeSet>
+
+    <changeSet author="dubduan" id="76834618168717" dbms="postgresql">
+        <addDefaultValue
+                columnDataType="BIGINT"
+                columnName="id"
+                defaultValueSequenceNext="provider_format_seq"
+                tableName="provider_format"/>
+    </changeSet>
+    
+		
+   <changeSet author="dubduan" id="1419810741706-40" dbms="oracle">
+        <createProcedure>
+            CREATE OR REPLACE TRIGGER trg_provider_format
+            BEFORE INSERT
+            ON provider_format
+            FOR EACH ROW
+            DECLARE
+            BEGIN
+            SELECT provider_format_seq.NEXTVAL INTO :NEW.ID FROM DUAL;
+            END trg_provider_format;
+        </createProcedure>		
+    </changeSet>	
+	
+	
+<!--	<changeSet author="dubduan" id="1879h870s-31" dbms="postgresql">
+	
+        <createProcedure>
+
+            CREATE OR REPLACE FUNCTION inc_provider_format_sq()
+            RETURNS "trigger" AS
+            $BODY$
+            BEGIN
+            New.id:=nextval('provider_format_seq');
+            Return NEW;
+            END;
+            $BODY$
+            LANGUAGE 'plpgsql' VOLATILE;
+
+            CREATE TRIGGER trg_provider_format
+            before insert on provider_format
+            for each row EXECUTE procedure inc_provider_format_sq()
+			
+        </createProcedure>			
+    </changeSet>-->
+	
+</databaseChangeLog>
+ 
+ 

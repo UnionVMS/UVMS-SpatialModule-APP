@@ -425,5 +425,6 @@
         <module>service</module>
         <module>message</module>
         <module>module</module>
+        <module>LIQUIBASE</module>
     </modules>
 </project>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:spatial="http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-spatial"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd   http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-spatial
+      http://lonnyj.github.com/liquibase-spatial/liquibase-spatial.xsd">
+
+    <changeSet author="emrinalgr" id="3">
+        <createSequence cycle="false" incrementBy="1" maxValue="9223372036854775807" minValue="1"
+                        sequenceName="user_areas_seq" startValue="1"/>
+    </changeSet>
+
+    <changeSet author="padhyad" id="1455714034499-23">
+         <preConditions>
+            <spatial:spatialSupported/>
+        </preConditions>
+		<createTable tableName="user_areas">
+            <column name="gid" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="user_areas_pkey"/>
+            </column>
+            <column name="user_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" remarks="Area name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="code" type="VARCHAR(20)"/>
+            <column name="type" type="VARCHAR(255)"/>
+            <column name="area_desc" remarks="Description of the area" type="CLOB"/>
+            <column name="geom" remarks="Geometry of the area" type="GEOMETRY(Multipolygon, 4326)">
+                <constraints nullable="false"/>
+            </column>
+              <column name="enabled_on" type="TIMESTAMP"/>
+            <column name="created_on" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="start_date" type="TIMESTAMP"/>
+            <column name="end_date" type="TIMESTAMP"/>
+            <column name="dataset_name" type="VARCHAR(255)"/><column name="enabled" type="VARCHAR(1)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+    </changeSet>
+
+    <changeSet id="1" author="emrinalgr">
+        <spatial:createSpatialIndex tableName="user_areas" indexName="user_areas_geom_index" geometryType="Multipolygon" srid="4326">
+            <column name="geom" />
+        </spatial:createSpatialIndex>
+    </changeSet>
+
+    <changeSet author="dubduan" id="76834618168717" dbms="postgresql">
+        <addDefaultValue
+                columnDataType="BIGINT"
+                columnName="gid"
+                defaultValueSequenceNext="user_areas_seq"
+                tableName="user_areas"/>
+    </changeSet>
+
+	
+    <changeSet author="dubduan" id="1451714034491-21" dbms="oracle">
+        <createProcedure>
+            CREATE OR REPLACE TRIGGER trg_user_areas
+            BEFORE INSERT
+            ON user_areas
+            FOR EACH ROW
+            DECLARE
+            BEGIN
+            SELECT user_areas_seq.NEXTVAL INTO :NEW.gid FROM DUAL;
+            END trg_user_areas;
+        </createProcedure>		
+    </changeSet>	
+	
+	
+<!--	<changeSet author="dubduan" id="18k7997k70s-31" dbms="postgresql">
+	
+        <createProcedure>
+
+            CREATE OR REPLACE FUNCTION inc_user_areas_sq()
+            RETURNS "trigger" AS
+            $BODY$
+            BEGIN
+            New.gid:=nextval('user_areas_seq');
+            Return NEW;
+            END;
+            $BODY$
+            LANGUAGE 'plpgsql' VOLATILE;
+
+            CREATE TRIGGER trg_user_areas
+            before insert on user_areas
+            for each row EXECUTE procedure inc_user_areas_sq()
+			
+        </createProcedure>			
+    </changeSet>-->
+	
+</databaseChangeLog>

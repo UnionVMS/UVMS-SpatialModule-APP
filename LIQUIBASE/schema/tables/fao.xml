@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:spatial="http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-spatial"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd
+                   http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-spatial http://lonnyj.github.com/liquibase-spatial/liquibase-spatial.xsd">
+
+    <changeSet author="emrinalgr" id="10">
+        <createSequence cycle="false" incrementBy="1" maxValue="9223372036854775807" minValue="1"
+                        sequenceName="fao_seq" startValue="1"/>
+    </changeSet>
+
+	<changeSet author="martinhu" id="1462799386763-8">
+        <createTable tableName="fao">
+            <column name="gid" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="fao_pkey"/>
+            </column>
+            <column name="geom" type="GEOMETRY(Multipolygon, 4326)"/>
+            <column name="ocean" type="VARCHAR(50)"/>
+            <column name="subocean" type="VARCHAR(50)"/>
+            <column name="f_area" type="VARCHAR(50)"/>
+            <column name="name" type="VARCHAR(50)"/>
+            <column name="area_l" type="VARCHAR(50)"/>
+            <column name="f_subarea" type="VARCHAR(50)"/>
+            <column name="subarea_n" type="VARCHAR(50)"/>
+            <column name="subarea_l" type="VARCHAR(50)"/>
+            <column name="f_division" type="VARCHAR(50)"/>
+            <column name="division_n" type="VARCHAR(50)"/>
+            <column name="division_l" type="VARCHAR(50)"/>
+            <column name="f_subdivis" type="VARCHAR(50)"/>
+            <column name="subdivis_n" type="VARCHAR(50)"/>
+            <column name="subdivis_l" type="VARCHAR(50)"/>
+            <column name="f_subunit" type="VARCHAR(50)"/>
+            <column name="subunit_n" type="VARCHAR(50)"/>
+            <column name="subunit_l" type="VARCHAR(50)"/>
+            <column name="ele_name" type="VARCHAR(50)"/>
+            <column name="ele_label" type="VARCHAR(50)"/>
+            <column name="ele_type" type="VARCHAR(50)"/>
+            <column name="f_label" type="VARCHAR(16)"/>
+            <column name="code" type="VARCHAR(20)"/>
+            <column name="enabled" type="VARCHAR(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enabled_on" type="TIMESTAMP"/>
+        </createTable>
+
+	</changeSet>
+    <changeSet id="1" author="emrinalgr">
+        <spatial:createSpatialIndex tableName="fao" indexName="fao_geom_index" geometryType="Multipolygon" srid="4326">
+            <column name="geom" />
+        </spatial:createSpatialIndex>
+    </changeSet>
+
+
+    <changeSet author="dubduan" id="76834618168717" dbms="postgresql">
+        <addDefaultValue
+                columnDataType="BIGINT"
+                columnName="gid"
+                defaultValueSequenceNext="fao_seq"
+                tableName="fao"/>
+    </changeSet>
+	
+	<changeSet author="dubduan" id="1462199386163-8" dbms="oracle">
+	
+        <createProcedure>
+            CREATE OR REPLACE TRIGGER trg_fao
+            BEFORE INSERT
+            ON fao
+            FOR EACH ROW
+            DECLARE
+            BEGIN
+            SELECT fao_seq.NEXTVAL INTO :NEW.gid FROM DUAL;
+            END trg_fao;
+        </createProcedure>
+	</changeSet>	
+	
+<!--	<changeSet author="dubduan" id="142230sds-31" dbms="postgresql">
+	
+        <createProcedure>
+
+            CREATE OR REPLACE FUNCTION inc_fao_sq()
+            RETURNS "trigger" AS
+            $BODY$
+            BEGIN
+            New.gid:=nextval('fao_seq');
+            Return NEW;
+            END;
+            $BODY$
+            LANGUAGE 'plpgsql' VOLATILE;
+
+            CREATE TRIGGER trg_fao
+            before insert on fao
+            for each row EXECUTE procedure inc_fao_sq()
+
+			
+        </createProcedure>			
+    </changeSet>-->
+	
+</databaseChangeLog>

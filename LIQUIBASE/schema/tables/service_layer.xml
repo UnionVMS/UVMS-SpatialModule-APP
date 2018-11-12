@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet author="emrinalgr" id="1">
+        <createSequence cycle="false" incrementBy="1" maxValue="9223372036854775807" minValue="1"
+                        sequenceName="service_layer_seq" startValue="1"/>
+    </changeSet>
+
+     <changeSet author="padhyad" id="1439890745706-46">
+        <createTable tableName="service_layer">
+            <column autoIncrement="true" name="id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="layer_pkey"/>
+            </column>
+            <column name="user_id" type="BIGINT"/>
+            <column name="name" remarks="Name of the layer to be displayed at the front-end" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="layer_desc" remarks="Description of the layer" type="VARCHAR(255)"/>
+            <column name="provider_format_id" remarks="link to PROVIDER_FORMAT table" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="service_url" remarks="if service type is WMS than this field is mandatory" type="CLOB"/>
+            <column name="geo_name" remarks="GeoServer layer name" type="VARCHAR(255)"/>
+            <column name="srs_code" type="BIGINT"/>
+            <column name="short_copyright" type="VARCHAR(255)"/>
+            <column name="long_copyright" type="CLOB"/>
+            <column name="is_internal" type="VARCHAR(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="style_geom" type="VARCHAR(255)"/>
+            <column name="style_label" type="VARCHAR(255)"/>
+            <column name="style_label_geom" type="VARCHAR(255)"/>
+            <column name="subtype" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    
+    <changeSet author="padhyad" id="1439890745706-56">
+        <addForeignKeyConstraint baseColumnNames="service_layer_id" baseTableName="area_location_types" constraintName="types_service_layer_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="service_layer"/>
+    </changeSet>
+    
+    <changeSet author="padhyad" id="1439890745706-59">
+        <addForeignKeyConstraint baseColumnNames="service_layer_id" baseTableName="report_connect_service_area" constraintName="area_service_layer_fkey" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="service_layer"/>
+    </changeSet>
+
+    <changeSet author="dubduan" id="76834618168717" dbms="postgresql">
+        <addDefaultValue
+                columnDataType="BIGINT"
+                columnName="id"
+                defaultValueSequenceNext="service_layer_seq"
+                tableName="service_layer"/>
+    </changeSet>
+	
+     <changeSet author="dubduan" id="1419890745106-41" dbms="oracle">
+        <createProcedure>
+            CREATE OR REPLACE TRIGGER trg_service_layer
+            BEFORE INSERT
+            ON service_layer
+            FOR EACH ROW
+            DECLARE
+            BEGIN
+            SELECT service_layer_seq.NEXTVAL INTO :NEW.ID FROM DUAL;
+            END trg_service_layer;
+        </createProcedure>			
+    </changeSet>    
+	
+<!--	<changeSet author="dubduan" id="18k77870s-31" dbms="postgresql">
+	
+        <createProcedure>
+
+            CREATE OR REPLACE FUNCTION inc_service_layer_sq()
+            RETURNS "trigger" AS
+            $BODY$
+            BEGIN
+            New.id:=nextval('service_layer_seq');
+            Return NEW;
+            END;
+            $BODY$
+            LANGUAGE 'plpgsql' VOLATILE;
+
+            CREATE TRIGGER trg_service_layer
+            before insert on service_layer
+            for each row EXECUTE procedure inc_service_layer_sq()
+
+
+			
+        </createProcedure>			
+    </changeSet>	-->
+	
+</databaseChangeLog>

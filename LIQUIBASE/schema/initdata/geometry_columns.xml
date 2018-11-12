@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:spatial="http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-spatial"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-spatial 
+      http://lonnyj.github.com/liquibase-spatial/liquibase-spatial.xsd">
+
+	<changeSet author="mkopyczok" id="1439890746709-22" dbms="oracle">
+	
+		<insert tableName="GEOMETRY_COLUMNS">
+			<column name="F_TABLE_SCHEMA" value="SPATIAL" />
+			<column name="F_TABLE_NAME"  value="EEZ" />
+			<column name="F_GEOMETRY_COLUMN" value="GEOM" />
+			<column name="COORD_DIMENSION" valueNumeric="2" />
+			<column name="SRID" valueNumeric="4326" />
+			<column name="TYPE" value="MULTIPOLYGON" />
+		</insert>
+		<insert tableName="GEOMETRY_COLUMNS">
+			<column name="F_TABLE_SCHEMA" value="SPATIAL" />
+			<column name="F_TABLE_NAME"  value="FAO" />
+			<column name="F_GEOMETRY_COLUMN" value="GEOM" />
+			<column name="COORD_DIMENSION" valueNumeric="2" />
+			<column name="SRID" valueNumeric="4326" />
+			<column name="TYPE" value="MULTIPOLYGON" />
+		</insert>
+		<insert tableName="GEOMETRY_COLUMNS">
+			<column name="F_TABLE_SCHEMA" value="SPATIAL" />
+			<column name="F_TABLE_NAME"  value="GFCM" />
+			<column name="F_GEOMETRY_COLUMN" value="GEOM" />
+			<column name="COORD_DIMENSION" valueNumeric="2" />
+			<column name="SRID" valueNumeric="4326" />
+			<column name="TYPE" value="MULTIPOLYGON" />
+		</insert>
+
+		<insert tableName="GEOMETRY_COLUMNS">
+			<column name="F_TABLE_SCHEMA" value="SPATIAL" />
+			<column name="F_TABLE_NAME"  value="PORT" />
+			<column name="F_GEOMETRY_COLUMN" value="GEOM" />
+			<column name="COORD_DIMENSION" valueNumeric="2" />
+			<column name="SRID" valueNumeric="4326" />
+			<column name="TYPE" value="MULTIPOINT" />
+		</insert>
+		<insert tableName="GEOMETRY_COLUMNS">
+			<column name="F_TABLE_SCHEMA" value="SPATIAL" />
+			<column name="F_TABLE_NAME"  value="PORT_AREA" />
+			<column name="F_GEOMETRY_COLUMN" value="GEOM" />
+			<column name="COORD_DIMENSION" valueNumeric="2" />
+			<column name="SRID" valueNumeric="4326" />
+			<column name="TYPE" value="MULTIPOLYGON" />
+		</insert>
+		<insert tableName="GEOMETRY_COLUMNS">
+			<column name="F_TABLE_SCHEMA" value="SPATIAL" />
+			<column name="F_TABLE_NAME"  value="RFMO" />
+			<column name="F_GEOMETRY_COLUMN" value="GEOM" />
+			<column name="COORD_DIMENSION" valueNumeric="2" />
+			<column name="SRID" valueNumeric="4326" />
+			<column name="TYPE" value="MULTIPOLYGON" />
+		</insert>
+		<insert tableName="GEOMETRY_COLUMNS">
+			<column name="F_TABLE_SCHEMA" value="SPATIAL" />
+			<column name="F_TABLE_NAME"  value="STAT_RECT" />
+			<column name="F_GEOMETRY_COLUMN" value="GEOM" />
+			<column name="COORD_DIMENSION" valueNumeric="2" />
+			<column name="SRID" valueNumeric="4326" />
+			<column name="TYPE" value="MULTIPOLYGON" />
+		</insert>
+		<insert tableName="GEOMETRY_COLUMNS">
+			<column name="F_TABLE_SCHEMA" value="SPATIAL" />
+			<column name="F_TABLE_NAME"  value="USER_AREAS" />
+			<column name="F_GEOMETRY_COLUMN" value="GEOM" />
+			<column name="COORD_DIMENSION" valueNumeric="2" />
+			<column name="SRID" valueNumeric="4326" />
+			<column name="TYPE" value="MULTIPOLYGON" />
+		</insert>
+		<insert tableName="GEOMETRY_COLUMNS">
+			<column name="F_TABLE_SCHEMA" value="SPATIAL" />
+			<column name="F_TABLE_NAME"  value="USER_AREAS_V" />
+			<column name="F_GEOMETRY_COLUMN" value="GEOM" />
+			<column name="COORD_DIMENSION" valueNumeric="2" />
+			<column name="SRID" valueNumeric="4326" />
+			<column name="TYPE" value="MULTIPOLYGON" />
+		</insert>
+		
+	</changeSet>
+</databaseChangeLog>

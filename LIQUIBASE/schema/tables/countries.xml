@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:spatial="http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-spatial"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd
+                   http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-spatial http://lonnyj.github.com/liquibase-spatial/liquibase-spatial.xsd">
+
+   <changeSet author="emrinalgr" id="8">
+        <createSequence cycle="false" incrementBy="1" maxValue="9223372036854775807" minValue="1"
+                        sequenceName="countries_seq" startValue="1"/>
+   </changeSet>
+
+	<changeSet author="martinhu" id="1462896361922-5">
+        <preConditions>
+            <spatial:spatialSupported/>
+        </preConditions>
+        <createTable tableName="countries">
+              <column name="gid" type="BIGINT" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="geom" type="GEOMETRY(Multipolygon, 4326)"/>
+			<column name="geom_20" type="GEOMETRY(Multipolygon, 4326)"/>
+            <column name="cntr_id" type="VARCHAR(2)"/>
+            <column name="cntr_name" type="VARCHAR(254)"/>
+            <column name="name_asci" type="VARCHAR(150)"/>
+            <column name="name" type="VARCHAR(254)"/>
+            <column name="name_fren" type="VARCHAR(254)"/>
+            <column name="poli_org_c" type="BIGINT"/>
+            <column name="name_gaul" type="VARCHAR(150)"/>
+            <column name="code" type="VARCHAR(3)"/>
+            <column name="svrg_un" type="VARCHAR(60)"/>
+            <column name="capt" type="VARCHAR(30)"/>
+            <column name="cent_meri" type="DOUBLE"/>
+            <column name="lat_orig" type="DOUBLE"/>
+            <column name="efta_terr" type="VARCHAR(1)"/>
+            <column name="cc_terr" type="VARCHAR(1)"/>
+            <column name="cntr_code_" type="VARCHAR(2)"/>
+            <column name="eu_terr" type="VARCHAR(5)"/>
+            <column name="enabled" type="VARCHAR(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enabled_on" type="TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1" author="emrinalgr">
+        <spatial:createSpatialIndex tableName="countries" indexName="countries_geom_index" geometryType="Multipolygon" srid="4326">
+            <column name="geom" />
+        </spatial:createSpatialIndex>
+        <spatial:createSpatialIndex tableName="countries" indexName="countries_geom_20_index" geometryType="Multipolygon" srid="4326">
+            <column name="geom_20" />
+        </spatial:createSpatialIndex>
+    </changeSet>
+
+    <changeSet author="dubduan" id="76834618168717" dbms="postgresql">
+        <addDefaultValue
+                columnDataType="BIGINT"
+                columnName="gid"
+                defaultValueSequenceNext="countries_seq"
+                tableName="countries"/>
+    </changeSet>
+	
+
+	<changeSet author="dubduan" id="1162196361922-1" dbms="oracle">	
+        <createProcedure>
+            CREATE OR REPLACE TRIGGER trg_countries
+            BEFORE INSERT
+            ON countries
+            FOR EACH ROW
+            DECLARE
+            BEGIN
+            SELECT countries_seq.NEXTVAL INTO :NEW.gid FROM DUAL;
+            END trg_countries;
+        </createProcedure>			
+    </changeSet>	
+	
+<!--	<changeSet author="dubduan" id="1429980sds-31" dbms="postgresql">
+	
+        <createProcedure>
+            CREATE OR REPLACE FUNCTION inc_countries_sq()
+            RETURNS "trigger" AS
+            $BODY$
+            BEGIN
+            New.id:=nextval('countries_seq');
+            Return NEW;
+            END;
+            $BODY$
+            LANGUAGE 'plpgsql' VOLATILE;
+
+            CREATE TRIGGER trg_countries
+            before insert on countries
+            for each row EXECUTE procedure inc_countries_sq()
+			
+        </createProcedure>			
+    </changeSet>-->
+	
+</databaseChangeLog>

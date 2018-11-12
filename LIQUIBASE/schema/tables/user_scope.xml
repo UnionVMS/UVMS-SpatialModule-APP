@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet author="emrinalgr" id="1">
+        <createSequence cycle="false" incrementBy="1" maxValue="9223372036854775807" minValue="1"
+                        sequenceName="user_scope_seq" startValue="1"/>
+    </changeSet>
+
+    <changeSet author="georgige (generated)" id="1455203156574-24">
+        <createTable tableName="user_scope">
+            <column name="scope_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_area_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="user_scope_id_pk"/>
+            </column>
+        </createTable>
+    </changeSet>
+   
+    <changeSet author="georgige (generated)" id="1455203156574-42">
+        <addForeignKeyConstraint baseColumnNames="user_area_id"
+                                 baseTableName="user_scope"
+                                 constraintName="user_area_id_fk"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 onDelete="NO ACTION"
+                                 onUpdate="NO ACTION"
+                                 referencedColumnNames="gid"
+                                 referencedTableName="user_areas"/>
+    </changeSet>
+
+    <changeSet author="dubduan" id="76834618168717" dbms="postgresql">
+        <addDefaultValue
+                columnDataType="BIGINT"
+                columnName="id"
+                defaultValueSequenceNext="user_scope_seq"
+                tableName="user_scope"/>
+    </changeSet>
+
+	
+	
+    <changeSet author="dubduan" id="141521316574-24" dbms="oracle">
+        <createProcedure>
+            CREATE OR REPLACE TRIGGER trg_user_scope
+            BEFORE INSERT
+            ON user_scope
+            FOR EACH ROW
+            DECLARE
+            BEGIN
+            SELECT user_scope_seq.NEXTVAL INTO :NEW.ID FROM DUAL;
+            END trg_user_scope;
+        </createProcedure>				
+    </changeSet>	
+	
+<!--	<changeSet author="dubduan" id="1980997ks-31" dbms="postgresql">
+	
+        <createProcedure>
+
+            CREATE OR REPLACE FUNCTION inc_user_scope_sq()
+            RETURNS "trigger" AS
+            $BODY$
+            BEGIN
+            New.gid:=nextval('user_scope_seq');
+            Return NEW;
+            END;
+            $BODY$
+            LANGUAGE 'plpgsql' VOLATILE;
+
+            CREATE TRIGGER trg_user_scope
+            before insert on user_scope
+            for each row EXECUTE procedure inc_user_scope_sq()
+			
+        </createProcedure>			
+    </changeSet>-->
+	
+	
+</databaseChangeLog>
