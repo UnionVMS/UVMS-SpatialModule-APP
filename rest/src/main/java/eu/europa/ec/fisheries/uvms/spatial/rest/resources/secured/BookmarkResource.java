@@ -38,16 +38,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class BookmarkResource extends UnionVMSResource {
 
-    @Context
-    private HttpServletRequest servletRequest;
-
     @EJB
     private BookmarkService bookmarkService;
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response list() throws ServiceException {
+    public Response list(@Context HttpServletRequest servletRequest) throws ServiceException {
 
         final String username = servletRequest.getRemoteUser();
         List<Bookmark> bookmarks = new ArrayList<>(bookmarkService.listByUsername(username));
@@ -59,7 +56,7 @@ public class BookmarkResource extends UnionVMSResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response createBookmark(final Bookmark bookmark) throws ServiceException {
+    public Response createBookmark(final Bookmark bookmark, @Context HttpServletRequest servletRequest) throws ServiceException {
 
         final String username = servletRequest.getRemoteUser();
         final Bookmark result = bookmarkService.create(bookmark, username);
@@ -70,7 +67,7 @@ public class BookmarkResource extends UnionVMSResource {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response deleteReport(@PathParam("id") Long id) throws ServiceException {
+    public Response deleteReport(@PathParam("id") Long id, @Context HttpServletRequest servletRequest) throws ServiceException {
 
         final String username = servletRequest.getRemoteUser();
         bookmarkService.delete(id, username);
@@ -82,7 +79,7 @@ public class BookmarkResource extends UnionVMSResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response updateBookmark(Bookmark bookmark, @PathParam("id") Long id) throws ServiceException {
+    public Response updateBookmark(Bookmark bookmark, @PathParam("id") Long id, @Context HttpServletRequest servletRequest) throws ServiceException {
 
         final String username = servletRequest.getRemoteUser();
         bookmark.setId(id);

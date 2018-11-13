@@ -57,9 +57,6 @@ public class ServiceLayerResource extends UnionVMSResource {
     @EJB
     private AreaTypeNamesService areaTypeService;
 
-    @Context
-    private HttpServletRequest servletRequest;
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("{systemAreaType}")
@@ -96,7 +93,7 @@ public class ServiceLayerResource extends UnionVMSResource {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/layer/{layerType}")
-    public Response getServiceLayersByType(@PathParam("layerType") String layerType, @HeaderParam("scopeName") String scopeName, @HeaderParam("roleName") String roleName) throws ServiceException {
+    public Response getServiceLayersByType(@PathParam("layerType") String layerType, @HeaderParam("scopeName") String scopeName, @HeaderParam("roleName") String roleName, @Context HttpServletRequest servletRequest) throws ServiceException {
         LayerSubTypeEnum layerTypeEnum = LayerSubTypeEnum.value(layerType);
         List<? extends ServiceLayerDto> areaServiceLayerDtos ;
 
