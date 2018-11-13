@@ -87,15 +87,6 @@ public class UserAreaResource extends UnionVMSResource {
 
     private AreaLocationMapper areaLocationMapper = AreaLocationMapper.mapper();
 
-    @HeaderParam("authorization")
-    private String authorization;
-
-    @HeaderParam("scopeName")
-    private String scopeName;
-
-    @HeaderParam("roleName")
-    private String roleName;
-
     @Context
     private HttpServletRequest servletRequest;
 
@@ -163,7 +154,7 @@ public class UserAreaResource extends UnionVMSResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response updateUserArea(UserAreaGeoJsonDto userAreaGeoJsonDto) throws ServiceException {
+    public Response updateUserArea(UserAreaGeoJsonDto userAreaGeoJsonDto, @HeaderParam("scopeName") String scopeName) throws ServiceException {
         if (servletRequest.isUserInRole(SpatialFeaturesEnum.MANAGE_USER_DEFINED_AREAS.toString())) {
             String userName = servletRequest.getRemoteUser();
             log.info("{} is requesting createUserArea(...)", userName);
@@ -214,7 +205,7 @@ public class UserAreaResource extends UnionVMSResource {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response deleteUserArea(@PathParam("id") Long userAreaId) throws ServiceException {
+    public Response deleteUserArea(@PathParam("id") Long userAreaId, @HeaderParam("scopeName") String scopeName) throws ServiceException {
         String userName = servletRequest.getRemoteUser();
         log.info("{} is requesting deleteUserArea(...), with a ID={} and scopeName={}", userName, userAreaId, scopeName);
 
@@ -227,7 +218,7 @@ public class UserAreaResource extends UnionVMSResource {
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/layers")
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response getUserAreaLayerMapping() {
+    public Response getUserAreaLayerMapping(@HeaderParam("scopeName") String scopeName) {
         log.debug("UserName from security : " + servletRequest.getRemoteUser());
         return createSuccessResponse(userAreaService.getUserAreaLayerDefinition(servletRequest.getRemoteUser(), scopeName));
     }
@@ -236,7 +227,7 @@ public class UserAreaResource extends UnionVMSResource {
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/details")
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response getUserAreaDetails(UserAreaCoordinateType userAreaTypeDto) throws IOException, ParseException, ServiceException {
+    public Response getUserAreaDetails(UserAreaCoordinateType userAreaTypeDto, @HeaderParam("scopeName") String scopeName) throws IOException, ParseException, ServiceException {
         Response response;
         boolean isPowerUser = isPowerUser(servletRequest);
         if (userAreaTypeDto.getId() != null) {
@@ -251,7 +242,7 @@ public class UserAreaResource extends UnionVMSResource {
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/types")
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response getUserAreaTypes() throws ServiceException {
+    public Response getUserAreaTypes(@HeaderParam("scopeName") String scopeName) throws ServiceException {
         log.debug("UserName from security : " + servletRequest.getRemoteUser());
         boolean isPowerUser = false;
 
@@ -347,18 +338,18 @@ public class UserAreaResource extends UnionVMSResource {
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/byfilter")
     @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
-    public Response searchUserAreas(FilterType filter) throws ServiceException {
+    public Response searchUserAreas(FilterType filter, @HeaderParam("scopeName") String scopeName) throws ServiceException {
         return createSuccessResponse(userAreaService.searchUserAreasByCriteria(servletRequest.getRemoteUser(), scopeName, filter.getFilter(), isPowerUser(servletRequest)));
     }
 
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/list")
-    public Response listUserAreas() throws ServiceException {
+    public Response listUserAreas(@HeaderParam("scopeName") String scopeName) throws ServiceException {
         Response response;
 
         if (servletRequest.isUserInRole(SpatialFeaturesEnum.MANAGE_USER_DEFINED_AREAS.toString())) {
-            response = createSuccessResponse(userAreaService. searchUserAreasByCriteria(servletRequest.getRemoteUser(), scopeName, StringUtils.EMPTY, isPowerUser(servletRequest)));
+            response = createSuccessResponse(userAreaService.searchUserAreasByCriteria(servletRequest.getRemoteUser(), scopeName, StringUtils.EMPTY, isPowerUser(servletRequest)));
         } else {
             response = createErrorResponse(ErrorCodes.NOT_AUTHORIZED);
         }
@@ -368,7 +359,7 @@ public class UserAreaResource extends UnionVMSResource {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/list/{type}")
-    public Response listUserAreas(@PathParam("type") String userAreaType) throws ServiceException {
+    public Response listUserAreasByType(@PathParam("type") String userAreaType, @HeaderParam("scopeName") String scopeName) throws ServiceException {
         Response response;
         if (servletRequest.isUserInRole(SpatialFeaturesEnum.MANAGE_USER_DEFINED_AREAS.toString())) {
             List<UserAreaGeoJsonDto> userAreas = userAreaService.searchUserAreasByType(servletRequest.getRemoteUser(), scopeName, userAreaType, isPowerUser(servletRequest));
