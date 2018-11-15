@@ -39,7 +39,7 @@
         <uvms.commons.version>3.0.29</uvms.commons.version>
         <uvms.test.version>0.0.8</uvms.test.version>
         <hibernate.validator.version>5.2.1.Final</hibernate.validator.version>
-        <usm4uvms.version>4.0.14-WILDFLY14-JEE8</usm4uvms.version>
+        <usm4uvms.version>4.0.14-W14-J8</usm4uvms.version>
         <usm_deployment_descriptor_force_update>false</usm_deployment_descriptor_force_update>
         <release.branch.name>uvms-1.0.0</release.branch.name>
         <maven.scm.provider.version>2.1.1</maven.scm.provider.version>
