@@ -30,7 +30,7 @@ public class SpatialConfigProducerBean extends AbstractProducer implements Confi
     private Queue spatialINQueue;
 
     @PostConstruct
-    public void initMdrQueue(){
+    public void init(){
         spatialINQueue = JMSUtils.lookupQueue(MessageConstants.QUEUE_SPATIAL);
     }
 
@@ -40,7 +40,7 @@ public class SpatialConfigProducerBean extends AbstractProducer implements Confi
         try {
             return sendModuleMessage(textMsg, spatialINQueue);
         } catch (MessageException e) {
-            log.error("[ERROR] Error while trying to send message to Config! Check MdrConfigProducerBeanImpl..");
+            log.error("[ERROR] Error while trying to send message to Config! Check SpatialConfigProducerBeanImpl..");
         }
         return StringUtils.EMPTY;
     }

@@ -22,7 +22,7 @@ import eu.europa.ec.fisheries.uvms.config.constants.ConfigHelper;
 @Stateless
 public class SpatialConfigRegistration implements ConfigHelper {
 
-    @PersistenceContext(unitName = "spatialPUpostgres")
+    @PersistenceContext(unitName = "spatialConfig")
     private EntityManager em;
 
     @Override
