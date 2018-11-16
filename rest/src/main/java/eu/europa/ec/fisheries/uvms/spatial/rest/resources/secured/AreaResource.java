@@ -103,9 +103,6 @@ public class AreaResource extends UnionVMSResource {
     @EJB
     private USMService usmService;
 
-    @Context
-    private HttpServletRequest servletRequest;
-
     private AreaLocationMapper mapper = AreaLocationMapper.mapper();
 
     /**
@@ -249,7 +246,7 @@ public class AreaResource extends UnionVMSResource {
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/details")
     @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
-    public Response getAreasByPointOrById(AreaCoordinateType areaDto) throws ServiceException {
+    public Response getAreasByPointOrById(AreaCoordinateType areaDto, @Context HttpServletRequest servletRequest) throws ServiceException {
         Response response;
         StringWriter writer = new StringWriter();
         try {

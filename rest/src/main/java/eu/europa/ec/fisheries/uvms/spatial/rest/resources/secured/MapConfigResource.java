@@ -49,22 +49,13 @@ public class MapConfigResource extends UnionVMSResource {
     @EJB
     private USMService usmService;
 
-    @HeaderParam("authorization")
-    private String authorization;
-
-    @HeaderParam("scopeName")
-    private String scopeName;
-
-    @HeaderParam("roleName")
-    private String roleName;
-
     @Context
     private HttpServletRequest servletRequest;
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Path("{id}")
-    public Response getMapConfigBy(@PathParam("id") Integer reportId) {
+    public Response getMapConfigBy(@PathParam("id") Integer reportId, @HeaderParam("scopeName") String scopeName, @HeaderParam("roleName") String roleName) {
 
         log.info("Getting mapDefaultSRIDToEPSG settings for report with id = {}", reportId);
         Response response;

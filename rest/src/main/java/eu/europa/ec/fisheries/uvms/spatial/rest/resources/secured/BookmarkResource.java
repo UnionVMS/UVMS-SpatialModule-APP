@@ -15,22 +15,13 @@ package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 import javax.ejb.EJB;
 import javax.interceptor.Interceptors;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
@@ -47,25 +38,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class BookmarkResource extends UnionVMSResource {
 
-    @HeaderParam("authorization")
-    private String authorization;
-
-    @HeaderParam("scopeName")
-    private String scopeName;
-
-    @HeaderParam("roleName")
-    private String roleName;
-
-    @Context
-    private HttpServletRequest servletRequest;
-
     @EJB
     private BookmarkService bookmarkService;
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response list() throws ServiceException {
+    public Response list(@Context HttpServletRequest servletRequest) throws ServiceException {
 
         final String username = servletRequest.getRemoteUser();
         List<Bookmark> bookmarks = new ArrayList<>(bookmarkService.listByUsername(username));
@@ -77,7 +56,7 @@ public class BookmarkResource extends UnionVMSResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response createBookmark(final Bookmark bookmark) throws ServiceException {
+    public Response createBookmark(final Bookmark bookmark, @Context HttpServletRequest servletRequest) throws ServiceException {
 
         final String username = servletRequest.getRemoteUser();
         final Bookmark result = bookmarkService.create(bookmark, username);
@@ -88,7 +67,7 @@ public class BookmarkResource extends UnionVMSResource {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response deleteReport(@PathParam("id") Long id) throws ServiceException {
+    public Response deleteReport(@PathParam("id") Long id, @Context HttpServletRequest servletRequest) throws ServiceException {
 
         final String username = servletRequest.getRemoteUser();
         bookmarkService.delete(id, username);
@@ -100,7 +79,7 @@ public class BookmarkResource extends UnionVMSResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response updateBookmark(Bookmark bookmark, @PathParam("id") Long id) throws ServiceException {
+    public Response updateBookmark(Bookmark bookmark, @PathParam("id") Long id, @Context HttpServletRequest servletRequest) throws ServiceException {
 
         final String username = servletRequest.getRemoteUser();
         bookmark.setId(id);

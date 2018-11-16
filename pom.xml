@@ -14,7 +14,6 @@
     <packaging>pom</packaging>
     <description>Maven project-archetype for UnionVms modules</description>
 
-
   <properties>
         <!-- The spatial name is used as a common point to rename the application alias visible in USM-->
         <spatial.name>Spatial</spatial.name>
@@ -46,6 +45,7 @@
         <maven.scm.provider.version>2.1.1</maven.scm.provider.version>
         <javaee.version>8.0</javaee.version>
         <mapstruct.version>1.2.0.Final</mapstruct.version>
+        <uvms.config.version>4.0.2-W14-J8</uvms.config.version>
         <database.dialect>postgres</database.dialect>
         <scm.connection>scm:git:https://github.com/UnionVMS/UVMS-SpatialModule-APP.git</scm.connection>
 
@@ -66,6 +66,18 @@
 				<version>1.21</version>
 				<type>pom</type>
 			</dependency>
+
+            <dependency>
+                <groupId>eu.europa.ec.fisheries.uvms</groupId>
+                <artifactId>config-library</artifactId>
+                <version>${uvms.config.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>eu.europa.ec.fisheries.uvms</groupId>
+                        <artifactId>uvms-commons</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
 
             <dependency>
                 <groupId>org.slf4j</groupId>
