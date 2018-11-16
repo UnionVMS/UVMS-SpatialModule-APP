@@ -11,6 +11,12 @@
         <version>1.1.10-SNAPSHOT</version>
     </parent>
 
+    <properties>
+        <project.scm.id>github</project.scm.id>
+        <db.user>spatial</db.user>
+        <db.passwd>spatial</db.passwd>
+    </properties>
+
     <distributionManagement>
         <repository>
             <id>focus-releases</id>
@@ -47,10 +53,10 @@
                 <db.defaultSchema>spatial</db.defaultSchema>
                 <db.changeLogFile>changelog/db-changelog-master.xml</db.changeLogFile>
                 <db.outputFile>changelog/generatedChangelog.xml</db.outputFile>
+                <db.diffTypes />
                 <driver.groupId>org.postgresql</driver.groupId>
                 <driver.artifactId>postgresql</driver.artifactId>
                 <driver.version>42.2.1.jre7</driver.version>
-                <db.diffTypes />
                 <liquibase.contexts>none</liquibase.contexts>
             </properties>
             <dependencies>
@@ -95,6 +101,7 @@
                     <plugin>
                         <groupId>org.liquibase</groupId>
                         <artifactId>liquibase-maven-plugin</artifactId>
+                        <version>3.4.2</version>
                         <configuration>
                             <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
                             <changeLogFile>${db.changeLogFile}</changeLogFile>
@@ -118,6 +125,20 @@
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+
+        <profile>
+            <id>export</id>
+            <properties>
+                <db.diffTypes>data</db.diffTypes>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>testdata</id>
+            <properties>
+                <liquibase.contexts>test</liquibase.contexts>
+            </properties>
         </profile>
 
         <profile>
@@ -161,7 +182,7 @@
                             <images>
                                 <image>
                                     <alias>postgres</alias>
-                                    <name>uvms/postgres-base:3.14.0</name>
+                                    <name>uvms/postgres-base:3.22.0</name>
                                     <run>
                                         <net>bridge</net>
                                         <namingStrategy>none</namingStrategy>
@@ -206,7 +227,7 @@
                     <plugin>
                         <groupId>org.liquibase</groupId>
                         <artifactId>liquibase-maven-plugin</artifactId>
-                        <version>3.4.2</version>
+                        <version>3.5.2</version>
                         <configuration>
                             <url>${db.docker.url}</url>
                             <migrationSqlOutputFile>${project.build.directory}/full-update.sql</migrationSqlOutputFile>
@@ -259,6 +280,79 @@
         </profile>
 
     </profiles>
+
+    <build>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.liquibase</groupId>
+                    <artifactId>liquibase-maven-plugin</artifactId>
+                    <version>3.5.2</version>
+                    <configuration>
+                        <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
+                        <changeLogFile>${db.changeLogFile}</changeLogFile>
+                        <driver>${db.driver}</driver>
+                        <url>${db.url}</url>
+                        <username>${db.user}</username>
+                        <password>${db.passwd}</password>
+                        <defaultSchemaName>${db.defaultSchema}</defaultSchemaName>
+                        <outputChangeLogFile>${db.outputFile}</outputChangeLogFile>
+                        <diffTypes>${db.diffTypes}</diffTypes>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.4.1</version>
+                <configuration>
+                    <descriptor>assembly.xml</descriptor>
+                    <finalName>${artifactId}</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.3.1</version>
+                <executions>
+                    <execution>
+                        <id>default-jar</id>
+                        <!-- put the default-jar in the none phase to skip it from being created -->
+                        <phase>none</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.6</version>
+                <goals>
+                    <goal>deploy-file</goal>
+                </goals>
+                <configuration>
+                    <repositoryId>${repository.id}</repositoryId>
+                    <packaging>zip</packaging>
+                    <generatePom>true</generatePom>
+                    <url>${repository.url}</url>
+                    <artifactId>${project.artifactId}</artifactId>
+                    <groupId>${project.groupId}</groupId>
+                    <version>${project.version}</version>
+                    <file>target/liquibase.zip</file>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 
 </project>
