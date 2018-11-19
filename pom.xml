@@ -9,7 +9,7 @@
 
     <properties>
         <liquibase.core.version>3.5.1</liquibase.core.version>
-        <postgresql.version>9.4-1201-jdbc41</postgresql.version>
+        <postgresql.version>9.4.1211</postgresql.version>
         <ojdbc6.version>11.2.0.4</ojdbc6.version>
 		<liquibase.spatial.version>1.2.1</liquibase.spatial.version>
         <maven.release.plugin.version>2.5.2</maven.release.plugin.version>
