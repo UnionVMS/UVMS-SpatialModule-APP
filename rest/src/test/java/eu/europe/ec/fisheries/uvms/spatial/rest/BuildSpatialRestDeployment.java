@@ -16,17 +16,21 @@ import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 @ArquillianSuiteDeployment
 public abstract class BuildSpatialRestDeployment {
 
-    @Deployment(name = "movement", order = 1)
+    @Deployment(name = "spatial", order = 1)
     public static Archive<?> createDeployment() {
 
         WebArchive testWar = ShrinkWrap.create(WebArchive.class, "test.war");
 
-        File[] files = Maven.configureResolver().loadPomFromFile("pom.xml").importRuntimeAndTestDependencies().resolve()
+        File[] files = Maven.configureResolver().loadPomFromFile("pom.xml")
+                .resolve("eu.europa.ec.fisheries.uvms.spatial:service",
+                        "eu.europa.ec.fisheries.uvms.movement:movement-model")
                 .withTransitivity().asFile();
         testWar.addAsLibraries(files);
-
+        
         testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.spatial.rest");
 
+        testWar.addClass(ConfigServiceMock.class);
+        
         testWar.delete("/WEB-INF/web.xml");
         testWar.addAsWebInfResource("mock-web.xml", "web.xml");
 
