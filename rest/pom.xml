@@ -35,17 +35,20 @@
 		    <groupId>com.fasterxml.jackson.core</groupId>
 		    <artifactId>jackson-annotations</artifactId>
 		    <version>2.6.0</version>
+		    <scope>provided</scope>
 		</dependency>
         
 
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>spatial-model</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>service</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -62,12 +65,14 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
+			<scope>provided</scope>
 		</dependency>
 
 
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>jaxrs-api</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.eu.ingwar.tools</groupId>
