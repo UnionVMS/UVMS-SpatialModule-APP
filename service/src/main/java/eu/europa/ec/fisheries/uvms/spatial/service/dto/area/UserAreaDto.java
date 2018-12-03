@@ -10,9 +10,13 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.service.dto.area;
 
-import eu.europa.ec.fisheries.uvms.spatial.service.enums.SpatialTypeEnum;
 import java.io.Serializable;
+import eu.europa.ec.fisheries.uvms.spatial.service.enums.SpatialTypeEnum;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
 public class UserAreaDto implements Serializable {
 
 	private String areaType = SpatialTypeEnum.USERAREA.getType();
@@ -30,58 +34,4 @@ public class UserAreaDto implements Serializable {
         this.extent = extent;
     }
 
-    public UserAreaDto() {
-
-
-    }
-
-    public String getAreaType() {
-		return areaType;
-	}
-
-	public void setAreaType(String areaType) {
-		this.areaType = areaType;
-	}
-
-	public Number getGid() {
-		return gid;
-	}
-
-	public void setGid(Number gid) {
-		this.gid = gid;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getDesc() {
-		return desc;
-	}
-
-	public void setDesc(String desc) {
-		this.desc = desc;
-	}
-
-	public String getExtent() {
-		return extent;
-	}
-
-	public void setExtent(String extent) {
-		this.extent = extent;
-	}
-
-    public String getOwner() {
-
-        return owner;
-    }
-
-    public void setOwner(String owner) {
-
-        this.owner = owner;
-    }
 }
