@@ -32,7 +32,7 @@
         <application.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}.log</application.logfile>
         <application.error.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}-error.log</application.error.logfile>
         <application.logfile.boot>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}-boot.log</application.logfile.boot>
-        <hibernate.version>4.3.11.Final</hibernate.version>
+        <hibernate.version>5.1.9.Final</hibernate.version>
         <hibernate-spatial.version>4.3</hibernate-spatial.version>
         <geotools.version>14.4</geotools.version>
         <uvms.test.version>0.0.8</uvms.test.version>
@@ -45,9 +45,9 @@
         <mapstruct.version>1.2.0.Final</mapstruct.version>
 
         <!-- UVMS Libraries -->
-        <uvms.commons.version>3.0.29</uvms.commons.version>
+        <uvms.commons.version>3.0.31-W14J8</uvms.commons.version>
         <usm4uvms.version>4.0.14-W14-J8</usm4uvms.version>
-        <uvms.config.version>4.0.2-W14-J8</uvms.config.version>
+        <uvms.config.version>4.0.3-W14J8</uvms.config.version>
 
         <database.dialect>postgres</database.dialect>
         <scm.connection>scm:git:https://github.com/UnionVMS/UVMS-SpatialModule-APP.git</scm.connection>
@@ -143,7 +143,7 @@
                 <artifactId>movement-model</artifactId>
                 <version>${movement.model.version}</version>
             </dependency>
-            
+
 	        <dependency>
 				<groupId>org.hibernate</groupId>
 				<artifactId>hibernate-validator</artifactId>
@@ -200,7 +200,7 @@
 			    <artifactId>resteasy-jaxb-provider</artifactId>
 			  	<version>3.0.11.Final</version>
 			</dependency>
-			
+
 			<dependency>
 			    <groupId>org.jboss.resteasy</groupId>
 			    <artifactId>jaxrs-api</artifactId>
@@ -359,7 +359,7 @@
             <url>https://repository.jboss.org/nexus/content/repositories/releases/</url>
         </repository>
     </repositories>
-	
+
 	<profiles>
         <profile>
             <id>postgres</id>

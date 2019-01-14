@@ -46,8 +46,8 @@
 
     <logger name="org.hibernate.type" level="INFO" />
     <logger name="org.hibernate" level="INFO" />
-    <logger name="eu.europa.ec.fisheries.uvms.commons.message.impl" level="DEBUG"/>
-    <logger name="eu.europa.ec.fisheries.uvms.rest.security.bean" level="DEBUG"/>
+    <logger name="eu.europa.ec.fisheries.uvms.commons.message.impl" level="INFO"/>
+    <logger name="eu.europa.ec.fisheries.uvms.rest.security.bean" level="INFO"/>
 
     <!-- CONSOLE APPENDER -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
