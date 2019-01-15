@@ -10,7 +10,7 @@
 
     <groupId>eu.europa.ec.fisheries.uvms.spatial</groupId>
     <artifactId>spatial</artifactId>
-    <version>1.1.10-SNAPSHOT</version>
+    <version>1.1.12-SNAPSHOT</version>
     <packaging>pom</packaging>
     <description>Maven project-archetype for UnionVms modules</description>
 
@@ -78,6 +78,18 @@
                     <exclusion>
                         <groupId>eu.europa.ec.fisheries.uvms</groupId>
                         <artifactId>uvms-commons</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>eu.europa.ec.fisheries.uvms</groupId>
+                <artifactId>usm4uvms</artifactId>
+                <version>${usm4uvms.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>

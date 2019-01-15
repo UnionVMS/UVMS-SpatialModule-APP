@@ -14,15 +14,7 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -30,7 +22,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.io.ParseException;
@@ -144,37 +135,6 @@ public class UserAreaResource extends UnionVMSResource {
 
         }
         return isAllowedToShareScopes;
-    }
-
-    @PUT
-    @Path("/")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Interceptors(value = {ExceptionInterceptor.class})
-    public Response updateUserArea(UserAreaGeoJsonDto userAreaGeoJsonDto, @HeaderParam("scopeName") String scopeName, @Context HttpServletRequest servletRequest) throws ServiceException {
-        if (servletRequest.isUserInRole(SpatialFeaturesEnum.MANAGE_USER_DEFINED_AREAS.toString())) {
-            String userName = servletRequest.getRemoteUser();
-            log.info("{} is requesting createUserArea(...)", userName);
-
-            if (StringUtils.isNotBlank(userAreaGeoJsonDto.getDatasetName()) && !servletRequest.isUserInRole(SpatialFeaturesEnum.CREATE_USER_AREA_DATASET.toString())) {
-                return createErrorResponse("user_area_dataset_creation_not_allowed");
-            }
-
-            List<String> scopeSelection = userAreaGeoJsonDto.getScopeSelection();
-            boolean isPowerUser = isPowerUser(servletRequest);
-
-            if (isAllowedToShareScopes(userName, scopeSelection, servletRequest)) {
-                long gid = userAreaService.updateUserArea(userAreaGeoJsonDto, servletRequest.getRemoteUser(), isPowerUser, scopeName);
-                log.info("{} is requesting updateUserArea(...), with a ID={}. Spatial power user: {}", userName, Long.toString(userAreaGeoJsonDto.getId()), isPowerUser);
-                return createSuccessResponse(gid);
-            }
-            else {
-                return createErrorResponse("user_area_sharing_not_allowed");
-            }
-
-        } else {
-            return createErrorResponse("user_areas_management_not_allowed");
-        }
     }
 
     private SimpleFeatureType build(Class geometryType, Map<String, Object> properties, String geometryFieldName) {
@@ -331,12 +291,51 @@ public class UserAreaResource extends UnionVMSResource {
         }
     }
 
+    @PUT
+    @Path("/")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Interceptors(value = {ExceptionInterceptor.class})
+    public Response updateUserArea(UserAreaGeoJsonDto userAreaGeoJsonDto, @HeaderParam("scopeName") String scopeName, @Context HttpServletRequest servletRequest) throws ServiceException {
+        if (servletRequest.isUserInRole(SpatialFeaturesEnum.MANAGE_ANY_USER_AREA.toString())) {
+            String userName = servletRequest.getRemoteUser();
+            log.info("{} is requesting updateUserArea(...)", userName);
+
+            if (StringUtils.isNotBlank(userAreaGeoJsonDto.getDatasetName()) && !servletRequest.isUserInRole(SpatialFeaturesEnum.CREATE_USER_AREA_DATASET.toString())) {
+                return createErrorResponse("user_area_dataset_creation_not_allowed");
+            }
+
+            List<String> scopeSelection = userAreaGeoJsonDto.getScopeSelection();
+            boolean isPowerUser = isPowerUser(servletRequest);
+
+            if (isAllowedToShareScopes(userName, scopeSelection, servletRequest)) {
+                long gid = userAreaService.updateUserArea(userAreaGeoJsonDto, servletRequest.getRemoteUser(), isPowerUser, scopeName);
+                log.info("{} is requesting updateUserArea(...), with a ID={}. Spatial power user: {}", userName, Long.toString(userAreaGeoJsonDto.getId()), isPowerUser);
+                return createSuccessResponse(gid);
+            }
+            else {
+                return createErrorResponse("user_area_sharing_not_allowed");
+            }
+
+        } else {
+            return createErrorResponse("user_areas_management_not_allowed");
+        }
+    }
+
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/byfilter")
     @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
     public Response searchUserAreas(FilterType filter, @HeaderParam("scopeName") String scopeName, @Context HttpServletRequest servletRequest) throws ServiceException {
-        return createSuccessResponse(userAreaService.searchUserAreasByCriteria(servletRequest.getRemoteUser(), scopeName, filter.getFilter(), isPowerUser(servletRequest)));
+        Response response;
+
+        if (servletRequest.isUserInRole(SpatialFeaturesEnum.MANAGE_USER_DEFINED_AREAS.toString())) {
+            response = createSuccessResponse(userAreaService.searchUserAreasByCriteria(servletRequest.getRemoteUser(), scopeName, filter.getFilter(), isPowerUser(servletRequest)));
+        }
+        else {
+            response = createErrorResponse(ErrorCodes.NOT_AUTHORIZED);
+        }
+        return response;
     }
 
     @GET

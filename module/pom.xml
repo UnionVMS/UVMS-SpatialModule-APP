@@ -9,7 +9,7 @@
     <parent>
         <groupId>eu.europa.ec.fisheries.uvms.spatial</groupId>
         <artifactId>spatial</artifactId>
-        <version>1.1.10-SNAPSHOT</version>
+        <version>1.1.12-SNAPSHOT</version>
     </parent>
 
     <build>
@@ -54,11 +54,7 @@
     </build>
 
     <dependencies>
-        <dependency>
-            <groupId>eu.europa.ec.fisheries.uvms</groupId>
-            <artifactId>usm4uvms</artifactId>
-            <version>${usm4uvms.version}</version>
-        </dependency>
+        
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
             <artifactId>uvms-commons-message</artifactId>
