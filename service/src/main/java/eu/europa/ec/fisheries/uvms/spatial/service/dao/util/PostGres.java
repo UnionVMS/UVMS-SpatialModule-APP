@@ -50,7 +50,7 @@ public class PostGres extends AbstractGisFunction {
         StringBuilder sb = new StringBuilder();
         sb.append("(WITH candidates AS (SELECT cast('").append(typeName).append("' as varchar) as type, gid, code, name, geom FROM spatial.").append(tableName);
         sb.append(" WHERE enabled = 'Y' ORDER BY geom <-> ST_GeomFromText(CAST ('POINT(").append(longitude).append(" ").append(latitude);
-        sb.append(")' AS TEXT), 4326) LIMIT 50)");
+        sb.append(")' AS TEXT), 4326) LIMIT 20)");
         sb.append(" SELECT type, gid, code, name, geom as closest, ST_Distance(geom,");
         sb.append(" ST_GeomFromText(CAST ('POINT(").append(longitude).append(" ").append(latitude).append(")' AS TEXT), 4326), true) as dist");
         sb.append(" FROM candidates ORDER BY dist LIMIT ").append(limit).append(")");

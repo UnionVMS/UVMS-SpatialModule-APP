@@ -21,7 +21,7 @@ public class PostgresTest {
     @Test
     public void testClosestAreaToPoint(){
         String query = postgres.closestAreaToPoint(0,"EEZ", "eez", 41.0, -30.5, 1);
-        String expectedQuery = "(WITH candidates AS (SELECT cast('EEZ' as varchar) as type, gid, code, name, geom FROM spatial.eez WHERE enabled = 'Y' ORDER BY geom <-> ST_GeomFromText(CAST ('POINT(-30.5 41.0)' AS TEXT), 4326) LIMIT 50) SELECT type, gid, code, name, geom as closest, ST_Distance(geom, ST_GeomFromText(CAST ('POINT(-30.5 41.0)' AS TEXT), 4326), true) as dist FROM candidates ORDER BY dist LIMIT 1)";
+        String expectedQuery = "(WITH candidates AS (SELECT cast('EEZ' as varchar) as type, gid, code, name, geom FROM spatial.eez WHERE enabled = 'Y' ORDER BY geom <-> ST_GeomFromText(CAST ('POINT(-30.5 41.0)' AS TEXT), 4326) LIMIT 20) SELECT type, gid, code, name, geom as closest, ST_Distance(geom, ST_GeomFromText(CAST ('POINT(-30.5 41.0)' AS TEXT), 4326), true) as dist FROM candidates ORDER BY dist LIMIT 1)";
 
         assertEquals(query, expectedQuery);
     }
