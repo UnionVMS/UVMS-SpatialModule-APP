@@ -32,11 +32,11 @@
         <application.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}.log</application.logfile>
         <application.error.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}-error.log</application.error.logfile>
         <application.logfile.boot>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}-boot.log</application.logfile.boot>
-        <hibernate.version>5.1.9.Final</hibernate.version>
+        <hibernate.version>4.3.11.Final</hibernate.version>
         <hibernate-spatial.version>4.3</hibernate-spatial.version>
         <geotools.version>14.4</geotools.version>
         <uvms.test.version>0.0.8</uvms.test.version>
-        <hibernate.validator.version>5.2.1.Final</hibernate.validator.version>
+        <hibernate.validator.version>4.3.2.Final</hibernate.validator.version>
 
         <usm_deployment_descriptor_force_update>false</usm_deployment_descriptor_force_update>
         <release.branch.name>uvms-1.0.0</release.branch.name>
