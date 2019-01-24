@@ -48,6 +48,7 @@
         <database.dialect>postgres</database.dialect>
         <scm.connection>scm:git:https://github.com/UnionVMS/UVMS-SpatialModule-APP.git</scm.connection>
         <installAtEnd>false</installAtEnd>
+      
 
     </properties>
 
