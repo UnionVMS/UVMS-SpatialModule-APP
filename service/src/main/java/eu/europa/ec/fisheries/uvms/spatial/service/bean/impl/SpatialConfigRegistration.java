@@ -12,17 +12,18 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.impl;
 
+import eu.europa.ec.fisheries.uvms.config.constants.ConfigHelper;
+
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.Collections;
 import java.util.List;
-import eu.europa.ec.fisheries.uvms.config.constants.ConfigHelper;
 
 @Stateless
 public class SpatialConfigRegistration implements ConfigHelper {
 
-    @PersistenceContext(unitName = "spatialPUpostgres")
+    @PersistenceContext(unitName = "spatialConfig")
     private EntityManager em;
 
     @Override
