@@ -158,7 +158,7 @@ public class UserAreaServiceBean implements UserAreaService {
         userAreasEntity.setUserName(userName);
         userAreasEntity.setCreatedOn(new Date());
         String code = dto.getName();
-        if(code.length() > 20){
+        if(code != null && code.length() > 20){
             code = code.substring(0 , 20);
         }
         userAreasEntity.setCode(code);
