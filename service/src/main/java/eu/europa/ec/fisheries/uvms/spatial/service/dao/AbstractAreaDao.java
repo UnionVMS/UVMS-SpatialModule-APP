@@ -34,7 +34,8 @@ import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.StatelessSession;
 import org.hibernate.Transaction;
-import org.hibernate.spatial.GeometryType;
+import org.hibernate.spatial.JTSGeometryType;
+import org.hibernate.spatial.dialect.postgis.PGGeometryTypeDescriptor;
 import org.hibernate.transform.AliasToEntityMapResultTransformer;
 import org.hibernate.type.DoubleType;
 import org.hibernate.type.IntegerType;
@@ -132,7 +133,7 @@ public abstract class AbstractAreaDao<E extends BaseAreaEntity> extends Abstract
         javax.persistence.Query emNativeQuery = getEntityManager().createNativeQuery(query);
         emNativeQuery.unwrap(SQLQuery.class)
                 .addScalar(TYPE, StringType.INSTANCE)
-                .addScalar(GEOM, GeometryType.INSTANCE);
+                .addScalar(GEOM, new JTSGeometryType(PGGeometryTypeDescriptor.INSTANCE));
         return emNativeQuery.getResultList();
     }
 
@@ -164,7 +165,7 @@ public abstract class AbstractAreaDao<E extends BaseAreaEntity> extends Abstract
         emNativeQuery.unwrap(SQLQuery.class)
                 .addScalar("type", StringType.INSTANCE)
                 .addScalar("code", StringType.INSTANCE)
-                .addScalar(GEOM, org.hibernate.spatial.GeometryType.INSTANCE);
+                .addScalar(GEOM, new JTSGeometryType(PGGeometryTypeDescriptor.INSTANCE));
 
         resultList = emNativeQuery.getResultList();
         return resultList;
@@ -197,7 +198,7 @@ public abstract class AbstractAreaDao<E extends BaseAreaEntity> extends Abstract
             log.debug(QUERY, spatialFunction.getClass().getSimpleName().toUpperCase(), sb.toString());
             final javax.persistence.Query emNativeQuery = getEntityManager().createNativeQuery(sb.toString());
             emNativeQuery.unwrap(SQLQuery.class).addScalar("type", StringType.INSTANCE).addScalar(GID, IntegerType.INSTANCE)
-                    .addScalar(CODE, StringType.INSTANCE).addScalar(NAME, StringType.INSTANCE).addScalar(GEOM, GeometryType.INSTANCE)
+                    .addScalar(CODE, StringType.INSTANCE).addScalar(NAME, StringType.INSTANCE).addScalar(GEOM, new JTSGeometryType(PGGeometryTypeDescriptor.INSTANCE))
                     .addScalar("distance", DoubleType.INSTANCE);
             resultList = emNativeQuery.getResultList();
         }
@@ -232,7 +233,7 @@ public abstract class AbstractAreaDao<E extends BaseAreaEntity> extends Abstract
                     .addScalar(GID, StandardBasicTypes.INTEGER)
                     .addScalar(CODE, StandardBasicTypes.STRING)
                     .addScalar(NAME, StandardBasicTypes.STRING)
-                    .addScalar(CLOSEST, org.hibernate.spatial.GeometryType.INSTANCE)
+                    .addScalar(CLOSEST, new JTSGeometryType(PGGeometryTypeDescriptor.INSTANCE))
                     .addScalar(DISTANCE, StandardBasicTypes.DOUBLE);
 
             resultList = emNativeQuery.getResultList();

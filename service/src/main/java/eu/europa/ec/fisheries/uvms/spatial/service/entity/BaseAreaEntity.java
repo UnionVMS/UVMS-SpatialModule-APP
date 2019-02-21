@@ -52,7 +52,6 @@ public class BaseAreaEntity extends BaseEntity {
     private static final String UTF_8 = "UTF-8";
 
     @JsonIgnore
-    @Type(type = "org.hibernate.spatial.GeometryType")
     private Geometry geom;
 
     private String name;
