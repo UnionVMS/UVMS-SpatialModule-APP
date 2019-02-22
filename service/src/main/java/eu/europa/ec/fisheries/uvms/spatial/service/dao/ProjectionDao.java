@@ -18,10 +18,8 @@ import eu.europa.ec.fisheries.uvms.spatial.service.entity.ProjectionEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.ProjectionDto;
 import java.util.Map;
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import java.util.List;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.transform.Transformers;
 
 import static eu.europa.ec.fisheries.uvms.commons.service.dao.QueryParameter.*;
 import static eu.europa.ec.fisheries.uvms.spatial.service.entity.ProjectionEntity.*;
@@ -45,11 +43,10 @@ public class ProjectionDao extends AbstractDAO<ProjectionEntity> {
 
     public List<ProjectionDto> findProjectionById(Long id) {
         Map<String, Object> parameters = ImmutableMap.<String, Object>builder().put("id", id).build();
-        Query query = em.unwrap(Session.class).getNamedQuery(ProjectionEntity.FIND_PROJECTION_BY_ID);
+        TypedQuery<ProjectionDto> query = em.createNamedQuery(ProjectionEntity.FIND_PROJECTION_BY_ID, ProjectionDto.class);
         for (Map.Entry<String, Object> entry : parameters.entrySet()) {
             query.setParameter(entry.getKey(), entry.getValue());
         }
-        query.setResultTransformer(Transformers.aliasToBean(ProjectionDto.class));
-        return query.list();
+        return query.getResultList();
     }
 }

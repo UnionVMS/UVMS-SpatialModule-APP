@@ -42,9 +42,6 @@ import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadMappingPrope
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.transform.Transformers;
 
 @Slf4j
 public class UserAreaDao extends AbstractAreaDao<UserAreasEntity> {
@@ -118,42 +115,35 @@ public class UserAreaDao extends AbstractAreaDao<UserAreasEntity> {
 
     public List<AreaDto> getAllUserAreas(String userName, String scopeName) {
         Map<String, Object> parameters = ImmutableMap.<String, Object>builder().put(USER_NAME, userName).put(SCOPE_NAME, scopeName).build();
-        Query query = createNamedNativeQuery(UserAreasEntity.FIND_ALL_USER_AREAS, parameters);
-        query.setResultTransformer(Transformers.aliasToBean(AreaDto.class));
-        return query.list();
+        TypedQuery<AreaDto> query = createNamedNativeQuery(UserAreasEntity.FIND_ALL_USER_AREAS, parameters, AreaDto.class);
+        return query.getResultList();
     }
 
     public List<AreaDto> getAllUserAreaGroupName(String userName, String scopeName) {
         Map<String, Object> parameters = ImmutableMap.<String, Object>builder().put(USER_NAME, userName).put(SCOPE_NAME, scopeName).build();
-        Query query = createNamedNativeQuery(UserAreasEntity.FIND_ALL_USER_AREAS_GROUP, parameters);
-        query.setResultTransformer(Transformers.aliasToBean(AreaDto.class));
-        return query.list();
+        TypedQuery<AreaDto> query = createNamedNativeQuery(UserAreasEntity.FIND_ALL_USER_AREAS_GROUP, parameters, AreaDto.class);
+        return query.getResultList();
     }
 
     public List<Long> getAllSharedGids(String userName, String scopeName, String type) {
         Map<String, Object> parameters =
                 ImmutableMap.<String, Object>builder().put(USER_NAME, userName).put(SCOPE_NAME, scopeName).put(TYPE, type).build();
-        Query query = createNamedNativeQuery(FIND_GID_FOR_SHARED_AREA, parameters);
-        return query.list();
+        TypedQuery<Long> query = createNamedNativeQuery(FIND_GID_FOR_SHARED_AREA, parameters, Long.class);
+        return query.getResultList();
     }
 
     public List<AreaDto> findAllUserAreasByGids(List<Long> gids) {
-        Query query = getSession().getNamedQuery(UserAreasEntity.FIND_ALL_USER_AREAS_BY_GIDS);
-        query.setParameterList(GID_LIST, gids);
-        query.setResultTransformer(Transformers.aliasToBean( AreaDto.class));
-        return query.list();
+        TypedQuery<AreaDto> query = em.createNamedQuery(UserAreasEntity.FIND_ALL_USER_AREAS_BY_GIDS, AreaDto.class);
+        query.setParameter(GID_LIST, gids);
+        return query.getResultList();
     }
 
-    private Query createNamedNativeQuery(String nativeQueryString, Map<String, Object> parameters) {
-        Query query = getSession().getNamedQuery(nativeQueryString);
+    private <T> TypedQuery<T> createNamedNativeQuery(String nativeQueryString, Map<String, Object> parameters, Class<T> type) {
+        TypedQuery<T> query = em.createNamedQuery(nativeQueryString, type);
         for (Map.Entry<String, Object> entry : parameters.entrySet()) {
             query.setParameter(entry.getKey(), entry.getValue());
         }
         return query;
-    }
-
-    private Session getSession() {
-        return em.unwrap(Session.class);
     }
 
     public List<UserAreasEntity> listByCriteria(String userName, String scopeName, String searchCriteria, Boolean isPowerUser) throws ServiceException {

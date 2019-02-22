@@ -17,10 +17,9 @@ import javax.persistence.Query;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.MultiPoint;
-import org.hibernate.SQLQuery;
+import org.hibernate.query.NativeQuery;
 import org.hibernate.spatial.JTSGeometryType;
 import org.hibernate.spatial.dialect.postgis.PGGeometryTypeDescriptor;
-import org.hibernate.type.TimestampType;
 
 public class PostgresUtilsDao extends UtilsDao {
 
@@ -42,14 +41,15 @@ public class PostgresUtilsDao extends UtilsDao {
         return epsg;
     }
 
-    @Override public MultiPoint generatePoints(String wkt, Integer numberOfPoints) {
+    @Override 
+    public MultiPoint generatePoints(String wkt, Integer numberOfPoints) {
 
         Query nativeQuery = em.createNativeQuery("SELECT ST_GeneratePoints(ST_GeomFromText(:wkt), :nbrPoints);");
 
         nativeQuery.setParameter("wkt", wkt);
         nativeQuery.setParameter("nbrPoints", numberOfPoints);
 
-        SQLQuery unwrap = nativeQuery.unwrap(SQLQuery.class);
+        NativeQuery<?> unwrap = nativeQuery.unwrap(NativeQuery.class);
 
         unwrap.addScalar("st_generatepoints", new JTSGeometryType(PGGeometryTypeDescriptor.INSTANCE));
 
