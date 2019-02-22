@@ -7,7 +7,6 @@ import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaTransitionsDTO;
 import eu.europe.ec.fisheries.uvms.spatial.rest.BuildSpatialRestDeployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -25,7 +24,6 @@ import static org.junit.Assert.assertFalse;
 
 @RunAsClient
 @RunWith(Arquillian.class)
-@Ignore // Just for the sake of building a w14J8 compliant image
 public class SpatialRestResourceTest extends BuildSpatialRestDeployment {
 
     @Test
