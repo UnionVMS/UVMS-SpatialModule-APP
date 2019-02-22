@@ -157,6 +157,11 @@ public class UserAreaServiceBean implements UserAreaService {
         UserAreasEntity userAreasEntity = mapper.fromDtoToEntity(dto);
         userAreasEntity.setUserName(userName);
         userAreasEntity.setCreatedOn(new Date());
+        String code = dto.getName();
+        if(code != null && code.length() > 20){
+            code = code.substring(0 , 20);
+        }
+        userAreasEntity.setCode(code);
         persisted = repository.save(userAreasEntity);
         return persisted;
     }
