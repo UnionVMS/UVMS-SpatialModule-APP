@@ -60,11 +60,6 @@
             <groupId>eu.europa.ec.fisheries.uvms.movement</groupId>
             <artifactId>movement-model</artifactId>
         </dependency>
-       <dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-validator</artifactId>
-			<scope>provided</scope>
-		</dependency>
 		<dependency>
 			<groupId>fish.focus.uvms.maven</groupId>
 			<artifactId>uvms-pom-arquillian-deps</artifactId>

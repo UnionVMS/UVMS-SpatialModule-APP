@@ -34,14 +34,13 @@
         <geotools.version>14.4</geotools.version>
         <uvms.commons.version>3.0.32</uvms.commons.version>
         <uvms.test.version>0.0.8</uvms.test.version>
-        <hibernate.validator.version>6.0.13.Final</hibernate.validator.version>
         <usm4uvms.version>4.0.12</usm4uvms.version>
         <usm_deployment_descriptor_force_update>false</usm_deployment_descriptor_force_update>
         <release.branch.name>uvms-1.0.0</release.branch.name>
         <maven.scm.provider.version>2.1.1</maven.scm.provider.version>
-        <javaee.version>7.0</javaee.version>
+        <javaee.version>8.0</javaee.version>
         <mapstruct.version>1.2.0.Final</mapstruct.version>
-        <uvms.config.version>4.0.1</uvms.config.version>
+        <uvms.config.version>4.0.2</uvms.config.version>
         <database.dialect>postgres</database.dialect>
         <scm.connection>scm:git:https://github.com/UnionVMS/UVMS-SpatialModule-APP.git</scm.connection>
         <installAtEnd>false</installAtEnd>
@@ -81,12 +80,6 @@
 				<artifactId>uvms-pom-arquillian-deps</artifactId>
 				<version>1.23</version>
 				<type>pom</type>
-			</dependency>
-			
-			<dependency>
-				<groupId>org.hibernate</groupId>
-				<artifactId>hibernate-validator</artifactId>
-				<version>${hibernate.validator.version}</version>
 			</dependency>
 
             <dependency>
