@@ -189,6 +189,9 @@ public class SpatialRestResource {
             double movePortDistance2 = 2778d;
             AreaSimpleType closestPort1 = null;
             AreaSimpleType closestPort2 = null;
+
+            //Note: The port areas in the DB seems to be slightly different then the definition of 1.5 nautical miles around point p. Thus we can get some unexpected results when the DB says that we are not in area a while the distance to point p is lower then 2778 meters. The most notably effect of this is that track logic regarding when to create new tracks occasionally fails.
+            //Since the current track logic is not very useful (or sane.....) anyway I will not fix this for now
             for(AreaSimpleType port : portList){   //loop over ports
 
                 MultiPoint portMultiPoint = (MultiPoint)reader.read(port.getWkt());  //why do we store single points as multipoints?????
