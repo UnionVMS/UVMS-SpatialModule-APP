@@ -4,31 +4,31 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 				   
-    <include file="schema\initdata\provider_format_init.xml"/>
-	<include file="schema\initdata\service_layer_init.xml"/>
-	<include file="schema\initdata\area_location_types_init.xml"/>
-	<include file="schema\initdata\projection_init.xml"/>
-    <include file="schema\initdata\system_configurations_init.xml"/>
-	<include file="schema\initdata\geometry_columns.xml"/>
+    <include file="..\..\schema\initdata\provider_format_init.xml" relativeToChangelogFile="true"/>
+	<include file="..\..\schema\initdata\service_layer_init.xml" relativeToChangelogFile="true"/>
+	<include file="..\..\schema\initdata\area_location_types_init.xml" relativeToChangelogFile="true"/>
+	<include file="..\..\schema\initdata\projection_init.xml" relativeToChangelogFile="true"/>
+    <include file="..\..\schema\initdata\system_configurations_init.xml" relativeToChangelogFile="true"/>
+	<include file="..\..\schema\initdata\geometry_columns.xml" relativeToChangelogFile="true"/>
 	
 	<changeSet author="martinhu" id="1436863739768-2" dbms="postgresql">
-		<loadData file="schema/initdata/csv/postgres/eez.csv" tableName="eez"/>
-		<loadData file="schema/initdata/csv/postgres/fao.csv" tableName="fao"/>
-		<loadData file="schema/initdata/csv/postgres/gfcm.csv" tableName="gfcm"/>
-		<loadData file="schema/initdata/csv/postgres/port_area.csv" tableName="port_area"/>
-		<loadData file="schema/initdata/csv/postgres/port.csv" tableName="port"/>
-		<loadData file="schema/initdata/csv/postgres/rfmo.csv" tableName="rfmo"/>
-		<loadData file="schema/initdata/csv/postgres/stat_rect.csv" tableName="stat_rect"/>
+		<loadData file="../../schema/initdata/csv/postgres/eez.csv" tableName="eez" relativeToChangelogFile="true"/>
+		<loadData file="../../schema/initdata/csv/postgres/fao.csv" tableName="fao" relativeToChangelogFile="true"/>
+		<loadData file="../../schema/initdata/csv/postgres/gfcm.csv" tableName="gfcm" relativeToChangelogFile="true"/>
+		<loadData file="../../schema/initdata/csv/postgres/port_area.csv" tableName="port_area" relativeToChangelogFile="true"/>
+		<loadData file="../../schema/initdata/csv/postgres/port.csv" tableName="port" relativeToChangelogFile="true"/>
+		<loadData file="../../schema/initdata/csv/postgres/rfmo.csv" tableName="rfmo" relativeToChangelogFile="true"/>
+		<loadData file="../../schema/initdata/csv/postgres/stat_rect.csv" tableName="stat_rect" relativeToChangelogFile="true"/>
 	</changeSet>
 	
 	<changeSet author="martinhu" id="1436863739768-2" dbms="oracle">
-		<loadData file="schema/initdata/csv/oracle/eez.csv" tableName="eez"/>
-		<loadData file="schema/initdata/csv/oracle/fao.csv" tableName="fao"/>
-		<loadData file="schema/initdata/csv/oracle/gfcm.csv" tableName="gfcm"/>
-		<loadData file="schema/initdata/csv/oracle/port_area.csv" tableName="port_area"/>
-		<loadData file="schema/initdata/csv/oracle/port.csv" tableName="port"/>
-		<loadData file="schema/initdata/csv/oracle/rfmo.csv" tableName="rfmo"/>
-		<loadData file="schema/initdata/csv/oracle/stat_rect.csv" tableName="stat_rect"/>
+		<loadData file="../../schema/initdata/csv/oracle/eez.csv" tableName="eez" relativeToChangelogFile="true"/>
+		<loadData file="../../schema/initdata/csv/oracle/fao.csv" tableName="fao" relativeToChangelogFile="true"/>
+		<loadData file="../../schema/initdata/csv/oracle/gfcm.csv" tableName="gfcm" relativeToChangelogFile="true"/>
+		<loadData file="../../schema/initdata/csv/oracle/port_area.csv" tableName="port_area" relativeToChangelogFile="true"/>
+		<loadData file="../../schema/initdata/csv/oracle/port.csv" tableName="port" relativeToChangelogFile="true"/>
+		<loadData file="../../schema/initdata/csv/oracle/rfmo.csv" tableName="rfmo" relativeToChangelogFile="true"/>
+		<loadData file="../../schema/initdata/csv/oracle/stat_rect.csv" tableName="stat_rect" relativeToChangelogFile="true"/>
 	</changeSet>
 	
 </databaseChangeLog>

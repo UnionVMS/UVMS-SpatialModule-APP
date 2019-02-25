@@ -7,23 +7,9 @@
    
     <parent>
         <groupId>eu.europa.ec.fisheries.uvms.spatial</groupId>
-        <artifactId>spatial-db</artifactId>
-        <version>1.0.7-SNAPSHOT</version>
+        <artifactId>spatial</artifactId>
+        <version>1.1.14-SNAPSHOT</version>
     </parent>
-	
-	    <dependencies>
-
-        <dependency>
-            <groupId>org.liquibase</groupId>
-            <artifactId>liquibase-core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.lonnyj</groupId>
-            <artifactId>liquibase-spatial</artifactId>
-        </dependency>
-
-    </dependencies>
 
     <profiles>
 
@@ -56,17 +42,21 @@
             </activation>
             <properties>
                 <db.driver>org.postgresql.Driver</db.driver>
-                <db.url>jdbc:postgresql://localhost:5432/uvms</db.url>
+                <db.url>jdbc:postgresql://localhost:5432/db71u</db.url>
                 <db.user>spatial</db.user>
                 <db.passwd>spatial</db.passwd>
                 <db.defaultSchema>spatial</db.defaultSchema>
                 <db.changeLogFile>changelog/db-changelog-master.xml</db.changeLogFile>
                 <db.outputFile>changelog/generatedChangelog.xml</db.outputFile>
+                <driver.groupId>org.postgresql</driver.groupId>
+                <driver.artifactId>postgresql</driver.artifactId>
+                <driver.version>9.4-1201-jdbc41</driver.version>
             </properties>
 			<dependencies>
 				<dependency>
-					<groupId>org.postgresql</groupId>
-					<artifactId>postgresql</artifactId>
+					<groupId>${driver.groupId}</groupId>
+		            <artifactId>${driver.artifactId}</artifactId>
+		            <version>${driver.version}</version>
 				</dependency>
 			</dependencies>
         </profile>
@@ -78,7 +68,7 @@
                     <plugin>
                         <groupId>org.liquibase</groupId>
                         <artifactId>liquibase-maven-plugin</artifactId>
-                        <version>3.5.2</version>
+                        <version>3.5.3</version>
                         <configuration>
                             <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
                             <changeLogFile>${db.changeLogFile}</changeLogFile>
@@ -98,88 +88,9 @@
 			<build>
 				<plugins>
 					<plugin>
-						<groupId>io.fabric8</groupId>
-						<artifactId>docker-maven-plugin</artifactId>
-						<inherited>false</inherited>
-						<executions>
-							<execution>
-								<id>verifyallstopped</id>
-								<phase>validate</phase>
-								<goals>
-									<goal>stop</goal>
-								</goals>
-								<configuration>
-									<allContainers>true</allContainers>
-								</configuration>
-							</execution>
-							<execution>
-								<id>start</id>
-								<phase>generate-sources</phase>
-								<goals>
-									<goal>start</goal>
-								</goals>
-							</execution>
-							<execution>
-								<id>stop</id>
-								<phase>package</phase>
-								<goals>
-									<goal>stop</goal>
-								</goals>
-								<configuration>
-									<allContainers>true</allContainers>
-								</configuration>
-							</execution>
-						</executions>
-						<configuration combine.self="override">
-							<images>
-								<image>
-									<alias>postgres</alias>
-									<name>uvms/postgres-base:3.14.0</name>
-									<run>
-										<net>bridge</net>
-										<namingStrategy>none</namingStrategy>
-										<ports>
-											<port>25432:5432</port>
-										</ports>
-										<wait>
-											<log>database system is shut down</log>
-											<time>240000</time>
-											<kill>15000</kill>
-											<shutdown>15000</shutdown>
-										</wait>
-										<log>
-											<enabled>true</enabled>
-											<color>green</color>
-										</log>
-										<hostname>postgres</hostname>
-									</run>
-								</image>
-							</images>
-						</configuration>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-antrun-plugin</artifactId>
-						<version>1.8</version>
-						<executions>
-							<execution>
-								<id>delayDockerStartup</id>
-								<phase>process-resources</phase>
-								<configuration>
-									<tasks>
-										<sleep seconds="5" />
-									</tasks>
-								</configuration>
-								<goals>
-									<goal>run</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>					
-					<plugin>
 						<groupId>org.liquibase</groupId>
 						<artifactId>liquibase-maven-plugin</artifactId>
-						<version>3.5.2</version>
+						<version>3.5.3</version>
 						<configuration>
 							<url>${db.docker.url}</url>
 							<migrationSqlOutputFile>${project.build.directory}/full-update.sql</migrationSqlOutputFile>
@@ -191,13 +102,6 @@
 								<phase>process-resources</phase>
 								<goals>
 									<goal>updateSQL</goal>
-								</goals>
-							</execution>
-							<execution>
-								<id>test-apply-schema</id>
-								<phase>test</phase>
-								<goals>
-									<goal>update</goal>
 								</goals>
 							</execution>
 						</executions>
@@ -227,10 +131,73 @@
 				</plugins>
 			</build>
 			<properties>
-				<db.docker.url>jdbc:postgresql://localhost:25432/db71u</db.docker.url>
+				<db.docker.url>offline:postgresql?changeLogFile=target/databasechangelog.csv&amp;outputLiquibaseSql=true</db.docker.url>
 			</properties>
 		</profile>                               
     </profiles>
-        
-        
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.liquibase</groupId>
+                    <artifactId>liquibase-maven-plugin</artifactId>
+                    <version>3.5.3</version>
+                    <configuration>
+                        <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
+                        <changeLogFile>${db.changeLogFile}</changeLogFile>
+                        <driver>${db.driver}</driver>
+                        <url>${db.url}</url>
+                        <username>${db.user}</username>
+                        <password>${db.passwd}</password>
+                        <defaultSchemaName>${db.defaultSchema}</defaultSchemaName>
+                        <outputChangeLogFile>${db.outputFile}</outputChangeLogFile>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+        	<plugin>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>2.4.1</version>
+                    <configuration>
+                        <descriptor>assembly.xml</descriptor>
+                        <finalName>${project.artifactId}</finalName>
+                        <appendAssemblyId>false</appendAssemblyId>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>single</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>default-jar</id>
+                            <!-- put the default-jar in the none phase to skip it from being created -->
+                            <phase>none</phase>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <goals>
+                        <goal>deploy-file</goal>
+                    </goals>
+                    <configuration>
+                        <packaging>zip</packaging>
+                        <generatePom>true</generatePom>
+                        <artifactId>${project.artifactId}</artifactId>
+                        <groupId>${project.groupId}</groupId>
+                        <version>${project.version}</version>
+                        <file>target/liquibase.zip</file>
+                    </configuration>
+                </plugin>        	
+        </plugins>
+    </build>
 </project>

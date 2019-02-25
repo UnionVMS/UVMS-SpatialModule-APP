@@ -114,6 +114,6 @@
         </rollback>
     </changeSet>
 	
-	<include file="schema\tables\parameter.xml"/>
+	<include file="..\..\schema\tables\parameter.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
