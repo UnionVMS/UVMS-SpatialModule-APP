@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet author="emrinalgr" id="1">
+        <createSequence cycle="false" incrementBy="1" maxValue="9223372036854775807" minValue="1"
+                        sequenceName="system_configurations_seq" startValue="1"/>
+    </changeSet>
+
+    <changeSet author="georgige (generated)" id="1448362466453-1">
+        <createTable tableName="system_configurations">
+            <column name="id" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="system_configurations_pkey"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="value" type="CLOB"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="dubduan" id="76834618168717" dbms="postgresql">
+        <addDefaultValue
+                columnDataType="BIGINT"
+                columnName="id"
+                defaultValueSequenceNext="system_configurations_seq"
+                tableName="system_configurations"/>
+    </changeSet>
+	
+	
+    <changeSet author="dubduan" id="1418362466451-1" dbms="oracle">
+       <createProcedure>
+            CREATE OR REPLACE TRIGGER trg_system_configurations
+            BEFORE INSERT
+            ON system_configurations
+            FOR EACH ROW
+            DECLARE
+            BEGIN
+            SELECT system_configurations_seq.NEXTVAL INTO :NEW.ID FROM DUAL;
+            END trg_system_configurations;
+        </createProcedure>			
+    </changeSet>	
+	
+<!--	<changeSet author="dubduan" id="18k7jhk70s-31" dbms="postgresql">
+	
+        <createProcedure>
+
+            CREATE OR REPLACE FUNCTION inc_system_configurations_sq()
+            RETURNS "trigger" AS
+            $BODY$
+            BEGIN
+            New.id:=nextval('system_configurations_seq');
+            Return NEW;
+            END;
+            $BODY$
+            LANGUAGE 'plpgsql' VOLATILE;
+
+            CREATE TRIGGER trg_system_configurations
+            before insert on system_configurations
+            for each row EXECUTE procedure inc_system_configurations_sq()
+
+			
+        </createProcedure>			
+    </changeSet>-->
+	
+</databaseChangeLog>

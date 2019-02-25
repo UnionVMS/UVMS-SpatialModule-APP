@@ -1,0 +1,125 @@
+<databaseChangeLog xmlns='http://www.liquibase.org/xml/ns/dbchangelog'
+  xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+  xsi:schemaLocation='http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd'>
+
+    <changeSet dbms="postgresql" id="001" author="Greg">
+
+        <preConditions onFail="WARN">
+            <dbms type="postgresql" />
+            <runningAs username="SPATIAL" />
+        </preConditions>
+
+        <createView replaceIfExists="true"
+                    schemaName="spatial"
+                    viewName="user_areas_v">select * from spatial.user_areas as areas LEFT JOIN
+            (select a.user_area_id as id, string_agg(a.scope, '|') as scopes from
+            (select user_area_id, '#'||scope_name||'#' as scope from spatial.user_scope group by scope, user_area_id) as a
+            group by a.user_area_id) as area_scopes ON areas.gid = area_scopes.id
+        </createView>
+
+    </changeSet>
+
+	
+    <changeSet dbms="oracle" id="002" author="dubduan">
+
+
+        <createView replaceIfExists="true"
+                    schemaName="spatial"
+                    viewName="user_areas_v">
+		select * from user_areas areas LEFT JOIN
+            (select a.user_area_id as id, LISTAGG(a.scope, '|') WITHIN GROUP (order by a.scope) scopes from
+            (select user_area_id, '#'||scope_name||'#'  scope from user_scope group by scope_name, user_area_id) a
+            group by a.user_area_id) area_scopes ON areas.gid = area_scopes.id						
+        </createView>
+
+    </changeSet>
+	
+	
+<!--	<changeSet author="dubduan" id="123dfsdss21-1" dbms="postgresql">
+        <sql>
+		
+			ALTER TABLE AREA_LOCATION_TYPES DISABLE TRIGGER trg_area_location_types;
+			
+			ALTER TABLE BOOKMARK DISABLE TRIGGER trg_bookmark;
+			
+			ALTER TABLE COUNTRIES DISABLE TRIGGER trg_countries;
+			
+			ALTER TABLE EEZ DISABLE TRIGGER trg_eez;
+			
+			ALTER TABLE FAO DISABLE TRIGGER trg_fao;
+			
+			ALTER TABLE FMZ DISABLE TRIGGER trg_fmz;
+			
+			ALTER TABLE GFCM DISABLE TRIGGER trg_gfcm;
+			
+			ALTER TABLE PORT DISABLE TRIGGER trg_port;
+
+			ALTER TABLE PORT_AREA DISABLE TRIGGER trg_port_area;
+			
+			ALTER TABLE PROJECTION DISABLE TRIGGER trg_projection;
+			
+			ALTER TABLE PROVIDER_FORMAT DISABLE TRIGGER trg_provider_format;
+
+			ALTER TABLE report_connect_service_area DISABLE TRIGGER trg_rpt_cct_srv_a;
+
+			ALTER TABLE REPORT_CONNECT_SPATIAL DISABLE TRIGGER trg_rpt_cct_srv_a;
+
+			ALTER TABLE REPORT_LAYER_CONFIG DISABLE TRIGGER trg_report_layer_config;
+
+			ALTER TABLE RFMO DISABLE TRIGGER trg_rfmo;
+			
+			ALTER TABLE SERVICE_LAYER DISABLE TRIGGER trg_service_layer;
+			
+			ALTER TABLE STAT_RECT DISABLE TRIGGER trg_stat_rect;
+			
+			ALTER TABLE SYSTEM_CONFIGURATIONS DISABLE TRIGGER trg_system_configurations;
+			
+			ALTER TABLE USER_AREAS DISABLE TRIGGER trg_user_areas;
+			
+			ALTER TABLE USER_SCOPE DISABLE TRIGGER trg_user_scope;
+        </sql>	
+    </changeSet>-->
+	
+	
+	
+	
+	<changeSet author="dubduan" id="12343fdss21-1" dbms="oracle">
+        <sql>
+			ALTER TRIGGER TRG_AREA_LOCATION_TYPES DISABLE;
+			ALTER TRIGGER TRG_BOOKMARK DISABLE;
+			ALTER TRIGGER TRG_COUNTRIES DISABLE;
+			ALTER TRIGGER TRG_EEZ DISABLE;
+			ALTER TRIGGER TRG_FAO DISABLE;
+			ALTER TRIGGER TRG_FMZ DISABLE;
+			ALTER TRIGGER TRG_GFCM DISABLE;
+			ALTER TRIGGER TRG_PORT DISABLE;
+
+			ALTER TRIGGER TRG_PORT_AREA DISABLE;
+
+			ALTER TRIGGER TRG_PROJECTION DISABLE;
+
+			ALTER TRIGGER TRG_PROVIDER_FORMAT DISABLE;
+
+			ALTER TRIGGER TRG_REPORT_CONNECT_SPATIAL DISABLE;
+
+			ALTER TRIGGER TRG_REPORT_LAYER_CONFIG DISABLE;
+
+			ALTER TRIGGER TRG_RFMO DISABLE;
+
+			ALTER TRIGGER TRG_RPT_CCT_SRV_A DISABLE;
+
+			ALTER TRIGGER TRG_SERVICE_LAYER DISABLE;
+
+			ALTER TRIGGER TRG_STAT_RECT DISABLE;
+
+			ALTER TRIGGER TRG_SYSTEM_CONFIGURATIONS DISABLE;
+
+			ALTER TRIGGER TRG_USER_AREAS DISABLE;
+
+			ALTER TRIGGER TRG_USER_SCOPE DISABLE;
+        </sql>	
+    </changeSet>
+
+
+	
+</databaseChangeLog>

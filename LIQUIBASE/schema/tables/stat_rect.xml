@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:spatial="/liquibase-spatial.xsd"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd   http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-spatial
+      http://lonnyj.github.com/liquibase-spatial/liquibase-spatial.xsd">
+
+    <changeSet author="emrinalgr" id="2">
+        <createSequence cycle="false" incrementBy="1" maxValue="9223372036854775807" minValue="1"
+                        sequenceName="stat_rect_seq" startValue="1"/>
+    </changeSet>
+
+<changeSet author="martinhu" id="1462540272744-20">
+        <createTable tableName="stat_rect">
+            <column name="gid" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="stat_rect_pkey"/>
+            </column>
+            <column name="geom" type="GEOMETRY(Multipolygon, 4326)"/>
+            <column name="north" type="FLOAT"/>
+            <column name="south" type="FLOAT"/>
+            <column name="east" type="FLOAT"/>
+            <column name="west" type="FLOAT"/>
+            <column name="code" type="VARCHAR(20)"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="enabled" type="VARCHAR(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enabled_on" type="TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1" author="emrinalgr">
+        <spatial:createSpatialIndex tableName="stat_rect" indexName="stat_rect_geom_index" geometryType="Multipolygon" srid="4326">
+            <column name="geom" />
+        </spatial:createSpatialIndex>
+    </changeSet>
+
+    <changeSet author="dubduan" id="76834618168717" dbms="postgresql">
+        <addDefaultValue
+                columnDataType="BIGINT"
+                columnName="gid"
+                defaultValueSequenceNext="stat_rect_seq"
+                tableName="stat_rect"/>
+    </changeSet>
+	
+	
+	<changeSet author="dubduan" id="1412540272714-10" dbms="oracle">
+        <createProcedure>
+            CREATE OR REPLACE TRIGGER trg_stat_rect
+            BEFORE INSERT
+            ON stat_rect
+            FOR EACH ROW
+            DECLARE
+            BEGIN
+            SELECT stat_rect_seq.NEXTVAL INTO :NEW.gid FROM DUAL;
+            END trg_stat_rect;
+        </createProcedure>		
+    </changeSet>	
+	
+	
+<!--	<changeSet author="dubduan" id="18k7hjk70s-31" dbms="postgresql">
+	
+        <createProcedure>
+
+
+            CREATE OR REPLACE FUNCTION inc_stat_rect_sq()
+            RETURNS "trigger" AS
+            $BODY$
+            BEGIN
+            New.gid:=nextval('stat_rect_seq');
+            Return NEW;
+            END;
+            $BODY$
+            LANGUAGE 'plpgsql' VOLATILE;
+
+            CREATE TRIGGER trg_stat_rect
+            before insert on stat_rect
+            for each row EXECUTE procedure inc_stat_rect_sq()
+			
+        </createProcedure>			
+    </changeSet>-->
+
+</databaseChangeLog>

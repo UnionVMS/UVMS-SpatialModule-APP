@@ -1,0 +1,39 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+<changeSet author="emrinalgr" id="16">
+        <createSequence cycle="false" incrementBy="1" maxValue="9223372036854775807" minValue="1"
+                        sequenceName="area_group_seq" startValue="1"/>
+    </changeSet>
+
+    <changeSet author="padhyad" id="1439890745706-31">
+        <createTable tableName="area_group">
+            <column name="id" type="BIGINT" defaultValueSequenceNext="area_group_seq">
+                <constraints primaryKey="true" primaryKeyName="area_group_pkey" />
+            </column>
+            <column name="user_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="scope_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="group_name" type="VARCHAR(255)" />
+            <column name="bookmark_definition" type="CLOB" />
+            <column name="description" type="CLOB"/>
+            <column name="created_on" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    
+    <changeSet author="padhyad" id="1439890745706-53">
+        <addForeignKeyConstraint baseColumnNames="area_group_id" baseTableName="area_connect_group" constraintName="area_connect_group_area_group_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="area_group"/>
+    </changeSet>
+    
+    <changeSet author="padhyad" id="1439890745706-57">
+        <addForeignKeyConstraint baseColumnNames="area_group_id" baseTableName="report_connect_service_areas" constraintName="report_connect_service_areas_area_group_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="area_group"/>
+    </changeSet>
+
+</databaseChangeLog>
