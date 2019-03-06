@@ -12,9 +12,10 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.service.dao;
 
 import static com.ninja_squad.dbsetup.Operations.sequenceOf;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.TestCase.assertTrue;
 import static junitparams.JUnitParamsRunner.$;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+
 import com.ninja_squad.dbsetup.DbSetup;
 import com.ninja_squad.dbsetup.destination.DataSourceDestination;
 import com.ninja_squad.dbsetup.operation.Operation;

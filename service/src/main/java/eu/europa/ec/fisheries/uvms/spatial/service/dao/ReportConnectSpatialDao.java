@@ -24,8 +24,8 @@ import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.commons.service.dao.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.ProjectionDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.ReportConnectSpatialEntity;
+import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.query.Query;
 import org.hibernate.transform.Transformers;
 
 public class ReportConnectSpatialDao extends AbstractDAO<ReportConnectSpatialEntity> {
@@ -77,10 +77,11 @@ public class ReportConnectSpatialDao extends AbstractDAO<ReportConnectSpatialEnt
 
     public List<ProjectionDto> findProjectionByMap(long reportId) {
         Map<String, Object> parameters = ImmutableMap.<String, Object>builder().put(REPORT_ID, reportId).build();
-        Query<ProjectionDto> query = em.unwrap(Session.class).createNamedQuery(ReportConnectSpatialEntity.FIND_MAP_PROJ_BY_ID, ProjectionDto.class);
+        Query query = em.unwrap(Session.class).getNamedQuery(ReportConnectSpatialEntity.FIND_MAP_PROJ_BY_ID);
         for (Map.Entry<String, Object> entry : parameters.entrySet()) {
             query.setParameter(entry.getKey(), entry.getValue());
         }
+        query.setResultTransformer(Transformers.aliasToBean(ProjectionDto.class));
         return query.list();
     }
 }

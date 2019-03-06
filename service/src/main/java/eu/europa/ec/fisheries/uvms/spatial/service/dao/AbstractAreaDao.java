@@ -29,11 +29,11 @@ import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
+import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.StatelessSession;
 import org.hibernate.Transaction;
-import org.hibernate.query.NativeQuery;
-import org.hibernate.query.Query;
 import org.hibernate.spatial.JTSGeometryType;
 import org.hibernate.spatial.dialect.postgis.PGGeometryTypeDescriptor;
 import org.hibernate.transform.AliasToEntityMapResultTransformer;
@@ -63,7 +63,7 @@ public abstract class AbstractAreaDao<E extends BaseAreaEntity> extends Abstract
         StatelessSession session = (getEntityManager().unwrap(Session.class)).getSessionFactory().openStatelessSession();
         Transaction tx = session.beginTransaction();
         try {
-            Query<?> query = session.createNamedQuery(getDisableAreaNamedQuery());
+            Query query = session.getNamedQuery(getDisableAreaNamedQuery());
             query.executeUpdate();
             for (List<Property> properties : features.values()) {
                 Map<String, Object> values = BaseAreaEntity.createAttributesMap(properties);
@@ -131,7 +131,7 @@ public abstract class AbstractAreaDao<E extends BaseAreaEntity> extends Abstract
 
     public List listBaseAreas(final String query) throws ServiceException {
         javax.persistence.Query emNativeQuery = getEntityManager().createNativeQuery(query);
-        emNativeQuery.unwrap(NativeQuery.class)
+        emNativeQuery.unwrap(SQLQuery.class)
                 .addScalar(TYPE, StringType.INSTANCE)
                 .addScalar(GEOM, new JTSGeometryType(PGGeometryTypeDescriptor.INSTANCE));
         return emNativeQuery.getResultList();
@@ -162,7 +162,7 @@ public abstract class AbstractAreaDao<E extends BaseAreaEntity> extends Abstract
         }
         log.debug(QUERY, sb.toString());
         final javax.persistence.Query emNativeQuery = getEntityManager().createNativeQuery(sb.toString());
-        emNativeQuery.unwrap(NativeQuery.class)
+        emNativeQuery.unwrap(SQLQuery.class)
                 .addScalar("type", StringType.INSTANCE)
                 .addScalar("code", StringType.INSTANCE)
                 .addScalar(GEOM, new JTSGeometryType(PGGeometryTypeDescriptor.INSTANCE));
@@ -197,7 +197,7 @@ public abstract class AbstractAreaDao<E extends BaseAreaEntity> extends Abstract
             }
             log.debug(QUERY, spatialFunction.getClass().getSimpleName().toUpperCase(), sb.toString());
             final javax.persistence.Query emNativeQuery = getEntityManager().createNativeQuery(sb.toString());
-            emNativeQuery.unwrap(NativeQuery.class).addScalar("type", StringType.INSTANCE).addScalar(GID, IntegerType.INSTANCE)
+            emNativeQuery.unwrap(SQLQuery.class).addScalar("type", StringType.INSTANCE).addScalar(GID, IntegerType.INSTANCE)
                     .addScalar(CODE, StringType.INSTANCE).addScalar(NAME, StringType.INSTANCE).addScalar(GEOM, new JTSGeometryType(PGGeometryTypeDescriptor.INSTANCE))
                     .addScalar("distance", DoubleType.INSTANCE);
             resultList = emNativeQuery.getResultList();
@@ -228,7 +228,7 @@ public abstract class AbstractAreaDao<E extends BaseAreaEntity> extends Abstract
             sb.append(dialect.closestAreaToPointSuffix());
             log.debug(QUERY, dialect.getClass().getSimpleName().toUpperCase(), sb.toString());
             javax.persistence.Query emNativeQuery = getEntityManager().createNativeQuery(sb.toString());
-            emNativeQuery.unwrap(NativeQuery.class)
+            emNativeQuery.unwrap(SQLQuery.class)
                     .addScalar(TYPE, StandardBasicTypes.STRING)
                     .addScalar(GID, StandardBasicTypes.INTEGER)
                     .addScalar(CODE, StandardBasicTypes.STRING)
@@ -266,7 +266,7 @@ public abstract class AbstractAreaDao<E extends BaseAreaEntity> extends Abstract
             sb.append(") a ORDER BY indexRS, gid ASC ");
             log.debug(QUERY, dialect.getClass().getSimpleName().toUpperCase(), sb.toString());
             javax.persistence.Query emNativeQuery = getEntityManager().createNativeQuery(sb.toString());
-            emNativeQuery.unwrap(NativeQuery.class)
+            emNativeQuery.unwrap(SQLQuery.class)
                     .addScalar(TYPE, StandardBasicTypes.STRING)
                     .addScalar(GID, StandardBasicTypes.INTEGER)
                     .addScalar(CODE, StandardBasicTypes.STRING)

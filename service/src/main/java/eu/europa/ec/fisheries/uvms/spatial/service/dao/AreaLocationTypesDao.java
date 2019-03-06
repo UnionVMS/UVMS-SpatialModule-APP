@@ -16,8 +16,9 @@ import eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTypesEntit
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.AreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.UserAreaLayerDto;
 import org.apache.commons.collections.CollectionUtils;
+import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.query.Query;
+import org.hibernate.transform.Transformers;
 import javax.persistence.EntityManager;
 import java.util.List;
 
@@ -58,16 +59,20 @@ public class AreaLocationTypesDao extends AbstractDAO<AreaLocationTypesEntity> {
                 with("isLocation", isLocation).parameters());
     }
 
-    public List<UserAreaLayerDto> findUserAreaLayerMapping() {
-        return em.createNamedQuery(AreaLocationTypesEntity.FIND_USER_AREA_LAYER, UserAreaLayerDto.class).getResultList();
+    public List findUserAreaLayerMapping() {
+        Query query = em.unwrap(Session.class).getNamedQuery(AreaLocationTypesEntity.FIND_USER_AREA_LAYER);
+        query.setResultTransformer(Transformers.aliasToBean(UserAreaLayerDto.class));
+        return query.list();
     }
 
     public List<AreaLayerDto> findSystemAreaLayerMapping() {
-        return em.createNamedQuery(AreaLocationTypesEntity.FIND_SYSTEM_AREA_LAYER, AreaLayerDto.class).getResultList();
+        Query query = em.unwrap(Session.class).getNamedQuery(AreaLocationTypesEntity.FIND_SYSTEM_AREA_LAYER);
+        return query.setResultTransformer(Transformers.aliasToBean(AreaLayerDto.class)).list();
     }
 
     public List<AreaLayerDto> findSystemAreaAndLocationLayerMapping() {
-        return em.createNamedQuery(AreaLocationTypesEntity.FIND_SYSTEM_AREA_AND_LOCATION_LAYER, AreaLayerDto.class).getResultList();
+        Query query = em.unwrap(Session.class).getNamedQuery(AreaLocationTypesEntity.FIND_SYSTEM_AREA_AND_LOCATION_LAYER);
+        return query.setResultTransformer(Transformers.aliasToBean(AreaLayerDto.class)).list();
     }
 
 }
