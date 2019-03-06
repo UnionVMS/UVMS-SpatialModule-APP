@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:spatial="/liquibase-spatial.xsd"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd   http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-spatial
+      http://lonnyj.github.com/liquibase-spatial/liquibase-spatial.xsd">
+
+    <changeSet author="emrinalgr" id="4">
+        <createSequence cycle="false" incrementBy="1" maxValue="9223372036854775807" minValue="1"
+                        sequenceName="rfmo_seq" startValue="1"/>
+    </changeSet>
+
+    <changeSet author="padhyad" id="1439890745706-45">
+        <preConditions>
+            <spatial:spatialSupported/>
+        </preConditions>    
+        <createTable tableName="rfmo">
+            <column name="gid" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="rfmo_pkey"/>
+            </column>
+            <column name="geom" type="GEOMETRY(Multipolygon, 4326)"/>
+            <column name="code" type="VARCHAR(20)"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="tuna" type="VARCHAR(10)"/>
+			<column name="enabled" type="VARCHAR(1)">
+                <constraints nullable="false"/>
+            </column>
+			<column name="enabled_on" type="TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1" author="emrinalgr">
+        <spatial:createSpatialIndex tableName="rfmo" indexName="rfmo_geom_index" geometryType="Multipolygon" srid="4326">
+            <column name="geom" />
+        </spatial:createSpatialIndex>
+    </changeSet>
+
+    <changeSet author="dubduan" id="76834618168717" dbms="postgresql">
+        <addDefaultValue
+                columnDataType="BIGINT"
+                columnName="gid"
+                defaultValueSequenceNext="rfmo_seq"
+                tableName="rfmo"/>
+    </changeSet>
+	
+	
+ <changeSet author="dubduan" id="1431890745716-41" dbms="oracle">
+        <createProcedure>
+            CREATE OR REPLACE TRIGGER trg_rfmo
+            BEFORE INSERT
+            ON rfmo
+            FOR EACH ROW
+            DECLARE
+            BEGIN
+            SELECT rfmo_seq.NEXTVAL INTO :NEW.gid FROM DUAL;
+            END trg_rfmo;
+        </createProcedure>					
+    </changeSet>	
+	
+	
+<!--	<changeSet author="dubduan" id="18h67770s-31" dbms="postgresql">
+	
+        <createProcedure>
+
+            CREATE OR REPLACE FUNCTION inc_rfmo_sq()
+            RETURNS "trigger" AS
+            $BODY$
+            BEGIN
+            New.gid:=nextval('rfmo_seq');
+            Return NEW;
+            END;
+            $BODY$
+            LANGUAGE 'plpgsql' VOLATILE;
+
+            CREATE TRIGGER trg_rfmo
+            before insert on rfmo
+            for each row EXECUTE procedure inc_rfmo_sq()
+			
+        </createProcedure>			
+    </changeSet>-->
+
+</databaseChangeLog>

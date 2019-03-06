@@ -12,10 +12,10 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.rest.dto;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import lombok.Data;
-import org.hibernate.validator.constraints.NotEmpty;
 
 @Data
 public class LocationQueryDto extends GeoCoordinateType {

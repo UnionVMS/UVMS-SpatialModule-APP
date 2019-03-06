@@ -21,8 +21,8 @@ import eu.europa.ec.fisheries.uvms.spatial.service.entity.ServiceLayerEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.query.Query;
 import org.hibernate.transform.Transformers;
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -77,7 +77,7 @@ public class ServiceLayerDao extends AbstractDAO<ServiceLayerEntity> {
     public List<ServiceLayerEntity> findServiceLayerEntityByIds(List<Long> ids) {
         Map<String, List<Long>> parameters = ImmutableMap.<String, List<Long>>builder().put("ids", ids).build();
 
-        Query query = em.unwrap(Session.class).getNamedQuery(ServiceLayerEntity.FIND_SERVICE_LAYERS_BY_ID);
+        Query<ServiceLayerEntity> query = em.unwrap(Session.class).createNamedQuery(ServiceLayerEntity.FIND_SERVICE_LAYERS_BY_ID, ServiceLayerEntity.class);
         for (Map.Entry<String, List<Long>> entry : parameters.entrySet()) {
             query.setParameterList(entry.getKey(), entry.getValue());
         }

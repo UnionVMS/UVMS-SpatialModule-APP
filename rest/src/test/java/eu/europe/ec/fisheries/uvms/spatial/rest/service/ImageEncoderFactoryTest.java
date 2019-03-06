@@ -10,7 +10,6 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europe.ec.fisheries.uvms.spatial.rest.service;
 
-import eu.europa.ec.fisheries.uvms.BaseUnitilsTest;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ImageEncoderFactory;
 import lombok.SneakyThrows;
 import org.apache.batik.transcoder.TranscoderException;
@@ -24,7 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImageEncoderFactoryTest extends BaseUnitilsTest {
+public class ImageEncoderFactoryTest {
 
     @Test
     @SneakyThrows

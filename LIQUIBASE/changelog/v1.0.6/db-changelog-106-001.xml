@@ -1,0 +1,119 @@
+<databaseChangeLog xmlns='http://www.liquibase.org/xml/ns/dbchangelog'
+  xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+  xsi:schemaLocation='http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd'>
+
+    <changeSet author="stihft" id="addIndexOnTableReport_layer_configAndColumnReport_connect_service_area_id">
+        <createIndex
+                indexName="report_layer_config_i_1"
+                tableName="report_layer_config">
+            <column name="report_connect_service_area_id" type="bigint"/>
+        </createIndex>
+
+        <rollback>
+            <dropIndex
+                    indexName="report_layer_config_i_1"
+                    tableName="report_layer_config"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet author="stihft" id="addIndexOnTableReport_connect_service_areaAndColumnService_layer_id">
+        <createIndex
+                indexName="report_connect_service_area_i_1"
+                tableName="report_connect_service_area">
+            <column name="service_layer_id" type="bigint"/>
+        </createIndex>
+
+        <rollback>
+            <dropIndex
+                    indexName="report_connect_service_area_i_1"
+                    tableName="report_connect_service_area"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet author="stihft" id="addIndexOnTableReport_connect_service_areaAndColumnReport_connect_spatial_id">
+        <createIndex
+                indexName="report_connect_service_area_i_2"
+                tableName="report_connect_service_area">
+            <column name="report_connect_spatial_id" type="bigint"/>
+        </createIndex>
+
+        <rollback>
+            <dropIndex
+                    indexName="report_connect_service_area_i_2"
+                    tableName="report_connect_service_area"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet author="stihft" id="addIndexOnTableReport_connect_spatialAndColumnDisplay_proj_id">
+        <createIndex
+                indexName="report_connect_spatial_i_1"
+                tableName="report_connect_spatial">
+            <column name="display_proj_id" type="bigint"/>
+        </createIndex>
+
+        <rollback>
+            <dropIndex
+                    indexName="report_connect_spatial_i_1"
+                    tableName="report_connect_spatial"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet author="stihft" id="addIndexOnTableReport_connect_spatialAndColumnMap_proj_id">
+        <createIndex
+                indexName="report_connect_spatial_i_2"
+                tableName="report_connect_spatial">
+            <column name="map_proj_id" type="bigint"/>
+        </createIndex>
+
+        <rollback>
+            <dropIndex
+                    indexName="report_connect_spatial_i_2"
+                    tableName="report_connect_spatial"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet author="stihft" id="addIndexOnTableReport_connect_spatialAndColumnService_layer_id">
+        <createIndex
+                indexName="area_location_types_i_1"
+                tableName="area_location_types">
+            <column name="service_layer_id" type="tinyint"/>
+        </createIndex>
+
+        <rollback>
+            <dropIndex
+                    indexName="area_location_types_i_1"
+                    tableName="area_location_types"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet author="stihft" id="addIndexOnTableService_layerAndColumnProvider_format_id">
+        <createIndex
+                indexName="service_layer_i_1"
+                tableName="service_layer">
+            <column name="provider_format_id" type="tinyint"/>
+        </createIndex>
+
+        <rollback>
+            <dropIndex
+                    indexName="service_layer_i_1"
+                    tableName="service_layer"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet author="stihft" id="addIndexOnTableUser_scopeAndColumnUser_area_id">
+        <createIndex
+                indexName="user_scope_i_1"
+                tableName="user_scope">
+            <column name="user_area_id" type="tinyint"/>
+        </createIndex>
+
+        <rollback>
+            <dropIndex
+                    indexName="user_scope_i_1"
+                    tableName="user_scope"/>
+        </rollback>
+    </changeSet>
+	
+	<include file="..\..\schema\tables\parameter.xml" relativeToChangelogFile="true"/>
+
+</databaseChangeLog>

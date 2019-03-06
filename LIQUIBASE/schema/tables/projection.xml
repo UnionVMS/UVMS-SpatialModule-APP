@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet author="emrinalgr" id="1">
+        <createSequence cycle="false" incrementBy="1" maxValue="9223372036854775807" minValue="1"
+                        sequenceName="projection_seq" startValue="1"/>
+    </changeSet>
+
+    <changeSet author="padhyad" id="1439890745706-39">
+        <createTable tableName="projection">
+            <column name="id" type="BIGINT" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="srs_code" remarks="epsg code" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="proj_def" remarks="proj4js definition" type="CLOB" />
+            <column name="formats" remarks="dd;dms;ddm&#10;m" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="units" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="world" type="VARCHAR(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="extent" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="axis" type="VARCHAR(3)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="world_extent" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    
+    <changeSet author="padhyad" id="1439890745706-49">
+        <addPrimaryKey columnNames="id" constraintName="projection_pkey" tableName="projection"/>
+    </changeSet>
+    
+    <changeSet author="padhyad" id="1439890745706-51">
+        <addUniqueConstraint columnNames="name" constraintName="projection_name_key" tableName="projection"/>
+    </changeSet>
+    
+    <changeSet author="padhyad" id="1439890745706-52">
+        <addUniqueConstraint columnNames="srs_code" constraintName="projection_srs_code_key" tableName="projection"/>
+    </changeSet>
+    
+    <changeSet author="padhyad" id="1439890745706-60">
+        <addForeignKeyConstraint baseColumnNames="display_proj_id" baseTableName="report_connect_spatial"
+                                 constraintName="display_proj_id_fkey" deferrable="false"
+                                 initiallyDeferred="false" onDelete="RESTRICT"
+                                 onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="projection"/>
+    </changeSet>
+    
+    <changeSet author="padhyad" id="1439890745706-61">
+        <addForeignKeyConstraint baseColumnNames="map_proj_id"
+                                 baseTableName="report_connect_spatial"
+                                 constraintName="map_proj_id_fkey"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 onDelete="RESTRICT"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="projection"/>
+    </changeSet>
+
+
+    <changeSet author="dubduan" id="76834618168717" dbms="postgresql">
+        <addDefaultValue
+                columnDataType="BIGINT"
+                columnName="id"
+                defaultValueSequenceNext="projection_seq"
+                tableName="projection"/>
+    </changeSet>
+
+    <changeSet author="dubduan" id="1439891741706-39" dbms="oracle">
+        <createProcedure>
+            CREATE OR REPLACE TRIGGER trg_projection
+            BEFORE INSERT
+            ON projection
+            FOR EACH ROW
+            DECLARE
+            BEGIN
+            SELECT projection_seq.NEXTVAL INTO :NEW.ID FROM DUAL;
+            END trg_projection;
+        </createProcedure>		
+    </changeSet>	
+	
+	
+	
+<!--	<changeSet author="dubduan" id="187968sds-31" dbms="postgresql">
+	
+        <createProcedure>
+
+            CREATE OR REPLACE FUNCTION inc_projection_sq()
+            RETURNS "trigger" AS
+            $BODY$
+            BEGIN
+            New.id:=nextval('projection_seq');
+            Return NEW;
+            END;
+            $BODY$
+            LANGUAGE 'plpgsql' VOLATILE;
+
+            CREATE TRIGGER trg_projection
+            before insert on projection
+            for each row EXECUTE procedure inc_projection_sq()
+			
+        </createProcedure>			
+    </changeSet>-->
+    
+</databaseChangeLog>

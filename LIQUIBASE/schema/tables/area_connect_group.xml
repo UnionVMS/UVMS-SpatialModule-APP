@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet author="emrinalgr" id="15">
+        <createSequence cycle="false" incrementBy="1" maxValue="9223372036854775807" minValue="1"
+                        sequenceName="area_connect_group_seq" startValue="1"/>
+    </changeSet>
+
+    <changeSet author="padhyad" id="1439890745706-30" >
+        <createTable tableName="area_connect_group">
+            <column name="id" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="area_connect_group_pkey"/>
+            </column>
+            <column name="area_type_id" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="area_group_id" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="area_id" remarks="It is not nullable because we are not sure that selection
+            within the predefine areas will be supported (for instance EEZ feature 1)" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+	
+    
+    <changeSet author="padhyad" id="1439890745706-62">
+        <addForeignKeyConstraint baseColumnNames="area_connect_group_id" baseTableName="report_layer_config" constraintName="report_layer_config_area_connect_group_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="area_connect_group"/>
+    </changeSet>
+
+
+    <changeSet author="dubduan" id="76834618168717" dbms="postgresql">
+        <addDefaultValue
+                columnDataType="BIGINT"
+                columnName="id"
+                defaultValueSequenceNext="area_connect_group_seq"
+                tableName="area_connect_group"/>
+    </changeSet>
+
+		
+	<changeSet author="dubduan" id="1439190741706-31" dbms="oracle">
+	
+        <createProcedure>
+            CREATE OR REPLACE TRIGGER trg_area_connect_group
+            BEFORE INSERT
+            ON area_connect_group
+            FOR EACH ROW
+            DECLARE
+            BEGIN
+            SELECT area_connect_group_seq.NEXTVAL INTO :NEW.ID FROM DUAL;
+            END trg_area_connect_group;
+        </createProcedure>			
+    </changeSet>
+	
+<!--	<changeSet author="dubduan" id="1429sdfkf312d-31" dbms="postgresql">
+	
+        <createProcedure>
+
+            CREATE OR REPLACE FUNCTION inc_area_connect_group_sq()
+            RETURNS "trigger" AS
+            $BODY$
+            BEGIN
+            New.id:=nextval('area_connect_group_seq');
+            Return NEW;
+            END;
+            $BODY$
+            LANGUAGE 'plpgsql' VOLATILE;
+
+
+            CREATE TRIGGER trg_area_connect_group
+            before insert on area_connect_group
+            for each row EXECUTE procedure inc_area_connect_group_sq()
+			
+        </createProcedure>			
+    </changeSet>-->
+	
+</databaseChangeLog>

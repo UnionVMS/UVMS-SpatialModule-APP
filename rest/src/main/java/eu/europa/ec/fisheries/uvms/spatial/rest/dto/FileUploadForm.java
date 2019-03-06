@@ -12,10 +12,10 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.rest.dto;
 
+import javax.validation.constraints.NotEmpty;
 import javax.ws.rs.FormParam;
 
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.resteasy.annotations.providers.multipart.PartType;
 
 @NoArgsConstructor

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <!-- Including tables -->
+    <include file="..\..\schema\tables\report_layer_config.xml" relativeToChangelogFile="true"/>
+    <include file="..\..\schema\tables\report_connect_service_areas.xml" relativeToChangelogFile="true"/>
+    <include file="..\..\schema\tables\report_connect_spatial.xml" relativeToChangelogFile="true"/>
+    <include file="..\..\schema\tables\area_location_types.xml" relativeToChangelogFile="true"/>
+    <include file="..\..\schema\tables\bookmark.xml" relativeToChangelogFile="true"/>
+    <include file="..\..\schema\tables\eez.xml" relativeToChangelogFile="true"/>
+    <include file="..\..\schema\tables\fao.xml" relativeToChangelogFile="true"/>
+    <include file="..\..\schema\tables\gfcm.xml" relativeToChangelogFile="true"/>
+	<include file="..\..\schema\tables\geometry_columns.xml" relativeToChangelogFile="true"/>	
+    <include file="..\..\schema\tables\port.xml" relativeToChangelogFile="true"/>
+	<include file="..\..\schema\tables\port_area.xml" relativeToChangelogFile="true"/>
+    <include file="..\..\schema\tables\projection.xml" relativeToChangelogFile="true"/>
+    <include file="..\..\schema\tables\service_layer.xml" relativeToChangelogFile="true"/>
+    <include file="..\..\schema\tables\provider_format.xml" relativeToChangelogFile="true"/>
+    <include file="..\..\schema\tables\rfmo.xml" relativeToChangelogFile="true"/>
+    <include file="..\..\schema\tables\stat_rect.xml" relativeToChangelogFile="true"/>
+    <include file="..\..\schema\tables\user_areas.xml" relativeToChangelogFile="true"/>
+    <include file="..\..\schema\tables\system_configurations.xml" relativeToChangelogFile="true"/>
+	<include file="..\..\schema\tables\user_scope.xml" relativeToChangelogFile="true"/>
+
+
+</databaseChangeLog>

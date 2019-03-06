@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+
+
+   <changeSet author="dubduan" id="142390712322-31" dbms="oracle">   
+        <sql>
+			CREATE TABLE GEOMETRY_COLUMNS(
+			   F_TABLE_SCHEMA VARCHAR(30) NOT NULL,
+			   F_TABLE_NAME VARCHAR(30) NOT NULL,
+			   F_GEOMETRY_COLUMN VARCHAR(30) NOT NULL,
+			   COORD_DIMENSION INTEGER,
+			   SRID INTEGER NOT NULL,
+			   TYPE VARCHAR(30) NOT NULL,
+			   UNIQUE(F_TABLE_SCHEMA, F_TABLE_NAME, F_GEOMETRY_COLUMN),
+			   CHECK(TYPE IN ('POINT','LINE', 'POLYGON', 'COLLECTION', 'MULTIPOINT', 'MULTILINE', 'MULTIPOLYGON', 'GEOMETRY') ));         
+        </sql>			
+    </changeSet>	
+
+</databaseChangeLog>

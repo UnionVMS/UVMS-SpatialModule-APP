@@ -100,7 +100,6 @@ public class SpatialEventMDB implements MessageListener {
     private SpatialProducer producer;
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void onMessage(Message message) {
 
         TextMessage textMessage = (TextMessage) message;
