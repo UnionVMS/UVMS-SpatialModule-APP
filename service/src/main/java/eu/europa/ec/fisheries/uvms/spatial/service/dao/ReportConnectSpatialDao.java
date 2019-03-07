@@ -24,8 +24,8 @@ import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.commons.service.dao.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.ProjectionDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.ReportConnectSpatialEntity;
+import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.query.Query;
 import org.hibernate.transform.Transformers;
 
 public class ReportConnectSpatialDao extends AbstractDAO<ReportConnectSpatialEntity> {

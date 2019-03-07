@@ -16,8 +16,8 @@ import eu.europa.ec.fisheries.uvms.spatial.service.entity.ReportConnectServiceAr
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
+import org.hibernate.Query;
+import org.hibernate.Session;
 
 public class ReportConnectServiceAreaDao extends AbstractDAO<ReportConnectServiceAreasEntity> {
 
@@ -39,16 +39,16 @@ public class ReportConnectServiceAreaDao extends AbstractDAO<ReportConnectServic
     public List<ReportConnectServiceAreasEntity> findReportConnectServiceAreas(long reportId) {
         Map<String, Object> parameters = ImmutableMap.<String, Object>builder().put("reportId", reportId).build();
 
-        TypedQuery<ReportConnectServiceAreasEntity> query = em.createNamedQuery(ReportConnectServiceAreasEntity.FIND_REPORT_SERVICE_AREAS, ReportConnectServiceAreasEntity.class);
+        Query query = em.unwrap(Session.class).getNamedQuery(ReportConnectServiceAreasEntity.FIND_REPORT_SERVICE_AREAS);
         for (Map.Entry<String, Object> entry : parameters.entrySet()) {
             query.setParameter(entry.getKey(), entry.getValue());
         }
-        return query.getResultList();
+        return query.list();
     }
 
     public void deleteReportConnectServiceAreas(Long id) {
         Map<String, Object> parameters = ImmutableMap.<String, Object>builder().put("id", id).build();
-        Query query = em.createNamedQuery(ReportConnectServiceAreasEntity.DELETE_BY_REPORT_CONNECT_SPATIAL_ID);
+        Query query = em.unwrap(Session.class).getNamedQuery(ReportConnectServiceAreasEntity.DELETE_BY_REPORT_CONNECT_SPATIAL_ID);
         for (Map.Entry<String, Object> entry : parameters.entrySet()) {
             query.setParameter(entry.getKey(), entry.getValue());
         }
