@@ -1,36 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" version="3.1">
 
-
-    <context-param>
-        <param-name>javamelody.datasources</param-name>
-        <param-value>java:jboss/datasources/uvms_spatial</param-value>
-    </context-param>
-    <listener>
-        <listener-class>net.bull.javamelody.SessionListener</listener-class>
-    </listener>
     <filter>
-        <filter-name>javamelody</filter-name>
-        <filter-class>net.bull.javamelody.MonitoringFilter</filter-class>
+        <filter-name>AuthenticationFilterMock</filter-name>
+        <filter-class>eu.europe.ec.fisheries.uvms.spatial.rest.AuthenticationFilterMock</filter-class>
         <async-supported>true</async-supported>
-        <init-param>
-            <param-name>displayed-counters</param-name>
-            <param-value>http,sql,ejb,error,log</param-value>
-        </init-param>
-        <init-param>
-            <param-name>system-actions-enabled</param-name>
-            <param-value>true</param-value>
-        </init-param>
-        <init-param>
-            <param-name>storage-directory</param-name>
-            <param-value>javamelody-spatial</param-value>
-        </init-param>
-        <init-param>
-            <param-name>datasources</param-name>
-            <param-value>java:jboss/datasources/uvms_spatial</param-value>
-        </init-param>
     </filter>
-
+    <filter-mapping>
+        <filter-name>AuthenticationFilterMock</filter-name>
+        <url-pattern>/rest/*</url-pattern>
+    </filter-mapping>
 
     <context-param>
         <param-name>usmApplication</param-name>
