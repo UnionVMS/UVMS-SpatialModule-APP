@@ -36,7 +36,7 @@
 			<column name="service_layer_id" valueNumeric="4" />
 			<column name="type_name" value="USERAREA" />
 			<column name="area_db_table" value="user_areas" />
-			<column name="is_system_wide" value="N" />
+			<column name="is_system_wide" value="Y" />
 			<column name="area_type_desc" value="User Areas" />
 			<column name="is_location" value="N" />
 		</insert>
