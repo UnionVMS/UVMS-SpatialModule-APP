@@ -2,39 +2,26 @@ package eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.MultiPoint;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.io.WKTReader;
-import eu.europa.ec.fisheries.schema.movement.v1.MovementMetaData;
 import eu.europa.ec.fisheries.schema.movement.v1.MovementType;
 import eu.europa.ec.fisheries.schema.movement.v1.SegmentCategoryType;
 import eu.europa.ec.fisheries.uvms.commons.geometry.utils.GeometryUtils;
-import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaTransitionsDTO;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.MapConfigService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.impl.SpatialEnrichmentServiceBean;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.PortDao;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DatabaseDialectFactory;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.PortEntity;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.ws.rs.*;
-import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
