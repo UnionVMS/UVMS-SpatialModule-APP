@@ -111,21 +111,6 @@ public class AreaServiceBean implements AreaService {
     private PropertiesBean properties;
 
     private DatabaseDialect databaseDialect;
-/*
-        map.put("EEZ", EezDao.class);
-        map.put("FAO", FaoDao.class);
-        map.put("RFMO", RfmoDao.class);
-        map.put("PORT", PortDao.class);
-        map.put("GFCM", GfcmDao.class);
-        map.put("FMZ", FmzDao.class);
-        map.put("STATRECT", StatRectDao.class);
-        map.put("STAT_RECT", StatRectDao.class);
-        map.put("USERAREA", UserAreaDao.class);
-        map.put("PORTAREA", PortAreaDao.class);
-        map.put("PORT_AREA", PortAreaDao.class);
-        map.put("PORTAREAS", PortAreaDao.class);
-        map.put("PORT_AREAS", PortAreaDao.class);
-        */
 
     @Inject
     private EezDao eezDao;
