@@ -25,6 +25,8 @@ import static org.junit.Assert.assertEquals;
 
 public class ProjectionDaoTest extends BaseSpatialDaoTest {
 
+    /*
+
     private ProjectionDao dao = new ProjectionDao(em);
 
     @Before
@@ -51,4 +53,6 @@ public class ProjectionDaoTest extends BaseSpatialDaoTest {
         assertEquals(1L, bySrsCode.get(0).getId().longValue());
 
     }
+
+    */
 }

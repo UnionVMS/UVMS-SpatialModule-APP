@@ -14,6 +14,7 @@ import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.commons.service.dao.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.SysConfigEntity;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,10 +26,11 @@ import static eu.europa.ec.fisheries.uvms.spatial.service.entity.SysConfigEntity
 @Slf4j
 public class SysConfigDao extends AbstractDAO<SysConfigEntity> {
 
+    @PersistenceContext
     private EntityManager em;
 
-    public SysConfigDao(EntityManager em) {
-        this.em = em;
+    public SysConfigDao() {
+        ;
     }
 
     @Override

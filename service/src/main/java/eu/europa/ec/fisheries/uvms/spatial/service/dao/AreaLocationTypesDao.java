@@ -20,6 +20,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
 import static eu.europa.ec.fisheries.uvms.commons.service.dao.QueryParameter.*;
@@ -27,11 +28,10 @@ import static eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTyp
 
 public class AreaLocationTypesDao extends AbstractDAO<AreaLocationTypesEntity> {
 
+    @PersistenceContext
     private EntityManager em;
 
-    public AreaLocationTypesDao(EntityManager em) {
-        this.em = em;
-    }
+    public AreaLocationTypesDao(){};
 
     @Override
     public EntityManager getEntityManager() {

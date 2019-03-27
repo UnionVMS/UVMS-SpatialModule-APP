@@ -16,6 +16,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.entity.BaseAreaEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.FmzEntity;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Map;
 
@@ -23,10 +24,10 @@ import static eu.europa.ec.fisheries.uvms.spatial.service.entity.FmzEntity.*;
 
 public class FmzDao extends AbstractAreaDao<FmzEntity> {
 
+    @PersistenceContext
     private EntityManager em;
 
-    public FmzDao(EntityManager em) {
-        this.em = em;
+    public FmzDao() {
     }
 
     @Override

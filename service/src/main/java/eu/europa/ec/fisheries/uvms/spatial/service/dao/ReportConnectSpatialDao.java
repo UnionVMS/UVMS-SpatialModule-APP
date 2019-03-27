@@ -16,6 +16,7 @@ import static eu.europa.ec.fisheries.uvms.commons.service.dao.QueryParameter.wit
 import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Map;
 
@@ -31,10 +32,12 @@ import org.hibernate.transform.Transformers;
 public class ReportConnectSpatialDao extends AbstractDAO<ReportConnectSpatialEntity> {
 
     private static final String REPORT_ID = "reportId";
+
+    @PersistenceContext
     private EntityManager em;
 
-    public ReportConnectSpatialDao(EntityManager em) {
-        this.em = em;
+    public ReportConnectSpatialDao() {
+
     }
 
     @Override

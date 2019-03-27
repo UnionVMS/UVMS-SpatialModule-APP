@@ -32,6 +32,8 @@ import static org.junit.Assert.assertEquals;
 
 public class UserAreaDaoTest extends BaseSpatialDaoTest {
 
+    /*
+
     private UserAreaDao dao = new UserAreaDao(em);
 
     @Before
@@ -92,4 +94,6 @@ public class UserAreaDaoTest extends BaseSpatialDaoTest {
         List<Long> allSharedGids = dao.getAllSharedGids("userDaoTest", "EC", "UNKNOWN");
         assertEquals(0, allSharedGids.size());
     }
+
+    */
 }

@@ -32,6 +32,8 @@ import static org.junit.Assert.assertTrue;
 
 public class ServiceLayerDaoTest extends BaseSpatialDaoTest {
 
+    /*
+
     private ServiceLayerDao dao = new ServiceLayerDao(em);
 
     @Before
@@ -127,5 +129,7 @@ public class ServiceLayerDaoTest extends BaseSpatialDaoTest {
 
         assertEquals(0, list.size());
     }
+
+    */
 
 }

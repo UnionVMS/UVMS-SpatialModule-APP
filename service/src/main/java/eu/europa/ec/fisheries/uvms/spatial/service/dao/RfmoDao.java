@@ -18,6 +18,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.entity.RfmoEntity;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Map;
 
@@ -26,10 +27,11 @@ import static eu.europa.ec.fisheries.uvms.spatial.service.entity.RfmoEntity.*;
 @Slf4j
 public class RfmoDao extends AbstractAreaDao<RfmoEntity> {
 
+    @PersistenceContext
     private EntityManager em;
 
-    public RfmoDao(EntityManager em) {
-        this.em = em;
+    public RfmoDao() {
+
     }
 
     @Override

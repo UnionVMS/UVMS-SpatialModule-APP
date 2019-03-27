@@ -15,14 +15,16 @@ import eu.europa.ec.fisheries.uvms.commons.service.dao.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.commons.service.dao.QueryParameter;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.BookmarkEntity;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
 public class BookmarkDao extends AbstractDAO<BookmarkEntity> {
 
+    @PersistenceContext
     private EntityManager em;
 
-    public BookmarkDao(EntityManager em) {
-        this.em = em;
+    public BookmarkDao() {
+
     }
 
     @Override

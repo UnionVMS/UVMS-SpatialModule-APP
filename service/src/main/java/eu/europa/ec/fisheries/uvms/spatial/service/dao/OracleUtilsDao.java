@@ -13,6 +13,7 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.service.dao;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import com.vividsolutions.jts.geom.MultiPoint;
@@ -22,6 +23,7 @@ import org.apache.commons.lang.NotImplementedException;
 @Slf4j
 public class OracleUtilsDao extends UtilsDao {
 
+    @PersistenceContext
     private EntityManager em;
 
     private static final String MAP_DEFAULT_SRID_TO_EPSG =  "SELECT SDO_CS.MAP_ORACLE_SRID_TO_EPSG(:srid) FROM DUAL";
@@ -30,8 +32,7 @@ public class OracleUtilsDao extends UtilsDao {
     private static Query mapDefaultSridToEpsg;
     private static Query mapEpsgToDefaultSrid;
 
-    public OracleUtilsDao(EntityManager em) {
-        this.em = em;
+    public OracleUtilsDao() {
         mapDefaultSridToEpsg = em.createNativeQuery(MAP_DEFAULT_SRID_TO_EPSG);
         mapDefaultSridToEpsg.setMaxResults(1);
         mapEpsgToDefaultSrid = em.createNamedQuery(MAP_EPSG_TO_DEFAULT_SRID);

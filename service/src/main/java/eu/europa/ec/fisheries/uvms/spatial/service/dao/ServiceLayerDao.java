@@ -25,6 +25,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Slf4j
@@ -32,10 +33,11 @@ public class ServiceLayerDao extends AbstractDAO<ServiceLayerEntity> {
 
     private static final String SUB_TYPE = "subTypes";
 
+    @PersistenceContext
     private EntityManager em;
 
-    public ServiceLayerDao(EntityManager em) {
-        this.em = em;
+    public ServiceLayerDao() {
+
     }
 
     @Override

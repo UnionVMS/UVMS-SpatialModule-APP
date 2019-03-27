@@ -27,6 +27,7 @@ import static eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity
 import static eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity.USER_AREA_DETAILS_BY_LOCATION;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.Date;
@@ -49,6 +50,7 @@ import org.hibernate.transform.Transformers;
 @Slf4j
 public class UserAreaDao extends AbstractAreaDao<UserAreasEntity> {
 
+    @PersistenceContext
     private EntityManager em;
 
     private static final String USER_NAME = "userName";
@@ -57,8 +59,8 @@ public class UserAreaDao extends AbstractAreaDao<UserAreasEntity> {
     private static final String GID_LIST = "gids";
     private static final String IS_POWER_USER = "isPowerUser";
 
-    public UserAreaDao(EntityManager em) {
-        this.em = em;
+    public UserAreaDao() {
+
     }
 
     @Override

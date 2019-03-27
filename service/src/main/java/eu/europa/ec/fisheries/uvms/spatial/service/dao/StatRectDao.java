@@ -17,6 +17,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadMappingPrope
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.StatRectEntity;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
@@ -26,10 +27,11 @@ import static eu.europa.ec.fisheries.uvms.spatial.service.entity.StatRectEntity.
 @Slf4j
 public class StatRectDao extends AbstractAreaDao<StatRectEntity> {
 
+    @PersistenceContext
     private EntityManager em;
 
-    public StatRectDao(EntityManager em) {
-        this.em = em;
+    public StatRectDao() {
+
     }
 
     @Override

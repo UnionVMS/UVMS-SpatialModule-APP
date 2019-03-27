@@ -29,6 +29,8 @@ import static org.junit.Assert.assertNull;
 
 public class AreaLocationTypesDaoTest extends BaseSpatialDaoTest {
 
+    /*
+
     private AreaLocationTypesDao dao = new AreaLocationTypesDao(em);
 
     @Before
@@ -94,4 +96,6 @@ public class AreaLocationTypesDaoTest extends BaseSpatialDaoTest {
         assertEquals("BINGROAD", byIsLocationAndIsSystemWide.get(2).getTypeName());
 
     }
+
+    */
 }

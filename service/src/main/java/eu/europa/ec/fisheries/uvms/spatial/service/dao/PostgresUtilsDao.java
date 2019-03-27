@@ -13,6 +13,7 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.service.dao;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -26,10 +27,11 @@ public class PostgresUtilsDao extends UtilsDao {
 
     private String GENERATE_POINTS =  "";
 
+    @PersistenceContext
     private EntityManager em;
 
-    public PostgresUtilsDao(EntityManager em) {
-        this.em = em;
+    public PostgresUtilsDao() {
+
     }
 
     @Override

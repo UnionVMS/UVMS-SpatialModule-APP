@@ -12,19 +12,6 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.impl;
 
-import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
-
-import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
-import javax.ejb.Local;
-import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.vividsolutions.jts.geom.MultiPoint;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.commons.service.dao.QueryParameter;
@@ -32,21 +19,7 @@ import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialRepository;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.AbstractAreaDao;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.AreaLocationTypesDao;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.BookmarkDao;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.CountryDao;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.EezDao;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.OracleUtilsDao;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.PortDao;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.PostgresUtilsDao;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.ProjectionDao;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.ReportConnectServiceAreaDao;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.ReportConnectSpatialDao;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.ServiceLayerDao;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.SysConfigDao;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.UserAreaDao;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.UtilsDao;
+import eu.europa.ec.fisheries.uvms.spatial.service.dao.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DatabaseDialect;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.AreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.AreaLayerDto;
@@ -54,77 +27,49 @@ import eu.europa.ec.fisheries.uvms.spatial.service.dto.bookmark.Bookmark;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.ProjectionDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.ServiceLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.UserAreaLayerDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTypesEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.BaseAreaEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.BookmarkEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.CountryEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.EntityMapper;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.PortEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.ProjectionEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.ReportConnectServiceAreasEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.ReportConnectSpatialEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.ServiceLayerEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.SysConfigEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.BookmarkMapper;
+
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.inject.Inject;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 
 @Stateless
 public class SpatialRepositoryBean implements SpatialRepository {
 
-    private EntityManager em;
 
-    @PersistenceContext(unitName = "spatialPUpostgres")
-    private EntityManager postgres;
-
-    @PersistenceContext(unitName = "spatialPUoracle")
-    private EntityManager oracle;	
-	
+    @Inject
     private UserAreaDao userAreaDao;
+    @Inject
     private AbstractAreaDao areaDao;
+    @Inject
     private SysConfigDao sysConfigDao;
+    @Inject
     private ReportConnectSpatialDao reportConnectSpatialDao;
+    @Inject
     private BookmarkDao bookmarkDao;
+    @Inject
     private ProjectionDao projectionDao;
+    @Inject
     private AreaLocationTypesDao areaLocationTypeDao;
+    @Inject
     private ServiceLayerDao serviceLayerDao;
+    @Inject
     private ReportConnectServiceAreaDao connectServiceAreaDao;
+    @Inject
     private PortDao portDao;
+    @Inject
     private CountryDao countryDao;
+    @Inject
     private UtilsDao utilsDao;
-
     @EJB
     private PropertiesBean properties;
-
-    public void initEntityManager() {
-        String dbDialect = System.getProperty("db.dialect");
-        if ("oracle".equalsIgnoreCase(dbDialect)) {
-            em = oracle;
-        } else {
-            em = postgres;
-        }
-    }	
-	
-    @PostConstruct
-    public void init() {
-		initEntityManager();
-        areaDao = new EezDao(em); // FIXME create generic one to avoid confusion
-        userAreaDao = new UserAreaDao(em);
-        sysConfigDao = new SysConfigDao(em);
-        reportConnectSpatialDao = new ReportConnectSpatialDao(em);
-        bookmarkDao = new BookmarkDao(em);
-        projectionDao = new ProjectionDao(em);
-        areaLocationTypeDao = new AreaLocationTypesDao(em);
-        serviceLayerDao = new ServiceLayerDao(em);
-        connectServiceAreaDao = new ReportConnectServiceAreaDao(em);
-        portDao = new PortDao(em);
-        countryDao = new CountryDao(em);
-        utilsDao = new PostgresUtilsDao(em);
-
-        if ("oracle".equals(properties.getProperty("database.dialect"))){
-            utilsDao = new OracleUtilsDao(em);
-        }
-
-    }
 
     @Override
     public BaseAreaEntity findAreaById(Long id, AreaType type) throws ServiceException {

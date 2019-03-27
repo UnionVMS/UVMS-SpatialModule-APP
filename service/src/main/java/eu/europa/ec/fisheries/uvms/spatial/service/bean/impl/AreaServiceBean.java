@@ -11,34 +11,6 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.impl;
 
-import static com.vividsolutions.jts.operation.distance.DistanceOp.nearestPoints;
-import static eu.europa.ec.fisheries.uvms.commons.geometry.utils.GeometryUtils.isDefaultEpsgSRID;
-import static org.geotools.geometry.jts.JTS.orthodromicDistance;
-
-import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
-import javax.ejb.Local;
-import javax.ejb.Stateless;
-import javax.interceptor.Interceptors;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
-import javax.validation.constraints.NotNull;
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.attribute.FileAttribute;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -51,27 +23,11 @@ import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.commons.service.fileutils.ZipExtractor;
 import eu.europa.ec.fisheries.uvms.commons.service.interceptor.SimpleTracingInterceptor;
 import eu.europa.ec.fisheries.uvms.commons.service.interceptor.ValidationInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Area;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaExtendedIdentifierType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaIdentifierType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestLocationSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRS;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Location;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationTypeEntry;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ScopeAreasType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.UnitType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.UserAreasType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialRepository;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.AbstractAreaDao;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DAOFactory;
+import eu.europa.ec.fisheries.uvms.spatial.service.dao.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DatabaseDialect;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DatabaseDialectFactory;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.Oracle;
@@ -80,11 +36,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.SystemAreaNamesDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadMapping;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadMetadata;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadProperty;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTypesEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.BaseAreaEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.CountryEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.EntityFactory;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.PortEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.enums.MeasurementUnit;
 import eu.europa.ec.fisheries.uvms.spatial.service.enums.SpatialTypeEnum;
 import eu.europa.ec.fisheries.uvms.spatial.service.exception.SpatialServiceErrors;
@@ -112,6 +64,28 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
 
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.inject.Inject;
+import javax.interceptor.Interceptors;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
+import javax.validation.constraints.NotNull;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.FileAttribute;
+import java.util.*;
+
+import static com.vividsolutions.jts.operation.distance.DistanceOp.nearestPoints;
+import static eu.europa.ec.fisheries.uvms.commons.geometry.utils.GeometryUtils.isDefaultEpsgSRID;
+import static org.geotools.geometry.jts.JTS.orthodromicDistance;
+
 @Stateless
 @Slf4j
 public class AreaServiceBean implements AreaService {
@@ -121,13 +95,8 @@ public class AreaServiceBean implements AreaService {
     private static final String GID = "gid";
     private static final String AREA_TYPE = "areaType";
 
+    @PersistenceContext
     private EntityManager em;
-
-    @PersistenceContext(unitName = "spatialPUpostgres")
-    private EntityManager postgres;
-
-    @PersistenceContext(unitName = "spatialPUoracle")
-    private EntityManager oracle;
 
     @EJB
     private AreaTypeNamesService areaTypeService;
@@ -142,14 +111,43 @@ public class AreaServiceBean implements AreaService {
     private PropertiesBean properties;
 
     private DatabaseDialect databaseDialect;
+/*
+        map.put("EEZ", EezDao.class);
+        map.put("FAO", FaoDao.class);
+        map.put("RFMO", RfmoDao.class);
+        map.put("PORT", PortDao.class);
+        map.put("GFCM", GfcmDao.class);
+        map.put("FMZ", FmzDao.class);
+        map.put("STATRECT", StatRectDao.class);
+        map.put("STAT_RECT", StatRectDao.class);
+        map.put("USERAREA", UserAreaDao.class);
+        map.put("PORTAREA", PortAreaDao.class);
+        map.put("PORT_AREA", PortAreaDao.class);
+        map.put("PORTAREAS", PortAreaDao.class);
+        map.put("PORT_AREAS", PortAreaDao.class);
+        */
+
+    @Inject
+    private EezDao eezDao;
+    @Inject
+    private FaoDao faoDao;
+    @Inject
+    private RfmoDao rfmoDao;
+    @Inject
+    private PortDao portDao;
+    @Inject
+    private GfcmDao gfcmDao;
+    @Inject
+    private FmzDao fmzDao;
+    @Inject
+    private StatRectDao statRectDao;
+    @Inject
+    private UserAreaDao userAreaDao;
+    @Inject
+    private PortAreaDao portAreaDao;
+
 
     public void initEntityManager() {
-        String dbDialect = System.getProperty("db.dialect");
-        if ("oracle".equalsIgnoreCase(dbDialect)) {
-            em = oracle;
-        } else {
-            em = postgres;
-        }
     }
 
     @PostConstruct
@@ -195,7 +193,6 @@ public class AreaServiceBean implements AreaService {
             }
         }
 
-
         for (Map.Entry<String, List<Long>> entry : areaTypeGidMap.entrySet()) { // FIXME looping and querying should be avoided
             String namedQuery = null;
             for (SpatialTypeEnum type : SpatialTypeEnum.values()) {
@@ -214,7 +211,6 @@ public class AreaServiceBean implements AreaService {
         return areaColumnsList;
     }
 
-
     @Override
     @Interceptors(SimpleTracingInterceptor.class)
     public void upload(final UploadMapping mapping, final String type, final Integer epsg) throws ServiceException {
@@ -230,15 +226,58 @@ public class AreaServiceBean implements AreaService {
             }
 
             Map<String, List<Property>> features = readShapeFile(Paths.get(ref + File.separator + typeName.getAreaDbTable() + ".shp"), srid);
-            DAOFactory.getAbstractSpatialDao(em, typeName.getTypeName()).bulkInsert(features, mapping.getMapping());
+            AbstractAreaDao<?> component = getComponent(typeName.getTypeName());
+            if(component != null){
+                component.bulkInsert(features, mapping.getMapping());
+            }
             org.apache.commons.io.FileUtils.deleteDirectory(Paths.get(ref).getParent().toFile());
-
             repository.makeGeomValid(typeName.getAreaDbTable(), databaseDialect);
-
         } catch (Exception e) {
             throw new ServiceException(e.getMessage(), e);
         }
     }
+
+
+    private AbstractAreaDao<?> getComponent(String typeName){
+
+        switch (typeName){
+            case  "EEZ"  :  {
+                return eezDao;
+            }
+            case  "FAO"  :  {
+                return  faoDao;
+            }
+            case  "RFMO"  :  {
+                return rfmoDao;
+            }
+            case  "PORT"  :  {
+                return portDao;
+            }
+            case  "GFCM"  :  {
+                return gfcmDao;
+            }
+            case  "FMZ"  :  {
+                return  fmzDao;
+            }
+            case  "STATRECT"   :
+            case  "STAT_RECT"  :  {
+                return statRectDao;
+            }
+            case  "USERAREA"  :  {
+                return userAreaDao;
+            }
+            case  "PORTAREA"  :
+            case  "PORT_AREA"  :
+            case  "PORTAREAS"  :
+            case  "PORT_AREAS"  :  {
+                return portAreaDao;
+            }
+            default : {
+                throw new IllegalArgumentException("AreaServiceBean.getComponent  " + typeName + "  NOT supported if needed implement it here");
+            }
+        }
+    }
+
 
     private Map<String, List<Property>> readShapeFile(Path shapeFilePath, Integer srid) throws IOException, ServiceException {
 
@@ -416,11 +455,11 @@ public class AreaServiceBean implements AreaService {
             MeasurementUnit measurementUnit = MeasurementUnit.getMeasurement(unit.name());
             List<AreaLocationTypesEntity> typesEntities = repository.findByIsLocationAndIsSystemWide(false, true);
             List records = repository.closestAreaByPoint(typesEntities, databaseDialect, incoming);
-            if (databaseDialect instanceof Oracle){
+            if (databaseDialect instanceof Oracle) {
                 for (Object record : records) {
                     Object[] result = (Object[]) record;
                     Geometry geom = (Geometry) result[4];
-                    if (geom.isEmpty()){
+                    if (geom.isEmpty()) {
                         continue;
                     }
                     com.vividsolutions.jts.geom.Coordinate[] coordinates = nearestPoints(geom, incoming);
@@ -454,8 +493,7 @@ public class AreaServiceBean implements AreaService {
                     distancePerTypeMap.put(type, closest);
                 }
             }
-        }
-        catch (TransformException e) {
+        } catch (TransformException e) {
             throw new ServiceException("ERROR WHILE CALCULATING DISTANCE", e);
         }
         return new ArrayList<>(distancePerTypeMap.values());
@@ -469,7 +507,7 @@ public class AreaServiceBean implements AreaService {
         final StringBuilder sb = new StringBuilder();
         final List<AreaLocationTypesEntity> typesEntities = repository.findAllIsLocation(false);
         final Map<String, AreaLocationTypesEntity> typesEntityMap = new HashMap<>();
-        for (AreaLocationTypesEntity typesEntity : typesEntities){
+        for (AreaLocationTypesEntity typesEntity : typesEntities) {
             typesEntityMap.put(typesEntity.getTypeName(), typesEntity);
         }
         buildQuery(scopeAreas.getScopeAreas(), sb, "scope", typesEntityMap);
@@ -525,7 +563,7 @@ public class AreaServiceBean implements AreaService {
         return response;
     }
 
-    private void buildQuery(List<AreaIdentifierType> typeList, StringBuilder sb, String type, Map<String, AreaLocationTypesEntity> typesEntityMap ) {
+    private void buildQuery(List<AreaIdentifierType> typeList, StringBuilder sb, String type, Map<String, AreaLocationTypesEntity> typesEntityMap) {
         Iterator<AreaIdentifierType> it = typeList.iterator();
         while (it.hasNext()) {
             AreaIdentifierType next = it.next();
@@ -546,18 +584,16 @@ public class AreaServiceBean implements AreaService {
     public List<GenericSystemAreaDto> searchAreasByNameOrCode(@NotNull String areaType, @NotNull String filter) throws ServiceException {
         AreaLocationTypesEntity areaLocationType = repository.findAreaLocationTypeByTypeName(areaType.toUpperCase());
         final ArrayList<GenericSystemAreaDto> systemAreaByFilterRecords = new ArrayList<>();
-        //FIXME use generic dao
-        List<BaseAreaEntity> baseEntities = DAOFactory.getAbstractSpatialDao(em, areaLocationType.getTypeName()).searchEntity(filter);
+        AbstractAreaDao<?> component = getComponent(areaLocationType.getTypeName());
+        List<BaseAreaEntity> baseEntities = component.searchEntity(filter);
         for (BaseAreaEntity entity : baseEntities) {
             Geometry geometry = entity.getGeom();
             Geometry envelope = geometry.getGeometryType().equalsIgnoreCase(MULTIPOINT) ? geometry : entity.getGeom().getEnvelope();
             systemAreaByFilterRecords.add(
-                    new GenericSystemAreaDto(entity.getId().intValue(), entity.getCode(),areaType.toUpperCase(),
+                    new GenericSystemAreaDto(entity.getId().intValue(), entity.getCode(), areaType.toUpperCase(),
                             GeometryMapper.INSTANCE.geometryToWkt(envelope).getValue(), entity.getName()));
         }
-
         return systemAreaByFilterRecords;
-
     }
 
     @Override
@@ -576,22 +612,20 @@ public class AreaServiceBean implements AreaService {
 
         locationTypesEntity = repository.findAreaLocationTypeByTypeName(locationType.toUpperCase());
 
-        if (locationTypesEntity == null){
+        if (locationTypesEntity == null) {
             throw new ServiceException("TYPE CANNOT BE NULL");
-        }
-        else if (!locationTypesEntity.getIsLocation()){
+        } else if (!locationTypesEntity.getIsLocation()) {
             throw new ServiceException(locationTypesEntity.getTypeName() + " IS NOT A LOCATION");
         }
 
         if (locationTypeEntry.getId() != null) {
-            AbstractAreaDao dao = DAOFactory.getAbstractSpatialDao(em, locationTypesEntity.getTypeName());
+            AbstractAreaDao<?> dao = getComponent(locationTypesEntity.getTypeName());
             BaseAreaEntity areaEntity = dao.findOne(Long.parseLong(locationTypeEntry.getId()));
             if (areaEntity == null) {
                 throw new SpatialServiceException(SpatialServiceErrors.ENTITY_NOT_FOUND, locationTypesEntity.getTypeName());
             }
             match = areaEntity;
-        }
-        else {
+        } else {
             Point point = (Point) GeometryUtils.toGeographic(incomingLatitude, incomingLongitude, locationTypeEntry.getCrs());
             List<PortEntity> records = repository.listClosestPorts(point, 5);
             Double closestDistance = Double.MAX_VALUE;
@@ -619,8 +653,9 @@ public class AreaServiceBean implements AreaService {
         if (areaLocationType == null) {
             throw new SpatialServiceException(SpatialServiceErrors.INTERNAL_APPLICATION_ERROR);
         }
-        List<BaseAreaEntity> baseEntities = DAOFactory.getAbstractSpatialDao(em, areaLocationType.getTypeName()).searchNameByCode(filter);
 
+        AbstractAreaDao<?> component = getComponent(areaLocationType.getTypeName());
+        List<BaseAreaEntity> baseEntities = component.searchNameByCode(filter);
         List<SystemAreaNamesDto> systemAreas = new ArrayList<>();
         for (BaseAreaEntity baseEntity : baseEntities) {
             boolean isAdded = false;
@@ -657,12 +692,13 @@ public class AreaServiceBean implements AreaService {
         Point point = (Point) GeometryUtils.toGeographic(latitude, longitude, crs);
 
         // FIXME try using ethod of repo remove DAOFactory stuff
-        List byIntersect = DAOFactory.getAbstractSpatialDao(em, areaLocationTypesEntity.getTypeName()).findByIntersect(point);
+        AbstractAreaDao<?> component = getComponent(areaLocationTypesEntity.getTypeName());
+        List byIntersect = component.findByIntersect(point);
 
         ObjectMapper objectMapper = new ObjectMapper();
         List<Map<String, Object>> objectAsMap = new ArrayList<>();
 
-        for(Object o : byIntersect){
+        for (Object o : byIntersect) {
             objectAsMap.add(objectMapper.convertValue(o, Map.class));
         }
 
@@ -671,17 +707,17 @@ public class AreaServiceBean implements AreaService {
 
     @Override // FIXME is kind off a duplicate of List<Map<String, Object>> getAreasByPoint
     public List<AreaExtendedIdentifierType> getAreasByPoint(final AreaByLocationSpatialRQ request) throws ServiceException {
-        if (request == null){
+        if (request == null) {
             throw new ServiceException("REQUEST CAN NOT BE NULL");
         }
-        if (request.getPoint() == null){
+        if (request.getPoint() == null) {
             throw new ServiceException("POINT CAN NOT BE NULL");
         }
         Double lat = request.getPoint().getLatitude();
         Double lon = request.getPoint().getLongitude();
         Integer crs = request.getPoint().getCrs();
 
-        if (lat == null || lon == null || crs == null){
+        if (lat == null || lon == null || crs == null) {
             throw new ServiceException("MISSING MANDATORY FIELDS");
         }
 
@@ -730,27 +766,26 @@ public class AreaServiceBean implements AreaService {
     }
 
     @Override
-    public String getGeometryForPort(String portCode){
-        if(portCode ==null){
+    public String getGeometryForPort(String portCode) {
+        if (portCode == null) {
             return null;
         }
-        log.debug("Port code received in getGeometryForPort :"+portCode);
-        String geomWkt=null;
+        log.debug("Port code received in getGeometryForPort :" + portCode);
+        String geomWkt = null;
         try {
-            List<BaseAreaEntity> baseEntities = DAOFactory.getAbstractSpatialDao(em, "port").searchNameByCode(portCode);
-
-            if(CollectionUtils.isNotEmpty(baseEntities)){
-                for(BaseAreaEntity baseAreaEntity : baseEntities){
-                    if(baseAreaEntity.getGeom() !=null){
+            List<BaseAreaEntity> baseEntities = portDao.searchNameByCode(portCode);
+            if (CollectionUtils.isNotEmpty(baseEntities)) {
+                for (BaseAreaEntity baseAreaEntity : baseEntities) {
+                    if (baseAreaEntity.getGeom() != null) {
                         Geometry geometry = baseAreaEntity.getGeom();
                         geomWkt = GeometryMapper.INSTANCE.geometryToWkt(geometry).getValue();
-                        log.debug("geomWkt received :"+geomWkt);
+                        log.debug("geomWkt received :" + geomWkt);
                         break;
                     }
                 }
             }
         } catch (ServiceException e) {
-            log.error("Could not fetch geometry for the portCode:"+portCode,e);
+            log.error("Could not fetch geometry for the portCode:" + portCode, e);
         }
 
 

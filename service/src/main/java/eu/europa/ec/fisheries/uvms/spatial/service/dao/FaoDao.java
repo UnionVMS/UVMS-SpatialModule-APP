@@ -17,6 +17,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadMappingPrope
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.FaoEntity;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Map;
 
@@ -24,10 +25,11 @@ import static eu.europa.ec.fisheries.uvms.spatial.service.entity.FaoEntity.*;
 
 public class FaoDao extends AbstractAreaDao<FaoEntity> {
 
+    @PersistenceContext
     private EntityManager em;
 
-    public FaoDao(EntityManager em) {
-        this.em = em;
+    public FaoDao() {
+
     }
 
     @Override

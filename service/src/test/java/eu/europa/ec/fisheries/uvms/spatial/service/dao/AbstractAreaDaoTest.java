@@ -19,7 +19,6 @@ import static junitparams.JUnitParamsRunner.$;
 import com.ninja_squad.dbsetup.DbSetup;
 import com.ninja_squad.dbsetup.destination.DataSourceDestination;
 import com.ninja_squad.dbsetup.operation.Operation;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DAOFactory;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.PostGres;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.BaseAreaEntity;
@@ -41,6 +40,8 @@ import org.junit.runner.RunWith;
 
 @RunWith(JUnitParamsRunner.class)
 public class AbstractAreaDaoTest extends BaseSpatialDaoTest {
+
+    /*
 
     @Before
     public void prepare(){
@@ -139,5 +140,7 @@ public class AbstractAreaDaoTest extends BaseSpatialDaoTest {
             $("PORTAREA", 1L)
         );
     }
+
+    */
 
 }

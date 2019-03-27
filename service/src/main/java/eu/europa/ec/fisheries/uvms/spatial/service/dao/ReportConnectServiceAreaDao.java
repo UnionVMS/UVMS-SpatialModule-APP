@@ -16,15 +16,18 @@ import eu.europa.ec.fisheries.uvms.spatial.service.entity.ReportConnectServiceAr
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 
 public class ReportConnectServiceAreaDao extends AbstractDAO<ReportConnectServiceAreasEntity> {
 
+    @PersistenceContext
     private EntityManager em;
 
-    public ReportConnectServiceAreaDao(EntityManager em) {
-        this.em = em;
+    public ReportConnectServiceAreaDao() {
+
     }
 
     @Override

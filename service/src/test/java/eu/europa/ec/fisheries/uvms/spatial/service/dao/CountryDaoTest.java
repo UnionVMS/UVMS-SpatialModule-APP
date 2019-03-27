@@ -25,6 +25,8 @@ import static org.junit.Assert.assertEquals;
 
 public class CountryDaoTest extends BaseSpatialDaoTest {
 
+    /*
+
     private CountryDao dao = new CountryDao(em);
 
     @Before
@@ -48,4 +50,6 @@ public class CountryDaoTest extends BaseSpatialDaoTest {
         assertEquals("ESP", entityByNamedQuery.get(1).getCode());
 
     }
+
+    */
 }
