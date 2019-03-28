@@ -18,6 +18,8 @@ import java.util.Map;
 
 import com.vividsolutions.jts.geom.MultiPoint;
 
+import javax.ejb.Stateless;
+
 public abstract class UtilsDao {
 
     Map<Integer, Integer> SRID_EPSG_MAP = Collections.synchronizedMap(new LinkedHashMap() {

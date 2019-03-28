@@ -12,6 +12,7 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.dao;
 
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -23,6 +24,7 @@ import org.hibernate.spatial.JTSGeometryType;
 import org.hibernate.spatial.dialect.postgis.PGGeometryTypeDescriptor;
 import org.hibernate.type.TimestampType;
 
+@Stateless
 public class PostgresUtilsDao extends UtilsDao {
 
     private String GENERATE_POINTS =  "";

@@ -16,6 +16,7 @@ import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadMappingProperty;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.FaoEntity;
 
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
@@ -23,6 +24,7 @@ import java.util.Map;
 
 import static eu.europa.ec.fisheries.uvms.spatial.service.entity.FaoEntity.*;
 
+@Stateless
 public class FaoDao extends AbstractAreaDao<FaoEntity> {
 
     @PersistenceContext

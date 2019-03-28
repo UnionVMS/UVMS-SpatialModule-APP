@@ -18,6 +18,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.entity.PortAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.PortEntity;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
@@ -26,6 +27,7 @@ import java.util.Map;
 import static eu.europa.ec.fisheries.uvms.spatial.service.entity.PortAreasEntity.*;
 
 @Slf4j
+@Stateless
 public class PortAreaDao extends AbstractAreaDao<PortAreasEntity> {
 
     @PersistenceContext

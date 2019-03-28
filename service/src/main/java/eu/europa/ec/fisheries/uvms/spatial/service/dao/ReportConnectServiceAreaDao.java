@@ -15,12 +15,15 @@ import eu.europa.ec.fisheries.uvms.commons.service.dao.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.ReportConnectServiceAreasEntity;
 import java.util.List;
 import java.util.Map;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
 
+
+@Stateless
 public class ReportConnectServiceAreaDao extends AbstractDAO<ReportConnectServiceAreasEntity> {
 
     @PersistenceContext

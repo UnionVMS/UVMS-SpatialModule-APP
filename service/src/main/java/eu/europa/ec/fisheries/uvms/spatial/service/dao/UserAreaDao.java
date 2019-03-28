@@ -26,6 +26,7 @@ import static eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity
 import static eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity.USER_AREA_BY_COORDINATE;
 import static eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity.USER_AREA_DETAILS_BY_LOCATION;
 
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -48,6 +49,7 @@ import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
 
 @Slf4j
+@Stateless
 public class UserAreaDao extends AbstractAreaDao<UserAreasEntity> {
 
     @PersistenceContext

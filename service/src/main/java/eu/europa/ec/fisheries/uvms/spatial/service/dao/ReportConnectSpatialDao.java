@@ -15,6 +15,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.dao;
 import static eu.europa.ec.fisheries.uvms.commons.service.dao.QueryParameter.with;
 import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
@@ -29,6 +30,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
 
+@Stateless
 public class ReportConnectSpatialDao extends AbstractDAO<ReportConnectSpatialEntity> {
 
     private static final String REPORT_ID = "reportId";

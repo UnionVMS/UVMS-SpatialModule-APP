@@ -17,6 +17,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.entity.ProjectionEntity;
 
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.ProjectionDto;
 import java.util.Map;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
@@ -27,6 +28,7 @@ import org.hibernate.transform.Transformers;
 import static eu.europa.ec.fisheries.uvms.commons.service.dao.QueryParameter.*;
 import static eu.europa.ec.fisheries.uvms.spatial.service.entity.ProjectionEntity.*;
 
+@Stateless
 public class ProjectionDao extends AbstractDAO<ProjectionEntity> {
 
     @PersistenceContext

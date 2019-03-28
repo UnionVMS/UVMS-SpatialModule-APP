@@ -11,6 +11,7 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.entity;
 
+import javax.ejb.Stateless;
 import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -46,6 +47,7 @@ import org.opengis.feature.Property;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Data
+@Stateless
 public class BaseAreaEntity extends BaseEntity {
 
     private static final String ISO_8859_1 = "ISO-8859-1";

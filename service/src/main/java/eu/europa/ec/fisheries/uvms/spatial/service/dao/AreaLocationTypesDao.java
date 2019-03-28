@@ -19,6 +19,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
+
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
@@ -26,6 +28,7 @@ import java.util.List;
 import static eu.europa.ec.fisheries.uvms.commons.service.dao.QueryParameter.*;
 import static eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTypesEntity.*;
 
+@Stateless
 public class AreaLocationTypesDao extends AbstractDAO<AreaLocationTypesEntity> {
 
     @PersistenceContext

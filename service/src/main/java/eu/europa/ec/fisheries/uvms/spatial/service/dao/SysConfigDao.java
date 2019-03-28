@@ -13,6 +13,8 @@ package eu.europa.ec.fisheries.uvms.spatial.service.dao;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.commons.service.dao.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.SysConfigEntity;
+
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -24,6 +26,7 @@ import static eu.europa.ec.fisheries.uvms.commons.service.dao.QueryParameter.*;
 import static eu.europa.ec.fisheries.uvms.spatial.service.entity.SysConfigEntity.*;
 
 @Slf4j
+@Stateless
 public class SysConfigDao extends AbstractDAO<SysConfigEntity> {
 
     @PersistenceContext

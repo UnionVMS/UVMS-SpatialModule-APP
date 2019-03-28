@@ -16,6 +16,7 @@ import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadMappingProperty;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.GfcmEntity;
 
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
@@ -23,12 +24,13 @@ import java.util.Map;
 
 import static eu.europa.ec.fisheries.uvms.spatial.service.entity.GfcmEntity.*;
 
+@Stateless
 public class GfcmDao extends AbstractAreaDao<GfcmEntity> {
 
     @PersistenceContext
     private EntityManager em;
 
-    public GfcmDao(EntityManager em) {
+    public GfcmDao() {
 
     }
 

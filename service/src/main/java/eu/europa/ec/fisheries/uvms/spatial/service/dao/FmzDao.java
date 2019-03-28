@@ -15,6 +15,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadMappingPrope
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.BaseAreaEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.FmzEntity;
 
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
@@ -22,6 +23,7 @@ import java.util.Map;
 
 import static eu.europa.ec.fisheries.uvms.spatial.service.entity.FmzEntity.*;
 
+@Stateless
 public class FmzDao extends AbstractAreaDao<FmzEntity> {
 
     @PersistenceContext

@@ -15,6 +15,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadMappingPrope
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.PortEntity;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
@@ -23,6 +24,7 @@ import java.util.Map;
 import static eu.europa.ec.fisheries.uvms.spatial.service.entity.PortEntity.*;
 
 @Slf4j
+@Stateless
 public class PortDao extends AbstractAreaDao<PortEntity> {
 
     @PersistenceContext
@@ -30,6 +32,9 @@ public class PortDao extends AbstractAreaDao<PortEntity> {
 
     public PortDao(EntityManager em) {
 
+    }
+
+    public PortDao() {
     }
 
     @Override

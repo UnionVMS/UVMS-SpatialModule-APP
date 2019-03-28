@@ -24,11 +24,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
+
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Slf4j
+@Stateless
 public class ServiceLayerDao extends AbstractDAO<ServiceLayerEntity> {
 
     private static final String SUB_TYPE = "subTypes";

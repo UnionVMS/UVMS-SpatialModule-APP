@@ -12,14 +12,6 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.impl;
 
-import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.interceptor.Interceptors;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
-
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
@@ -31,6 +23,14 @@ import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DatabaseDialect;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.DatabaseDialectFactory;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.interceptor.Interceptors;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
+
 /**
  * This class groups all the spatial operations on the spatial database.
  */
@@ -40,25 +40,15 @@ import lombok.extern.slf4j.Slf4j;
 @Interceptors(TracingInterceptor.class)
 public class SpatialServiceBean implements SpatialService {
 
+    @PersistenceContext
     private EntityManager em;
 	
-    @PersistenceContext(unitName = "spatialPUpostgres")
-    private EntityManager postgres;
 
-    @PersistenceContext(unitName = "spatialPUoracle")
-    private EntityManager oracle;	
-	
     private @EJB SpatialRepository repository;
     private @EJB PropertiesBean properties;
     private DatabaseDialect dialect;
 
     public void initEntityManager() {
-        String dbDialect = System.getProperty("db.dialect");
-        if ("oracle".equalsIgnoreCase(dbDialect)) {
-            em = oracle;
-        } else {
-            em = postgres;
-        }
     }
 	
     @PostConstruct
