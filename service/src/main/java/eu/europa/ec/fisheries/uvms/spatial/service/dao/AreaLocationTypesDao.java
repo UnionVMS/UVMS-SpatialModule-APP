@@ -21,6 +21,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -36,7 +37,7 @@ public class AreaLocationTypesDao {
 
     public AreaLocationTypesEntity findOneByTypeName(final String typeName) throws ServiceException {
         AreaLocationTypesEntity result = null;
-        Query qry = em.createNamedQuery(AreaLocationTypesEntity.FIND_TYPE_BY_NAME);
+        TypedQuery<AreaLocationTypesEntity> qry = em.createNamedQuery(AreaLocationTypesEntity.FIND_TYPE_BY_NAME,AreaLocationTypesEntity.class);
         qry.setParameter("typeName", typeName);
         qry.setMaxResults(1);
         List<AreaLocationTypesEntity> rs = qry.getResultList();
@@ -48,14 +49,14 @@ public class AreaLocationTypesDao {
 
 
     public List<AreaLocationTypesEntity> findByIsLocationAndIsSystemWide(Boolean isLocation, Boolean isSystemWide) throws ServiceException {
-        Query qry = em.createNamedQuery(AreaLocationTypesEntity.FIND_ALL_IS_LOCATION_IS_SYSTEM_WIDE);
+        TypedQuery<AreaLocationTypesEntity> qry = em.createNamedQuery(AreaLocationTypesEntity.FIND_ALL_IS_LOCATION_IS_SYSTEM_WIDE,AreaLocationTypesEntity.class);
         qry.setParameter("isLocation", isLocation);
         qry.setParameter("isSystemWide", isSystemWide);
         return qry.getResultList();
     }
 
     public List<AreaLocationTypesEntity> findByIsLocation(Boolean isLocation) throws ServiceException {
-        Query qry = em.createNamedQuery(AreaLocationTypesEntity.FIND_ALL_IS_LOCATION);
+        TypedQuery<AreaLocationTypesEntity> qry = em.createNamedQuery(AreaLocationTypesEntity.FIND_ALL_IS_LOCATION,AreaLocationTypesEntity.class);
         qry.setParameter("isLocation", isLocation);
         return qry.getResultList();
     }

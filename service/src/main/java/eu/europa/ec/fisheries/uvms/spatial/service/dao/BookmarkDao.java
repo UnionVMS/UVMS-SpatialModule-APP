@@ -11,17 +11,16 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.service.dao;
 
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.commons.service.dao.AbstractDAO;
-import eu.europa.ec.fisheries.uvms.commons.service.dao.QueryParameter;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.BookmarkEntity;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import java.util.List;
 
 @Stateless
-public class BookmarkDao extends AbstractDAO<BookmarkEntity> {
+public class BookmarkDao {
 
     @PersistenceContext
     private EntityManager em;
@@ -30,13 +29,12 @@ public class BookmarkDao extends AbstractDAO<BookmarkEntity> {
 
     }
 
-    @Override
-    public EntityManager getEntityManager() {
-        return em;
+    public List<BookmarkEntity> findAllByUser(String userName) throws ServiceException {
+
+        TypedQuery<BookmarkEntity> qry = em.createNamedQuery(BookmarkEntity.LIST_BY_USERNAME, BookmarkEntity.class);
+        qry.setParameter("createdBy",userName);
+        List<BookmarkEntity> rs = qry.getResultList();
+        return rs;
     }
 
-    public List<BookmarkEntity> findAllByUser(String userName) throws ServiceException {
-        return findEntityByNamedQuery(BookmarkEntity.class, BookmarkEntity.LIST_BY_USERNAME,
-                QueryParameter.with("createdBy", userName).parameters());
-    }
 }
