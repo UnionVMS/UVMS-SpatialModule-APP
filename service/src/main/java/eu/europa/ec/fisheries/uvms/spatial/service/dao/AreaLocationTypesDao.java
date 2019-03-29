@@ -67,19 +67,6 @@ public class AreaLocationTypesDao extends AbstractDAO<AreaLocationTypesEntity> {
                 with("isLocation", isLocation).parameters());
     }
 
-/*
-    SELECT area.typeName as typeName,
-           layer.geoName as geoName,
-           layer.isInternal as isInternal,
-           layer.serviceUrl as serviceUrl,
-           layer.styleLabelGeom as style,
-            provider.serviceType as serviceType
-
-             FROM AreaLocationTypesEntity as area
-             INNER JOIN area.serviceLayer as layer
-             INNER JOIN layer.providerFormat as provider
-*/
-
     public List<UserAreaLayerDto> findUserAreaLayerMapping() {
 
         List<UserAreaLayerDto> returnList = new ArrayList<>();
@@ -120,6 +107,7 @@ public class AreaLocationTypesDao extends AbstractDAO<AreaLocationTypesEntity> {
         return returnList;
     }
 
+
     public List<AreaLayerDto> findSystemAreaLayerMapping() {
 
         List<AreaLayerDto> returnList = new ArrayList<>();
@@ -128,9 +116,21 @@ public class AreaLocationTypesDao extends AbstractDAO<AreaLocationTypesEntity> {
         for (AreaLocationTypesEntity rec : rs) {
             AreaLayerDto mapped = new AreaLayerDto();
 
-            // TODO do the mapping
+            mapped.setTypeName(rec.getTypeName());
 
-
+            ServiceLayerEntity serviceLayer = rec.getServiceLayer();
+            if (serviceLayer != null) {
+                mapped.setIsInternal(serviceLayer.getIsInternal());
+                mapped.setGeoName(serviceLayer.getGeoName());
+                mapped.setAreaTypeDesc(serviceLayer.getLayerDesc());
+                mapped.setServiceUrl(serviceLayer.getServiceUrl());
+                mapped.setStyle(serviceLayer.getStyleLabelGeom());
+            }
+            AreaLocationTypesEntity areaLocationTypes = serviceLayer.getAreaType();
+            if (areaLocationTypes != null) {
+                mapped.setIsLocation(areaLocationTypes.getIsLocation());
+                mapped.setServiceType(areaLocationTypes.getTypeName());
+            }
             returnList.add(mapped);
         }
         return returnList;
@@ -144,26 +144,24 @@ public class AreaLocationTypesDao extends AbstractDAO<AreaLocationTypesEntity> {
         for (AreaLocationTypesEntity rec : rs) {
             AreaLayerDto mapped = new AreaLayerDto();
 
-            // TODO do the mapping
+            mapped.setTypeName(rec.getTypeName());
 
-
+            ServiceLayerEntity serviceLayer = rec.getServiceLayer();
+            if (serviceLayer != null) {
+                mapped.setIsInternal(serviceLayer.getIsInternal());
+                mapped.setGeoName(serviceLayer.getGeoName());
+                mapped.setAreaTypeDesc(serviceLayer.getLayerDesc());
+                mapped.setServiceUrl(serviceLayer.getServiceUrl());
+                mapped.setStyle(serviceLayer.getStyleLabelGeom());
+            }
+            AreaLocationTypesEntity areaLocationTypes = serviceLayer.getAreaType();
+            if (areaLocationTypes != null) {
+                mapped.setIsLocation(areaLocationTypes.getIsLocation());
+                mapped.setServiceType(areaLocationTypes.getTypeName());
+            }
             returnList.add(mapped);
         }
         return returnList;
     }
-
-
-    /*
-
-    public List<AreaLayerDto> findSystemAreaLayerMappingORIGINAL() {
-        Query query = em.unwrap(Session.class).getNamedQuery(AreaLocationTypesEntity.FIND_SYSTEM_AREA_LAYER);
-        return query.setResultTransformer(Transformers.aliasToBean(AreaLayerDto.class)).list();
-    }
-
-    public List<AreaLayerDto> findSystemAreaAndLocationLayerMappingORGINAL() {
-        Query query = em.unwrap(Session.class).getNamedQuery(AreaLocationTypesEntity.FIND_SYSTEM_AREA_AND_LOCATION_LAYER);
-        return query.setResultTransformer(Transformers.aliasToBean(AreaLayerDto.class)).list();
-    }
-    */
 
 }
