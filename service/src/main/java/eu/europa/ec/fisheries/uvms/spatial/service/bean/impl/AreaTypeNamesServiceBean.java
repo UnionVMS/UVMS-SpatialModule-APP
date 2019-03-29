@@ -26,10 +26,12 @@ import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.ServiceLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.util.MapConfigHelper;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import net.bull.javamelody.internal.common.LOG;
 
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -45,7 +47,8 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
     private static final String GEO_SERVER = "geo_server_url";
     private static final String BING_API_KEY = "bing_api_key";
 
-    private @EJB SpatialRepository repository;
+    @Inject
+    private SpatialRepository repository;
 
     @Override
     @SneakyThrows
@@ -155,9 +158,15 @@ public class AreaTypeNamesServiceBean implements AreaTypeNamesService {
 
     @Override
     public List<UserAreaLayerDto> listUserAreaLayerMapping() {
-        List<UserAreaLayerDto> systemAreaLayerMapping = repository.findUserAreaLayerMapping();
-        addServiceUrlForInternalWMSLayers(systemAreaLayerMapping);
-        return systemAreaLayerMapping;
+        try {
+            List<UserAreaLayerDto> systemAreaLayerMapping = repository.findUserAreaLayerMapping();
+            addServiceUrlForInternalWMSLayers(systemAreaLayerMapping);
+            return systemAreaLayerMapping;
+        }
+        catch(Throwable t){
+            LOG.warn(t.toString(),t);
+            throw t;
+        }
     }
 
     private void addServiceUrlForInternalWMSLayers(List<? extends AreaLayerDto> systemAreaLayerMapping) {

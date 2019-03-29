@@ -17,6 +17,16 @@ import eu.europe.ec.fisheries.uvms.spatial.rest.BuildSpatialRestDeployment;
 @RunWith(Arquillian.class)
 public class UserAreaResourceTest extends BuildSpatialRestDeployment {
 
+
+    /*
+    String dbDialect = System.getProperty("db.dialect");
+        if ("oracle".equalsIgnoreCase(dbDialect)) {
+            em = oracle;
+        } else {
+            em = postgres;
+
+     */
+
     @Test
     public void getUserAreaLayerMappingTest() {
         ResponseDto<UserAreaLayerDto> response = getSecuredWebTarget()

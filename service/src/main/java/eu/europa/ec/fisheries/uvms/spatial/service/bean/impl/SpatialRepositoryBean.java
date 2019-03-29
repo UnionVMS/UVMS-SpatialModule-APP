@@ -44,34 +44,35 @@ import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 public class SpatialRepositoryBean implements SpatialRepository {
 
 
-    @EJB
+    @Inject
     private UserAreaDao userAreaDao;
-    @EJB
+    @Inject
     private EezDao areaDao;
-    @EJB
+    @Inject
     private SysConfigDao sysConfigDao;
-    @EJB
+    @Inject
     private ReportConnectSpatialDao reportConnectSpatialDao;
-    @EJB
+    @Inject
     private BookmarkDao bookmarkDao;
-    @EJB
+    @Inject
     private ProjectionDao projectionDao;
-    @EJB
+    @Inject
     private AreaLocationTypesDao areaLocationTypeDao;
-    @EJB
+    @Inject
     private ServiceLayerDao serviceLayerDao;
-    @EJB
+    @Inject
     private ReportConnectServiceAreaDao connectServiceAreaDao;
-    @EJB
+    @Inject
     private PortDao portDao;
-    @EJB
+    @Inject
     private CountryDao countryDao;
 
     // OBS FIX THIS WHEn Oracle is on the table
     @EJB
     private PostgresUtilsDao utilsDao;
-    @EJB
-    private OracleUtilsDao utilsDaoOracle;
+
+   // @EJB
+   // private OracleUtilsDao utilsDaoOracle;
 
     @EJB
     private PropertiesBean properties;

@@ -10,11 +10,13 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.service.dao;
 
-import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.commons.service.dao.AbstractDAO;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTypesEntity;
+import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.AreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.UserAreaLayerDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTypesEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.ProviderFormatEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.ServiceLayerEntity;
 import org.apache.commons.collections.CollectionUtils;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -23,9 +25,11 @@ import org.hibernate.transform.Transformers;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
-import static eu.europa.ec.fisheries.uvms.commons.service.dao.QueryParameter.*;
+import static eu.europa.ec.fisheries.uvms.commons.service.dao.QueryParameter.with;
 import static eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTypesEntity.*;
 
 @Stateless
@@ -62,11 +66,60 @@ public class AreaLocationTypesDao extends AbstractDAO<AreaLocationTypesEntity> {
                 with("isLocation", isLocation).parameters());
     }
 
-    public List findUserAreaLayerMapping() {
-        Query query = em.unwrap(Session.class).getNamedQuery(AreaLocationTypesEntity.FIND_USER_AREA_LAYER);
-        query.setResultTransformer(Transformers.aliasToBean(UserAreaLayerDto.class));
-        return query.list();
+/*
+    SELECT area.typeName as typeName,
+           layer.geoName as geoName,
+           layer.isInternal as isInternal,
+           layer.serviceUrl as serviceUrl,
+           layer.styleLabelGeom as style,
+            provider.serviceType as serviceType
+
+             FROM AreaLocationTypesEntity as area
+             INNER JOIN area.serviceLayer as layer
+             INNER JOIN layer.providerFormat as provider
+*/
+
+    public List<UserAreaLayerDto> findUserAreaLayerMapping() {
+
+            List<UserAreaLayerDto> returnList = new ArrayList<>();
+            javax.persistence.Query qry = em.createNamedQuery(AreaLocationTypesEntity.FIND_USER_AREA_LAYER);
+            List<AreaLocationTypesEntity> rs = qry.getResultList();
+            for(AreaLocationTypesEntity rec : rs){
+                UserAreaLayerDto mapped = new UserAreaLayerDto();
+
+                mapped.setTypeName(rec.getTypeName());
+
+                ServiceLayerEntity serviceLayer = rec.getServiceLayer();
+                if(serviceLayer != null) {
+                    mapped.setIsInternal(serviceLayer.getIsInternal());
+                    mapped.setGeoName(serviceLayer.getGeoName());
+                    mapped.setAreaTypeDesc(serviceLayer.getLayerDesc());
+                    mapped.setServiceUrl(serviceLayer.getServiceUrl());
+                    mapped.setStyle(serviceLayer.getStyleLabelGeom());
+
+                    AreaLocationTypesEntity areaLocationTypes = serviceLayer.getAreaType();
+                    if(areaLocationTypes != null){
+                        mapped.setIsLocation(areaLocationTypes.getIsLocation());
+                        mapped.setServiceType(areaLocationTypes.getTypeName());
+                    }
+
+                    ProviderFormatEntity providerFormatEntity = serviceLayer.getProviderFormat();
+                    if(providerFormatEntity != null){
+                        List<Long> idList = new ArrayList<>();
+                        Set<ServiceLayerEntity> set=  providerFormatEntity.getServiceLayers();
+                        if(set != null){
+                            for(ServiceLayerEntity sl : set){
+                                idList.add(sl.getId());
+                            }
+                        }
+                        mapped.setIdList(idList);
+                    }
+                }
+                returnList.add(mapped);
+            }
+            return returnList;
     }
+
 
     public List<AreaLayerDto> findSystemAreaLayerMapping() {
         Query query = em.unwrap(Session.class).getNamedQuery(AreaLocationTypesEntity.FIND_SYSTEM_AREA_LAYER);
