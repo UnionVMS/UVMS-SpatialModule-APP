@@ -10,14 +10,12 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.service.dao;
 
-import eu.europa.ec.fisheries.uvms.commons.service.dao.AbstractDAO;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.AreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.UserAreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.ProviderFormatEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.ServiceLayerEntity;
-import org.apache.commons.collections.CollectionUtils;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -27,11 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import static eu.europa.ec.fisheries.uvms.commons.service.dao.QueryParameter.with;
-import static eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTypesEntity.*;
-
 @Stateless
-public class AreaLocationTypesDao extends AbstractDAO<AreaLocationTypesEntity> {
+public class AreaLocationTypesDao {
 
     @PersistenceContext
     private EntityManager em;
@@ -39,32 +34,30 @@ public class AreaLocationTypesDao extends AbstractDAO<AreaLocationTypesEntity> {
     public AreaLocationTypesDao() {
     }
 
-    ;
-
-    @Override
-    public EntityManager getEntityManager() {
-        return em;
-    }
-
     public AreaLocationTypesEntity findOneByTypeName(final String typeName) throws ServiceException {
         AreaLocationTypesEntity result = null;
-        List<AreaLocationTypesEntity> resultList =
-                findEntityByNamedQuery(AreaLocationTypesEntity.class, FIND_TYPE_BY_NAME,
-                        with("typeName", typeName).parameters(), 1);
-        if (CollectionUtils.isNotEmpty(resultList)) {
-            result = resultList.get(0);
+        Query qry = em.createNamedQuery(AreaLocationTypesEntity.FIND_TYPE_BY_NAME);
+        qry.setParameter("typeName", typeName);
+        qry.setMaxResults(1);
+        List<AreaLocationTypesEntity> rs = qry.getResultList();
+        if (rs.size() > 0) {
+            result = rs.get(0);
         }
         return result;
     }
 
+
     public List<AreaLocationTypesEntity> findByIsLocationAndIsSystemWide(Boolean isLocation, Boolean isSystemWide) throws ServiceException {
-        return findEntityByNamedQuery(AreaLocationTypesEntity.class, FIND_ALL_IS_LOCATION_IS_SYSTEM_WIDE,
-                with("isLocation", isLocation).and("isSystemWide", isSystemWide).parameters());
+        Query qry = em.createNamedQuery(AreaLocationTypesEntity.FIND_ALL_IS_LOCATION_IS_SYSTEM_WIDE);
+        qry.setParameter("isLocation", isLocation);
+        qry.setParameter("isSystemWide", isSystemWide);
+        return qry.getResultList();
     }
 
     public List<AreaLocationTypesEntity> findByIsLocation(Boolean isLocation) throws ServiceException {
-        return findEntityByNamedQuery(AreaLocationTypesEntity.class, FIND_ALL_IS_LOCATION,
-                with("isLocation", isLocation).parameters());
+        Query qry = em.createNamedQuery(AreaLocationTypesEntity.FIND_ALL_IS_LOCATION);
+        qry.setParameter("isLocation", isLocation);
+        return qry.getResultList();
     }
 
     public List<UserAreaLayerDto> findUserAreaLayerMapping() {
