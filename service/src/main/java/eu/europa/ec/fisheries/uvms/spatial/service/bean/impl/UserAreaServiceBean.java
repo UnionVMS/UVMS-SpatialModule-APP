@@ -218,9 +218,14 @@ public class UserAreaServiceBean implements UserAreaService {
     @Override
     public UserAreaLayerDto getUserAreaLayerDefinition(String userName, String scopeName) {
         List<UserAreaLayerDto> userAreaLayerDtoList = areaTypeNamesService.listUserAreaLayerMapping();
-        UserAreaLayerDto userAreaLayerDto = userAreaLayerDtoList.get(0);
-        userAreaLayerDto.setIdList(getUserAreaGuid(userName, scopeName));
-        return userAreaLayerDto;
+        if(userAreaLayerDtoList.size() > 0) {
+            UserAreaLayerDto userAreaLayerDto = userAreaLayerDtoList.get(0);
+            userAreaLayerDto.setIdList(getUserAreaGuid(userName, scopeName));
+            return userAreaLayerDto;
+        }
+        else{
+            return null;
+        }
     }
 
     @Override

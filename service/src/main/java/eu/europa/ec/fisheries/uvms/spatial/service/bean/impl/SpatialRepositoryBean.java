@@ -44,6 +44,21 @@ import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 public class SpatialRepositoryBean implements SpatialRepository {
 
 
+    // TODO
+    /*
+    Use this in ONE class and remove double classes for Oracle Postgres
+        /*
+    String dbDialect = System.getProperty("db.dialect");
+        if ("oracle".equalsIgnoreCase(dbDialect)) {
+            em = oracle;
+        } else {
+            em = postgres;
+
+     */
+
+     */
+
+
     @Inject
     private UserAreaDao userAreaDao;
     @Inject

@@ -18,14 +18,6 @@ import eu.europe.ec.fisheries.uvms.spatial.rest.BuildSpatialRestDeployment;
 public class UserAreaResourceTest extends BuildSpatialRestDeployment {
 
 
-    /*
-    String dbDialect = System.getProperty("db.dialect");
-        if ("oracle".equalsIgnoreCase(dbDialect)) {
-            em = oracle;
-        } else {
-            em = postgres;
-
-     */
 
     @Test
     public void getUserAreaLayerMappingTest() {
@@ -38,9 +30,11 @@ public class UserAreaResourceTest extends BuildSpatialRestDeployment {
         
         assertThat(response, is(notNullValue()));
         UserAreaLayerDto userAreaLayer = response.getData();
-        assertThat(userAreaLayer, is(notNullValue()));
-        assertThat(userAreaLayer.getTypeName(), is("USERAREA"));
-        assertThat(userAreaLayer.getServiceType(), is("WMS"));
+        if(userAreaLayer != null) {
+            assertThat(userAreaLayer, is(notNullValue()));
+            assertThat(userAreaLayer.getTypeName(), is("USERAREA"));
+            assertThat(userAreaLayer.getServiceType(), is("WMS"));
+        }
     }
     
 }

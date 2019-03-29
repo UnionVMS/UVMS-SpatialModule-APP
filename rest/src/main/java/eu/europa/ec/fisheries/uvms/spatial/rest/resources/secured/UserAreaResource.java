@@ -43,6 +43,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.UserAreaService;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.UserAreaUpdateDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson.UserAreaGeoJsonDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.UserAreaLayerDto;
 import eu.europa.ec.fisheries.wsdl.user.types.ContextSet;
 import eu.europa.ec.fisheries.wsdl.user.types.UserContext;
 import lombok.extern.slf4j.Slf4j;
@@ -177,7 +178,13 @@ public class UserAreaResource extends UnionVMSResource {
     @Interceptors(value = {ExceptionInterceptor.class})
     public Response getUserAreaLayerMapping(@HeaderParam("scopeName") String scopeName, @Context HttpServletRequest servletRequest) {
         log.debug("UserName from security : " + servletRequest.getRemoteUser());
-        return createSuccessResponse(userAreaService.getUserAreaLayerDefinition(servletRequest.getRemoteUser(), scopeName));
+        UserAreaLayerDto userAreaLayerDto = userAreaService.getUserAreaLayerDefinition(servletRequest.getRemoteUser(), scopeName);
+        if(userAreaLayerDto == null){
+            return createSuccessResponse();
+        }
+        else{
+            return createSuccessResponse(userAreaLayerDto);
+        }
     }
 
     @POST
