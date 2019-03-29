@@ -18,13 +18,11 @@ import eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTypesEntit
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.ProviderFormatEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.ServiceLayerEntity;
 import org.apache.commons.collections.CollectionUtils;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.transform.Transformers;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -38,7 +36,10 @@ public class AreaLocationTypesDao extends AbstractDAO<AreaLocationTypesEntity> {
     @PersistenceContext
     private EntityManager em;
 
-    public AreaLocationTypesDao(){};
+    public AreaLocationTypesDao() {
+    }
+
+    ;
 
     @Override
     public EntityManager getEntityManager() {
@@ -50,13 +51,13 @@ public class AreaLocationTypesDao extends AbstractDAO<AreaLocationTypesEntity> {
         List<AreaLocationTypesEntity> resultList =
                 findEntityByNamedQuery(AreaLocationTypesEntity.class, FIND_TYPE_BY_NAME,
                         with("typeName", typeName).parameters(), 1);
-        if(CollectionUtils.isNotEmpty(resultList)){
+        if (CollectionUtils.isNotEmpty(resultList)) {
             result = resultList.get(0);
         }
         return result;
     }
 
-    public List<AreaLocationTypesEntity> findByIsLocationAndIsSystemWide(Boolean isLocation, Boolean isSystemWide ) throws ServiceException {
+    public List<AreaLocationTypesEntity> findByIsLocationAndIsSystemWide(Boolean isLocation, Boolean isSystemWide) throws ServiceException {
         return findEntityByNamedQuery(AreaLocationTypesEntity.class, FIND_ALL_IS_LOCATION_IS_SYSTEM_WIDE,
                 with("isLocation", isLocation).and("isSystemWide", isSystemWide).parameters());
     }
@@ -81,54 +82,88 @@ public class AreaLocationTypesDao extends AbstractDAO<AreaLocationTypesEntity> {
 
     public List<UserAreaLayerDto> findUserAreaLayerMapping() {
 
-            List<UserAreaLayerDto> returnList = new ArrayList<>();
-            javax.persistence.Query qry = em.createNamedQuery(AreaLocationTypesEntity.FIND_USER_AREA_LAYER);
-            List<AreaLocationTypesEntity> rs = qry.getResultList();
-            for(AreaLocationTypesEntity rec : rs){
-                UserAreaLayerDto mapped = new UserAreaLayerDto();
+        List<UserAreaLayerDto> returnList = new ArrayList<>();
+        Query qry = em.createNamedQuery(AreaLocationTypesEntity.FIND_USER_AREA_LAYER);
+        List<AreaLocationTypesEntity> rs = qry.getResultList();
+        for (AreaLocationTypesEntity rec : rs) {
+            UserAreaLayerDto mapped = new UserAreaLayerDto();
+            mapped.setTypeName(rec.getTypeName());
 
-                mapped.setTypeName(rec.getTypeName());
+            ServiceLayerEntity serviceLayer = rec.getServiceLayer();
+            if (serviceLayer != null) {
+                mapped.setIsInternal(serviceLayer.getIsInternal());
+                mapped.setGeoName(serviceLayer.getGeoName());
+                mapped.setAreaTypeDesc(serviceLayer.getLayerDesc());
+                mapped.setServiceUrl(serviceLayer.getServiceUrl());
+                mapped.setStyle(serviceLayer.getStyleLabelGeom());
 
-                ServiceLayerEntity serviceLayer = rec.getServiceLayer();
-                if(serviceLayer != null) {
-                    mapped.setIsInternal(serviceLayer.getIsInternal());
-                    mapped.setGeoName(serviceLayer.getGeoName());
-                    mapped.setAreaTypeDesc(serviceLayer.getLayerDesc());
-                    mapped.setServiceUrl(serviceLayer.getServiceUrl());
-                    mapped.setStyle(serviceLayer.getStyleLabelGeom());
-
-                    AreaLocationTypesEntity areaLocationTypes = serviceLayer.getAreaType();
-                    if(areaLocationTypes != null){
-                        mapped.setIsLocation(areaLocationTypes.getIsLocation());
-                        mapped.setServiceType(areaLocationTypes.getTypeName());
-                    }
-
-                    ProviderFormatEntity providerFormatEntity = serviceLayer.getProviderFormat();
-                    if(providerFormatEntity != null){
-                        List<Long> idList = new ArrayList<>();
-                        Set<ServiceLayerEntity> set=  providerFormatEntity.getServiceLayers();
-                        if(set != null){
-                            for(ServiceLayerEntity sl : set){
-                                idList.add(sl.getId());
-                            }
-                        }
-                        mapped.setIdList(idList);
-                    }
+                AreaLocationTypesEntity areaLocationTypes = serviceLayer.getAreaType();
+                if (areaLocationTypes != null) {
+                    mapped.setIsLocation(areaLocationTypes.getIsLocation());
+                    mapped.setServiceType(areaLocationTypes.getTypeName());
                 }
-                returnList.add(mapped);
+
+                ProviderFormatEntity providerFormatEntity = serviceLayer.getProviderFormat();
+                if (providerFormatEntity != null) {
+                    List<Long> idList = new ArrayList<>();
+                    Set<ServiceLayerEntity> set = providerFormatEntity.getServiceLayers();
+                    if (set != null) {
+                        for (ServiceLayerEntity sl : set) {
+                            idList.add(sl.getId());
+                        }
+                    }
+                    mapped.setIdList(idList);
+                }
             }
-            return returnList;
+            returnList.add(mapped);
+        }
+        return returnList;
+    }
+
+    public List<AreaLayerDto> findSystemAreaLayerMapping() {
+
+        List<AreaLayerDto> returnList = new ArrayList<>();
+        Query qry = em.createNamedQuery(AreaLocationTypesEntity.FIND_SYSTEM_AREA_LAYER);
+        List<AreaLocationTypesEntity> rs = qry.getResultList();
+        for (AreaLocationTypesEntity rec : rs) {
+            AreaLayerDto mapped = new AreaLayerDto();
+
+            // TODO do the mapping
+
+
+            returnList.add(mapped);
+        }
+        return returnList;
     }
 
 
-    public List<AreaLayerDto> findSystemAreaLayerMapping() {
+    public List<AreaLayerDto> findSystemAreaAndLocationLayerMapping() {
+        List<AreaLayerDto> returnList = new ArrayList<>();
+        Query qry = em.createNamedQuery(AreaLocationTypesEntity.FIND_SYSTEM_AREA_AND_LOCATION_LAYER);
+        List<AreaLocationTypesEntity> rs = qry.getResultList();
+        for (AreaLocationTypesEntity rec : rs) {
+            AreaLayerDto mapped = new AreaLayerDto();
+
+            // TODO do the mapping
+
+
+            returnList.add(mapped);
+        }
+        return returnList;
+    }
+
+
+    /*
+
+    public List<AreaLayerDto> findSystemAreaLayerMappingORIGINAL() {
         Query query = em.unwrap(Session.class).getNamedQuery(AreaLocationTypesEntity.FIND_SYSTEM_AREA_LAYER);
         return query.setResultTransformer(Transformers.aliasToBean(AreaLayerDto.class)).list();
     }
 
-    public List<AreaLayerDto> findSystemAreaAndLocationLayerMapping() {
+    public List<AreaLayerDto> findSystemAreaAndLocationLayerMappingORGINAL() {
         Query query = em.unwrap(Session.class).getNamedQuery(AreaLocationTypesEntity.FIND_SYSTEM_AREA_AND_LOCATION_LAYER);
         return query.setResultTransformer(Transformers.aliasToBean(AreaLayerDto.class)).list();
     }
+    */
 
 }
