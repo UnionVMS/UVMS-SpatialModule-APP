@@ -34,9 +34,6 @@ public class ProjectionDao extends AbstractDAO<ProjectionEntity> {
     @PersistenceContext
     private EntityManager em;
 
-    public ProjectionDao() {
-
-    }
 
     @Override
     public EntityManager getEntityManager() {

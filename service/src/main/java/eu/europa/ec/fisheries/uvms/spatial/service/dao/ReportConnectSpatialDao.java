@@ -38,9 +38,6 @@ public class ReportConnectSpatialDao extends AbstractDAO<ReportConnectSpatialEnt
     @PersistenceContext
     private EntityManager em;
 
-    public ReportConnectSpatialDao() {
-
-    }
 
     @Override
     public EntityManager getEntityManager() {

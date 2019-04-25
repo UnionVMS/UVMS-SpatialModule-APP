@@ -32,9 +32,6 @@ public class PostgresUtilsDao extends UtilsDao {
     @PersistenceContext
     private EntityManager em;
 
-    public PostgresUtilsDao() {
-
-    }
 
     @Override
     public Integer mapDefaultSRIDToEPSG(Integer srid) {

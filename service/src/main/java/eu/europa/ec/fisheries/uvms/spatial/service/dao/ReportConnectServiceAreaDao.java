@@ -29,9 +29,6 @@ public class ReportConnectServiceAreaDao extends AbstractDAO<ReportConnectServic
     @PersistenceContext
     private EntityManager em;
 
-    public ReportConnectServiceAreaDao() {
-
-    }
 
     @Override
     public EntityManager getEntityManager() {

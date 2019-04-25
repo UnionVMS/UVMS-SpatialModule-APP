@@ -32,8 +32,6 @@ public class EezDao extends AbstractAreaDao<EezEntity> {
     @PersistenceContext
     private EntityManager em;
 
-    public EezDao(){
-    }
 
     @Override
     public EntityManager getEntityManager() {

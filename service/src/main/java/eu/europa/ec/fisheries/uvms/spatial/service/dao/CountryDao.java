@@ -26,9 +26,6 @@ public class CountryDao extends AbstractDAO<CountryEntity> {
     @PersistenceContext
     private EntityManager em;
 
-    public CountryDao() {
-
-    }
 
     @Override
     public EntityManager getEntityManager() {

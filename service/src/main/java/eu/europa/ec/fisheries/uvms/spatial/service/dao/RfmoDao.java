@@ -32,9 +32,6 @@ public class RfmoDao extends AbstractAreaDao<RfmoEntity> {
     @PersistenceContext
     private EntityManager em;
 
-    public RfmoDao() {
-
-    }
 
     @Override
     public EntityManager getEntityManager() {

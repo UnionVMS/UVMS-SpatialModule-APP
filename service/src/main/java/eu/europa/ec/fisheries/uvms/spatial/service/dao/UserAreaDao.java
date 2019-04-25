@@ -61,9 +61,6 @@ public class UserAreaDao extends AbstractAreaDao<UserAreasEntity> {
     private static final String GID_LIST = "gids";
     private static final String IS_POWER_USER = "isPowerUser";
 
-    public UserAreaDao() {
-
-    }
 
     @Override
     public EntityManager getEntityManager() {

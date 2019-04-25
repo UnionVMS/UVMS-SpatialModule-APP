@@ -32,9 +32,6 @@ public class StatRectDao extends AbstractAreaDao<StatRectEntity> {
     @PersistenceContext
     private EntityManager em;
 
-    public StatRectDao() {
-
-    }
 
     @Override
     protected String getIntersectNamedQuery() {

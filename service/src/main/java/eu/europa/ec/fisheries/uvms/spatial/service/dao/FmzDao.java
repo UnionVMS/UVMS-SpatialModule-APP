@@ -29,8 +29,6 @@ public class FmzDao extends AbstractAreaDao<FmzEntity> {
     @PersistenceContext
     private EntityManager em;
 
-    public FmzDao() {
-    }
 
     @Override
     protected String getIntersectNamedQuery() {

@@ -32,9 +32,6 @@ public class SysConfigDao extends AbstractDAO<SysConfigEntity> {
     @PersistenceContext
     private EntityManager em;
 
-    public SysConfigDao() {
-        ;
-    }
 
     @Override
     public EntityManager getEntityManager() {

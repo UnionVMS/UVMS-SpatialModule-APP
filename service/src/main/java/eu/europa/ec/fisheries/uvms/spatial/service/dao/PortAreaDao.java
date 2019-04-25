@@ -33,9 +33,6 @@ public class PortAreaDao extends AbstractAreaDao<PortAreasEntity> {
     @PersistenceContext
     private EntityManager em;
 
-    public PortAreaDao() {
-
-    }
 
     @Override
     public EntityManager getEntityManager() {

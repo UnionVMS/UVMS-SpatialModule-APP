@@ -39,9 +39,6 @@ public class ServiceLayerDao extends AbstractDAO<ServiceLayerEntity> {
     @PersistenceContext
     private EntityManager em;
 
-    public ServiceLayerDao() {
-
-    }
 
     @Override
     public EntityManager getEntityManager() {

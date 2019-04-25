@@ -29,7 +29,7 @@ import static junit.framework.TestCase.assertEquals;
 
 public class PortDaoTest extends BaseSpatialDaoTest {
 
-    private PortDao dao = new PortDao(em);
+    private PortDao dao = new PortDao();
 
     @Before
     public void prepare(){

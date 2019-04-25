@@ -30,9 +30,6 @@ public class FaoDao extends AbstractAreaDao<FaoEntity> {
     @PersistenceContext
     private EntityManager em;
 
-    public FaoDao() {
-
-    }
 
     @Override
     protected String getIntersectNamedQuery() {

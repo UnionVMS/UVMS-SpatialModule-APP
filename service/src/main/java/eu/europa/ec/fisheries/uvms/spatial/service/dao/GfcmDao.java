@@ -30,9 +30,6 @@ public class GfcmDao extends AbstractAreaDao<GfcmEntity> {
     @PersistenceContext
     private EntityManager em;
 
-    public GfcmDao() {
-
-    }
 
     @Override
     protected String getIntersectNamedQuery() {

@@ -32,9 +32,6 @@ public class AreaLocationTypesDao {
     @PersistenceContext
     private EntityManager em;
 
-    public AreaLocationTypesDao() {
-    }
-
     public AreaLocationTypesEntity findOneByTypeName(final String typeName) throws ServiceException {
         AreaLocationTypesEntity result = null;
         TypedQuery<AreaLocationTypesEntity> qry = em.createNamedQuery(AreaLocationTypesEntity.FIND_TYPE_BY_NAME,AreaLocationTypesEntity.class);
