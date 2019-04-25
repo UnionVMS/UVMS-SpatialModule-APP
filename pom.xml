@@ -424,5 +424,6 @@
         <module>service</module>
         <module>message</module>
         <module>module</module>
+        <module>service2</module>
     </modules>
 </project>
