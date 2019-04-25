@@ -35,10 +35,12 @@ import lombok.SneakyThrows;
 import org.geotools.geometry.jts.GeometryBuilder;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(JUnitParamsRunner.class)
+@Ignore
 public class AbstractAreaDaoTest extends BaseSpatialDaoTest {
 
     /*

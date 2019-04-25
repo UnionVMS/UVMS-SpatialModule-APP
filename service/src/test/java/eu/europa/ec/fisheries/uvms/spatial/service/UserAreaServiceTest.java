@@ -44,11 +44,13 @@ import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.UserAreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity;
 import lombok.SneakyThrows;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.unitils.inject.annotation.InjectIntoByType;
 import org.unitils.inject.annotation.TestedObject;
 import org.unitils.mock.Mock;
 
+@Ignore
 public class UserAreaServiceTest extends BaseUnitilsTest {
 
     @TestedObject

@@ -32,11 +32,13 @@ import eu.europa.ec.fisheries.wsdl.user.types.DatasetExtension;
 import eu.europa.ec.fisheries.wsdl.user.types.DatasetList;
 import lombok.SneakyThrows;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+@Ignore
 public class UserAreaServiceMockitoTest {
 
     private static String USER_NAME = "testUser";

@@ -15,12 +15,15 @@ import eu.europa.ec.fisheries.uvms.commons.geometry.utils.GeometryUtils;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import lombok.SneakyThrows;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static junitparams.JUnitParamsRunner.$;
 
 @RunWith(JUnitParamsRunner.class)
+@Ignore
+
 public class GeometryUtilsTest extends BaseUnitilsTest {
 
     @Test(expected = IllegalArgumentException.class)

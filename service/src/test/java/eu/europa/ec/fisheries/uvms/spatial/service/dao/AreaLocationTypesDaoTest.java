@@ -19,6 +19,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTypesEntit
 import eu.europa.ec.fisheries.uvms.spatial.utility.BaseSpatialDaoTest;
 import lombok.SneakyThrows;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -27,6 +28,7 @@ import static com.ninja_squad.dbsetup.Operations.sequenceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+@Ignore
 public class AreaLocationTypesDaoTest extends BaseSpatialDaoTest {
 
     /*

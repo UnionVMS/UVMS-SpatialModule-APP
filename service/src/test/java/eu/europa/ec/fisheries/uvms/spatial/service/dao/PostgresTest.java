@@ -3,8 +3,10 @@ package eu.europa.ec.fisheries.uvms.spatial.service.dao;
 import static org.junit.Assert.assertEquals;
 
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.util.PostGres;
+import org.junit.Ignore;
 import org.junit.Test;
 
+@Ignore
 public class PostgresTest {
     PostGres postgres = new PostGres();
 

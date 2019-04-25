@@ -65,6 +65,7 @@ import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+@Ignore
 @PowerMockIgnore("javax.management.*")
 @RunWith(PowerMockRunner.class)
 //@PrepareForTest({DAOFactory.class, EntityManager.class})

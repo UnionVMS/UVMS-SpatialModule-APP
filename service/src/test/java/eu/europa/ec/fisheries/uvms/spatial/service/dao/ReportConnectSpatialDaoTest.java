@@ -28,8 +28,10 @@ import eu.europa.ec.fisheries.uvms.spatial.service.entity.ReportConnectSpatialEn
 import eu.europa.ec.fisheries.uvms.spatial.utility.BaseSpatialDaoTest;
 import lombok.SneakyThrows;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
+@Ignore
 public class ReportConnectSpatialDaoTest extends BaseSpatialDaoTest {
 
     /*

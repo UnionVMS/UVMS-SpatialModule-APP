@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 import lombok.SneakyThrows;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static com.ninja_squad.dbsetup.Operations.sequenceOf;
@@ -30,6 +31,7 @@ import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+@Ignore
 public class ServiceLayerDaoTest extends BaseSpatialDaoTest {
 
     /*

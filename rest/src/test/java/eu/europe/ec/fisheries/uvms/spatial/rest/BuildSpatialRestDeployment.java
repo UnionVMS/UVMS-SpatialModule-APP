@@ -23,19 +23,21 @@ public abstract class BuildSpatialRestDeployment {
 
         WebArchive testWar = ShrinkWrap.create(WebArchive.class, "test.war");
 
-        File[] files = Maven.configureResolver().loadPomFromFile("pom.xml").importRuntimeAndTestDependencies().resolve().withTransitivity().asFile();
-        // testWar.addAsLibraries(files);
-        
-        testWar.addAsLibraries(Maven.configureResolver().loadPomFromFile("pom.xml").resolve("eu.europa.ec.fisheries.uvms.spatial:service").withTransitivity().asFile());
-        
+        File[] files = Maven.configureResolver().loadPomFromFile("pom.xml")
+                .importRuntimeAndTestDependencies()
+                .resolve()
+                .withTransitivity().asFile();
+        testWar.addAsLibraries(files);
+
+        testWar.addAsLibraries(Maven.configureResolver().loadPomFromFile("pom.xml")
+                .resolve("eu.europa.ec.fisheries.uvms.spatial:service")
+                .withTransitivity().asFile());
+
         testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.spatial.rest");
-        
+
         testWar.addClass(AuthenticationFilterMock.class);
         testWar.addClass(UserModuleMock.class);
         testWar.addClass(ConfigServiceMock.class);
-
-        testWar.addClass(eu.europa.ec.fisheries.schema.movement.v1.MovementType.class);
-
 
         testWar.delete("/WEB-INF/web.xml");
         testWar.addAsWebInfResource("mock-web.xml", "web.xml");
@@ -49,7 +51,7 @@ public abstract class BuildSpatialRestDeployment {
         client.register(new JacksonJaxbJsonProvider(objectMapper, JacksonJaxbJsonProvider.DEFAULT_ANNOTATIONS));
         return client.target("http://localhost:28080/test/spatialnonsecure");
     }
-    
+
     protected WebTarget getSecuredWebTarget() {
         ObjectMapper objectMapper = new ObjectMapper();
         Client client = ClientBuilder.newClient();

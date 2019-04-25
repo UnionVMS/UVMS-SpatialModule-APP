@@ -54,6 +54,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.entity.ReportConnectSpatialEn
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.ServiceLayerEntity;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -63,6 +64,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
+@Ignore
 public class MapConfigServiceTest extends BaseUnitilsTest {
 
     @Mock

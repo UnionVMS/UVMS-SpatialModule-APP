@@ -7,6 +7,7 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import eu.europa.ec.fisheries.uvms.commons.rest.dto.ResponseDto;
@@ -15,6 +16,8 @@ import eu.europe.ec.fisheries.uvms.spatial.rest.BuildSpatialRestDeployment;
 
 @RunAsClient
 @RunWith(Arquillian.class)
+@Ignore
+
 public class UserAreaResourceTest extends BuildSpatialRestDeployment {
 
 

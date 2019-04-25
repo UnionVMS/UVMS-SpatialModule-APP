@@ -21,6 +21,7 @@ import eu.europa.ec.fisheries.uvms.spatial.utility.BaseSpatialDaoTest;
 import lombok.SneakyThrows;
 import org.geotools.geometry.jts.GeometryBuilder;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -30,6 +31,7 @@ import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 
+@Ignore
 public class UserAreaDaoTest extends BaseSpatialDaoTest {
 
     /*

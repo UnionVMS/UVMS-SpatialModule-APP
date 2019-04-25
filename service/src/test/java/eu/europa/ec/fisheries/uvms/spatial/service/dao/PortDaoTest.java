@@ -19,6 +19,7 @@ import eu.europa.ec.fisheries.uvms.spatial.utility.BaseSpatialDaoTest;
 import lombok.SneakyThrows;
 import org.geotools.geometry.jts.GeometryBuilder;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -27,6 +28,7 @@ import java.util.Map;
 import static com.ninja_squad.dbsetup.Operations.sequenceOf;
 import static junit.framework.TestCase.assertEquals;
 
+@Ignore
 public class PortDaoTest extends BaseSpatialDaoTest {
 
     private PortDao dao = new PortDao();
