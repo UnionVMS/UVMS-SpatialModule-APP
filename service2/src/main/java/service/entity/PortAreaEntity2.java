@@ -19,16 +19,17 @@ import java.util.Objects;
 
 @Entity
 @NamedQueries({
-        @NamedQuery(name = PortAreasEntity2.PORT_AREA_BY_COORDINATE,
-                query = "FROM PortAreasEntity WHERE intersects(geom, :shape) = true AND enabled = true"),
-        @NamedQuery(name = PortAreasEntity2.DISABLE_PORT_AREAS, query = "UPDATE PortAreasEntity SET enabled = false"),
-        @NamedQuery(name = PortAreasEntity2.SEARCH_PORTAREAS, query = "FROM PortAreasEntity where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid"),
-        @NamedQuery(name = PortAreasEntity2.SEARCH_PORT_AREA_NAMES_BY_CODE, query = "From PortAreasEntity where code in (SELECT distinct(code) from PortAreasEntity where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid)"),
-        @NamedQuery(name = PortAreasEntity2.PORTAREA_COLUMNS, query = "SELECT portarea.id as gid, portarea.name AS name, portarea.code AS code FROM PortAreasEntity AS portarea WHERE portarea.id in (:ids)")})
-@Table(name = "port_area")
-public class PortAreasEntity2 extends BaseAreaEntity2 {
+        @NamedQuery(name = PortAreaEntity2.PORT_AREA_BY_POINT,
+                query = "FROM PortAreasEntity2 WHERE within(:point, geom) = true AND enabled = true"),
 
-    public static final String PORT_AREA_BY_COORDINATE = "portEntity.PortAreaByCoordinate";
+        @NamedQuery(name = PortAreaEntity2.DISABLE_PORT_AREAS, query = "UPDATE PortAreasEntity SET enabled = false"),
+        @NamedQuery(name = PortAreaEntity2.SEARCH_PORTAREAS, query = "FROM PortAreasEntity where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid"),
+        @NamedQuery(name = PortAreaEntity2.SEARCH_PORT_AREA_NAMES_BY_CODE, query = "From PortAreasEntity where code in (SELECT distinct(code) from PortAreasEntity where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid)"),
+        @NamedQuery(name = PortAreaEntity2.PORTAREA_COLUMNS, query = "SELECT portarea.id as gid, portarea.name AS name, portarea.code AS code FROM PortAreasEntity AS portarea WHERE portarea.id in (:ids)")})
+@Table(name = "port_area")
+public class PortAreaEntity2 extends BaseAreaEntity2 {
+
+    public static final String PORT_AREA_BY_POINT = "portEntity.PortAreaByPoint";
     public static final String DISABLE_PORT_AREAS = "portAreasEntity.disablePortAreas";
     public static final String SEARCH_PORTAREAS = "portAreaEntity.searchPortAreaByNameOrCode";
     public static final String SEARCH_PORT_AREA_NAMES_BY_CODE = "portAreaEntity.searchNamesByCode";
@@ -54,7 +55,7 @@ public class PortAreasEntity2 extends BaseAreaEntity2 {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        PortAreasEntity2 that = (PortAreasEntity2) o;
+        PortAreaEntity2 that = (PortAreaEntity2) o;
         return Objects.equals(id, that.id);
     }
 

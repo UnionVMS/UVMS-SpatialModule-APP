@@ -10,7 +10,7 @@ FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more d
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package service.bean.impl;
+package service.bean;
 
 import eu.europa.ec.fisheries.uvms.config.constants.ConfigHelper;
 
@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Stateless
-public class SpatialConfigRegistration implements ConfigHelper {
+public class SpatialConfigRegistration2 implements ConfigHelper {
 
     @PersistenceContext(unitName = "spatialPUpostgres")
     private EntityManager em;

@@ -90,6 +90,8 @@ public class UserAreaDao2  {
         return query.list();
     }
 
+
+
     public List<Long> getAllSharedGids(String userName, String scopeName, String type) {
         Map<String, Object> parameters =
                 ImmutableMap.<String, Object>builder().put(USER_NAME, userName).put(SCOPE_NAME, scopeName).put(TYPE, type).build();
@@ -104,7 +106,6 @@ public class UserAreaDao2  {
         return query.list();
     }
 
-    */
 
     private Query createNamedNativeQuery(String nativeQueryString, Map<String, Object> parameters) {
         Query query = em.unwrap(Session.class).getNamedQuery(nativeQueryString);
@@ -113,11 +114,6 @@ public class UserAreaDao2  {
         }
         return query;
     }
-
-
-
-
-
 
 
     public List<UserAreasEntity2> listByCriteria(String userName, String scopeName, String searchCriteria, Boolean isPowerUser) {
@@ -131,12 +127,15 @@ public class UserAreaDao2  {
     }
 
 
+     */
 
 
-    public UserAreasEntity2 getByUserNameAndName(String userName, String name) {
+
+
+    public UserAreasEntity2 getByUserNameAndName(String userName, String areaName) {
 
         TypedQuery<UserAreasEntity2> query =  em.createNamedQuery(UserAreasEntity2.FIND_BY_USERNAME_AND_NAME,UserAreasEntity2.class);
-        query.setParameter("name", name);
+        query.setParameter("name", areaName);
         query.setParameter(USER_NAME, userName);
         List<UserAreasEntity2> rs = query.getResultList();
         if (!CollectionUtils.isEmpty(rs)){

@@ -8,25 +8,24 @@
  details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package service.bean.impl;
+package service.bean;
 
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.JMSUtils;
 import eu.europa.ec.fisheries.uvms.config.message.ConfigMessageProducer;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.jms.Queue;
 
 @Stateless
-@Slf4j
-public class SpatialConfigProducerBean extends AbstractProducer implements ConfigMessageProducer {
+public class SpatialConfigProducerBean2 extends AbstractProducer implements ConfigMessageProducer {
+
+    private static final Logger LOG = LoggerFactory.getLogger(SpatialConfigProducerBean2.class);
 
     private Queue spatialINQueue;
 
@@ -36,14 +35,13 @@ public class SpatialConfigProducerBean extends AbstractProducer implements Confi
     }
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public String sendConfigMessage(String textMsg) {
         try {
             return sendModuleMessage(textMsg, spatialINQueue);
         } catch (MessageException e) {
-            log.error("[ERROR] Error while trying to send message to Config! Check SpatialConfigProducerBeanImpl..");
+            LOG.error("[ERROR] Error while trying to send message to Config! Check SpatialConfigProducerBeanImpl..");
         }
-        return StringUtils.EMPTY;
+        return "";
     }
 
     @Override

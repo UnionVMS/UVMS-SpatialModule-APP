@@ -8,7 +8,7 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
-package service.bean.impl;
+package service.bean;
 
 import eu.europa.ec.fisheries.uvms.init.AbstractModuleInitializerBean;
 import lombok.extern.slf4j.Slf4j;

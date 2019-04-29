@@ -8,22 +8,24 @@
  details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package service.bean.impl;
+package service.bean;
 
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractConsumer;
 import eu.europa.ec.fisheries.uvms.config.exception.ConfigMessageException;
 import eu.europa.ec.fisheries.uvms.config.message.ConfigMessageConsumer;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
 @Stateless
-@Slf4j
-public class SpatialConfigConsumerBean extends AbstractConsumer implements ConfigMessageConsumer {
+public class SpatialConfigConsumerBean2 extends AbstractConsumer implements ConfigMessageConsumer {
+
+    private static final Logger LOG = LoggerFactory.getLogger(SpatialConfigConsumerBean2.class);
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -31,7 +33,7 @@ public class SpatialConfigConsumerBean extends AbstractConsumer implements Confi
         try {
             return getMessage(correlationId, type);
         } catch (MessageException e) {
-            log.error("[ERROR] Error when getting config message {}", e.getMessage());
+            LOG.error("[ERROR] Error when getting config message {}", e.getMessage());
             throw new ConfigMessageException("[ Error when getting config message. ]");
         }
     }

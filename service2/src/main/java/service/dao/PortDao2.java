@@ -14,6 +14,8 @@ import service.entity.PortEntity2;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import java.util.List;
 
 public class PortDao2 {
 
@@ -27,5 +29,12 @@ public class PortDao2 {
 
         em.persist(entity);
         return entity;
+    }
+
+    public List<PortEntity2> getPortsByAreaCodes(List<String> codes) {
+
+        TypedQuery<PortEntity2> query = em.createNamedQuery(PortEntity2.SEARCH_PORT_BY_AREA_CODES, PortEntity2.class);
+        query.setParameter("code", codes);
+        return query.getResultList();
     }
 }

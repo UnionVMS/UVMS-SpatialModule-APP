@@ -12,10 +12,14 @@ details. You should have received a copy of the GNU General Public License along
 
 package service.dao;
 
-import service.entity.PortAreasEntity2;
+import com.vividsolutions.jts.geom.Point;
+import service.entity.BaseAreaEntity2;
+import service.entity.PortAreaEntity2;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import java.util.List;
 
 
 public class PortAreaDao2 {
@@ -25,9 +29,17 @@ public class PortAreaDao2 {
 
 
 
-    public PortAreasEntity2 createEntity(PortAreasEntity2 entity)  {
+    public PortAreaEntity2 createEntity(PortAreaEntity2 entity)  {
 
         em.persist(entity);
         return entity;
     }
+
+    public List<PortAreaEntity2> getPortAreasByPoint(Point point) {
+
+        TypedQuery<PortAreaEntity2> query = em.createNamedQuery(PortAreaEntity2.PORT_AREA_BY_POINT, PortAreaEntity2.class);
+        query.setParameter("point", point);
+        return query.getResultList();
+    }
+
 }

@@ -21,7 +21,7 @@ import java.util.Objects;
         @NamedQuery(name = PortEntity2.DISABLE, query = "UPDATE PortEntity SET enabled = false"),
         @NamedQuery(name = PortEntity2.LIST_ORDERED_BY_DISTANCE, query ="FROM PortEntity WHERE enabled = true ORDER BY distance(geom, :shape) ASC"), /// TODO create dao test
         @NamedQuery(name = PortEntity2.SEARCH_PORT, query = "FROM PortEntity where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid"),
-        @NamedQuery(name = PortEntity2.SEARCH_PORT_NAMES_BY_CODE, query = "From PortEntity where code in (SELECT distinct(code) from PortEntity where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid)")
+        @NamedQuery(name = PortEntity2.SEARCH_PORT_BY_AREA_CODES, query = "From PortEntity2 where code in :code AND enabled=true ")
 })
 @Table(name = "port")
 public class PortEntity2 extends BaseAreaEntity2 {
@@ -30,7 +30,7 @@ public class PortEntity2 extends BaseAreaEntity2 {
     public static final String DISABLE = "portsEntity.disable";
     public static final String LIST_ORDERED_BY_DISTANCE = "portsEntity.listOrderedByDistance";
     public static final String SEARCH_PORT = "portEntity.searchPortByNameOrCode";
-    public static final String SEARCH_PORT_NAMES_BY_CODE = "portEntity.searchNamesByCode";
+    public static final String SEARCH_PORT_BY_AREA_CODES = "portEntity.searchPortsByAreaCode";
 
 	@Id
 	@Column(name = "gid")

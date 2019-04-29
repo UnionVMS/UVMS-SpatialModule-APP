@@ -10,7 +10,7 @@ details. You should have received a copy of the GNU General Public License along
  */
 
 
-package service.bean.impl;
+package service.bean;
 
 import eu.europa.ec.fisheries.uvms.commons.message.api.Fault;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.JAXBUtils;

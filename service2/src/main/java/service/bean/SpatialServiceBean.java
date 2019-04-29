@@ -10,7 +10,7 @@ details. You should have received a copy of the GNU General Public License along
  */
 
 
-package service.bean.impl;
+package service.bean;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;

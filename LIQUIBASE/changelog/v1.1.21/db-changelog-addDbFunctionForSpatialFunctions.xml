@@ -1,0 +1,27 @@
+<databaseChangeLog xmlns='http://www.liquibase.org/xml/ns/dbchangelog'
+  xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+  xsi:schemaLocation='http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd'>
+
+    <changeSet author="joemat" id="spatial db-functions">
+        <sql
+             splitStatements="false"
+             stripComments="false">
+
+            CREATE OR REPLACE FUNCTION spatial.getAreasByPoint(inPoint geometry) returns TABLE(indexRS integer, type text, gid bigint, code varchar(20), name varchar)AS $$
+            BEGIN
+            return query (SELECT 1 as indexRS,'EEZ' as type, e.gid, e.code, e.name FROM spatial.eez e WHERE ST_Within(inPoint, geom) AND enabled = 'Y'
+            UNION ALL (SELECT 2 as indexRS,'RFMO' as type, r.gid, r.code, r.name FROM spatial.rfmo r WHERE ST_Within(inPoint, geom) AND enabled = 'Y')
+            UNION ALL (SELECT 3 as indexRS,'USERAREA' as type, u.gid, u.code, u.name FROM spatial.user_areas u WHERE ST_Within(inPoint, geom) AND enabled = 'Y')
+            UNION ALL (SELECT 4 as indexRS,'PORTAREA' as type, p.gid, p.code, p.name FROM spatial.port_area p WHERE ST_Within(inPoint, geom) AND enabled = 'Y')
+            UNION ALL (SELECT 5 as indexRS,'STATRECT' as type, s.gid, s.code, s.name FROM spatial.stat_rect s WHERE ST_Within(inPoint, geom) AND enabled = 'Y')
+            UNION ALL (SELECT 6 as indexRS,'GFCM' as type, g.gid, g.code, g.name FROM spatial.gfcm g WHERE ST_Within(inPoint, geom) AND enabled = 'Y')
+            UNION ALL (SELECT 7 as indexRS,'FAO' as type, f.gid, f.code, f.name FROM spatial.fao f WHERE ST_Within(inPoint, geom) AND enabled = 'Y')
+            ORDER BY indexRS, gid ASC);
+            END;
+            $$ LANGUAGE 'plpgsql';
+
+
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
