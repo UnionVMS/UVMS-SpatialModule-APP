@@ -22,10 +22,10 @@
             <column name="west" type="FLOAT"/>
             <column name="code" type="VARCHAR(20)"/>
             <column name="name" type="VARCHAR(255)"/>
-            <column name="enabled" type="VARCHAR(1)">
+            <column name="enabled" type="boolean">
                 <constraints nullable="false"/>
             </column>
-            <column name="enabled_on" type="TIMESTAMP"/>
+            <column name="enabled_on" type="TIMESTAMP WITH TIME ZONE"/>
         </createTable>
     </changeSet>
 

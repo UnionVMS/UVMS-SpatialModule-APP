@@ -19,20 +19,20 @@ import java.util.Objects;
 @Entity
 @Table(name = "fao")
 @NamedQueries({
-        @NamedQuery(name = FaoEntity2.DISABLE_FAO_AREAS, query = "UPDATE FaoEntity SET enabled = false"),
+        @NamedQuery(name = FaoEntity2.DISABLE_FAO_AREAS, query = "UPDATE FaoEntity2 SET enabled = false"),
         @NamedQuery(name = FaoEntity2.FAO_BY_INTERSECT,
-                query = "FROM FaoEntity WHERE intersects(geom, :shape) = true AND enabled = true"),
-        @NamedQuery(name = FaoEntity2.SEARCH_FAO, query = "FROM FaoEntity where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid"),
-        @NamedQuery(name = FaoEntity2.SEARCH_FAO_NAMES_BY_CODE, query = "From FaoEntity where code in (SELECT distinct(code) from FaoEntity where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid)"),
-        @NamedQuery(name = FaoEntity2.FAO_COLUMNS, query = "SELECT fao.id as gid, fao.name AS name, fao.code AS code FROM FaoEntity AS fao WHERE fao.id in (:ids)")
+                query = "FROM FaoEntity2 WHERE intersects(geom, :shape) = true AND enabled = true"),
+        @NamedQuery(name = FaoEntity2.SEARCH_FAO, query = "FROM FaoEntity2 where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid"),
+        @NamedQuery(name = FaoEntity2.SEARCH_FAO_NAMES_BY_CODE, query = "From FaoEntity2 where code in (SELECT distinct(code) from FaoEntity2 where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid)"),
+        @NamedQuery(name = FaoEntity2.FAO_COLUMNS, query = "SELECT fao.id as gid, fao.name AS name, fao.code AS code FROM FaoEntity2 AS fao WHERE fao.id in (:ids)")
 })
 public class FaoEntity2 extends BaseAreaEntity2 {
 
-    public static final String DISABLE_FAO_AREAS = "faoEntity.disableFaoAreas";
-    public static final String FAO_BY_INTERSECT = "faoEntity.faoByIntersect";
-    public static final String SEARCH_FAO = "FaoEntity.searchFaoByNameOrCode";
-    public static final String SEARCH_FAO_NAMES_BY_CODE = "FaoEntity.searchNamesByCode";
-    public static final String FAO_COLUMNS = "FaoEntity.FaoColumns";
+    public static final String DISABLE_FAO_AREAS = "faoEntity2.disableFaoAreas";
+    public static final String FAO_BY_INTERSECT = "faoEntity2.faoByIntersect";
+    public static final String SEARCH_FAO = "FaoEntity2.searchFaoByNameOrCode";
+    public static final String SEARCH_FAO_NAMES_BY_CODE = "FaoEntity2.searchNamesByCode";
+    public static final String FAO_COLUMNS = "FaoEntity2.FaoColumns";
 
 	@Id
 	@Column(name = "gid")

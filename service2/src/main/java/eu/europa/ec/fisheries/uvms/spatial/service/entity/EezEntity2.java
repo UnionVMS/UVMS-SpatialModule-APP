@@ -19,20 +19,20 @@ import java.util.Objects;
 
 @Entity
 @NamedQueries({
-        @NamedQuery(name = EezEntity2.EEZ_BY_COORDINATE, query = "FROM EezEntity WHERE intersects(geom, :shape) = true AND enabled = true"),
-        @NamedQuery(name = EezEntity2.EEZ_COLUMNS, query = "SELECT eez.id as gid, eez.name AS name, eez.code AS code FROM EezEntity AS eez WHERE eez.id in (:ids)"),
-        @NamedQuery(name = EezEntity2.DISABLE_EEZ_AREAS, query = "UPDATE EezEntity SET enabled = false"),
-        @NamedQuery(name = EezEntity2.SEARCH_EEZ, query = "FROM EezEntity where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid"),
-        @NamedQuery(name = EezEntity2.SEARCH_EEZ_NAMES_BY_CODE, query = "From EezEntity where code in (SELECT distinct(code) from EezEntity where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid)")
+        @NamedQuery(name = EezEntity2.EEZ_BY_COORDINATE, query = "FROM EezEntity2 WHERE intersects(geom, :shape) = true AND enabled = true"),
+        @NamedQuery(name = EezEntity2.EEZ_COLUMNS, query = "SELECT eez.id as gid, eez.name AS name, eez.code AS code FROM EezEntity2 AS eez WHERE eez.id in (:ids)"),
+        @NamedQuery(name = EezEntity2.DISABLE_EEZ_AREAS, query = "UPDATE EezEntity2 SET enabled = false"),
+        @NamedQuery(name = EezEntity2.SEARCH_EEZ, query = "FROM EezEntity2 where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid"),
+        @NamedQuery(name = EezEntity2.SEARCH_EEZ_NAMES_BY_CODE, query = "From EezEntity2 where code in (SELECT distinct(code) from EezEntity2 where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid)")
 })
 @Table(name = "eez")
 public class EezEntity2 extends BaseAreaEntity2 {
 
-    public static final String EEZ_BY_COORDINATE = "eezEntity.ByCoordinate";
-    public static final String DISABLE_EEZ_AREAS = "eezEntity.disableEezAreas";
-    public static final String SEARCH_EEZ = "eezEntity.searchByNameAndCode";
-    public static final String SEARCH_EEZ_NAMES_BY_CODE = "eezEntity.searchNameByCode";
-    public static final String EEZ_COLUMNS = "eezEntity.findSelectedColumns";
+    public static final String EEZ_BY_COORDINATE = "eezEntity2.ByCoordinate";
+    public static final String DISABLE_EEZ_AREAS = "eezEntity2.disableEezAreas";
+    public static final String SEARCH_EEZ = "eezEntity2.searchByNameAndCode";
+    public static final String SEARCH_EEZ_NAMES_BY_CODE = "eezEntity2.searchNameByCode";
+    public static final String EEZ_COLUMNS = "eezEntity2.findSelectedColumns";
 
 	@Id
 	@Column(name = "gid")

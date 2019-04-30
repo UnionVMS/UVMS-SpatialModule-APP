@@ -19,12 +19,11 @@ import java.util.Objects;
 @Table(name = "system_configurations")
 @NamedQueries({
         @NamedQuery(name= SysConfigEntity2.FIND_CONFIG_BY_NAME,
-        query = "FROM SysConfigEntity config WHERE config.name = :name")
+        query = "FROM SysConfigEntity2 config WHERE config.name = :name")
 })
 public class SysConfigEntity2 {
 
-    public static final String FIND_CONFIG_BY_NAME = "sysConfig.findById";
-    public static final String FIND_CONFIG = "sysConfig.find";
+    public static final String FIND_CONFIG_BY_NAME = "sysConfig2.findById";
 
 	@Id
 	@Column(name = "id")

@@ -19,21 +19,21 @@ import java.util.Objects;
 @Entity
 @Table(name = "stat_rect")
 @NamedQueries({
-        @NamedQuery(name = StatRectEntity2.DISABLE, query = "UPDATE StatRectEntity SET enabled = false"),
+        @NamedQuery(name = StatRectEntity2.DISABLE, query = "UPDATE StatRectEntity2 SET enabled = false"),
         @NamedQuery(name = StatRectEntity2.BY_INTERSECT,
-                query = "FROM StatRectEntity WHERE intersects(geom, :shape) = true AND enabled = true"),
-        @NamedQuery(name = StatRectEntity2.SEARCH_STATRECT, query = "FROM StatRectEntity where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid"),
-        @NamedQuery(name = StatRectEntity2.SEARCH_STATRECT_NAMES_BY_CODE, query = "From StatRectEntity where code in (SELECT distinct(code) from StatRectEntity where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid)"),
-        @NamedQuery(name = StatRectEntity2.STATRECT_COLUMNS, query = "SELECT statrect.id as gid, statrect.name AS name, statrect.code AS code FROM StatRectEntity AS statrect WHERE statrect.id in (:ids)")
+                query = "FROM StatRectEntity2 WHERE intersects(geom, :shape) = true AND enabled = true"),
+        @NamedQuery(name = StatRectEntity2.SEARCH_STATRECT, query = "FROM StatRectEntity2 where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid"),
+        @NamedQuery(name = StatRectEntity2.SEARCH_STATRECT_NAMES_BY_CODE, query = "From StatRectEntity2 where code in (SELECT distinct(code) from StatRectEntity2 where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid)"),
+        @NamedQuery(name = StatRectEntity2.STATRECT_COLUMNS, query = "SELECT statrect.id as gid, statrect.name AS name, statrect.code AS code FROM StatRectEntity2 AS statrect WHERE statrect.id in (:ids)")
 })
 
 public class StatRectEntity2 extends BaseAreaEntity2 {
 
-    public static final String BY_INTERSECT = "statRectEntity.byIntersect";
-    public static final String DISABLE = "statRectEntity.disable";
-    public static final String SEARCH_STATRECT = "statrectEntity.searchStatrectByNameOrCode";
-    public static final String SEARCH_STATRECT_NAMES_BY_CODE = "statrectEntity.searchNamesByCode";
-    public static final String STATRECT_COLUMNS = "statrectEntity.statRectColumns";
+    public static final String BY_INTERSECT = "statRectEntity2.byIntersect";
+    public static final String DISABLE = "statRectEntity2.disable";
+    public static final String SEARCH_STATRECT = "statrectEntity2.searchStatrectByNameOrCode";
+    public static final String SEARCH_STATRECT_NAMES_BY_CODE = "statrectEntity2.searchNamesByCode";
+    public static final String STATRECT_COLUMNS = "statrectEntity2.statRectColumns";
 
 	@Id
 	@Column(name = "gid")

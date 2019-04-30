@@ -20,16 +20,16 @@ import java.util.Set;
 @Entity
 @Table(name = "projection")
 @NamedQueries({
-        @NamedQuery(name = ProjectionEntity2.FIND_BY_SRS_CODE, query = "FROM ProjectionEntity p WHERE p.srsCode = :srsCode"),
+        @NamedQuery(name = ProjectionEntity2.FIND_BY_SRS_CODE, query = "FROM ProjectionEntity2 p WHERE p.srsCode = :srsCode"),
         @NamedQuery(name = ProjectionEntity2.FIND_PROJECTION_BY_ID,
 				query = "SELECT projection.srsCode AS epsgCode, projection.units AS units, projection.isWorld AS global, projection.extent as extent, projection.axis as axis, projection.projDef as projDef, projection.worldExtent as worldExtent " +
-						"FROM ProjectionEntity projection WHERE projection.id = :id")
+						"FROM ProjectionEntity2 projection WHERE projection.id = :id")
 })
 
 public class ProjectionEntity2 {
 
-    public static final String FIND_PROJECTION_BY_ID = "ReportLayerConfig.findProjectionById";
-    public static final String FIND_BY_SRS_CODE = "Projection.findBySrsCode";
+    public static final String FIND_PROJECTION_BY_ID = "ReportLayerConfig2.findProjectionById";
+    public static final String FIND_BY_SRS_CODE = "Projection2.findBySrsCode";
 	
 	@Id
 	@Column(name = "id")
@@ -52,7 +52,7 @@ public class ProjectionEntity2 {
 	@Column(nullable = false, length = 255)
 	private String units;
 
-	@Column(name = "world", nullable = false, length = 1)
+	@Column(name = "world", nullable = false)
 	private Boolean world;
 
 	@Column(nullable = false, length = 255)

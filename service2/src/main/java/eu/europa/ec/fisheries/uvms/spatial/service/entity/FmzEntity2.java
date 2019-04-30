@@ -19,20 +19,20 @@ import java.util.Objects;
 @Entity
 @Table(name = "fmz")
 @NamedQueries({
-        @NamedQuery(name = FmzEntity2.DISABLE, query = "UPDATE FmzEntity SET enabled = false"),
+        @NamedQuery(name = FmzEntity2.DISABLE, query = "UPDATE FmzEntity2 SET enabled = false"),
         @NamedQuery(name = FmzEntity2.BY_INTERSECT,
-                query = "FROM FmzEntity WHERE intersects(geom, :shape) = true AND enabled = true"),
-        @NamedQuery(name = FmzEntity2.SEARCH_FMZ, query = "FROM FmzEntity where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid"),
-        @NamedQuery(name = FmzEntity2.SEARCH_FMZ_NAMES_BY_CODE, query = "From FmzEntity where code in (SELECT distinct(code) from FmzEntity where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid)"),
-        @NamedQuery(name = FmzEntity2.FMZ_COLUMNS, query = "SELECT fmz.id as gid, fmz.name AS name, fmz.code AS code FROM FmzEntity AS fmz WHERE fmz.id in (:ids)")
+                query = "FROM FmzEntity2 WHERE intersects(geom, :shape) = true AND enabled = true"),
+        @NamedQuery(name = FmzEntity2.SEARCH_FMZ, query = "FROM FmzEntity2 where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid"),
+        @NamedQuery(name = FmzEntity2.SEARCH_FMZ_NAMES_BY_CODE, query = "From FmzEntity2 where code in (SELECT distinct(code) from FmzEntity2 where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid)"),
+        @NamedQuery(name = FmzEntity2.FMZ_COLUMNS, query = "SELECT fmz.id as gid, fmz.name AS name, fmz.code AS code FROM FmzEntity2 AS fmz WHERE fmz.id in (:ids)")
 })
 public class FmzEntity2 extends BaseAreaEntity2 {
 
-    public static final String DISABLE = "fmzEntity.disable";
-    public static final String BY_INTERSECT = "fmzEntity.byIntersect";
-    public static final String SEARCH_FMZ = "fmzEntity.SearcgFmzByNameOrCode";
-    public static final String SEARCH_FMZ_NAMES_BY_CODE = "fmzEntity.searchNamesByCode";
-    public static final String FMZ_COLUMNS = "fmzEntity.fmzColumns";
+    public static final String DISABLE = "fmzEntity2.disable";
+    public static final String BY_INTERSECT = "fmzEntity2.byIntersect";
+    public static final String SEARCH_FMZ = "fmzEntity2.SearcgFmzByNameOrCode";
+    public static final String SEARCH_FMZ_NAMES_BY_CODE = "fmzEntity2.searchNamesByCode";
+    public static final String FMZ_COLUMNS = "fmzEntity2.fmzColumns";
 
 	@Id
 	@Column(name = "gid")

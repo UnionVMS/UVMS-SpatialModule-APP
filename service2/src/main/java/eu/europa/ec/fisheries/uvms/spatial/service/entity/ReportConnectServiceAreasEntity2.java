@@ -18,14 +18,14 @@ import java.util.Objects;
 @Table(name = "report_connect_service_area")
 @NamedQueries({
 		@NamedQuery(name = ReportConnectServiceAreasEntity2.FIND_REPORT_SERVICE_AREAS,
-				query = "SELECT rcsa FROM ReportConnectServiceAreasEntity rcsa WHERE rcsa.reportConnectSpatial.reportId = :reportId"),
+				query = "SELECT rcsa FROM ReportConnectServiceAreasEntity2 rcsa WHERE rcsa.reportConnectSpatial.reportId = :reportId"),
 		@NamedQuery(name = ReportConnectServiceAreasEntity2.DELETE_BY_REPORT_CONNECT_SPATIAL_ID,
-				query = "DELETE FROM ReportConnectServiceAreasEntity rcsa WHERE rcsa.id = :id")
+				query = "DELETE FROM ReportConnectServiceAreasEntity2 rcsa WHERE rcsa.id = :id")
 })
 public class ReportConnectServiceAreasEntity2 implements Comparable<ReportConnectServiceAreasEntity2> {
 
-    public static final String DELETE_BY_REPORT_CONNECT_SPATIAL_ID = "ReportLayerConfig.deleteByReportConnectSpatialId";
-    public static final String FIND_REPORT_SERVICE_AREAS = "ReportLayerConfig.findReportConnectServiceAreas";
+    public static final String DELETE_BY_REPORT_CONNECT_SPATIAL_ID = "ReportLayerConfig2.deleteByReportConnectSpatialId";
+    public static final String FIND_REPORT_SERVICE_AREAS = "ReportLayerConfig2.findReportConnectServiceAreas";
 
 	@Id
 	@Column(name = "id")

@@ -32,10 +32,10 @@
             <column name="longitude" type="FLOAT"/>
             <column name="latitude" type="FLOAT"/>
             <column name="mrgid_eez" type="BIGINT"/>
-			<column name="enabled" type="VARCHAR(1)">
+			<column name="enabled" type="boolean">
                 <constraints nullable="false"/>
             </column>
-			<column name="enabled_on" type="TIMESTAMP"/>
+			<column name="enabled_on" type="TIMESTAMP WITH TIME ZONE"/>
         </createTable>
 
     </changeSet>

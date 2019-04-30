@@ -21,11 +21,11 @@
             <column name="geom" type="GEOMETRY(Multipolygon, 4326)"/>
             <column name="code" type="VARCHAR(20)"/>
             <column name="name" type="VARCHAR(255)"/>
-            <column name="tuna" type="VARCHAR(10)"/>
-			<column name="enabled" type="VARCHAR(1)">
+            <column name="tuna" type="boolean"/>
+			<column name="enabled" type="boolean">
                 <constraints nullable="false"/>
             </column>
-			<column name="enabled_on" type="TIMESTAMP"/>
+			<column name="enabled_on" type="TIMESTAMP WITH TIME ZONE"/>
         </createTable>
     </changeSet>
 

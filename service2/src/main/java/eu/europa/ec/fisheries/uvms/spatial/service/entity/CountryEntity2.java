@@ -19,7 +19,7 @@ import java.util.Objects;
 @Entity
 @NamedQueries({
 		@NamedQuery(name = CountryEntity2.FIND_ALL,
-        query = "SELECT country.name as name, country.code as code FROM CountryEntity country WHERE country.code IN (SELECT DISTINCT c.code FROM CountryEntity c)")
+        query = "SELECT country.name as name, country.code as code FROM CountryEntity2 country WHERE country.code IN (SELECT DISTINCT c.code FROM CountryEntity2 c)")
 })
 @Table(name = "countries")
 public class CountryEntity2 extends BaseAreaEntity2 {
@@ -31,7 +31,7 @@ public class CountryEntity2 extends BaseAreaEntity2 {
 	@JsonProperty("gid")
 	private Long id;
 
-    public static final String FIND_ALL = "countryEntity.findAll";
+    public static final String FIND_ALL = "countryEntity2.findAll";
 
 	public Long getId() {
 		return id;
