@@ -8,7 +8,7 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
  */
-package service.dao;
+package eu.europa.ec.fisheries.uvms.spatial.service.dao;
 
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTypesEntity2;
