@@ -14,6 +14,13 @@ package eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dao.AreaDao2;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dao.SpatialQueriesDao;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.BaseAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.PortAreaEntity2;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.PortEntity2;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.utils.GeometryUtils;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.utils.MeasurementUnit;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -41,48 +48,30 @@ public class AreaServiceBean2 {
         return portAreaDao.getPortsByAreaCodes(codes);
     }
 
-    public List<PortAreaEntity2> getPortAreasByPoint(Double lat,  Double lon){
-        try {
-            Point point = (Point) GeometryUtils.toGeographic(lat, lon, 4326);
-            return portAreaDao.getPortAreasByPoint(point);
-
-        } catch (ServiceException e) {
-            throw new RuntimeException(e);
-        }
+    public List<PortAreaEntity2> getPortAreasByPoint(Double lat, Double lon){
+        Point point = (Point) GeometryUtils.createPoint(lat, lon);
+        return portAreaDao.getPortAreasByPoint(point);
     }
 
     public List<BaseAreaDto> getAreasByPoint(Double lat, Double lon){
 
-        try {
-            Point point = (Point) GeometryUtils.toGeographic(lat, lon, 4326);
-            return spatialQueriesDao.getAreasByPoint(point);
+        Point point = (Point) GeometryUtils.createPoint(lat, lon);
+        return spatialQueriesDao.getAreasByPoint(point);
 
-        } catch (ServiceException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public PortEntity2 findClosestPortByPosition(Double lat,  Double lon){
-        try {
-
-            Point point = (Point) GeometryUtils.toGeographic(lat, lon, 4326);
-            return portAreaDao.getClosestPort(point);
-        } catch (ServiceException e) {
-            throw new RuntimeException(e);
-        }
+        Point point = (Point) GeometryUtils.createPoint(lat, lon);
+        return portAreaDao.getClosestPort(point);
     }
 
 
     public SpatialEnrichmentRS getSpatialEnrichment(SpatialEnrichmentRQ request){
-        try {
 
-            PointType pointType = request.getPoint();
+        PointType pointType = request.getPoint();
 
-            Point point = (Point) GeometryUtils.toGeographic(pointType.getLatitude(), pointType.getLongitude(), 4326);
-            return computeSpatialEnrichment(point);
-        } catch (ServiceException e) {
-            throw new RuntimeException(e);
-        }
+        Point point = (Point) GeometryUtils.createPoint(pointType.getLatitude(), pointType.getLongitude());
+        return computeSpatialEnrichment(point);
     }
 
 

@@ -11,14 +11,6 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
-import javax.ejb.EJB;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.util.Collection;
-import java.util.List;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
@@ -27,17 +19,25 @@ import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.constants.RestConstants;
 import eu.europa.ec.fisheries.uvms.spatial.rest.constants.View;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.AreaTypeNamesService;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.ServiceLayerService;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.Views;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.layer.ServiceLayer;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.layer.ServiceLayerDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.ServiceLayerService;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.Views;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.ServiceLayer;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.ServiceLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.enums.LayerSubTypeEnum;
 import eu.europa.ec.fisheries.uvms.spatial.service.util.ServiceLayerUtils;
 import lombok.extern.slf4j.Slf4j;
-import static eu.europa.ec.fisheries.uvms.spatial.rest.constants.RestConstants.SERVICE_LAYER_PATH;
-import static eu.europa.ec.fisheries.uvms.spatial.rest.constants.RestConstants.SYSTEM_AREA_TYPE;
-import static eu.europa.ec.fisheries.uvms.spatial.rest.constants.RestConstants.VIEW;
+
+import javax.ejb.EJB;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.util.Collection;
+import java.util.List;
+
+import static eu.europa.ec.fisheries.uvms.spatial.rest.constants.RestConstants.*;
 
 /**
  * @implicitParam roleName|string|header|true||||||

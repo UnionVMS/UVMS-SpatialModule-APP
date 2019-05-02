@@ -11,6 +11,16 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
+import com.vividsolutions.jts.geom.Geometry;
+import eu.europa.ec.fisheries.uvms.commons.geometry.utils.GeometryUtils;
+import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialRepository;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialService;
+import lombok.extern.slf4j.Slf4j;
+import org.geotools.geometry.jts.WKTReader2;
+import org.geotools.geometry.jts.WKTWriter2;
+
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -20,16 +30,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.vividsolutions.jts.geom.Geometry;
-import eu.europa.ec.fisheries.uvms.commons.geometry.utils.GeometryUtils;
-import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.AreaService;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.SpatialRepository;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.SpatialService;
-import lombok.extern.slf4j.Slf4j;
-import org.geotools.geometry.jts.WKTReader2;
-import org.geotools.geometry.jts.WKTWriter2;
 
 /**
  * @implicitParam roleName|string|header|true||||||

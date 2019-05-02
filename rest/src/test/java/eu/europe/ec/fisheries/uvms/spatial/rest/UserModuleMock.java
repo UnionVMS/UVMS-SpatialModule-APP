@@ -10,39 +10,30 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europe.ec.fisheries.uvms.spatial.rest;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
+import eu.europa.ec.fisheries.uvms.spatial.message.bean.SpatialProducer;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.ConfigurationDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.LayerSettingsDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.LayersDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.MapSettingsDto;
+import eu.europa.ec.fisheries.uvms.user.model.mapper.JAXBMarshaller;
+import eu.europa.ec.fisheries.uvms.user.model.mapper.UserModuleResponseMapper;
+import eu.europa.ec.fisheries.wsdl.user.module.UserBaseRequest;
+import eu.europa.ec.fisheries.wsdl.user.types.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.MessageDriven;
 import javax.inject.Inject;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
-import eu.europa.ec.fisheries.uvms.spatial.message.bean.SpatialProducer;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.usm.ConfigurationDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.usm.LayerSettingsDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.usm.LayersDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.usm.MapSettingsDto;
-import eu.europa.ec.fisheries.uvms.user.model.mapper.JAXBMarshaller;
-import eu.europa.ec.fisheries.uvms.user.model.mapper.UserModuleResponseMapper;
-import eu.europa.ec.fisheries.wsdl.user.module.UserBaseRequest;
-import eu.europa.ec.fisheries.wsdl.user.types.Application;
-import eu.europa.ec.fisheries.wsdl.user.types.Context;
-import eu.europa.ec.fisheries.wsdl.user.types.ContextSet;
-import eu.europa.ec.fisheries.wsdl.user.types.Dataset;
-import eu.europa.ec.fisheries.wsdl.user.types.Feature;
-import eu.europa.ec.fisheries.wsdl.user.types.Option;
-import eu.europa.ec.fisheries.wsdl.user.types.Preference;
-import eu.europa.ec.fisheries.wsdl.user.types.Preferences;
-import eu.europa.ec.fisheries.wsdl.user.types.Role;
-import eu.europa.ec.fisheries.wsdl.user.types.Scope;
-import eu.europa.ec.fisheries.wsdl.user.types.UserContext;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 @MessageDriven(mappedName = "jms/queue/UVMSUserEvent", activationConfig = {
         @ActivationConfigProperty(propertyName = "messagingType", propertyValue = "javax.jms.MessageListener"), 

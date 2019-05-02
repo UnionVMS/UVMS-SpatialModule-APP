@@ -12,9 +12,9 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.mapper;
 
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.ProjectionEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.ReportConnectSpatialEntity;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.MapConfigurationType;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.ProjectionEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.ReportConnectSpatialEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;

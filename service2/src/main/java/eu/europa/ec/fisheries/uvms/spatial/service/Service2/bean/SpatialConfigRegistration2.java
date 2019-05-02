@@ -23,7 +23,7 @@ import java.util.List;
 @Stateless
 public class SpatialConfigRegistration2 implements ConfigHelper {
 
-    @PersistenceContext(unitName = "spatialPUpostgres")
+    @PersistenceContext
     private EntityManager em;
 
     @Override

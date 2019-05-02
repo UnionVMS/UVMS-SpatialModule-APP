@@ -12,46 +12,16 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.mockito.internal.util.collections.Sets.newSet;
-
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.uvms.BaseUnitilsTest;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.CoordinatesFormat;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LayerSettingsType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ScaleBarUnits;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialDeleteMapConfigurationRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialGetMapConfigurationRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialGetMapConfigurationRS;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.SpatialRepository;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.impl.MapConfigServiceBean;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.config.DisplayProjectionDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.config.MapConfigDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.config.MapDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.config.ProjectionDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.config.ServiceLayersDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.usm.ConfigurationDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.AreaLocationTypesEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.ProjectionEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.ProviderFormatEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.ReportConnectServiceAreasEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.ReportConnectSpatialEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.ServiceLayerEntity;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialRepository;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.impl.MapConfigServiceBean;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.*;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.ConfigurationDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.*;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -61,6 +31,16 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.*;
+import static org.mockito.internal.util.collections.Sets.newSet;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MapConfigServiceTest extends BaseUnitilsTest {

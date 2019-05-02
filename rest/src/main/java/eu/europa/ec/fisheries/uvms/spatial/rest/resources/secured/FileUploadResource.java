@@ -10,25 +10,21 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
-import javax.ejb.EJB;
-import javax.interceptor.Interceptors;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
 import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.commons.service.interceptor.ValidationInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.FileUploadForm;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.AreaService;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.upload.UploadMapping;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.upload.UploadMetadata;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadMapping;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadMetadata;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
+
+import javax.ejb.EJB;
+import javax.interceptor.Interceptors;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  * @implicitParam roleName|string|header|true||||||

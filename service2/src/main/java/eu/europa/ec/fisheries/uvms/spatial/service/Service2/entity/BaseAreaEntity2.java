@@ -14,6 +14,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTWriter;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.utils.GeometryMapper;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.Column;

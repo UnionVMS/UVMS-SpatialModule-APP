@@ -1,17 +1,19 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.MediaType;
+import eu.europa.ec.fisheries.uvms.commons.rest.dto.ResponseDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.UserAreaLayerDto;
+import eu.europe.ec.fisheries.uvms.spatial.rest.BuildSpatialRestDeployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import eu.europa.ec.fisheries.uvms.commons.rest.dto.ResponseDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.layer.UserAreaLayerDto;
-import eu.europe.ec.fisheries.uvms.spatial.rest.BuildSpatialRestDeployment;
+
+import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.MediaType;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
 
 @RunAsClient
 @RunWith(Arquillian.class)

@@ -32,7 +32,19 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
-import static org.apache.commons.lang3.StringUtils.EMPTY;
+import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
+import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured.LegendResource;
+import eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured.PositionResource;
+import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
+import eu.europa.ec.fisheries.uvms.spatial.rest.util.ImageEncoderFactory;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.impl.PropertiesBean;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.mapfish.request.Class;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.mapfish.request.Cluster;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.mapfish.request.Icons;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.mapfish.response.ImageResponse;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.batik.transcoder.TranscoderException;
 
 import javax.ejb.EJB;
 import javax.interceptor.Interceptors;
@@ -49,19 +61,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
-import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured.LegendResource;
-import eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured.PositionResource;
-import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.rest.util.ImageEncoderFactory;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.impl.PropertiesBean;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.mapfish.request.Class;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.mapfish.request.Cluster;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.mapfish.request.Icons;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.mapfish.response.ImageResponse;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.batik.transcoder.TranscoderException;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 /**
  * @implicitParam roleName|string|header|true||||||
@@ -178,7 +178,7 @@ public class ImageResource extends UnionVMSResource {
             String lineStyle = payload.getSegments().getLineStyle();
             List<ImageEncoderFactory.LegendEntry> temp = new ArrayList<>();
 
-            for (eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.mapfish.request.Class clazz : payload.getSegments().getClasses()) {
+            for (eu.europa.ec.fisheries.uvms.spatial.service.dto.mapfish.request.Class clazz : payload.getSegments().getClasses()) {
 
                 ImageEncoderFactory.LegendEntry legendEntry = new ImageEncoderFactory.LegendEntry();
                 legendEntry.setMsg(clazz.getText());

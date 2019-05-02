@@ -11,8 +11,8 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.mapper;
 
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.layer.ServiceLayer;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.ServiceLayerEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.ServiceLayer;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.ServiceLayerEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

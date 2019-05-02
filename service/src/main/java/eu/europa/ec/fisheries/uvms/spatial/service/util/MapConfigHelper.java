@@ -12,36 +12,25 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.util;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.config.LayerDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.config.StylesDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.usm.ConfigurationDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.usm.LayerAreaDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.usm.LayerSettingsDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.usm.LayersDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.usm.ReferenceDataPropertiesDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.usm.StyleSettingsDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.usm.VisibilitySettingsDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.AreaLocationTypesEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.ReportConnectServiceAreasEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.ServiceLayerEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.LayerDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.StylesDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.*;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTypesEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.ReportConnectServiceAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.ServiceLayerEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.enums.AreaTypeEnum;
 import eu.europa.ec.fisheries.uvms.spatial.service.enums.LayerTypeEnum;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.*;
 
 public class MapConfigHelper {
 

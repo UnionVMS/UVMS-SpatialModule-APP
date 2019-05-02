@@ -109,11 +109,6 @@
                 </exclusions>
             </dependency>
 
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>1.7.25</version>
-            </dependency>
 
             <dependency>
                 <groupId>eu.europa.ec.fisheries.uvms.reporting</groupId>
@@ -127,12 +122,6 @@
                 <version>${spatial.model}</version>
             </dependency>
 
-
-            <dependency>
-                <groupId>io.jsonwebtoken</groupId>
-                <artifactId>jjwt</artifactId>
-                <version>0.4</version>
-            </dependency>
 
             <dependency>
 	            <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
@@ -165,17 +154,6 @@
                 <version>${movement.model.version}</version>
             </dependency>
             
-            <dependency>
-                <groupId>org.geotools</groupId>
-                <artifactId>gt-geojson</artifactId>
-                <version>${geotools.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>com.vividsolutions</groupId>
-                        <artifactId>jts</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
 
             <dependency>
                 <groupId>org.geotools</groupId>
@@ -219,16 +197,6 @@
                 <version>${javaee.version}</version>
                 <scope>provided</scope>
             </dependency>
-	        <dependency>
-	            <groupId>ch.qos.logback</groupId>
-	            <artifactId>logback-classic</artifactId>
-	            <version>${logback.core.version}</version>
-	        </dependency>
-	        <dependency>
-	            <groupId>ch.qos.logback</groupId>
-	            <artifactId>logback-core</artifactId>
-	            <version>${logback.core.version}</version>
-	        </dependency>
 
         </dependencies>
 

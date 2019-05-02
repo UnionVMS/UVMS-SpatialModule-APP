@@ -65,7 +65,7 @@ public final class GeometryUtils {
 
 
 
-    public static Geometry createPoint(Double longitude, Double latitude) {
+    public static Geometry createPoint(Double latitude, Double longitude) {
         if(null == longitude || null == latitude){
             return null;
         }

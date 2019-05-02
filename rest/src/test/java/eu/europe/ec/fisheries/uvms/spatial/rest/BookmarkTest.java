@@ -10,12 +10,12 @@
 
 package eu.europe.ec.fisheries.uvms.spatial.rest;
 
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.bookmark.Bookmark;
+import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.bookmark.Bookmark;
-import org.junit.Test;
 
 public class BookmarkTest {
 
