@@ -10,11 +10,9 @@ details. You should have received a copy of the GNU General Public License along
  */
 package service.dao;
 
-import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTypesEntity2;
 import org.hibernate.Session;
-import service.entity.AreaLocationTypesEntity2;
-import service.entity.BaseAreaEntity2;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

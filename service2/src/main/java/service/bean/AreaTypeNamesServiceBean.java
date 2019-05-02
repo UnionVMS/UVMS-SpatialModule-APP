@@ -11,19 +11,6 @@ details. You should have received a copy of the GNU General Public License along
 package service.bean;
 
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialRepository;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.AreaDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.AreaLayerDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.AreaServiceLayerDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.ServiceLayerDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.UserAreaLayerDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTypesEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.enums.AreaSubTypeEnum;
-import eu.europa.ec.fisheries.uvms.spatial.service.enums.LayerSubTypeEnum;
-import eu.europa.ec.fisheries.uvms.spatial.service.exception.SpatialServiceErrors;
-import eu.europa.ec.fisheries.uvms.spatial.service.exception.SpatialServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.service.util.MapConfigHelper;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 

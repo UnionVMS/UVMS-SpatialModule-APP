@@ -15,13 +15,11 @@ import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.commons.geometry.utils.GeometryUtils;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.PortAreaDao2;
-import eu.europa.ec.fisheries.uvms.spatial.service.dao.PortDao2;
+import eu.europa.ec.fisheries.uvms.spatial.service.dao.AreaDao2;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.SpatialQueriesDao;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.BaseAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.PortAreaEntity2;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.PortEntity2;
-import eu.europa.ec.fisheries.uvms.spatial.service.utils.GeometryMapper;
 import eu.europa.ec.fisheries.uvms.spatial.service.utils.MeasurementUnit;
 
 import javax.ejb.Stateless;
@@ -37,10 +35,7 @@ public class AreaServiceBean2 {
     private static final String AREA_TYPE = "areaType";
 
     @Inject
-    private PortDao2 portDao;
-
-    @Inject
-    private PortAreaDao2 portAreaDao;
+    private AreaDao2 portAreaDao;
 
     @Inject
     SpatialQueriesDao spatialQueriesDao;
@@ -50,7 +45,7 @@ public class AreaServiceBean2 {
 
 
     public List<PortEntity2> getPortsByAreaCodes(List<String> codes){
-        return portDao.getPortsByAreaCodes(codes);
+        return portAreaDao.getPortsByAreaCodes(codes);
     }
 
     public List<PortAreaEntity2> getPortAreasByPoint(Double lat,  Double lon){
@@ -78,7 +73,7 @@ public class AreaServiceBean2 {
         try {
 
             Point point = (Point) GeometryUtils.toGeographic(lat, lon, 4326);
-            return portDao.getClosestPort(point);
+            return portAreaDao.getClosestPort(point);
         } catch (ServiceException e) {
             throw new RuntimeException(e);
         }
@@ -106,7 +101,7 @@ public class AreaServiceBean2 {
 
         List<BaseAreaDto> closestAreas = spatialQueriesDao.getClosestAreaByPoint(point);
 
-        PortEntity2 closestLocations = portDao.getClosestPort(point);
+        PortEntity2 closestLocations = portAreaDao.getClosestPort(point);
 
         SpatialEnrichmentRS response = new SpatialEnrichmentRS();
 
