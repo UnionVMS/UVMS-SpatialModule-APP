@@ -12,7 +12,7 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.util;
 
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadProperty;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.upload.UploadProperty;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;

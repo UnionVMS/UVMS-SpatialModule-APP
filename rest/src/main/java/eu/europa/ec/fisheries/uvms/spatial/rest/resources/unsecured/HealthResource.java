@@ -19,7 +19,7 @@ import javax.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.Map;
 
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.impl.PropertiesBean;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.impl.PropertiesBean;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

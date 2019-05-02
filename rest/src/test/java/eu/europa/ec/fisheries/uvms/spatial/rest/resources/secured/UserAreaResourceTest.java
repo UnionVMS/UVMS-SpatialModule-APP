@@ -10,7 +10,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import eu.europa.ec.fisheries.uvms.commons.rest.dto.ResponseDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.UserAreaLayerDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.layer.UserAreaLayerDto;
 import eu.europe.ec.fisheries.uvms.spatial.rest.BuildSpatialRestDeployment;
 
 @RunAsClient

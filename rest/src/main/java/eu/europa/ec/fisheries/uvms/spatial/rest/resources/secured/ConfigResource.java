@@ -35,11 +35,11 @@ import eu.europa.ec.fisheries.uvms.constants.AuthConstants;
 import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialFeaturesEnum;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.MapConfigService;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.ConfigResourceDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.MapConfigDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.ProjectionDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.ConfigurationDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.MapConfigService;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.config.ConfigResourceDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.config.MapConfigDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.config.ProjectionDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.usm.ConfigurationDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.util.ServiceLayerUtils;
 import lombok.extern.slf4j.Slf4j;
 

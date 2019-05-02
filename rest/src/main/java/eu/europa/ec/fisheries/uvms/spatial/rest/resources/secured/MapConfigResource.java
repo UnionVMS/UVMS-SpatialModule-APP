@@ -29,7 +29,7 @@ import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.MapConfigurationType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.MapSettingsType;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.MapConfigService;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.MapConfigService;
 import eu.europa.ec.fisheries.uvms.spatial.service.util.ServiceLayerUtils;
 import lombok.extern.slf4j.Slf4j;
 

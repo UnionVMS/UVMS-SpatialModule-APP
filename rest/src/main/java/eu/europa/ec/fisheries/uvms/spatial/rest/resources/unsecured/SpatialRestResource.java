@@ -11,10 +11,10 @@ import eu.europa.ec.fisheries.schema.movement.v1.SegmentCategoryType;
 import eu.europa.ec.fisheries.uvms.commons.geometry.utils.GeometryUtils;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaTransitionsDTO;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.MapConfigService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.impl.SpatialEnrichmentServiceBean;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.AreaService;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.AreaTypeNamesService;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.MapConfigService;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.impl.SpatialEnrichmentServiceBean;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.inject.Inject;

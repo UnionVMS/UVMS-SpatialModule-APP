@@ -11,8 +11,8 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import eu.europa.ec.fisheries.uvms.commons.rest.dto.ResponseDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.ConfigResourceDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.MapConfigDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.config.ConfigResourceDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.config.MapConfigDto;
 import eu.europe.ec.fisheries.uvms.spatial.rest.BuildSpatialRestDeployment;
 
 @RunAsClient

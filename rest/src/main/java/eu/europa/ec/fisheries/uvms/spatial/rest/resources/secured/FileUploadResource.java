@@ -25,9 +25,9 @@ import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.commons.service.interceptor.ValidationInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.FileUploadForm;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadMapping;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadMetadata;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.AreaService;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.upload.UploadMapping;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.upload.UploadMetadata;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 /**

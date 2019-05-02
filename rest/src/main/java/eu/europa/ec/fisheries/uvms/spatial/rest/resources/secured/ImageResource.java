@@ -55,11 +55,11 @@ import eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured.LegendResour
 import eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured.PositionResource;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ImageEncoderFactory;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.impl.PropertiesBean;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.mapfish.request.Class;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.mapfish.request.Cluster;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.mapfish.request.Icons;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.mapfish.response.ImageResponse;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.impl.PropertiesBean;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.mapfish.request.Class;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.mapfish.request.Cluster;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.mapfish.request.Icons;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.mapfish.response.ImageResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.batik.transcoder.TranscoderException;
 
@@ -178,7 +178,7 @@ public class ImageResource extends UnionVMSResource {
             String lineStyle = payload.getSegments().getLineStyle();
             List<ImageEncoderFactory.LegendEntry> temp = new ArrayList<>();
 
-            for (eu.europa.ec.fisheries.uvms.spatial.service.dto.mapfish.request.Class clazz : payload.getSegments().getClasses()) {
+            for (eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.mapfish.request.Class clazz : payload.getSegments().getClasses()) {
 
                 ImageEncoderFactory.LegendEntry legendEntry = new ImageEncoderFactory.LegendEntry();
                 legendEntry.setMsg(clazz.getText());

@@ -13,8 +13,8 @@ package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.impl.SpatialEnrichmentServiceBean;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.AreaService;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.impl.SpatialEnrichmentServiceBean;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.ejb.EJB;

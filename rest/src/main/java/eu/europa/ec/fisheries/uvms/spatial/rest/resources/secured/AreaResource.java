@@ -63,12 +63,12 @@ import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaFilterType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.LocationQueryDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.AreaLocationMapper;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.UserAreaService;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.AreaByCodeJsonPayload;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.USMSpatial;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.AreaService;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.AreaTypeNamesService;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.SpatialService;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.UserAreaService;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.area.AreaByCodeJsonPayload;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.usm.USMSpatial;
 import eu.europa.ec.fisheries.uvms.spatial.service.util.ServiceLayerUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
@@ -408,8 +408,8 @@ public class AreaResource extends UnionVMSResource {
     public Response byCode(AreaByCodeJsonPayload payload) throws ServiceException {
 
         List<AreaSimpleType> request = new ArrayList<>();
-        List<eu.europa.ec.fisheries.uvms.spatial.service.dto.area.AreaType> areaTypeList = payload.getAreaTypes();
-        for (eu.europa.ec.fisheries.uvms.spatial.service.dto.area.AreaType areaType : areaTypeList){
+        List<eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.area.AreaType> areaTypeList = payload.getAreaTypes();
+        for (eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.area.AreaType areaType : areaTypeList){
             request.add(new AreaSimpleType(areaType.getAreaType(), areaType.getAreaCode(), null));
         }
         return createSuccessResponse(areaService.getAreasByCode(request));

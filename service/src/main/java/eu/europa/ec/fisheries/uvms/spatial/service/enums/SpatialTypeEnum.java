@@ -12,14 +12,14 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.enums;
 
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.EezEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.FaoEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.FmzEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.GfcmEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.PortAreasEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.RfmoEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.StatRectEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.EezEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.FaoEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.FmzEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.GfcmEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.PortAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.RfmoEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.StatRectEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.UserAreasEntity;
 
 public enum SpatialTypeEnum {
 	

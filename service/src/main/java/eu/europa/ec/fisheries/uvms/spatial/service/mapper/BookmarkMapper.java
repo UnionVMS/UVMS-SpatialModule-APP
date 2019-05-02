@@ -13,8 +13,8 @@ package eu.europa.ec.fisheries.uvms.spatial.service.mapper;
 import java.util.List;
 import java.util.Set;
 
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.bookmark.Bookmark;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.BookmarkEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.bookmark.Bookmark;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.BookmarkEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
