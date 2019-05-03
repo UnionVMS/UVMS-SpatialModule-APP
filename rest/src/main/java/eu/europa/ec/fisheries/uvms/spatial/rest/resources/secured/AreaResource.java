@@ -11,17 +11,9 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import eu.europa.ec.fisheries.uvms.commons.geometry.mapper.GeometryMapper;
 import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
-import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.commons.service.interceptor.ValidationInterceptor;
-import eu.europa.ec.fisheries.uvms.constants.AuthConstants;
-import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaCoordinateType;
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaFilterType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.LocationQueryDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.AreaLocationMapper;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
@@ -29,16 +21,9 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.UserAreaService;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.area.AreaByCodeJsonPayload;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.USMSpatial;
-import eu.europa.ec.fisheries.uvms.spatial.service.util.ServiceLayerUtils;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
-import org.geotools.feature.simple.SimpleFeatureBuilder;
-import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
-import org.geotools.referencing.crs.DefaultGeographicCRS;
-import org.opengis.feature.simple.SimpleFeatureType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -48,10 +33,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -61,9 +44,10 @@ import java.util.Map;
  * @implicitParam authorization|string|header|true||||||jwt token
  */
 @Path("/area")
-@Slf4j
 @Stateless
 public class AreaResource extends UnionVMSResource {
+
+    private static final Logger log = LoggerFactory.getLogger(AreaResource.class);
 
     @EJB
     private AreaTypeNamesService areaTypeService;
@@ -77,8 +61,8 @@ public class AreaResource extends UnionVMSResource {
     @EJB
     private SpatialService spatialService;
 
-    @EJB
-    private USMService usmService;
+   // @EJB
+   // private USMService usmService;
 
     private AreaLocationMapper mapper = AreaLocationMapper.mapper();
 
@@ -95,7 +79,7 @@ public class AreaResource extends UnionVMSResource {
     @Path("/types")
     public Response getAreaTypes() {
         log.info("Getting user areas list");
-        List<String> areaTypes = areaTypeService.listAllAreaTypeNames();
+        List<String> areaTypes = null /*areaTypeService.listAllAreaTypeNames()*/;
         return createSuccessResponse(areaTypes);
     }
 
@@ -114,18 +98,19 @@ public class AreaResource extends UnionVMSResource {
     @Produces({MediaType.APPLICATION_JSON})
     @Interceptors(value = {ExceptionInterceptor.class})
     @Path("/location/details")
-    public Response getLocationByPointOrById(LocationQueryDto query) throws ServiceException {
+    public Response getLocationByPointOrById(LocationQueryDto query) throws Exception {
         try {
             String id = query.getId();
-            Boolean isGeom = query.getIsGeom();
+            //Boolean isGeom = query.getIsGeom();
+            Boolean isGeom = false;
             String locationType = query.getLocationType();
             Integer crs = query.getCrs();
             Double latitude = query.getLatitude();
             Double longitude = query.getLongitude();
 
-            Map<String, Object> locationDetails;
+            Map<String, Object> locationDetails = null;
             if (id != null){
-                locationDetails = areaService.getAreaById(Long.valueOf(id), AreaType.valueOf(locationType));
+                locationDetails = null /*areaService.getAreaById(Long.valueOf(id), AreaType.valueOf(locationType))*/;
             }
 
             else {
@@ -139,16 +124,17 @@ public class AreaResource extends UnionVMSResource {
                 pointType.setLongitude(longitude);
                 closestLocationSpatialRQ.setPoint(pointType);
                 closestLocationSpatialRQ.setUnit(UnitType.NAUTICAL_MILES);
-                List<Location> closestPointByPoint = areaService.getClosestPointByPoint(closestLocationSpatialRQ);
+                List<Location> closestPointByPoint = null /*areaService.getClosestPointByPoint(closestLocationSpatialRQ)*/;
                 Location location = closestPointByPoint.get(0);
-                ObjectMapper oMapper = new ObjectMapper();
-                locationDetails = oMapper.convertValue(location, Map.class);
+//                ObjectMapper oMapper = new ObjectMapper();
+//                locationDetails = oMapper.convertValue(location, Map.class);
 
             }
             if (!isGeom) {
                 return createSuccessResponse(locationDetails);
             }
             StringWriter writer = new StringWriter();
+            /*
             SimpleFeatureBuilder featureBuilder = new SimpleFeatureBuilder(build(MultiPolygon.class, locationDetails, "geometry"));
 
             for (Map.Entry<String, Object> entrySet : locationDetails.entrySet()) {
@@ -157,8 +143,12 @@ public class AreaResource extends UnionVMSResource {
             }
             GeometryMapper.INSTANCE.simpleFeatureToGeoJson(featureBuilder.buildFeature(null), writer);
             return Response.ok(writer.toString()).build();
-        } catch (ServiceException  | IOException e) {
-            throw new ServiceException(e.getMessage(), e);
+
+             */
+            return Response.ok().build();
+
+        } catch (Exception   e) {
+            throw new Exception(e.getMessage(), e);
         }
     }
 
@@ -166,10 +156,10 @@ public class AreaResource extends UnionVMSResource {
     @Produces(value = {MediaType.APPLICATION_XML})
     @Consumes(value = {MediaType.APPLICATION_XML})
     @Path("/location/details")
-    public ClosestLocationSpatialRS getLocationByPoint(ClosestLocationSpatialRQ request) throws ServiceException {
+    public ClosestLocationSpatialRS getLocationByPoint(ClosestLocationSpatialRQ request) throws Exception {
 
         ClosestLocationSpatialRS response = new ClosestLocationSpatialRS();
-        List<Location> closestLocations = areaService.getClosestPointByPoint(request);
+        List<Location> closestLocations = null /*areaService.getClosestPointByPoint(request)*/;
 
         if (closestLocations != null){
             ClosestLocationsType locationType = new ClosestLocationsType();
@@ -185,8 +175,8 @@ public class AreaResource extends UnionVMSResource {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/properties")
-    @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
-    public Response getAreaProperties(List<AreaCoordinateType> areaDtoList) throws ServiceException {
+    //@Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
+    public Response getAreaProperties(List<AreaCoordinateType> areaDtoList) throws Exception {
         List<AreaTypeEntry> areaTypeEntryList = null;
 
         if (CollectionUtils.isNotEmpty(areaDtoList)) {
@@ -206,7 +196,7 @@ public class AreaResource extends UnionVMSResource {
             }
         }
 
-        List<Map<String, Object>> selectedAreaColumns = areaService.getAreasByIds(areaTypeEntryList);
+        List<Map<String, Object>> selectedAreaColumns = null /*areaService.getAreasByIds(areaTypeEntryList)*/;
         return createSuccessResponse(selectedAreaColumns);
     }
 
@@ -216,15 +206,16 @@ public class AreaResource extends UnionVMSResource {
      *
      * @see
      * @return
-     * @throws ServiceException
+     * @throws Exception
      */
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/details")
-    @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
-    public Response getAreasByPointOrById(AreaCoordinateType areaDto, @Context HttpServletRequest servletRequest) throws ServiceException {
-        Response response;
+    // @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
+    public Response getAreasByPointOrById(AreaCoordinateType areaDto, @Context HttpServletRequest servletRequest) throws Exception {
+        /*
+        Response response ;
         StringWriter writer = new StringWriter();
         try {
             if (areaDto.getId() != null) {
@@ -254,16 +245,21 @@ public class AreaResource extends UnionVMSResource {
         }
 
         return response;
+
+
+         */
+
+        return Response.ok().build();
     }
 
     @POST
     @Produces(value = {MediaType.APPLICATION_XML})
     @Consumes(value = {MediaType.APPLICATION_XML})
     @Path("/details")
-    public AreaByLocationSpatialRS getAreasByPoint(AreaByLocationSpatialRQ request) throws ServiceException {
+    public AreaByLocationSpatialRS getAreasByPoint(AreaByLocationSpatialRQ request) throws Exception {
 
         AreaByLocationSpatialRS response = new AreaByLocationSpatialRS();
-        List<AreaExtendedIdentifierType> areaTypesByLocation = areaService.getAreasByPoint(request);
+        List<AreaExtendedIdentifierType> areaTypesByLocation = null /*areaService.getAreasByPoint(request)*/;
 
         if(areaTypesByLocation != null){
             AreasByLocationType areasByLocationType = new AreasByLocationType();
@@ -279,13 +275,13 @@ public class AreaResource extends UnionVMSResource {
     @Produces(value = {MediaType.APPLICATION_XML})
     @Consumes(value = {MediaType.APPLICATION_XML})
     @Path("/closest")
-    public ClosestAreaSpatialRS getClosestAreasToPointByType(ClosestAreaSpatialRQ request) throws ServiceException {
+    public ClosestAreaSpatialRS getClosestAreasToPointByType(ClosestAreaSpatialRQ request) throws Exception {
         ClosestAreaSpatialRS response = new ClosestAreaSpatialRS();
         Double lat = request.getPoint().getLatitude();
         Double lon = request.getPoint().getLongitude();
         Integer crs = request.getPoint().getCrs();
         UnitType unit = request.getUnit();
-        List<Area> closestAreas = areaService.getClosestArea(lon, lat, crs, unit);
+        List<Area> closestAreas = null /*areaService.getClosestArea(lon, lat, crs, unit)*/;
         if (closestAreas != null) {
             ClosestAreasType closestAreasType = new ClosestAreasType();
             closestAreasType.getClosestAreas().addAll(closestAreas);
@@ -294,6 +290,7 @@ public class AreaResource extends UnionVMSResource {
         return response;
     }
 
+    /*
     private SimpleFeatureType build(Class geometryType, Map<String, Object> properties, String geometryFieldName) {
         SimpleFeatureTypeBuilder sb = new SimpleFeatureTypeBuilder();
         sb.setCRS(DefaultGeographicCRS.WGS84);
@@ -314,7 +311,10 @@ public class AreaResource extends UnionVMSResource {
         return sb.buildFeatureType();
     }
 
-   
+     */
+
+
+    /*
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/layers")
@@ -326,7 +326,10 @@ public class AreaResource extends UnionVMSResource {
         Collection<String> permittedLayersNames = ServiceLayerUtils.getUserPermittedLayersNames(usmService, username, roleName, scopeName);
     	return createSuccessResponse(areaTypeService.listSystemAreaLayerMapping(permittedLayersNames));
     }
+    */
 
+
+    /*
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/locationlayers")
@@ -391,4 +394,7 @@ public class AreaResource extends UnionVMSResource {
         }
         return createSuccessResponse(areaService.getAreasByCode(request));
     }
+
+
+     */
 }

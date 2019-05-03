@@ -11,10 +11,8 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
-import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
-import lombok.extern.slf4j.Slf4j;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -31,7 +29,6 @@ import javax.ws.rs.core.Response;
  * @implicitParam authorization|string|header|true||||||jwt token
  */
 @Path("/countries")
-@Slf4j
 @Stateless
 public class CountryResource extends UnionVMSResource {
 
@@ -41,7 +38,7 @@ public class CountryResource extends UnionVMSResource {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response getAllCountriesDesc() throws ServiceException {
-        return createSuccessResponse(areaService.getAllCountriesDesc());
+    public Response getAllCountriesDesc() throws Exception  {
+        return createSuccessResponse(null/*areaService.getAllCountriesDesc()*/);
     }
 }

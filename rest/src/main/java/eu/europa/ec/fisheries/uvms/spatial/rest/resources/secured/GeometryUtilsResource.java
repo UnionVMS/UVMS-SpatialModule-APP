@@ -12,14 +12,12 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import com.vividsolutions.jts.geom.Geometry;
-import eu.europa.ec.fisheries.uvms.commons.geometry.utils.GeometryUtils;
 import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialRepository;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialService;
-import lombok.extern.slf4j.Slf4j;
-import org.geotools.geometry.jts.WKTReader2;
-import org.geotools.geometry.jts.WKTWriter2;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
@@ -36,8 +34,10 @@ import java.util.Map;
  * @implicitParam scopeName|string|header|true|EC|||||
  * @implicitParam authorization|string|header|true||||||jwt token
  */
-@Slf4j
 public class GeometryUtilsResource extends UnionVMSResource {
+
+
+    private static final Logger log = LoggerFactory.getLogger(GeometryUtilsResource.class);
 
     @EJB
     private SpatialService service;
@@ -76,16 +76,16 @@ public class GeometryUtilsResource extends UnionVMSResource {
     @Path("/transform")
     public Response transform(Map<String, Object> payload){
 
-        Response response;
+        Response response = null;
         Geometry translate;
 
         try {
             Double latitude = Double.valueOf(String.valueOf(payload.get("x")));
             Double longitude = Double.valueOf(String.valueOf(payload.get("y")));
             String wkt = String.valueOf(String.valueOf(payload.get("wkt")));
-            Geometry geometry = new WKTReader2().read(wkt);
-            translate = GeometryUtils.transform(latitude, longitude, geometry);
-            response = createSuccessResponse(new WKTWriter2().write(translate));
+            //Geometry geometry = new WKTReader2().read(wkt);
+            //translate = GeometryUtils.transform(latitude, longitude, geometry);
+            //response = createSuccessResponse(new WKTWriter2().write(translate));
         }
         catch (Exception ex){
             String error = "[ Error when translating. ] ";
@@ -102,13 +102,13 @@ public class GeometryUtilsResource extends UnionVMSResource {
     public Response translateToDefault(Map<String, Object> payload){
 
         Response response;
-        Geometry translate;
+        Geometry translate = null;
 
         try {
             Double longitude = Double.valueOf(String.valueOf(payload.get("x")));
             Double latitude = Double.valueOf(String.valueOf(payload.get("y")));
             Integer sourceCode = Integer.valueOf(String.valueOf(payload.get("sourceCode")));
-            translate = GeometryUtils.toGeographic(latitude, longitude, sourceCode);
+           // translate = GeometryUtils.toGeographic(latitude, longitude, sourceCode);
             final Double x = translate.getCoordinates()[0].x;
             final Double y = translate.getCoordinates()[0].y;
             final Integer srid = translate.getSRID();
@@ -116,7 +116,7 @@ public class GeometryUtilsResource extends UnionVMSResource {
             result.put("lon", x);
             result.put("lat", y);
             result.put("srid", srid);
-            result.put("wkt", new WKTWriter2().write(translate));
+            //result.put("wkt", new WKTWriter2().write(translate));
             response = createSuccessResponse(result);
         }
         catch (Exception ex){

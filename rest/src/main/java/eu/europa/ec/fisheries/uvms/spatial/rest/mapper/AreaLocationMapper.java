@@ -20,44 +20,40 @@ import eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson.AreaDetailsGeoJso
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson.LocationDetailsGeoJsonDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserScopeEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.mapper.UserAreaMapper;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
-import org.mapstruct.factory.Mappers;
 
 import java.util.*;
 
-@Mapper
 public abstract class AreaLocationMapper {
 
 	private static final String AREA_TYPE = "areaType";
 	private static final String LOCATION_TYPE = "locationType";
 	public static final String AREA_ID = "id";
-	
-	private static final AreaLocationMapper INSTANCE = Mappers.getMapper(AreaLocationMapper.class);
+
+//	private static final AreaLocationMapper INSTANCE = Mappers.getMapper(AreaLocationMapper.class);
+	private static final AreaLocationMapper INSTANCE = null;
 
 
 	public static AreaLocationMapper mapper() {
 		return INSTANCE;
 	}
 
-	@Mappings( {
+	/*@Mappings( {
 			@Mapping(target = "areaType", expression = "java(getAreaTypeEnum(areaDto.getAreaType()))")
-	})
+	})*/
 	public abstract AreaTypeEntry getAreaTypeEntry(AreaCoordinateType areaDto);
 
 	public abstract LocationTypeEntry getLocationTypeEntry(LocationQueryDto locationDto);
 	
-	@Mappings( {
+	/*@Mappings( {
 		@Mapping(target = "properties", expression = "java(extractProperties(locationDetails))"),
 		@Mapping(target = "type", expression = "java(extractType(locationDetails))")
-	})
+	})*/
 	public abstract LocationDetailsGeoJsonDto getLocationDetailsDto(LocationDetails locationDetails);
 	
-	@Mappings( {
+/*	@Mappings( {
 		@Mapping(target = "properties", expression = "java(extractProperties(areaDetails))"),
 		@Mapping(target = "type", expression = "java(extractType(areaDetails))")
-	})
+	})*/
 	public abstract AreaDetailsGeoJsonDto getAreaDetailsDto(AreaDetails areaDetails);
 	
 	public abstract List<AreaTypeEntry> getAreaTypeEntryList(List<AreaCoordinateType> areaDtoList);
@@ -125,7 +121,7 @@ public abstract class AreaLocationMapper {
 		}
 		return propertyMap;
 	}
-	
+
 	protected String extractType(LocationDetails locationDetails) {
 		return String.valueOf(locationDetails.getLocationType().getLocationType());
 	}

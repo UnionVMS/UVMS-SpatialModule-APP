@@ -644,7 +644,7 @@ public class AreaServiceBean implements AreaService {
     }
 
     @Override // FIXME is kind off a duplicate of List<Map<String, Object>> getAreasByPoint
-    public List<AreaExtendedIdentifierType> getAreasByPoint(final AreaByLocationSpatialRQ request) throws ServiceException {
+    public List<AreaExtendedIdentifierType> getAreasByPoint(final AreaByLocationSpatialRQ request) throws Exception {
         if (request == null){
             throw new ServiceException("REQUEST CAN NOT BE NULL");
         }

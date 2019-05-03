@@ -33,7 +33,6 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
-import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured.LegendResource;
 import eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured.PositionResource;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
@@ -43,8 +42,8 @@ import eu.europa.ec.fisheries.uvms.spatial.service.dto.mapfish.request.Class;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.mapfish.request.Cluster;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.mapfish.request.Icons;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.mapfish.response.ImageResponse;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.batik.transcoder.TranscoderException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
 import javax.interceptor.Interceptors;
@@ -61,6 +60,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+// TODO  fix legendEntry
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 /**
@@ -69,8 +69,9 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
  * @implicitParam authorization|string|header|true||||||jwt token
  */
 @Path("/image")
-@Slf4j
 public class ImageResource extends UnionVMSResource {
+
+    private final static Logger log = LoggerFactory.getLogger(ImageResource.class);
 
     public static final String SCALE_1_3 = "scale(1.3)";
     public static final String SCALE_0_3 = "scale(0.3)";
@@ -87,7 +88,7 @@ public class ImageResource extends UnionVMSResource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Interceptors(value = { ExceptionInterceptor.class})
-    public Response renderImages(@Context HttpServletRequest request, Icons payload) throws ServiceException {
+    public Response renderImages(@Context HttpServletRequest request, Icons payload)  {
 
         ImageResponse response = new ImageResponse();
         response.getLegend().withBase("/" + propertiesBean.getProperty("context.root") + "/spatial/image/legend/");
@@ -108,29 +109,29 @@ public class ImageResource extends UnionVMSResource {
 
     }
 
-    private void handleAlarms(Icons payload, ImageResponse response) throws ServiceException {
+    private void handleAlarms(Icons payload, ImageResponse response)  {
         try {
             List<ImageEncoderFactory.LegendEntry> temp = new ArrayList<>();
 
             for (Class clazz : payload.getAlarms().getClasses()) {
 
                 ImageEncoderFactory.LegendEntry legendEntry = new ImageEncoderFactory.LegendEntry();
-                legendEntry.setMsg(clazz.getText());
+//                legendEntry.setMsg(clazz.getText());
                 BufferedImage alarmIconForLegend = ImageEncoderFactory.renderAlarm(clazz.getColor());
-                legendEntry.setIcon(alarmIconForLegend);
+//                legendEntry.setIcon(alarmIconForLegend);
                 temp.add(legendEntry);
             }
 
             String guid = UUID.randomUUID().toString();
             response.getLegend().withAlarms(guid);
             LegendResource.getLegendEntries().put(guid, ImageEncoderFactory.renderLegend(temp, payload.getAlarms().getTitle(), 25));
-        } catch (TranscoderException | IOException e) {
+        } catch ( IOException e) {
             log.error(e.getMessage(), e);
-            throw new ServiceException(e.getMessage(), e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
-    private void handlePositions(Icons payload, ImageResponse response) throws ServiceException {
+    private void handlePositions(Icons payload, ImageResponse response) {
         try {
             response.getMap().getVmspos().withBase("/" + propertiesBean.getProperty("context.root") + "/spatial/image/position/");
             List<ImageEncoderFactory.LegendEntry> temp = new ArrayList<>();
@@ -138,7 +139,7 @@ public class ImageResource extends UnionVMSResource {
             for (Class clazz : payload.getPositions().getClasses()) { // TODO validate hex value
 
                 ImageEncoderFactory.LegendEntry legendEntry = new ImageEncoderFactory.LegendEntry();
-                legendEntry.setMsg(clazz.getText());
+ //               legendEntry.setMsg(clazz.getText());
 
                 if (PositionResource.getpositionEntries().get(clazz.getColor().replace("#", EMPTY)) == null){
                     BufferedImage positionForMapIcon = ImageEncoderFactory.renderPosition(clazz.getColor());
@@ -146,7 +147,7 @@ public class ImageResource extends UnionVMSResource {
                 }
 
                 BufferedImage iconForLegend = ImageEncoderFactory.renderPosition(clazz.getColor(), SCALE_0_3);
-                legendEntry.setIcon(iconForLegend);
+//                legendEntry.setIcon(iconForLegend);
 
                 response.getMap().getVmspos().getColors().add(clazz.getColor().replace("#", EMPTY));
                 temp.add(legendEntry);
@@ -158,8 +159,8 @@ public class ImageResource extends UnionVMSResource {
 
                 BufferedImage bufferedImage = ImageEncoderFactory.renderCluster(cluster.getBgcolor(), cluster.getBordercolor());
                 ImageEncoderFactory.LegendEntry clusterEntry = new ImageEncoderFactory.LegendEntry();
-                clusterEntry.setMsg(cluster.getText());
-                clusterEntry.setIcon(bufferedImage);
+//                clusterEntry.setMsg(cluster.getText());
+//                clusterEntry.setIcon(bufferedImage);
                 temp.add(clusterEntry);
             }
 
@@ -167,13 +168,13 @@ public class ImageResource extends UnionVMSResource {
             response.getLegend().withPositions(guid);
             LegendResource.getLegendEntries().put(guid, ImageEncoderFactory.renderLegend(temp, payload.getPositions().getTitle(), 25));
 
-        } catch (TranscoderException | IOException e) {
+        } catch ( IOException e) {
             log.error(e.getMessage(), e);
-            throw new ServiceException(e.getMessage(), e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
-    private void handleSegments(Icons payload, ImageResponse response) throws ServiceException {
+    private void handleSegments(Icons payload, ImageResponse response)  {
         try {
             String lineStyle = payload.getSegments().getLineStyle();
             List<ImageEncoderFactory.LegendEntry> temp = new ArrayList<>();
@@ -181,9 +182,9 @@ public class ImageResource extends UnionVMSResource {
             for (eu.europa.ec.fisheries.uvms.spatial.service.dto.mapfish.request.Class clazz : payload.getSegments().getClasses()) {
 
                 ImageEncoderFactory.LegendEntry legendEntry = new ImageEncoderFactory.LegendEntry();
-                legendEntry.setMsg(clazz.getText());
+  //              legendEntry.setMsg(clazz.getText());
                 BufferedImage segmentIconForLegend = ImageEncoderFactory.renderSegment(clazz.getColor(), lineStyle, SCALE_1_3);
-                legendEntry.setIcon(segmentIconForLegend);
+//                legendEntry.setIcon(segmentIconForLegend);
                 temp.add(legendEntry);
             }
 
@@ -191,9 +192,9 @@ public class ImageResource extends UnionVMSResource {
             response.getLegend().withSegments(guid);
             LegendResource.getLegendEntries().put(guid, ImageEncoderFactory.renderLegend(temp, payload.getSegments().getTitle(), 40));
 
-        } catch (TranscoderException | IOException e) {
+        } catch (IOException e) {
             log.error(e.getMessage(), e);
-            throw new ServiceException(e.getMessage(), e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 

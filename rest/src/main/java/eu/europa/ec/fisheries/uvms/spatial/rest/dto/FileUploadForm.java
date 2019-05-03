@@ -15,10 +15,7 @@ package eu.europa.ec.fisheries.uvms.spatial.rest.dto;
 import javax.validation.constraints.NotEmpty;
 import javax.ws.rs.FormParam;
 
-import lombok.NoArgsConstructor;
-import org.jboss.resteasy.annotations.providers.multipart.PartType;
 
-@NoArgsConstructor
 public class FileUploadForm {
 
     private int crsCode;
@@ -50,7 +47,6 @@ public class FileUploadForm {
     }
 
     @FormParam("uploadedFile")
-    @PartType("application/octet-stream")
     public void setData(byte[] data) {
         this.data = data;
     }

@@ -11,33 +11,19 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
-import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
-import eu.europa.ec.fisheries.uvms.spatial.rest.constants.RestConstants;
-import eu.europa.ec.fisheries.uvms.spatial.rest.constants.View;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.ServiceLayerService;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.Views;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.ServiceLayer;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.ServiceLayerDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.enums.LayerSubTypeEnum;
-import eu.europa.ec.fisheries.uvms.spatial.service.util.ServiceLayerUtils;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Collection;
-import java.util.List;
 
-import static eu.europa.ec.fisheries.uvms.spatial.rest.constants.RestConstants.*;
+import static eu.europa.ec.fisheries.uvms.spatial.rest.constants.RestConstants.SERVICE_LAYER_PATH;
 
 /**
  * @implicitParam roleName|string|header|true||||||
@@ -45,11 +31,12 @@ import static eu.europa.ec.fisheries.uvms.spatial.rest.constants.RestConstants.*
  * @implicitParam authorization|string|header|true||||||jwt token
  */
 @Path(SERVICE_LAYER_PATH)
-@Slf4j
 public class ServiceLayerResource extends UnionVMSResource {
 
-    @EJB
-    private USMService usmService;
+    private static final Logger log = LoggerFactory.getLogger(ServiceLayerResource.class);
+
+    //@EJB
+    //private USMService usmService;
 
     @EJB
     private ServiceLayerService service;
@@ -57,6 +44,7 @@ public class ServiceLayerResource extends UnionVMSResource {
     @EJB
     private AreaTypeNamesService areaTypeService;
 
+    /*
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("{systemAreaType}")
@@ -89,6 +77,8 @@ public class ServiceLayerResource extends UnionVMSResource {
         return response;
     }
 
+     */
+/*
     @GET
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
@@ -109,6 +99,9 @@ public class ServiceLayerResource extends UnionVMSResource {
         return createSuccessResponse(areaServiceLayerDtos);
     }
 
+
+ */
+
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -117,7 +110,7 @@ public class ServiceLayerResource extends UnionVMSResource {
         Response response = createSuccessResponse();
         serviceLayer.setId(id);
         try {
-            service.update(serviceLayer);
+            //service.update(serviceLayer);
         } catch (Exception ex) {
             String error = "[ Error when updating resource layer. ] ";
             log.error(error, ex);

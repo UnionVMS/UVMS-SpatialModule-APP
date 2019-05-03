@@ -12,16 +12,13 @@ package eu.europe.ec.fisheries.uvms.spatial.rest.service;
 
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ImageEncoderFactory;
 import lombok.SneakyThrows;
-import org.apache.batik.transcoder.TranscoderException;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ImageEncoderFactoryTest {
 
@@ -29,7 +26,7 @@ public class ImageEncoderFactoryTest {
     @SneakyThrows
     public void test() {
 
-        BufferedImage position = getPosition("scale(0.3)");
+      /*  BufferedImage position = getPosition("scale(0.3)");
         BufferedImage line = getLine("scale(1.3)");
         BufferedImage cluster = getCluster();
 
@@ -57,11 +54,11 @@ public class ImageEncoderFactoryTest {
         BufferedImage image = ImageEncoderFactory.renderLegend(entries, "TITLE", 40);
 
         File outputfile = File.createTempFile("test2", ".png");
-        ImageIO.write(image, "PNG", outputfile);
+        ImageIO.write(image, "PNG", outputfile);*/
 
     }
 
-    private BufferedImage getCluster() throws IOException, TranscoderException {
+    private BufferedImage getCluster() throws Exception {
         Document cluster = ImageEncoderFactory.createDocument("/cluster.svg");
         NamedNodeMap attributes = cluster.getElementById("circle").getAttributes();
         attributes.getNamedItem("stroke").getFirstChild().setNodeValue("#EE0000");
@@ -83,7 +80,7 @@ public class ImageEncoderFactoryTest {
         return ImageEncoderFactory.getBufferedImage(position);
     }
 
-    private BufferedImage getLine(String scale) throws IOException, TranscoderException {
+    private BufferedImage getLine(String scale) throws Exception {
         Document segment = ImageEncoderFactory.createDocument("/line.svg");
         segment.getElementById("line").getAttributes().getNamedItem("transform").getFirstChild().setNodeValue(scale);
         return ImageEncoderFactory.getBufferedImage(segment);

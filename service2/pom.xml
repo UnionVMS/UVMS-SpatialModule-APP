@@ -39,6 +39,7 @@
             <artifactId>usm4uvms</artifactId>
         </dependency>
 
+
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>spatial-model</artifactId>

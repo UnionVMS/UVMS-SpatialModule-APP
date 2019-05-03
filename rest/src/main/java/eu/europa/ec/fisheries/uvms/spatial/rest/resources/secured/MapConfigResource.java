@@ -10,48 +10,37 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
+import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.MapConfigService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.util.Collection;
-
-import eu.europa.ec.fisheries.uvms.commons.rest.constants.ErrorCodes;
-import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
-import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.MapConfigurationType;
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.MapSettingsType;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.MapConfigService;
-import eu.europa.ec.fisheries.uvms.spatial.service.util.ServiceLayerUtils;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * @implicitParam roleName|string|header|true||||||
  * @implicitParam scopeName|string|header|true|EC|||||
  * @implicitParam authorization|string|header|true||||||jwt token
  */
-@Path("/mapconfig")
-@Slf4j
+//@Path("/mapconfig")
 @Stateless
 public class MapConfigResource extends UnionVMSResource {
+
+    private static final Logger log = LoggerFactory.getLogger(MapConfigResource.class);
 
     @EJB
     private MapConfigService mapConfigService;
 
     @EJB
-    private USMService usmService;
+   // private USMService usmService;
 
     @Context
     private HttpServletRequest servletRequest;
 
+    /*
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Path("{id}")
@@ -65,12 +54,14 @@ public class MapConfigResource extends UnionVMSResource {
             MapConfigurationType mapConfigurationType = mapConfigService.getMapConfigurationType(Long.valueOf(reportId), permittedLayersNames);
             response = createSuccessResponse(new MapSettingsType(mapConfigurationType));
 
-        } catch (ServiceException ex) {
+        } catch (Exception ex) {
             log.error("[ Error when getting mapDefaultSRIDToEPSG settings. ] ", ex);
             response = createErrorResponse(ErrorCodes.INTERNAL_SERVER_ERROR);
         }
         return response;
 
     }
+
+     */
 
 }

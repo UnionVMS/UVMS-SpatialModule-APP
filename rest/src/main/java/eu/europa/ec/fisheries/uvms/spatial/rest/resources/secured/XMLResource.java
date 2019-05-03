@@ -11,11 +11,11 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
-import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.impl.SpatialEnrichmentServiceBean;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
@@ -30,9 +30,11 @@ import java.util.List;
  * @implicitParam scopeName|string|header|true|EC|||||
  * @implicitParam authorization|string|header|true||||||jwt token
  */
-@Slf4j
 @Path("/xml")
 public class XMLResource {
+
+    private static final Logger log = LoggerFactory.getLogger(XMLResource.class);
+
 
     @EJB
     private SpatialEnrichmentServiceBean enrichmentService;
@@ -44,7 +46,7 @@ public class XMLResource {
     @Produces(value = {MediaType.APPLICATION_XML})
     @Consumes(value = {MediaType.APPLICATION_XML})
     @Path("/enrichment")
-    public SpatialEnrichmentRS spatialEnrichment(SpatialEnrichmentRQ request) throws ServiceException {
+    public SpatialEnrichmentRS spatialEnrichment(SpatialEnrichmentRQ request)  throws Exception{
         return enrichmentService.getSpatialEnrichment(request);
     }
 
@@ -52,15 +54,16 @@ public class XMLResource {
     @Produces(value = {MediaType.APPLICATION_XML})
     @Consumes(value = {MediaType.APPLICATION_XML})
     @Path("/filter-areas")
-    public FilterAreasSpatialRS computeAreaFilter(FilterAreasSpatialRQ request) throws ServiceException {
-        return areaService.computeAreaFilter(request);
+    public FilterAreasSpatialRS computeAreaFilter(FilterAreasSpatialRQ request) throws Exception{
+        //return areaService.computeAreaFilter(request);
+        return null;
     }
 
     @POST
     @Produces(value = {MediaType.APPLICATION_XML})
     @Consumes(value = {MediaType.APPLICATION_XML})
     @Path("/areas-by-location")
-    public AreaByLocationSpatialRS getAreasByPoint(AreaByLocationSpatialRQ request) throws ServiceException {
+    public AreaByLocationSpatialRS getAreasByPoint(AreaByLocationSpatialRQ request)  throws Exception {
         AreaByLocationSpatialRS response = new AreaByLocationSpatialRS();
         List<AreaExtendedIdentifierType> areaTypesByLocation = areaService.getAreasByPoint(request);
         if(areaTypesByLocation != null){

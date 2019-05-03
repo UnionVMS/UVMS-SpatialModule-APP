@@ -47,7 +47,7 @@ public interface AreaService {
 
     List<Area> getClosestArea(@NotNull Double longitude, @NotNull Double latitude, @NotNull Integer crs, @NotNull UnitType unit) throws ServiceException;
 
-    List<AreaExtendedIdentifierType> getAreasByPoint(AreaByLocationSpatialRQ request) throws ServiceException;
+    List<AreaExtendedIdentifierType> getAreasByPoint(AreaByLocationSpatialRQ request) throws Exception;
 
     List<Location> getClosestPointByPoint(ClosestLocationSpatialRQ request) throws ServiceException;
 

@@ -1,21 +1,19 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.MultiPoint;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.io.WKTReader;
 import eu.europa.ec.fisheries.schema.movement.v1.MovementType;
 import eu.europa.ec.fisheries.schema.movement.v1.SegmentCategoryType;
-import eu.europa.ec.fisheries.uvms.commons.geometry.utils.GeometryUtils;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaTransitionsDTO;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.MapConfigService;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.impl.SpatialEnrichmentServiceBean;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -31,14 +29,16 @@ import java.util.List;
  * OBS we will initially mostly only implement methods  used from Movement and Reporting
  */
 
-
+// TODO fix
 @Path("json")
 @SuppressWarnings("unchecked")
-@Slf4j
 public class SpatialRestResource {
 
+
+    private static final Logger log = LoggerFactory.getLogger(SpatialRestResource.class);
+
 //    private static final ObjectMapper MAPPER = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).registerModule(new JavaTimeModule());
-    private static final ObjectMapper MAPPER = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+//    private static final ObjectMapper MAPPER = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
 
     @Inject
@@ -97,7 +97,7 @@ public class SpatialRestResource {
             Double lon = request.getPoint().getLongitude();
             Integer crs = request.getPoint().getCrs();
             UnitType unit = request.getUnit();
-            List<Area> response = areaService.getClosestArea(lon, lat, crs, unit);
+            List<Area> response = null /*areaService.getClosestArea(lon, lat, crs, unit)*/;
             return Response.ok(response).build();
         } catch (Exception e) {
             log.error(e.toString(),e);
@@ -113,7 +113,7 @@ public class SpatialRestResource {
     public Response getClosestLocation(ClosestLocationSpatialRQ closestLocationSpatialRQ) {
 
         try {
-            List<Location> response = areaService.getClosestPointByPoint(closestLocationSpatialRQ);
+            List<Location> response = null /*areaService.getClosestPointByPoint(closestLocationSpatialRQ)*/;
             return Response.ok(response).build();
         } catch (Exception e) {
             log.error(e.toString(),e);
@@ -149,11 +149,13 @@ public class SpatialRestResource {
                 move2 = movements.get(0);
             }
 
-            Point movePoint1 = (Point) GeometryUtils.toGeographic(move1.getPosition().getLatitude(), move1.getPosition().getLongitude(), 4326);     //this magical int is the World Geodetic System 1984, aka EPSG:4326. See: https://en.wikipedia.org/wiki/World_Geodetic_System or http://spatialreference.org/ref/epsg/wgs-84/
-            Point movePoint2 = (Point) GeometryUtils.toGeographic(move2.getPosition().getLatitude(), move2.getPosition().getLongitude(), 4326);
+           // Point movePoint1 = (Point) GeometryUtils.toGeographic(move1.getPosition().getLatitude(), move1.getPosition().getLongitude(), 4326);     //this magical int is the World Geodetic System 1984, aka EPSG:4326. See: https://en.wikipedia.org/wiki/World_Geodetic_System or http://spatialreference.org/ref/epsg/wgs-84/
+           // Point movePoint2 = (Point) GeometryUtils.toGeographic(move2.getPosition().getLatitude(), move2.getPosition().getLongitude(), 4326);
 
-            List<AreaExtendedIdentifierType> portsForMove1 = areaService.getPortAreasByPoint(movePoint1);
-            List<AreaExtendedIdentifierType> portsForMove2 = areaService.getPortAreasByPoint(movePoint2);
+            Point movePoint1 = null;
+            Point movePoint2 = null;
+            List<AreaExtendedIdentifierType> portsForMove1 = null /*areaService.getPortAreasByPoint(movePoint1)*/;
+            List<AreaExtendedIdentifierType> portsForMove2 = null /*areaService.getPortAreasByPoint(movePoint2)*/;
 
 
             List<AreaSimpleType> portRequestList = new ArrayList<>();
@@ -171,7 +173,7 @@ public class SpatialRestResource {
             WKTReader reader = new WKTReader();
 
 
-            List<AreaSimpleType> portList = areaService.getAreasByCode(portRequestList);
+            List<AreaSimpleType> portList = null /*areaService.getAreasByCode(portRequestList)*/;
             double movePortDistance1 = 2778d;               // 1.5 nautical miles is 2778 meters, aka the radius of the port area
             double movePortDistance2 = 2778d;
             AreaSimpleType closestPort1 = null;
@@ -332,7 +334,7 @@ public class SpatialRestResource {
     public Response getFilterArea(FilterAreasSpatialRQ filterAreasSpatialRQ) {
 
         try {
-            FilterAreasSpatialRS response = areaService.computeAreaFilter(filterAreasSpatialRQ);
+            FilterAreasSpatialRS response = null/*areaService.computeAreaFilter(filterAreasSpatialRQ)*/;
             return Response.ok(response).build();
         } catch (Exception e) {
             log.error(e.toString(),e);
@@ -348,7 +350,7 @@ public class SpatialRestResource {
     public Response getMapConfiguration(SpatialGetMapConfigurationRQ spatialGetMapConfigurationRQ) {
 
         try {
-            SpatialGetMapConfigurationRS response = mapConfigService.getMapConfiguration(spatialGetMapConfigurationRQ);
+            SpatialGetMapConfigurationRS response = null /*mapConfigService.getMapConfiguration(spatialGetMapConfigurationRQ)*/;
             return Response.ok(response).build();
         } catch (Exception e) {
             log.error(e.toString(),e);
@@ -390,7 +392,7 @@ public class SpatialRestResource {
 
         try {
             List<AreaSimpleType> areaSimples = areaByCodeRequest.getAreaSimples();
-            List<AreaSimpleType> areaSimpleTypeList = areaService.getAreasByCode(areaSimples);
+            List<AreaSimpleType> areaSimpleTypeList = null/*areaService.getAreasByCode(areaSimples)*/;
             AreaByCodeResponse response = new AreaByCodeResponse();
             response.setAreaSimples(areaSimpleTypeList);
             return Response.ok(response).build();

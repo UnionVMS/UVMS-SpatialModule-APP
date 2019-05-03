@@ -11,7 +11,8 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured;
 
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.impl.PropertiesBean;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
 import javax.ws.rs.GET;
@@ -22,9 +23,11 @@ import javax.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.Map;
 
-@Slf4j
 @Path("/")
 public class HealthResource {
+
+    private static final Logger log = LoggerFactory.getLogger(HealthResource.class);
+
 
     private static final String APPLICATION_VERSION = "application.version";
     private static final String APPLICATION_NAME = "application.name";

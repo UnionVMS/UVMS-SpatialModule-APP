@@ -25,6 +25,10 @@ public abstract class BuildService2Deployment {
                     .withTransitivity().asFile();
             testWar.addAsLibraries(files);
 
+            testWar.addAsLibraries(Maven.configureResolver().loadPomFromFile("pom.xml")
+                    .resolve("com.vividsolutions:jts:1.13")
+                    .withTransitivity().asFile());
+
             testWar.addAsResource("persistenceS2.xml", "META-INF/persistence.xml");
             //testWar.addAsResource("beans.xml", "META-INF/beans.xml");
 

@@ -29,7 +29,7 @@ public class SpatialEnrichmentServiceBean {
     @EJB
     private AreaService areaService;
 
-    public SpatialEnrichmentRS getSpatialEnrichment(SpatialEnrichmentRQ request) throws ServiceException {
+    public SpatialEnrichmentRS getSpatialEnrichment(SpatialEnrichmentRQ request) throws Exception {
         PointType point = request.getPoint();
         UnitType unit = request.getUnit();
         List<AreaType> areaTypes = request.getAreaTypes().getAreaTypes();
@@ -37,7 +37,7 @@ public class SpatialEnrichmentServiceBean {
         return computeSpatialEnrichment(point, unit, areaTypes, locationTypes);
     }
 
-    public BatchSpatialEnrichmentRS getBatchSpatialEnrichment(BatchSpatialEnrichmentRQ spatialBatchEnrichmentRQ) throws ServiceException {
+    public BatchSpatialEnrichmentRS getBatchSpatialEnrichment(BatchSpatialEnrichmentRQ spatialBatchEnrichmentRQ) throws Exception {
         List<SpatialEnrichmentRS> spatialBatchEnrichRespList = new ArrayList<>();
         for (SpatialEnrichmentRQListElement enrichmentListElement : spatialBatchEnrichmentRQ.getEnrichmentLists()) {
             spatialBatchEnrichRespList.add(computeSpatialEnrichment(enrichmentListElement.getPoint(), enrichmentListElement.getUnit(),
@@ -56,7 +56,7 @@ public class SpatialEnrichmentServiceBean {
         return batchResponse;
     }
 
-    private SpatialEnrichmentRS computeSpatialEnrichment(PointType point, UnitType unit, List<AreaType> areaTypes, List<LocationType> locationTypes) throws ServiceException {
+    private SpatialEnrichmentRS computeSpatialEnrichment(PointType point, UnitType unit, List<AreaType> areaTypes, List<LocationType> locationTypes) throws Exception {
         AreaByLocationSpatialRQ areaByLocationSpatialRQ = new AreaByLocationSpatialRQ();
         areaByLocationSpatialRQ.setPoint(point);
         List<AreaExtendedIdentifierType> areaTypesByLocation = areaService.getAreasByPoint(areaByLocationSpatialRQ);

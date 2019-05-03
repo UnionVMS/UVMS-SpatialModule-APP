@@ -11,28 +11,21 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
-import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.commons.service.interceptor.ValidationInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.FileUploadForm;
-import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadMapping;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadMetadata;
-import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
-
-import javax.ejb.EJB;
-import javax.interceptor.Interceptors;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @implicitParam roleName|string|header|true||||||
  * @implicitParam scopeName|string|header|true|EC|||||
  * @implicitParam authorization|string|header|true||||||jwt token
  */
-@Path("/files")
+//@Path("/files")
 public class FileUploadResource extends UnionVMSResource {
+
+    private static final Logger log = LoggerFactory.getLogger(FileUploadResource.class);
+
+/*
+
 
     @EJB
     private AreaService areaService;
@@ -60,4 +53,7 @@ public class FileUploadResource extends UnionVMSResource {
         UploadMetadata metadata = areaService.metadata(form.getData(), form.getAreaType());
         return createSuccessResponse(metadata);
     }
+
+
+ */
 }

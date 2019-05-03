@@ -11,45 +11,26 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
-import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.commons.service.interceptor.ValidationInterceptor;
-import eu.europa.ec.fisheries.uvms.constants.AuthConstants;
-import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialFeaturesEnum;
-import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.MapConfigService;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.ConfigResourceDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.MapConfigDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.ProjectionDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.ConfigurationDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.util.ServiceLayerUtils;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.interceptor.Interceptors;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * @implicitParam roleName|string|header|true||||||
  * @implicitParam scopeName|string|header|true|EC|||||
  * @implicitParam authorization|string|header|true||||||jwt token
  */
-@Path("/config")
-@Slf4j
+//@Path("/config")
 @Stateless
 public class ConfigResource extends UnionVMSResource {
 
+    private static final Logger log = LoggerFactory.getLogger(ConfigResource.class);
+
+
     private static final String DEFAULT_CONFIG = "DEFAULT_CONFIG";
     private static final String USER_CONFIG = "USER_CONFIG";
-
+/*
     @EJB
     private MapConfigService mapConfigService;
 
@@ -61,7 +42,7 @@ public class ConfigResource extends UnionVMSResource {
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Path("{id}")
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response getReportMapConfig(@PathParam("id") int id, ConfigResourceDto config, @HeaderParam("roleName") String roleName, @HeaderParam("scopeName") String scopeName, @Context HttpServletRequest servletRequest) throws ServiceException {
+    public Response getReportMapConfig(@PathParam("id") int id, ConfigResourceDto config, @HeaderParam("roleName") String roleName, @HeaderParam("scopeName") String scopeName, @Context HttpServletRequest servletRequest) throws Exception {
         final String username = servletRequest.getRemoteUser();
         String applicationName = servletRequest.getServletContext().getInitParameter("usmApplication");
         String adminPref = usmService.getOptionDefaultValue(DEFAULT_CONFIG, applicationName);
@@ -203,4 +184,7 @@ public class ConfigResource extends UnionVMSResource {
         List<ProjectionDto> projections = mapConfigService.getAllProjections();
         return createSuccessResponse(projections);
     }
+
+
+ */
 }

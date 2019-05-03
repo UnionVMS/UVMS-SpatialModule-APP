@@ -15,7 +15,8 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 
-public class AreaFilterType extends FilterType {
+//public class AreaFilterType extends FilterType {
+	public class AreaFilterType  {
 
 	@NotNull
 	@NotEmpty

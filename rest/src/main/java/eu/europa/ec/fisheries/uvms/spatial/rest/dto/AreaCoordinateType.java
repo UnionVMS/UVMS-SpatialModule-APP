@@ -11,12 +11,10 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.rest.dto;
 
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import lombok.Data;
-
-@Data
 public class AreaCoordinateType extends GeoCoordinateType {
 
 	@NotEmpty
@@ -24,5 +22,24 @@ public class AreaCoordinateType extends GeoCoordinateType {
 	
 	@NotNull
 	private Boolean isGeom = false;
+
+
+	public String getAreaType() {
+		return areaType;
+	}
+
+	public void setAreaType(String areaType) {
+		this.areaType = areaType;
+	}
+
+	public Boolean getGeom() {
+		return isGeom;
+	}
+
+	public void setGeom(Boolean geom) {
+		isGeom = geom;
+	}
+
+
 
 }

@@ -13,11 +13,11 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
-import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.BookmarkService;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.bookmark.Bookmark;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
 import javax.interceptor.Interceptors;
@@ -36,8 +36,9 @@ import java.util.List;
  * @implicitParam authorization|string|header|true||||||jwt token
  */
 @Path("/bookmark")
-@Slf4j
 public class BookmarkResource extends UnionVMSResource {
+
+    private static final Logger log = LoggerFactory.getLogger(BookmarkResource.class);
 
     @EJB
     private BookmarkService bookmarkService;
@@ -45,22 +46,23 @@ public class BookmarkResource extends UnionVMSResource {
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response list(@Context HttpServletRequest servletRequest) throws ServiceException {
+    public Response list(@Context HttpServletRequest servletRequest) throws Exception {
 
-        final String username = servletRequest.getRemoteUser();
-        List<Bookmark> bookmarks = new ArrayList<>(bookmarkService.listByUsername(username));
-        Collections.sort(bookmarks);
-        return createSuccessResponse(bookmarks);
+       // final String username = servletRequest.getRemoteUser();
+       // List<Bookmark> bookmarks = new ArrayList<>(bookmarkService.listByUsername(username));
+       // Collections.sort(bookmarks);
+       // return createSuccessResponse(bookmarks);
+        return Response.ok().build();
     }
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response createBookmark(final Bookmark bookmark, @Context HttpServletRequest servletRequest) throws ServiceException {
+    public Response createBookmark(final Bookmark bookmark, @Context HttpServletRequest servletRequest) throws Exception {
 
         final String username = servletRequest.getRemoteUser();
-        final Bookmark result = bookmarkService.create(bookmark, username);
+        final Bookmark result = null /*bookmarkService.create(bookmark, username)*/;
         return createSuccessResponse(result);
     }
 
@@ -68,10 +70,10 @@ public class BookmarkResource extends UnionVMSResource {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response deleteReport(@PathParam("id") Long id, @Context HttpServletRequest servletRequest) throws ServiceException {
+    public Response deleteReport(@PathParam("id") Long id, @Context HttpServletRequest servletRequest) throws Exception {
 
         final String username = servletRequest.getRemoteUser();
-        bookmarkService.delete(id, username);
+        //bookmarkService.delete(id, username);
         return createSuccessResponse();
     }
 
@@ -80,11 +82,11 @@ public class BookmarkResource extends UnionVMSResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response updateBookmark(Bookmark bookmark, @PathParam("id") Long id, @Context HttpServletRequest servletRequest) throws ServiceException {
+    public Response updateBookmark(Bookmark bookmark, @PathParam("id") Long id, @Context HttpServletRequest servletRequest) throws Exception {
 
         final String username = servletRequest.getRemoteUser();
         bookmark.setId(id);
-        bookmarkService.update(bookmark, username);
+       // bookmarkService.update(bookmark, username);
         return createSuccessResponse();
     }
 }

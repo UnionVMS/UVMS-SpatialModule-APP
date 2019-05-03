@@ -15,9 +15,6 @@ package eu.europa.ec.fisheries.uvms.spatial.rest.dto;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import lombok.Data;
-
-@Data
 public class LocationQueryDto extends GeoCoordinateType {
 
 	@NotEmpty
@@ -39,4 +36,19 @@ public class LocationQueryDto extends GeoCoordinateType {
 		this.id = id;
 	}
 
+	public String getLocationType() {
+		return locationType;
+	}
+
+	public void setLocationType(String locationType) {
+		this.locationType = locationType;
+	}
+
+	public Boolean getGeom() {
+		return isGeom;
+	}
+
+	public void setGeom(Boolean geom) {
+		isGeom = geom;
+	}
 }

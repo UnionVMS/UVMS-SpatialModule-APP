@@ -23,11 +23,9 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import lombok.extern.slf4j.Slf4j;
 
 @Path("/alarm")
 @SuppressWarnings("unchecked")
-@Slf4j
 public class AlarmResource {
 
     protected static final Map<String, BufferedImage> alarmEntries = Collections.synchronizedMap(new LinkedHashMap() {

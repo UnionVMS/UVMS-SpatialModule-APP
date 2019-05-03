@@ -10,36 +10,48 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.rest.util;
 
+import eu.europa.ec.fisheries.uvms.spatial.rest.constants.RestConstants;
+import eu.europa.ec.fisheries.uvms.spatial.service.exception.SpatialServiceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.Response;
 
-import eu.europa.ec.fisheries.uvms.commons.rest.constants.ErrorCodes;
-import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
-import eu.europa.ec.fisheries.uvms.spatial.service.exception.SpatialServiceException;
-import lombok.extern.slf4j.Slf4j;
 
 @Interceptor
-@Slf4j
-public class ExceptionInterceptor extends UnionVMSResource {
+public class ExceptionInterceptor {
+
+	Logger LOG = LoggerFactory.getLogger(ExceptionInterceptor.class);
+
+
 	
 	@AroundInvoke
 	public Object createResponse(final InvocationContext ic) throws Exception {
-		log.info("ExceptionInterceptor received");	
+		LOG.info("ExceptionInterceptor received");
 		try {
 			return ic.proceed();
 		} catch (IllegalArgumentException e) {
-			log.error(e.getMessage(), e);
-    		return createErrorResponse(ErrorCodes.INPUT_NOT_SUPPORTED);
+			LOG.error(e.getMessage(), e);
+    		return createErrorResponse(RestConstants.INPUT_NOT_SUPPORTED);
     	} catch (Exception e) {
-			log.error(e.getMessage(), e);
+			LOG.error(e.getMessage(), e);
     		if (e.getCause() instanceof SpatialServiceException) {
 				return createErrorResponse(((SpatialServiceException)e.getCause()).getErrorMessageCode());
 			}
 			if (e.getCause() instanceof RuntimeException) {
 				return createErrorResponse(((RuntimeException)e.getCause()).getMessage());
 			}
-			return createErrorResponse(ErrorCodes.INTERNAL_SERVER_ERROR);
+			return createErrorResponse(RestConstants.INTERNAL_SERVER_ERROR);
 		}
-	}	
+	}
+
+	public Response createErrorResponse(String errorMsgCode) {
+		Response response = Response.status(HttpServletResponse.SC_INTERNAL_SERVER_ERROR).entity(errorMsgCode).build();
+		return response;
+	}
+
 }

@@ -15,11 +15,10 @@ package eu.europa.ec.fisheries.uvms.spatial.rest.dto;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.CoordinatesFormat;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.MapConfigurationType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ScaleBarUnits;
-import lombok.experimental.Delegate;
 
 public class MapSettingsType {
 
-    @Delegate(excludes = Exclude.class)
+//    @Delegate(excludes = Exclude.class)
     private MapConfigurationType mapConfigurationType;
 
     public MapSettingsType(MapConfigurationType mapConfigurationType) {

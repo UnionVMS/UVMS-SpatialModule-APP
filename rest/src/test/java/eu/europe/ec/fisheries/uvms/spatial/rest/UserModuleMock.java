@@ -10,18 +10,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europe.ec.fisheries.uvms.spatial.rest;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import eu.europa.ec.fisheries.uvms.spatial.message.bean.SpatialProducer;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.ConfigurationDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.LayerSettingsDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.LayersDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.usm.MapSettingsDto;
-import eu.europa.ec.fisheries.uvms.user.model.mapper.JAXBMarshaller;
-import eu.europa.ec.fisheries.uvms.user.model.mapper.UserModuleResponseMapper;
-import eu.europa.ec.fisheries.wsdl.user.module.UserBaseRequest;
-import eu.europa.ec.fisheries.wsdl.user.types.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,9 +20,6 @@ import javax.inject.Inject;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 @MessageDriven(mappedName = "jms/queue/UVMSUserEvent", activationConfig = {
         @ActivationConfigProperty(propertyName = "messagingType", propertyValue = "javax.jms.MessageListener"), 
@@ -50,7 +36,7 @@ public class UserModuleMock implements MessageListener {
     public void onMessage(Message message) {
         TextMessage textMessage = (TextMessage) message;
         try {
-            UserBaseRequest request = JAXBMarshaller.unmarshallTextMessage(textMessage, UserBaseRequest.class);
+           /* UserBaseRequest request = JAXBMarshaller.unmarshallTextMessage(textMessage, UserBaseRequest.class);
             switch (request.getMethod()) {
                 case GET_USER_CONTEXT:
                     UserContext userContext = getUserContext();
@@ -76,13 +62,13 @@ public class UserModuleMock implements MessageListener {
                 default:
                     messageProducer.sendResponseMessageToSender((TextMessage) message, null);
                     break;
-            }
+            }*/
         } catch (Exception e) {
             LOG.error("UserModuleMock Error", e);
         }
     }
     
-    private UserContext getUserContext() throws JsonProcessingException {
+   /* private UserContext getUserContext() throws JsonProcessingException {
         UserContext userContext = new UserContext();
         userContext.setContextSet(new ContextSet());
         Context context = new Context();
@@ -133,5 +119,5 @@ public class UserModuleMock implements MessageListener {
         
         ObjectMapper mapper = new ObjectMapper();
         return mapper.writeValueAsString(dto);
-    }
+    }*/
 }
