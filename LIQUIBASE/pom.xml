@@ -152,6 +152,13 @@
                         <defaultSchemaName>${db.defaultSchema}</defaultSchemaName>
                         <outputChangeLogFile>${db.outputFile}</outputChangeLogFile>
                     </configuration>
+					<dependencies>
+						<dependency>
+							<groupId>com.github.lonnyj</groupId>
+							<artifactId>liquibase-spatial</artifactId>
+							<version>1.2.1</version>
+						</dependency>
+					</dependencies>
                 </plugin>
             </plugins>
         </pluginManagement>
