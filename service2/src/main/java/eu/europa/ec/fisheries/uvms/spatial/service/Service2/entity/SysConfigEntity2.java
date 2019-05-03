@@ -27,8 +27,8 @@ public class SysConfigEntity2 {
 
 	@Id
 	@Column(name = "id")
-	@SequenceGenerator(name="SEQ_GEN", sequenceName="system_configurations_seq", allocationSize = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN")
+	@SequenceGenerator(name="SEQ_SYSCONF_GEN", sequenceName="system_configurations_seq", allocationSize = 1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_SYSCONF_GEN")
 	private Long id;
 	
 	

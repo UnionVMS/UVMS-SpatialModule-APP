@@ -22,8 +22,8 @@ public class ProviderFormatEntity2 {
 
 	@Id
 	@Column(name = "id")
-	@SequenceGenerator(name="SEQ_GEN", sequenceName="provider_format_seq", allocationSize = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN")
+	@SequenceGenerator(name="SEQ_PROVIDER_FMT_GEN", sequenceName="provider_format_seq", allocationSize = 1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_PROVIDER_FMT_GEN")
 	private Long id;
 
 	@Column(name = "service_type", nullable = false, length = 10)

@@ -37,8 +37,8 @@ public class StatRectEntity2 extends BaseAreaEntity2 {
 
 	@Id
 	@Column(name = "gid")
-	@SequenceGenerator(name="SEQ_GEN", sequenceName="stat_rect_seq", allocationSize = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN")
+	@SequenceGenerator(name="SEQ_STATRECT_GEN", sequenceName="stat_rect_seq", allocationSize = 1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_STATRECT_GEN")
     @JsonProperty("gid")
     private Long id;
 	

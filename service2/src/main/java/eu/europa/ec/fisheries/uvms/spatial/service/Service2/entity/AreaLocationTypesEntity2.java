@@ -54,8 +54,8 @@ public class AreaLocationTypesEntity2 {
 	
 	@Id
 	@Column(name = "id")
-	@SequenceGenerator(name="SEQ_GEN", sequenceName="area_location_types_seq", allocationSize = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN")
+	@SequenceGenerator(name="SEQ_LOC_TYPE_GEN", sequenceName="area_location_types_seq", allocationSize = 1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_LOC_TYPE_GEN")
 	private Long id;
 	
     @OneToOne(fetch = FetchType.LAZY)

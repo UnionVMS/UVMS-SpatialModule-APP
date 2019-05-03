@@ -340,3 +340,13 @@ Caused by: java.net.ConnectException: Connection refused: no further information
 2019-05-03 14:38:28.298  [34mINFO [0;39m [36mxnio.<clinit>(95)[0;39m [main]  INFO  [MDC:] org.xnio - XNIO version 3.5.1.Final
 2019-05-03 14:38:28.307  [34mINFO [0;39m [36mnio.<clinit>(58)[0;39m [main]  INFO  [MDC:] org.xnio.nio - XNIO NIO Implementation Version 3.5.1.Final
 2019-05-03 14:38:28.381  [34mINFO [0;39m [36msecurity.<clinit>(57)[0;39m [main]  INFO  [MDC:] org.wildfly.security - ELY00001: WildFly Elytron version 1.1.0.Final
+2019-05-03 14:45:40.802  [34mINFO [0;39m [36mReflections.scan(232)[0;39m [main]  INFO  [MDC:] org.reflections.Reflections - Reflections took 57 ms to scan 1 urls, producing 3 keys and 3 values 
+2019-05-03 14:45:48.708  [34mINFO [0;39m [36mremoting.<clinit>(98)[0;39m [main]  INFO  [MDC:] org.jboss.remoting - JBoss Remoting version 5.0.0.Final
+2019-05-03 14:45:48.748  [34mINFO [0;39m [36mxnio.<clinit>(95)[0;39m [main]  INFO  [MDC:] org.xnio - XNIO version 3.5.1.Final
+2019-05-03 14:45:48.759  [34mINFO [0;39m [36mnio.<clinit>(58)[0;39m [main]  INFO  [MDC:] org.xnio.nio - XNIO NIO Implementation Version 3.5.1.Final
+2019-05-03 14:45:48.828  [34mINFO [0;39m [36msecurity.<clinit>(57)[0;39m [main]  INFO  [MDC:] org.wildfly.security - ELY00001: WildFly Elytron version 1.1.0.Final
+2019-05-03 14:57:32.106  [34mINFO [0;39m [36mReflections.scan(232)[0;39m [main]  INFO  [MDC:] org.reflections.Reflections - Reflections took 57 ms to scan 1 urls, producing 3 keys and 3 values 
+2019-05-03 14:57:40.310  [34mINFO [0;39m [36mremoting.<clinit>(98)[0;39m [main]  INFO  [MDC:] org.jboss.remoting - JBoss Remoting version 5.0.0.Final
+2019-05-03 14:57:40.385  [34mINFO [0;39m [36mxnio.<clinit>(95)[0;39m [main]  INFO  [MDC:] org.xnio - XNIO version 3.5.1.Final
+2019-05-03 14:57:40.395  [34mINFO [0;39m [36mnio.<clinit>(58)[0;39m [main]  INFO  [MDC:] org.xnio.nio - XNIO NIO Implementation Version 3.5.1.Final
+2019-05-03 14:57:40.467  [34mINFO [0;39m [36msecurity.<clinit>(57)[0;39m [main]  INFO  [MDC:] org.wildfly.security - ELY00001: WildFly Elytron version 1.1.0.Final

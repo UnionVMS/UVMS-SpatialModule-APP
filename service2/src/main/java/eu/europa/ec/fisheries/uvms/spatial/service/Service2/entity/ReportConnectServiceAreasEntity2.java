@@ -29,8 +29,8 @@ public class ReportConnectServiceAreasEntity2 implements Comparable<ReportConnec
 
 	@Id
 	@Column(name = "id")
-    @SequenceGenerator(name = "SEQ_GEN", sequenceName = "report_conn_serv_area_seq", allocationSize = 1)
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN")
+    @SequenceGenerator(name = "SEQ_REP_CONN_GEN", sequenceName = "report_conn_serv_area_seq", allocationSize = 1)
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_REP_CONN_GEN")
 	private Long id;
 	
 	@ManyToOne
