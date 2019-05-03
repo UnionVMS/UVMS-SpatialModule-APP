@@ -96,13 +96,6 @@
 							<migrationSqlOutputFile>${project.build.directory}/full-update.sql</migrationSqlOutputFile>
 							<outputFileEncoding>UTF-8</outputFileEncoding>
 						</configuration>
-						<dependencies>
-							<dependency>
-								<groupId>com.github.lonnyj</groupId>
-								<artifactId>liquibase-spatial</artifactId>
-								<version>1.2.1</version>
-							</dependency>
-						</dependencies>
 						<executions>
 							<execution>
 								<id>update-schema-sql</id>
@@ -159,6 +152,13 @@
                         <defaultSchemaName>${db.defaultSchema}</defaultSchemaName>
                         <outputChangeLogFile>${db.outputFile}</outputChangeLogFile>
                     </configuration>
+					<dependencies>
+						<dependency>
+							<groupId>com.github.lonnyj</groupId>
+							<artifactId>liquibase-spatial</artifactId>
+							<version>1.2.1</version>
+						</dependency>
+					</dependencies>
                 </plugin>
             </plugins>
         </pluginManagement>
