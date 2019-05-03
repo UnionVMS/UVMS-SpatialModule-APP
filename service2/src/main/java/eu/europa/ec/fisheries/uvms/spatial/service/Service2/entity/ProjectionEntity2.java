@@ -22,7 +22,7 @@ import java.util.Set;
 @NamedQueries({
         @NamedQuery(name = ProjectionEntity2.FIND_BY_SRS_CODE, query = "FROM ProjectionEntity2 p WHERE p.srsCode = :srsCode"),
         @NamedQuery(name = ProjectionEntity2.FIND_PROJECTION_BY_ID,
-				query = "SELECT projection.srsCode AS epsgCode, projection.units AS units, projection.isWorld AS global, projection.extent as extent, projection.axis as axis, projection.projDef as projDef, projection.worldExtent as worldExtent " +
+				query = "SELECT projection.srsCode AS epsgCode, projection.units AS units, projection.world AS global, projection.extent as extent, projection.axis as axis, projection.projDef as projDef, projection.worldExtent as worldExtent " +
 						"FROM ProjectionEntity2 projection WHERE projection.id = :id")
 })
 

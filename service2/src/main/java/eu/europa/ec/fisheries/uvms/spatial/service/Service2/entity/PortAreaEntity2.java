@@ -20,7 +20,7 @@ import java.util.Objects;
 @Entity
 @NamedQueries({
         @NamedQuery(name = PortAreaEntity2.PORT_AREA_BY_POINT,
-                query = "FROM PortAreasEntity2 WHERE within(:point, geom) = true AND enabled = true"),
+                query = "FROM PortAreaEntity2 WHERE within(:point, geom) = true AND enabled = true"),
 
         @NamedQuery(name = PortAreaEntity2.DISABLE_PORT_AREAS, query = "UPDATE PortAreaEntity2 SET enabled = false"),
         @NamedQuery(name = PortAreaEntity2.SEARCH_PORTAREAS, query = "FROM PortAreaEntity2 where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid"),

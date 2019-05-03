@@ -21,7 +21,7 @@ import java.util.Set;
 @Table(name = "service_layer")
 @NamedQueries({
         @NamedQuery(name = ServiceLayerEntity2.BY_SYSTEM_AREA_TYPE,
-                query = "FROM ServiceLayerEntity2 s JOIN FETCH s.areaType a WHERE a.isSystemWide = true AND upper(s.areaType.typeName) = upper(:systemAreaType)"),
+                query = "FROM ServiceLayerEntity2 s JOIN FETCH s.areaType a WHERE a.systemWide = true AND upper(s.areaType.typeName) = upper(:systemAreaType)"),
         @NamedQuery(name = ServiceLayerEntity2.FIND_SERVICE_LAYERS_BY_ID,
                 query = "SELECT serviceLayer FROM ServiceLayerEntity2 serviceLayer WHERE serviceLayer.id in (:ids) order by serviceLayer.id"),
         @NamedQuery(name = ServiceLayerEntity2.FIND_SERVICE_LAYER_BY_SUBTYPE,

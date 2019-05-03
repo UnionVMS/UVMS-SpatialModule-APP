@@ -48,7 +48,7 @@ import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
         @NamedQuery(name = UserAreasEntity2.FIND_USER_AREA_BY_ID,
                 query = "SELECT area FROM UserAreasEntity2 area LEFT JOIN area.scopeSelection scopeSelection WHERE area.id = :userAreaId AND ((1=:isPowerUser) OR (area.userName=:userName OR scopeSelection.name=:scopeName))"),
         @NamedQuery(name = UserAreasEntity2.USERAREA_COLUMNS,
-                query = "SELECT userArea.id as gid, userArea.name as name, userArea.areaDesc as desc FROM UserAreasEntity AS userArea WHERE userArea.id in (:ids)"),
+                query = "SELECT userArea.id as gid, userArea.name as name, userArea.areaDesc as desc FROM UserAreasEntity2 AS userArea WHERE userArea.id in (:ids)"),
         @NamedQuery(name = UserAreasEntity2.FIND_ALL_USER_AREAS,
                 query = "SELECT DISTINCT area.id as gid, area.name as name, area.areaDesc as desc FROM UserAreasEntity2 area " +
                         "LEFT JOIN area.scopeSelection scope WHERE area.userName = :userName OR scope.name = :scopeName"),
@@ -65,7 +65,7 @@ import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
         @NamedQuery(name = UserAreasEntity2.FIND_GID_FOR_SHARED_AREA,
                 query = "SELECT area.id FROM UserAreasEntity2 area LEFT JOIN area.scopeSelection scopeSelection WHERE (area.userName <> :userName AND area.type = :type AND scopeSelection.name = :scopeName)"),
         @NamedQuery(name = UserAreasEntity2.FIND_BY_USERNAME_AND_NAME,
-                query = "FROM UserAreasEntity WHERE userName = :userName AND name = :name"),
+                query = "FROM UserAreasEntity2 WHERE userName = :userName AND name = :name"),
         @NamedQuery(name = UserAreasEntity2.DISABLE, query = "UPDATE UserAreasEntity2 SET enabled = false"),
         @NamedQuery(name = UserAreasEntity2.BY_INTERSECT, query = "FROM UserAreasEntity2 WHERE intersects(geom, :shape) = true AND enabled = true"),
         @NamedQuery(name = UserAreasEntity2.SEARCH_USERAREA, query = "FROM UserAreasEntity2 where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid"),

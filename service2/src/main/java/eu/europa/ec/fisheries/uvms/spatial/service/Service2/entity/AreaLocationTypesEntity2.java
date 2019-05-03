@@ -20,23 +20,23 @@ import java.util.Objects;
 @Entity
 @NamedQueries({
         @NamedQuery(name = AreaLocationTypesEntity2.FIND_ALL_AREA_AND_LOCATION_TYPE_NAMES, query = "FROM AreaLocationTypesEntity2 area"),
-        @NamedQuery(name = AreaLocationTypesEntity2.FIND_ALL_IS_LOCATION, query = "FROM AreaLocationTypesEntity2 area WHERE isLocation = :isLocation and area.areaDbTable <> 'NA'"),
-        @NamedQuery(name = AreaLocationTypesEntity2.FIND_ALL_IS_LOCATION_IS_SYSTEM_WIDE, query = "FROM AreaLocationTypesEntity2 WHERE isLocation = :isLocation AND isSystemWide = :isSystemWide"),
+        @NamedQuery(name = AreaLocationTypesEntity2.FIND_ALL_IS_LOCATION, query = "FROM AreaLocationTypesEntity2 area WHERE location = :isLocation and area.areaDbTable <> 'NA'"),
+        @NamedQuery(name = AreaLocationTypesEntity2.FIND_ALL_IS_LOCATION_IS_SYSTEM_WIDE, query = "FROM AreaLocationTypesEntity2 WHERE location = :location AND systemWide = :systemWide"),
         @NamedQuery(name = AreaLocationTypesEntity2.FIND_TYPE_BY_NAME, query = "FROM AreaLocationTypesEntity2 WHERE typeName= :typeName"),
         @NamedQuery(name = AreaLocationTypesEntity2.FIND_TYPE_BY_NAMES, query = "FROM AreaLocationTypesEntity2 WHERE typeName in (:typeNames)"),
         @NamedQuery(name = AreaLocationTypesEntity2.FIND_SYSTEM_AREA_LAYER, query = "select area.typeName as typeName, area.areaTypeDesc as areaTypeDesc,"
-                + " layer.geoName as geoName, layer.isInternal as isInternal, layer.styleLabelGeom as style,"
+                + " layer.geoName as geoName, layer.internal as internal, layer.styleLabelGeom as style,"
                 + " provider.serviceType as serviceType FROM AreaLocationTypesEntity2 as area INNER JOIN area.serviceLayer as layer"
-                + " INNER JOIN layer.providerFormat as provider WHERE area.isSystemWide = true AND area.isLocation =  false"
+                + " INNER JOIN layer.providerFormat as provider WHERE area.systemWide = true AND area.location =  false"
                 + " AND area.serviceLayer = layer AND layer.providerFormat = provider AND area.areaDbTable <> 'user_areas'"),
-        @NamedQuery(name = AreaLocationTypesEntity2.FIND_SYSTEM_AREA_AND_LOCATION_LAYER, query = "select area.typeName as typeName, area.areaTypeDesc as areaTypeDesc, area.isLocation as isLocation,"
-                + " layer.geoName as geoName, layer.isInternal as isInternal, layer.styleLabelGeom as style,"
+        @NamedQuery(name = AreaLocationTypesEntity2.FIND_SYSTEM_AREA_AND_LOCATION_LAYER, query = "select area.typeName as typeName, area.areaTypeDesc as areaTypeDesc, area.location as location,"
+                + " layer.geoName as geoName, layer.internal as internal, layer.styleLabelGeom as style,"
                 + " provider.serviceType as serviceType FROM AreaLocationTypesEntity2 as area INNER JOIN area.serviceLayer as layer"
-                + " INNER JOIN layer.providerFormat as provider WHERE area.isSystemWide = true"
+                + " INNER JOIN layer.providerFormat as provider WHERE area.systemWide = true"
                 + " AND area.serviceLayer = layer AND layer.providerFormat = provider AND area.areaDbTable <> 'user_areas'"),
-        @NamedQuery(name = AreaLocationTypesEntity2.FIND_USER_AREA_LAYER, query = "SELECT area.typeName as typeName, layer.geoName as geoName, layer.isInternal as isInternal, layer.serviceUrl as serviceUrl, layer.styleLabelGeom as style,"
+        @NamedQuery(name = AreaLocationTypesEntity2.FIND_USER_AREA_LAYER, query = "SELECT area.typeName as typeName, layer.geoName as geoName, layer.internal as internal, layer.serviceUrl as serviceUrl, layer.styleLabelGeom as style,"
                 + " provider.serviceType as serviceType FROM AreaLocationTypesEntity2 as area INNER JOIN area.serviceLayer as layer"
-                + " INNER JOIN layer.providerFormat as provider WHERE area.isSystemWide = true AND area.isLocation = false"
+                + " INNER JOIN layer.providerFormat as provider WHERE area.systemWide = true AND area.location = false"
                 + " AND area.serviceLayer = layer AND area.areaDbTable = 'user_areas' AND layer.providerFormat = provider")
 })
 @Table(name = "area_location_types", uniqueConstraints = @UniqueConstraint(columnNames = "type_name"))
