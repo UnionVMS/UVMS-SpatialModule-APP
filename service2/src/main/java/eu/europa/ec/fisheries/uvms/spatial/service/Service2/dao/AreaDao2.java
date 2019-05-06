@@ -15,6 +15,8 @@ package eu.europa.ec.fisheries.uvms.spatial.service.Service2.dao;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.BaseAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.PortDistanceInfoDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.PortAreaEntity2;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.PortEntity2;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.UserAreasEntity2;
@@ -64,12 +66,12 @@ public class AreaDao2 {
     }
 
 
-    public PortEntity2 getClosestPort(Point point) {
+    public PortDistanceInfoDto getClosestPort(Point point) {
 
-        TypedQuery<PortEntity2> query = em.createNamedQuery(PortEntity2.CLOSEST_PORT, PortEntity2.class);
+        TypedQuery<PortDistanceInfoDto> query = em.createNamedQuery(PortEntity2.CLOSEST_PORT, PortDistanceInfoDto.class);
         query.setParameter("point", point);
         query.setMaxResults(1);
-        List<PortEntity2> rs =  query.getResultList();
+        List<PortDistanceInfoDto> rs =  query.getResultList();
         return rs.isEmpty() ? null : rs.get(0);
     }
 

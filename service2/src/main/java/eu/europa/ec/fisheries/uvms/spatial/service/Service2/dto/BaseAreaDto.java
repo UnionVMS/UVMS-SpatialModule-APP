@@ -13,6 +13,14 @@ public class BaseAreaDto {
     private Geometry geom;
     private AreaType type;
 
+    public BaseAreaDto(long gid, String type, Geometry geom, String code, String name, double distance) {
+        this.type = AreaType.valueOf(type);
+        this.geom = geom;
+        this.code = code;
+        this.name = name;
+        this.distance = distance;
+        this.gid = gid;
+    }
 
     public BaseAreaDto(String type, Geometry geom, String code, String name) {
         this.type = AreaType.valueOf(type);
@@ -21,14 +29,6 @@ public class BaseAreaDto {
         this.name = name;
     }
 
-    public BaseAreaDto(long gid,String type, Geometry geom, String code, String name, double distance) {
-        this.type = AreaType.valueOf(type);
-        this.geom = geom;
-        this.code = code;
-        this.name = name;
-        this.distance = distance;
-        this.gid = gid;
-    }
 
     public BaseAreaDto(String type, long gid, String code, double distance) {
         this.type = AreaType.valueOf(type);
@@ -44,13 +44,23 @@ public class BaseAreaDto {
         this.distance = distance;
     }
 
+    public BaseAreaDto(String type, long gid, String code, String name) {
+        this.type = AreaType.valueOf(type);
+        this.code = code;
+        this.name = name;
+        this.gid = gid;
+    }
+
+    public BaseAreaDto() {
+    }
+
     public AreaType getType() {
         return type;
     }
 
-    public void setType(AreaType type) {
+    /*public void setType(AreaType type) {
         this.type = type;
-    }
+    }*/
 
     public void setType(String type) {
         this.type = AreaType.valueOf(type);

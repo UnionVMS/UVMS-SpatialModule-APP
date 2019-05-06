@@ -17,8 +17,10 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dao.AreaDao2;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dao.SpatialQueriesDao;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.BaseAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.PortDistanceInfoDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.PortAreaEntity2;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.PortEntity2;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.utils.GeometryMapper;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.utils.GeometryUtils;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.utils.MeasurementUnit;
 
@@ -60,9 +62,14 @@ public class AreaServiceBean2 {
 
     }
 
-    public PortEntity2 findClosestPortByPosition(Double lat,  Double lon){
+    public PortDistanceInfoDto findClosestPortByPosition(Double lat,  Double lon){
         Point point = (Point) GeometryUtils.createPoint(lat, lon);
         return portAreaDao.getClosestPort(point);
+    }
+
+    public List<BaseAreaDto> getClosestAreasByPoint(Double lat, Double lon){
+        Point point = (Point) GeometryUtils.createPoint(lat, lon);
+        return spatialQueriesDao.getClosestAreaByPoint(point);
     }
 
 
@@ -79,23 +86,23 @@ public class AreaServiceBean2 {
     private SpatialEnrichmentRS computeSpatialEnrichment(Point point){
 
 
-        List<PortAreaEntity2> areaTypesByLocation = portAreaDao.getPortAreasByPoint(point);
+        List<BaseAreaDto> areaTypesByLocation = spatialQueriesDao.getAreasByPoint(point);
 
         List<BaseAreaDto> closestAreas = spatialQueriesDao.getClosestAreaByPoint(point);
 
-        PortEntity2 closestLocations = portAreaDao.getClosestPort(point);
+        PortDistanceInfoDto closestLocation = portAreaDao.getClosestPort(point);
 
         SpatialEnrichmentRS response = new SpatialEnrichmentRS();
 
         if(areaTypesByLocation != null){
             AreasByLocationType areasByLocationType = new AreasByLocationType();
 
-            for( PortAreaEntity2 entity : areaTypesByLocation){
+            for( BaseAreaDto entity : areaTypesByLocation){
                 AreaExtendedIdentifierType areaExtendedIdentifierType = new AreaExtendedIdentifierType();
                 areaExtendedIdentifierType.setCode(entity.getCode());
                 areaExtendedIdentifierType.setName(entity.getName());
-                areaExtendedIdentifierType.setAreaType(AreaType.PORTAREA);
-                areaExtendedIdentifierType.setId(String.valueOf(entity.getId()));
+                areaExtendedIdentifierType.setAreaType(entity.getType());
+                areaExtendedIdentifierType.setId(String.valueOf(entity.getGid()));
                 areasByLocationType.getAreas().add(areaExtendedIdentifierType);
             }
             response.setAreasByLocation(areasByLocationType);
@@ -117,24 +124,24 @@ public class AreaServiceBean2 {
             response.setClosestAreas(closestAreasType);
         }
 
-        if (closestLocations != null){
+        if (closestLocation != null){
             ClosestLocationsType locationType = new ClosestLocationsType();
             Location location = new Location();
-            location.setCentroid(closestLocations.getCentroid());
-            location.setCode(closestLocations.getCode());
-            location.setCountryCode(closestLocations.getCountryCode());
+            location.setCentroid(closestLocation.getPort().getCentroid());
+            location.setCode(closestLocation.getPort().getCode());
+            location.setCountryCode(closestLocation.getPort().getCountryCode());
 
-            double distanceInMeters = distanceMeter(point.getY(), point.getX(), closestLocations.getGeom().getCentroid().getY(), closestLocations.getGeom().getCentroid().getX());
+            double distanceInMeters = closestLocation.getDistance();
 
             location.setDistance(distanceInMeters / MeasurementUnit.NAUTICAL_MILES.getRatio());
-            location.setEnabled(closestLocations.getEnabled());
-            location.setExtent(closestLocations.getExtent());
-            location.setGid(String.valueOf(closestLocations.getId()));
-            location.setId(String.valueOf(closestLocations.getId()));
+            location.setEnabled(closestLocation.getPort().getEnabled());
+            location.setExtent(closestLocation.getPort().getExtent());
+            location.setGid(String.valueOf(closestLocation.getPort().getId()));
+            location.setId(String.valueOf(closestLocation.getPort().getId()));
             location.setLocationType(LocationType.PORT);
-            location.setName(closestLocations.getName());
+            location.setName(closestLocation.getPort().getName());
             location.setUnit(UnitType.NAUTICAL_MILES);
-            location.setWkt(closestLocations.getGeometry());
+            location.setWkt(closestLocation.getPort().getGeometry());
 
 
             locationType.getClosestLocations().add(location);
@@ -142,19 +149,6 @@ public class AreaServiceBean2 {
         }
         return response;
     }
-
-
-    private static final int EARTH_RADIUS_METER = 6371000;
-    private static double distanceMeter(double prevLat, double prevLon, double currentLat, double currentLon) {
-        double lat1Rad = Math.toRadians(prevLat);
-        double lat2Rad = Math.toRadians(currentLat);
-        double deltaLonRad = Math.toRadians(currentLon - prevLon);
-
-        return Math.acos(Math.sin(lat1Rad) * Math.sin(lat2Rad) + Math.cos(lat1Rad) * Math.cos(lat2Rad)
-                * Math.cos(deltaLonRad))
-                * EARTH_RADIUS_METER;
-    }
-
 
 
 }

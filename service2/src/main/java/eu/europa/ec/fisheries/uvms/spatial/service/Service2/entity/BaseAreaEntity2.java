@@ -16,11 +16,25 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTWriter;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.utils.GeometryMapper;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 import java.time.Instant;
 import java.util.Objects;
+
+@SqlResultSetMapping(
+        name="BaseAreaDtoMapping",
+        classes={
+                @ConstructorResult(
+                        targetClass=eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.BaseAreaDto.class,
+                        columns={
+                                @ColumnResult(name="type"),
+                                @ColumnResult(name="gid", type=Long.class),
+                                @ColumnResult(name="code"),
+                                @ColumnResult(name="name")
+                        }
+                )
+        }
+)
+
 
 @MappedSuperclass
 @AttributeOverride(name = "id", column = @Column(name = "GID"))
