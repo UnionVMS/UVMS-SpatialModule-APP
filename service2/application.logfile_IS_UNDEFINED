@@ -350,3 +350,26 @@ Caused by: java.net.ConnectException: Connection refused: no further information
 2019-05-03 14:57:40.385  [34mINFO [0;39m [36mxnio.<clinit>(95)[0;39m [main]  INFO  [MDC:] org.xnio - XNIO version 3.5.1.Final
 2019-05-03 14:57:40.395  [34mINFO [0;39m [36mnio.<clinit>(58)[0;39m [main]  INFO  [MDC:] org.xnio.nio - XNIO NIO Implementation Version 3.5.1.Final
 2019-05-03 14:57:40.467  [34mINFO [0;39m [36msecurity.<clinit>(57)[0;39m [main]  INFO  [MDC:] org.wildfly.security - ELY00001: WildFly Elytron version 1.1.0.Final
+2019-05-06 11:22:24.299  [34mINFO [0;39m [36mReflections.scan(232)[0;39m [main]  INFO  [MDC:] org.reflections.Reflections - Reflections took 86 ms to scan 1 urls, producing 5 keys and 5 values 
+2019-05-06 11:22:33.178  [34mINFO [0;39m [36mremoting.<clinit>(98)[0;39m [main]  INFO  [MDC:] org.jboss.remoting - JBoss Remoting version 5.0.0.Final
+2019-05-06 11:22:33.221  [34mINFO [0;39m [36mxnio.<clinit>(95)[0;39m [main]  INFO  [MDC:] org.xnio - XNIO version 3.5.1.Final
+2019-05-06 11:22:33.231  [34mINFO [0;39m [36mnio.<clinit>(58)[0;39m [main]  INFO  [MDC:] org.xnio.nio - XNIO NIO Implementation Version 3.5.1.Final
+2019-05-06 11:22:33.310  [34mINFO [0;39m [36msecurity.<clinit>(57)[0;39m [main]  INFO  [MDC:] org.wildfly.security - ELY00001: WildFly Elytron version 1.1.0.Final
+2019-05-06 11:22:42.712  [31mWARN [0;39m [36mArchiveDeployer.undeploy(137)[0;39m [main]  WARN  [MDC:] o.j.a.a.container.ArchiveDeployer - Failed to undeploy test.war: {"WFLYCTL0062: Composite operation failed and was rolled back. Steps that failed:" => {"Operation step-1" => "WFLYCTL0216: Management resource '[(\"deployment\" => \"test.war\")]' not found"}}
+2019-05-06 11:24:23.910  [34mINFO [0;39m [36mReflections.scan(232)[0;39m [main]  INFO  [MDC:] org.reflections.Reflections - Reflections took 77 ms to scan 1 urls, producing 5 keys and 5 values 
+2019-05-06 11:24:33.910  [34mINFO [0;39m [36mremoting.<clinit>(98)[0;39m [main]  INFO  [MDC:] org.jboss.remoting - JBoss Remoting version 5.0.0.Final
+2019-05-06 11:24:33.952  [34mINFO [0;39m [36mxnio.<clinit>(95)[0;39m [main]  INFO  [MDC:] org.xnio - XNIO version 3.5.1.Final
+2019-05-06 11:24:33.962  [34mINFO [0;39m [36mnio.<clinit>(58)[0;39m [main]  INFO  [MDC:] org.xnio.nio - XNIO NIO Implementation Version 3.5.1.Final
+2019-05-06 11:24:34.036  [34mINFO [0;39m [36msecurity.<clinit>(57)[0;39m [main]  INFO  [MDC:] org.wildfly.security - ELY00001: WildFly Elytron version 1.1.0.Final
+2019-05-06 11:24:41.873  [31mWARN [0;39m [36mArchiveDeployer.undeploy(137)[0;39m [main]  WARN  [MDC:] o.j.a.a.container.ArchiveDeployer - Failed to undeploy test.war: {"WFLYCTL0062: Composite operation failed and was rolled back. Steps that failed:" => {"Operation step-1" => "WFLYCTL0216: Management resource '[(\"deployment\" => \"test.war\")]' not found"}}
+2019-05-06 11:25:51.910  [34mINFO [0;39m [36mReflections.scan(232)[0;39m [main]  INFO  [MDC:] org.reflections.Reflections - Reflections took 89 ms to scan 1 urls, producing 5 keys and 5 values 
+2019-05-06 11:26:01.993  [34mINFO [0;39m [36mremoting.<clinit>(98)[0;39m [main]  INFO  [MDC:] org.jboss.remoting - JBoss Remoting version 5.0.0.Final
+2019-05-06 11:26:02.034  [34mINFO [0;39m [36mxnio.<clinit>(95)[0;39m [main]  INFO  [MDC:] org.xnio - XNIO version 3.5.1.Final
+2019-05-06 11:26:02.043  [34mINFO [0;39m [36mnio.<clinit>(58)[0;39m [main]  INFO  [MDC:] org.xnio.nio - XNIO NIO Implementation Version 3.5.1.Final
+2019-05-06 11:26:02.124  [34mINFO [0;39m [36msecurity.<clinit>(57)[0;39m [main]  INFO  [MDC:] org.wildfly.security - ELY00001: WildFly Elytron version 1.1.0.Final
+2019-05-06 11:26:11.198  [31mWARN [0;39m [36mArchiveDeployer.undeploy(137)[0;39m [main]  WARN  [MDC:] o.j.a.a.container.ArchiveDeployer - Failed to undeploy test.war: {"WFLYCTL0062: Composite operation failed and was rolled back. Steps that failed:" => {"Operation step-1" => "WFLYCTL0216: Management resource '[(\"deployment\" => \"test.war\")]' not found"}}
+2019-05-06 11:28:15.098  [34mINFO [0;39m [36mReflections.scan(232)[0;39m [main]  INFO  [MDC:] org.reflections.Reflections - Reflections took 86 ms to scan 1 urls, producing 6 keys and 6 values 
+2019-05-06 11:28:25.971  [34mINFO [0;39m [36mremoting.<clinit>(98)[0;39m [main]  INFO  [MDC:] org.jboss.remoting - JBoss Remoting version 5.0.0.Final
+2019-05-06 11:28:26.015  [34mINFO [0;39m [36mxnio.<clinit>(95)[0;39m [main]  INFO  [MDC:] org.xnio - XNIO version 3.5.1.Final
+2019-05-06 11:28:26.026  [34mINFO [0;39m [36mnio.<clinit>(58)[0;39m [main]  INFO  [MDC:] org.xnio.nio - XNIO NIO Implementation Version 3.5.1.Final
+2019-05-06 11:28:26.100  [34mINFO [0;39m [36msecurity.<clinit>(57)[0;39m [main]  INFO  [MDC:] org.wildfly.security - ELY00001: WildFly Elytron version 1.1.0.Final

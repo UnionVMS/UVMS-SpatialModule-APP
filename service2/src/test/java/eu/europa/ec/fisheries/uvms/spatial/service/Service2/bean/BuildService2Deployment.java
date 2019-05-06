@@ -36,6 +36,8 @@ public abstract class BuildService2Deployment {
 
             testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.spatial.service.Service2");
 
+            testWar.addClass(ConfigServiceMock.class);
+
             return testWar;
         }
 
