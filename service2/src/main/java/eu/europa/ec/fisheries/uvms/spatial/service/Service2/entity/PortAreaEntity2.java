@@ -37,8 +37,8 @@ public class PortAreaEntity2 extends BaseAreaEntity2 {
 
 	@Id
 	@Column(name = "gid")
-	@SequenceGenerator(name="SEQ_GEN", sequenceName="port_area_seq", allocationSize = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN")
+	@SequenceGenerator(name="SEQ_PORTAREA_GEN", sequenceName="port_area_seq", allocationSize = 1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_PORTAREA_GEN")
     @JsonProperty("gid")
     private Long id;
 

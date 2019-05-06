@@ -41,8 +41,8 @@ public class ServiceLayerEntity2 {
 
 	@Id
 	@Column(name = "id")
-	@SequenceGenerator(name="SEQ_GEN", sequenceName="service_layer_seq", allocationSize = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN")
+	@SequenceGenerator(name="SEQ_SL_GEN", sequenceName="service_layer_seq", allocationSize = 1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_SL_GEN")
 	private Long id;
 
     @ManyToOne

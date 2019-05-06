@@ -21,8 +21,8 @@ public class UserScopeEntity2 {
 
 	@Id
 	@Column(name = "id")
-	@SequenceGenerator(name="SEQ_GEN", sequenceName="user_scope_seq", allocationSize = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GEN")
+	@SequenceGenerator(name="SEQ_USERSCOPE_GEN", sequenceName="user_scope_seq", allocationSize = 1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_USERSCOPE_GEN")
 	private Long id;
 
     @ManyToOne
