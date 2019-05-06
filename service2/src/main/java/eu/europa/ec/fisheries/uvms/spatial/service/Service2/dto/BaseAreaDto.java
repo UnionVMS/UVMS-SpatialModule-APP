@@ -37,6 +37,13 @@ public class BaseAreaDto {
         this.distance = distance;
     }
 
+    public BaseAreaDto( long gid, String code, double distance) {
+        this.type = AreaType.PORT;
+        this.gid = gid;
+        this.code = code;
+        this.distance = distance;
+    }
+
     public AreaType getType() {
         return type;
     }

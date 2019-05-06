@@ -36,11 +36,6 @@ public abstract class BuildService2Deployment {
 
             testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.spatial.service.Service2");
 
-            for (File f:
-                 files) {
-                System.out.println(f.getName());
-            }
-
             return testWar;
         }
 
