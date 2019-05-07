@@ -13,6 +13,8 @@ details. You should have received a copy of the GNU General Public License along
 
 import com.vividsolutions.jts.geom.*;
 import com.vividsolutions.jts.io.ParseException;
+import com.vividsolutions.jts.io.WKTReader;
+import com.vividsolutions.jts.io.WKTWriter;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public final class GeometryUtils {
+public class GeometryUtils {
 
     private static final Logger LOG = LoggerFactory.getLogger(GeometryUtils.class);
     private static final String EPSG = "EPSG:";
@@ -30,12 +32,32 @@ public final class GeometryUtils {
     public static final int DEFAULT_EPSG_SRID = 4326;
     public static GeometryFactory geometryFactory = new GeometryFactory();
 
-    /**
-     * private constructor to avoid class instantiation
-     */
-    private GeometryUtils() {
+    public static String geometryToWkt(Geometry geometry) {
+        if ( geometry == null ) {
+            return null;
+        }
+
+
+        return new WKTWriter().write(geometry) ;
     }
 
+    public static  Geometry wktToGeometry(String wkt) throws ParseException {
+        if ( wkt == null ) {
+            return null;
+        }
+
+        return  new WKTReader().read(wkt) ;
+
+    }
+
+    public String calculateBuffer(final Double latitude, final Double longitude, final Double buffer) {
+
+        GeometryFactory gf = new GeometryFactory();
+        Point point = gf.createPoint(new com.vividsolutions.jts.geom.Coordinate(longitude, latitude));
+        Geometry geometry = point.buffer(buffer);
+        return geometryToWkt(geometry);
+
+    }
 
     /**
      * Returns the centroid of a given geometry as WKT
@@ -48,8 +70,8 @@ public final class GeometryUtils {
         String theWktString = null;
 
         try {
-            Point centroid = GeometryMapper.wktToGeometry(wkt).getCentroid();
-            theWktString = GeometryMapper.geometryToWkt(centroid);
+            Point centroid = wktToGeometry(wkt).getCentroid();
+            theWktString = geometryToWkt(centroid);
 
         } catch (ParseException e) {
             LOG.error(e.getMessage(), e);
@@ -101,8 +123,8 @@ public final class GeometryUtils {
         LineString line;
 
         try {
-            Geometry point1 = GeometryMapper.wktToGeometry(wkt1);
-            Geometry point2 = GeometryMapper.wktToGeometry(wkt2);
+            Geometry point1 = wktToGeometry(wkt1);
+            Geometry point2 = wktToGeometry(wkt2);
             GeometryFactory geometryFactory = new GeometryFactory();
             List<Coordinate> coordinates = new ArrayList<>();
             coordinates.add(point1.getCoordinate());

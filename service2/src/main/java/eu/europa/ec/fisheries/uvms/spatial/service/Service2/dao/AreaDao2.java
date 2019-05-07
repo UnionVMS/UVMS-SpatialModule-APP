@@ -15,7 +15,6 @@ package eu.europa.ec.fisheries.uvms.spatial.service.Service2.dao;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.BaseAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.PortDistanceInfoDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.PortAreaEntity2;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.PortEntity2;

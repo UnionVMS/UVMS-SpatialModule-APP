@@ -1,12 +1,12 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.Service2.dao;
 
 import com.vividsolutions.jts.geom.Point;
-import org.hibernate.Session;
-import org.hibernate.transform.Transformers;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.BaseAreaDto;
 
 import javax.ejb.Stateless;
-import javax.persistence.*;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.util.List;
 
 
@@ -28,7 +28,7 @@ public class SpatialQueriesDao {
     }
 
     public List<BaseAreaDto> getClosestAreaByPoint(Point point) {
-        Query q = em.createNativeQuery("SELECT type,gid,code,name from  spatial.get_closest_areas( :point)", "BaseAreaDtoMapping")
+        Query q = em.createNativeQuery("SELECT type,gid,code,name,dist from  spatial.get_closest_areas( :point)", "BaseAreaDtoMappingWithDist")
                 .setParameter("point", point);
 
         return q.getResultList();

@@ -14,7 +14,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTWriter;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.utils.GeometryMapper;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.utils.GeometryUtils;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -30,6 +30,22 @@ import java.util.Objects;
                                 @ColumnResult(name="gid", type=Long.class),
                                 @ColumnResult(name="code"),
                                 @ColumnResult(name="name")
+                        }
+                )
+        }
+)
+
+@SqlResultSetMapping(
+        name="BaseAreaDtoMappingWithDist",
+        classes={
+                @ConstructorResult(
+                        targetClass=eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.BaseAreaDto.class,
+                        columns={
+                                @ColumnResult(name="type"),
+                                @ColumnResult(name="gid", type=Long.class),
+                                @ColumnResult(name="code"),
+                                @ColumnResult(name="name"),
+                                @ColumnResult(name="dist")
                         }
                 )
         }
@@ -58,7 +74,7 @@ public class BaseAreaEntity2 {
     protected Instant enabledOn;
 
     public String getGeometry(){
-        return GeometryMapper.geometryToWkt(geom);
+        return GeometryUtils.geometryToWkt(geom);
     }
 
     @JsonIgnore

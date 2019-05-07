@@ -12,7 +12,6 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean;
 
 import com.vividsolutions.jts.geom.Point;
-import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dao.AreaDao2;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dao.SpatialQueriesDao;
@@ -20,7 +19,6 @@ import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.BaseAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.PortDistanceInfoDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.PortAreaEntity2;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.PortEntity2;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.utils.GeometryMapper;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.utils.GeometryUtils;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.utils.MeasurementUnit;
 
