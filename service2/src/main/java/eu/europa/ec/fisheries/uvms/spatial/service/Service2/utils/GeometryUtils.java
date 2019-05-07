@@ -46,7 +46,9 @@ public class GeometryUtils {
             return null;
         }
 
-        return  new WKTReader().read(wkt) ;
+        Geometry geom = new WKTReader().read(wkt);
+        geom.setSRID(4326);
+        return  geom;
 
     }
 
