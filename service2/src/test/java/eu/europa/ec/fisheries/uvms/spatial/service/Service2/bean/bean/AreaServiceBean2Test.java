@@ -5,7 +5,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.PointType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRS;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.AreaServiceBean2;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.BuildService2Deployment;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.TransactionalTests;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.BaseAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.PortDistanceInfoDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.PortAreaEntity2;
@@ -22,7 +22,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
-public class AreaServiceBean2Test extends BuildService2Deployment {
+public class AreaServiceBean2Test extends TransactionalTests {
 
 
     @Inject
