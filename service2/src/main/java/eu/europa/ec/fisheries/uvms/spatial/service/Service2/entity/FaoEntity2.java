@@ -24,6 +24,7 @@ import java.util.Objects;
                 query = "FROM FaoEntity2 WHERE intersects(geom, :shape) = true AND enabled = true"),
         @NamedQuery(name = FaoEntity2.SEARCH_FAO, query = "FROM FaoEntity2 where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid"),
         @NamedQuery(name = FaoEntity2.SEARCH_FAO_NAMES_BY_CODE, query = "From FaoEntity2 where code in (SELECT distinct(code) from FaoEntity2 where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid)"),
+        @NamedQuery(name = FaoEntity2.AREA_BY_AREA_CODES, query = "From FaoEntity2 where code in :code AND enabled=true "),
         @NamedQuery(name = FaoEntity2.FAO_COLUMNS, query = "SELECT fao.id as gid, fao.name AS name, fao.code AS code FROM FaoEntity2 AS fao WHERE fao.id in (:ids)")
 })
 public class FaoEntity2 extends BaseAreaEntity2 {
@@ -33,6 +34,7 @@ public class FaoEntity2 extends BaseAreaEntity2 {
     public static final String SEARCH_FAO = "FaoEntity2.searchFaoByNameOrCode";
     public static final String SEARCH_FAO_NAMES_BY_CODE = "FaoEntity2.searchNamesByCode";
     public static final String FAO_COLUMNS = "FaoEntity2.FaoColumns";
+    public static final String AREA_BY_AREA_CODES = "FaoEntity2.areaByAreaCodes";
 
 	@Id
 	@Column(name = "gid")

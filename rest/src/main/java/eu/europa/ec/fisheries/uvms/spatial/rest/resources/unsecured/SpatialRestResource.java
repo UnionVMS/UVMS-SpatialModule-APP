@@ -1,17 +1,19 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured;
 
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.MultiPoint;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.io.WKTReader;
 import eu.europa.ec.fisheries.schema.movement.v1.MovementType;
 import eu.europa.ec.fisheries.schema.movement.v1.SegmentCategoryType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaTransitionsDTO;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.MapConfigService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.impl.SpatialEnrichmentServiceBean;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.AreaServiceBean2;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dao.AreaLocationTypesDao2;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.BaseAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.PortDistanceInfoDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.AreaLocationTypesEntity2;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.PortAreaEntity2;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.PortEntity2;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.utils.GeometryUtils2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,31 +39,27 @@ public class SpatialRestResource {
 
     private static final Logger log = LoggerFactory.getLogger(SpatialRestResource.class);
 
-//    private static final ObjectMapper MAPPER = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).registerModule(new JavaTimeModule());
-//    private static final ObjectMapper MAPPER = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
 
     @Inject
-    private SpatialEnrichmentServiceBean enrichmentService;
+    private AreaServiceBean2 areaServiceBean2;
 
     @Inject
-    private AreaService areaService;
-
-    @Inject
-    private AreaTypeNamesService areaTypeNamesService;
-
-    @Inject
-    private MapConfigService mapConfigService;
+    AreaLocationTypesDao2 areaLocationTypesDao2;
 
 
     @POST
     @Path("getAreaByLocation")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getAreaByLocation( AreaByLocationSpatialRQ areaByLocationSpatialRQ)  {
+    public Response getAreaByLocation2( AreaByLocationSpatialRQ areaByLocationSpatialRQ)  {
 
         try {
-            List<AreaExtendedIdentifierType> response = areaService.getAreasByPoint(areaByLocationSpatialRQ);
+            List<BaseAreaDto> areaList = areaServiceBean2.getAreasByPoint(areaByLocationSpatialRQ.getPoint().getLatitude(), areaByLocationSpatialRQ.getPoint().getLatitude());
+            List<AreaExtendedIdentifierType> response = new ArrayList<>();
+            for (BaseAreaDto area: areaList) {
+                AreaExtendedIdentifierType areaExtendedIdentifierType = new AreaExtendedIdentifierType(String.valueOf(area.getGid()), area.getType(), area.getCode(), area.getName());
+                response.add(areaExtendedIdentifierType);
+            }
             return Response.ok(response).build();
         } catch (Exception e) {
             log.error(e.toString(),e);
@@ -70,15 +68,18 @@ public class SpatialRestResource {
     }
 
 
-
     @POST
     @Path("getAreaTypes")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getAreaTypes(AllAreaTypesRequest allAreaTypesRequest) {
+    public Response getAreaTypes2(AllAreaTypesRequest allAreaTypesRequest) {
 
         try {
-            List<String> response = areaTypeNamesService.listAllAreaTypeNames();
+            List<AreaLocationTypesEntity2> areaList = areaLocationTypesDao2.findByIsLocation(false);
+            List<String> response = new ArrayList<>();
+            for (AreaLocationTypesEntity2 entity: areaList) {
+                response.add(entity.getTypeName());
+            }
             return Response.ok(response).build();
         } catch (Exception e) {
             log.error(e.toString(),e);
@@ -90,14 +91,18 @@ public class SpatialRestResource {
     @Path("getClosestArea")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getClosestArea(ClosestAreaSpatialRQ request)  {
+    public Response getClosestArea2(ClosestAreaSpatialRQ request)  {
 
         try {
             Double lat = request.getPoint().getLatitude();
             Double lon = request.getPoint().getLongitude();
-            Integer crs = request.getPoint().getCrs();
-            UnitType unit = request.getUnit();
-            List<Area> response = null /*areaService.getClosestArea(lon, lat, crs, unit)*/;
+
+            List<BaseAreaDto> closestAreas = areaServiceBean2.getClosestAreasByPoint(lat, lon);
+            List<Area> response = new ArrayList<>();
+            for (BaseAreaDto base: closestAreas) {
+                Area area = new Area(String.valueOf(base.getGid()), base.getType(), base.getCode(), base.getName(), base.getDistance(), UnitType.METERS);
+                response.add(area);
+            }
             return Response.ok(response).build();
         } catch (Exception e) {
             log.error(e.toString(),e);
@@ -110,10 +115,13 @@ public class SpatialRestResource {
     @Path("getClosestLocation")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getClosestLocation(ClosestLocationSpatialRQ closestLocationSpatialRQ) {
+    public Response getClosestLocation2(ClosestLocationSpatialRQ closestLocationSpatialRQ) {
 
         try {
-            List<Location> response = null /*areaService.getClosestPointByPoint(closestLocationSpatialRQ)*/;
+            PortDistanceInfoDto closestPort = areaServiceBean2.findClosestPortByPosition(closestLocationSpatialRQ.getPoint().getLatitude(), closestLocationSpatialRQ.getPoint().getLongitude());
+            List<Location> response = new ArrayList<>();
+            Location location = new Location(String.valueOf(closestPort.getPort().getId()), String.valueOf(closestPort.getPort().getId()), LocationType.PORT, closestPort.getPort().getCode(), closestPort.getPort().getName(), closestPort.getDistance(), UnitType.METERS, closestPort.getPort().getCentroid(), closestPort.getPort().getGeometry(), closestPort.getPort().getExtent(), closestPort.getPort().getEnabled(), closestPort.getPort().getCountryCode());
+            response.add(location);
             return Response.ok(response).build();
         } catch (Exception e) {
             log.error(e.toString(),e);
@@ -130,7 +138,7 @@ public class SpatialRestResource {
     @Path("getSegmentCategoryType")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getSegmentCategoryType(List<MovementType> movements) {
+    public Response getSegmentCategoryType2(List<MovementType> movements) {
 
         SegmentCategoryType returnVal = SegmentCategoryType.OTHER;
         try {
@@ -149,43 +157,36 @@ public class SpatialRestResource {
                 move2 = movements.get(0);
             }
 
-           // Point movePoint1 = (Point) GeometryUtils.toGeographic(move1.getPosition().getLatitude(), move1.getPosition().getLongitude(), 4326);     //this magical int is the World Geodetic System 1984, aka EPSG:4326. See: https://en.wikipedia.org/wiki/World_Geodetic_System or http://spatialreference.org/ref/epsg/wgs-84/
-           // Point movePoint2 = (Point) GeometryUtils.toGeographic(move2.getPosition().getLatitude(), move2.getPosition().getLongitude(), 4326);
+            Point movePoint1 = (Point) GeometryUtils2.createPoint(move1.getPosition().getLatitude(), move1.getPosition().getLongitude());     //this magical int is the World Geodetic System 1984, aka EPSG:4326. See: https://en.wikipedia.org/wiki/World_Geodetic_System or http://spatialreference.org/ref/epsg/wgs-84/
+            Point movePoint2 = (Point) GeometryUtils2.createPoint(move2.getPosition().getLatitude(), move2.getPosition().getLongitude());
 
-            Point movePoint1 = null;
-            Point movePoint2 = null;
-            List<AreaExtendedIdentifierType> portsForMove1 = null /*areaService.getPortAreasByPoint(movePoint1)*/;
-            List<AreaExtendedIdentifierType> portsForMove2 = null /*areaService.getPortAreasByPoint(movePoint2)*/;
+            List<PortAreaEntity2> portsForMove1 = areaServiceBean2.getPortAreasByPoint(movePoint1);
+            List<PortAreaEntity2> portsForMove2 = areaServiceBean2.getPortAreasByPoint(movePoint2);
 
 
-            List<AreaSimpleType> portRequestList = new ArrayList<>();
+            List<String> portRequestList = new ArrayList<>();
             //for the first move
-            for(AreaExtendedIdentifierType area : portsForMove1){
-                AreaSimpleType ast = new AreaSimpleType(AreaType.PORT.value(), area.getCode(), null);
-                portRequestList.add(ast);
+            for(PortAreaEntity2 area : portsForMove1){
+                portRequestList.add(area.getCode());
             }
             //and for the second move
-            for(AreaExtendedIdentifierType area : portsForMove2){
-                AreaSimpleType ast = new AreaSimpleType(AreaType.PORT.value(), area.getCode(), null);
-                portRequestList.add(ast);
+            for(PortAreaEntity2 area : portsForMove2){
+                portRequestList.add(area.getCode());
             }
 
             WKTReader reader = new WKTReader();
 
 
-            List<AreaSimpleType> portList = null /*areaService.getAreasByCode(portRequestList)*/;
+            List<PortEntity2> portList = areaServiceBean2.getPortsByAreaCodes(portRequestList);
             double movePortDistance1 = 2778d;               // 1.5 nautical miles is 2778 meters, aka the radius of the port area
             double movePortDistance2 = 2778d;
-            AreaSimpleType closestPort1 = null;
-            AreaSimpleType closestPort2 = null;
+            PortEntity2 closestPort1 = null;
+            PortEntity2 closestPort2 = null;
 
             //Note: The port areas in the DB seems to be slightly different then the definition of 1.5 nautical miles around point p. Thus we can get some unexpected results when the DB says that we are not in area a while the distance to point p is lower then 2778 meters. The most notably effect of this is that track logic regarding when to create new tracks occasionally fails.
             //Since the current track logic is not very useful (or sane.....) anyway I will not fix this for now
-            for(AreaSimpleType port : portList){   //loop over ports
-
-                MultiPoint portMultiPoint = (MultiPoint)reader.read(port.getWkt());  //why do we store single points as multipoints?????
-                GeometryFactory geoFactory = new GeometryFactory();
-                Point portPoint = geoFactory.createPoint(portMultiPoint.getCoordinate());
+            for(PortEntity2 port : portList){   //loop over ports
+                Point portPoint = port.getGeom().getCentroid();
 
                 double dist = distanceMeter(portPoint.getY(), portPoint.getX(), movePoint1.getY(), movePoint1.getX());
                 if(dist < movePortDistance1){
@@ -251,7 +252,7 @@ public class SpatialRestResource {
     @Path("getEnrichmentAndTransitions")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getEnrichmentAndTransitions(@QueryParam(value = "firstLongitude") Double firstLongitude, @QueryParam(value = "firstLatitude") Double firstLatitude, @QueryParam(value = "secondLongitude") Double secondLongitude, @QueryParam(value = "secondLatitude") Double secondLatitude) {
+    public Response getEnrichmentAndTransitions2(@QueryParam(value = "firstLongitude") Double firstLongitude, @QueryParam(value = "firstLatitude") Double firstLatitude, @QueryParam(value = "secondLongitude") Double secondLongitude, @QueryParam(value = "secondLatitude") Double secondLatitude) {
 
         try {
             if(secondLongitude == null || secondLatitude == null){
@@ -259,19 +260,21 @@ public class SpatialRestResource {
                 return Response.status(400).entity("Null as indata on the second long or latitude").build();
             }
 
+            //assuming that the incoming coordinates are in 4326 aka the magical int that is the World Geodetic System 1984, aka EPSG:4326. See: https://en.wikipedia.org/wiki/World_Geodetic_System or http://spatialreference.org/ref/epsg/wgs-84/
             PointType point;
             ArrayList<AreaExtendedIdentifierType> firstAreas = new ArrayList<>();
             if(firstLongitude != null && firstLatitude != null) {
-                 point = new PointType(firstLongitude, firstLatitude, 4326);   //this magical int is the World Geodetic System 1984, aka EPSG:4326. See: https://en.wikipedia.org/wiki/World_Geodetic_System or http://spatialreference.org/ref/epsg/wgs-84/
-                AreaByLocationSpatialRQ request = new AreaByLocationSpatialRQ();
-                request.setPoint(point);
-                firstAreas = (ArrayList<AreaExtendedIdentifierType>) areaService.getAreasByPoint(request);
+                List<BaseAreaDto> areaList = areaServiceBean2.getAreasByPoint(firstLatitude, firstLongitude);
+                for (BaseAreaDto bad: areaList) {
+                    AreaExtendedIdentifierType areaExtendedIdentifierType = new AreaExtendedIdentifierType(String.valueOf(bad.getGid()),bad.getType(),bad.getCode(), bad.getName());
+                    firstAreas.add(areaExtendedIdentifierType);
+                }
             }
 
             point = new PointType(secondLongitude, secondLatitude, 4326);
 
             SpatialEnrichmentRQ spatialEnrichmentRQ = new SpatialEnrichmentRQ(null, point, new SpatialEnrichmentRQ.AreaTypes(), new SpatialEnrichmentRQ.LocationTypes(), UnitType.NAUTICAL_MILES);
-            SpatialEnrichmentRS spatialEnrichmentRS = enrichmentService.getSpatialEnrichment(spatialEnrichmentRQ);
+            SpatialEnrichmentRS spatialEnrichmentRS = areaServiceBean2.getSpatialEnrichment(spatialEnrichmentRQ);           //this one is hardcoded to return distance in nautical miles right now
 
             ArrayList<AreaExtendedIdentifierType> secondAreas = (ArrayList<AreaExtendedIdentifierType>)spatialEnrichmentRS.getAreasByLocation().getAreas();
 
@@ -300,10 +303,10 @@ public class SpatialRestResource {
     @Path("getEnrichment")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getEnrichment(SpatialEnrichmentRQ spatialEnrichmentRQ) {
+    public Response getEnrichment2(SpatialEnrichmentRQ spatialEnrichmentRQ) {
 
         try {
-            SpatialEnrichmentRS response = enrichmentService.getSpatialEnrichment(spatialEnrichmentRQ);
+            SpatialEnrichmentRS response = areaServiceBean2.getSpatialEnrichment(spatialEnrichmentRQ);
             return Response.ok(response).build();
         } catch (Exception e) {
             log.error(e.toString(),e);
@@ -316,11 +319,12 @@ public class SpatialRestResource {
     @Path("getEnrichmentBatch")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getEnrichmentBatch(BatchSpatialEnrichmentRQ batchSpatialEnrichmentRQ){
+    public Response getEnrichmentBatch2(BatchSpatialEnrichmentRQ batchSpatialEnrichmentRQ){         //should we really support this?
 
         try {
-            BatchSpatialEnrichmentRS response = enrichmentService.getBatchSpatialEnrichment(batchSpatialEnrichmentRQ);
-            return Response.ok(response).build();
+            /*BatchSpatialEnrichmentRS response = enrichmentService.getBatchSpatialEnrichment(batchSpatialEnrichmentRQ);
+            return Response.ok(response).build();*/
+            return Response.status(501).build();
         } catch (Exception e) {
             log.error(e.toString(),e);
             return Response.status(500).build();
@@ -331,11 +335,12 @@ public class SpatialRestResource {
     @Path("getFilterArea")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getFilterArea(FilterAreasSpatialRQ filterAreasSpatialRQ) {
+    public Response getFilterArea2(FilterAreasSpatialRQ filterAreasSpatialRQ) {
 
         try {
-            FilterAreasSpatialRS response = null/*areaService.computeAreaFilter(filterAreasSpatialRQ)*/;
-            return Response.ok(response).build();
+            /*FilterAreasSpatialRS response = areaService.computeAreaFilter(filterAreasSpatialRQ);
+            return Response.ok(response).build();*/
+            return Response.status(501).build();
         } catch (Exception e) {
             log.error(e.toString(),e);
             return Response.status(500).build();
@@ -347,11 +352,12 @@ public class SpatialRestResource {
     @Path("getMapConfiguration")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getMapConfiguration(SpatialGetMapConfigurationRQ spatialGetMapConfigurationRQ) {
+    public Response getMapConfiguration2(SpatialGetMapConfigurationRQ spatialGetMapConfigurationRQ) {
 
         try {
-            SpatialGetMapConfigurationRS response = null /*mapConfigService.getMapConfiguration(spatialGetMapConfigurationRQ)*/;
-            return Response.ok(response).build();
+            /*SpatialGetMapConfigurationRS response = mapConfigService.getMapConfiguration(spatialGetMapConfigurationRQ);
+            return Response.ok(response).build();*/
+            return Response.status(501).build();
         } catch (Exception e) {
             log.error(e.toString(),e);
             return Response.status(500).build();
@@ -362,7 +368,7 @@ public class SpatialRestResource {
     @Path("ping")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response ping(PingRQ pingrq) {
+    public Response ping2(PingRQ pingrq) {
 
         try {
             PingRS response = new PingRS();
@@ -375,24 +381,14 @@ public class SpatialRestResource {
         }
     }
 
-    @GET
-    @Path("ping")
-    @Consumes(value = {MediaType.APPLICATION_JSON})
-    @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response pong2() {
-        return Response.ok("Pong").build();
-    }
-
-
     @POST
     @Path("getAreaByCode")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getAreaByCode(AreaByCodeRequest areaByCodeRequest) {
+    public Response getAreaByCode2(AreaByCodeRequest areaByCodeRequest) {
 
         try {
-            List<AreaSimpleType> areaSimples = areaByCodeRequest.getAreaSimples();
-            List<AreaSimpleType> areaSimpleTypeList = null/*areaService.getAreasByCode(areaSimples)*/;
+            List<AreaSimpleType> areaSimpleTypeList = areaServiceBean2.getAreasByCode(areaByCodeRequest);
             AreaByCodeResponse response = new AreaByCodeResponse();
             response.setAreaSimples(areaSimpleTypeList);
             return Response.ok(response).build();
@@ -406,10 +402,12 @@ public class SpatialRestResource {
     @Path("getGeometryByPortCode")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getGeometryByPortCode(GeometryByPortCodeRequest geometryByPortCodeRequest) {
+    public Response getGeometryByPortCode2(GeometryByPortCodeRequest geometryByPortCodeRequest) {
         try {
-            String portCode=geometryByPortCodeRequest.getPortCode();
-            String geometry= areaService.getGeometryForPort(portCode);
+            List<String> portCode = new ArrayList<>();
+            portCode.add(geometryByPortCodeRequest.getPortCode());
+            List<PortEntity2> portList = areaServiceBean2.getPortsByAreaCodes(portCode);
+            String geometry = (portList.isEmpty() ? "" : portList.get(0).getGeometry());
             GeometryByPortCodeResponse response = new GeometryByPortCodeResponse();
             response.setPortGeometry(geometry);
             return Response.ok(response).build();

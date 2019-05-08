@@ -24,6 +24,7 @@ import java.util.Objects;
                 query = "FROM StatRectEntity2 WHERE intersects(geom, :shape) = true AND enabled = true"),
         @NamedQuery(name = StatRectEntity2.SEARCH_STATRECT, query = "FROM StatRectEntity2 where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid"),
         @NamedQuery(name = StatRectEntity2.SEARCH_STATRECT_NAMES_BY_CODE, query = "From StatRectEntity2 where code in (SELECT distinct(code) from StatRectEntity2 where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid)"),
+        @NamedQuery(name = StatRectEntity2.AREA_BY_AREA_CODES, query = "From StatRectEntity2 where code in :code AND enabled=true "),
         @NamedQuery(name = StatRectEntity2.STATRECT_COLUMNS, query = "SELECT statrect.id as gid, statrect.name AS name, statrect.code AS code FROM StatRectEntity2 AS statrect WHERE statrect.id in (:ids)")
 })
 
@@ -34,6 +35,7 @@ public class StatRectEntity2 extends BaseAreaEntity2 {
     public static final String SEARCH_STATRECT = "statrectEntity2.searchStatrectByNameOrCode";
     public static final String SEARCH_STATRECT_NAMES_BY_CODE = "statrectEntity2.searchNamesByCode";
     public static final String STATRECT_COLUMNS = "statrectEntity2.statRectColumns";
+    public static final String AREA_BY_AREA_CODES = "statrectEntity2.areaByAreaCodes";
 
 	@Id
 	@Column(name = "gid")

@@ -24,6 +24,7 @@ import java.util.Objects;
                 query = "FROM GfcmEntity2 WHERE intersects(geom, :shape) = true AND enabled = true"),
         @NamedQuery(name = GfcmEntity2.SEARCH_GFCM, query = "FROM GfcmEntity2 where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid"),
         @NamedQuery(name = GfcmEntity2.SEARCH_GFCM_NAMES_BY_CODE, query = "From GfcmEntity2 where code in (SELECT distinct(code) from GfcmEntity2 where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid)"),
+        @NamedQuery(name = GfcmEntity2.AREA_BY_AREA_CODES, query = "From GfcmEntity2 where code in :code AND enabled=true "),
         @NamedQuery(name = GfcmEntity2.GFCM_COLUMNS, query = "SELECT gfcm.id as gid, gfcm.name AS name, gfcm.code AS code FROM GfcmEntity2 AS gfcm WHERE gfcm.id in (:ids)")})
 
 public class GfcmEntity2 extends BaseAreaEntity2 {
@@ -33,6 +34,7 @@ public class GfcmEntity2 extends BaseAreaEntity2 {
     public static final String SEARCH_GFCM = "gfcmEntity2.SearchgfcmByNameOrCode";
     public static final String SEARCH_GFCM_NAMES_BY_CODE = "gfcmEntity2.searchNamesByCode";
     public static final String GFCM_COLUMNS = "gfcmEntity2.gfcmColumns";
+    public static final String AREA_BY_AREA_CODES = "gfcmEntity2.areaByAreaCodes";
 
 	@Id
 	@Column(name = "gid")

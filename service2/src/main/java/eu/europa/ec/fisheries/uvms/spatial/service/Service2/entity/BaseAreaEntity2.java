@@ -14,7 +14,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTWriter;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.utils.GeometryUtils;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.utils.GeometryUtils2;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -74,7 +74,7 @@ public class BaseAreaEntity2 {
     protected Instant enabledOn;
 
     public String getGeometry(){
-        return GeometryUtils.geometryToWkt(geom);
+        return GeometryUtils2.geometryToWkt(geom);
     }
 
     @JsonIgnore

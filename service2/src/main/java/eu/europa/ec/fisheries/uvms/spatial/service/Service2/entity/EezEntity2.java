@@ -23,6 +23,7 @@ import java.util.Objects;
         @NamedQuery(name = EezEntity2.EEZ_COLUMNS, query = "SELECT eez.id as gid, eez.name AS name, eez.code AS code FROM EezEntity2 AS eez WHERE eez.id in (:ids)"),
         @NamedQuery(name = EezEntity2.DISABLE_EEZ_AREAS, query = "UPDATE EezEntity2 SET enabled = false"),
         @NamedQuery(name = EezEntity2.SEARCH_EEZ, query = "FROM EezEntity2 where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid"),
+        @NamedQuery(name = EezEntity2.AREA_BY_AREA_CODES, query = "From EezEntity2 where code in :code AND enabled=true "),
         @NamedQuery(name = EezEntity2.SEARCH_EEZ_NAMES_BY_CODE, query = "From EezEntity2 where code in (SELECT distinct(code) from EezEntity2 where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid)")
 })
 @Table(name = "eez")
@@ -33,6 +34,7 @@ public class EezEntity2 extends BaseAreaEntity2 {
     public static final String SEARCH_EEZ = "eezEntity2.searchByNameAndCode";
     public static final String SEARCH_EEZ_NAMES_BY_CODE = "eezEntity2.searchNameByCode";
     public static final String EEZ_COLUMNS = "eezEntity2.findSelectedColumns";
+    public static final String AREA_BY_AREA_CODES = "eezEntity2.areaByAreaCodes";
 
 	@Id
 	@Column(name = "gid")

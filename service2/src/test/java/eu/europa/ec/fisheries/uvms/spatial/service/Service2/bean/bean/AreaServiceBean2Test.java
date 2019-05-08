@@ -1,9 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.bean;
 
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.PointType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRQ;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.AreaServiceBean2;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.TransactionalTests;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.BaseAreaDto;
@@ -16,6 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -132,6 +130,55 @@ public class AreaServiceBean2Test extends TransactionalTests {
         assertEquals("SEOER", response.getClosestLocations().getClosestLocations().get(0).getCode());
         assertEquals("Örnsköldsvik", response.getClosestLocations().getClosestLocations().get(0).getName());
         assertEquals(2158d / MeasurementUnit.NAUTICAL_MILES.getRatio() , response.getClosestLocations().getClosestLocations().get(0).getDistance(), 0.01d);
+    }
+
+
+    @Test
+    public void getAreasByCodeAllDifferentAreaTypesTest(){
+        double lon = 17.536166666666666;
+        double lat = 59.391;
+
+        List<BaseAreaDto> areasByPoint = areaServiceBean.getAreasByPoint(lat, lon);
+
+        assertEquals(4, areasByPoint.size());
+
+        AreaByCodeRequest areaByCodeRequest = new AreaByCodeRequest();
+        List<AreaSimpleType> areaList = new ArrayList<>();
+        for (BaseAreaDto base: areasByPoint) {
+            AreaSimpleType simpleType = new AreaSimpleType(base.getType().value(), base.getCode(), null);
+            areaList.add(simpleType);
+        }
+
+        areaByCodeRequest.setAreaSimples(areaList);
+        List<AreaSimpleType> result = areaServiceBean.getAreasByCode(areaByCodeRequest);
+
+        assertEquals(4, result.size());
+        for (AreaSimpleType simpleType: result) {
+            assertNotNull(simpleType.getWkt());
+            assertTrue(simpleType.getAreaType() + " : " + simpleType.getAreaCode() ,areasByPoint.stream().anyMatch(base -> simpleType.getAreaCode().equals((base.getCode()))));
+        }
+    }
+
+    @Test
+    public void getAreasByCodeAllSameAreaTypesTest(){
+        String inputArray[] = {"SGP", "ATA", "IDN", "TLS", "PRT", "GBR",  "SJM", "USA", "SAU", "NZL", "EGY", "AUS", "COL", "IND", "VNM", "CHN", "MEX"};
+
+
+        AreaByCodeRequest areaByCodeRequest = new AreaByCodeRequest();
+        List<AreaSimpleType> areaList = new ArrayList<>();
+        for (String s: inputArray) {
+            AreaSimpleType simpleType = new AreaSimpleType(AreaType.EEZ.value(), s, null);
+            areaList.add(simpleType);
+        }
+
+        areaByCodeRequest.setAreaSimples(areaList);
+        List<AreaSimpleType> result = areaServiceBean.getAreasByCode(areaByCodeRequest);
+
+        assertEquals(28, result.size());            //17 codes, some are used several times so the result is 28
+        for (AreaSimpleType simpleType: result) {
+            assertNotNull(simpleType.getWkt());
+            assertTrue(simpleType.getAreaType() + " : " + simpleType.getAreaCode() ,Arrays.asList(inputArray).stream().anyMatch(base -> simpleType.getAreaCode().equals((base))));
+        }
     }
 
 

@@ -70,6 +70,7 @@ import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
         @NamedQuery(name = UserAreasEntity2.BY_INTERSECT, query = "FROM UserAreasEntity2 WHERE intersects(geom, :shape) = true AND enabled = true"),
         @NamedQuery(name = UserAreasEntity2.SEARCH_USERAREA, query = "FROM UserAreasEntity2 where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid"),
         @NamedQuery(name = UserAreasEntity2.SEARCH_USERAREA_NAMES_BY_CODE, query = "From UserAreasEntity2 where code in (SELECT distinct(code) from UserAreasEntity2 where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid)"),
+        @NamedQuery(name = UserAreasEntity2.AREA_BY_AREA_CODES, query = "From UserAreasEntity2 where code in :code AND enabled=true "),
         @NamedQuery(name = UserAreasEntity2.UPDATE_USERAREA_FORUSER_AND_SCOPE,
                 query = "update UserAreasEntity2 userarea " +
                         "set userarea.startDate = :startDate, userarea.endDate = :endDate " +
@@ -104,6 +105,7 @@ public class UserAreasEntity2 extends BaseAreaEntity2 {
     public static final String UPDATE_USERAREA_FORUSER_AND_SCOPE = "userAreaEntity2.updateUserAreaForUserAndScope";
     public static final String UPDATE_USERAREA_FORUSER = "userAreaEntity2.updateUserAreaForUser";
     public static final String USERAREA_COLUMNS = "userAreasEntity2.findSelectedColumns";
+    public static final String AREA_BY_AREA_CODES = "userAreasEntity2.areaByAreaCodes";
 
     @Id
     @Column(name = "gid")

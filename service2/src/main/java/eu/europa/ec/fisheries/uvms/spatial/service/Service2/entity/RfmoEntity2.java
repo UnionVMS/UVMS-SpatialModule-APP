@@ -25,6 +25,7 @@ import java.util.Objects;
         @NamedQuery(name = RfmoEntity2.DISABLE_RFMO_AREAS,
                 query = "UPDATE RfmoEntity2 SET enabled = false"),
         @NamedQuery(name = RfmoEntity2.SEARCH_RFMO, query = "FROM RfmoEntity2 where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid"),
+        @NamedQuery(name = RfmoEntity2.AREA_BY_AREA_CODES, query = "From RfmoEntity2 where code in :code AND enabled=true "),
         @NamedQuery(name = RfmoEntity2.SEARCH_RFMO_NAMES_BY_CODE, query = "From RfmoEntity2 where code in (SELECT distinct(code) from RfmoEntity2 where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid)")})
 @Table(name = "rfmo")
 public class RfmoEntity2 extends BaseAreaEntity2 {
@@ -34,6 +35,7 @@ public class RfmoEntity2 extends BaseAreaEntity2 {
     public static final String SEARCH_RFMO = "rfmoEntity2.searchRfmoByNameOrCode";
     public static final String SEARCH_RFMO_NAMES_BY_CODE = "rfmoEntity2.searchNamesByCode";
     public static final String RFMO_COLUMNS = "rfmoEntity2.findSelectedColumns";
+    public static final String AREA_BY_AREA_CODES = " rfmoEntity2.areaByAreaCodes";
 
 	@Id
 	@Column(name = "gid")

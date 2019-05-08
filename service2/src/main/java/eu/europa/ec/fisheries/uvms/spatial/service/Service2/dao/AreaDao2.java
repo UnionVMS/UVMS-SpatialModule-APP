@@ -16,9 +16,7 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.PortDistanceInfoDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.PortAreaEntity2;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.PortEntity2;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.UserAreasEntity2;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.*;
 import org.apache.commons.collections.CollectionUtils;
 
 import javax.ejb.Stateless;
@@ -208,6 +206,55 @@ public class AreaDao2 {
         query.setParameter("userName", remoteUser);
         query.setParameter("type", type);
         query.executeUpdate();
+    }
+
+    public List<EezEntity2> getEEZByAreaCodes(List<String> codes) {
+
+        TypedQuery<EezEntity2> query = em.createNamedQuery(EezEntity2.AREA_BY_AREA_CODES, EezEntity2.class);
+        query.setParameter("code", codes);
+        return query.getResultList();
+    }
+
+    public List<FaoEntity2> getFAOByAreaCodes(List<String> codes) {
+
+        TypedQuery<FaoEntity2> query = em.createNamedQuery(FaoEntity2.AREA_BY_AREA_CODES, FaoEntity2.class);
+        query.setParameter("code", codes);
+        return query.getResultList();
+    }
+
+    public List<GfcmEntity2> getGFCMByAreaCodes(List<String> codes) {
+
+        TypedQuery<GfcmEntity2> query = em.createNamedQuery(GfcmEntity2.AREA_BY_AREA_CODES, GfcmEntity2.class);
+        query.setParameter("code", codes);
+        return query.getResultList();
+    }
+
+    public List<PortAreaEntity2> getPortAreaByAreaCodes(List<String> codes) {
+
+        TypedQuery<PortAreaEntity2> query = em.createNamedQuery(PortAreaEntity2.AREA_BY_AREA_CODES, PortAreaEntity2.class);
+        query.setParameter("code", codes);
+        return query.getResultList();
+    }
+
+    public List<RfmoEntity2> getRFMOByAreaCodes(List<String> codes) {
+
+        TypedQuery<RfmoEntity2> query = em.createNamedQuery(RfmoEntity2.AREA_BY_AREA_CODES, RfmoEntity2.class);
+        query.setParameter("code", codes);
+        return query.getResultList();
+    }
+
+    public List<StatRectEntity2> getStatRectByAreaCodes(List<String> codes) {
+
+        TypedQuery<StatRectEntity2> query = em.createNamedQuery(StatRectEntity2.AREA_BY_AREA_CODES, StatRectEntity2.class);
+        query.setParameter("code", codes);
+        return query.getResultList();
+    }
+
+    public List<UserAreasEntity2> getUserAreasByAreaCodes(List<String> codes) {
+
+        TypedQuery<UserAreasEntity2> query = em.createNamedQuery(UserAreasEntity2.AREA_BY_AREA_CODES, UserAreasEntity2.class);
+        query.setParameter("code", codes);
+        return query.getResultList();
     }
 
 

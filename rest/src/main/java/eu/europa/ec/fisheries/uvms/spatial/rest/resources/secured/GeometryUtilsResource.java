@@ -84,7 +84,7 @@ public class GeometryUtilsResource extends UnionVMSResource {
             Double longitude = Double.valueOf(String.valueOf(payload.get("y")));
             String wkt = String.valueOf(String.valueOf(payload.get("wkt")));
             //Geometry geometry = new WKTReader2().read(wkt);
-            //translate = GeometryUtils.transform(latitude, longitude, geometry);
+            //translate = GeometryUtils2.transform(latitude, longitude, geometry);
             //response = createSuccessResponse(new WKTWriter2().write(translate));
         }
         catch (Exception ex){
@@ -108,7 +108,7 @@ public class GeometryUtilsResource extends UnionVMSResource {
             Double longitude = Double.valueOf(String.valueOf(payload.get("x")));
             Double latitude = Double.valueOf(String.valueOf(payload.get("y")));
             Integer sourceCode = Integer.valueOf(String.valueOf(payload.get("sourceCode")));
-           // translate = GeometryUtils.toGeographic(latitude, longitude, sourceCode);
+           // translate = GeometryUtils2.toGeographic(latitude, longitude, sourceCode);
             final Double x = translate.getCoordinates()[0].x;
             final Double y = translate.getCoordinates()[0].y;
             final Integer srid = translate.getSRID();

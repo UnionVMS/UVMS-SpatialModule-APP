@@ -19,12 +19,16 @@ import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.BaseAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.PortDistanceInfoDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.PortAreaEntity2;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.PortEntity2;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.utils.GeometryUtils;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.utils.AreaSimpleTypeMapper;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.utils.GeometryUtils2;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.utils.MeasurementUnit;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Stateless
 public class AreaServiceBean2 {
@@ -35,38 +39,87 @@ public class AreaServiceBean2 {
     private static final String AREA_TYPE = "areaType";
 
     @Inject
-    private AreaDao2 portAreaDao;
+    private AreaDao2 areaDao;
 
     @Inject
     SpatialQueriesDao spatialQueriesDao;
 
 
 
+    public List<AreaSimpleType> getAreasByCode(AreaByCodeRequest areaByCodeRequest){        //should this really return area simple type???
+        Map<AreaType, List<String>> requestMap = new HashMap();
+        for (AreaSimpleType areaSimpleType: areaByCodeRequest.getAreaSimples()) {
+            AreaType areaType = AreaType.fromValue(areaSimpleType.getAreaType());
+            if(!requestMap.containsKey(areaType)) {
+                List<String> stringList = new ArrayList<>();
+                requestMap.put(areaType, stringList);
+            }
+            requestMap.get(areaType).add(areaSimpleType.getAreaCode());
+        }
 
+        List<AreaSimpleType> responseList = new ArrayList<>();
+        for (AreaType areaType : requestMap.keySet()) {
+            switch (areaType){
+                case EEZ:
+                    responseList.addAll(AreaSimpleTypeMapper.mapToAreaSimpleType(areaDao.getEEZByAreaCodes(requestMap.get(areaType)), areaType));
+                    break;
+                case FAO:
+                    responseList.addAll(AreaSimpleTypeMapper.mapToAreaSimpleType(areaDao.getFAOByAreaCodes(requestMap.get(areaType)), areaType));
+                    break;
+                case GFCM:
+                    responseList.addAll(AreaSimpleTypeMapper.mapToAreaSimpleType(areaDao.getGFCMByAreaCodes(requestMap.get(areaType)), areaType));
+                    break;
+                case RFMO:
+                    responseList.addAll(AreaSimpleTypeMapper.mapToAreaSimpleType(areaDao.getRFMOByAreaCodes(requestMap.get(areaType)), areaType));
+                    break;
+                case PORT:
+                    responseList.addAll(AreaSimpleTypeMapper.mapToAreaSimpleType(areaDao.getPortsByAreaCodes(requestMap.get(areaType)), areaType));
+                    break;
+                case PORTAREA:
+                    responseList.addAll(AreaSimpleTypeMapper.mapToAreaSimpleType(areaDao.getPortAreaByAreaCodes(requestMap.get(areaType)), areaType));
+                    break;
+                case USERAREA:
+                    responseList.addAll(AreaSimpleTypeMapper.mapToAreaSimpleType(areaDao.getUserAreasByAreaCodes(requestMap.get(areaType)), areaType));
+                    break;
+                case STATRECT:
+                    responseList.addAll(AreaSimpleTypeMapper.mapToAreaSimpleType(areaDao.getStatRectByAreaCodes(requestMap.get(areaType)), areaType));
+                    break;
+                default:
+
+            }
+        }
+
+        return responseList;
+
+    }
 
     public List<PortEntity2> getPortsByAreaCodes(List<String> codes){
-        return portAreaDao.getPortsByAreaCodes(codes);
+        return areaDao.getPortsByAreaCodes(codes);
     }
 
     public List<PortAreaEntity2> getPortAreasByPoint(Double lat, Double lon){
-        Point point = (Point) GeometryUtils.createPoint(lat, lon);
-        return portAreaDao.getPortAreasByPoint(point);
+        Point point = (Point) GeometryUtils2.createPoint(lat, lon);
+        return getPortAreasByPoint(point);
+    }
+
+    public List<PortAreaEntity2> getPortAreasByPoint(Point point){
+        return areaDao.getPortAreasByPoint(point);
     }
 
     public List<BaseAreaDto> getAreasByPoint(Double lat, Double lon){
 
-        Point point = (Point) GeometryUtils.createPoint(lat, lon);
+        Point point = (Point) GeometryUtils2.createPoint(lat, lon);
         return spatialQueriesDao.getAreasByPoint(point);
 
     }
 
     public PortDistanceInfoDto findClosestPortByPosition(Double lat,  Double lon){
-        Point point = (Point) GeometryUtils.createPoint(lat, lon);
-        return portAreaDao.getClosestPort(point);
+        Point point = (Point) GeometryUtils2.createPoint(lat, lon);
+        return areaDao.getClosestPort(point);
     }
 
     public List<BaseAreaDto> getClosestAreasByPoint(Double lat, Double lon){
-        Point point = (Point) GeometryUtils.createPoint(lat, lon);
+        Point point = (Point) GeometryUtils2.createPoint(lat, lon);
         return spatialQueriesDao.getClosestAreaByPoint(point);
     }
 
@@ -75,7 +128,7 @@ public class AreaServiceBean2 {
 
         PointType pointType = request.getPoint();
 
-        Point point = (Point) GeometryUtils.createPoint(pointType.getLatitude(), pointType.getLongitude());
+        Point point = (Point) GeometryUtils2.createPoint(pointType.getLatitude(), pointType.getLongitude());
         return computeSpatialEnrichment(point);
     }
 
@@ -88,7 +141,7 @@ public class AreaServiceBean2 {
 
         List<BaseAreaDto> closestAreas = spatialQueriesDao.getClosestAreaByPoint(point);
 
-        PortDistanceInfoDto closestLocation = portAreaDao.getClosestPort(point);
+        PortDistanceInfoDto closestLocation = areaDao.getClosestPort(point);
 
         SpatialEnrichmentRS response = new SpatialEnrichmentRS();
 

@@ -25,6 +25,7 @@ import java.util.Objects;
         @NamedQuery(name = PortAreaEntity2.DISABLE_PORT_AREAS, query = "UPDATE PortAreaEntity2 SET enabled = false"),
         @NamedQuery(name = PortAreaEntity2.SEARCH_PORTAREAS, query = "FROM PortAreaEntity2 where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid"),
         @NamedQuery(name = PortAreaEntity2.SEARCH_PORT_AREA_NAMES_BY_CODE, query = "From PortAreaEntity2 where code in (SELECT distinct(code) from PortAreaEntity2 where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid)"),
+        @NamedQuery(name = PortAreaEntity2.AREA_BY_AREA_CODES, query = "From PortAreaEntity2 where code in :code AND enabled=true "),
         @NamedQuery(name = PortAreaEntity2.PORTAREA_COLUMNS, query = "SELECT portarea.id as gid, portarea.name AS name, portarea.code AS code FROM PortAreaEntity2 AS portarea WHERE portarea.id in (:ids)")})
 @Table(name = "port_area")
 public class PortAreaEntity2 extends BaseAreaEntity2 {
@@ -34,6 +35,7 @@ public class PortAreaEntity2 extends BaseAreaEntity2 {
     public static final String SEARCH_PORTAREAS = "portAreaEntity2.searchPortAreaByNameOrCode";
     public static final String SEARCH_PORT_AREA_NAMES_BY_CODE = "portAreaEntity2.searchNamesByCode";
     public static final String PORTAREA_COLUMNS = "portAreaEntity2.portAreaColumns";
+    public static final String AREA_BY_AREA_CODES = "portAreaEntity2.areaByAreaCodes";
 
 	@Id
 	@Column(name = "gid")

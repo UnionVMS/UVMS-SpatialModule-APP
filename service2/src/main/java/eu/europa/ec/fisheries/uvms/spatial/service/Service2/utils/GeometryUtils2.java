@@ -24,9 +24,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class GeometryUtils {
+public class GeometryUtils2 {
 
-    private static final Logger LOG = LoggerFactory.getLogger(GeometryUtils.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GeometryUtils2.class);
     private static final String EPSG = "EPSG:";
 
     public static final int DEFAULT_EPSG_SRID = 4326;
