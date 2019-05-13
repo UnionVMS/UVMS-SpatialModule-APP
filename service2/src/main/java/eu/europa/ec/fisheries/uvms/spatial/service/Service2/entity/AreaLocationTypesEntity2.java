@@ -34,8 +34,8 @@ import java.util.Objects;
                 + " provider.serviceType as serviceType FROM AreaLocationTypesEntity2 as area INNER JOIN area.serviceLayer as layer"
                 + " INNER JOIN layer.providerFormat as provider WHERE area.systemWide = true"
                 + " AND area.serviceLayer = layer AND layer.providerFormat = provider AND area.areaDbTable <> 'user_areas'"),
-        @NamedQuery(name = AreaLocationTypesEntity2.FIND_USER_AREA_LAYER, query = "SELECT area.typeName as typeName, layer.geoName as geoName, layer.internal as internal, layer.serviceUrl as serviceUrl, layer.styleLabelGeom as style,"
-                + " provider.serviceType as serviceType FROM AreaLocationTypesEntity2 as area INNER JOIN area.serviceLayer as layer"
+        @NamedQuery(name = AreaLocationTypesEntity2.FIND_USER_AREA_LAYER, query = "SELECT new eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.AreaLayerDto2(area.typeName, layer.geoName, area.areaTypeDesc, layer.styleLabelGeom, provider.serviceType"
+                + " FROM AreaLocationTypesEntity2 as area INNER JOIN area.serviceLayer as layer"
                 + " INNER JOIN layer.providerFormat as provider WHERE area.systemWide = true AND area.location = false"
                 + " AND area.serviceLayer = layer AND area.areaDbTable = 'user_areas' AND layer.providerFormat = provider")
 })

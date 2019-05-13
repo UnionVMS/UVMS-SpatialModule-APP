@@ -42,6 +42,10 @@ public class AreaDao2 {
         return entity;
     }
 
+    public <T> T find(Class<T> entity, long id)  {
+        return em.find(entity, id);
+    }
+
 
     public <T> T update(T entity)  {
         return em.merge(entity);
@@ -84,23 +88,6 @@ public class AreaDao2 {
         return   query.getResultList();
     }
 
-    public List<UserAreasEntity2> intersects(final Geometry shape) {
-
-        TypedQuery<UserAreasEntity2> query = em.createNamedQuery(UserAreasEntity2.USER_AREA_BY_COORDINATE, UserAreasEntity2.class);
-        query.setParameter("shape",shape);
-        return   query.getResultList();
-    }
-
-
-    public List<UserAreasEntity2> findByUserNameAndGeometry(Geometry shape){
-
-        if (shape != null ){
-            TypedQuery<UserAreasEntity2> query = em.createNamedQuery(UserAreasEntity2.USER_AREA_DETAILS_BY_LOCATION, UserAreasEntity2.class);
-            query.setParameter("shape",shape);
-            return query.getResultList();
-        }
-        return new ArrayList<>();
-    }
 
     public List<UserAreasEntity2> getAllUserAreas(String userName, String scopeName) {
 
@@ -111,54 +98,12 @@ public class AreaDao2 {
     }
 
 
-
-    public UserAreasEntity2 getByUserNameAndName(String userName, String areaName) {
-
-        TypedQuery<UserAreasEntity2> query =  em.createNamedQuery(UserAreasEntity2.FIND_BY_USERNAME_AND_NAME,UserAreasEntity2.class);
-        query.setParameter("name", areaName);
-        query.setParameter(USER_NAME, userName);
-        List<UserAreasEntity2> rs = query.getResultList();
-        if (!CollectionUtils.isEmpty(rs)){
-            return rs.get(0);
-        }
-        return null;
-    }
-
-
-
-    public UserAreasEntity2 findOne(final Long userAreaId, final String userName, final Boolean isPowerUser, final String scopeName) {
-
-        TypedQuery<UserAreasEntity2> query =  em.createNamedQuery(UserAreasEntity2.FIND_USER_AREA_BY_ID,UserAreasEntity2.class);
-        query.setParameter("userAreaId", userAreaId);
-        query.setParameter(USER_NAME, userName);
-        query.setParameter(IS_POWER_USER, isPowerUser);
-        query.setParameter(SCOPE_NAME, scopeName);
-        List<UserAreasEntity2> rs  = query.getResultList();
-
-        if (!CollectionUtils.isEmpty(rs)){
-            return rs.get(0);
-        }
-        return null;
-    }
-
-    public List<UserAreasEntity2> findByUserNameAndScopeNameAndTypeAndPowerUser(String userName, String scopeName, String type, boolean isPowerUser) {
-
-        TypedQuery<UserAreasEntity2> query =  em.createNamedQuery(UserAreasEntity2.FIND_USER_AREA_BY_TYPE,UserAreasEntity2.class);
-        query.setParameter("type", type);
+    public List<UserAreasEntity2> findByUserNameScopeNameAndPowerUser(String userName, String scopeName, boolean isPowerUser){
+        TypedQuery<UserAreasEntity2> query =  em.createNamedQuery(UserAreasEntity2.FIND_USER_AREA_BY_USERNAME_SCOPE_AND_POWERUSER,UserAreasEntity2.class);
         query.setParameter(USER_NAME, userName);
         query.setParameter(IS_POWER_USER, isPowerUser);
         query.setParameter(SCOPE_NAME, scopeName);
         return query.getResultList();
-    }
-
-    public List<UserAreasEntity2> findUserAreasTypes(final String userName, final String scopeName, final Boolean isPowerUser)  {
-
-        TypedQuery<UserAreasEntity2> query =  em.createNamedQuery(UserAreasEntity2.FIND_USER_AREA_BY_USER,UserAreasEntity2.class);
-        query.setParameter(USER_NAME, userName);
-        query.setParameter(IS_POWER_USER, isPowerUser);
-        query.setParameter(SCOPE_NAME, scopeName);
-        return query.getResultList();
-
     }
 
     public List<UserAreasEntity2> findByUserNameAndScopeName(String userName, String scopeName){
@@ -169,47 +114,7 @@ public class AreaDao2 {
         return query.getResultList();
     }
 
-    /**
-     * <p>Update Start date and End date for user areas if the user is having scope <code><B>MANAGE_ANY_USER_AREA</B></code>
-     * <p><code>StartDate</code> and <code>EndDate</code> can be NULL or Empty or a Valid Date</p>
-     *
-     * @param startDate Start Date
-     * @param endDate End Date
-     * @param type Area Type
-     * @exception ServiceException Exception is Date cannot be updated
-     *
-     * @see UserAreaDao2#updateUserAreasForUser(String, Date, Date, String)
-     */
-    public void updateUserAreasForUserAndScope(Date startDate, Date endDate, String type) {
-
-        TypedQuery<UserAreasEntity2> query =  em.createNamedQuery(UserAreasEntity2.UPDATE_USERAREA_FORUSER_AND_SCOPE,UserAreasEntity2.class);
-        query.setParameter("startDate", startDate);
-        query.setParameter("endDate", endDate);
-        query.setParameter("type", type);
-        query.executeUpdate();
-    }
-
-    /**
-     * <p>Update Start date and End date for user areas those are created by the user</p>
-     * <p><code>StartDate</code> and <code>EndDate</code> can be NULL or Empty or a Valid Date</p>
-     *
-     * @param remoteUser User Name
-     * @param startDate Start Date
-     * @param endDate End Date
-     * @param type Area Type
-     * @throws ServiceException Exception is Date cannot be updated
-     *
-     * @see UserAreaDao2#updateUserAreasForUserAndScope(Date, Date, String)
-     */
-    public void updateUserAreasForUser(String remoteUser, Date startDate, Date endDate, String type) {
-
-        TypedQuery<UserAreasEntity2> query =  em.createNamedQuery(UserAreasEntity2.UPDATE_USERAREA_FORUSER,UserAreasEntity2.class);
-        query.setParameter("startDate", startDate);
-        query.setParameter("endDate", endDate);
-        query.setParameter("userName", remoteUser);
-        query.setParameter("type", type);
-        query.executeUpdate();
-    }
+    /*  ---------------------- Get Areas By Codes ------------------------- */
 
     public List<EezEntity2> getEEZByAreaCodes(List<String> codes) {
         if(codes == null || codes.isEmpty()){

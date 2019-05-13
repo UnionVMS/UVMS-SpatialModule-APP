@@ -14,9 +14,12 @@ package eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dao.AreaDao2;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dao.AreaLocationTypesDao2;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dao.SpatialQueriesDao;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.AreaLayerDto2;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.BaseAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.PortDistanceInfoDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.AreaLocationTypesEntity2;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.PortAreaEntity2;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.PortEntity2;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.UserAreasEntity2;
@@ -44,6 +47,9 @@ public class AreaServiceBean2 {
 
     @Inject
     SpatialQueriesDao spatialQueriesDao;
+
+    @Inject
+    AreaLocationTypesDao2 areaLocationTypesDao2;
 
 
 
@@ -207,5 +213,14 @@ public class AreaServiceBean2 {
     /*public UserAreasEntity2 createUserArea( areaType){
 
     }*/
+
+
+    public AreaLayerDto2 getUserAreaLayerDefinition(String userName, String scopeName) {
+
+        AreaLayerDto2 userAreaLayer = areaLocationTypesDao2.findUserAreaLayerMapping();
+        List<UserAreasEntity2> userAreasEntity2List = areaDao.findByUserNameAndScopeName(userName, scopeName);
+        userAreaLayer.setIdList(AreaMapper2.mapToBaseAreaDtoList(userAreasEntity2List));
+        return userAreaLayer;
+    }
 
 }

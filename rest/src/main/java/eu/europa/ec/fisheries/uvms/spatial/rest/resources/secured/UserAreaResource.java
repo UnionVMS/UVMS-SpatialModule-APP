@@ -11,20 +11,34 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialFeaturesEnum;
+import eu.europa.ec.fisheries.uvms.spatial.rest.constants.ErrorCodes;
 import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.AreaLocationMapper;
+import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.AreaServiceBean2;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dao.AreaDao2;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
+import javax.interceptor.Interceptors;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  * @implicitParam roleName|string|header|true||||||
  * @implicitParam scopeName|string|header|true|EC|||||
  * @implicitParam authorization|string|header|true||||||jwt token
  */
-//@Path("/userarea")
+@Path("/userarea")
 @Stateless
 public class UserAreaResource extends UnionVMSResource {
 
@@ -43,6 +57,9 @@ public class UserAreaResource extends UnionVMSResource {
     @EJB
     private SpatialService spatialService;
 */
+    @Inject
+    AreaServiceBean2 areaServiceBean2;
+
     private AreaLocationMapper areaLocationMapper = AreaLocationMapper.mapper();
 
    /* @POST
@@ -138,14 +155,16 @@ public class UserAreaResource extends UnionVMSResource {
         return createSuccessResponse();
     }*/
 
-    /*@GET
+
+
+    @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/layers")
     @Interceptors(value = {ExceptionInterceptor.class})
     public Response getUserAreaLayerMapping(@HeaderParam("scopeName") String scopeName, @Context HttpServletRequest servletRequest) {
         log.debug("UserName from security : " + servletRequest.getRemoteUser());
-        return createSuccessResponse(userAreaService.getUserAreaLayerDefinition(servletRequest.getRemoteUser(), scopeName));
-    }*/
+        return createSuccessResponse(areaServiceBean2.getUserAreaLayerDefinition(servletRequest.getRemoteUser(), scopeName));
+    }
 
     /*@POST
     @Produces({MediaType.APPLICATION_JSON})
@@ -305,19 +324,22 @@ public class UserAreaResource extends UnionVMSResource {
         return response;
     }*/
 
-    /*@GET
+    @Inject
+    AreaDao2 areaDao2;
+
+    @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/list")
-    public Response listUserAreas(@HeaderParam("scopeName") String scopeName, @Context HttpServletRequest servletRequest) throws ServiceException {
+    public Response listUserAreas(@HeaderParam("scopeName") String scopeName, @Context HttpServletRequest servletRequest) {
         Response response;
 
         if (servletRequest.isUserInRole(SpatialFeaturesEnum.MANAGE_USER_DEFINED_AREAS.toString())) {
-            response = createSuccessResponse(userAreaService.searchUserAreasByCriteria(servletRequest.getRemoteUser(), scopeName, StringUtils.EMPTY, isPowerUser(servletRequest)));
+            response = createSuccessResponse(areaDao2.findByUserNameScopeNameAndPowerUser(servletRequest.getRemoteUser(), scopeName, isPowerUser(servletRequest)));
         } else {
             response = createErrorResponse(ErrorCodes.NOT_AUTHORIZED);
         }
         return response;
-    }*/
+    }
 
     /*@GET
     @Produces({MediaType.APPLICATION_JSON})

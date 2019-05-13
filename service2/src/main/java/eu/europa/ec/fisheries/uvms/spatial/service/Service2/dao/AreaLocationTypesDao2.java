@@ -10,6 +10,7 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.service.Service2.dao;
 
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.AreaLayerDto2;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.AreaLocationTypesEntity2;
 import org.hibernate.Session;
 
@@ -53,9 +54,9 @@ public class AreaLocationTypesDao2 {
        return   query.getResultList();
     }
 
-    public List findUserAreaLayerMapping() {
-        TypedQuery<AreaLocationTypesEntity2> query = em.unwrap(Session.class).getNamedQuery(AreaLocationTypesEntity2.FIND_USER_AREA_LAYER);
-        return query.getResultList();
+    public AreaLayerDto2 findUserAreaLayerMapping() {
+        TypedQuery<AreaLayerDto2> query = em.unwrap(Session.class).getNamedQuery(AreaLocationTypesEntity2.FIND_USER_AREA_LAYER);
+        return query.getSingleResult();
     }
 
     public List<AreaLocationTypesEntity2> findSystemAreaLayerMapping() {

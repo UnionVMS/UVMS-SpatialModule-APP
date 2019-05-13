@@ -5,6 +5,7 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.BaseAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.BaseAreaEntity2;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.UserAreasEntity2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,19 @@ public class AreaMapper2 {
             response.add(areaExtendedIdentifierType);
         }
         return response;
+    }
+
+    public static List<BaseAreaDto> mapToBaseAreaDtoList(List<UserAreasEntity2> entityList){
+        List<BaseAreaDto> dtoList = new ArrayList<>();
+        for (UserAreasEntity2 entity: entityList) {
+            dtoList.add(mapToBaseAreaDto(entity));
+        }
+        return dtoList;
+    }
+
+    public static BaseAreaDto mapToBaseAreaDto(UserAreasEntity2 entity){
+        BaseAreaDto dto = new BaseAreaDto(entity.getType(), entity.getId(), entity.getCode(), entity.getName());
+        return dto;
     }
 
 }
