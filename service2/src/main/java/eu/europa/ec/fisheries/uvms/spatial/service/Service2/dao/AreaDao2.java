@@ -56,6 +56,9 @@ public class AreaDao2 {
 
 
     public List<PortEntity2> getPortsByAreaCodes(List<String> codes) {
+        if(codes == null || codes.isEmpty()){
+            return new ArrayList<>();
+        }
 
         TypedQuery<PortEntity2> query = em.createNamedQuery(PortEntity2.SEARCH_PORT_BY_AREA_CODES, PortEntity2.class);
         query.setParameter("code", codes);
@@ -209,6 +212,9 @@ public class AreaDao2 {
     }
 
     public List<EezEntity2> getEEZByAreaCodes(List<String> codes) {
+        if(codes == null || codes.isEmpty()){
+            return new ArrayList<>();
+        }
 
         TypedQuery<EezEntity2> query = em.createNamedQuery(EezEntity2.AREA_BY_AREA_CODES, EezEntity2.class);
         query.setParameter("code", codes);
@@ -216,6 +222,9 @@ public class AreaDao2 {
     }
 
     public List<FaoEntity2> getFAOByAreaCodes(List<String> codes) {
+        if(codes == null || codes.isEmpty()){
+            return new ArrayList<>();
+        }
 
         TypedQuery<FaoEntity2> query = em.createNamedQuery(FaoEntity2.AREA_BY_AREA_CODES, FaoEntity2.class);
         query.setParameter("code", codes);
@@ -223,6 +232,9 @@ public class AreaDao2 {
     }
 
     public List<GfcmEntity2> getGFCMByAreaCodes(List<String> codes) {
+        if(codes == null || codes.isEmpty()){
+            return new ArrayList<>();
+        }
 
         TypedQuery<GfcmEntity2> query = em.createNamedQuery(GfcmEntity2.AREA_BY_AREA_CODES, GfcmEntity2.class);
         query.setParameter("code", codes);
@@ -230,6 +242,9 @@ public class AreaDao2 {
     }
 
     public List<PortAreaEntity2> getPortAreaByAreaCodes(List<String> codes) {
+        if(codes == null || codes.isEmpty()){
+            return new ArrayList<>();
+        }
 
         TypedQuery<PortAreaEntity2> query = em.createNamedQuery(PortAreaEntity2.AREA_BY_AREA_CODES, PortAreaEntity2.class);
         query.setParameter("code", codes);
@@ -237,6 +252,9 @@ public class AreaDao2 {
     }
 
     public List<RfmoEntity2> getRFMOByAreaCodes(List<String> codes) {
+        if(codes == null || codes.isEmpty()){
+            return new ArrayList<>();
+        }
 
         TypedQuery<RfmoEntity2> query = em.createNamedQuery(RfmoEntity2.AREA_BY_AREA_CODES, RfmoEntity2.class);
         query.setParameter("code", codes);
@@ -244,6 +262,9 @@ public class AreaDao2 {
     }
 
     public List<StatRectEntity2> getStatRectByAreaCodes(List<String> codes) {
+        if(codes == null || codes.isEmpty()){
+            return new ArrayList<>();
+        }
 
         TypedQuery<StatRectEntity2> query = em.createNamedQuery(StatRectEntity2.AREA_BY_AREA_CODES, StatRectEntity2.class);
         query.setParameter("code", codes);
@@ -251,6 +272,9 @@ public class AreaDao2 {
     }
 
     public List<UserAreasEntity2> getUserAreasByAreaCodes(List<String> codes) {
+        if(codes == null || codes.isEmpty()){
+            return new ArrayList<>();
+        }
 
         TypedQuery<UserAreasEntity2> query = em.createNamedQuery(UserAreasEntity2.AREA_BY_AREA_CODES, UserAreasEntity2.class);
         query.setParameter("code", codes);

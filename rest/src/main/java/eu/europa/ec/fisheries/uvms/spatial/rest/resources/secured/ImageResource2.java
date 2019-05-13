@@ -33,35 +33,19 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
-import eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured.LegendResource;
 import eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured.PositionResource;
-import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.rest.util.ImageEncoderFactory;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.impl.PropertiesBean;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.mapfish.request.Class;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.mapfish.request.Cluster;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.mapfish.request.Icons;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.mapfish.response.ImageResponse;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.PropertiesBean2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ejb.EJB;
-import javax.interceptor.Interceptors;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.POST;
+import javax.inject.Inject;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 // TODO  fix legendEntry
-import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 /**
  * @implicitParam roleName|string|header|true||||||
@@ -69,15 +53,16 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
  * @implicitParam authorization|string|header|true||||||jwt token
  */
 @Path("/image")
-public class ImageResource extends UnionVMSResource {
+public class ImageResource2 extends UnionVMSResource {
 
-    private final static Logger log = LoggerFactory.getLogger(ImageResource.class);
+    private final static Logger log = LoggerFactory.getLogger(ImageResource2.class);
 
     public static final String SCALE_1_3 = "scale(1.3)";
     public static final String SCALE_0_3 = "scale(0.3)";
 
-    @EJB
-    private PropertiesBean propertiesBean;
+
+    @Inject
+    private PropertiesBean2 propertiesBean2;
 
     @Path("/position")
     @Produces(MediaType.APPLICATION_JSON)
@@ -85,13 +70,13 @@ public class ImageResource extends UnionVMSResource {
         return createSuccessResponse(PositionResource.getpositionEntries().keySet());
     }
 
-    @POST
+    /*@POST
     @Produces(MediaType.APPLICATION_JSON)
     @Interceptors(value = { ExceptionInterceptor.class})
     public Response renderImages(@Context HttpServletRequest request, Icons payload)  {
 
         ImageResponse response = new ImageResponse();
-        response.getLegend().withBase("/" + propertiesBean.getProperty("context.root") + "/spatial/image/legend/");
+        response.getLegend().withBase("/" + propertiesBean2.getProperty("context.root") + "/spatial/image/legend/");
 
         if (payload.getPositions() != null){
             handlePositions(payload, response);
@@ -107,9 +92,9 @@ public class ImageResource extends UnionVMSResource {
 
         return createSuccessResponse(response);
 
-    }
+    }*/
 
-    private void handleAlarms(Icons payload, ImageResponse response)  {
+    /*private void handleAlarms(Icons payload, ImageResponse response)  {
         try {
             List<ImageEncoderFactory.LegendEntry> temp = new ArrayList<>();
 
@@ -129,11 +114,11 @@ public class ImageResource extends UnionVMSResource {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e.getMessage(), e);
         }
-    }
+    }*/
 
-    private void handlePositions(Icons payload, ImageResponse response) {
+    /*private void handlePositions(Icons payload, ImageResponse response) {
         try {
-            response.getMap().getVmspos().withBase("/" + propertiesBean.getProperty("context.root") + "/spatial/image/position/");
+            response.getMap().getVmspos().withBase("/" + propertiesBean2.getProperty("context.root") + "/spatial/image/position/");
             List<ImageEncoderFactory.LegendEntry> temp = new ArrayList<>();
 
             for (Class clazz : payload.getPositions().getClasses()) { // TODO validate hex value
@@ -172,9 +157,9 @@ public class ImageResource extends UnionVMSResource {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e.getMessage(), e);
         }
-    }
+    }*/
 
-    private void handleSegments(Icons payload, ImageResponse response)  {
+    /*private void handleSegments(Icons payload, ImageResponse response)  {
         try {
             String lineStyle = payload.getSegments().getLineStyle();
             List<ImageEncoderFactory.LegendEntry> temp = new ArrayList<>();
@@ -196,6 +181,6 @@ public class ImageResource extends UnionVMSResource {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e.getMessage(), e);
         }
-    }
+    }*/
 
 }

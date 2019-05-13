@@ -19,7 +19,8 @@ import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.BaseAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.PortDistanceInfoDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.PortAreaEntity2;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.PortEntity2;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.utils.AreaSimpleTypeMapper;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.UserAreasEntity2;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.utils.AreaMapper2;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.utils.GeometryUtils2;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.utils.MeasurementUnit;
 
@@ -61,28 +62,28 @@ public class AreaServiceBean2 {
         for (AreaType areaType : requestMap.keySet()) {
             switch (areaType){
                 case EEZ:
-                    responseList.addAll(AreaSimpleTypeMapper.mapToAreaSimpleType(areaDao.getEEZByAreaCodes(requestMap.get(areaType)), areaType));
+                    responseList.addAll(AreaMapper2.mapToAreaSimpleType(areaDao.getEEZByAreaCodes(requestMap.get(areaType)), areaType));
                     break;
                 case FAO:
-                    responseList.addAll(AreaSimpleTypeMapper.mapToAreaSimpleType(areaDao.getFAOByAreaCodes(requestMap.get(areaType)), areaType));
+                    responseList.addAll(AreaMapper2.mapToAreaSimpleType(areaDao.getFAOByAreaCodes(requestMap.get(areaType)), areaType));
                     break;
                 case GFCM:
-                    responseList.addAll(AreaSimpleTypeMapper.mapToAreaSimpleType(areaDao.getGFCMByAreaCodes(requestMap.get(areaType)), areaType));
+                    responseList.addAll(AreaMapper2.mapToAreaSimpleType(areaDao.getGFCMByAreaCodes(requestMap.get(areaType)), areaType));
                     break;
                 case RFMO:
-                    responseList.addAll(AreaSimpleTypeMapper.mapToAreaSimpleType(areaDao.getRFMOByAreaCodes(requestMap.get(areaType)), areaType));
+                    responseList.addAll(AreaMapper2.mapToAreaSimpleType(areaDao.getRFMOByAreaCodes(requestMap.get(areaType)), areaType));
                     break;
                 case PORT:
-                    responseList.addAll(AreaSimpleTypeMapper.mapToAreaSimpleType(areaDao.getPortsByAreaCodes(requestMap.get(areaType)), areaType));
+                    responseList.addAll(AreaMapper2.mapToAreaSimpleType(areaDao.getPortsByAreaCodes(requestMap.get(areaType)), areaType));
                     break;
                 case PORTAREA:
-                    responseList.addAll(AreaSimpleTypeMapper.mapToAreaSimpleType(areaDao.getPortAreaByAreaCodes(requestMap.get(areaType)), areaType));
+                    responseList.addAll(AreaMapper2.mapToAreaSimpleType(areaDao.getPortAreaByAreaCodes(requestMap.get(areaType)), areaType));
                     break;
                 case USERAREA:
-                    responseList.addAll(AreaSimpleTypeMapper.mapToAreaSimpleType(areaDao.getUserAreasByAreaCodes(requestMap.get(areaType)), areaType));
+                    responseList.addAll(AreaMapper2.mapToAreaSimpleType(areaDao.getUserAreasByAreaCodes(requestMap.get(areaType)), areaType));
                     break;
                 case STATRECT:
-                    responseList.addAll(AreaSimpleTypeMapper.mapToAreaSimpleType(areaDao.getStatRectByAreaCodes(requestMap.get(areaType)), areaType));
+                    responseList.addAll(AreaMapper2.mapToAreaSimpleType(areaDao.getStatRectByAreaCodes(requestMap.get(areaType)), areaType));
                     break;
                 default:
 
@@ -90,8 +91,9 @@ public class AreaServiceBean2 {
         }
 
         return responseList;
-
     }
+
+
 
     public List<PortEntity2> getPortsByAreaCodes(List<String> codes){
         return areaDao.getPortsByAreaCodes(codes);
@@ -201,5 +203,9 @@ public class AreaServiceBean2 {
         return response;
     }
 
+
+    /*public UserAreasEntity2 createUserArea( areaType){
+
+    }*/
 
 }

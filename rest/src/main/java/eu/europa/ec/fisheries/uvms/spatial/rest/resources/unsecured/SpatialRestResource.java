@@ -13,6 +13,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.PortDistanceInfo
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.AreaLocationTypesEntity2;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.PortAreaEntity2;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.PortEntity2;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.utils.AreaMapper2;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.utils.GeometryUtils2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +45,7 @@ public class SpatialRestResource {
     private AreaServiceBean2 areaServiceBean2;
 
     @Inject
-    AreaLocationTypesDao2 areaLocationTypesDao2;
+    private AreaLocationTypesDao2 areaLocationTypesDao2;
 
 
     @POST
@@ -55,11 +56,7 @@ public class SpatialRestResource {
 
         try {
             List<BaseAreaDto> areaList = areaServiceBean2.getAreasByPoint(areaByLocationSpatialRQ.getPoint().getLatitude(), areaByLocationSpatialRQ.getPoint().getLatitude());
-            List<AreaExtendedIdentifierType> response = new ArrayList<>();
-            for (BaseAreaDto area: areaList) {
-                AreaExtendedIdentifierType areaExtendedIdentifierType = new AreaExtendedIdentifierType(String.valueOf(area.getGid()), area.getType(), area.getCode(), area.getName());
-                response.add(areaExtendedIdentifierType);
-            }
+            List<AreaExtendedIdentifierType> response = AreaMapper2.mapToAreaExtendedIdentifierType(areaList);
             return Response.ok(response).build();
         } catch (Exception e) {
             log.error(e.toString(),e);

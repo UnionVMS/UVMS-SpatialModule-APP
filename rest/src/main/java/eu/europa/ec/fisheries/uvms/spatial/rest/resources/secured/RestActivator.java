@@ -11,7 +11,6 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import eu.europa.ec.fisheries.uvms.spatial.rest.constants.RestConstants;
-import eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured.SpatialRestResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.ws.rs.ApplicationPath;
@@ -28,17 +27,16 @@ public class RestActivator extends Application {
     private final Set<Class<?>> set = new HashSet<>();
 
     public RestActivator() {
-        set.add(AreaResource.class);
-        set.add(XMLResource.class);
+        set.add(AreaResource2.class);
+        set.add(XMLResource2.class);
         set.add(ConfigResource.class);
         set.add(UserAreaResource.class);
-        set.add(CountryResource.class);
         set.add(MapConfigResource.class);
         set.add(FileUploadResource.class);
-        set.add(BookmarkResource.class);
-        set.add(ImageResource.class);
+        set.add(BookmarkResource2.class);
+        set.add(ImageResource2.class);
         set.add(ServiceLayerResource.class);
-        set.add(GeometryUtilsResource.class);
+        set.add(GeometryUtilsResource2.class);
         LOG.info(RestConstants.MODULE_NAME + " module starting up");
     }
 

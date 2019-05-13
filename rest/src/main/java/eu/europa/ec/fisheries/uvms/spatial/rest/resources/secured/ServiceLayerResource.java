@@ -12,16 +12,10 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaTypeNamesService;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.ServiceLayerService;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.layer.ServiceLayer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ejb.EJB;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.Path;
 
 import static eu.europa.ec.fisheries.uvms.spatial.rest.constants.RestConstants.SERVICE_LAYER_PATH;
 
@@ -38,11 +32,11 @@ public class ServiceLayerResource extends UnionVMSResource {
     //@EJB
     //private USMService usmService;
 
-    @EJB
-    private ServiceLayerService service;
+    //@EJB
+    //private ServiceLayerService service;
 
-    @EJB
-    private AreaTypeNamesService areaTypeService;
+    //@EJB
+    //private AreaTypeNamesService areaTypeService;
 
     /*
     @GET
@@ -102,7 +96,7 @@ public class ServiceLayerResource extends UnionVMSResource {
 
  */
 
-    @PUT
+    /*@PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("{id}")
@@ -117,6 +111,6 @@ public class ServiceLayerResource extends UnionVMSResource {
             response = createErrorResponse(error);
         }
         return response;
-    }
+    }*/
 
 }

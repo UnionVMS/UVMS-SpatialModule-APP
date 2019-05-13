@@ -11,10 +11,13 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
+import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.AreaLocationMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ejb.Stateless;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Path;
 
 /**
  * @implicitParam roleName|string|header|true||||||
@@ -27,8 +30,8 @@ public class UserAreaResource extends UnionVMSResource {
 
     private static final Logger log = LoggerFactory.getLogger(ConfigResource.class);
 
-/*
-    @EJB
+
+    /*@EJB
     private USMService usmService;
 
     @EJB
@@ -39,10 +42,10 @@ public class UserAreaResource extends UnionVMSResource {
 
     @EJB
     private SpatialService spatialService;
-
+*/
     private AreaLocationMapper areaLocationMapper = AreaLocationMapper.mapper();
 
-    @POST
+   /* @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/")
@@ -69,9 +72,9 @@ public class UserAreaResource extends UnionVMSResource {
 
         return createErrorResponse("user_areas_management_not_allowed");
 
-    }
+    }*/
 
-    private Boolean isAllowedToShareScopes(String userName, List<String> scopeSelection, HttpServletRequest servletRequest) throws ServiceException {
+    /*private Boolean isAllowedToShareScopes(String userName, List<String> scopeSelection, HttpServletRequest servletRequest) throws ServiceException {
 
         Boolean isAllowedToShareScopes = false;
 
@@ -99,9 +102,9 @@ public class UserAreaResource extends UnionVMSResource {
 
         }
         return isAllowedToShareScopes;
-    }
+    }*/
 
-    private SimpleFeatureType build(Class geometryType, Map<String, Object> properties, String geometryFieldName) {
+   /* private SimpleFeatureType build(Class geometryType, Map<String, Object> properties, String geometryFieldName) {
         SimpleFeatureTypeBuilder sb = new SimpleFeatureTypeBuilder();
         sb.setCRS(DefaultGeographicCRS.WGS84);
         sb.setName("MULTIPOLIGON");
@@ -120,9 +123,9 @@ public class UserAreaResource extends UnionVMSResource {
             }
         }
         return sb.buildFeatureType();
-    }
+    }*/
 
-    @DELETE
+    /*@DELETE
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Interceptors(value = {ExceptionInterceptor.class})
@@ -133,18 +136,18 @@ public class UserAreaResource extends UnionVMSResource {
         boolean isPowerUser = isPowerUser(servletRequest);
         userAreaService.deleteUserArea(userAreaId, userName, isPowerUser, null); // we pass NULL for scope because deletion shouldn't happen on shared areas, unless you are a power user
         return createSuccessResponse();
-    }
+    }*/
 
-    @GET
+    /*@GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/layers")
     @Interceptors(value = {ExceptionInterceptor.class})
     public Response getUserAreaLayerMapping(@HeaderParam("scopeName") String scopeName, @Context HttpServletRequest servletRequest) {
         log.debug("UserName from security : " + servletRequest.getRemoteUser());
         return createSuccessResponse(userAreaService.getUserAreaLayerDefinition(servletRequest.getRemoteUser(), scopeName));
-    }
+    }*/
 
-    @POST
+    /*@POST
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/details")
     @Interceptors(value = {ExceptionInterceptor.class})
@@ -157,9 +160,9 @@ public class UserAreaResource extends UnionVMSResource {
             response = getUserAreaDetailsByLocation(userAreaTypeDto, servletRequest.getRemoteUser());
         }
         return response;
-    }
+    }*/
 
-    @GET
+    /*@GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/types")
     @Interceptors(value = {ExceptionInterceptor.class})
@@ -172,9 +175,9 @@ public class UserAreaResource extends UnionVMSResource {
         }
 
         return createSuccessResponse(userAreaService.getUserAreaTypes(servletRequest.getRemoteUser(), scopeName, isPowerUser));
-    }
+    }*/
 
-    @POST
+    /*@POST
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/updatedate")
     @Interceptors(value = {ExceptionInterceptor.class})
@@ -185,13 +188,13 @@ public class UserAreaResource extends UnionVMSResource {
         }
         userAreaService.updateUserAreaDates(servletRequest.getRemoteUser(), userAreaUpdateDto.getStartDate(), userAreaUpdateDto.getEndDate(), userAreaUpdateDto.getType(), isPowerUser);
         return createSuccessResponse();
-    }
+    }*/
 
     private boolean isPowerUser(HttpServletRequest request) {
         return request.isUserInRole("MANAGE_ANY_USER_AREA");
     }
 
-    private Response getUserAreaDetailsById(UserAreaCoordinateType userAreaTypeDto, String userName, boolean isPowerUser, String scopeName) throws ServiceException, IOException, ParseException {
+    /*private Response getUserAreaDetailsById(UserAreaCoordinateType userAreaTypeDto, String userName, boolean isPowerUser, String scopeName) throws ServiceException, IOException, ParseException {
         if (!userAreaTypeDto.getIsGeom()) {
             AreaTypeEntry areaTypeEntry = areaLocationMapper.getAreaTypeEntry(userAreaTypeDto);
             Map<String, Object> userAreaDetailsWithExtentById = userAreaService.getUserAreaDetailsWithExtentById(areaTypeEntry, userName, isPowerUser, scopeName);
@@ -215,9 +218,9 @@ public class UserAreaResource extends UnionVMSResource {
 
             return createSuccessResponse(nodeList);
         }
-    }
+    }*/
 
-    private Response getUserAreaDetailsByLocation(UserAreaCoordinateType userAreaTypeDto, String userName) throws ServiceException {
+   /* private Response getUserAreaDetailsByLocation(UserAreaCoordinateType userAreaTypeDto, String userName) throws ServiceException {
 
         try {
             String areaType = userAreaTypeDto.getAreaType();
@@ -253,9 +256,9 @@ public class UserAreaResource extends UnionVMSResource {
         } catch (IOException e) {
             throw new ServiceException(e.getMessage(), e);
         }
-    }
+    }*/
 
-    @PUT
+    /*@PUT
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -284,9 +287,9 @@ public class UserAreaResource extends UnionVMSResource {
         } else {
             return createErrorResponse("user_areas_management_not_allowed");
         }
-    }
+    }*/
 
-    @POST
+    /*@POST
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/byfilter")
     @Interceptors(value = {ValidationInterceptor.class, ExceptionInterceptor.class})
@@ -300,9 +303,9 @@ public class UserAreaResource extends UnionVMSResource {
             response = createErrorResponse(ErrorCodes.NOT_AUTHORIZED);
         }
         return response;
-    }
+    }*/
 
-    @GET
+    /*@GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/list")
     public Response listUserAreas(@HeaderParam("scopeName") String scopeName, @Context HttpServletRequest servletRequest) throws ServiceException {
@@ -314,9 +317,9 @@ public class UserAreaResource extends UnionVMSResource {
             response = createErrorResponse(ErrorCodes.NOT_AUTHORIZED);
         }
         return response;
-    }
+    }*/
 
-    @GET
+    /*@GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/list/{type}")
     public Response listUserAreasByType(@PathParam("type") String userAreaType, @HeaderParam("scopeName") String scopeName, @Context HttpServletRequest servletRequest) throws ServiceException {
@@ -328,8 +331,8 @@ public class UserAreaResource extends UnionVMSResource {
             response = createErrorResponse(ErrorCodes.NOT_AUTHORIZED);
         }
         return response;
-    }
+    }*/
 
 
- */
+
 }

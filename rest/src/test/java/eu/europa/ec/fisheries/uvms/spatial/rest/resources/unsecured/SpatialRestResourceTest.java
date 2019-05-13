@@ -1,10 +1,10 @@
-package eu.europe.ec.fisheries.uvms.spatial.rest.resources.unsecured;
+package eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured;
 
 import eu.europa.ec.fisheries.schema.movement.v1.MovementPoint;
 import eu.europa.ec.fisheries.schema.movement.v1.MovementType;
 import eu.europa.ec.fisheries.schema.movement.v1.SegmentCategoryType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaTransitionsDTO;
-import eu.europe.ec.fisheries.uvms.spatial.rest.BuildSpatialRestDeployment;
+import eu.europa.ec.fisheries.uvms.spatial.rest.BuildSpatialRestDeployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;

@@ -10,22 +10,23 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.service.Service2.dao;
 
-import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.AreaLocationTypesEntity2;
 import org.hibernate.Session;
 
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
+@Stateless
 public class AreaLocationTypesDao2 {
 
     @PersistenceContext
     private EntityManager em;
 
 
-    public AreaLocationTypesEntity2 findOneByTypeName(final String typeName) throws ServiceException {
+    public AreaLocationTypesEntity2 findOneByTypeName(final String typeName) {
 
         TypedQuery<AreaLocationTypesEntity2> query = em.createNamedQuery(AreaLocationTypesEntity2.FIND_TYPE_BY_NAME, AreaLocationTypesEntity2.class);
         query.setParameter("typeName",typeName);
@@ -36,7 +37,7 @@ public class AreaLocationTypesDao2 {
         return null;
     }
 
-    public List<AreaLocationTypesEntity2> findByIsLocationAndIsSystemWide(Boolean isLocation, Boolean isSystemWide ) throws ServiceException {
+    public List<AreaLocationTypesEntity2> findByIsLocationAndIsSystemWide(Boolean isLocation, Boolean isSystemWide ) {
 
         TypedQuery<AreaLocationTypesEntity2> query = em.createNamedQuery(AreaLocationTypesEntity2.FIND_ALL_IS_LOCATION_IS_SYSTEM_WIDE, AreaLocationTypesEntity2.class);
         query.setParameter("isLocation",isLocation);
@@ -45,7 +46,7 @@ public class AreaLocationTypesDao2 {
         return  query.getResultList();
     }
 
-    public List<AreaLocationTypesEntity2> findByIsLocation(Boolean isLocation) throws ServiceException {
+    public List<AreaLocationTypesEntity2> findByIsLocation(Boolean isLocation) {
 
         TypedQuery<AreaLocationTypesEntity2> query = em.createNamedQuery(AreaLocationTypesEntity2.FIND_ALL_IS_LOCATION, AreaLocationTypesEntity2.class);
         query.setParameter("isLocation",isLocation);

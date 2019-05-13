@@ -16,12 +16,11 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaCoordinateType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.GeoCoordinateType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.LocationQueryDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson.AreaDetailsGeoJsonDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson.LocationDetailsGeoJsonDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserScopeEntity;
-import eu.europa.ec.fisheries.uvms.spatial.service.mapper.UserAreaMapper;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public abstract class AreaLocationMapper {
 
@@ -48,22 +47,22 @@ public abstract class AreaLocationMapper {
 		@Mapping(target = "properties", expression = "java(extractProperties(locationDetails))"),
 		@Mapping(target = "type", expression = "java(extractType(locationDetails))")
 	})*/
-	public abstract LocationDetailsGeoJsonDto getLocationDetailsDto(LocationDetails locationDetails);
+	//public abstract LocationDetailsGeoJsonDto getLocationDetailsDto(LocationDetails locationDetails);
 	
 /*	@Mappings( {
 		@Mapping(target = "properties", expression = "java(extractProperties(areaDetails))"),
 		@Mapping(target = "type", expression = "java(extractType(areaDetails))")
 	})*/
-	public abstract AreaDetailsGeoJsonDto getAreaDetailsDto(AreaDetails areaDetails);
+	//public abstract AreaDetailsGeoJsonDto getAreaDetailsDto(AreaDetails areaDetails);
 	
 	public abstract List<AreaTypeEntry> getAreaTypeEntryList(List<AreaCoordinateType> areaDtoList);
 	
-	public AreaDetailsGeoJsonDto getAreaDetailsDtoForAllAreas(List<AreaDetails> areaDetailsList, AreaCoordinateType areaDto) {
+	/*public AreaDetailsGeoJsonDto getAreaDetailsDtoForAllAreas(List<AreaDetails> areaDetailsList, AreaCoordinateType areaDto) {
 		AreaDetailsGeoJsonDto areaDetailsGeoJsonDto = new AreaDetailsGeoJsonDto();
 		areaDetailsGeoJsonDto.setAllAreaProperties(extractProperties(areaDetailsList));
 		areaDetailsGeoJsonDto.setType(extractType(areaDto));
 		return areaDetailsGeoJsonDto;
-	}
+	}*/
 	
 	public abstract Coordinate getCoordinateFromDto(GeoCoordinateType geoCoordinateType);
 
@@ -80,12 +79,12 @@ public abstract class AreaLocationMapper {
 			Object propertyValue;
 
 			if ("scopeSelection".equalsIgnoreCase(property.getPropertyName()) ) {
-				propertyValue = UserAreaMapper.fromEntityToScopeArray((Set<UserScopeEntity>) property.getPropertyValue());
+				//propertyValue = UserAreaMapper.fromEntityToScopeArray((Set<UserScopeEntity>) property.getPropertyValue());
 			} else {
 				propertyValue = property.getPropertyValue();
 			}
 
-			propertyMap.put(property.getPropertyName(), propertyValue);
+			//propertyMap.put(property.getPropertyName(), propertyValue);
 		}
 		if (!propertyMap.isEmpty()) {
 			propertyMap.put(AREA_TYPE, String.valueOf(areaDetails.getAreaType().getAreaType()).toUpperCase());

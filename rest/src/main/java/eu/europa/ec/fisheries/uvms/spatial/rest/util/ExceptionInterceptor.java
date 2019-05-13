@@ -11,7 +11,6 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.rest.util;
 
 import eu.europa.ec.fisheries.uvms.spatial.rest.constants.RestConstants;
-import eu.europa.ec.fisheries.uvms.spatial.service.exception.SpatialServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +29,7 @@ public class ExceptionInterceptor {
 
 	
 	@AroundInvoke
-	public Object createResponse(final InvocationContext ic) throws Exception {
+	public Object createResponse(final InvocationContext ic) {
 		LOG.info("ExceptionInterceptor received");
 		try {
 			return ic.proceed();
@@ -39,9 +38,9 @@ public class ExceptionInterceptor {
     		return createErrorResponse(RestConstants.INPUT_NOT_SUPPORTED);
     	} catch (Exception e) {
 			LOG.error(e.getMessage(), e);
-    		if (e.getCause() instanceof SpatialServiceException) {
+    		/*if (e.getCause() instanceof SpatialServiceException) {
 				return createErrorResponse(((SpatialServiceException)e.getCause()).getErrorMessageCode());
-			}
+			}*/
 			if (e.getCause() instanceof RuntimeException) {
 				return createErrorResponse(((RuntimeException)e.getCause()).getMessage());
 			}

@@ -3,7 +3,7 @@
 
     <filter>
         <filter-name>AuthenticationFilterMock</filter-name>
-        <filter-class>eu.europe.ec.fisheries.uvms.spatial.rest.AuthenticationFilterMock</filter-class>
+        <filter-class>eu.europa.ec.fisheries.uvms.spatial.rest.AuthenticationFilterMock</filter-class>
         <async-supported>true</async-supported>
     </filter>
     <filter-mapping>

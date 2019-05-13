@@ -52,7 +52,7 @@ public class GeometryUtils2 {
 
     }
 
-    public String calculateBuffer(final Double latitude, final Double longitude, final Double buffer) {
+    public static String calculateBuffer(final Double latitude, final Double longitude, final Double buffer) {
 
         GeometryFactory gf = new GeometryFactory();
         Point point = gf.createPoint(new com.vividsolutions.jts.geom.Coordinate(longitude, latitude));

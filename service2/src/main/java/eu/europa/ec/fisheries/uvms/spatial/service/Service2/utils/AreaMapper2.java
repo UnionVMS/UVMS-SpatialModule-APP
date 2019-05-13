@@ -1,13 +1,15 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.Service2.utils;
 
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaExtendedIdentifierType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.BaseAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.BaseAreaEntity2;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AreaSimpleTypeMapper {
+public class AreaMapper2 {
 
     public static List<AreaSimpleType> mapToAreaSimpleType(List<? extends BaseAreaEntity2> baseList, AreaType areaType){
         List<AreaSimpleType> responseList = new ArrayList<>();
@@ -16,6 +18,17 @@ public class AreaSimpleTypeMapper {
             responseList.add(areaSimpleType);
         }
         return responseList;
+    }
+
+
+    public static List<AreaExtendedIdentifierType> mapToAreaExtendedIdentifierType(List<BaseAreaDto> areaList){
+        List<AreaExtendedIdentifierType> response = new ArrayList<>();
+
+        for (BaseAreaDto area: areaList) {
+            AreaExtendedIdentifierType areaExtendedIdentifierType = new AreaExtendedIdentifierType(String.valueOf(area.getGid()), area.getType(), area.getCode(), area.getName());
+            response.add(areaExtendedIdentifierType);
+        }
+        return response;
     }
 
 }

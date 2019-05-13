@@ -1,4 +1,4 @@
-package eu.europe.ec.fisheries.uvms.spatial.rest;
+package eu.europa.ec.fisheries.uvms.spatial.rest;
 
 import java.io.File;
 import javax.ws.rs.client.Client;
@@ -7,7 +7,6 @@ import javax.ws.rs.client.WebTarget;
 
 import org.eu.ingwar.tools.arquillian.extension.suite.annotations.ArquillianSuiteDeployment;
 import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.as.domain.management.security.UserRemoveHandler;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
@@ -30,10 +29,11 @@ public abstract class BuildSpatialRestDeployment {
         testWar.addAsLibraries(files);
         
         testWar.addAsLibraries(Maven.configureResolver().loadPomFromFile("pom.xml")
-                .resolve("eu.europa.ec.fisheries.uvms.spatial:service")
+                .resolve("eu.europa.ec.fisheries.uvms.spatial:service2")
                 .withTransitivity().asFile());
         
         testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.spatial.rest");
+        testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.commons.rest");
         
         testWar.addClass(AuthenticationFilterMock.class);
         testWar.addClass(UserModuleMock.class);

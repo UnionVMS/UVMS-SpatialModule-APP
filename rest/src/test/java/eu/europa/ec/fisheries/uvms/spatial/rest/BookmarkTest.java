@@ -8,21 +8,16 @@
  details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.europe.ec.fisheries.uvms.spatial.rest;
+package eu.europa.ec.fisheries.uvms.spatial.rest;
 
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.bookmark.Bookmark;
 import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class BookmarkTest {
 
     @Test
     public void testOrdering() {
 
-        Bookmark bookmark = new Bookmark();
+       /* Bookmark bookmark = new Bookmark();
         bookmark.setCreatedBy("2017-05-31 12:19:12 +0200");
 
         Bookmark bookmark2 = new Bookmark();
@@ -41,7 +36,7 @@ public class BookmarkTest {
         objects.get(0).getCreatedBy().equals("2000-03-11 12:23:11");
         objects.get(1).getCreatedBy().equals("2002-03-11 12:23:11");
         objects.get(2).getCreatedBy().equals("2004-03-11 12:23:11");
-
+*/
     }
 
 }

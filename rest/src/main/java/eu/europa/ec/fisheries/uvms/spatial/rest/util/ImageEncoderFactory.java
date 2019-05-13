@@ -17,9 +17,13 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 public class ImageEncoderFactory {
@@ -93,8 +97,8 @@ public class ImageEncoderFactory {
     }
 
     public static BufferedImage getBufferedImage(Document document) throws IOException {
-        /*
 
+/*
         ByteArrayOutputStream resultByteStream = new ByteArrayOutputStream();
         TranscoderInput transcoderInput = new TranscoderInput(document);
         TranscoderOutput transcoderOutput = new TranscoderOutput(resultByteStream);
@@ -105,7 +109,7 @@ public class ImageEncoderFactory {
         resultByteStream.flush();
         return ImageIO.read(new ByteArrayInputStream(resultByteStream.toByteArray()));
 
-         */
+  */
         return null;
     }
 
@@ -133,7 +137,7 @@ public class ImageEncoderFactory {
         }
         return null;
 
- */
+*/
 return null;
     }
 

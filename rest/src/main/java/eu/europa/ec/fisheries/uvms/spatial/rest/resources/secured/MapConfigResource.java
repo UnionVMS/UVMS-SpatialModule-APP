@@ -11,14 +11,10 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
-import eu.europa.ec.fisheries.uvms.spatial.service.bean.MapConfigService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.core.Context;
 
 /**
  * @implicitParam roleName|string|header|true||||||
@@ -31,14 +27,14 @@ public class MapConfigResource extends UnionVMSResource {
 
     private static final Logger log = LoggerFactory.getLogger(MapConfigResource.class);
 
-    @EJB
-    private MapConfigService mapConfigService;
+    //@EJB
+    //private MapConfigService mapConfigService;
 
-    @EJB
+    //@EJB
    // private USMService usmService;
 
-    @Context
-    private HttpServletRequest servletRequest;
+    //@Context
+    //private HttpServletRequest servletRequest;
 
     /*
     @GET

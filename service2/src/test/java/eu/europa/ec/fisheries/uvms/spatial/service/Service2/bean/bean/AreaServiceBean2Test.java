@@ -55,6 +55,14 @@ public class AreaServiceBean2Test extends TransactionalTests {
     }
 
     @Test
+    public void getPortsByEmptyListTest(){
+        List<String> inputList = new ArrayList<>();
+
+        List<PortEntity2> result = areaServiceBean.getPortsByAreaCodes(inputList);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
     public void findClosestPortByPositionTest(){
         double lon = 17.969;
         double lat = 58.916666666666664;
