@@ -13,12 +13,14 @@ package eu.europa.ec.fisheries.uvms.spatial.service.Service2.dao;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.SysConfigEntity2;
 
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
 
+@Stateless
 public class SysConfigDao2  {
 
     @PersistenceContext

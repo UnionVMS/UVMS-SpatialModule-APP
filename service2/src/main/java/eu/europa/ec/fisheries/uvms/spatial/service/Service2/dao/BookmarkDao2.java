@@ -12,11 +12,13 @@ package eu.europa.ec.fisheries.uvms.spatial.service.Service2.dao;
 
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.BookmarkEntity2;
 
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
+@Stateless
 public class BookmarkDao2  {
 
     @PersistenceContext

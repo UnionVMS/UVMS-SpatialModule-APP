@@ -17,6 +17,7 @@ import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.AreaLocationMapper;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.AreaServiceBean2;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dao.AreaDao2;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.UserAreasEntity2;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,13 +26,11 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 /**
  * @implicitParam roleName|string|header|true||||||
@@ -62,34 +61,17 @@ public class UserAreaResource extends UnionVMSResource {
 
     private AreaLocationMapper areaLocationMapper = AreaLocationMapper.mapper();
 
-   /* @POST
+    @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/")
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response storeUserArea(UserAreaGeoJsonDto userAreaGeoJsonDto, @Context HttpServletRequest servletRequest) throws ServiceException {
-        if (servletRequest.isUserInRole("MANAGE_USER_DEFINED_AREAS")) {
-            String userName = servletRequest.getRemoteUser();
-            log.info("{} is requesting createUserArea(...)", userName);
-
-            if (StringUtils.isNotBlank(userAreaGeoJsonDto.getDatasetName()) && !servletRequest.isUserInRole("CREATE_USER_AREA_DATASET")) {
-                return createErrorResponse("user_area_dataset_creation_not_allowed");
-            }
-
-            List<String> scopeSelection = userAreaGeoJsonDto.getScopeSelection();
-
-            if (isAllowedToShareScopes(userName, scopeSelection, servletRequest)) {
-                long gid = userAreaService.createUserArea(userAreaGeoJsonDto, userName);
-                return createSuccessResponse(gid);
-            }
-            else {
-                return createErrorResponse("user_area_sharing_not_allowed");
-            }
-        }
-
-        return createErrorResponse("user_areas_management_not_allowed");
-
-    }*/
+    public Response upsertUserArea(UserAreasEntity2 userArea, @Context HttpServletRequest servletRequest) {
+        String userName = servletRequest.getRemoteUser();
+        log.info("{} is requesting createUserArea(...)", userName);
+        userArea.setUserName(userName);
+        return createSuccessResponse(areaServiceBean2.upsertUserArea(userArea));
+    }
 
     /*private Boolean isAllowedToShareScopes(String userName, List<String> scopeSelection, HttpServletRequest servletRequest) throws ServiceException {
 
@@ -277,35 +259,23 @@ public class UserAreaResource extends UnionVMSResource {
         }
     }*/
 
-    /*@PUT
+   /*
+    @PUT
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response updateUserArea(UserAreaGeoJsonDto userAreaGeoJsonDto, @HeaderParam("scopeName") String scopeName, @Context HttpServletRequest servletRequest) throws ServiceException {
-        if (servletRequest.isUserInRole(SpatialFeaturesEnum.MANAGE_ANY_USER_AREA.toString())) {
-            String userName = servletRequest.getRemoteUser();
-            log.info("{} is requesting updateUserArea(...)", userName);
+    public Response updateUserArea(UserAreaGeoJsonDto userAreaGeoJsonDto, @HeaderParam("scopeName") String scopeName, @Context HttpServletRequest servletRequest) {
+        String userName = servletRequest.getRemoteUser();
+        log.info("{} is requesting updateUserArea(...)", userName);
 
-            if (StringUtils.isNotBlank(userAreaGeoJsonDto.getDatasetName()) && !servletRequest.isUserInRole(SpatialFeaturesEnum.CREATE_USER_AREA_DATASET.toString())) {
-                return createErrorResponse("user_area_dataset_creation_not_allowed");
-            }
+        List<String> scopeSelection = userAreaGeoJsonDto.getScopeSelection();
+        boolean isPowerUser = isPowerUser(servletRequest);
 
-            List<String> scopeSelection = userAreaGeoJsonDto.getScopeSelection();
-            boolean isPowerUser = isPowerUser(servletRequest);
+        long gid = userAreaService.updateUserArea(userAreaGeoJsonDto, servletRequest.getRemoteUser(), isPowerUser, scopeName);
+        log.info("{} is requesting updateUserArea(...), with a ID={}. Spatial power user: {}", userName, Long.toString(userAreaGeoJsonDto.getId()), isPowerUser);
+        return createSuccessResponse(gid);
 
-            if (isAllowedToShareScopes(userName, scopeSelection, servletRequest)) {
-                long gid = userAreaService.updateUserArea(userAreaGeoJsonDto, servletRequest.getRemoteUser(), isPowerUser, scopeName);
-                log.info("{} is requesting updateUserArea(...), with a ID={}. Spatial power user: {}", userName, Long.toString(userAreaGeoJsonDto.getId()), isPowerUser);
-                return createSuccessResponse(gid);
-            }
-            else {
-                return createErrorResponse("user_area_sharing_not_allowed");
-            }
-
-        } else {
-            return createErrorResponse("user_areas_management_not_allowed");
-        }
     }*/
 
     /*@POST

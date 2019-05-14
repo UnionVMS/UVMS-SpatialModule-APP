@@ -3,7 +3,9 @@ package eu.europa.ec.fisheries.uvms.spatial.service.Service2.utils;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaExtendedIdentifierType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaSimpleType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.AreaLayerDto2;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.BaseAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.AreaLocationTypesEntity2;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.BaseAreaEntity2;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.UserAreasEntity2;
 

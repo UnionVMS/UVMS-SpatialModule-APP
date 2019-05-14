@@ -15,11 +15,13 @@ package eu.europa.ec.fisheries.uvms.spatial.service.Service2.dao;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.ServiceLayerEntity2;
 
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
+@Stateless
 public class ServiceLayerDao2 {
 
     private static final String SUB_TYPE = "subTypes";

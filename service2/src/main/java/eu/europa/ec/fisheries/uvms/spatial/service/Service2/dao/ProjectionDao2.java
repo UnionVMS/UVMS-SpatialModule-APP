@@ -13,11 +13,13 @@ package eu.europa.ec.fisheries.uvms.spatial.service.Service2.dao;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.ProjectionEntity2;
 import org.hibernate.Session;
 
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
+@Stateless
 public class ProjectionDao2 {
 
    @PersistenceContext
@@ -37,5 +39,10 @@ public class ProjectionDao2 {
         query.setParameter("id",id);
         return query.getResultList();
 
+    }
+
+    public List<ProjectionEntity2> findAll(){
+        TypedQuery<ProjectionEntity2> query = em.createNamedQuery(ProjectionEntity2.FIND_ALL, ProjectionEntity2.class);
+        return query.getResultList();
     }
 }

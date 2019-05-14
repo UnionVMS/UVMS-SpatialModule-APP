@@ -12,6 +12,7 @@ package eu.europa.ec.fisheries.uvms.spatial.rest.service;
 
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ImageEncoderFactory;
 import lombok.SneakyThrows;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -19,14 +20,15 @@ import org.w3c.dom.NamedNodeMap;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ImageEncoderFactoryTest {
 
-    @Test
-    @SneakyThrows
-    public void test() {
+    /*@Test             @Ignore  //ignore until we figure out if we are actually supposed to do the thing this is testing......
+    public void test() throws Exception {
 
-      /*  BufferedImage position = getPosition("scale(0.3)");
+        BufferedImage position = getPosition("scale(0.3)");
         BufferedImage line = getLine("scale(1.3)");
         BufferedImage cluster = getCluster();
 
@@ -54,9 +56,9 @@ public class ImageEncoderFactoryTest {
         BufferedImage image = ImageEncoderFactory.renderLegend(entries, "TITLE", 40);
 
         File outputfile = File.createTempFile("test2", ".png");
-        ImageIO.write(image, "PNG", outputfile);*/
+        ImageIO.write(image, "PNG", outputfile);
 
-    }
+    }*/
 
     private BufferedImage getCluster() throws Exception {
         Document cluster = ImageEncoderFactory.createDocument("/cluster.svg");
@@ -66,6 +68,7 @@ public class ImageEncoderFactoryTest {
     }
 
     @Test
+    @Ignore  //ignore until we figure out if we are actually supposed to do the thing this is testing......
     public void test3() throws Exception {
         BufferedImage position = getPosition("scale(1)");
         File outputfile = File.createTempFile("test3", ".png");

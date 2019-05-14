@@ -59,8 +59,8 @@ public class AreaLocationTypesDao2 {
         return query.getSingleResult();
     }
 
-    public List<AreaLocationTypesEntity2> findSystemAreaLayerMapping() {
-        TypedQuery<AreaLocationTypesEntity2> query = em.unwrap(Session.class).getNamedQuery(AreaLocationTypesEntity2.FIND_SYSTEM_AREA_LAYER);
+    public List<AreaLayerDto2> findSystemAreaLayerMapping() {
+        TypedQuery<AreaLayerDto2> query = em.unwrap(Session.class).getNamedQuery(AreaLocationTypesEntity2.FIND_SYSTEM_AREA_LAYER);
         return query.getResultList();
     }
 

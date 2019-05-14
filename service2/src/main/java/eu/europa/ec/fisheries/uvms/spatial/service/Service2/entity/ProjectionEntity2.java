@@ -23,13 +23,16 @@ import java.util.Set;
         @NamedQuery(name = ProjectionEntity2.FIND_BY_SRS_CODE, query = "FROM ProjectionEntity2 p WHERE p.srsCode = :srsCode"),
         @NamedQuery(name = ProjectionEntity2.FIND_PROJECTION_BY_ID,
 				query = "SELECT projection.srsCode AS epsgCode, projection.units AS units, projection.world AS global, projection.extent as extent, projection.axis as axis, projection.projDef as projDef, projection.worldExtent as worldExtent " +
-						"FROM ProjectionEntity2 projection WHERE projection.id = :id")
+						"FROM ProjectionEntity2 projection WHERE projection.id = :id"),
+		@NamedQuery(name = ProjectionEntity2.FIND_ALL,
+				query = "FROM ProjectionEntity2")
 })
 
 public class ProjectionEntity2 {
 
     public static final String FIND_PROJECTION_BY_ID = "ReportLayerConfig2.findProjectionById";
     public static final String FIND_BY_SRS_CODE = "Projection2.findBySrsCode";
+    public static final String FIND_ALL = "Projection2.findAll";
 	
 	@Id
 	@Column(name = "id")

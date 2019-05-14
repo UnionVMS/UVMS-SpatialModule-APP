@@ -19,7 +19,6 @@ import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dao.SpatialQueriesDa
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.AreaLayerDto2;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.BaseAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.PortDistanceInfoDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.AreaLocationTypesEntity2;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.PortAreaEntity2;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.PortEntity2;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.UserAreasEntity2;
@@ -210,9 +209,13 @@ public class AreaServiceBean2 {
     }
 
 
-    /*public UserAreasEntity2 createUserArea( areaType){
+    public UserAreasEntity2 upsertUserArea(UserAreasEntity2 newArea){
 
-    }*/
+        if(newArea.getId() == null){
+            return areaDao.create(newArea);
+        }
+        return areaDao.update(newArea);
+    }
 
 
     public AreaLayerDto2 getUserAreaLayerDefinition(String userName, String scopeName) {

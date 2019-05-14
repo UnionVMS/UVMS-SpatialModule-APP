@@ -11,10 +11,28 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
+import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
+import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dao.ProjectionDao2;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.ProjectionDto2;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.utils.ProjectionMapper2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
+import javax.interceptor.Interceptors;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.util.List;
 
 /**
  * @implicitParam roleName|string|header|true||||||
@@ -33,10 +51,13 @@ public class ConfigResource extends UnionVMSResource {
 /*
     @EJB
     private MapConfigService mapConfigService;
+*/
+   /* @EJB
+    private USMService usmService;*/
 
-    @EJB
-    private USMService usmService;
-
+    @Inject
+    ProjectionDao2 projectionDao2;
+/*
     @POST
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Consumes(value = {MediaType.APPLICATION_JSON})
@@ -54,8 +75,8 @@ public class ConfigResource extends UnionVMSResource {
         MapConfigDto mapConfig = mapConfigService.getReportConfig(id, userPref, adminPref, username, scopeName, config.getTimeStamp(), permittedLayersNames);
         return createSuccessResponse(mapConfig);
     }
-
-    @GET
+*/
+ /*   @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Path("/basic")
     @Interceptors(value = {ExceptionInterceptor.class})
@@ -64,10 +85,10 @@ public class ConfigResource extends UnionVMSResource {
         String applicationName = servletRequest.getServletContext().getInitParameter("usmApplication");
         String adminPref = usmService.getOptionDefaultValue(DEFAULT_CONFIG, applicationName);
         String userPref = usmService.getUserPreference(USER_CONFIG, username, applicationName, roleName, scopeName);
-        MapConfigDto mapConfig = mapConfigService.getBasicReportConfig(userPref, adminPref);
-        return createSuccessResponse(mapConfig);
+        //MapConfigDto mapConfig = mapConfigService.getBasicReportConfig(userPref, adminPref);  //TODO: add back in, just need to figure out a sane way to do it.....
+        return createSuccessResponse(null/*mapConfig);
     }
-
+/*
     @POST
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Consumes(value = {MediaType.APPLICATION_JSON})
@@ -175,16 +196,20 @@ public class ConfigResource extends UnionVMSResource {
         return createSuccessResponse(defaultConfigurationDto);
     }
 
+    */
+
+
+
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Path("/projections")
     @Interceptors(value = {ExceptionInterceptor.class})
     public Response getAllProjections() {
         log.info("Getting all projections");
-        List<ProjectionDto> projections = mapConfigService.getAllProjections();
+        List<ProjectionDto2> projections = ProjectionMapper2.mapToProjectionDto(projectionDao2.findAll());
         return createSuccessResponse(projections);
     }
 
 
- */
+
 }

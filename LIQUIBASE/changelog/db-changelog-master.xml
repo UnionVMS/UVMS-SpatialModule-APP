@@ -11,6 +11,6 @@
 	<include file="v0.4.2\db-changelog-042-001.xml" relativeToChangelogFile="true"/>
     <include file="v1.0.2\db-changelog-102-001.xml" relativeToChangelogFile="true"/>
     <include file="v1.0.6\db-changelog-106-001.xml" relativeToChangelogFile="true"/>
-    <include file="v1.1.21\db-changelog-addDbFunctionForSpatialFunctions.xml" relativeToChangelogFile="true"/>
+    <include file="v2.0.0\db-changelog-addDbFunctionForSpatialFunctions.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

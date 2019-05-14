@@ -11,6 +11,7 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
+import eu.europa.ec.fisheries.uvms.constants.AuthConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.AreaServiceBean2;
@@ -25,7 +26,9 @@ import org.slf4j.LoggerFactory;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
@@ -151,5 +154,15 @@ public class AreaResource2 {
     }
 
 
+    //TODO: Remove the headers
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/layers")
+    @Interceptors(value = {ExceptionInterceptor.class})
+    public Response getSystemAreaLayerMapping(@Context HttpServletRequest request,
+                                              @HeaderParam(AuthConstants.HTTP_HEADER_SCOPE_NAME) String scopeName,
+                                              @HeaderParam(AuthConstants.HTTP_HEADER_ROLE_NAME) String roleName)  {
+        return Response.ok(areaLocationTypesDao2.findSystemAreaLayerMapping()).build();
+    }
 
 }

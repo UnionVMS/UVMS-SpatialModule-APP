@@ -124,7 +124,7 @@ public class ImageEncoderFactory {
     }
 
     public static Document createDocument(String pathToSvg) {
-/*
+        /*
         try {
 
             InputStream is = ImageEncoderFactory.class.getResourceAsStream(pathToSvg);
@@ -137,8 +137,8 @@ public class ImageEncoderFactory {
         }
         return null;
 
-*/
-return null;
+        */
+        return null;
     }
 
     public static BufferedImage renderLegend(List<LegendEntry> legendEntries, String title, int iconAndTextOffset) {
