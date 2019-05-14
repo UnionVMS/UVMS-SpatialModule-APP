@@ -10,7 +10,7 @@
 
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured;
 
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.PropertiesBean2;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.PropertiesBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +33,7 @@ public class HealthResource {
     private static final String APPLICATION_NAME = "application.name";
 
     @EJB
-    private PropertiesBean2 propertiesBean;
+    private PropertiesBean propertiesBean;
 
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON })

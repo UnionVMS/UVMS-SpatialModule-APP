@@ -15,10 +15,9 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialFeaturesEnum;
 import eu.europa.ec.fisheries.uvms.spatial.rest.constants.ErrorCodes;
 import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.AreaLocationMapper;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.AreaServiceBean2;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dao.AreaDao2;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.UserAreasEntity2;
-import org.apache.commons.lang3.StringUtils;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.AreaServiceBean;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dao.AreaDao;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.UserAreasEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +29,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.List;
 
 /**
  * @implicitParam roleName|string|header|true||||||
@@ -44,7 +42,7 @@ public class UserAreaResource extends UnionVMSResource {
     private static final Logger log = LoggerFactory.getLogger(ConfigResource.class);
 
     @Inject
-    AreaServiceBean2 areaServiceBean2;
+    AreaServiceBean areaServiceBean;
 
     private AreaLocationMapper areaLocationMapper = AreaLocationMapper.mapper();
 
@@ -53,11 +51,11 @@ public class UserAreaResource extends UnionVMSResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/")
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response upsertUserArea(UserAreasEntity2 userArea, @Context HttpServletRequest servletRequest) {
+    public Response upsertUserArea(UserAreasEntity userArea, @Context HttpServletRequest servletRequest) {
         String userName = servletRequest.getRemoteUser();
         log.info("{} is requesting createUserArea(...)", userName);
         userArea.setUserName(userName);
-        return createSuccessResponse(areaServiceBean2.upsertUserArea(userArea));
+        return createSuccessResponse(areaServiceBean.upsertUserArea(userArea));
     }
 
 
@@ -69,7 +67,7 @@ public class UserAreaResource extends UnionVMSResource {
     @Interceptors(value = {ExceptionInterceptor.class})
     public Response getUserAreaLayerMapping(@HeaderParam("scopeName") String scopeName, @Context HttpServletRequest servletRequest) {
         log.debug("UserName from security : " + servletRequest.getRemoteUser());
-        return createSuccessResponse(areaServiceBean2.getUserAreaLayerDefinition(servletRequest.getRemoteUser(), scopeName));
+        return createSuccessResponse(areaServiceBean.getUserAreaLayerDefinition(servletRequest.getRemoteUser(), scopeName));
     }
 
 
@@ -79,7 +77,7 @@ public class UserAreaResource extends UnionVMSResource {
 
 
     @Inject
-    AreaDao2 areaDao2;
+    AreaDao areaDao;
 
     @GET
     @Produces({MediaType.APPLICATION_JSON})
@@ -88,7 +86,7 @@ public class UserAreaResource extends UnionVMSResource {
         Response response;
 
         if (servletRequest.isUserInRole(SpatialFeaturesEnum.MANAGE_USER_DEFINED_AREAS.toString())) {
-            response = createSuccessResponse(areaDao2.findByUserNameScopeNameAndPowerUser(servletRequest.getRemoteUser(), scopeName, isPowerUser(servletRequest)));
+            response = createSuccessResponse(areaDao.findByUserNameScopeNameAndPowerUser(servletRequest.getRemoteUser(), scopeName, isPowerUser(servletRequest)));
         } else {
             response = createErrorResponse(ErrorCodes.NOT_AUTHORIZED);
         }

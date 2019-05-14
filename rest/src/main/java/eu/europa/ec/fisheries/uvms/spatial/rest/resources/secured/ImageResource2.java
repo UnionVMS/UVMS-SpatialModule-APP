@@ -34,7 +34,7 @@ package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured.PositionResource;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.PropertiesBean2;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.PropertiesBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,7 +62,7 @@ public class ImageResource2 extends UnionVMSResource {
 
 
     @Inject
-    private PropertiesBean2 propertiesBean2;
+    private PropertiesBean propertiesBean;
 
     @Path("/position")
     @Produces(MediaType.APPLICATION_JSON)

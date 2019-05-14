@@ -11,25 +11,19 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
-import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.rest.security.bean.USMService;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dao.ProjectionDao2;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.ProjectionDto2;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.utils.ProjectionMapper2;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dao.ProjectionDao;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.ProjectionDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.utils.ProjectionMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
@@ -51,7 +45,7 @@ public class ConfigResource extends UnionVMSResource {
 
 
     @Inject
-    ProjectionDao2 projectionDao2;
+    ProjectionDao projectionDao;
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
@@ -59,7 +53,7 @@ public class ConfigResource extends UnionVMSResource {
     @Interceptors(value = {ExceptionInterceptor.class})
     public Response getAllProjections() {
         log.info("Getting all projections");
-        List<ProjectionDto2> projections = ProjectionMapper2.mapToProjectionDto(projectionDao2.findAll());
+        List<ProjectionDto> projections = ProjectionMapper.mapToProjectionDto(projectionDao.findAll());
         return createSuccessResponse(projections);
     }
 

@@ -12,7 +12,7 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.utils.GeometryUtils2;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.utils.GeometryUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,7 +46,7 @@ public class GeometryUtilsResource2 extends UnionVMSResource {
             Double latitude = Double.valueOf(String.valueOf(payload.get("latitude")));
             Double longitude = Double.valueOf(String.valueOf(payload.get("longitude")));
             Double buffer = Double.valueOf(String.valueOf(payload.get("buffer")));
-            response = Response.ok(GeometryUtils2.calculateBuffer(latitude, longitude, buffer)).build();
+            response = Response.ok(GeometryUtils.calculateBuffer(latitude, longitude, buffer)).build();
         } catch (Exception ex) {
             String error = "[ Error when calculating buffer. ] ";
             log.error(error, ex);

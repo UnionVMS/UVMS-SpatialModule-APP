@@ -14,12 +14,12 @@ package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 import eu.europa.ec.fisheries.uvms.constants.AuthConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.AreaServiceBean2;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dao.AreaLocationTypesDao2;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.AreaServiceBean;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dao.AreaLocationTypesDao;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.BaseAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.PortDistanceInfoDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.AreaLocationTypesEntity2;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.utils.AreaMapper2;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.AreaLocationTypesEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.utils.AreaMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,10 +46,10 @@ public class AreaResource2 {
     private static final Logger log = LoggerFactory.getLogger(AreaResource2.class);
 
     @Inject
-    private AreaServiceBean2 areaServiceBean2;
+    private AreaServiceBean areaServiceBean;
 
     @Inject
-    private AreaLocationTypesDao2 areaLocationTypesDao2;
+    private AreaLocationTypesDao areaLocationTypesDao;
 
 
     /**
@@ -65,9 +65,9 @@ public class AreaResource2 {
     @Path("/types")
     public Response getAreaTypes2() {
         log.info("Getting user areas list");
-        List<AreaLocationTypesEntity2> areaList = areaLocationTypesDao2.findByIsLocation(false);
+        List<AreaLocationTypesEntity> areaList = areaLocationTypesDao.findByIsLocation(false);
         List<String> response = new ArrayList<>();
-        for (AreaLocationTypesEntity2 entity: areaList) {
+        for (AreaLocationTypesEntity entity: areaList) {
             response.add(entity.getTypeName());
         }
         return Response.ok(response).build();
@@ -81,7 +81,7 @@ public class AreaResource2 {
     public ClosestLocationSpatialRS getLocationByPoint2(ClosestLocationSpatialRQ request) {
 
         ClosestLocationSpatialRS response = new ClosestLocationSpatialRS();
-        PortDistanceInfoDto closestPort = areaServiceBean2.findClosestPortByPosition(request.getPoint().getLatitude(), request.getPoint().getLongitude());
+        PortDistanceInfoDto closestPort = areaServiceBean.findClosestPortByPosition(request.getPoint().getLatitude(), request.getPoint().getLongitude());
 
         if (closestPort != null){
             Location location = new Location(String.valueOf(closestPort.getPort().getId()), String.valueOf(closestPort.getPort().getId()), LocationType.PORT, closestPort.getPort().getCode(), closestPort.getPort().getName(), closestPort.getDistance(), UnitType.METERS, closestPort.getPort().getCentroid(), closestPort.getPort().getGeometry(), closestPort.getPort().getExtent(), closestPort.getPort().getEnabled(), closestPort.getPort().getCountryCode());
@@ -102,9 +102,9 @@ public class AreaResource2 {
     public AreaByLocationSpatialRS getAreasByPoint2(AreaByLocationSpatialRQ request) {
 
         AreaByLocationSpatialRS response = new AreaByLocationSpatialRS();
-        List<BaseAreaDto> areaList = areaServiceBean2.getAreasByPoint(request.getPoint().getLatitude(), request.getPoint().getLatitude());
+        List<BaseAreaDto> areaList = areaServiceBean.getAreasByPoint(request.getPoint().getLatitude(), request.getPoint().getLatitude());
         if(areaList != null){
-            List<AreaExtendedIdentifierType> areaExtendedIdentifierTypes = AreaMapper2.mapToAreaExtendedIdentifierType(areaList);
+            List<AreaExtendedIdentifierType> areaExtendedIdentifierTypes = AreaMapper.mapToAreaExtendedIdentifierType(areaList);
             AreasByLocationType areasByLocationType = new AreasByLocationType();
             areasByLocationType.getAreas().addAll(areaExtendedIdentifierTypes);
             response.setAreasByLocation(areasByLocationType);
@@ -124,7 +124,7 @@ public class AreaResource2 {
         Integer crs = request.getPoint().getCrs();
         UnitType unit = request.getUnit();
 
-        List<BaseAreaDto> closestAreas = areaServiceBean2.getClosestAreasByPoint(lat, lon);
+        List<BaseAreaDto> closestAreas = areaServiceBean.getClosestAreasByPoint(lat, lon);
         List<Area> areaList = new ArrayList<>();
         for (BaseAreaDto base: closestAreas) {
             Area area = new Area(String.valueOf(base.getGid()), base.getType(), base.getCode(), base.getName(), base.getDistance(), UnitType.METERS);
@@ -147,7 +147,7 @@ public class AreaResource2 {
     @Interceptors(value = { ExceptionInterceptor.class})
     public Response byCode(AreaByCodeRequest areaByCodeRequest) {
 
-        List<AreaSimpleType> areaSimpleTypeList = areaServiceBean2.getAreasByCode(areaByCodeRequest);
+        List<AreaSimpleType> areaSimpleTypeList = areaServiceBean.getAreasByCode(areaByCodeRequest);
         AreaByCodeResponse response = new AreaByCodeResponse();
         response.setAreaSimples(areaSimpleTypeList);
         return Response.ok(response).build();
@@ -162,7 +162,7 @@ public class AreaResource2 {
     public Response getSystemAreaLayerMapping(@Context HttpServletRequest request,
                                               @HeaderParam(AuthConstants.HTTP_HEADER_SCOPE_NAME) String scopeName,
                                               @HeaderParam(AuthConstants.HTTP_HEADER_ROLE_NAME) String roleName)  {
-        return Response.ok(areaLocationTypesDao2.findSystemAreaLayerMapping()).build();
+        return Response.ok(areaLocationTypesDao.findSystemAreaLayerMapping()).build();
     }
 
 }

@@ -1,23 +1,23 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto;
 
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.PortEntity2;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.PortEntity;
 
 public class PortDistanceInfoDto {
 
 
-    private PortEntity2 port;
+    private PortEntity port;
     private double distance;
 
-    public PortDistanceInfoDto(PortEntity2 port, double distance) {
+    public PortDistanceInfoDto(PortEntity port, double distance) {
         this.port = port;
         this.distance = distance;
     }
 
-    public PortEntity2 getPort() {
+    public PortEntity getPort() {
         return port;
     }
 
-    public void setPort(PortEntity2 port) {
+    public void setPort(PortEntity port) {
         this.port = port;
     }
 

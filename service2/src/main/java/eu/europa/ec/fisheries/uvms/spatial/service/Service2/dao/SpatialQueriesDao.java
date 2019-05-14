@@ -20,7 +20,7 @@ public class SpatialQueriesDao {
 
     public List<BaseAreaDto> getAreasByPoint(Point point) {
 
-        Query q = em.createNativeQuery("SELECT type,gid,code,name from  spatial.get_areas_by_point( :point)", "BaseAreaDtoMapping")     //BaseAreaDtoMapping is defined in BaseAreaEntity2
+        Query q = em.createNativeQuery("SELECT type,gid,code,name from  spatial.get_areas_by_point( :point)", "BaseAreaDtoMapping")     //BaseAreaDtoMapping is defined in BaseAreaEntity
                 .setParameter("point", point);
 
         return q.getResultList();

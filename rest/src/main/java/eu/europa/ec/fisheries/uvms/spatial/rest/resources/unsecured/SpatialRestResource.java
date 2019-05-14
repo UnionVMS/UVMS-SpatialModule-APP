@@ -6,15 +6,15 @@ import eu.europa.ec.fisheries.schema.movement.v1.MovementType;
 import eu.europa.ec.fisheries.schema.movement.v1.SegmentCategoryType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaTransitionsDTO;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.AreaServiceBean2;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dao.AreaLocationTypesDao2;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.AreaServiceBean;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dao.AreaLocationTypesDao;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.BaseAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.PortDistanceInfoDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.AreaLocationTypesEntity2;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.PortAreaEntity2;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.PortEntity2;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.utils.AreaMapper2;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.utils.GeometryUtils2;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.AreaLocationTypesEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.PortAreaEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.PortEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.utils.AreaMapper;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.utils.GeometryUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,10 +42,10 @@ public class SpatialRestResource {
 
 
     @Inject
-    private AreaServiceBean2 areaServiceBean2;
+    private AreaServiceBean areaServiceBean;
 
     @Inject
-    private AreaLocationTypesDao2 areaLocationTypesDao2;
+    private AreaLocationTypesDao areaLocationTypesDao;
 
 
     @POST
@@ -55,8 +55,8 @@ public class SpatialRestResource {
     public Response getAreaByLocation2( AreaByLocationSpatialRQ areaByLocationSpatialRQ)  {
 
         try {
-            List<BaseAreaDto> areaList = areaServiceBean2.getAreasByPoint(areaByLocationSpatialRQ.getPoint().getLatitude(), areaByLocationSpatialRQ.getPoint().getLatitude());
-            List<AreaExtendedIdentifierType> response = AreaMapper2.mapToAreaExtendedIdentifierType(areaList);
+            List<BaseAreaDto> areaList = areaServiceBean.getAreasByPoint(areaByLocationSpatialRQ.getPoint().getLatitude(), areaByLocationSpatialRQ.getPoint().getLatitude());
+            List<AreaExtendedIdentifierType> response = AreaMapper.mapToAreaExtendedIdentifierType(areaList);
             return Response.ok(response).build();
         } catch (Exception e) {
             log.error(e.toString(),e);
@@ -72,9 +72,9 @@ public class SpatialRestResource {
     public Response getAreaTypes2(AllAreaTypesRequest allAreaTypesRequest) {
 
         try {
-            List<AreaLocationTypesEntity2> areaList = areaLocationTypesDao2.findByIsLocation(false);
+            List<AreaLocationTypesEntity> areaList = areaLocationTypesDao.findByIsLocation(false);
             List<String> response = new ArrayList<>();
-            for (AreaLocationTypesEntity2 entity: areaList) {
+            for (AreaLocationTypesEntity entity: areaList) {
                 response.add(entity.getTypeName());
             }
             return Response.ok(response).build();
@@ -94,7 +94,7 @@ public class SpatialRestResource {
             Double lat = request.getPoint().getLatitude();
             Double lon = request.getPoint().getLongitude();
 
-            List<BaseAreaDto> closestAreas = areaServiceBean2.getClosestAreasByPoint(lat, lon);
+            List<BaseAreaDto> closestAreas = areaServiceBean.getClosestAreasByPoint(lat, lon);
             List<Area> response = new ArrayList<>();
             for (BaseAreaDto base: closestAreas) {
                 Area area = new Area(String.valueOf(base.getGid()), base.getType(), base.getCode(), base.getName(), base.getDistance(), UnitType.METERS);
@@ -115,7 +115,7 @@ public class SpatialRestResource {
     public Response getClosestLocation2(ClosestLocationSpatialRQ closestLocationSpatialRQ) {
 
         try {
-            PortDistanceInfoDto closestPort = areaServiceBean2.findClosestPortByPosition(closestLocationSpatialRQ.getPoint().getLatitude(), closestLocationSpatialRQ.getPoint().getLongitude());
+            PortDistanceInfoDto closestPort = areaServiceBean.findClosestPortByPosition(closestLocationSpatialRQ.getPoint().getLatitude(), closestLocationSpatialRQ.getPoint().getLongitude());
             List<Location> response = new ArrayList<>();
             Location location = new Location(String.valueOf(closestPort.getPort().getId()), String.valueOf(closestPort.getPort().getId()), LocationType.PORT, closestPort.getPort().getCode(), closestPort.getPort().getName(), closestPort.getDistance(), UnitType.METERS, closestPort.getPort().getCentroid(), closestPort.getPort().getGeometry(), closestPort.getPort().getExtent(), closestPort.getPort().getEnabled(), closestPort.getPort().getCountryCode());
             response.add(location);
@@ -154,35 +154,35 @@ public class SpatialRestResource {
                 move2 = movements.get(0);
             }
 
-            Point movePoint1 = (Point) GeometryUtils2.createPoint(move1.getPosition().getLatitude(), move1.getPosition().getLongitude());     //this magical int is the World Geodetic System 1984, aka EPSG:4326. See: https://en.wikipedia.org/wiki/World_Geodetic_System or http://spatialreference.org/ref/epsg/wgs-84/
-            Point movePoint2 = (Point) GeometryUtils2.createPoint(move2.getPosition().getLatitude(), move2.getPosition().getLongitude());
+            Point movePoint1 = (Point) GeometryUtils.createPoint(move1.getPosition().getLatitude(), move1.getPosition().getLongitude());     //this magical int is the World Geodetic System 1984, aka EPSG:4326. See: https://en.wikipedia.org/wiki/World_Geodetic_System or http://spatialreference.org/ref/epsg/wgs-84/
+            Point movePoint2 = (Point) GeometryUtils.createPoint(move2.getPosition().getLatitude(), move2.getPosition().getLongitude());
 
-            List<PortAreaEntity2> portsForMove1 = areaServiceBean2.getPortAreasByPoint(movePoint1);
-            List<PortAreaEntity2> portsForMove2 = areaServiceBean2.getPortAreasByPoint(movePoint2);
+            List<PortAreaEntity> portsForMove1 = areaServiceBean.getPortAreasByPoint(movePoint1);
+            List<PortAreaEntity> portsForMove2 = areaServiceBean.getPortAreasByPoint(movePoint2);
 
 
             List<String> portRequestList = new ArrayList<>();
             //for the first move
-            for(PortAreaEntity2 area : portsForMove1){
+            for(PortAreaEntity area : portsForMove1){
                 portRequestList.add(area.getCode());
             }
             //and for the second move
-            for(PortAreaEntity2 area : portsForMove2){
+            for(PortAreaEntity area : portsForMove2){
                 portRequestList.add(area.getCode());
             }
 
             WKTReader reader = new WKTReader();
 
 
-            List<PortEntity2> portList = areaServiceBean2.getPortsByAreaCodes(portRequestList);
+            List<PortEntity> portList = areaServiceBean.getPortsByAreaCodes(portRequestList);
             double movePortDistance1 = 2778d;               // 1.5 nautical miles is 2778 meters, aka the radius of the port area
             double movePortDistance2 = 2778d;
-            PortEntity2 closestPort1 = null;
-            PortEntity2 closestPort2 = null;
+            PortEntity closestPort1 = null;
+            PortEntity closestPort2 = null;
 
             //Note: The port areas in the DB seems to be slightly different then the definition of 1.5 nautical miles around point p. Thus we can get some unexpected results when the DB says that we are not in area a while the distance to point p is lower then 2778 meters. The most notably effect of this is that track logic regarding when to create new tracks occasionally fails.
             //Since the current track logic is not very useful (or sane.....) anyway I will not fix this for now
-            for(PortEntity2 port : portList){   //loop over ports
+            for(PortEntity port : portList){   //loop over ports
                 Point portPoint = port.getGeom().getCentroid();
 
                 double dist = distanceMeter(portPoint.getY(), portPoint.getX(), movePoint1.getY(), movePoint1.getX());
@@ -261,7 +261,7 @@ public class SpatialRestResource {
             PointType point;
             ArrayList<AreaExtendedIdentifierType> firstAreas = new ArrayList<>();
             if(firstLongitude != null && firstLatitude != null) {
-                List<BaseAreaDto> areaList = areaServiceBean2.getAreasByPoint(firstLatitude, firstLongitude);
+                List<BaseAreaDto> areaList = areaServiceBean.getAreasByPoint(firstLatitude, firstLongitude);
                 for (BaseAreaDto bad: areaList) {
                     AreaExtendedIdentifierType areaExtendedIdentifierType = new AreaExtendedIdentifierType(String.valueOf(bad.getGid()),bad.getType(),bad.getCode(), bad.getName());
                     firstAreas.add(areaExtendedIdentifierType);
@@ -271,7 +271,7 @@ public class SpatialRestResource {
             point = new PointType(secondLongitude, secondLatitude, 4326);
 
             SpatialEnrichmentRQ spatialEnrichmentRQ = new SpatialEnrichmentRQ(null, point, new SpatialEnrichmentRQ.AreaTypes(), new SpatialEnrichmentRQ.LocationTypes(), UnitType.NAUTICAL_MILES);
-            SpatialEnrichmentRS spatialEnrichmentRS = areaServiceBean2.getSpatialEnrichment(spatialEnrichmentRQ);           //this one is hardcoded to return distance in nautical miles right now
+            SpatialEnrichmentRS spatialEnrichmentRS = areaServiceBean.getSpatialEnrichment(spatialEnrichmentRQ);           //this one is hardcoded to return distance in nautical miles right now
 
             ArrayList<AreaExtendedIdentifierType> secondAreas = (ArrayList<AreaExtendedIdentifierType>)spatialEnrichmentRS.getAreasByLocation().getAreas();
 
@@ -303,7 +303,7 @@ public class SpatialRestResource {
     public Response getEnrichment2(SpatialEnrichmentRQ spatialEnrichmentRQ) {
 
         try {
-            SpatialEnrichmentRS response = areaServiceBean2.getSpatialEnrichment(spatialEnrichmentRQ);
+            SpatialEnrichmentRS response = areaServiceBean.getSpatialEnrichment(spatialEnrichmentRQ);
             return Response.ok(response).build();
         } catch (Exception e) {
             log.error(e.toString(),e);
@@ -385,7 +385,7 @@ public class SpatialRestResource {
     public Response getAreaByCode2(AreaByCodeRequest areaByCodeRequest) {
 
         try {
-            List<AreaSimpleType> areaSimpleTypeList = areaServiceBean2.getAreasByCode(areaByCodeRequest);
+            List<AreaSimpleType> areaSimpleTypeList = areaServiceBean.getAreasByCode(areaByCodeRequest);
             AreaByCodeResponse response = new AreaByCodeResponse();
             response.setAreaSimples(areaSimpleTypeList);
             return Response.ok(response).build();
@@ -403,7 +403,7 @@ public class SpatialRestResource {
         try {
             List<String> portCode = new ArrayList<>();
             portCode.add(geometryByPortCodeRequest.getPortCode());
-            List<PortEntity2> portList = areaServiceBean2.getPortsByAreaCodes(portCode);
+            List<PortEntity> portList = areaServiceBean.getPortsByAreaCodes(portCode);
             String geometry = (portList.isEmpty() ? "" : portList.get(0).getGeometry());
             GeometryByPortCodeResponse response = new GeometryByPortCodeResponse();
             response.setPortGeometry(geometry);

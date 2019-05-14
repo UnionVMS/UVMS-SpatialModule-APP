@@ -12,9 +12,9 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.AreaServiceBean2;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.AreaServiceBean;
 import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.BaseAreaDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.utils.AreaMapper2;
+import eu.europa.ec.fisheries.uvms.spatial.service.Service2.utils.AreaMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,14 +38,14 @@ public class XMLResource2 {
 
 
     @Inject
-    private AreaServiceBean2 areaServiceBean2;
+    private AreaServiceBean areaServiceBean;
 
     @POST
     @Produces(value = {MediaType.APPLICATION_XML})
     @Consumes(value = {MediaType.APPLICATION_XML})
     @Path("/enrichment")
     public SpatialEnrichmentRS spatialEnrichment2(SpatialEnrichmentRQ request){
-        return areaServiceBean2.getSpatialEnrichment(request);
+        return areaServiceBean.getSpatialEnrichment(request);
     }
 
     @POST
@@ -63,8 +63,8 @@ public class XMLResource2 {
     @Path("/areas-by-location")
     public AreaByLocationSpatialRS getAreasByPoint2(AreaByLocationSpatialRQ request)  throws Exception {
         AreaByLocationSpatialRS response = new AreaByLocationSpatialRS();
-        List<BaseAreaDto> areaList = areaServiceBean2.getAreasByPoint(request.getPoint().getLatitude(), request.getPoint().getLongitude());
-        List<AreaExtendedIdentifierType> areaTypesByLocation = AreaMapper2.mapToAreaExtendedIdentifierType(areaList);
+        List<BaseAreaDto> areaList = areaServiceBean.getAreasByPoint(request.getPoint().getLatitude(), request.getPoint().getLongitude());
+        List<AreaExtendedIdentifierType> areaTypesByLocation = AreaMapper.mapToAreaExtendedIdentifierType(areaList);
         if(areaList != null){
 
             AreasByLocationType areasByLocationType = new AreasByLocationType();
