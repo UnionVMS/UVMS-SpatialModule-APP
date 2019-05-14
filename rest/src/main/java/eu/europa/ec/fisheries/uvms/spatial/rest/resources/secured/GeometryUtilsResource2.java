@@ -12,7 +12,7 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.utils.GeometryUtils;
+import eu.europa.ec.fisheries.uvms.spatial.service.utils.GeometryUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

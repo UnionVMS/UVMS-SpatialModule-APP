@@ -10,7 +10,7 @@
 
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured;
 
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.PropertiesBean;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.PropertiesBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

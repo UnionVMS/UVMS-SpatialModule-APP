@@ -15,9 +15,9 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialFeaturesEnum;
 import eu.europa.ec.fisheries.uvms.spatial.rest.constants.ErrorCodes;
 import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.AreaLocationMapper;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.AreaServiceBean;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dao.AreaDao;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.entity.UserAreasEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaServiceBean;
+import eu.europa.ec.fisheries.uvms.spatial.service.dao.AreaDao;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

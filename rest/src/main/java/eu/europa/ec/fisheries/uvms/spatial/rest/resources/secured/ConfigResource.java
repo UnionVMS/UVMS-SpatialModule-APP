@@ -12,9 +12,9 @@ package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dao.ProjectionDao;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.ProjectionDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.utils.ProjectionMapper;
+import eu.europa.ec.fisheries.uvms.spatial.service.dao.ProjectionDao;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.ProjectionDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.utils.ProjectionMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

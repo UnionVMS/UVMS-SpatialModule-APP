@@ -12,9 +12,9 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.bean.AreaServiceBean;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.BaseAreaDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.Service2.utils.AreaMapper;
+import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaServiceBean;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.BaseAreaDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.utils.AreaMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
