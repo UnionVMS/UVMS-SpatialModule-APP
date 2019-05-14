@@ -28,7 +28,6 @@ public abstract class AreaLocationMapper {
 	private static final String LOCATION_TYPE = "locationType";
 	public static final String AREA_ID = "id";
 
-//	private static final AreaLocationMapper INSTANCE = Mappers.getMapper(AreaLocationMapper.class);
 	private static final AreaLocationMapper INSTANCE = null;
 
 
@@ -36,33 +35,14 @@ public abstract class AreaLocationMapper {
 		return INSTANCE;
 	}
 
-	/*@Mappings( {
-			@Mapping(target = "areaType", expression = "java(getAreaTypeEnum(areaDto.getAreaType()))")
-	})*/
 	public abstract AreaTypeEntry getAreaTypeEntry(AreaCoordinateType areaDto);
 
 	public abstract LocationTypeEntry getLocationTypeEntry(LocationQueryDto locationDto);
 	
-	/*@Mappings( {
-		@Mapping(target = "properties", expression = "java(extractProperties(locationDetails))"),
-		@Mapping(target = "type", expression = "java(extractType(locationDetails))")
-	})*/
-	//public abstract LocationDetailsGeoJsonDto getLocationDetailsDto(LocationDetails locationDetails);
-	
-/*	@Mappings( {
-		@Mapping(target = "properties", expression = "java(extractProperties(areaDetails))"),
-		@Mapping(target = "type", expression = "java(extractType(areaDetails))")
-	})*/
-	//public abstract AreaDetailsGeoJsonDto getAreaDetailsDto(AreaDetails areaDetails);
-	
+
 	public abstract List<AreaTypeEntry> getAreaTypeEntryList(List<AreaCoordinateType> areaDtoList);
 	
-	/*public AreaDetailsGeoJsonDto getAreaDetailsDtoForAllAreas(List<AreaDetails> areaDetailsList, AreaCoordinateType areaDto) {
-		AreaDetailsGeoJsonDto areaDetailsGeoJsonDto = new AreaDetailsGeoJsonDto();
-		areaDetailsGeoJsonDto.setAllAreaProperties(extractProperties(areaDetailsList));
-		areaDetailsGeoJsonDto.setType(extractType(areaDto));
-		return areaDetailsGeoJsonDto;
-	}*/
+
 	
 	public abstract Coordinate getCoordinateFromDto(GeoCoordinateType geoCoordinateType);
 
@@ -79,12 +59,10 @@ public abstract class AreaLocationMapper {
 			Object propertyValue;
 
 			if ("scopeSelection".equalsIgnoreCase(property.getPropertyName()) ) {
-				//propertyValue = UserAreaMapper.fromEntityToScopeArray((Set<UserScopeEntity>) property.getPropertyValue());
 			} else {
 				propertyValue = property.getPropertyValue();
 			}
 
-			//propertyMap.put(property.getPropertyName(), propertyValue);
 		}
 		if (!propertyMap.isEmpty()) {
 			propertyMap.put(AREA_TYPE, String.valueOf(areaDetails.getAreaType().getAreaType()).toUpperCase());
