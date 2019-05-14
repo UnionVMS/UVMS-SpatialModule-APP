@@ -17,10 +17,10 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "bookmark")
-@NamedQuery(name = BookmarkEntity.LIST_BY_USERNAME, query = "FROM BookmarkEntity2 b WHERE b.createdBy = :createdBy")
+@NamedQuery(name = BookmarkEntity.LIST_BY_USERNAME, query = "FROM BookmarkEntity b WHERE b.createdBy = :createdBy")
 public class BookmarkEntity {
 
-    public static final String LIST_BY_USERNAME = "Bookmark2.listByUsername";
+    public static final String LIST_BY_USERNAME = "Bookmark.listByUsername";
 
 	@Id
 	@Column(name = "id")

@@ -20,19 +20,19 @@ import java.util.Set;
 @Entity
 @Table(name = "projection")
 @NamedQueries({
-        @NamedQuery(name = ProjectionEntity.FIND_BY_SRS_CODE, query = "FROM ProjectionEntity2 p WHERE p.srsCode = :srsCode"),
+        @NamedQuery(name = ProjectionEntity.FIND_BY_SRS_CODE, query = "FROM ProjectionEntity p WHERE p.srsCode = :srsCode"),
         @NamedQuery(name = ProjectionEntity.FIND_PROJECTION_BY_ID,
 				query = "SELECT projection.srsCode AS epsgCode, projection.units AS units, projection.world AS global, projection.extent as extent, projection.axis as axis, projection.projDef as projDef, projection.worldExtent as worldExtent " +
-						"FROM ProjectionEntity2 projection WHERE projection.id = :id"),
+						"FROM ProjectionEntity projection WHERE projection.id = :id"),
 		@NamedQuery(name = ProjectionEntity.FIND_ALL,
-				query = "FROM ProjectionEntity2")
+				query = "FROM ProjectionEntity")
 })
 
 public class ProjectionEntity {
 
-    public static final String FIND_PROJECTION_BY_ID = "ReportLayerConfig2.findProjectionById";
-    public static final String FIND_BY_SRS_CODE = "Projection2.findBySrsCode";
-    public static final String FIND_ALL = "Projection2.findAll";
+    public static final String FIND_PROJECTION_BY_ID = "ReportLayerConfig.findProjectionById";
+    public static final String FIND_BY_SRS_CODE = "Projection.findBySrsCode";
+    public static final String FIND_ALL = "Projection.findAll";
 	
 	@Id
 	@Column(name = "id")

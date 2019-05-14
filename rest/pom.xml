@@ -52,18 +52,10 @@
             <scope>provided</scope>
         </dependency>
 
-        <!--
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>service</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        -->
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>service2</artifactId>
-            <version>${project.version}</version>
+            <artifactId>service</artifactId>
             <scope>provided</scope>
         </dependency>
 

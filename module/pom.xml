@@ -27,7 +27,7 @@
                         </ejbModule>
                         <ejbModule>
                             <groupId>${project.groupId}</groupId>
-                            <artifactId>service2</artifactId>
+                            <artifactId>service</artifactId>
                         </ejbModule>
                         <ejbModule>
                             <groupId>${project.groupId}</groupId>
@@ -73,15 +73,9 @@
             <version>${project.parent.version}</version>
             <type>ejb</type>
         </dependency>
-        <!--dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>service</artifactId>
-            <version>${project.parent.version}</version>
-            <type>ejb</type>
-        </dependency-->
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>service2</artifactId>
+            <artifactId>service</artifactId>
             <version>${project.parent.version}</version>
             <type>ejb</type>
         </dependency>

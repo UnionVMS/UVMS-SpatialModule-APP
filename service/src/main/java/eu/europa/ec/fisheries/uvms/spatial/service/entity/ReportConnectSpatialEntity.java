@@ -26,24 +26,24 @@ import java.util.Set;
 @NamedQueries({
 		@NamedQuery(name = ReportConnectSpatialEntity.FIND_MAP_PROJ_BY_ID,
 				query = "SELECT projection.srsCode AS epsgCode, projection.units AS units, projection.world AS global, projection.extent as extent, projection.axis as axis , projection.projDef as projDef, projection.worldExtent as worldExtent " +
-						"FROM ReportConnectSpatialEntity2 rcs INNER JOIN rcs.projectionByMapProjId AS projection " +
+						"FROM ReportConnectSpatialEntity rcs INNER JOIN rcs.projectionByMapProjId AS projection " +
 						"WHERE rcs.reportId = :reportId"),
 		@NamedQuery(name = ReportConnectSpatialEntity.FIND_BY_REPORT_ID,
-				query = "FROM ReportConnectSpatialEntity2 WHERE reportId = :reportId"),
+				query = "FROM ReportConnectSpatialEntity WHERE reportId = :reportId"),
 		@NamedQuery(name = ReportConnectSpatialEntity.FIND_BY_ID,
-				query = "FROM ReportConnectSpatialEntity2 WHERE reportId = :reportId AND id = :id"),
+				query = "FROM ReportConnectSpatialEntity WHERE reportId = :reportId AND id = :id"),
 		@NamedQuery(name = ReportConnectSpatialEntity.FIND_BY_REPORT_CONNECT_ID,
-				query = "FROM ReportConnectSpatialEntity2 WHERE id = :id"),
+				query = "FROM ReportConnectSpatialEntity WHERE id = :id"),
         @NamedQuery(name = ReportConnectSpatialEntity.DELETE_BY_ID_LIST,
-                query = "DELETE FROM ReportConnectSpatialEntity2 WHERE id IN :idList")
+                query = "DELETE FROM ReportConnectSpatialEntity WHERE id IN :idList")
 })
 public class ReportConnectSpatialEntity implements Serializable {
 
-    public static final String FIND_BY_ID = "reportConnectSpatialEntity2.findById";
-    public static final String FIND_MAP_PROJ_BY_ID = "reportConnectSpatialEntity2.findMapProjectionById";
-    public static final String DELETE_BY_ID_LIST = "reportConnectSpatialEntity2.deleteByIdList";
-	public static final String FIND_BY_REPORT_CONNECT_ID = "reportConnectSpatialEntity2.findByReportConnectId";
-    public static final String FIND_BY_REPORT_ID = "ReportLayerConfig2.findByReportId";
+    public static final String FIND_BY_ID = "ReportConnectSpatialEntity.findById";
+    public static final String FIND_MAP_PROJ_BY_ID = "ReportConnectSpatialEntity.findMapProjectionById";
+    public static final String DELETE_BY_ID_LIST = "ReportConnectSpatialEntity.deleteByIdList";
+	public static final String FIND_BY_REPORT_CONNECT_ID = "ReportConnectSpatialEntity.findByReportConnectId";
+    public static final String FIND_BY_REPORT_ID = "ReportLayerConfig.findByReportId";
 
 	
     @Id

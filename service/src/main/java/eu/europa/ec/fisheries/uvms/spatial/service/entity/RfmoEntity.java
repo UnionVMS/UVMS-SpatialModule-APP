@@ -19,23 +19,23 @@ import java.util.Objects;
 @Entity
 @NamedQueries({
         @NamedQuery(name = RfmoEntity.RFMO_BY_COORDINATE,
-                query = "FROM RfmoEntity2 WHERE intersects(geom, :shape) = true AND enabled = true"),
+                query = "FROM RfmoEntity WHERE intersects(geom, :shape) = true AND enabled = true"),
         @NamedQuery(name = RfmoEntity.RFMO_COLUMNS,
-                query = "SELECT rfmo.id as gid, rfmo.name AS name, rfmo.code AS code FROM RfmoEntity2 AS rfmo WHERE rfmo.id in (:ids)"),
+                query = "SELECT rfmo.id as gid, rfmo.name AS name, rfmo.code AS code FROM RfmoEntity AS rfmo WHERE rfmo.id in (:ids)"),
         @NamedQuery(name = RfmoEntity.DISABLE_RFMO_AREAS,
-                query = "UPDATE RfmoEntity2 SET enabled = false"),
-        @NamedQuery(name = RfmoEntity.SEARCH_RFMO, query = "FROM RfmoEntity2 where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid"),
-        @NamedQuery(name = RfmoEntity.AREA_BY_AREA_CODES, query = "From RfmoEntity2 where code in :code AND enabled=true "),
-        @NamedQuery(name = RfmoEntity.SEARCH_RFMO_NAMES_BY_CODE, query = "From RfmoEntity2 where code in (SELECT distinct(code) from RfmoEntity2 where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid)")})
+                query = "UPDATE RfmoEntity SET enabled = false"),
+        @NamedQuery(name = RfmoEntity.SEARCH_RFMO, query = "FROM RfmoEntity where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid"),
+        @NamedQuery(name = RfmoEntity.AREA_BY_AREA_CODES, query = "From RfmoEntity where code in :code AND enabled=true "),
+        @NamedQuery(name = RfmoEntity.SEARCH_RFMO_NAMES_BY_CODE, query = "From RfmoEntity where code in (SELECT distinct(code) from RfmoEntity where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid)")})
 @Table(name = "rfmo")
 public class RfmoEntity extends BaseAreaEntity {
 
-    public static final String RFMO_BY_COORDINATE = "rfmoEntity2.ByCoordinate";
-    public static final String DISABLE_RFMO_AREAS = "rfmoEntity2.disableRfmoAreas";
-    public static final String SEARCH_RFMO = "rfmoEntity2.searchRfmoByNameOrCode";
-    public static final String SEARCH_RFMO_NAMES_BY_CODE = "rfmoEntity2.searchNamesByCode";
-    public static final String RFMO_COLUMNS = "rfmoEntity2.findSelectedColumns";
-    public static final String AREA_BY_AREA_CODES = " rfmoEntity2.areaByAreaCodes";
+    public static final String RFMO_BY_COORDINATE = "RfmoEntity.ByCoordinate";
+    public static final String DISABLE_RFMO_AREAS = "RfmoEntity.disableRfmoAreas";
+    public static final String SEARCH_RFMO = "RfmoEntity.searchRfmoByNameOrCode";
+    public static final String SEARCH_RFMO_NAMES_BY_CODE = "RfmoEntity.searchNamesByCode";
+    public static final String RFMO_COLUMNS = "RfmoEntity.findSelectedColumns";
+    public static final String AREA_BY_AREA_CODES = " RfmoEntity.areaByAreaCodes";
 
 	@Id
 	@Column(name = "gid")

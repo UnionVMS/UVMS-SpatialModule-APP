@@ -27,18 +27,18 @@ import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 @Entity
 @NamedQueries({
         @NamedQuery(name = UserAreasEntity.FIND_USER_AREA_BY_USERNAME_SCOPE_AND_POWERUSER,
-                query = "SELECT distinct area FROM UserAreasEntity2 area LEFT JOIN area.scopeSelection scopeSelection " +
+                query = "SELECT distinct area FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection " +
                         "WHERE ((true=:isPowerUser) OR (area.userName=:userName OR scopeSelection.name=:scopeName)) " +
                         "GROUP BY area.id"),
         @NamedQuery(name = UserAreasEntity.FIND_BY_USER_NAME_AND_SCOPE_NAME,
-                query = "SELECT distinct area FROM UserAreasEntity2 area LEFT JOIN area.scopeSelection scopeSelection " +
+                query = "SELECT distinct area FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection " +
                         "WHERE area.userName = :userName OR scopeSelection.name = :scopeName"),
         @NamedQuery(name = UserAreasEntity.USER_AREA_DETAILS_BY_LOCATION,
-                query = "FROM UserAreasEntity2 userArea WHERE intersects(userArea.geom, :shape) = true AND userArea.enabled = true GROUP BY userArea.id"),
+                query = "FROM UserAreasEntity userArea WHERE intersects(userArea.geom, :shape) = true AND userArea.enabled = true GROUP BY userArea.id"),
         @NamedQuery(name = UserAreasEntity.FIND_ALL_USER_AREAS,
-                query = "SELECT DISTINCT area.id as gid, area.name as name, area.areaDesc as desc FROM UserAreasEntity2 area LEFT JOIN area.scopeSelection scope " +
+                query = "SELECT DISTINCT area.id as gid, area.name as name, area.areaDesc as desc FROM UserAreasEntity area LEFT JOIN area.scopeSelection scope " +
                         "WHERE area.userName = :userName OR scope.name = :scopeName"),
-        @NamedQuery(name = UserAreasEntity.AREA_BY_AREA_CODES, query = "From UserAreasEntity2 where code in :code AND enabled=true ")
+        @NamedQuery(name = UserAreasEntity.AREA_BY_AREA_CODES, query = "From UserAreasEntity where code in :code AND enabled=true ")
 })
 @Where(clause = "enabled = true")
 @Table(name = "user_areas", uniqueConstraints = {
@@ -46,11 +46,11 @@ import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 })
 public class UserAreasEntity extends BaseAreaEntity {
 
-    public static final String FIND_ALL_USER_AREAS = "userArea2.findAllUserAreas";
-    public static final String USER_AREA_DETAILS_BY_LOCATION = "UserArea2.findUserAreaDetailsByLocation";
-    public static final String FIND_USER_AREA_BY_USERNAME_SCOPE_AND_POWERUSER = "UserArea2.findUserAreaByUsernameScopeAndPowerUser";
-    public static final String FIND_BY_USER_NAME_AND_SCOPE_NAME = "UserArea2.findGidByUserNameOrScope";
-    public static final String AREA_BY_AREA_CODES = "userAreasEntity2.areaByAreaCodes";
+    public static final String FIND_ALL_USER_AREAS = "userArea.findAllUserAreas";
+    public static final String USER_AREA_DETAILS_BY_LOCATION = "UserArea.findUserAreaDetailsByLocation";
+    public static final String FIND_USER_AREA_BY_USERNAME_SCOPE_AND_POWERUSER = "UserArea.findUserAreaByUsernameScopeAndPowerUser";
+    public static final String FIND_BY_USER_NAME_AND_SCOPE_NAME = "UserArea.findGidByUserNameOrScope";
+    public static final String AREA_BY_AREA_CODES = "UserAreasEntity.areaByAreaCodes";
 
     @Id
     @Column(name = "gid")

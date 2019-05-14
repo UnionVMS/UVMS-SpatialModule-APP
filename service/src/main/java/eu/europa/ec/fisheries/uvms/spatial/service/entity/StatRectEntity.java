@@ -19,23 +19,23 @@ import java.util.Objects;
 @Entity
 @Table(name = "stat_rect")
 @NamedQueries({
-        @NamedQuery(name = StatRectEntity.DISABLE, query = "UPDATE StatRectEntity2 SET enabled = false"),
+        @NamedQuery(name = StatRectEntity.DISABLE, query = "UPDATE StatRectEntity SET enabled = false"),
         @NamedQuery(name = StatRectEntity.BY_INTERSECT,
-                query = "FROM StatRectEntity2 WHERE intersects(geom, :shape) = true AND enabled = true"),
-        @NamedQuery(name = StatRectEntity.SEARCH_STATRECT, query = "FROM StatRectEntity2 where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid"),
-        @NamedQuery(name = StatRectEntity.SEARCH_STATRECT_NAMES_BY_CODE, query = "From StatRectEntity2 where code in (SELECT distinct(code) from StatRectEntity2 where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid)"),
-        @NamedQuery(name = StatRectEntity.AREA_BY_AREA_CODES, query = "From StatRectEntity2 where code in :code AND enabled=true "),
-        @NamedQuery(name = StatRectEntity.STATRECT_COLUMNS, query = "SELECT statrect.id as gid, statrect.name AS name, statrect.code AS code FROM StatRectEntity2 AS statrect WHERE statrect.id in (:ids)")
+                query = "FROM StatRectEntity WHERE intersects(geom, :shape) = true AND enabled = true"),
+        @NamedQuery(name = StatRectEntity.SEARCH_STATRECT, query = "FROM StatRectEntity where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid"),
+        @NamedQuery(name = StatRectEntity.SEARCH_STATRECT_NAMES_BY_CODE, query = "From StatRectEntity where code in (SELECT distinct(code) from StatRectEntity where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid)"),
+        @NamedQuery(name = StatRectEntity.AREA_BY_AREA_CODES, query = "From StatRectEntity where code in :code AND enabled=true "),
+        @NamedQuery(name = StatRectEntity.STATRECT_COLUMNS, query = "SELECT statrect.id as gid, statrect.name AS name, statrect.code AS code FROM StatRectEntity AS statrect WHERE statrect.id in (:ids)")
 })
 
 public class StatRectEntity extends BaseAreaEntity {
 
-    public static final String BY_INTERSECT = "statRectEntity2.byIntersect";
-    public static final String DISABLE = "statRectEntity2.disable";
-    public static final String SEARCH_STATRECT = "statrectEntity2.searchStatrectByNameOrCode";
-    public static final String SEARCH_STATRECT_NAMES_BY_CODE = "statrectEntity2.searchNamesByCode";
-    public static final String STATRECT_COLUMNS = "statrectEntity2.statRectColumns";
-    public static final String AREA_BY_AREA_CODES = "statrectEntity2.areaByAreaCodes";
+    public static final String BY_INTERSECT = "StatRectEntity.byIntersect";
+    public static final String DISABLE = "StatRectEntity.disable";
+    public static final String SEARCH_STATRECT = "StatRectEntity.searchStatrectByNameOrCode";
+    public static final String SEARCH_STATRECT_NAMES_BY_CODE = "StatRectEntity.searchNamesByCode";
+    public static final String STATRECT_COLUMNS = "StatRectEntity.statRectColumns";
+    public static final String AREA_BY_AREA_CODES = "StatRectEntity.areaByAreaCodes";
 
 	@Id
 	@Column(name = "gid")

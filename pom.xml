@@ -388,9 +388,8 @@
 
     <modules>
         <module>LIQUIBASE</module>
+        <module>service</module>
         <module>rest</module>
-        <!--module>service</module-->
-        <module>service2</module>
         <module>message</module>
         <module>module</module>
     </modules>

@@ -20,22 +20,22 @@ import java.util.Objects;
 @Entity
 @NamedQueries({
         @NamedQuery(name = PortAreaEntity.PORT_AREA_BY_POINT,
-                query = "FROM PortAreaEntity2 WHERE within(:point, geom) = true AND enabled = true"),
+                query = "FROM PortAreaEntity WHERE within(:point, geom) = true AND enabled = true"),
 
-        @NamedQuery(name = PortAreaEntity.DISABLE_PORT_AREAS, query = "UPDATE PortAreaEntity2 SET enabled = false"),
-        @NamedQuery(name = PortAreaEntity.SEARCH_PORTAREAS, query = "FROM PortAreaEntity2 where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid"),
-        @NamedQuery(name = PortAreaEntity.SEARCH_PORT_AREA_NAMES_BY_CODE, query = "From PortAreaEntity2 where code in (SELECT distinct(code) from PortAreaEntity2 where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid)"),
-        @NamedQuery(name = PortAreaEntity.AREA_BY_AREA_CODES, query = "From PortAreaEntity2 where code in :code AND enabled=true "),
-        @NamedQuery(name = PortAreaEntity.PORTAREA_COLUMNS, query = "SELECT portarea.id as gid, portarea.name AS name, portarea.code AS code FROM PortAreaEntity2 AS portarea WHERE portarea.id in (:ids)")})
+        @NamedQuery(name = PortAreaEntity.DISABLE_PORT_AREAS, query = "UPDATE PortAreaEntity SET enabled = false"),
+        @NamedQuery(name = PortAreaEntity.SEARCH_PORTAREAS, query = "FROM PortAreaEntity where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid"),
+        @NamedQuery(name = PortAreaEntity.SEARCH_PORT_AREA_NAMES_BY_CODE, query = "From PortAreaEntity where code in (SELECT distinct(code) from PortAreaEntity where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid)"),
+        @NamedQuery(name = PortAreaEntity.AREA_BY_AREA_CODES, query = "From PortAreaEntity where code in :code AND enabled=true "),
+        @NamedQuery(name = PortAreaEntity.PORTAREA_COLUMNS, query = "SELECT portarea.id as gid, portarea.name AS name, portarea.code AS code FROM PortAreaEntity AS portarea WHERE portarea.id in (:ids)")})
 @Table(name = "port_area")
 public class PortAreaEntity extends BaseAreaEntity {
 
-    public static final String PORT_AREA_BY_POINT = "portEntity2.PortAreaByPoint";
-    public static final String DISABLE_PORT_AREAS = "portAreasEntity2.disablePortAreas";
-    public static final String SEARCH_PORTAREAS = "portAreaEntity2.searchPortAreaByNameOrCode";
-    public static final String SEARCH_PORT_AREA_NAMES_BY_CODE = "portAreaEntity2.searchNamesByCode";
-    public static final String PORTAREA_COLUMNS = "portAreaEntity2.portAreaColumns";
-    public static final String AREA_BY_AREA_CODES = "portAreaEntity2.areaByAreaCodes";
+    public static final String PORT_AREA_BY_POINT = "portEntity.PortAreaByPoint";
+    public static final String DISABLE_PORT_AREAS = "portAreasEntity.disablePortAreas";
+    public static final String SEARCH_PORTAREAS = "PortAreaEntity.searchPortAreaByNameOrCode";
+    public static final String SEARCH_PORT_AREA_NAMES_BY_CODE = "PortAreaEntity.searchNamesByCode";
+    public static final String PORTAREA_COLUMNS = "PortAreaEntity.portAreaColumns";
+    public static final String AREA_BY_AREA_CODES = "PortAreaEntity.areaByAreaCodes";
 
 	@Id
 	@Column(name = "gid")

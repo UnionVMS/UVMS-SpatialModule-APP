@@ -9,7 +9,7 @@ import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 
 import java.io.File;
 @ArquillianSuiteDeployment
-public abstract class BuildService2Deployment {
+public abstract class BuildServiceDeployment {
 
 
 
@@ -34,7 +34,7 @@ public abstract class BuildService2Deployment {
 
 
 
-            testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.spatial.service.Service2");
+            testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.spatial.service");
 
             testWar.addClass(ConfigServiceMock.class);
 

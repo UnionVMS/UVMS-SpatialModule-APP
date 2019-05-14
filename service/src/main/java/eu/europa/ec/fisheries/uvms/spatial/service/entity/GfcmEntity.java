@@ -19,22 +19,22 @@ import java.util.Objects;
 @Entity
 @Table(name = "gfcm")
 @NamedQueries({
-        @NamedQuery(name = GfcmEntity.DISABLE_GFMC_AREAS, query = "UPDATE GfcmEntity2 SET enabled = false"),
+        @NamedQuery(name = GfcmEntity.DISABLE_GFMC_AREAS, query = "UPDATE GfcmEntity SET enabled = false"),
         @NamedQuery(name = GfcmEntity.GFMC_BY_INTERSECT,
-                query = "FROM GfcmEntity2 WHERE intersects(geom, :shape) = true AND enabled = true"),
-        @NamedQuery(name = GfcmEntity.SEARCH_GFCM, query = "FROM GfcmEntity2 where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid"),
-        @NamedQuery(name = GfcmEntity.SEARCH_GFCM_NAMES_BY_CODE, query = "From GfcmEntity2 where code in (SELECT distinct(code) from GfcmEntity2 where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid)"),
-        @NamedQuery(name = GfcmEntity.AREA_BY_AREA_CODES, query = "From GfcmEntity2 where code in :code AND enabled=true "),
-        @NamedQuery(name = GfcmEntity.GFCM_COLUMNS, query = "SELECT gfcm.id as gid, gfcm.name AS name, gfcm.code AS code FROM GfcmEntity2 AS gfcm WHERE gfcm.id in (:ids)")})
+                query = "FROM GfcmEntity WHERE intersects(geom, :shape) = true AND enabled = true"),
+        @NamedQuery(name = GfcmEntity.SEARCH_GFCM, query = "FROM GfcmEntity where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid"),
+        @NamedQuery(name = GfcmEntity.SEARCH_GFCM_NAMES_BY_CODE, query = "From GfcmEntity where code in (SELECT distinct(code) from GfcmEntity where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid)"),
+        @NamedQuery(name = GfcmEntity.AREA_BY_AREA_CODES, query = "From GfcmEntity where code in :code AND enabled=true "),
+        @NamedQuery(name = GfcmEntity.GFCM_COLUMNS, query = "SELECT gfcm.id as gid, gfcm.name AS name, gfcm.code AS code FROM GfcmEntity AS gfcm WHERE gfcm.id in (:ids)")})
 
 public class GfcmEntity extends BaseAreaEntity {
 
-    public static final String DISABLE_GFMC_AREAS = "gfmcEntity2.disable";
-    public static final String GFMC_BY_INTERSECT = "gfmcEntity2.gfmcByIntersect";
-    public static final String SEARCH_GFCM = "gfcmEntity2.SearchgfcmByNameOrCode";
-    public static final String SEARCH_GFCM_NAMES_BY_CODE = "gfcmEntity2.searchNamesByCode";
-    public static final String GFCM_COLUMNS = "gfcmEntity2.gfcmColumns";
-    public static final String AREA_BY_AREA_CODES = "gfcmEntity2.areaByAreaCodes";
+    public static final String DISABLE_GFMC_AREAS = "gfmcEntity.disable";
+    public static final String GFMC_BY_INTERSECT = "gfmcEntity.gfmcByIntersect";
+    public static final String SEARCH_GFCM = "GfcmEntity.SearchgfcmByNameOrCode";
+    public static final String SEARCH_GFCM_NAMES_BY_CODE = "GfcmEntity.searchNamesByCode";
+    public static final String GFCM_COLUMNS = "GfcmEntity.gfcmColumns";
+    public static final String AREA_BY_AREA_CODES = "GfcmEntity.areaByAreaCodes";
 
 	@Id
 	@Column(name = "gid")

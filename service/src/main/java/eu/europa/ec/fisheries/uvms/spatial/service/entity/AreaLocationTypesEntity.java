@@ -19,36 +19,36 @@ import java.util.Objects;
 
 @Entity
 @NamedQueries({
-        @NamedQuery(name = AreaLocationTypesEntity.FIND_ALL_AREA_AND_LOCATION_TYPE_NAMES, query = "FROM AreaLocationTypesEntity2 area"),
-        @NamedQuery(name = AreaLocationTypesEntity.FIND_ALL_IS_LOCATION, query = "FROM AreaLocationTypesEntity2 area WHERE location = :isLocation and area.areaDbTable <> 'NA'"),
-        @NamedQuery(name = AreaLocationTypesEntity.FIND_ALL_IS_LOCATION_IS_SYSTEM_WIDE, query = "FROM AreaLocationTypesEntity2 WHERE location = :location AND systemWide = :systemWide"),
-        @NamedQuery(name = AreaLocationTypesEntity.FIND_TYPE_BY_NAME, query = "FROM AreaLocationTypesEntity2 WHERE typeName= :typeName"),
-        @NamedQuery(name = AreaLocationTypesEntity.FIND_TYPE_BY_NAMES, query = "FROM AreaLocationTypesEntity2 WHERE typeName in (:typeNames)"),
-        @NamedQuery(name = AreaLocationTypesEntity.FIND_SYSTEM_AREA_LAYER, query = "select new eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.AreaLayerDto(area.typeName, layer.geoName, area.areaTypeDesc, layer.styleLabelGeom, provider.serviceType) "
-                + " FROM AreaLocationTypesEntity2 as area INNER JOIN area.serviceLayer as layer"
+        @NamedQuery(name = AreaLocationTypesEntity.FIND_ALL_AREA_AND_LOCATION_TYPE_NAMES, query = "FROM AreaLocationTypesEntity area"),
+        @NamedQuery(name = AreaLocationTypesEntity.FIND_ALL_IS_LOCATION, query = "FROM AreaLocationTypesEntity area WHERE location = :isLocation and area.areaDbTable <> 'NA'"),
+        @NamedQuery(name = AreaLocationTypesEntity.FIND_ALL_IS_LOCATION_IS_SYSTEM_WIDE, query = "FROM AreaLocationTypesEntity WHERE location = :location AND systemWide = :systemWide"),
+        @NamedQuery(name = AreaLocationTypesEntity.FIND_TYPE_BY_NAME, query = "FROM AreaLocationTypesEntity WHERE typeName= :typeName"),
+        @NamedQuery(name = AreaLocationTypesEntity.FIND_TYPE_BY_NAMES, query = "FROM AreaLocationTypesEntity WHERE typeName in (:typeNames)"),
+        @NamedQuery(name = AreaLocationTypesEntity.FIND_SYSTEM_AREA_LAYER, query = "select new eu.europa.ec.fisheries.uvms.spatial.service.dto.AreaLayerDto(area.typeName, layer.geoName, area.areaTypeDesc, layer.styleLabelGeom, provider.serviceType) "
+                + " FROM AreaLocationTypesEntity as area INNER JOIN area.serviceLayer as layer"
                 + " INNER JOIN layer.providerFormat as provider WHERE area.systemWide = true AND area.location =  false"
                 + " AND area.serviceLayer = layer AND layer.providerFormat = provider AND area.areaDbTable <> 'user_areas'"),
         @NamedQuery(name = AreaLocationTypesEntity.FIND_SYSTEM_AREA_AND_LOCATION_LAYER, query = "select area.typeName as typeName, area.areaTypeDesc as areaTypeDesc, area.location as location,"
                 + " layer.geoName as geoName, layer.internal as internal, layer.styleLabelGeom as style,"
-                + " provider.serviceType as serviceType FROM AreaLocationTypesEntity2 as area INNER JOIN area.serviceLayer as layer"
+                + " provider.serviceType as serviceType FROM AreaLocationTypesEntity as area INNER JOIN area.serviceLayer as layer"
                 + " INNER JOIN layer.providerFormat as provider WHERE area.systemWide = true"
                 + " AND area.serviceLayer = layer AND layer.providerFormat = provider AND area.areaDbTable <> 'user_areas'"),
-        @NamedQuery(name = AreaLocationTypesEntity.FIND_USER_AREA_LAYER, query = "SELECT new eu.europa.ec.fisheries.uvms.spatial.service.Service2.dto.AreaLayerDto(area.typeName, layer.geoName, area.areaTypeDesc, layer.styleLabelGeom, provider.serviceType)"
-                + " FROM AreaLocationTypesEntity2 as area INNER JOIN area.serviceLayer as layer"
+        @NamedQuery(name = AreaLocationTypesEntity.FIND_USER_AREA_LAYER, query = "SELECT new eu.europa.ec.fisheries.uvms.spatial.service.dto.AreaLayerDto(area.typeName, layer.geoName, area.areaTypeDesc, layer.styleLabelGeom, provider.serviceType)"
+                + " FROM AreaLocationTypesEntity as area INNER JOIN area.serviceLayer as layer"
                 + " INNER JOIN layer.providerFormat as provider WHERE area.systemWide = true AND area.location = false"
                 + " AND area.serviceLayer = layer AND area.areaDbTable = 'user_areas' AND layer.providerFormat = provider")
 })
 @Table(name = "area_location_types", uniqueConstraints = @UniqueConstraint(columnNames = "type_name"))
 public class AreaLocationTypesEntity {
 
-    public static final String FIND_USER_AREA_LAYER = "areaLocationType2.findUserAreaLayerMappings";
-    public static final String FIND_ALL_IS_LOCATION  = "areaLocationType2.findAllIsLocation";
-    public static final String FIND_TYPE_BY_NAME = "areaLocationType2.findAreaByName";
-    public static final String FIND_ALL_IS_LOCATION_IS_SYSTEM_WIDE = "AreaLocationType2.findAllByIsLocationIsSystemWide";
-    public static final String FIND_SYSTEM_AREA_LAYER = "AreaLocationType2.findSystemAreaLayerMappings";
-    public static final String FIND_SYSTEM_AREA_AND_LOCATION_LAYER = "AreaLocationType2.findSystemAreaAndLocationLayerMappings";
-    public static final String FIND_ALL_AREA_AND_LOCATION_TYPE_NAMES = "AreaLocationType2.findAllAreaAndLocationTypeNames";
-    public static final String FIND_TYPE_BY_NAMES = "AreaLocationType2.findAreaByNames";
+    public static final String FIND_USER_AREA_LAYER = "areaLocationType.findUserAreaLayerMappings";
+    public static final String FIND_ALL_IS_LOCATION  = "areaLocationType.findAllIsLocation";
+    public static final String FIND_TYPE_BY_NAME = "areaLocationType.findAreaByName";
+    public static final String FIND_ALL_IS_LOCATION_IS_SYSTEM_WIDE = "AreaLocationType.findAllByIsLocationIsSystemWide";
+    public static final String FIND_SYSTEM_AREA_LAYER = "AreaLocationType.findSystemAreaLayerMappings";
+    public static final String FIND_SYSTEM_AREA_AND_LOCATION_LAYER = "AreaLocationType.findSystemAreaAndLocationLayerMappings";
+    public static final String FIND_ALL_AREA_AND_LOCATION_TYPE_NAMES = "AreaLocationType.findAllAreaAndLocationTypeNames";
+    public static final String FIND_TYPE_BY_NAMES = "AreaLocationType.findAreaByNames";
 	
 	
 	@Id

@@ -8,7 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.*;
 
-public class TransactionalTests extends BuildService2Deployment {
+public class TransactionalTests extends BuildServiceDeployment {
 
     @Inject
     private UserTransaction userTransaction;

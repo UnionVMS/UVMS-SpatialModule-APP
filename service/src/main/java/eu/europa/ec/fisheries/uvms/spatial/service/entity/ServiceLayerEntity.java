@@ -21,23 +21,23 @@ import java.util.Set;
 @Table(name = "service_layer")
 @NamedQueries({
         @NamedQuery(name = ServiceLayerEntity.BY_SYSTEM_AREA_TYPE,
-                query = "FROM ServiceLayerEntity2 s JOIN FETCH s.areaType a WHERE a.systemWide = true AND upper(s.areaType.typeName) = upper(:systemAreaType)"),
+                query = "FROM ServiceLayerEntity s JOIN FETCH s.areaType a WHERE a.systemWide = true AND upper(s.areaType.typeName) = upper(:systemAreaType)"),
         @NamedQuery(name = ServiceLayerEntity.FIND_SERVICE_LAYERS_BY_ID,
-                query = "SELECT serviceLayer FROM ServiceLayerEntity2 serviceLayer WHERE serviceLayer.id in (:ids) order by serviceLayer.id"),
+                query = "SELECT serviceLayer FROM ServiceLayerEntity serviceLayer WHERE serviceLayer.id in (:ids) order by serviceLayer.id"),
         @NamedQuery(name = ServiceLayerEntity.FIND_SERVICE_LAYER_BY_SUBTYPE,
                 query = "SELECT serviceLayer.id AS id, serviceLayer.name AS name, serviceLayer.layerDesc AS layerDesc, serviceLayer.subType as subType, serviceLayer.areaType.typeName as areaLocationTypeName  " +
-                        "FROM ServiceLayerEntity2 serviceLayer WHERE serviceLayer.subType in (:subTypes) order by serviceLayer.id"),
+                        "FROM ServiceLayerEntity serviceLayer WHERE serviceLayer.subType in (:subTypes) order by serviceLayer.id"),
         @NamedQuery(name = ServiceLayerEntity.FIND_SERVICE_LAYER_BY_SUBTYPE_WITHOUT_BING,
                 query = "SELECT serviceLayer.id AS id, serviceLayer.name AS name, serviceLayer.layerDesc AS layerDesc, serviceLayer.subType as subType, serviceLayer.areaType.typeName as areaLocationTypeName " +
-                        "FROM ServiceLayerEntity2 serviceLayer INNER JOIN serviceLayer.providerFormat providerFormat " +
+                        "FROM ServiceLayerEntity serviceLayer INNER JOIN serviceLayer.providerFormat providerFormat " +
                         "WHERE serviceLayer.subType in (:subTypes) AND providerFormat.serviceType <> 'BING' order by serviceLayer.id")
 })
 public class ServiceLayerEntity {
 
-    public static final String FIND_SERVICE_LAYER_BY_SUBTYPE = "serviceLayer2.findServiceLayerBySubType";
-    public static final String FIND_SERVICE_LAYER_BY_SUBTYPE_WITHOUT_BING = "serviceLayer2.findServiceLayerBySubTypeWithoutBing";
-    public static final String BY_SYSTEM_AREA_TYPE = "serviceLayer2.bySystemAreaType";
-    public static final String FIND_SERVICE_LAYERS_BY_ID ="ReportLayerConfig2.findServiceLayerById";
+    public static final String FIND_SERVICE_LAYER_BY_SUBTYPE = "serviceLayer.findServiceLayerBySubType";
+    public static final String FIND_SERVICE_LAYER_BY_SUBTYPE_WITHOUT_BING = "serviceLayer.findServiceLayerBySubTypeWithoutBing";
+    public static final String BY_SYSTEM_AREA_TYPE = "serviceLayer.bySystemAreaType";
+    public static final String FIND_SERVICE_LAYERS_BY_ID ="ReportLayerConfig.findServiceLayerById";
 
 	@Id
 	@Column(name = "id")
