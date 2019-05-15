@@ -55,7 +55,7 @@ public class AreaServiceBean {
     public List<AreaSimpleType> getAreasByCode(AreaByCodeRequest areaByCodeRequest){        //should this really return area simple type???
         Map<AreaType, List<String>> requestMap = new HashMap();
         for (AreaSimpleType areaSimpleType: areaByCodeRequest.getAreaSimples()) {
-            AreaType areaType = AreaType.fromValue(areaSimpleType.getAreaType());
+            AreaType areaType = AreaType.fromValue(areaSimpleType.getAreaType().toUpperCase());
             if(!requestMap.containsKey(areaType)) {
                 List<String> stringList = new ArrayList<>();
                 requestMap.put(areaType, stringList);

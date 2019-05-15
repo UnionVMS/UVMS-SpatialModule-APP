@@ -52,10 +52,10 @@ public class SpatialRestResource {
     @Path("getAreaByLocation")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getAreaByLocation2( AreaByLocationSpatialRQ areaByLocationSpatialRQ)  {
+    public Response getAreaByLocation( AreaByLocationSpatialRQ areaByLocationSpatialRQ)  {
 
         try {
-            List<BaseAreaDto> areaList = areaServiceBean.getAreasByPoint(areaByLocationSpatialRQ.getPoint().getLatitude(), areaByLocationSpatialRQ.getPoint().getLatitude());
+            List<BaseAreaDto> areaList = areaServiceBean.getAreasByPoint(areaByLocationSpatialRQ.getPoint().getLatitude(), areaByLocationSpatialRQ.getPoint().getLongitude());
             List<AreaExtendedIdentifierType> response = AreaMapper.mapToAreaExtendedIdentifierType(areaList);
             return Response.ok(response).build();
         } catch (Exception e) {
@@ -69,7 +69,7 @@ public class SpatialRestResource {
     @Path("getAreaTypes")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getAreaTypes2(AllAreaTypesRequest allAreaTypesRequest) {
+    public Response getAreaTypes(AllAreaTypesRequest allAreaTypesRequest) {
 
         try {
             List<AreaLocationTypesEntity> areaList = areaLocationTypesDao.findByIsLocation(false);
@@ -88,7 +88,7 @@ public class SpatialRestResource {
     @Path("getClosestArea")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getClosestArea2(ClosestAreaSpatialRQ request)  {
+    public Response getClosestArea(ClosestAreaSpatialRQ request)  {
 
         try {
             Double lat = request.getPoint().getLatitude();
@@ -112,7 +112,7 @@ public class SpatialRestResource {
     @Path("getClosestLocation")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getClosestLocation2(ClosestLocationSpatialRQ closestLocationSpatialRQ) {
+    public Response getClosestLocation(ClosestLocationSpatialRQ closestLocationSpatialRQ) {
 
         try {
             PortDistanceInfoDto closestPort = areaServiceBean.findClosestPortByPosition(closestLocationSpatialRQ.getPoint().getLatitude(), closestLocationSpatialRQ.getPoint().getLongitude());
@@ -135,7 +135,7 @@ public class SpatialRestResource {
     @Path("getSegmentCategoryType")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getSegmentCategoryType2(List<MovementType> movements) {
+    public Response getSegmentCategoryType(List<MovementType> movements) {
 
         SegmentCategoryType returnVal = SegmentCategoryType.OTHER;
         try {
@@ -249,7 +249,7 @@ public class SpatialRestResource {
     @Path("getEnrichmentAndTransitions")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getEnrichmentAndTransitions2(@QueryParam(value = "firstLongitude") Double firstLongitude, @QueryParam(value = "firstLatitude") Double firstLatitude, @QueryParam(value = "secondLongitude") Double secondLongitude, @QueryParam(value = "secondLatitude") Double secondLatitude) {
+    public Response getEnrichmentAndTransitions(@QueryParam(value = "firstLongitude") Double firstLongitude, @QueryParam(value = "firstLatitude") Double firstLatitude, @QueryParam(value = "secondLongitude") Double secondLongitude, @QueryParam(value = "secondLatitude") Double secondLatitude) {
 
         try {
             if(secondLongitude == null || secondLatitude == null){
@@ -300,7 +300,7 @@ public class SpatialRestResource {
     @Path("getEnrichment")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getEnrichment2(SpatialEnrichmentRQ spatialEnrichmentRQ) {
+    public Response getEnrichment(SpatialEnrichmentRQ spatialEnrichmentRQ) {
 
         try {
             SpatialEnrichmentRS response = areaServiceBean.getSpatialEnrichment(spatialEnrichmentRQ);
@@ -316,7 +316,7 @@ public class SpatialRestResource {
     @Path("getEnrichmentBatch")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getEnrichmentBatch2(BatchSpatialEnrichmentRQ batchSpatialEnrichmentRQ){         //should we really support this?
+    public Response getEnrichmentBatch(BatchSpatialEnrichmentRQ batchSpatialEnrichmentRQ){         //should we really support this?
 
         try {
             /*BatchSpatialEnrichmentRS response = enrichmentService.getBatchSpatialEnrichment(batchSpatialEnrichmentRQ);
@@ -332,7 +332,7 @@ public class SpatialRestResource {
     @Path("getFilterArea")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getFilterArea2(FilterAreasSpatialRQ filterAreasSpatialRQ) {
+    public Response getFilterArea(FilterAreasSpatialRQ filterAreasSpatialRQ) {
 
         try {
             /*FilterAreasSpatialRS response = areaService.computeAreaFilter(filterAreasSpatialRQ);
@@ -349,7 +349,7 @@ public class SpatialRestResource {
     @Path("getMapConfiguration")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getMapConfiguration2(SpatialGetMapConfigurationRQ spatialGetMapConfigurationRQ) {
+    public Response getMapConfiguration(SpatialGetMapConfigurationRQ spatialGetMapConfigurationRQ) {
 
         try {
             /*SpatialGetMapConfigurationRS response = mapConfigService.getMapConfiguration(spatialGetMapConfigurationRQ);
@@ -365,7 +365,7 @@ public class SpatialRestResource {
     @Path("ping")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response ping2(PingRQ pingrq) {
+    public Response ping(PingRQ pingrq) {
 
         try {
             PingRS response = new PingRS();
@@ -382,7 +382,7 @@ public class SpatialRestResource {
     @Path("getAreaByCode")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getAreaByCode2(AreaByCodeRequest areaByCodeRequest) {
+    public Response getAreaByCode(AreaByCodeRequest areaByCodeRequest) {
 
         try {
             List<AreaSimpleType> areaSimpleTypeList = areaServiceBean.getAreasByCode(areaByCodeRequest);
@@ -399,7 +399,7 @@ public class SpatialRestResource {
     @Path("getGeometryByPortCode")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getGeometryByPortCode2(GeometryByPortCodeRequest geometryByPortCodeRequest) {
+    public Response getGeometryByPortCode(GeometryByPortCodeRequest geometryByPortCodeRequest) {
         try {
             List<String> portCode = new ArrayList<>();
             portCode.add(geometryByPortCodeRequest.getPortCode());
