@@ -10,13 +10,11 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.spatial.rest;
 
-import eu.europa.ec.fisheries.uvms.spatial.message.bean.SpatialProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.MessageDriven;
-import javax.inject.Inject;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
@@ -29,8 +27,8 @@ public class UserModuleMock implements MessageListener {
 
     final static Logger LOG = LoggerFactory.getLogger(UserModuleMock.class);
     
-    @Inject
-    SpatialProducer messageProducer;
+    /*@Inject
+    SpatialProducer messageProducer;*/
     
     @Override
     public void onMessage(Message message) {

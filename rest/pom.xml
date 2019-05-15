@@ -2,13 +2,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>rest</artifactId>
+    <artifactId>restSwe</artifactId>
     <name>${project.parent.artifactId}-rest</name>
     <packaging>war</packaging>
 
     <parent>
         <groupId>eu.europa.ec.fisheries.uvms.spatial</groupId>
-        <artifactId>spatial</artifactId>
+        <artifactId>spatialSwe</artifactId>
         <version>2.0.0-SNAPSHOT</version>
     </parent>
     
@@ -55,7 +55,7 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>service</artifactId>
+            <artifactId>serviceSwe</artifactId>
             <scope>provided</scope>
         </dependency>
 
@@ -75,11 +75,11 @@
             <version>2.9.4</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
+        <!--dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>message</artifactId>
             <scope>test</scope>
-        </dependency>
+        </dependency-->
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
             <artifactId>jersey-client</artifactId>
