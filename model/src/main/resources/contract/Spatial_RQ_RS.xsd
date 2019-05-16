@@ -1,0 +1,362 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema xmlns="http://europa.eu/ec/fisheries/uvms/spatial/model/schemas" id="FISH2015_SPATIAL2015" targetNamespace="http://europa.eu/ec/fisheries/uvms/spatial/model/schemas" version="1.0"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:include schemaLocation="Spatial_CommonTypes.xsd"/>
+    <xs:element name="AllAreaTypesRequest">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="SpatialModuleRequest">
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="AreaTypeNamesSpatialRS">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="AreaTypes" type="AreasNameType" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="EezSpatialRQ">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="EezId" type="NumericStringLength1to9"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="EezSpatialRS">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Eez" type="EezType" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="AreaByLocationSpatialRQ">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="SpatialModuleRequest">
+                    <xs:sequence>
+                        <xs:element name="Point" type="PointType"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="AreaByLocationSpatialRS">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="AreasByLocation" type="AreasByLocationType" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="FilterAreasSpatialRQ">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="SpatialModuleRequest">
+                    <xs:sequence>
+                        <xs:element name="UserAreas" type="UserAreasType"/>
+                        <xs:element name="ScopeAreas" type="ScopeAreasType"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="PingRQ">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="SpatialModuleRequest">
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="PingRS">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="response" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="FilterAreasSpatialRS">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Geometry" type="xs:string" maxOccurs="1"/>
+                <xs:element name="Code" type="xs:int" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="ClosestAreaSpatialRQ">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="SpatialModuleRequest">
+                    <xs:sequence>
+                        <xs:element name="Point" type="PointType"/>
+                        <xs:element name="AreaTypes">
+                            <xs:complexType>
+                                <xs:sequence minOccurs="1" maxOccurs="10">
+                                    <xs:element name="AreaType" type="AreaType"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="Unit" type="UnitType"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="ClosestAreaSpatialRS">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="ClosestArea" type="ClosestAreasType" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="ClosestLocationSpatialRQ">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="SpatialModuleRequest">
+                    <xs:sequence>
+                        <xs:element name="Point" type="PointType"/>
+                        <xs:element name="LocationTypes">
+                            <xs:complexType>
+                                <xs:sequence minOccurs="1" maxOccurs="10">
+                                    <xs:element name="LocationType" type="LocationType"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="Unit" type="UnitType"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="ClosestLocationSpatialRS">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="ClosestLocations" type="ClosestLocationsType" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="SpatialEnrichmentRQ">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="SpatialModuleRequest">
+                    <xs:sequence>
+                        <xs:element name="Point" type="PointType"/>
+                        <xs:element name="AreaTypes">
+                            <xs:complexType>
+                                <xs:sequence maxOccurs="10">
+                                    <xs:element name="AreaType" type="AreaType"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="LocationTypes">
+                            <xs:complexType>
+                                <xs:sequence maxOccurs="10">
+                                    <xs:element name="LocationType" type="LocationType"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="Unit" type="UnitType"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="SpatialEnrichmentRS">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="AreasByLocation" type="AreasByLocationType"/>
+                <xs:element name="ClosestAreas" type="ClosestAreasType"/>
+                <xs:element name="ClosestLocations" type="ClosestLocationsType"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="BatchSpatialEnrichmentRQ">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="SpatialModuleRequest">
+                    <xs:sequence>
+                        <xs:element name="enrichmentList" type="SpatialEnrichmentRQListElement" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="BatchSpatialEnrichmentRS">
+        <xs:complexType>
+            <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="enrichmentRespList" type="SpatialEnrichmentRSListElement"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="AreaDetailsSpatialRequest">
+        <xs:annotation>
+            <xs:documentation>Root element for area details request</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="SpatialModuleRequest">
+                    <xs:sequence>
+                        <xs:element name="areaType" type="AreaTypeEntry" nillable="false"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="AreaDetailsSpatialResponse">
+        <xs:annotation>
+            <xs:documentation>Root element for area details response</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="areaDetails" type="AreaDetails" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="LocationDetailsSpatialRequest">
+        <xs:annotation>
+            <xs:documentation>Root element for location details request</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="locationType" type="LocationTypeEntry" nillable="false"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="LocationDetailsSpatialResponse">
+        <xs:annotation>
+            <xs:documentation>Root element for location details request</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="locationDetails" type="LocationDetails" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="SpatialSaveOrUpdateMapConfigurationRQ">
+        <xs:annotation>
+            <xs:documentation>Root element for store map configuration request</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="SpatialModuleRequest">
+                    <xs:sequence>
+                        <xs:element name="mapConfiguration" type="MapConfigurationType" minOccurs="1"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="SpatialDeleteMapConfigurationRQ">
+        <xs:annotation>
+            <xs:documentation>Root element for store map configuration request</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="SpatialModuleRequest">
+                    <xs:sequence>
+                        <xs:element name="spatialConnectId" type="xs:long" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="SpatialDeleteMapConfigurationRS">
+        <xs:annotation>
+            <xs:documentation>Root element for deleting map configurations request</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="response" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="SpatialSaveOrUpdateMapConfigurationRS">
+        <xs:annotation>
+            <xs:documentation>Root element for store map configuration request</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="response" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="SpatialGetMapConfigurationRQ">
+        <xs:annotation>
+            <xs:documentation>Root element for store map configuration request</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="SpatialModuleRequest">
+                    <xs:sequence>
+                        <xs:element name="reportId" type="xs:long" minOccurs="1"/>
+                        <xs:element name="permittedServiceLayers" type="xs:string" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="SpatialGetMapConfigurationRS">
+        <xs:annotation>
+            <xs:documentation>Root element for store map configuration request</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="mapConfiguration" type="MapConfigurationType" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- area by code -->
+    <xs:element name="AreaByCodeRequest">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="SpatialModuleRequest">
+                    <xs:sequence>
+                        <xs:element name="areaSimple" type="AreaSimpleType" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+
+    <xs:element name="AreaByCodeResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="areaSimple" type="AreaSimpleType" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+       </xs:complexType>
+    </xs:element>
+
+
+    <!-- area by code -->
+    <xs:element name="GeometryByPortCodeRequest">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="SpatialModuleRequest">
+                    <xs:sequence>
+                        <xs:element name="portCode" type="xs:string"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="GeometryByPortCodeResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="portGeometry" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+
+</xs:schema>
