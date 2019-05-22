@@ -7,7 +7,7 @@
    
     <parent>
         <groupId>eu.europa.ec.fisheries.uvms.spatialSwe</groupId>
-        <artifactId>spatial</artifactId>
+        <artifactId>spatialSwe</artifactId>
         <version>2.0.0-SNAPSHOT</version>
     </parent>
 
@@ -43,9 +43,9 @@
             <properties>
                 <db.driver>org.postgresql.Driver</db.driver>
                 <db.url>jdbc:postgresql://localhost:5432/db71u</db.url>
-                <db.user>spatial</db.user>
-                <db.passwd>spatial</db.passwd>
-                <db.defaultSchema>spatial</db.defaultSchema>
+                <db.user>spatialswe</db.user>
+                <db.passwd>spatialswe</db.passwd>
+                <db.defaultSchema>spatialswe</db.defaultSchema>
                 <db.changeLogFile>changelog/db-changelog-master.xml</db.changeLogFile>
                 <db.outputFile>changelog/generatedChangelog.xml</db.outputFile>
                 <driver.groupId>org.postgresql</driver.groupId>

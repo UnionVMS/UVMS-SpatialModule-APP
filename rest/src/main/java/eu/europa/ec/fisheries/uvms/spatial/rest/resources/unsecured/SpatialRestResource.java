@@ -15,6 +15,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.entity.PortAreaEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.PortEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.utils.AreaMapper;
 import eu.europa.ec.fisheries.uvms.spatial.service.utils.GeometryUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,7 +61,7 @@ public class SpatialRestResource {
             return Response.ok(response).build();
         } catch (Exception e) {
             log.error(e.toString(),e);
-            return Response.status(500).build();
+            return Response.status(500).entity(ExceptionUtils.getRootCause(e)).build();
         }
     }
 
@@ -411,7 +412,7 @@ public class SpatialRestResource {
 
         } catch (Exception e) {
             log.error(e.toString(), e);
-            return Response.status(500).build();
+            return Response.status(500).entity(ExceptionUtils.getRootCause(e)).build();
         }
     }
 }
