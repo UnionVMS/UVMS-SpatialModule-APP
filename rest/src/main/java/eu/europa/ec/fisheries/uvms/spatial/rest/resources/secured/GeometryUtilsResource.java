@@ -29,10 +29,10 @@ import java.util.Map;
  * @implicitParam scopeName|string|header|true|EC|||||
  * @implicitParam authorization|string|header|true||||||jwt token
  */
-public class GeometryUtilsResource2 extends UnionVMSResource {
+public class GeometryUtilsResource extends UnionVMSResource {
 
 
-    private static final Logger log = LoggerFactory.getLogger(GeometryUtilsResource2.class);
+    private static final Logger log = LoggerFactory.getLogger(GeometryUtilsResource.class);
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)

@@ -41,9 +41,9 @@ import java.util.List;
  */
 @Path("/area")
 @Stateless
-public class AreaResource2 {
+public class AreaResource {
 
-    private static final Logger log = LoggerFactory.getLogger(AreaResource2.class);
+    private static final Logger log = LoggerFactory.getLogger(AreaResource.class);
 
     @Inject
     private AreaServiceBean areaServiceBean;

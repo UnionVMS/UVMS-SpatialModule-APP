@@ -27,12 +27,12 @@ public class RestActivator extends Application {
     private final Set<Class<?>> set = new HashSet<>();
 
     public RestActivator() {
-        set.add(AreaResource2.class);
-        set.add(XMLResource2.class);
+        set.add(AreaResource.class);
+        set.add(XMLResource.class);
         set.add(ConfigResource.class);
         set.add(UserAreaResource.class);
-        set.add(ImageResource2.class);
-        set.add(GeometryUtilsResource2.class);
+        set.add(ImageResource.class);
+        set.add(GeometryUtilsResource.class);
         LOG.info(RestConstants.MODULE_NAME + " module starting up");
     }
 

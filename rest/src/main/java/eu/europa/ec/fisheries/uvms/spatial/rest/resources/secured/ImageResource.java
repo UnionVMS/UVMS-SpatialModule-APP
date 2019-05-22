@@ -53,9 +53,9 @@ import java.io.IOException;
  * @implicitParam authorization|string|header|true||||||jwt token
  */
 @Path("/image")
-public class ImageResource2 extends UnionVMSResource {
+public class ImageResource extends UnionVMSResource {
 
-    private final static Logger log = LoggerFactory.getLogger(ImageResource2.class);
+    private final static Logger log = LoggerFactory.getLogger(ImageResource.class);
 
     public static final String SCALE_1_3 = "scale(1.3)";
     public static final String SCALE_0_3 = "scale(0.3)";

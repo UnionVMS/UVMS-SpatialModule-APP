@@ -32,9 +32,9 @@ import java.util.List;
  * @implicitParam authorization|string|header|true||||||jwt token
  */
 @Path("/xml")
-public class XMLResource2 {
+public class XMLResource {
 
-    private static final Logger log = LoggerFactory.getLogger(XMLResource2.class);
+    private static final Logger log = LoggerFactory.getLogger(XMLResource.class);
 
 
     @Inject
