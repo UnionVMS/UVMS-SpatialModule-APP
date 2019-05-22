@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:ClosestLocationSpatialRQ xmlns:ns2="http://europa.eu/ec/fisheries/uvms/spatial/model/schemas">
+    <ns2:method>GET_CLOSEST_LOCATION</ns2:method>
+    <Point>
+        <ns2:Longitude>-7.14925</ns2:Longitude>
+        <ns2:Latitude>45.11557</ns2:Latitude>
+        <ns2:Crs>3857</ns2:Crs>
+    </Point>
+    <LocationTypes>
+        <LocationType>PORT</LocationType>
+    </LocationTypes>
+    <Unit>METERS</Unit>
+</ns2:ClosestLocationSpatialRQ>

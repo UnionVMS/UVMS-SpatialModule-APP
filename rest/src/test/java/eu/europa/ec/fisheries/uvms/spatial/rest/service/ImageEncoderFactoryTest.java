@@ -11,7 +11,6 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.rest.service;
 
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ImageEncoderFactory;
-import lombok.SneakyThrows;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -20,8 +19,6 @@ import org.w3c.dom.NamedNodeMap;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ImageEncoderFactoryTest {
 
