@@ -4,7 +4,7 @@
 
     <context-param>
         <param-name>javamelody.datasources</param-name>
-        <param-value>java:jboss/datasources/uvms_spatial</param-value>
+        <param-value>java:jboss/datasources/uvms_spatialswe</param-value>
     </context-param>
     <listener>
         <listener-class>net.bull.javamelody.SessionListener</listener-class>
@@ -23,11 +23,11 @@
         </init-param>
         <init-param>
             <param-name>storage-directory</param-name>
-            <param-value>javamelody-spatial</param-value>
+            <param-value>javamelody-spatialswe</param-value>
         </init-param>
         <init-param>
             <param-name>datasources</param-name>
-            <param-value>java:jboss/datasources/uvms_spatial</param-value>
+            <param-value>java:jboss/datasources/uvms_spatialswe</param-value>
         </init-param>
     </filter>
     <filter-mapping>
@@ -60,7 +60,7 @@
 
     <context-param>
         <param-name>usmApplication</param-name>
-        <param-value>Spatial</param-value>
+        <param-value>Spatialswe</param-value>
     </context-param>
 
 

@@ -31,12 +31,12 @@
         <movement.model.version>5.2.1-UVMS</movement.model.version>
         <application.name>${project.parent.artifactId}</application.name>
         <application.version>${project.parent.version}</application.version>
-        <!--application.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}.log</application.logfile>
-        <application.error.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}-error.log</application.error.logfile>
-        <application.logfile.boot>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}-boot.log</application.logfile.boot-->
-        <application.logfile>/app/logs/spatialSwe/spatialSwe.log</application.logfile>
+        <application.logfile>/app/logs/${project.artifactId}/${project.artifactId}.log</application.logfile>
+        <application.error.logfile>/app/logs/${project.artifactId}/${project.artifactId}-error.log</application.error.logfile>
+        <application.logfile.boot>/app/logs/${project.artifactId}/${project.artifactId}-boot.log</application.logfile.boot>
+        <!--application.logfile>/app/logs/spatialSwe/spatialSwe.log</application.logfile>
         <application.error.logfile>/app/logs/spatialSwe/spatialSwe-error.log</application.error.logfile>
-        <application.logfile.boot>/app/logs/spatialSwe/spatialSwe-boot.log</application.logfile.boot>
+        <application.logfile.boot>/app/logs/spatialSwe/spatialSwe-boot.log</application.logfile.boot-->
         <geotools.version>14.4</geotools.version>
         <uvms.commons.version>3.0.32</uvms.commons.version>
         <uvms.test.version>0.0.8</uvms.test.version>
@@ -145,11 +145,6 @@
                 <version>${project.parent.version}</version>
             </dependency>
 
-            <!--dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>message</artifactId>
-                <version>${project.parent.version}</version>
-            </dependency-->
 
             <dependency>
                 <groupId>eu.europa.ec.fisheries.uvms.movement</groupId>

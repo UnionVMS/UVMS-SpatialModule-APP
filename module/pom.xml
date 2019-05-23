@@ -67,12 +67,6 @@
 			<type>pom</type>
 		</dependency>
         
-        <!--dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>message</artifactId>
-            <version>${project.parent.version}</version>
-            <type>ejb</type>
-        </dependency-->
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>service</artifactId>
