@@ -22,7 +22,7 @@ import java.util.Objects;
         @NamedQuery(name = PortEntity.LIST_ORDERED_BY_DISTANCE, query ="FROM PortEntity WHERE enabled = true ORDER BY distance(geom, :shape) ASC"), /// TODO create dao test
         @NamedQuery(name = PortEntity.SEARCH_PORT, query = "FROM PortEntity where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid"),
         @NamedQuery(name = PortEntity.SEARCH_PORT_BY_AREA_CODES, query = "From PortEntity where code in :code AND enabled=true "),
-        @NamedQuery(name = PortEntity.CLOSEST_PORT, query = "select new eu.europa.ec.fisheries.uvms.spatial.service.dto.PortDistanceInfoDto(p, distance(p.geom, :point, true)) from PortEntity p where enabled=true AND dWithin(p.geom, :point, 22224.0, true) = true order by distance(geom ,:point, true) "),
+        @NamedQuery(name = PortEntity.CLOSEST_PORT, query = "select new eu.europa.ec.fisheries.uvms.spatial.service.dto.PortDistanceInfoDto(p, distance(p.geom, :point, false) as dist) from PortEntity p where enabled=true AND dWithin(p.geom, :point, 22224.0, false) = true order by dist "),
 
         /*AND dWithin(p.geom, :point, 22224, true) "*/
         //(SELECT 'PORT' as type, gid, code, name, geom, _ST_DistanceUnCached(geom, ST_GeomFromText(CAST ('POINT(11.918000000000001 57.70016666666667)' AS TEXT), 4326),true) AS distance FROM spatial.port
