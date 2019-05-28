@@ -63,7 +63,7 @@ public class AreaResource {
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Interceptors(value = {ExceptionInterceptor.class})
     @Path("/types")
-    public Response getAreaTypes2() {
+    public Response getAreaTypes() {
         log.info("Getting user areas list");
         List<AreaLocationTypesEntity> areaList = areaLocationTypesDao.findByIsLocation(false);
         List<String> response = new ArrayList<>();
@@ -78,7 +78,7 @@ public class AreaResource {
     @Produces(value = {MediaType.APPLICATION_XML})
     @Consumes(value = {MediaType.APPLICATION_XML})
     @Path("/location/details")
-    public ClosestLocationSpatialRS getLocationByPoint2(ClosestLocationSpatialRQ request) {
+    public ClosestLocationSpatialRS getLocationByPoint(ClosestLocationSpatialRQ request) {
 
         ClosestLocationSpatialRS response = new ClosestLocationSpatialRS();
         PortDistanceInfoDto closestPort = areaServiceBean.findClosestPortByPosition(request.getPoint().getLatitude(), request.getPoint().getLongitude());
@@ -99,7 +99,7 @@ public class AreaResource {
     @Produces(value = {MediaType.APPLICATION_XML})
     @Consumes(value = {MediaType.APPLICATION_XML})
     @Path("/details")
-    public AreaByLocationSpatialRS getAreasByPoint2(AreaByLocationSpatialRQ request) {
+    public AreaByLocationSpatialRS getAreasByPoint(AreaByLocationSpatialRQ request) {
 
         AreaByLocationSpatialRS response = new AreaByLocationSpatialRS();
         List<BaseAreaDto> areaList = areaServiceBean.getAreasByPoint(request.getPoint().getLatitude(), request.getPoint().getLatitude());

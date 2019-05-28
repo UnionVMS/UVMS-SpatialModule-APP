@@ -38,7 +38,7 @@ public class GeometryUtilsResource extends UnionVMSResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/buffer")
-    public Response buffer2(Map<String, Object> payload) {
+    public Response buffer(Map<String, Object> payload) {
 
         Response response;
 
