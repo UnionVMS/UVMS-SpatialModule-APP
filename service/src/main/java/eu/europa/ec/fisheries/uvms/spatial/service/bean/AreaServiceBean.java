@@ -217,6 +217,15 @@ public class AreaServiceBean {
         return areaDao.update(newArea);
     }
 
+    public boolean deleteUserArea(Long id){
+        UserAreasEntity toBeDeleted = areaDao.find(UserAreasEntity.class, id);
+        if(toBeDeleted == null){
+            return false; //throw exception maybe?
+        }
+        areaDao.delete(toBeDeleted);
+        return true;
+    }
+
 
     public AreaLayerDto getUserAreaLayerDefinition(String userName, String scopeName) {
 

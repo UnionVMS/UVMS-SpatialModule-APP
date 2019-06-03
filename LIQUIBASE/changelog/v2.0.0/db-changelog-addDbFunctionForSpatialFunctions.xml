@@ -6,7 +6,7 @@
         <!--    Since this is native SQL it needs spatial. (or wherever it is) to function       -->
         <sql
              splitStatements="false"
-             stripComments="false">
+            stripComments="false">
 
             CREATE OR REPLACE FUNCTION spatialswe.get_Areas_By_Point(inPoint geometry) returns TABLE(indexRS integer, type text, gid bigint, code varchar(20), name varchar)AS $$
             BEGIN

@@ -114,6 +114,10 @@ public class UserAreasEntity extends BaseAreaEntity {
         this.enabledOn = enabledOn;
     }
 
+    public UserAreasEntity(){
+
+    }
+
 
     public void addUserScope(UserScopeEntity scope) {
         scopeSelection.add(scope);

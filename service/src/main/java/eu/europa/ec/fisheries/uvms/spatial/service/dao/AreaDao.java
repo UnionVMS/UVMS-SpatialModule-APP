@@ -48,6 +48,10 @@ public class AreaDao {
         return em.merge(entity);
     }
 
+    public void delete(BaseAreaEntity entity)  {
+        em.remove(entity);
+    }
+
     public List<PortAreaEntity> getPortAreasByPoint(Point point) {
 
         TypedQuery<PortAreaEntity> query = em.createNamedQuery(PortAreaEntity.PORT_AREA_BY_POINT, PortAreaEntity.class);

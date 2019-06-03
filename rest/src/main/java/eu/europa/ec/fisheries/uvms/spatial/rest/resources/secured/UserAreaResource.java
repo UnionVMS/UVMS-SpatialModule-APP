@@ -10,11 +10,14 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
+import com.vividsolutions.jts.io.ParseException;
 import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialFeaturesEnum;
 import eu.europa.ec.fisheries.uvms.spatial.rest.constants.ErrorCodes;
+import eu.europa.ec.fisheries.uvms.spatial.rest.dto.UserAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.rest.mapper.AreaLocationMapper;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
+import eu.europa.ec.fisheries.uvms.spatial.rest.util.UserAreaMapper;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaServiceBean;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.AreaDao;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity;
@@ -51,9 +54,10 @@ public class UserAreaResource extends UnionVMSResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/")
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response upsertUserArea(UserAreasEntity userArea, @Context HttpServletRequest servletRequest) {
+    public Response upsertUserArea(UserAreaDto userAreaDto, @Context HttpServletRequest servletRequest) throws ParseException {
         String userName = servletRequest.getRemoteUser();
         log.info("{} is requesting createUserArea(...)", userName);
+        UserAreasEntity userArea = UserAreaMapper.mapToEntity(userAreaDto);
         userArea.setUserName(userName);
         return createSuccessResponse(areaServiceBean.upsertUserArea(userArea));
     }
@@ -91,6 +95,14 @@ public class UserAreaResource extends UnionVMSResource {
             response = createErrorResponse(ErrorCodes.NOT_AUTHORIZED);
         }
         return response;
+    }
+
+    @DELETE
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/{id}")
+    public Response deleteUserArea(@PathParam("id") Long id){
+        boolean ok = areaServiceBean.deleteUserArea(id);
+        return Response.ok(ok).build();
     }
 
 }
