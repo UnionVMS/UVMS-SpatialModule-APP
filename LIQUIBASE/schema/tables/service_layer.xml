@@ -26,7 +26,7 @@
             <column name="srs_code" type="BIGINT"/>
             <column name="short_copyright" type="VARCHAR(255)"/>
             <column name="long_copyright" type="CLOB"/>
-            <column name="is_internal" type="VARCHAR(1)">
+            <column name="is_internal" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column name="style_geom" type="VARCHAR(255)"/>

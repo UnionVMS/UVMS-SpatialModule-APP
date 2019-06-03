@@ -1,0 +1,42 @@
+<databaseChangeLog xmlns='http://www.liquibase.org/xml/ns/dbchangelog'
+  xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+  xsi:schemaLocation='http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd'>
+
+    <changeSet author="joemat" id="add index for area codes">
+        <createIndex indexName="port_code_idx" tableName="port">
+            <column name="code" />
+            <column name="enabled"/>
+        </createIndex>
+
+        <createIndex indexName="eez_code_idx" tableName="eez">
+            <column name="code" />
+            <column name="enabled"/>
+        </createIndex>
+
+        <createIndex indexName="fao_code_idx" tableName="fao">
+            <column name="code" />
+            <column name="enabled"/>
+        </createIndex>
+
+        <createIndex indexName="gfcm_code_idx" tableName="gfcm">
+            <column name="code" />
+            <column name="enabled"/>
+        </createIndex>
+
+        <createIndex indexName="port_area_code_idx" tableName="port_area">
+            <column name="code" />
+            <column name="enabled"/>
+        </createIndex>
+
+        <createIndex indexName="stat_rect_code_idx" tableName="stat_rect">
+            <column name="code" />
+            <column name="enabled"/>
+        </createIndex>
+
+        <createIndex indexName="user_areas_code_idx" tableName="user_areas">
+            <column name="code" />
+            <column name="enabled"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

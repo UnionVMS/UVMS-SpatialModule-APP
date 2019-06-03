@@ -31,10 +31,10 @@ import lombok.EqualsAndHashCode;
 
 @Entity
 @NamedQueries({
-        @NamedQuery(name = PortEntity.DISABLE, query = "UPDATE PortEntity SET enabled = 'N'"),
-        @NamedQuery(name = PortEntity.LIST_ORDERED_BY_DISTANCE, query ="FROM PortEntity WHERE enabled = 'Y' ORDER BY distance(geom, :shape) ASC"), /// TODO create dao test
-        @NamedQuery(name = PortEntity.SEARCH_PORT, query = "FROM PortEntity where (upper(name) like :name OR upper(code) like :code) AND enabled='Y' GROUP BY gid"),
-        @NamedQuery(name = PortEntity.SEARCH_PORT_NAMES_BY_CODE, query = "From PortEntity where code in (SELECT distinct(code) from PortEntity where (upper(name) like :name OR upper(code) like :code) AND enabled='Y' GROUP BY gid)")
+        @NamedQuery(name = PortEntity.DISABLE, query = "UPDATE PortEntity SET enabled = false"),
+        @NamedQuery(name = PortEntity.LIST_ORDERED_BY_DISTANCE, query ="FROM PortEntity WHERE enabled = true ORDER BY distance(geom, :shape) ASC"), /// TODO create dao test
+        @NamedQuery(name = PortEntity.SEARCH_PORT, query = "FROM PortEntity where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid"),
+        @NamedQuery(name = PortEntity.SEARCH_PORT_NAMES_BY_CODE, query = "From PortEntity where code in (SELECT distinct(code) from PortEntity where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid)")
 })
 @Table(name = "port")
 @EqualsAndHashCode(callSuper = true)

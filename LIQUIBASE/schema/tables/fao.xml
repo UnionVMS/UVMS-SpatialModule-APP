@@ -38,10 +38,10 @@
             <column name="ele_type" type="VARCHAR(50)"/>
             <column name="f_label" type="VARCHAR(16)"/>
             <column name="code" type="VARCHAR(20)"/>
-            <column name="enabled" type="VARCHAR(1)">
+            <column name="enabled" type="boolean">
                 <constraints nullable="false"/>
             </column>
-            <column name="enabled_on" type="TIMESTAMP"/>
+            <column name="enabled_on" type="TIMESTAMP WITH TIME ZONE"/>
         </createTable>
 
 	</changeSet>

@@ -30,13 +30,13 @@
             <column name="geom" remarks="Geometry of the area" type="GEOMETRY(Multipolygon, 4326)">
                 <constraints nullable="false"/>
             </column>
-              <column name="enabled_on" type="TIMESTAMP"/>
-            <column name="created_on" type="TIMESTAMP">
+              <column name="enabled_on" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="created_on" type="TIMESTAMP WITH TIME ZONE">
                 <constraints nullable="false"/>
             </column>
-            <column name="start_date" type="TIMESTAMP"/>
-            <column name="end_date" type="TIMESTAMP"/>
-            <column name="dataset_name" type="VARCHAR(255)"/><column name="enabled" type="VARCHAR(1)">
+            <column name="start_date" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="end_date" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="dataset_name" type="VARCHAR(255)"/><column name="enabled" type="boolean">
                 <constraints nullable="false"/>
             </column>
         </createTable>

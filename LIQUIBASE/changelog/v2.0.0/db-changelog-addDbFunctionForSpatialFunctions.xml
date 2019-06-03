@@ -1,0 +1,49 @@
+<databaseChangeLog xmlns='http://www.liquibase.org/xml/ns/dbchangelog'
+  xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+  xsi:schemaLocation='http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd'>
+
+    <changeSet author="joemat" id="spatial db-functions">
+        <!--    Since this is native SQL it needs spatial. (or wherever it is) to function       -->
+        <sql
+             splitStatements="false"
+            stripComments="false">
+
+            CREATE OR REPLACE FUNCTION spatialswe.get_Areas_By_Point(inPoint geometry) returns TABLE(indexRS integer, type text, gid bigint, code varchar(20), name varchar)AS $$
+            BEGIN
+            return query (SELECT 1 as indexRS,'EEZ' as type, e.gid, e.code, e.name FROM spatialswe.eez e WHERE ST_Within(inPoint, geom) AND enabled = true
+            UNION ALL (SELECT 2 as indexRS,'RFMO' as type, r.gid, r.code, r.name FROM spatialswe.rfmo r WHERE ST_Within(inPoint, geom) AND enabled = true)
+            UNION ALL (SELECT 3 as indexRS,'USERAREA' as type, u.gid, u.code, u.name FROM spatialswe.user_areas u WHERE ST_Within(inPoint, geom) AND enabled = true)
+            UNION ALL (SELECT 4 as indexRS,'PORTAREA' as type, p.gid, p.code, p.name FROM spatialswe.port_area p WHERE ST_Within(inPoint, geom) AND enabled = true)
+            UNION ALL (SELECT 5 as indexRS,'STATRECT' as type, s.gid, s.code, s.name FROM spatialswe.stat_rect s WHERE ST_Within(inPoint, geom) AND enabled = true)
+            UNION ALL (SELECT 6 as indexRS,'GFCM' as type, g.gid, g.code, g.name FROM spatialswe.gfcm g WHERE ST_Within(inPoint, geom) AND enabled = true)
+            UNION ALL (SELECT 7 as indexRS,'FAO' as type, f.gid, f.code, f.name FROM spatialswe.fao f WHERE ST_Within(inPoint, geom) AND enabled = true)
+            ORDER BY indexRS, gid ASC);
+            END;
+            $$ LANGUAGE 'plpgsql';
+
+
+        </sql>
+
+
+        <sql
+                splitStatements="false"
+                stripComments="false">
+
+            CREATE OR REPLACE FUNCTION spatialswe.get_Closest_Areas(inPoint geometry) returns TABLE(type varchar, gid bigint, code character varying(20), name varchar, geom geometry, dist double precision)AS $$
+            BEGIN
+            return query (WITH candidates AS (SELECT cast('EEZ' as varchar) as type, e.gid, e.code, e.name, e.geom FROM spatialswe.eez e WHERE enabled = true ORDER BY e.geom &lt;-> inpoint LIMIT 10) SELECT c.type, c.gid, c.code, c.name, c.geom as closest, _ST_DistanceUnCached(c.geom, inpoint, true) as dist FROM candidates c ORDER BY dist LIMIT 1 )
+            UNION ALL (WITH candidates AS (SELECT cast('RFMO' as varchar) as type, r.gid, r.code, r.name, r.geom FROM spatialswe.rfmo r WHERE enabled = true ORDER BY r.geom &lt;-> inpoint LIMIT 10) SELECT c.type, c.gid, c.code, c.name, c.geom as closest, _ST_DistanceUnCached(c.geom, inpoint, true) as dist FROM candidates c ORDER BY dist LIMIT 1)
+            UNION ALL (WITH candidates AS (SELECT cast('USERAREA' as varchar) as type, u.gid, u.code, u.name, u.geom FROM spatialswe.user_areas u WHERE enabled = true ORDER BY u.geom &lt;-> inpoint LIMIT 10) SELECT c.type, c.gid, c.code, c.name, c.geom as closest, _ST_DistanceUnCached(c.geom, inpoint, true) as dist FROM candidates c ORDER BY dist LIMIT 1)
+            UNION ALL (WITH candidates AS (SELECT cast('PORTAREA' as varchar) as type, p.gid, p.code, p.name, p.geom FROM spatialswe.port_area p WHERE enabled = true ORDER BY p.geom &lt;-> inpoint LIMIT 10) SELECT c.type, c.gid, c.code, c.name, c.geom as closest, _ST_DistanceUnCached(c.geom, inpoint, true) as dist FROM candidates c ORDER BY dist LIMIT 1)
+            UNION ALL (WITH candidates AS (SELECT cast('STATRECT' as varchar) as type, s.gid, s.code, s.name, s.geom FROM spatialswe.stat_rect s WHERE enabled = true ORDER BY s.geom &lt;-> inpoint LIMIT 10) SELECT c.type, c.gid, c.code, c.name, c.geom as closest, _ST_DistanceUnCached(c.geom, inpoint, true) as dist FROM candidates c ORDER BY dist LIMIT 1)
+            UNION ALL (WITH candidates AS (SELECT cast('GFCM' as varchar) as type, g.gid, g.code, g.name, g.geom FROM spatialswe.gfcm g WHERE enabled = true ORDER BY g.geom &lt;-> inpoint LIMIT 10) SELECT c.type, c.gid, c.code, c.name, c.geom as closest, _ST_DistanceUnCached(c.geom, inpoint, true) as dist FROM candidates c ORDER BY dist LIMIT 1)
+            UNION ALL (WITH candidates AS (SELECT cast('FAO' as varchar) as type, f.gid, f.code, f.name, f.geom FROM spatialswe.fao f WHERE enabled = true ORDER BY f.geom &lt;-> inpoint LIMIT 10) SELECT c.type, c.gid, c.code, c.name, c.geom as closest, _ST_DistanceUnCached(c.geom, inpoint, true) as dist FROM candidates c ORDER BY dist LIMIT 1)
+            ;
+            END;
+            $$ LANGUAGE 'plpgsql';
+
+
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

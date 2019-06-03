@@ -36,10 +36,10 @@
             <column name="cc_terr" type="VARCHAR(1)"/>
             <column name="cntr_code_" type="VARCHAR(2)"/>
             <column name="eu_terr" type="VARCHAR(5)"/>
-            <column name="enabled" type="VARCHAR(1)">
+            <column name="enabled" type="boolean">
                 <constraints nullable="false"/>
             </column>
-            <column name="enabled_on" type="TIMESTAMP"/>
+            <column name="enabled_on" type="TIMESTAMP WITH TIME ZONE"/>
         </createTable>
     </changeSet>
 

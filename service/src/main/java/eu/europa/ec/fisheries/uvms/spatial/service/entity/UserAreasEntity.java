@@ -71,9 +71,9 @@ import org.hibernate.annotations.Where;
                 query = "SELECT area FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection " +
                         "WHERE area.userName = :userName OR scopeSelection.name = :scopeName"),
         @NamedQuery(name = UserAreasEntity.USER_AREA_DETAILS_BY_LOCATION,
-                query = "FROM UserAreasEntity userArea WHERE intersects(userArea.geom, :shape) = true AND userArea.enabled = 'Y' GROUP BY userArea.id"),
+                query = "FROM UserAreasEntity userArea WHERE intersects(userArea.geom, :shape) = true AND userArea.enabled = true GROUP BY userArea.id"),
         @NamedQuery(name = UserAreasEntity.USER_AREA_BY_COORDINATE,
-                query = "FROM UserAreasEntity WHERE intersects(geom, :shape) = true AND enabled = 'Y'"),
+                query = "FROM UserAreasEntity WHERE intersects(geom, :shape) = true AND enabled = true"),
         @NamedQuery(name = UserAreasEntity.FIND_USER_AREA_BY_ID,
                 query = "SELECT area FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection WHERE area.id = :userAreaId AND ((1=:isPowerUser) OR (area.userName=:userName OR scopeSelection.name=:scopeName))"),
         @NamedQuery(name = UserAreasEntity.USERAREA_COLUMNS,
@@ -95,10 +95,10 @@ import org.hibernate.annotations.Where;
                 query = "SELECT area.id FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection WHERE (area.userName <> :userName AND area.type = :type AND scopeSelection.name = :scopeName)"),
         @NamedQuery(name = UserAreasEntity.FIND_BY_USERNAME_AND_NAME,
                 query = "FROM UserAreasEntity WHERE userName = :userName AND name = :name"),
-        @NamedQuery(name = UserAreasEntity.DISABLE, query = "UPDATE UserAreasEntity SET enabled = 'N'"),
-        @NamedQuery(name = UserAreasEntity.BY_INTERSECT, query = "FROM UserAreasEntity WHERE intersects(geom, :shape) = true AND enabled = 'Y'"),
-        @NamedQuery(name = UserAreasEntity.SEARCH_USERAREA, query = "FROM UserAreasEntity where (upper(name) like :name OR upper(code) like :code) AND enabled='Y' GROUP BY gid"),
-        @NamedQuery(name = UserAreasEntity.SEARCH_USERAREA_NAMES_BY_CODE, query = "From UserAreasEntity where code in (SELECT distinct(code) from UserAreasEntity where (upper(name) like :name OR upper(code) like :code) AND enabled='Y' GROUP BY gid)"),
+        @NamedQuery(name = UserAreasEntity.DISABLE, query = "UPDATE UserAreasEntity SET enabled = false"),
+        @NamedQuery(name = UserAreasEntity.BY_INTERSECT, query = "FROM UserAreasEntity WHERE intersects(geom, :shape) = true AND enabled = true"),
+        @NamedQuery(name = UserAreasEntity.SEARCH_USERAREA, query = "FROM UserAreasEntity where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid"),
+        @NamedQuery(name = UserAreasEntity.SEARCH_USERAREA_NAMES_BY_CODE, query = "From UserAreasEntity where code in (SELECT distinct(code) from UserAreasEntity where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid)"),
         @NamedQuery(name = UserAreasEntity.UPDATE_USERAREA_FORUSER_AND_SCOPE,
                 query = "update UserAreasEntity userarea " +
                         "set userarea.startDate = :startDate, userarea.endDate = :endDate " +
@@ -108,7 +108,7 @@ import org.hibernate.annotations.Where;
                         "set userarea.startDate = :startDate, userarea.endDate = :endDate " +
                         "where userarea.userName = :userName and userarea.type = :type")
 })
-@Where(clause = "enabled = 'Y'")
+@Where(clause = "enabled = true")
 @Table(name = "user_areas", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"name", "user_name"})
 })

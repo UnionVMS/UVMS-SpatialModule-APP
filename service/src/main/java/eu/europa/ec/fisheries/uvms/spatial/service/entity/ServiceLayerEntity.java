@@ -41,7 +41,7 @@ import lombok.ToString;
 @Table(name = "service_layer")
 @NamedQueries({
         @NamedQuery(name = ServiceLayerEntity.BY_SYSTEM_AREA_TYPE,
-                query = "FROM ServiceLayerEntity s JOIN FETCH s.areaType a WHERE a.isSystemWide = 'Y' AND upper(s.areaType.typeName) = upper(:systemAreaType)"),
+                query = "FROM ServiceLayerEntity s JOIN FETCH s.areaType a WHERE a.isSystemWide = true AND upper(s.areaType.typeName) = upper(:systemAreaType)"),
         @NamedQuery(name = ServiceLayerEntity.FIND_SERVICE_LAYERS_BY_ID,
                 query = "SELECT serviceLayer FROM ServiceLayerEntity serviceLayer WHERE serviceLayer.id in (:ids) order by serviceLayer.id"),
         @NamedQuery(name = ServiceLayerEntity.FIND_SERVICE_LAYER_BY_SUBTYPE,
