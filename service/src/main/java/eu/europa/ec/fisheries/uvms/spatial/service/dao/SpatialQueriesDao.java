@@ -20,7 +20,7 @@ public class SpatialQueriesDao {
 
     public List<BaseAreaDto> getAreasByPoint(Point point) {
 
-        Query q = em.createNativeQuery("SELECT type,gid,code,name from  spatialswe.get_areas_by_point( :point)", "BaseAreaDtoMapping")     //BaseAreaDtoMapping is defined in BaseAreaEntity
+        Query q = em.createNativeQuery("SELECT type,gid,code,name from  spatial.get_areas_by_point( :point)", "BaseAreaDtoMapping")     //BaseAreaDtoMapping is defined in BaseAreaEntity
                 .setParameter("point", point);
 
         return q.getResultList();
@@ -28,7 +28,7 @@ public class SpatialQueriesDao {
     }
 
     public List<BaseAreaDto> getClosestAreaByPoint(Point point) {
-        Query q = em.createNativeQuery("SELECT type,gid,code,name,dist from  spatialswe.get_closest_areas( :point)", "BaseAreaDtoMappingWithDist")
+        Query q = em.createNativeQuery("SELECT type,gid,code,name,dist from  spatial.get_closest_areas( :point)", "BaseAreaDtoMappingWithDist")
                 .setParameter("point", point);
 
         return q.getResultList();
