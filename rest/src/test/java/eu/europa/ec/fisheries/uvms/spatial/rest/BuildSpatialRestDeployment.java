@@ -29,7 +29,7 @@ public abstract class BuildSpatialRestDeployment {
         testWar.addAsLibraries(files);
         
         testWar.addAsLibraries(Maven.configureResolver().loadPomFromFile("pom.xml")
-                .resolve("eu.europa.ec.fisheries.uvms.spatial:service")
+                .resolve("eu.europa.ec.fisheries.uvms.spatialSwe:service")
                 .withTransitivity().asFile());
         
         testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.spatial.rest");

@@ -21,10 +21,6 @@
                 <artifactId>maven-ear-plugin</artifactId>
                 <configuration>
                     <modules>
-                        <!--ejbModule>
-                            <groupId>${project.groupId}</groupId>
-                            <artifactId>message</artifactId>
-                        </ejbModule-->
                         <ejbModule>
                             <groupId>${project.groupId}</groupId>
                             <artifactId>service</artifactId>
