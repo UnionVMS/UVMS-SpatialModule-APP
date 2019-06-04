@@ -32,13 +32,13 @@ import lombok.EqualsAndHashCode;
 @Entity
 @NamedQueries({
         @NamedQuery(name = RfmoEntity.RFMO_BY_COORDINATE,
-                query = "FROM RfmoEntity WHERE intersects(geom, :shape) = true AND enabled = 'Y'"),
+                query = "FROM RfmoEntity WHERE intersects(geom, :shape) = true AND enabled = true"),
         @NamedQuery(name = RfmoEntity.RFMO_COLUMNS,
                 query = "SELECT rfmo.id as gid, rfmo.name AS name, rfmo.code AS code FROM RfmoEntity AS rfmo WHERE rfmo.id in (:ids)"),
         @NamedQuery(name = RfmoEntity.DISABLE_RFMO_AREAS,
-                query = "UPDATE RfmoEntity SET enabled = 'N'"),
-        @NamedQuery(name = RfmoEntity.SEARCH_RFMO, query = "FROM RfmoEntity where (upper(name) like :name OR upper(code) like :code) AND enabled='Y' GROUP BY gid"),
-        @NamedQuery(name = RfmoEntity.SEARCH_RFMO_NAMES_BY_CODE, query = "From RfmoEntity where code in (SELECT distinct(code) from RfmoEntity where (upper(name) like :name OR upper(code) like :code) AND enabled='Y' GROUP BY gid)")})
+                query = "UPDATE RfmoEntity SET enabled = false"),
+        @NamedQuery(name = RfmoEntity.SEARCH_RFMO, query = "FROM RfmoEntity where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid"),
+        @NamedQuery(name = RfmoEntity.SEARCH_RFMO_NAMES_BY_CODE, query = "From RfmoEntity where code in (SELECT distinct(code) from RfmoEntity where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid)")})
 @Table(name = "rfmo")
 @EqualsAndHashCode(callSuper = true)
 @Data

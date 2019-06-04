@@ -32,11 +32,11 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Table(name = "gfcm")
 @NamedQueries({
-        @NamedQuery(name = GfcmEntity.DISABLE_GFMC_AREAS, query = "UPDATE GfcmEntity SET enabled = 'N'"),
+        @NamedQuery(name = GfcmEntity.DISABLE_GFMC_AREAS, query = "UPDATE GfcmEntity SET enabled = false"),
         @NamedQuery(name = GfcmEntity.GFMC_BY_INTERSECT,
-                query = "FROM GfcmEntity WHERE intersects(geom, :shape) = true AND enabled = 'Y'"),
-        @NamedQuery(name = GfcmEntity.SEARCH_GFCM, query = "FROM GfcmEntity where (upper(name) like :name OR upper(code) like :code) AND enabled='Y' GROUP BY gid"),
-        @NamedQuery(name = GfcmEntity.SEARCH_GFCM_NAMES_BY_CODE, query = "From GfcmEntity where code in (SELECT distinct(code) from GfcmEntity where (upper(name) like :name OR upper(code) like :code) AND enabled='Y' GROUP BY gid)"),
+                query = "FROM GfcmEntity WHERE intersects(geom, :shape) = true AND enabled = true"),
+        @NamedQuery(name = GfcmEntity.SEARCH_GFCM, query = "FROM GfcmEntity where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid"),
+        @NamedQuery(name = GfcmEntity.SEARCH_GFCM_NAMES_BY_CODE, query = "From GfcmEntity where code in (SELECT distinct(code) from GfcmEntity where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid)"),
         @NamedQuery(name = GfcmEntity.GFCM_COLUMNS, query = "SELECT gfcm.id as gid, gfcm.name AS name, gfcm.code AS code FROM GfcmEntity AS gfcm WHERE gfcm.id in (:ids)")})
 @EqualsAndHashCode(callSuper = true)
 @Data

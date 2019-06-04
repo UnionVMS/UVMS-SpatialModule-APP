@@ -15,7 +15,7 @@
 			<column name="srs_code" valueNumeric="4326" />
 			<column name="short_copyright" value="&amp;copy; &lt;b&gt;EEZ&lt;/b&gt;: EU Member States, Vlaams Instituut voor de Zee." />
 			<column name="long_copyright" value="&amp;copy; EU Member States, Vlaams Instituut voor de Zee (VLIZ) &lt;a href=&quot;http://www.vliz.be&quot; title=&quot;http://www.vliz.be&quot; target=&quot;_blank&quot;&gt;&lt;i class=&quot;fa fa-external-link&quot;&gt;&lt;/i&gt;&lt;/a&gt;" />
-			<column name="is_internal" value="Y" />			
+			<column name="is_internal" value="true" />
 			<column name="style_geom" value="eez" />
             <column name="style_label" value="eez_label" />
             <column name="style_label_geom" value="eez_label_geom" />
@@ -29,7 +29,7 @@
 			<column name="srs_code" valueNumeric="4326" />
 			<column name="short_copyright" value="&amp;copy; &lt;b&gt;RFMO&lt;/b&gt;: European Commission, DG MARE, Master Data Register." />
 			<column name="long_copyright" value="&lt;div&gt; &lt;div class=&quot;copy-message&quot;&gt;&amp;copy; European Commission, DG MARE, Master Data Register &lt;a href=&quot;http://ec.europa.eu/fisheries/cfp/control/codes/index_en.htm&quot; title=&quot;http://ec.europa.eu/fisheries/cfp/control/codes/index_en.htm&quot; target=&quot;_blank&quot;&gt;&lt;i class=&quot;fa fa-external-link&quot;&gt;&lt;/i&gt;&lt;/a&gt;&lt;/div&gt; &lt;div class=&quot;copy-disclaimer&quot;&gt; &lt;div class=&quot;content&quot;&gt;The European Commission maintains this dataset to improve public access to information about its initiatives and EU policies in general. However, the Commission accepts no responsibility or liability whatsoever with regard to the information on this geographical dataset. This information is: &lt;ul&gt; &lt;li&gt;of a general nature only and is not intended to address the specific circumstances of any particular individual or entity&lt;/li&gt; &lt;li&gt;not necessarily comprehensive, complete, accurate or up-to-date&lt;/li&gt; &lt;li&gt;sometimes based on external datasets over which the Commission has no control and for which it assumes no responsibility.&lt;/li&gt; &lt;/ul&gt; We cannot guarantee that the geographical datasets provided exactly reproduce the geographical features described in officially adopted texts. Only EU legislation published in paper editions of the Official Journal of the European Union is deemed authentic. It is our goal to minimize disruption caused by technical errors. However, some data or information in our datasets may have been created or structured in files or formats that contain errors. We cannot guarantee that our data has not been affected by such problems. This disclaimer is not intended to limit the liability of the Commission in contravention of any requirements laid down in applicable national law, nor to exclude its liability for matters which may not be excluded under that law. &lt;/div&gt; &lt;/div&gt; &lt;/div&gt;" />
-			<column name="is_internal" value="Y" />
+			<column name="is_internal" value="true" />
 			<column name="style_geom" value="rfmo" />
             <column name="style_label" value="rfmo_label" />
             <column name="style_label_geom" value="rfmo_label_geom" />
@@ -44,7 +44,7 @@
 			<column name="srs_code" valueNumeric="4326" />
 			<column name="short_copyright" value="&amp;copy; &lt;b&gt;PORTS&lt;/b&gt;: European Commission, DG MARE, Master Data Register." />
 			<column name="long_copyright" value="&lt;div&gt; &lt;div class=&quot;copy-message&quot;&gt;&amp;copy; European Commission, DG MARE, Master Data Register &lt;a href=&quot;http://ec.europa.eu/fisheries/cfp/control/codes/index_en.htm&quot; title=&quot;http://ec.europa.eu/fisheries/cfp/control/codes/index_en.htm&quot; target=&quot;_blank&quot;&gt;&lt;i class=&quot;fa fa-external-link&quot;&gt;&lt;/i&gt;&lt;/a&gt;&lt;/div&gt; &lt;div class=&quot;copy-disclaimer&quot;&gt; &lt;div class=&quot;content&quot;&gt;The European Commission maintains this dataset to improve public access to information about its initiatives and EU policies in general. However, the Commission accepts no responsibility or liability whatsoever with regard to the information on this geographical dataset. This information is: &lt;ul&gt; &lt;li&gt;of a general nature only and is not intended to address the specific circumstances of any particular individual or entity&lt;/li&gt; &lt;li&gt;not necessarily comprehensive, complete, accurate or up-to-date&lt;/li&gt; &lt;li&gt;sometimes based on external datasets over which the Commission has no control and for which it assumes no responsibility.&lt;/li&gt; &lt;/ul&gt; We cannot guarantee that the geographical datasets provided exactly reproduce the geographical features described in officially adopted texts. Only EU legislation published in paper editions of the Official Journal of the European Union is deemed authentic. It is our goal to minimize disruption caused by technical errors. However, some data or information in our datasets may have been created or structured in files or formats that contain errors. We cannot guarantee that our data has not been affected by such problems. This disclaimer is not intended to limit the liability of the Commission in contravention of any requirements laid down in applicable national law, nor to exclude its liability for matters which may not be excluded under that law. &lt;/div&gt; &lt;/div&gt; &lt;/div&gt;" />
-			<column name="is_internal" value="Y" />
+			<column name="is_internal" value="true" />
 			<column name="style_geom" value="port"/>
             <column name="style_label" value="port_label"/>
             <column name="style_label_geom" value="port_label_geom"/>
@@ -58,7 +58,7 @@
 			<column name="srs_code" valueNumeric="4326" />
 			<column name="short_copyright" value="&amp;copy; UnionVMS" />
 			<column name="long_copyright" value="&amp;copy; UnionVMS" />
-			<column name="is_internal" value="Y" />
+			<column name="is_internal" value="true" />
 			<column name="style_geom" value="userareas"/>
             <column name="style_label_geom" value="userareas_label_geom"/>
 			<column name="subtype" value="userarea"/>
@@ -68,7 +68,7 @@
 			<column name="layer_desc" value="OpenStreetMap" />
 			<column name="provider_format_id" valueNumeric="1" />
 			<column name="srs_code" valueNumeric="3857" />
-			<column name="is_internal" value="N" />
+			<column name="is_internal" value="false" />
 			<column name="subtype" value="background"/>
 		</insert>
 		<insert tableName="service_layer">
@@ -76,7 +76,7 @@
 			<column name="layer_desc" value="OpenSeaMap" />
 			<column name="srs_code" valueNumeric="3857" />
 			<column name="provider_format_id" valueNumeric="3" />
-			<column name="is_internal" value="N" />
+			<column name="is_internal" value="false" />
 			<column name="subtype" value="additional"/>
 		</insert>
 		<insert tableName="service_layer">
@@ -84,7 +84,7 @@
 			<column name="geo_name" value="Road" />
 			<column name="srs_code" valueNumeric="3857" />
 			<column name="provider_format_id" valueNumeric="5" />
-			<column name="is_internal" value="N" />
+			<column name="is_internal" value="false" />
 			<column name="subtype" value="background"/>
 		</insert>
 		<insert tableName="service_layer">
@@ -92,7 +92,7 @@
 			<column name="geo_name" value="Aerial" />
 			<column name="srs_code" valueNumeric="3857" />
 			<column name="provider_format_id" valueNumeric="5" />
-			<column name="is_internal" value="N" />
+			<column name="is_internal" value="false" />
 			<column name="subtype" value="background"/>
 		</insert>
 		<insert tableName="service_layer">
@@ -100,7 +100,7 @@
 			<column name="geo_name" value="AerialWithLabels" />
 			<column name="srs_code" valueNumeric="3857" />
 			<column name="provider_format_id" valueNumeric="5" />
-			<column name="is_internal" value="N" />
+			<column name="is_internal" value="false" />
 			<column name="subtype" value="background"/>
 		</insert>
 		<insert tableName="service_layer">
@@ -111,7 +111,7 @@
 			<column name="srs_code" valueNumeric="4326" />
 			<column name="short_copyright" value="&amp;copy; &lt;b&gt;PORT AREAS&lt;/b&gt;: areas generated by UnionVMS." />
 			<column name="long_copyright" value="&amp;copy; Port areas generated by UnionVMS based on the EC PORTS dataset" />
-			<column name="is_internal" value="Y" />
+			<column name="is_internal" value="true" />
 			<column name="style_geom" value="port_area"/>
 			<column name="style_label" value="port_area_label"/>
             <column name="style_label_geom" value="port_area_label_geom"/>
@@ -125,7 +125,7 @@
 			<column name="srs_code" valueNumeric="4326" />
 			<column name="short_copyright" value="&amp;copy; &lt;b&gt;Statistical rectangles&lt;/b&gt;: European Commission, DG MARE, Master Data Register." />
 			<column name="long_copyright" value="&lt;div&gt; &lt;div class=&quot;copy-message&quot;&gt;&amp;copy; European Commission, DG MARE, Master Data Register &lt;a href=&quot;http://ec.europa.eu/fisheries/cfp/control/codes/index_en.htm&quot; title=&quot;http://ec.europa.eu/fisheries/cfp/control/codes/index_en.htm&quot; target=&quot;_blank&quot;&gt;&lt;i class=&quot;fa fa-external-link&quot;&gt;&lt;/i&gt;&lt;/a&gt;&lt;/div&gt; &lt;div class=&quot;copy-disclaimer&quot;&gt; &lt;div class=&quot;content&quot;&gt;The European Commission maintains this dataset to improve public access to information about its initiatives and EU policies in general. However, the Commission accepts no responsibility or liability whatsoever with regard to the information on this geographical dataset. This information is: &lt;ul&gt; &lt;li&gt;of a general nature only and is not intended to address the specific circumstances of any particular individual or entity&lt;/li&gt; &lt;li&gt;not necessarily comprehensive, complete, accurate or up-to-date&lt;/li&gt; &lt;li&gt;sometimes based on external datasets over which the Commission has no control and for which it assumes no responsibility.&lt;/li&gt; &lt;/ul&gt; We cannot guarantee that the geographical datasets provided exactly reproduce the geographical features described in officially adopted texts. Only EU legislation published in paper editions of the Official Journal of the European Union is deemed authentic. It is our goal to minimize disruption caused by technical errors. However, some data or information in our datasets may have been created or structured in files or formats that contain errors. We cannot guarantee that our data has not been affected by such problems. This disclaimer is not intended to limit the liability of the Commission in contravention of any requirements laid down in applicable national law, nor to exclude its liability for matters which may not be excluded under that law. &lt;/div&gt; &lt;/div&gt; &lt;/div&gt;" />
-			<column name="is_internal" value="Y" />
+			<column name="is_internal" value="true" />
 			<column name="style_geom" value="stat_rect"/>
 			<column name="style_label" value="stat_rect_label"/>
             <column name="style_label_geom" value="stat_rect_label_geom"/>
@@ -139,7 +139,7 @@
 			<column name="srs_code" valueNumeric="4326" />
 			<column name="short_copyright" value="&amp;copy; &lt;b&gt;GFCM&lt;/b&gt;: General Fisheries Commission for the Mediterranean." />
 			<column name="long_copyright" value="&amp;copy; General Fisheries Commission for the Mediterranean &lt;a href=&quot;http://www.fao.org/gfcm/data/map-geographical-subareas/en/&quot; title=&quot;http://www.fao.org/gfcm/data/map-geographical-subareas/en/&quot; target=&quot;_blank&quot;&gt;&lt;i class=&quot;fa fa-external-link&quot;&gt;&lt;/i&gt;&lt;/a&gt;"/>
-			<column name="is_internal" value="Y" />
+			<column name="is_internal" value="true" />
 			<column name="style_geom" value="gfcm"/>
 			<column name="style_label" value="gfcm_label"/>
             <column name="style_label_geom" value="gfcm_label_geom"/>
@@ -153,7 +153,7 @@
 			<column name="srs_code" valueNumeric="4326" />
 			<column name="short_copyright" value="&amp;copy; &lt;b&gt;FAO&lt;/b&gt;: Food and Agriculture Organization of the United Nations." />
 			<column name="long_copyright" value="&amp;copy; Food and Agriculture Organization of the United Nations &lt;a href=&quot;http://www.fao.org/fishery/area/search/en&quot; title=&quot;http://www.fao.org/fishery/area/search/en&quot; target=&quot;_blank&quot;&gt;&lt;i class=&quot;fa fa-external-link&quot;&gt;&lt;/i&gt;&lt;/a&gt;" />
-			<column name="is_internal" value="Y" />
+			<column name="is_internal" value="true" />
 			<column name="style_geom" value="fao"/>
 			<column name="style_label" value="fao_label"/>
             <column name="style_label_geom" value="fao_label_geom"/>

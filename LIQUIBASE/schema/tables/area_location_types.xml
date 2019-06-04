@@ -24,10 +24,10 @@
             For instance, user defined maps are stored in USER_AREA." type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="is_system_wide" type="VARCHAR(1)">
+            <column name="is_system_wide" type="boolean">
                 <constraints nullable="false"/>
             </column>
-			<column name="is_location" type="VARCHAR(1)">
+			<column name="is_location" type="boolean">
                 <constraints nullable="false"/>
             </column>
         </createTable>

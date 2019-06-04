@@ -155,7 +155,7 @@ public abstract class AbstractAreaDao<E extends BaseAreaEntity> extends Abstract
                     .append(next.getAreaCode()).append("' as code,")
                     .append(" GEOM FROM ").append(next.getAreaType())
                     .append(" WHERE code = '").append(next.getAreaCode())
-                    .append("' AND enabled='Y'");
+                    .append("' AND enabled=true");
             if (iterator.hasNext()) {
                 sb.append(UNION_ALL);
             }
@@ -256,7 +256,7 @@ public abstract class AbstractAreaDao<E extends BaseAreaEntity> extends Abstract
                 final String typeName = next.getTypeName();
                 sb.append("(SELECT ").append(index).append(" as indexRS,").append("'").append(typeName).append("' as type, gid, code, name FROM spatial.").
                         append(areaDbTable).append(" WHERE ").
-                        append(dialect.stIntersects(latitude, longitude)).append(" AND enabled = 'Y')");
+                        append(dialect.stIntersects(latitude, longitude)).append(" AND enabled = true)");
                 it.remove(); // avoids a ConcurrentModificationException
                 index++;
                 if (it.hasNext()) {

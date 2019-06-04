@@ -72,7 +72,7 @@ public class ProjectionEntity extends BaseEntity {
 	@Column(nullable = false, length = 255)
 	private String units;
 
-	@Convert(converter = CharBooleanConverter.class)
+	//@Convert(converter = CharBooleanConverter.class)
 	@Column(name = "world", nullable = false, length = 1)
 	private Boolean isWorld;
 

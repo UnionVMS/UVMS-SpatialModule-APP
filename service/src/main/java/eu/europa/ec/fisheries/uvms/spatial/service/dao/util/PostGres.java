@@ -37,7 +37,7 @@ public class PostGres extends AbstractGisFunction {
     @Override
     public String makeGeomValid(String tableName) {
         StringBuilder sb = new StringBuilder();
-    	sb.append("update spatial.").append(tableName).append(" set geom = st_makevalid(geom) where enabled = 'Y'");
+    	sb.append("update spatial.").append(tableName).append(" set geom = st_makevalid(geom) where enabled = true");
     	return sb.toString();
     }
 
@@ -49,7 +49,7 @@ public class PostGres extends AbstractGisFunction {
     public String closestAreaToPoint(int index, String typeName, String tableName, Double latitude, Double longitude, Integer limit) {
         StringBuilder sb = new StringBuilder();
         sb.append("(WITH candidates AS (SELECT cast('").append(typeName).append("' as varchar) as type, gid, code, name, geom FROM spatial.").append(tableName);
-        sb.append(" WHERE enabled = 'Y' ORDER BY geom <-> ST_GeomFromText(CAST ('POINT(").append(longitude).append(" ").append(latitude);
+        sb.append(" WHERE enabled = true ORDER BY geom <-> ST_GeomFromText(CAST ('POINT(").append(longitude).append(" ").append(latitude);
         sb.append(")' AS TEXT), 4326) LIMIT 10)");
         sb.append(" SELECT type, gid, code, name, geom as closest, _ST_DistanceUnCached(geom,");
         sb.append(" ST_GeomFromText(CAST ('POINT(").append(longitude).append(" ").append(latitude).append(")' AS TEXT), 4326), true) as dist");
@@ -63,7 +63,7 @@ public class PostGres extends AbstractGisFunction {
         StringBuilder sb = new StringBuilder();
         sb.append("(SELECT '").append(typeName).append("' as type, gid, code, name, geom,");
         sb.append(" _ST_DistanceUnCached(geom, ST_GeomFromText(CAST ('POINT(").append(longitude).append(" ").append(latitude).append(")' AS TEXT), 4326),true) AS distance");
-        sb.append(" FROM spatial.").append(tableName).append(" WHERE enabled = 'Y' AND");
+        sb.append(" FROM spatial.").append(tableName).append(" WHERE enabled = true AND");
         sb.append(" ST_DWithin(ST_GeomFromText(CAST ('POINT(").append(longitude).append(" ").append(latitude).append(")' AS TEXT), 4326), geom, 22224)");
         sb.append(" ORDER BY ST_GeomFromText(CAST ('POINT(").append(longitude).append(" ").append(latitude).append(")' AS TEXT), 4326) <-> geom");
         sb.append(" LIMIT ").append(limit).append(" )");

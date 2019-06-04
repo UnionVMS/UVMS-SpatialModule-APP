@@ -22,13 +22,13 @@
 			<column name="country_code" type="VARCHAR(3)"/>
 			<column name="code" type="VARCHAR(20)"/>
 			<column name="name" type="VARCHAR(100)"/>
-            <column name="fishing_port" type="VARCHAR(1)"/>
-            <column name="landing_place" type="VARCHAR(1)"/>        
-            <column name="commercial_port" type="VARCHAR(1)"/>	
-			<column name="enabled" type="VARCHAR(1)">
+            <column name="fishing_port" type="boolean"/>
+            <column name="landing_place" type="boolean"/>
+            <column name="commercial_port" type="boolean"/>
+			<column name="enabled" type="boolean">
                 <constraints nullable="false"/>
             </column>
-			<column name="enabled_on" type="TIMESTAMP"/>
+			<column name="enabled_on" type="TIMESTAMP WITH TIME ZONE"/>
         </createTable>
 
     </changeSet>

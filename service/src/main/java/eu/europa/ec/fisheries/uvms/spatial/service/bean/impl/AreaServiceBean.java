@@ -533,7 +533,7 @@ public class AreaServiceBean implements AreaService {
             final AreaType areaType = next.getAreaType();
             final AreaLocationTypesEntity locationTypesEntity = typesEntityMap.get(areaType.value());
             sb.append("(SELECT '").append(type).append("' as type ,geom FROM spatial.").append(locationTypesEntity.getAreaDbTable())
-                    .append(" spatial WHERE spatial.gid = ").append(id).append(" AND enabled = 'Y')");
+                    .append(" spatial WHERE spatial.gid = ").append(id).append(" AND enabled = true)");
             it.remove(); // avoids a ConcurrentModificationException
             if (it.hasNext()) {
                 sb.append(" UNION ALL ");

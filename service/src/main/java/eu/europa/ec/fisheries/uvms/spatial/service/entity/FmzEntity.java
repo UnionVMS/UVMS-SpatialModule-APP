@@ -32,11 +32,11 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Table(name = "fmz")
 @NamedQueries({
-        @NamedQuery(name = FmzEntity.DISABLE, query = "UPDATE FmzEntity SET enabled = 'N'"),
+        @NamedQuery(name = FmzEntity.DISABLE, query = "UPDATE FmzEntity SET enabled = false"),
         @NamedQuery(name = FmzEntity.BY_INTERSECT,
-                query = "FROM FmzEntity WHERE intersects(geom, :shape) = true AND enabled = 'Y'"),
-        @NamedQuery(name = FmzEntity.SEARCH_FMZ, query = "FROM FmzEntity where (upper(name) like :name OR upper(code) like :code) AND enabled='Y' GROUP BY gid"),
-        @NamedQuery(name = FmzEntity.SEARCH_FMZ_NAMES_BY_CODE, query = "From FmzEntity where code in (SELECT distinct(code) from FmzEntity where (upper(name) like :name OR upper(code) like :code) AND enabled='Y' GROUP BY gid)"),
+                query = "FROM FmzEntity WHERE intersects(geom, :shape) = true AND enabled = true"),
+        @NamedQuery(name = FmzEntity.SEARCH_FMZ, query = "FROM FmzEntity where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid"),
+        @NamedQuery(name = FmzEntity.SEARCH_FMZ_NAMES_BY_CODE, query = "From FmzEntity where code in (SELECT distinct(code) from FmzEntity where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid)"),
         @NamedQuery(name = FmzEntity.FMZ_COLUMNS, query = "SELECT fmz.id as gid, fmz.name AS name, fmz.code AS code FROM FmzEntity AS fmz WHERE fmz.id in (:ids)")
 })
 @EqualsAndHashCode(callSuper = true)

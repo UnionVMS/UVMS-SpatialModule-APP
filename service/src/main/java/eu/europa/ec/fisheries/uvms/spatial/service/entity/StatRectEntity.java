@@ -32,11 +32,11 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Table(name = "stat_rect")
 @NamedQueries({
-        @NamedQuery(name = StatRectEntity.DISABLE, query = "UPDATE StatRectEntity SET enabled = 'N'"),
+        @NamedQuery(name = StatRectEntity.DISABLE, query = "UPDATE StatRectEntity SET enabled = false"),
         @NamedQuery(name = StatRectEntity.BY_INTERSECT,
-                query = "FROM StatRectEntity WHERE intersects(geom, :shape) = true AND enabled = 'Y'"),
-        @NamedQuery(name = StatRectEntity.SEARCH_STATRECT, query = "FROM StatRectEntity where (upper(name) like :name OR upper(code) like :code) AND enabled='Y' GROUP BY gid"),
-        @NamedQuery(name = StatRectEntity.SEARCH_STATRECT_NAMES_BY_CODE, query = "From StatRectEntity where code in (SELECT distinct(code) from StatRectEntity where (upper(name) like :name OR upper(code) like :code) AND enabled='Y' GROUP BY gid)"),
+                query = "FROM StatRectEntity WHERE intersects(geom, :shape) = true AND enabled = true"),
+        @NamedQuery(name = StatRectEntity.SEARCH_STATRECT, query = "FROM StatRectEntity where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid"),
+        @NamedQuery(name = StatRectEntity.SEARCH_STATRECT_NAMES_BY_CODE, query = "From StatRectEntity where code in (SELECT distinct(code) from StatRectEntity where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid)"),
         @NamedQuery(name = StatRectEntity.STATRECT_COLUMNS, query = "SELECT statrect.id as gid, statrect.name AS name, statrect.code AS code FROM StatRectEntity AS statrect WHERE statrect.id in (:ids)")
 })
 @EqualsAndHashCode(callSuper = true)
