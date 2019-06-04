@@ -96,7 +96,7 @@ public class ServiceLayerEntity extends BaseEntity {
     @Column(columnDefinition = "text", name = "long_copyright")
     private String longCopyright;
 
-    @Convert(converter = CharBooleanConverter.class)
+    //@Convert(converter = CharBooleanConverter.class)
     @Column(name = "is_internal", nullable = false, length = 1)
     private Boolean isInternal = false;
     

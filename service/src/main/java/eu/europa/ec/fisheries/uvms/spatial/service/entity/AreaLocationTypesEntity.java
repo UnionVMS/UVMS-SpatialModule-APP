@@ -92,11 +92,11 @@ public class AreaLocationTypesEntity extends BaseEntity {
     @Column(name = "area_db_table", nullable = false)
     private String areaDbTable;
 
-    @Convert(converter = CharBooleanConverter.class)
+    //@Convert(converter = CharBooleanConverter.class)
     @Column(name = "is_system_wide", nullable = false, length = 1)
     private Boolean isSystemWide = false;
 
-    @Convert(converter = CharBooleanConverter.class)
+    //@Convert(converter = CharBooleanConverter.class)
     @Column(name = "is_location", nullable = false, length = 1)
     private Boolean isLocation = false;
 

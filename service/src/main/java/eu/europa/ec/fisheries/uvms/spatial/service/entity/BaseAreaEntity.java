@@ -59,7 +59,7 @@ public class BaseAreaEntity extends BaseEntity {
     @Column(length = 20)
     private String code;
 
-    @Convert(converter = CharBooleanConverter.class)
+    //@Convert(converter = CharBooleanConverter.class)
     @Column(nullable = false, length = 1)
     private Boolean enabled = true;
 

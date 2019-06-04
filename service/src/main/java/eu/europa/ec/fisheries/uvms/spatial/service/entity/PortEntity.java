@@ -58,13 +58,13 @@ public class PortEntity extends BaseAreaEntity {
     private String countryCode;
 
     @Column(name = "fishing_port", length = 1)
-    private String fishingPort;
+    private Boolean fishingPort;
 
     @Column(name = "landing_place")
-    private String landingPlace;
+    private Boolean landingPlace;
 
     @Column(name = "commercial_port")
-    private String commercialPort;
+    private Boolean commercialPort;
 
     public PortEntity() {
         // why JPA why
