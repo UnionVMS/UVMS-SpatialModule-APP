@@ -10,15 +10,15 @@
 
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.impl;
 
-import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.jms.Destination;
+import javax.jms.JMSException;
 import javax.jms.Queue;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
-import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
-import eu.europa.ec.fisheries.uvms.commons.message.impl.JMSUtils;
 import eu.europa.ec.fisheries.uvms.config.message.ConfigMessageProducer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -27,11 +27,15 @@ import org.apache.commons.lang.StringUtils;
 @Slf4j
 public class SpatialConfigProducerBean extends AbstractProducer implements ConfigMessageProducer {
 
+    @Resource(mappedName =  "java:/" + MessageConstants.QUEUE_CONFIG)
+    private Destination destination;
+
+    @Resource(mappedName =  "java:/" + MessageConstants.QUEUE_SPATIAL)
     private Queue spatialINQueue;
 
-    @PostConstruct
-    public void init(){
-        spatialINQueue = JMSUtils.lookupQueue(MessageConstants.QUEUE_SPATIAL);
+    @Override
+    public Destination getDestination(){
+        return destination;
     }
 
     @Override
@@ -39,15 +43,10 @@ public class SpatialConfigProducerBean extends AbstractProducer implements Confi
     public String sendConfigMessage(String textMsg) {
         try {
             return sendModuleMessage(textMsg, spatialINQueue);
-        } catch (MessageException e) {
+        } catch (JMSException e) {
             log.error("[ERROR] Error while trying to send message to Config! Check SpatialConfigProducerBeanImpl..");
         }
         return StringUtils.EMPTY;
-    }
-
-    @Override
-    public String getDestinationName() {
-        return MessageConstants.QUEUE_CONFIG;
     }
 }
 

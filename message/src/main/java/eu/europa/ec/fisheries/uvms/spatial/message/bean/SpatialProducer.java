@@ -11,20 +11,23 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.message.bean;
 
-import static eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants.QUEUE_MODULE_SPATIAL;
-
+import javax.annotation.Resource;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
-
+import javax.jms.Destination;
+import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
 
 @Stateless
 @LocalBean
 public class SpatialProducer extends AbstractProducer {
 
+    @Resource(mappedName =  "java:/" + MessageConstants.QUEUE_MODULE_SPATIAL)
+    private Destination destination;
+
     @Override
-    public String getDestinationName(){
-        return QUEUE_MODULE_SPATIAL;
+    public Destination getDestination(){
+        return destination;
     }
     
 }

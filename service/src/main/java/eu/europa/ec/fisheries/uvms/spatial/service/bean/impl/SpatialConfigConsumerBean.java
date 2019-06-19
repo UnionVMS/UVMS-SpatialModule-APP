@@ -10,11 +10,12 @@
 
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.impl;
 
+import javax.annotation.Resource;
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
+import javax.jms.Destination;
+import javax.jms.JMSException;
+import javax.jms.Queue;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
-import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractConsumer;
 import eu.europa.ec.fisheries.uvms.config.exception.ConfigMessageException;
 import eu.europa.ec.fisheries.uvms.config.message.ConfigMessageConsumer;
@@ -24,20 +25,23 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SpatialConfigConsumerBean extends AbstractConsumer implements ConfigMessageConsumer {
 
+    private static final long CONFIG_TIMEOUT = 600000L;
+
+    @Resource(mappedName =  "java:/" + MessageConstants.QUEUE_SPATIAL)
+    private Queue destination;
+
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public <T> T getConfigMessage(String correlationId, Class type) throws ConfigMessageException {
+    public Destination getDestination(){
+        return destination;
+    }
+
+    @Override
+    public <T> T getConfigMessage(String correlationId, Class<T> type) throws ConfigMessageException {
         try {
-            return getMessage(correlationId, type);
-        } catch (MessageException e) {
+            return getMessage(correlationId, type, CONFIG_TIMEOUT);
+        } catch (JMSException e) {
             log.error("[ERROR] Error when getting config message {}", e.getMessage());
             throw new ConfigMessageException("[ Error when getting config message. ]");
         }
     }
-
-    @Override
-    public String getDestinationName() {
-        return MessageConstants.QUEUE_SPATIAL;
-    }
-
 }

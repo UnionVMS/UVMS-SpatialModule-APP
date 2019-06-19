@@ -13,6 +13,8 @@ package eu.europe.ec.fisheries.uvms.spatial.rest;
 import java.util.Arrays;
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.MessageDriven;
+import javax.inject.Inject;
+import javax.jms.Destination;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
@@ -22,13 +24,17 @@ import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
 import eu.europa.ec.fisheries.uvms.config.model.mapper.JAXBMarshaller;
 import eu.europa.ec.fisheries.uvms.config.model.mapper.ModuleResponseMapper;
+import eu.europa.ec.fisheries.uvms.spatial.message.bean.SpatialProducer;
 
 @MessageDriven(mappedName = "jms/queue/UVMSConfigEvent", activationConfig = {
         @ActivationConfigProperty(propertyName = "messagingType", propertyValue = "javax.jms.MessageListener"),
         @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
         @ActivationConfigProperty(propertyName = "destination", propertyValue = "UVMSConfigEvent")})
 public class ConfigServiceMock implements MessageListener {
-    
+
+    @Inject
+    private SpatialProducer producer;
+
     @Override
     public void onMessage(Message message) {
         TextMessage textMessage = (TextMessage) message;
@@ -41,12 +47,7 @@ public class ConfigServiceMock implements MessageListener {
                     mockSetting.setValue("value");
                     mockSetting.setDescription("From ConfigServiceMock.java");
                     String pullResponse = ModuleResponseMapper.toPullSettingsResponse(Arrays.asList(mockSetting), PullSettingsStatus.OK);
-                    new AbstractProducer() {
-                        @Override
-                        public String getDestinationName() {
-                            return "";
-                        }
-                    }.sendResponseMessageToSender((TextMessage) message, pullResponse);
+                    producer.sendResponseMessageToSender((TextMessage) message, pullResponse);
                     break;
                 default:
                     break;

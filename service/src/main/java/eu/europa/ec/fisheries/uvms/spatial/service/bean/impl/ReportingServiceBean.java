@@ -13,7 +13,6 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.impl;
 
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.reporting.model.exception.ReportingModelException;
 import eu.europa.ec.fisheries.uvms.reporting.model.mappper.ReportingModuleRequestMapper;
 import eu.europa.ec.fisheries.uvms.reporting.model.mappper.ReportingModuleResponseMapper;
@@ -24,7 +23,6 @@ import eu.europa.ec.fisheries.uvms.spatial.service.bean.ReportingService;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.ejb.EJB;
-import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -44,10 +42,10 @@ public class ReportingServiceBean implements ReportingService {
     public ReportGetStartAndEndDateRS getReportDates(Integer reportId, String userName, String scopeName, String timeStamp) throws ServiceException {
         try {
             String request = ReportingModuleRequestMapper.mapToSpatialSaveOrUpdateMapConfigurationRQ(timeStamp, reportId.longValue(), userName, scopeName);
-            String correlationId = producer.sendModuleMessage(request, consumer.getDestination());
+            String correlationId = producer.sendMessage(request, consumer.getDestination());
             Message message = consumer.getMessage(correlationId, TextMessage.class);
             return ReportingModuleResponseMapper.mapToReportGetStartAndEndDateRS(getText(message), correlationId);
-        } catch (ReportingModelException | MessageException | JMSException e) {
+        } catch (ReportingModelException | JMSException e) {
             throw new ServiceException("Error in communication with Reporting module", e);
         }
     }
