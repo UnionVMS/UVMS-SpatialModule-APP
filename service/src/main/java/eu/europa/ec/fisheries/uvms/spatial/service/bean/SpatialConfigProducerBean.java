@@ -11,15 +11,17 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
-import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
-import eu.europa.ec.fisheries.uvms.commons.message.impl.JMSUtils;
 import eu.europa.ec.fisheries.uvms.config.message.ConfigMessageProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.jms.Destination;
+import javax.jms.JMSException;
 import javax.jms.Queue;
 
 @Stateless
@@ -27,26 +29,25 @@ public class SpatialConfigProducerBean extends AbstractProducer implements Confi
 
     private static final Logger LOG = LoggerFactory.getLogger(SpatialConfigProducerBean.class);
 
+    @Resource(mappedName = "java:/" + MessageConstants.QUEUE_CONFIG)
+    private Queue destination;
+
+    @Resource(mappedName = "java:/" + MessageConstants.QUEUE_SPATIAL)
     private Queue spatialINQueue;
 
-    @PostConstruct
-    public void init(){
-        spatialINQueue = JMSUtils.lookupQueue(MessageConstants.QUEUE_SPATIAL);
+    @Override
+    public Destination getDestination() {
+        return destination;
     }
 
     @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public String sendConfigMessage(String textMsg) {
         try {
             return sendModuleMessage(textMsg, spatialINQueue);
-        } catch (MessageException e) {
+        } catch (JMSException e) {
             LOG.error("[ERROR] Error while trying to send message to Config! Check SpatialConfigProducerBeanImpl..");
         }
         return "";
     }
-
-    @Override
-    public String getDestinationName() {
-        return MessageConstants.QUEUE_CONFIG;
-    }
 }
-

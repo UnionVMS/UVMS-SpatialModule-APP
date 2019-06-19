@@ -13,13 +13,16 @@ package eu.europa.ec.fisheries.uvms.spatial.rest;
 import java.util.Arrays;
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.MessageDriven;
+import javax.inject.Inject;
+import javax.jms.JMSContext;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.schema.config.module.v1.ConfigModuleBaseRequest;
 import eu.europa.ec.fisheries.schema.config.types.v1.PullSettingsStatus;
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
-import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
 import eu.europa.ec.fisheries.uvms.config.model.mapper.JAXBMarshaller;
 import eu.europa.ec.fisheries.uvms.config.model.mapper.ModuleResponseMapper;
 
@@ -28,6 +31,11 @@ import eu.europa.ec.fisheries.uvms.config.model.mapper.ModuleResponseMapper;
         @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
         @ActivationConfigProperty(propertyName = "destination", propertyValue = "UVMSConfigEvent")})
 public class ConfigServiceMock implements MessageListener {
+    
+    private static final Logger LOG = LoggerFactory.getLogger(ConfigServiceMock.class);
+    
+    @Inject
+    private JMSContext context;
     
     @Override
     public void onMessage(Message message) {
@@ -41,18 +49,15 @@ public class ConfigServiceMock implements MessageListener {
                     mockSetting.setValue("value");
                     mockSetting.setDescription("From ConfigServiceMock.java");
                     String pullResponse = ModuleResponseMapper.toPullSettingsResponse(Arrays.asList(mockSetting), PullSettingsStatus.OK);
-                    new AbstractProducer() {
-                        @Override
-                        public String getDestinationName() {
-                            return "";
-                        }
-                    }.sendResponseMessageToSender((TextMessage) message, pullResponse);
+                    TextMessage response = context.createTextMessage(pullResponse);
+                    response.setJMSCorrelationID(textMessage.getJMSMessageID());
+                    context.createProducer().send(message.getJMSReplyTo(), response);
                     break;
                 default:
                     break;
             }
         } catch (Exception e) {
-            
+            LOG.error("Exception in ConfigServiceMock", e);
         }
     }
 }
