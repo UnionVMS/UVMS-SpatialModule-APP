@@ -28,7 +28,7 @@ import org.apache.commons.lang.StringUtils;
 public class SpatialConfigProducerBean extends AbstractProducer implements ConfigMessageProducer {
 
     @Resource(mappedName =  "java:/" + MessageConstants.QUEUE_CONFIG)
-    private Destination destination;
+    private Queue destination;
 
     @Resource(mappedName =  "java:/" + MessageConstants.QUEUE_SPATIAL)
     private Queue spatialINQueue;

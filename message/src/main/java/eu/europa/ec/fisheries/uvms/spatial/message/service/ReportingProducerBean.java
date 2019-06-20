@@ -18,6 +18,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.jms.Destination;
 import javax.jms.JMSException;
+import javax.jms.Queue;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
 
@@ -26,7 +27,7 @@ import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
 public class ReportingProducerBean extends AbstractProducer {
 
     @Resource(mappedName =  "java:/" + MessageConstants.QUEUE_REPORTING_EVENT)
-    private Destination destination;
+    private Queue destination;
 
     @Override
     public Destination getDestination(){
