@@ -23,6 +23,7 @@ import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.jms.JMSException;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,7 +36,6 @@ import java.util.Set;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.commons.geometry.mapper.GeometryMapper;
-import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.message.service.UserProducerBean;
 import eu.europa.ec.fisheries.uvms.spatial.model.exception.SpatialModelMapperException;
@@ -113,7 +113,7 @@ public class UserAreaServiceBean implements UserAreaService {
             }
             userAreaToBeUpdated.merge(dto);
 
-        } catch (ModelMarshallException | MessageException | SpatialModelMapperException e) {
+        } catch (ModelMarshallException | JMSException | SpatialModelMapperException e) {
             throw new SpatialServiceException(INTERNAL_APPLICATION_ERROR);
         }
         return userAreaToBeUpdated.getId();
@@ -145,7 +145,7 @@ public class UserAreaServiceBean implements UserAreaService {
                     throw new SpatialServiceException(DATA_SET_NAME_ALREADY_IN_USE);
                 }
             }
-        } catch (MessageException | ModelMarshallException | SpatialModelMapperException e) {
+        } catch (JMSException | ModelMarshallException | SpatialModelMapperException e) {
             throw new SpatialServiceException(INTERNAL_APPLICATION_ERROR);
         }
         return persisted.getId();
@@ -181,7 +181,7 @@ public class UserAreaServiceBean implements UserAreaService {
                     }
                 }
             }
-        } catch (ModelMarshallException | MessageException | SpatialModelMapperException e) {
+        } catch (ModelMarshallException | JMSException | SpatialModelMapperException e) {
             throw new SpatialServiceException(INTERNAL_APPLICATION_ERROR);
         }
         return true;

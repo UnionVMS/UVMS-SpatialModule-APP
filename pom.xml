@@ -35,15 +35,15 @@
         <application.error.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}-error.log</application.error.logfile>
         <application.logfile.boot>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}-boot.log</application.logfile.boot>
         <geotools.version>14.4</geotools.version>
-        <uvms.commons.version>3.0.32</uvms.commons.version>
+        <uvms.commons.version>4.0.0</uvms.commons.version>
         <uvms.test.version>0.0.8</uvms.test.version>
-        <usm4uvms.version>4.0.16</usm4uvms.version>
+        <usm4uvms.version>4.0.19</usm4uvms.version>
         <usm_deployment_descriptor_force_update>false</usm_deployment_descriptor_force_update>
         <release.branch.name>uvms-1.0.0</release.branch.name>
         <maven.scm.provider.version>2.1.1</maven.scm.provider.version>
         <javaee.version>8.0</javaee.version>
         <mapstruct.version>1.2.0.Final</mapstruct.version>
-        <uvms.config.version>4.0.3</uvms.config.version>
+        <uvms.config.version>4.0.4</uvms.config.version>
         <database.dialect>postgres</database.dialect>
         <scm.connection>scm:git:https://github.com/UnionVMS/UVMS-SpatialModule-APP.git</scm.connection>
         <installAtEnd>false</installAtEnd>

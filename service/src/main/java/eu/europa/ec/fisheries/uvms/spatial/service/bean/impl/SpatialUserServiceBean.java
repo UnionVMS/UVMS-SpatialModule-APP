@@ -20,7 +20,6 @@ import javax.jms.TextMessage;
 import javax.xml.bind.JAXBException;
 
 import eu.europa.ec.fisheries.uvms.commons.message.api.Fault;
-import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.JAXBUtils;
 import eu.europa.ec.fisheries.uvms.spatial.message.service.SpatialConsumerBean;
 import eu.europa.ec.fisheries.uvms.spatial.message.service.UserProducerBean;
@@ -54,17 +53,17 @@ public class SpatialUserServiceBean {
     @EJB
     private SpatialConsumerBean consumer;
 
-    public DatasetList listDatasets() throws ModelMarshallException, MessageException, SpatialModelMapperException {
+    public DatasetList listDatasets() throws ModelMarshallException, JMSException, SpatialModelMapperException {
         DatasetFilter filter = new DatasetFilter();
         filter.setApplicationName(USMSpatial.APPLICATION_NAME);
         filter.setCategory(USMSpatial.USM_DATASET_CATEGORY);
         String request = UserModuleRequestMapper.mapToFindDatasetRequest(filter);
-        String correlationId = userProducer.sendModuleMessage(request, consumer.getDestination());
+        String correlationId = userProducer.sendMessage(request, consumer.getDestination());
         TextMessage message = consumer.getMessage(correlationId, TextMessage.class);
         return mapToFindDataSetResponse(message, correlationId);
     }
 
-    public void persistDataSetInUSM(String dataSetName, String discriminator) throws ModelMarshallException, MessageException, SpatialModelMapperException {
+    public void persistDataSetInUSM(String dataSetName, String discriminator) throws ModelMarshallException, JMSException, SpatialModelMapperException {
         DatasetExtension dataSet = new DatasetExtension();
         dataSet.setApplicationName(USMSpatial.APPLICATION_NAME);
         dataSet.setDiscriminator(discriminator);
@@ -72,7 +71,7 @@ public class SpatialUserServiceBean {
         dataSet.setCategory(USMSpatial.USM_DATASET_CATEGORY);
         dataSet.setDescription(USMSpatial.USM_DATASET_DESCRIPTION);
         String payload = UserModuleRequestMapper.mapToCreateDatasetRequest(dataSet);
-        String correlationId = userProducer.sendModuleMessage(payload, consumer.getDestination());
+        String correlationId = userProducer.sendMessage(payload, consumer.getDestination());
         TextMessage message = consumer.getMessage(correlationId, TextMessage.class);
         mapToCreateDatasetResponse(message, correlationId);
     }
@@ -87,16 +86,16 @@ public class SpatialUserServiceBean {
 
             try {
                 String request = UserModuleRequestMapper.mapToDeleteDatasetRequest(extension);
-                String correlationId = userProducer.sendModuleMessage(request, consumer.getDestination());
+                String correlationId = userProducer.sendMessage(request, consumer.getDestination());
                 TextMessage message = consumer.getMessage(correlationId, TextMessage.class, 4000L);
                 validateResponse(message, correlationId);
                 DeleteDatasetResponse deleteDatasetResponse = JAXBUtils.unMarshallMessage(message.getText(), DeleteDatasetResponse.class);
                 return deleteDatasetResponse.getResponse();
             }
-            catch (MessageException e){
+            catch (JMSException e){
                 log.warn(e.getMessage(), e);
                 throw new DataSetNotFoundException();
-            } catch (SpatialModelMapperException | JMSException | JAXBException | ModelMarshallException e) {
+            } catch (SpatialModelMapperException | JAXBException | ModelMarshallException e) {
                 log.error(e.getMessage(), e);
             }
         }

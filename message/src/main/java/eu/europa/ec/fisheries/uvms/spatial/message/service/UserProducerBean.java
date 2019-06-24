@@ -10,9 +10,14 @@
 
 package eu.europa.ec.fisheries.uvms.spatial.message.service;
 
+import javax.annotation.Resource;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
-
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.jms.Destination;
+import javax.jms.JMSException;
+import javax.jms.Queue;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
 
@@ -20,9 +25,16 @@ import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
 @Local
 public class UserProducerBean extends AbstractProducer {
 
+    @Resource(mappedName =  "java:/" + MessageConstants.QUEUE_USM)
+    private Queue destination;
+
     @Override
-    public String getDestinationName(){
-        return MessageConstants.QUEUE_USM;
+    public Destination getDestination(){
+        return destination;
     }
 
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public String sendMessage(String text, Destination replyTo) throws JMSException {
+        return sendModuleMessage(text, replyTo);
+    }
 }
