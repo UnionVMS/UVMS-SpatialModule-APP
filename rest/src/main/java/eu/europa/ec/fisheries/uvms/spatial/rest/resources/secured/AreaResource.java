@@ -173,4 +173,12 @@ public class AreaResource {
         return Response.ok(areaServiceBean.getAllNonUserAreaTypes()).build();
     }
 
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/getAreaLayer/{areaType}")
+    @Interceptors(value = {ExceptionInterceptor.class})
+    public Response getAreaLayer(@PathParam("areaType") String areaType){
+        return Response.ok(areaServiceBean.getAllAreasOfType(AreaType.fromValue(areaType))).build();
+    }
+
 }
