@@ -187,5 +187,42 @@ public class AreaDao {
         return query.getResultList();
     }
 
+    /*  ---------------------- Get All Areas ------------------------- */
+
+    public List<EezEntity> getAllEezAreas() {
+        TypedQuery<EezEntity> query = em.createNamedQuery(EezEntity.ALL_AREAS, EezEntity.class);
+        return query.getResultList();
+    }
+
+    public List<FaoEntity> getAllFaoAreas() {
+        TypedQuery<FaoEntity> query = em.createNamedQuery(FaoEntity.ALL_AREAS, FaoEntity.class);
+        return query.getResultList();
+    }
+
+    public List<GfcmEntity> getAllGfcmAreas() {
+        TypedQuery<GfcmEntity> query = em.createNamedQuery(GfcmEntity.ALL_AREAS, GfcmEntity.class);
+        return query.getResultList();
+    }
+
+    public List<PortAreaEntity> getAllPortAreaAreas() {
+        TypedQuery<PortAreaEntity> query = em.createNamedQuery(PortAreaEntity.ALL_AREAS, PortAreaEntity.class);
+        return query.getResultList();
+    }
+
+    public List<PortEntity> getAllPorts() {
+        TypedQuery<PortEntity> query = em.createNamedQuery(PortEntity.ALL_AREAS, PortEntity.class);
+        return query.getResultList();
+    }
+
+    public List<RfmoEntity> getAllRfmoAreas() {
+        TypedQuery<RfmoEntity> query = em.createNamedQuery(RfmoEntity.ALL_AREAS, RfmoEntity.class);
+        return query.getResultList();
+    }
+
+    public List<StatRectEntity> getAllStatRectAreas() {
+        TypedQuery<StatRectEntity> query = em.createNamedQuery(StatRectEntity.ALL_AREAS, StatRectEntity.class);
+        return query.getResultList();
+    }
+
 
 }

@@ -19,6 +19,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.dao.SpatialQueriesDao;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.AreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.BaseAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.PortDistanceInfoDto;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.BaseAreaEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.PortAreaEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.PortEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity;
@@ -231,8 +232,46 @@ public class AreaServiceBean {
 
         AreaLayerDto userAreaLayer = areaLocationTypesDao.findUserAreaLayerMapping();
         List<UserAreasEntity> userAreasEntity2List = areaDao.findByUserNameAndScopeName(userName, scopeName);
-        userAreaLayer.setIdList(AreaMapper.mapToBaseAreaDtoList(userAreasEntity2List));
+        userAreaLayer.setIdList(AreaMapper.mapToBaseAreaDtoListFromUserAreas(userAreasEntity2List));
         return userAreaLayer;
+    }
+
+    public List<AreaLayerDto> getAllNonUserAreaTypes(){
+        List<AreaLayerDto> areas = areaLocationTypesDao.findSystemAreaLayerMapping();
+        for (AreaLayerDto dto : areas ) {
+            dto.setIdList(getAllAreasOfType(AreaType.fromValue(dto.getTypeName())));
+        }
+        return areas;
+    }
+
+    public Map<AreaType, List<BaseAreaDto>> getAllAreasOfTypes(List<AreaType> areaTypes){
+        Map<AreaType, List<BaseAreaDto>> dtoMap = new HashMap<>();
+        for (AreaType area: areaTypes) {
+            dtoMap.put(area, getAllAreasOfType(area));
+        }
+        return dtoMap;
+    }
+
+    public List<BaseAreaDto> getAllAreasOfType(AreaType area){
+        switch (area) {
+            case EEZ :
+                return AreaMapper.mapToBaseAreaDtoList(areaDao.getAllEezAreas());
+            case FAO :
+                return AreaMapper.mapToBaseAreaDtoList(areaDao.getAllFaoAreas());
+            case GFCM :
+                return AreaMapper.mapToBaseAreaDtoList(areaDao.getAllGfcmAreas());
+            case PORTAREA:
+                return AreaMapper.mapToBaseAreaDtoList(areaDao.getAllPortAreaAreas());
+            case PORT:
+                return AreaMapper.mapToBaseAreaDtoList(areaDao.getAllPorts());
+            case RFMO:
+                return AreaMapper.mapToBaseAreaDtoList(areaDao.getAllRfmoAreas());
+            case STATRECT:
+                return AreaMapper.mapToBaseAreaDtoList(areaDao.getAllStatRectAreas());
+            case USERAREA:
+                return AreaMapper.mapToBaseAreaDtoList(areaDao.getAllUserAreas(null, null));
+        }
+        return new ArrayList<>();
     }
 
 }

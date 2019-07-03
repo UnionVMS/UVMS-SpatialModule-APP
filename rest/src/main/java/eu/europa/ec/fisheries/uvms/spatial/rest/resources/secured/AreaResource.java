@@ -165,4 +165,12 @@ public class AreaResource {
         return Response.ok(areaLocationTypesDao.findSystemAreaLayerMapping()).build();
     }
 
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/allNonUserAreas")
+    @Interceptors(value = {ExceptionInterceptor.class})
+    public Response getAllNonUserAreas(){
+        return Response.ok(areaServiceBean.getAllNonUserAreaTypes()).build();
+    }
+
 }

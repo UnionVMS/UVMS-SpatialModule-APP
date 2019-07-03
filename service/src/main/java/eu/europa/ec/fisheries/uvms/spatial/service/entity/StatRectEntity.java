@@ -19,6 +19,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "stat_rect")
 @NamedQueries({
+        @NamedQuery(name = StatRectEntity.ALL_AREAS, query = "SELECT e FROM StatRectEntity e WHERE enabled = true"),
         @NamedQuery(name = StatRectEntity.DISABLE, query = "UPDATE StatRectEntity SET enabled = false"),
         @NamedQuery(name = StatRectEntity.BY_INTERSECT,
                 query = "FROM StatRectEntity WHERE intersects(geom, :shape) = true AND enabled = true"),
@@ -30,6 +31,7 @@ import java.util.Objects;
 
 public class StatRectEntity extends BaseAreaEntity {
 
+    public static final String ALL_AREAS = "StatRectEntity.AllAreas";
     public static final String BY_INTERSECT = "StatRectEntity.byIntersect";
     public static final String DISABLE = "StatRectEntity.disable";
     public static final String SEARCH_STATRECT = "StatRectEntity.searchStatrectByNameOrCode";

@@ -19,6 +19,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "gfcm")
 @NamedQueries({
+        @NamedQuery(name = GfcmEntity.ALL_AREAS, query = "SELECT e FROM GfcmEntity e WHERE enabled = true"),
         @NamedQuery(name = GfcmEntity.DISABLE_GFMC_AREAS, query = "UPDATE GfcmEntity SET enabled = false"),
         @NamedQuery(name = GfcmEntity.GFMC_BY_INTERSECT,
                 query = "FROM GfcmEntity WHERE intersects(geom, :shape) = true AND enabled = true"),
@@ -29,6 +30,7 @@ import java.util.Objects;
 
 public class GfcmEntity extends BaseAreaEntity {
 
+    public static final String ALL_AREAS = "GfcmEntity.AllAreas";
     public static final String DISABLE_GFMC_AREAS = "gfmcEntity.disable";
     public static final String GFMC_BY_INTERSECT = "gfmcEntity.gfmcByIntersect";
     public static final String SEARCH_GFCM = "GfcmEntity.SearchgfcmByNameOrCode";

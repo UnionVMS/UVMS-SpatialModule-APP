@@ -1,7 +1,9 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class BaseAreaDto {
 
 
@@ -10,6 +12,7 @@ public class BaseAreaDto {
     private String name;
     private AreaType type;
     private double distance;
+    private String geometryWKT;
 
     public BaseAreaDto(String type, long gid, String code, String name) {
         this.type = AreaType.valueOf(type);
@@ -71,5 +74,13 @@ public class BaseAreaDto {
 
     public void setDistance(double distance) {
         this.distance = distance;
+    }
+
+    public String getGeometryWKT() {
+        return geometryWKT;
+    }
+
+    public void setGeometryWKT(String geometryWKT) {
+        this.geometryWKT = geometryWKT;
     }
 }

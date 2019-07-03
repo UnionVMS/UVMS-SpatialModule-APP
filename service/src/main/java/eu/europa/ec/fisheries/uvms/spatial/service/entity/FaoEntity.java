@@ -19,6 +19,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "fao")
 @NamedQueries({
+        @NamedQuery(name = FaoEntity.ALL_AREAS, query = "SELECT e FROM FaoEntity e WHERE enabled = true"),
         @NamedQuery(name = FaoEntity.DISABLE_FAO_AREAS, query = "UPDATE FaoEntity SET enabled = false"),
         @NamedQuery(name = FaoEntity.FAO_BY_INTERSECT,
                 query = "FROM FaoEntity WHERE intersects(geom, :shape) = true AND enabled = true"),
@@ -29,6 +30,7 @@ import java.util.Objects;
 })
 public class FaoEntity extends BaseAreaEntity {
 
+    public static final String ALL_AREAS = "FaoEntity.AllAreas";
     public static final String DISABLE_FAO_AREAS = "FaoEntity.disableFaoAreas";
     public static final String FAO_BY_INTERSECT = "FaoEntity.faoByIntersect";
     public static final String SEARCH_FAO = "FaoEntity.searchFaoByNameOrCode";

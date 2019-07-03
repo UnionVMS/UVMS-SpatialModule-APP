@@ -19,6 +19,7 @@ import java.util.Objects;
 
 @Entity
 @NamedQueries({
+        @NamedQuery(name = PortAreaEntity.ALL_AREAS, query = "SELECT e FROM PortAreaEntity e WHERE enabled = true"),
         @NamedQuery(name = PortAreaEntity.PORT_AREA_BY_POINT,
                 query = "FROM PortAreaEntity WHERE within(:point, geom) = true AND enabled = true"),
 
@@ -30,6 +31,7 @@ import java.util.Objects;
 @Table(name = "port_area")
 public class PortAreaEntity extends BaseAreaEntity {
 
+    public static final String ALL_AREAS = "PortAreaEntity.AllAreas";
     public static final String PORT_AREA_BY_POINT = "portEntity.PortAreaByPoint";
     public static final String DISABLE_PORT_AREAS = "portAreasEntity.disablePortAreas";
     public static final String SEARCH_PORTAREAS = "PortAreaEntity.searchPortAreaByNameOrCode";

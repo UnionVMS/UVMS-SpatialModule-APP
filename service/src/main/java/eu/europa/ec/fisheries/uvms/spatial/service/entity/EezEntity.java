@@ -19,6 +19,7 @@ import java.util.Objects;
 
 @Entity
 @NamedQueries({
+        @NamedQuery(name = EezEntity.ALL_AREAS, query = "SELECT e FROM EezEntity e WHERE enabled = true"),
         @NamedQuery(name = EezEntity.EEZ_BY_COORDINATE, query = "FROM EezEntity WHERE intersects(geom, :shape) = true AND enabled = true"),
         @NamedQuery(name = EezEntity.EEZ_COLUMNS, query = "SELECT eez.id as gid, eez.name AS name, eez.code AS code FROM EezEntity AS eez WHERE eez.id in (:ids)"),
         @NamedQuery(name = EezEntity.DISABLE_EEZ_AREAS, query = "UPDATE EezEntity SET enabled = false"),
@@ -29,6 +30,7 @@ import java.util.Objects;
 @Table(name = "eez")
 public class EezEntity extends BaseAreaEntity {
 
+    public static final String ALL_AREAS = "EezEntity.AllAreas";
     public static final String EEZ_BY_COORDINATE = "EezEntity.ByCoordinate";
     public static final String DISABLE_EEZ_AREAS = "EezEntity.disableEezAreas";
     public static final String SEARCH_EEZ = "EezEntity.searchByNameAndCode";
