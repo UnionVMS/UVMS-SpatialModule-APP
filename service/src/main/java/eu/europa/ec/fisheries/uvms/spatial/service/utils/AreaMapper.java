@@ -32,16 +32,34 @@ public class AreaMapper {
         return response;
     }
 
-    public static List<BaseAreaDto> mapToBaseAreaDtoList(List<UserAreasEntity> entityList){
+    public static List<BaseAreaDto> mapToBaseAreaDtoListFromUserAreas(List<UserAreasEntity> entityList){
         List<BaseAreaDto> dtoList = new ArrayList<>();
         for (UserAreasEntity entity: entityList) {
+            dtoList.add(mapToBaseAreaDtoFromUserArea(entity));
+        }
+        return dtoList;
+    }
+
+    public static BaseAreaDto mapToBaseAreaDtoFromUserArea(UserAreasEntity entity){
+        BaseAreaDto dto = new BaseAreaDto(entity.getType(), entity.getId(), entity.getCode(), entity.getName());
+        return dto;
+    }
+
+    public static List<BaseAreaDto> mapToBaseAreaDtoList(List<? extends BaseAreaEntity> entityList){
+        List<BaseAreaDto> dtoList = new ArrayList<>();
+        for (BaseAreaEntity entity: entityList) {
             dtoList.add(mapToBaseAreaDto(entity));
         }
         return dtoList;
     }
 
-    public static BaseAreaDto mapToBaseAreaDto(UserAreasEntity entity){
-        BaseAreaDto dto = new BaseAreaDto(entity.getType(), entity.getId(), entity.getCode(), entity.getName());
+    public static BaseAreaDto mapToBaseAreaDto(BaseAreaEntity entity){
+        BaseAreaDto dto = new BaseAreaDto();
+        dto.setCode(entity.getCode());
+        dto.setName(entity.getName());
+        dto.setGeometryWKT(entity.getGeometry());
+
+
         return dto;
     }
 

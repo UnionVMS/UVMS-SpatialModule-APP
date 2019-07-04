@@ -18,6 +18,7 @@ import java.util.Objects;
 
 @Entity
 @NamedQueries({
+        @NamedQuery(name = RfmoEntity.ALL_AREAS, query = "SELECT e FROM RfmoEntity e WHERE enabled = true"),
         @NamedQuery(name = RfmoEntity.RFMO_BY_COORDINATE,
                 query = "FROM RfmoEntity WHERE intersects(geom, :shape) = true AND enabled = true"),
         @NamedQuery(name = RfmoEntity.RFMO_COLUMNS,
@@ -30,6 +31,7 @@ import java.util.Objects;
 @Table(name = "rfmo")
 public class RfmoEntity extends BaseAreaEntity {
 
+    public static final String ALL_AREAS = "RfmoEntity.AllAreas";
     public static final String RFMO_BY_COORDINATE = "RfmoEntity.ByCoordinate";
     public static final String DISABLE_RFMO_AREAS = "RfmoEntity.disableRfmoAreas";
     public static final String SEARCH_RFMO = "RfmoEntity.searchRfmoByNameOrCode";

@@ -18,6 +18,7 @@ import java.util.Objects;
 
 @Entity
 @NamedQueries({
+        @NamedQuery(name = PortEntity.ALL_AREAS, query = "SELECT e FROM PortEntity e WHERE enabled = true"),
         @NamedQuery(name = PortEntity.DISABLE, query = "UPDATE PortEntity SET enabled = false"),
         @NamedQuery(name = PortEntity.LIST_ORDERED_BY_DISTANCE, query ="FROM PortEntity WHERE enabled = true ORDER BY distance(geom, :shape) ASC"), /// TODO create dao test
         @NamedQuery(name = PortEntity.SEARCH_PORT, query = "FROM PortEntity where (upper(name) like :name OR upper(code) like :code) AND enabled=true GROUP BY gid"),
@@ -32,6 +33,7 @@ import java.util.Objects;
 @Table(name = "port")
 public class PortEntity extends BaseAreaEntity {
 
+    public static final String ALL_AREAS = "PortEntity.AllAreas";
     public static final String DISABLE = "portsEntity.disable";
     public static final String LIST_ORDERED_BY_DISTANCE = "portsEntity.listOrderedByDistance";
     public static final String SEARCH_PORT = "PortEntity.searchPortByNameOrCode";

@@ -1,8 +1,11 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class AreaLayerDto {
 
     private String typeName;
