@@ -4,7 +4,8 @@
 	xmlns:spatial="http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-spatial"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-spatial 
-      http://lonnyj.github.com/liquibase-spatial/liquibase-spatial.xsd">
+      http://lonnyj.github.com/liquibase-spatial/liquibase-spatial.xsd"
+      logicalFilePath="schema/initdata/projection_init.xml">
 
 	<changeSet author="mkopyczok" id="1439890746709-22">
 		<insert tableName="projection">

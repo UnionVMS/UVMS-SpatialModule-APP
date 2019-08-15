@@ -1,6 +1,7 @@
 <databaseChangeLog xmlns='http://www.liquibase.org/xml/ns/dbchangelog'
   xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
-  xsi:schemaLocation='http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd'>
+  xsi:schemaLocation='http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd'
+  logicalFilePath="changelog/v2.0.0/db-changelog-addDbFunctionForSpatialFunctions.xml">
 
     <changeSet author="joemat" id="spatial db-functions">
         <!--    Since this is native SQL it needs spatial. (or wherever it is) to function       -->

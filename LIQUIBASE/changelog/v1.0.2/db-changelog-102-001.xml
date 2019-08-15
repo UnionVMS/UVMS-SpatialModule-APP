@@ -1,6 +1,7 @@
 <databaseChangeLog xmlns='http://www.liquibase.org/xml/ns/dbchangelog'
   xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
-  xsi:schemaLocation='http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd'>
+  xsi:schemaLocation='http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd'
+  logicalFilePath="changelog/v1.0.2/db-changelog-102-001.xml">
 
     <changeSet id="0fb04dfe-815b-41ae-8887-446f63ac492e" author="emrinalgr">
 
