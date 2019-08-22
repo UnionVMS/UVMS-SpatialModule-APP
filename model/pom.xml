@@ -21,7 +21,6 @@
         <mockito.version>1.10.19</mockito.version>
         <jaxb2.version>1.11.1</jaxb2.version>
         <mapstruct.version>1.1.0.Final</mapstruct.version>
-        <sl4j.version>1.7.28</sl4j.version>
 		<maven.release.plugin.version>2.5.2</maven.release.plugin.version>
         <maven.scm.provider.version>2.1.1</maven.scm.provider.version>
 
@@ -65,12 +64,6 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.9</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${sl4j.version}</version>
         </dependency>
 
         <dependency>

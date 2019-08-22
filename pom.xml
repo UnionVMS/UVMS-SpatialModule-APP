@@ -78,6 +78,12 @@
 				<version>1.24</version>
 				<type>pom</type>
 			</dependency>
+            <dependency>
+                <groupId>fish.focus.uvms.maven</groupId>
+                <artifactId>uvms-pom-logging-deps</artifactId>
+                <version>1.24</version>
+                <type>pom</type>
+            </dependency>
 
             <dependency>
                 <groupId>eu.europa.ec.fisheries.uvms</groupId>
