@@ -16,11 +16,7 @@
     <description>This module shall have interfaces, XSD, and DTOs</description>
 
     <properties>
-        <javaee.version>8.0</javaee.version>
-        <junit.version>4.12</junit.version>
-        <mockito.version>1.10.19</mockito.version>
         <jaxb2.version>1.11.1</jaxb2.version>
-        <mapstruct.version>1.1.0.Final</mapstruct.version>
 		<maven.release.plugin.version>2.5.2</maven.release.plugin.version>
         <maven.scm.provider.version>2.1.1</maven.scm.provider.version>
 
@@ -29,19 +25,11 @@
     <dependencies>
 
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
+            <groupId>fish.focus.uvms.maven</groupId>
+            <artifactId>uvms-pom-test-deps</artifactId>
+            <version>1.24</version>
+            <type>pom</type>
         </dependency>
-
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>${mockito.version}</version>
-            <scope>test</scope>
-        </dependency>
-
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-api</artifactId>
@@ -69,7 +57,7 @@
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
             <artifactId>uvms-commons-message</artifactId>
-            <version>4.0.2</version>
+            <version>${uvms.commons.version}</version>
         </dependency>
 
     </dependencies>
