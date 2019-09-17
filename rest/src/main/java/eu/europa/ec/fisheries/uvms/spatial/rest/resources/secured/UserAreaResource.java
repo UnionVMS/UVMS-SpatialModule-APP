@@ -62,7 +62,7 @@ public class UserAreaResource extends UnionVMSResource {
     @Interceptors(value = {ExceptionInterceptor.class})
     public Response upsertUserArea(UserAreaDto userAreaDto, @Context HttpServletRequest servletRequest) throws ParseException {
         String userName = servletRequest.getRemoteUser();
-        log.info("{} is requesting createUserArea(...)", userName);
+        log.info("{} is requesting upsertUserArea(...)", userName);
         UserAreasEntity userArea = UserAreaMapper.mapToEntity(userAreaDto);
         userArea.setUserName(userName);
         return createSuccessResponse(areaServiceBean.upsertUserArea(userArea));
@@ -75,7 +75,7 @@ public class UserAreaResource extends UnionVMSResource {
     @Interceptors(value = {ExceptionInterceptor.class})
     public Response getUserAreasByCode(List<String> areaCode, @Context HttpServletRequest servletRequest) {
         String userName = servletRequest.getRemoteUser();
-        log.info("{} is requesting createUserArea(...)", userName);
+        log.info("{} is requesting User Area By Code(...)", userName);
         return createSuccessResponse(areaDao.getUserAreasByAreaCodes(areaCode));
     }
 
