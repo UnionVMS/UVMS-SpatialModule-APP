@@ -36,7 +36,6 @@ public class AreaDao {
 
     public <T> T create(T entity)  {
         em.persist(entity);
-        em.flush();
         return entity;
     }
 
