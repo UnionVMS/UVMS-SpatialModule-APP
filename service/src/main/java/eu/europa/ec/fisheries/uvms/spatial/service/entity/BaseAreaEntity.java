@@ -12,8 +12,12 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.service.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.InstantSerializer;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTWriter;
+import eu.europa.ec.fisheries.uvms.spatial.model.SpatialInstantDeserializer;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.BaseAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.utils.GeometryUtils;
 
@@ -71,6 +75,8 @@ public class BaseAreaEntity {
     @Column(nullable = false)
     protected Boolean enabled = true;
 
+    @JsonSerialize(using = InstantSerializer.class)
+    @JsonDeserialize(using = SpatialInstantDeserializer.class)
     @Column(name = "enabled_on")
     protected Instant enabledOn;
 

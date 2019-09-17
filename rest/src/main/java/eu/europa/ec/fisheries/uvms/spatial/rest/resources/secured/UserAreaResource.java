@@ -21,6 +21,7 @@ import eu.europa.ec.fisheries.uvms.spatial.rest.util.UserAreaMapper;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaServiceBean;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.AreaDao;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity;
+import org.apache.commons.collections.ListUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,6 +33,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @implicitParam roleName|string|header|true||||||
@@ -47,6 +50,9 @@ public class UserAreaResource extends UnionVMSResource {
     @Inject
     AreaServiceBean areaServiceBean;
 
+    @Inject
+    AreaDao areaDao;
+
     private AreaLocationMapper areaLocationMapper = AreaLocationMapper.mapper();
 
     @POST
@@ -56,14 +62,22 @@ public class UserAreaResource extends UnionVMSResource {
     @Interceptors(value = {ExceptionInterceptor.class})
     public Response upsertUserArea(UserAreaDto userAreaDto, @Context HttpServletRequest servletRequest) throws ParseException {
         String userName = servletRequest.getRemoteUser();
-        log.info("{} is requesting createUserArea(...)", userName);
+        log.info("{} is requesting upsertUserArea(...)", userName);
         UserAreasEntity userArea = UserAreaMapper.mapToEntity(userAreaDto);
         userArea.setUserName(userName);
         return createSuccessResponse(areaServiceBean.upsertUserArea(userArea));
     }
 
-
-
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/get")
+    @Interceptors(value = {ExceptionInterceptor.class})
+    public Response getUserAreasByCode(List<String> areaCode, @Context HttpServletRequest servletRequest) {
+        String userName = servletRequest.getRemoteUser();
+        log.info("{} is requesting User Area By Code(...)", userName);
+        return createSuccessResponse(areaDao.getUserAreasByAreaCodes(areaCode));
+    }
 
     @GET
     @Produces({MediaType.APPLICATION_JSON})
@@ -79,9 +93,6 @@ public class UserAreaResource extends UnionVMSResource {
         return request.isUserInRole("MANAGE_ANY_USER_AREA");
     }
 
-
-    @Inject
-    AreaDao areaDao;
 
     @GET
     @Produces({MediaType.APPLICATION_JSON})

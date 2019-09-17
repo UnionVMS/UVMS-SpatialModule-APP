@@ -10,8 +10,18 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.spatial.rest;
 
+import eu.europa.ec.fisheries.uvms.constants.AuthConstants;
+import eu.europa.ec.fisheries.uvms.rest.security.UserRoleRequestWrapper;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialFeaturesEnum;
+
 import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class AuthenticationFilterMock implements Filter {
     
@@ -23,12 +33,16 @@ public class AuthenticationFilterMock implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-      /*  HttpServletResponse httpResponse = (HttpServletResponse) response;
+        HttpServletResponse httpResponse = (HttpServletResponse) response;
         httpResponse.addHeader(AuthConstants.HTTP_HEADER_AUTHORIZATION, "MOCK_TOKEN");
         
         HttpServletRequest httpRequest = (HttpServletRequest) request;
-        UserRoleRequestWrapper arequest = new UserRoleRequestWrapper(httpRequest, TEST_USER);
-        chain.doFilter(arequest, httpResponse);*/
+        Set<String> roles = new HashSet<>();
+        for (SpatialFeaturesEnum feature: SpatialFeaturesEnum.values()) {
+            roles.add(feature.value());
+        }
+        UserRoleRequestWrapper arequest = new UserRoleRequestWrapper( TEST_USER, roles, httpRequest);
+        chain.doFilter(arequest, httpResponse);
     }
     
     @Override

@@ -50,6 +50,16 @@
         </dependency>
 
         <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.9.9</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>2.9.9</version>
+        </dependency>
+        <dependency>
             <groupId>fish.focus.uvms.maven</groupId>
             <artifactId>uvms-pom-arquillian-deps</artifactId>
             <type>pom</type>
@@ -67,6 +77,7 @@
             <version>2.29</version>
             <scope>test</scope>
         </dependency>
+
 
 
     </dependencies>

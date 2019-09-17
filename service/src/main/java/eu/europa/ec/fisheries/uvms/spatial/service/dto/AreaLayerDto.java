@@ -20,6 +20,9 @@ public class AreaLayerDto {
 
     private List<BaseAreaDto> idList;
 
+    public AreaLayerDto() {     //to make json happy
+    }
+
     public AreaLayerDto(String typeName, String geoName, String areaTypeDesc, String style, String serviceType) {
         this.typeName = typeName;
         this.areaTypeDesc = areaTypeDesc;

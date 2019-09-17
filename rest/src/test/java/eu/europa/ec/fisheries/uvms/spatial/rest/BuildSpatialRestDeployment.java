@@ -1,10 +1,15 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest;
 
 import java.io.File;
+import java.util.Arrays;
+import javax.ejb.EJB;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 
+import eu.europa.ec.fisheries.uvms.rest.security.InternalRestTokenHandler;
+import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
+import eu.europa.ec.mare.usm.jwt.JwtTokenHandler;
 import org.eu.ingwar.tools.arquillian.extension.suite.annotations.ArquillianSuiteDeployment;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
@@ -16,6 +21,14 @@ import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 
 @ArquillianSuiteDeployment
 public abstract class BuildSpatialRestDeployment {
+
+    @EJB
+    private JwtTokenHandler tokenHandler;
+
+    @EJB
+    private InternalRestTokenHandler internalRestTokenHandler;
+
+    private String token;
 
     @Deployment(name = "spatial", order = 1)
     public static Archive<?> createDeployment() {
@@ -36,7 +49,6 @@ public abstract class BuildSpatialRestDeployment {
         testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.commons.rest");
         
         testWar.addClass(AuthenticationFilterMock.class);
-        testWar.addClass(UserModuleMock.class);
         testWar.addClass(ConfigServiceMock.class);
         
         testWar.delete("/WEB-INF/web.xml");
@@ -56,6 +68,18 @@ public abstract class BuildSpatialRestDeployment {
         ObjectMapper objectMapper = new ObjectMapper();
         Client client = ClientBuilder.newClient();
         client.register(new JacksonJaxbJsonProvider(objectMapper, JacksonJaxbJsonProvider.DEFAULT_ANNOTATIONS));
-        return client.target("http://localhost:28080/test/rest");
+        return client.target("http://localhost:8080/test/rest");
+    }
+
+    protected String getToken() {
+        if (token == null) {
+            token = tokenHandler.createToken("user",
+                    Arrays.asList(UnionVMSFeature.manageManualMovements.getFeatureId(),
+                            UnionVMSFeature.viewMovements.getFeatureId(),
+                            UnionVMSFeature.viewManualMovements.getFeatureId(),
+                            UnionVMSFeature.manageAlarmsHoldingTable.getFeatureId(),
+                            UnionVMSFeature.viewAlarmsHoldingTable.getFeatureId()));
+        }
+        return token;
     }
 }

@@ -14,7 +14,11 @@ package eu.europa.ec.fisheries.uvms.spatial.service.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.InstantSerializer;
 import com.vividsolutions.jts.geom.Geometry;
+import eu.europa.ec.fisheries.uvms.spatial.model.SpatialInstantDeserializer;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
@@ -56,16 +60,18 @@ public class UserAreasEntity extends BaseAreaEntity {
     @Column(name = "gid")
     @SequenceGenerator(name = "SEQ_USERAREA_GEN", sequenceName = "user_areas_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_USERAREA_GEN")
-    @JsonProperty("gid")
     private Long id;
 
     @Column(name = "type")
-    @JsonProperty("subType")
     private String type;
 
+    @JsonSerialize(using = InstantSerializer.class)
+    @JsonDeserialize(using = SpatialInstantDeserializer.class)
     @Column(name = "start_date")
     private Instant startDate;
 
+    @JsonSerialize(using = InstantSerializer.class)
+    @JsonDeserialize(using = SpatialInstantDeserializer.class)
     @Column(name = "end_date")
     private Instant endDate;
 
@@ -78,10 +84,12 @@ public class UserAreasEntity extends BaseAreaEntity {
     @Column(columnDefinition = "text", name = "dataset_name")
     private String datasetName;
 
+    @JsonSerialize(using = InstantSerializer.class)
+    @JsonDeserialize(using = SpatialInstantDeserializer.class)
     @Column(name = "created_on", nullable = false)
     private Instant createdOn;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAreas", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "userAreas", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private Set<UserScopeEntity> scopeSelection = new HashSet<>();
 
