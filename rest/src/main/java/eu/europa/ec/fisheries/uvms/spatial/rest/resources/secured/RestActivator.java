@@ -11,6 +11,7 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import eu.europa.ec.fisheries.uvms.spatial.rest.constants.RestConstants;
+import eu.europa.ec.fisheries.uvms.spatial.rest.util.ObjectMapperContextResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.ws.rs.ApplicationPath;
@@ -33,6 +34,7 @@ public class RestActivator extends Application {
         set.add(UserAreaResource.class);
         set.add(ImageResource.class);
         set.add(GeometryUtilsResource.class);
+        set.add(ObjectMapperContextResolver.class);
         LOG.info(RestConstants.MODULE_NAME + " module starting up");
     }
 
