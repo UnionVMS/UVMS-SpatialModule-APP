@@ -52,6 +52,11 @@ public class AreaDao {
         em.remove(entity);
     }
 
+    public <T extends BaseAreaEntity> void disableAllAreasOfType(T entity){
+
+
+    }
+
     public List<PortAreaEntity> getPortAreasByPoint(Point point) {
 
         TypedQuery<PortAreaEntity> query = em.createNamedQuery(PortAreaEntity.PORT_AREA_BY_POINT, PortAreaEntity.class);

@@ -93,6 +93,11 @@ public class UserAreasEntity extends BaseAreaEntity {
     @JsonIgnore
     private Set<UserScopeEntity> scopeSelection = new HashSet<>();
 
+    @Override
+    public String getDisableQueryName(){
+        return "";
+    }
+
     @JsonProperty("scopeSelection")
     public List<String> getScopeSelectionAsString(){
         List<String> list = new ArrayList<>();

@@ -85,6 +85,11 @@ public class BaseAreaEntity {
     }
 
     @JsonIgnore
+    public String getDisableQueryName(){
+        return "";
+    }
+
+    @JsonIgnore
     public String getGeometryType(){
         String geometryType = null;
         if (geom !=null){

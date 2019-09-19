@@ -16,6 +16,12 @@ import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
 import com.vividsolutions.jts.io.WKTWriter;
 import org.apache.commons.collections.CollectionUtils;
+import org.geotools.geometry.jts.JTS;
+import org.geotools.referencing.CRS;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.opengis.referencing.operation.MathTransform;
+import org.opengis.referencing.operation.TransformException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -139,5 +145,14 @@ public class GeometryUtils {
         }
 
         return line;
+    }
+
+    public static Geometry convertGeometryTo4326(Geometry convertee, String sridFrom) throws FactoryException, TransformException {
+        CoordinateReferenceSystem targetCRS = CRS.decode("EPSG:4326");
+        CoordinateReferenceSystem sourceCRS = CRS.decode("EPSG:" + sridFrom);
+
+        MathTransform transform = CRS.findMathTransform(sourceCRS, targetCRS);
+        Geometry convertedGeometry = JTS.transform( convertee, transform);
+        return convertedGeometry;
     }
 }

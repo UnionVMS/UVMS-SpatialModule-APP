@@ -49,6 +49,11 @@ public class RfmoEntity extends BaseAreaEntity {
 	
     private Boolean tuna;
 
+    @Override
+    public String getDisableQueryName(){
+        return DISABLE_RFMO_AREAS;
+    }
+
     public Long getId() {
         return id;
     }

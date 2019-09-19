@@ -59,6 +59,11 @@ public class PortEntity extends BaseAreaEntity {
     @Column(name = "commercial_port")
     private Boolean commercialPort;
 
+    @Override
+    public String getDisableQueryName(){
+        return DISABLE;
+    }
+
     public Long getId() {
         return id;
     }
