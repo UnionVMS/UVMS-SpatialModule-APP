@@ -41,7 +41,9 @@
         <database.dialect>postgres</database.dialect>
         <scm.connection>scm:git:https://github.com/UnionVMS/UVMS-SpatialModule-APP.git</scm.connection>
         <installAtEnd>false</installAtEnd>
-      
+
+      <!-- 3rd-party dependencies -->
+      <jackson.version>2.9.9</jackson.version>
 
     </properties>
 
@@ -173,6 +175,25 @@
                 <artifactId>javaee-api</artifactId>
                 <version>${javaee.version}</version>
                 <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.module</groupId>
+                <artifactId>jackson-module-jaxb-annotations</artifactId>
+                <version>${jackson.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
             </dependency>
 
         </dependencies>
@@ -369,5 +390,6 @@
         <module>service</module>
         <module>rest</module>
         <module>module</module>
+        <module>client</module>
     </modules>
 </project>
