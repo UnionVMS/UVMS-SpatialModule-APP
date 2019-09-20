@@ -20,6 +20,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.entity.*;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,8 +54,15 @@ public class AreaDao {
     }
 
     public <T extends BaseAreaEntity> void disableAllAreasOfType(T entity){
+        Query query = em.createNamedQuery(entity.getDisableQueryName());
+        query.executeUpdate();
 
+    }
 
+    public void runST_MakeValidOnTabel(String tabelName){
+        String queryString = "UPDATE spatial." + tabelName + " SET geom = ST_MakeValid(geom)";
+        Query query = em.createNativeQuery(queryString);
+        query.executeUpdate();
     }
 
     public List<PortAreaEntity> getPortAreasByPoint(Point point) {

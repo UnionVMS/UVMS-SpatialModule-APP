@@ -118,7 +118,7 @@ public class SpatialRestResource {
         try {
             PortDistanceInfoDto closestPort = areaServiceBean.findClosestPortByPosition(closestLocationSpatialRQ.getPoint().getLatitude(), closestLocationSpatialRQ.getPoint().getLongitude());
             List<Location> response = new ArrayList<>();
-            Location location = new Location(String.valueOf(closestPort.getPort().getId()), String.valueOf(closestPort.getPort().getId()), LocationType.PORT, closestPort.getPort().getCode(), closestPort.getPort().getName(), closestPort.getDistance(), UnitType.METERS, closestPort.getPort().getCentroid(), closestPort.getPort().getGeometry(), closestPort.getPort().getExtent(), closestPort.getPort().getEnabled(), closestPort.getPort().getCountryCode());
+            Location location = new Location(String.valueOf(closestPort.getPort().getId()), String.valueOf(closestPort.getPort().getId()), LocationType.PORT, closestPort.getPort().getCode(), closestPort.getPort().getName(), closestPort.getDistance(), UnitType.METERS, closestPort.getPort().getCentroid(), closestPort.getPort().getGeometryWKT(), closestPort.getPort().getExtent(), closestPort.getPort().getEnabled(), closestPort.getPort().getCountryCode());
             response.add(location);
             return Response.ok(response).build();
         } catch (Exception e) {
@@ -405,7 +405,7 @@ public class SpatialRestResource {
             List<String> portCode = new ArrayList<>();
             portCode.add(geometryByPortCodeRequest.getPortCode());
             List<PortEntity> portList = areaServiceBean.getPortsByAreaCodes(portCode);
-            String geometry = (portList.isEmpty() ? "" : portList.get(0).getGeometry());
+            String geometry = (portList.isEmpty() ? "" : portList.get(0).getGeometryWKT());
             GeometryByPortCodeResponse response = new GeometryByPortCodeResponse();
             response.setPortGeometry(geometry);
             return Response.ok(response).build();

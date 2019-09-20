@@ -19,7 +19,6 @@ import eu.europa.ec.fisheries.uvms.spatial.service.dao.SpatialQueriesDao;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.AreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.BaseAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.PortDistanceInfoDto;
-import eu.europa.ec.fisheries.uvms.spatial.service.entity.BaseAreaEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.PortAreaEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.PortEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity;
@@ -200,7 +199,7 @@ public class AreaServiceBean {
             location.setLocationType(LocationType.PORT);
             location.setName(closestLocation.getPort().getName());
             location.setUnit(UnitType.NAUTICAL_MILES);
-            location.setWkt(closestLocation.getPort().getGeometry());
+            location.setWkt(closestLocation.getPort().getGeometryWKT());
 
 
             locationType.getClosestLocations().add(location);

@@ -2,21 +2,25 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean.bean;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.FileUploadBean;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.TestZipFile;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.TransactionalTests;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.AreaUploadMapping;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.AreaUploadMetadata;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.AreaUploadProperty;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaUpdateEntity;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.opengis.feature.Property;
 
 import javax.inject.Inject;
 import java.io.IOException;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -79,11 +83,33 @@ public class FileUploadBeanTest extends TransactionalTests {
     }
 
     @Test
-    public void uploadFile() throws IOException, ServiceException {
-    /*    String base64EncodedZipfile = TestZipFile.omradeZip;
-        byte[] bytes = Base64.getDecoder().decode(base64EncodedZipfile);
+    public void readShapeFileTest() throws Exception {
+        AreaUpdateEntity updateEntity = createAreaUpdateEntity();
 
-        fileUploadBean.uploadNewAreaDefinitions(bytes, "EEZ");*/
+        Map<String, List<Property>> propertyMap = fileUploadBean.readShapeFile(updateEntity, 4326);
+        //System.out.println(propertyMap);
+        assertEquals(20, propertyMap.size());
+        for (String key : propertyMap.keySet()) {
+            List<Property> entry = propertyMap.get(key);
+            assertEquals(16, entry.size());
+            entry.stream().anyMatch(p -> p.getValue().toString().startsWith("Bratten"));
+            assertTrue(entry.get(0).getName().toString().equals("the_geom"));
+            Geometry geo = (Geometry) entry.get(0).getValue();
+            assertEquals(4326, geo.getSRID());
+        }
+    }
+
+    @Test
+    public void upsertReferenceData() throws Exception{
+        AreaUpdateEntity createdEntity = createAreaUpdateEntity();
+
+        AreaUploadMetadata response = fileUploadBean.getShapeFileAndAreaMetadata(createdEntity);
+
+        AreaUploadMapping mapping = new AreaUploadMapping();
+        mapping.setAdditionalProperty("ref",response.getAdditionalProperties().get("ref"));
+
+        //fileUploadBean.upsertReferenceData(mapping, 4326);
+
     }
 
     private AreaUpdateEntity createAreaUpdateEntity(){

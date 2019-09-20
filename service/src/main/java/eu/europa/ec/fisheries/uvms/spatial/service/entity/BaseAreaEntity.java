@@ -80,13 +80,24 @@ public class BaseAreaEntity {
     @Column(name = "enabled_on")
     protected Instant enabledOn;
 
-    public String getGeometry(){
+    public String getGeometryWKT(){
         return GeometryUtils.geometryToWkt(geom);
     }
 
     @JsonIgnore
     public String getDisableQueryName(){
         return "";
+    }
+
+    @JsonIgnore
+    public String getMakeValidQuery(){ return "";}
+
+    @JsonIgnore
+    public String getCheckValidQuery() {return "";}
+
+    @JsonIgnore
+    public Long getId(){
+        return null;
     }
 
     @JsonIgnore

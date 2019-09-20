@@ -95,7 +95,7 @@ public class UserAreasEntity extends BaseAreaEntity {
 
     @Override
     public String getDisableQueryName(){
-        return "";
+        return "Non-existant Query";
     }
 
     @JsonProperty("scopeSelection")

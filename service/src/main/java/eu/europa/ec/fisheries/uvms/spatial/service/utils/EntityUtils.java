@@ -10,13 +10,21 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.service.utils;
 
+import com.google.common.collect.Maps;
+import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.AreaUploadMappingProperty;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.*;
+import org.apache.commons.lang3.reflect.FieldUtils;
+import org.opengis.feature.Property;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class EntityUtils {
 
@@ -79,7 +87,7 @@ public class EntityUtils {
                 entity = new StatRectEntity();
                 break;
             default:
-                throw new IllegalArgumentException("Type not supported");
+                throw new IllegalArgumentException("Type " + value + " not supported");
 
         }
         return entity;
@@ -100,5 +108,46 @@ public class EntityUtils {
             //Handle your exception here.
         }
         return fields;
+    }
+
+    public static Map<String, Object> createAttributesMap(List<Property> properties) {
+        Map<String, Object> resultMap = Maps.newHashMap();
+        for (Property property : properties) {
+            String name = property.getName().toString();
+            Object value = property.getValue();
+            resultMap.put(name, value);
+        }
+        return resultMap;
+    }
+
+    public static <T extends BaseAreaEntity> T populateAtributes(T entity, Map<String, Object> values, List<AreaUploadMappingProperty> mapping) {
+
+        try {
+            entity.setGeom((Geometry) values.get("the_geom")); // shape file standard
+            entity.setEnabled(true);
+            entity.setEnabledOn(Instant.now());
+            if (mapping != null){
+                for (AreaUploadMappingProperty property : mapping){
+                    Object value = values.get(property.getTarget());
+                    if ("code".equals(property.getSource())){
+                        if (value!= null){
+                            entity.setCode(String.valueOf(value));
+                        }
+                    }
+                    else if ("name".equals(property.getSource())){
+                        if (value!= null){
+                            entity.setName(String.valueOf(value));
+                        }
+                    }
+                    else {
+                        FieldUtils.writeDeclaredField(entity, property.getSource(), value, true);
+                    }
+                }
+            }
+
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException("ERROR WHILE MAPPING ENTITY", e);
+        }
+        return entity;
     }
 }
