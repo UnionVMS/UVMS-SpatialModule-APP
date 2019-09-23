@@ -35,6 +35,7 @@ public class RestActivator extends Application {
         set.add(ImageResource.class);
         set.add(GeometryUtilsResource.class);
         set.add(ObjectMapperContextResolver.class);
+        set.add(FileUploadRestResource.class);
         LOG.info(RestConstants.MODULE_NAME + " module starting up");
     }
 

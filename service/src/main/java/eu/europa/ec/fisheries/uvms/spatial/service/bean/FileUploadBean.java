@@ -181,7 +181,7 @@ public class FileUploadBean {
 
     /*------------------- Upsert Reference Data ----------------------*/
 
-    public List<BaseAreaDto> upsertReferenceData(final AreaUploadMapping mapping, final Integer incomingSrid) throws IOException {
+    public void upsertReferenceData(final AreaUploadMapping mapping, final Integer incomingSrid) throws IOException {
         long ref = (long) mapping.getAdditionalProperties().get("ref");
         AreaUpdateEntity updateEntity = areaDao.find(AreaUpdateEntity.class, ref);
         if(updateEntity == null){
@@ -198,18 +198,14 @@ public class FileUploadBean {
         List<BaseAreaEntity> createdEntitys = bulkInsert(propertyMap, mapping.getMapping(), updateEntity.getAreaType());
 
         areaDao.runST_MakeValidOnTabel(typeEntity.getAreaDbTable());
-        List<BaseAreaDto> invalidGeometries = new ArrayList<>();
 
         for (BaseAreaEntity entity : createdEntitys) {
             if(!entity.getGeom().isValid()){
-                entity.setEnabled(false);
-                BaseAreaDto bad = new BaseAreaDto(typeEntity.getTypeName(), entity.getId(), entity.getCode(), entity.getName());
-                bad.setGeometryWKT(entity.getGeometryWKT());
-                invalidGeometries.add(bad);
+
+                throw new IllegalArgumentException("Area nammed " + entity.getName() + " with code " + entity.getCode() + " is not valid. Its geometry is: " + entity.getGeometryWKT());
             }
         }
         updateEntity.setProcessCompleted(true);
-        return invalidGeometries;
 
     }
 

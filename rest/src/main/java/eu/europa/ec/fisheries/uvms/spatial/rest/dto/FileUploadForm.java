@@ -12,32 +12,27 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.rest.dto;
 
+import org.jboss.resteasy.annotations.providers.multipart.PartType;
+
 import javax.validation.constraints.NotEmpty;
 import javax.ws.rs.FormParam;
 
 
 public class FileUploadForm {
 
-    private int crsCode;
     @NotEmpty
+    @FormParam("areaType")
+    @PartType("text/plain")
     private String areaType;
     @NotEmpty
+    @FormParam("uploadedFile")
+    @PartType("application/octet-stream")
     private byte[] data;
-
-    public int getCrsCode() {
-        return crsCode;
-    }
-
-    @FormParam("crs")
-    public void setCrsCode(int crsCode) {
-        this.crsCode = crsCode;
-    }
 
     public String getAreaType() {
         return areaType;
     }
 
-    @FormParam("areaType")
     public void setAreaType(String areaType) {
         this.areaType = areaType;
     }
@@ -46,7 +41,6 @@ public class FileUploadForm {
         return data;
     }
 
-    @FormParam("uploadedFile")
     public void setData(byte[] data) {
         this.data = data;
     }

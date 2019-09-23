@@ -12,7 +12,6 @@ package eu.europa.ec.fisheries.uvms.spatial.service.utils;
 
 import com.google.common.collect.Maps;
 import com.vividsolutions.jts.geom.Geometry;
-import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.AreaUploadMappingProperty;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.*;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -86,6 +85,10 @@ public class EntityUtils {
             case "Stat_Rect":
                 entity = new StatRectEntity();
                 break;
+            case "USERAREA":
+            case "userArea":
+                entity = new UserAreasEntity();
+                break;
             default:
                 throw new IllegalArgumentException("Type " + value + " not supported");
 
@@ -140,6 +143,9 @@ public class EntityUtils {
                         }
                     }
                     else {
+                        if(value instanceof Date){
+                            value = ((Date) value).toInstant();
+                        }
                         FieldUtils.writeDeclaredField(entity, property.getSource(), value, true);
                     }
                 }

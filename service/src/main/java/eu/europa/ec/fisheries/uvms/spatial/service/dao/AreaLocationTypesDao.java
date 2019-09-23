@@ -30,7 +30,7 @@ public class AreaLocationTypesDao {
     public AreaLocationTypesEntity findOneByTypeName(final String typeName) {
 
         TypedQuery<AreaLocationTypesEntity> query = em.createNamedQuery(AreaLocationTypesEntity.FIND_TYPE_BY_NAME, AreaLocationTypesEntity.class);
-        query.setParameter("typeName",typeName);
+        query.setParameter("typeName",typeName.toUpperCase());
         List<AreaLocationTypesEntity> resultList = query.getResultList();
         if(!resultList.isEmpty()){
             return resultList.get(0);
