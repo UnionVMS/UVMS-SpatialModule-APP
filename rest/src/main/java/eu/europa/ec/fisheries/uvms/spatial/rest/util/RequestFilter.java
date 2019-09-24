@@ -62,7 +62,7 @@ public class RequestFilter implements Filter {
             throw new ForbiddenException("You are not allowed to make any request from an external domain. Your Host: " + HOST);
 
         HttpServletResponse response = (HttpServletResponse) res;
-        response.setHeader(RestConstants.ACCESS_CONTROL_ALLOW_ORIGIN, RestConstants.ACCESS_CONTROL_ALLOW_METHODS_ALL);
+        response.setHeader(RestConstants.ACCESS_CONTROL_ALLOW_ORIGIN, HOST);
         response.setHeader(RestConstants.ACCESS_CONTROL_ALLOW_METHODS, RestConstants.ACCESS_CONTROL_ALLOWED_METHODS);
         response.setHeader(RestConstants.ACCESS_CONTROL_ALLOW_HEADERS, RestConstants.ACCESS_CONTROL_ALLOW_HEADERS_ALL);
         chain.doFilter(request, res);
