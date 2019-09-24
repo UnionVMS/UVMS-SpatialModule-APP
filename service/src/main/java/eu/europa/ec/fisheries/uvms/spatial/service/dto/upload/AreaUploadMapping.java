@@ -27,7 +27,7 @@ public class AreaUploadMapping {
     @JsonProperty("mapping")
     @Valid
     private List<AreaUploadMappingProperty> mapping = new ArrayList<AreaUploadMappingProperty>();
-    @JsonIgnore
+    @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
@@ -80,7 +80,7 @@ public class AreaUploadMapping {
         return this.additionalProperties;
     }
 
-    @JsonAnySetter
+
     public void setAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
     }

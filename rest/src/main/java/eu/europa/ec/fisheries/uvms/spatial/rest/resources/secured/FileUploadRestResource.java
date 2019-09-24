@@ -37,7 +37,7 @@ public class FileUploadRestResource extends UnionVMSResource {
     @POST
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Consumes(value = {MediaType.APPLICATION_JSON})
-    @Path("/upload/{type}/{code}")
+    @Path("/upload/{code}")
     @Interceptors(value = { ExceptionInterceptor.class})
     public Response upload(AreaUploadMapping mapping,
                            @PathParam("code") int code) throws IOException {

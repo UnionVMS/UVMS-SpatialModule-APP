@@ -182,7 +182,7 @@ public class FileUploadBean {
     /*------------------- Upsert Reference Data ----------------------*/
 
     public void upsertReferenceData(final AreaUploadMapping mapping, final Integer incomingSrid) throws IOException {
-        long ref = (long) mapping.getAdditionalProperties().get("ref");
+        long ref = ((Integer) mapping.getAdditionalProperties().get("ref")).longValue();
         AreaUpdateEntity updateEntity = areaDao.find(AreaUpdateEntity.class, ref);
         if(updateEntity == null){
             throw new IllegalArgumentException("Reference for uploaded data is missing/invalid");
