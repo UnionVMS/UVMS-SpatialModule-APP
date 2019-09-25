@@ -90,12 +90,6 @@ public class BaseAreaEntity {
     }
 
     @JsonIgnore
-    public String getMakeValidQuery(){ return "";}
-
-    @JsonIgnore
-    public String getCheckValidQuery() {return "";}
-
-    @JsonIgnore
     public Long getId(){
         return null;
     }
