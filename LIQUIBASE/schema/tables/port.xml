@@ -21,7 +21,7 @@
             <column name="geom" type="GEOMETRY(Multipoint, 4326)"/>
 			<column name="country_code" type="VARCHAR(3)"/>
 			<column name="code" type="VARCHAR(20)"/>
-			<column name="name" type="VARCHAR(100)"/>
+			<column name="name" type="VARCHAR(250)"/>
             <column name="fishing_port" type="boolean"/>
             <column name="landing_place" type="boolean"/>
             <column name="commercial_port" type="boolean"/>

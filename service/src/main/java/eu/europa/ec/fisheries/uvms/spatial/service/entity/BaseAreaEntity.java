@@ -80,8 +80,17 @@ public class BaseAreaEntity {
     @Column(name = "enabled_on")
     protected Instant enabledOn;
 
-    public String getGeometry(){
+    public String getGeometryWKT(){
         return GeometryUtils.geometryToWkt(geom);
+    }
+
+    @JsonIgnore
+    public String getDisableQueryName(){
+        return "";
+    }
+
+    public Long getId(){
+        return null;
     }
 
     @JsonIgnore
@@ -93,6 +102,7 @@ public class BaseAreaEntity {
         return geometryType;
     }
 
+    @JsonIgnore
     public String getExtent() {
         String extent = null;
         if (geom != null) {
@@ -101,6 +111,7 @@ public class BaseAreaEntity {
         return extent;
     }
 
+    @JsonIgnore
     public String getCentroid(){
         String centroid = null;
         if (geom != null) {

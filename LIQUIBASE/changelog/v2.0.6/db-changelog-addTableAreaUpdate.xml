@@ -1,0 +1,18 @@
+<databaseChangeLog xmlns='http://www.liquibase.org/xml/ns/dbchangelog'
+  xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+  xsi:schemaLocation='http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd'>
+
+    <changeSet author="joemat" id="add table for saving uploaded area update info">
+        <createTable tableName="area_update">
+            <column name="id" type="serial" >
+                <constraints primaryKey="true" primaryKeyName="area_update_pkey"/>
+            </column>
+            <column name="uploaded_file" type="bytea"/>
+            <column name="area_type" type="VARCHAR(100)"/>
+            <column name="uploaded_date" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="uploader" type="VARCHAR(100)"/>
+            <column name="process_completed" type="boolean"/>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

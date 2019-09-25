@@ -40,9 +40,10 @@ import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
         @NamedQuery(name = UserAreasEntity.USER_AREA_DETAILS_BY_LOCATION,
                 query = "FROM UserAreasEntity userArea WHERE intersects(userArea.geom, :shape) = true AND userArea.enabled = true GROUP BY userArea.id"),
         @NamedQuery(name = UserAreasEntity.FIND_ALL_USER_AREAS,
-                query = "SELECT DISTINCT area.id as gid, area.name as name, area.areaDesc as desc FROM UserAreasEntity area LEFT JOIN area.scopeSelection scope " +
+                query = "SELECT DISTINCT area FROM UserAreasEntity area LEFT JOIN area.scopeSelection scope " +
                         "WHERE area.userName = :userName OR scope.name = :scopeName"),
-        @NamedQuery(name = UserAreasEntity.AREA_BY_AREA_CODES, query = "From UserAreasEntity where code in :code AND enabled=true ")
+        @NamedQuery(name = UserAreasEntity.AREA_BY_AREA_CODES, query = "From UserAreasEntity where code in :code AND enabled=true "),
+        @NamedQuery(name = UserAreasEntity.DISABLE_USER_AREA_DUMMY_QUERY, query = "Update UserAreasEntity set enabled = true where 0 = 1 ")
 })
 @Where(clause = "enabled = true")
 @Table(name = "user_areas", uniqueConstraints = {
@@ -52,6 +53,7 @@ public class UserAreasEntity extends BaseAreaEntity {
 
     public static final String FIND_ALL_USER_AREAS = "userArea.findAllUserAreas";
     public static final String USER_AREA_DETAILS_BY_LOCATION = "UserArea.findUserAreaDetailsByLocation";
+    public static final String DISABLE_USER_AREA_DUMMY_QUERY = "UserArea.dummyUpdateQuery";
     public static final String FIND_USER_AREA_BY_USERNAME_SCOPE_AND_POWERUSER = "UserArea.findUserAreaByUsernameScopeAndPowerUser";
     public static final String FIND_BY_USER_NAME_AND_SCOPE_NAME = "UserArea.findGidByUserNameOrScope";
     public static final String AREA_BY_AREA_CODES = "UserAreasEntity.areaByAreaCodes";
@@ -68,12 +70,12 @@ public class UserAreasEntity extends BaseAreaEntity {
     @JsonSerialize(using = InstantSerializer.class)
     @JsonDeserialize(using = SpatialInstantDeserializer.class)
     @Column(name = "start_date")
-    private Instant startDate;
+    private Instant startDate = Instant.now();
 
     @JsonSerialize(using = InstantSerializer.class)
     @JsonDeserialize(using = SpatialInstantDeserializer.class)
     @Column(name = "end_date")
-    private Instant endDate;
+    private Instant endDate = Instant.parse("2100-01-01T00:00:00.000Z");
 
     @Column(name = "user_name", nullable = false)
     private String userName;
@@ -87,11 +89,16 @@ public class UserAreasEntity extends BaseAreaEntity {
     @JsonSerialize(using = InstantSerializer.class)
     @JsonDeserialize(using = SpatialInstantDeserializer.class)
     @Column(name = "created_on", nullable = false)
-    private Instant createdOn;
+    private Instant createdOn = Instant.now();
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "userAreas", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private Set<UserScopeEntity> scopeSelection = new HashSet<>();
+
+    @Override
+    public String getDisableQueryName(){
+        return DISABLE_USER_AREA_DUMMY_QUERY;
+    }
 
     @JsonProperty("scopeSelection")
     public List<String> getScopeSelectionAsString(){

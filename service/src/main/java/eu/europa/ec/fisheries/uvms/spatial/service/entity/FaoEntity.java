@@ -103,6 +103,11 @@ public class FaoEntity extends BaseAreaEntity {
     @Column(name = "f_label")
     private String fLabel;
 
+    @Override
+    public String getDisableQueryName(){
+        return DISABLE_FAO_AREAS;
+    }
+
     public Long getId() {
         return id;
     }

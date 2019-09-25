@@ -76,6 +76,11 @@ public class EezEntity extends BaseAreaEntity {
     @Column(name = "mrgid_eez")
     private Long mrgidEez;
 
+    @Override
+    public String getDisableQueryName(){
+        return DISABLE_EEZ_AREAS;
+    }
+
     public Long getId() {
         return id;
     }

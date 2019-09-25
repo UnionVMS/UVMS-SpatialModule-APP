@@ -15,7 +15,7 @@ public class AreaMapper {
     public static List<AreaSimpleType> mapToAreaSimpleType(List<? extends BaseAreaEntity> baseList, AreaType areaType){
         List<AreaSimpleType> responseList = new ArrayList<>();
         for (BaseAreaEntity area: baseList) {
-            AreaSimpleType areaSimpleType = new AreaSimpleType(areaType.value(), area.getCode(), area.getGeometry());
+            AreaSimpleType areaSimpleType = new AreaSimpleType(areaType.value(), area.getCode(), area.getGeometryWKT());
             responseList.add(areaSimpleType);
         }
         return responseList;
@@ -57,7 +57,7 @@ public class AreaMapper {
         BaseAreaDto dto = new BaseAreaDto();
         dto.setCode(entity.getCode());
         dto.setName(entity.getName());
-        dto.setGeometryWKT(entity.getGeometry());
+        dto.setGeometryWKT(entity.getGeometryWKT());
 
 
         return dto;

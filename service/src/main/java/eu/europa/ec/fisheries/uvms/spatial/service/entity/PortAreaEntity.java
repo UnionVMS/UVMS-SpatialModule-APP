@@ -46,6 +46,11 @@ public class PortAreaEntity extends BaseAreaEntity {
     @JsonProperty("gid")
     private Long id;
 
+    @Override
+    public String getDisableQueryName(){
+        return DISABLE_PORT_AREAS;
+    }
+
     public Long getId() {
         return id;
     }

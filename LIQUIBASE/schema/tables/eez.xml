@@ -27,7 +27,7 @@
             <column name="eez_id" type="BIGINT"/>
             <column name="code" type="VARCHAR(20)"/>
             <column name="mrgid" type="DOUBLE"/>
-            <column name="date_chang" type="VARCHAR(50)"/>
+            <column name="date_chang" type="VARCHAR(250)"/>
             <column name="area_m2" type="FLOAT"/>
             <column name="longitude" type="FLOAT"/>
             <column name="latitude" type="FLOAT"/>

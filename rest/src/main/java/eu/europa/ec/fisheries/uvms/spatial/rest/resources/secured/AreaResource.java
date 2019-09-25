@@ -84,7 +84,7 @@ public class AreaResource {
         PortDistanceInfoDto closestPort = areaServiceBean.findClosestPortByPosition(request.getPoint().getLatitude(), request.getPoint().getLongitude());
 
         if (closestPort != null){
-            Location location = new Location(String.valueOf(closestPort.getPort().getId()), String.valueOf(closestPort.getPort().getId()), LocationType.PORT, closestPort.getPort().getCode(), closestPort.getPort().getName(), closestPort.getDistance(), UnitType.METERS, closestPort.getPort().getCentroid(), closestPort.getPort().getGeometry(), closestPort.getPort().getExtent(), closestPort.getPort().getEnabled(), closestPort.getPort().getCountryCode());
+            Location location = new Location(String.valueOf(closestPort.getPort().getId()), String.valueOf(closestPort.getPort().getId()), LocationType.PORT, closestPort.getPort().getCode(), closestPort.getPort().getName(), closestPort.getDistance(), UnitType.METERS, closestPort.getPort().getCentroid(), closestPort.getPort().getGeometryWKT(), closestPort.getPort().getExtent(), closestPort.getPort().getEnabled(), closestPort.getPort().getCountryCode());
             ClosestLocationsType locationType = new ClosestLocationsType();
             locationType.getClosestLocations().add(location);
             response.setClosestLocations(locationType);
