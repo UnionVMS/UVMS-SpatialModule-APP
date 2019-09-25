@@ -255,7 +255,11 @@ public class FileUploadBean {
             Map<String, Object> values = EntityUtils.createAttributesMap(properties);
             newEntity = EntityUtils.populateAtributes(newEntity, values, mapping);
             if (newEntity.getName() == null || newEntity.getCode() == null){
-                throw new IllegalArgumentException("NAME AND CODE FIELD ARE MANDATORY");
+                if(newEntity.getName() == null && newEntity.getCode() != null){
+                    newEntity.setName(newEntity.getCode());
+                }else {
+                    throw new IllegalArgumentException("NAME AND CODE FIELD ARE MANDATORY");
+                }
             }
             newEntity = areaDao.create(newEntity);
 
