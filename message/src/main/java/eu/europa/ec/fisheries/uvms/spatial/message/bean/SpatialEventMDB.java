@@ -13,9 +13,12 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.message.bean;
 
 import eu.europa.ec.fisheries.uvms.commons.message.api.Fault;
+import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.JAXBUtils;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.*;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.carrier.EventMessage;
 import eu.europa.ec.fisheries.uvms.spatial.model.enums.FaultCode;
+import eu.europa.ec.fisheries.uvms.spatial.model.mapper.SpatialModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -43,6 +46,10 @@ import static eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants.Q
 })
 @Slf4j
 public class SpatialEventMDB implements MessageListener {
+	
+	@Inject
+    @SpatialMessageErrorEvent
+    private Event<EventMessage> errorEvent;
 
     @Inject
     @GetAreaByLocationEvent
@@ -174,11 +181,11 @@ public class SpatialEventMDB implements MessageListener {
                 default:
                     log.error("[ Not implemented method consumed: {} ]", method);
                     Fault fault = new Fault(FaultCode.SPATIAL_MESSAGE.getCode(), "Method not implemented");
-                    producer.sendFault(textMessage,fault);
+                    throw new MessageException(method + " Method not implemented");
             }
-        } catch (JMSException | JAXBException e) {
+        } catch (JMSException | JAXBException | MessageException e) {
             Fault fault = new Fault(FaultCode.SPATIAL_MESSAGE.getCode(), "ERROR OCCURRED IN SPATIAL MDB");
-            producer.sendFault(textMessage, fault);
+            errorEvent.fire(new EventMessage(textMessage, SpatialModuleResponseMapper.createFaultMessage(FaultCode.SPATIAL_MESSAGE, "Exception in spatial [ " + e.getMessage())));
         }
     }
 }

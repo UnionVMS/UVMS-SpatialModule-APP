@@ -20,6 +20,7 @@ import java.util.Arrays;
 
 import eu.europa.ec.fisheries.uvms.BaseUnitilsTest;
 import eu.europa.ec.fisheries.uvms.commons.message.api.Fault;
+import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.JAXBUtils;
 import eu.europa.ec.fisheries.uvms.spatial.message.bean.SpatialEventMDB;
 import eu.europa.ec.fisheries.uvms.spatial.message.bean.SpatialProducer;
@@ -81,7 +82,7 @@ public class SpatialEventMDBTest extends BaseUnitilsTest {
     TextMessage textMessage;
 
     @Test
-    public void testOnMessageWithGetAreaByLocation() throws SpatialModelMarshallException, JMSException {
+    public void testOnMessageWithGetAreaByLocation() throws SpatialModelMarshallException, JMSException, MessageException {
         PointType point = new PointType();
         point.setLongitude(LONGITUDE);
         point.setLatitude(LATITUDE);
@@ -100,7 +101,7 @@ public class SpatialEventMDBTest extends BaseUnitilsTest {
     }
 
     @Test
-    public void testOnMessageWithClosestAreaRequest() throws SpatialModelMarshallException, JMSException {
+    public void testOnMessageWithClosestAreaRequest() throws SpatialModelMarshallException, JMSException, MessageException {
         PointType point = new PointType();
         point.setLongitude(LONGITUDE);
         point.setLatitude(LATITUDE);
@@ -119,7 +120,7 @@ public class SpatialEventMDBTest extends BaseUnitilsTest {
     }
 
     @Test
-    public void testOnMessageWithClosestLocationRequest() throws SpatialModelMarshallException, JMSException {
+    public void testOnMessageWithClosestLocationRequest() throws SpatialModelMarshallException, JMSException, MessageException {
         PointType point = new PointType();
         point.setLongitude(LONGITUDE);
         point.setLatitude(LATITUDE);
@@ -138,7 +139,7 @@ public class SpatialEventMDBTest extends BaseUnitilsTest {
     }
 
     @Test
-    public void testOnMessageWithEnrichmentRequest() throws SpatialModelMarshallException, JMSException {
+    public void testOnMessageWithEnrichmentRequest() throws SpatialModelMarshallException, JMSException, MessageException {
         PointType point = new PointType();
         point.setLongitude(LONGITUDE);
         point.setLatitude(LATITUDE);
@@ -174,7 +175,7 @@ public class SpatialEventMDBTest extends BaseUnitilsTest {
     }
 
     @Test
-    public void testOnMessageWithFilterAreasMethod() throws SpatialModelMarshallException, JMSException {
+    public void testOnMessageWithFilterAreasMethod() throws SpatialModelMarshallException, JMSException, MessageException {
         AreaIdentifierType areaType = new AreaIdentifierType();
         areaType.setAreaType(AreaType.EEZ);
         areaType.setId("1");

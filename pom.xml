@@ -10,7 +10,7 @@
 
     <groupId>eu.europa.ec.fisheries.uvms.spatial</groupId>
     <artifactId>spatial</artifactId>
-    <version>1.1.14-SNAPSHOT</version>
+    <version>1.1.16.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <description>Maven project-archetype for UnionVms modules</description>
 
@@ -18,7 +18,7 @@
         <!-- The spatial name is used as a common point to rename the application alias visible in USM-->
         <spatial.name>Spatial</spatial.name>
         <docker.dev.version>3.29.0.w14</docker.dev.version>
-        <spatial.model>1.0.12</spatial.model>
+        <spatial.model>1.0.13-SNAPSHOT</spatial.model>
         <reporting.model>1.0.4</reporting.model>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -26,7 +26,7 @@
         <jackson.version>2.6.0</jackson.version>
         <logback.core.version>1.2.3</logback.core.version>
         <asset.model.version>4.0.0</asset.model.version>
-        <movement.model.version>4.0.9</movement.model.version>
+        <movement.model.version>5.1.8-SNAPSHOT</movement.model.version>
         <application.name>${project.parent.artifactId}</application.name>
         <application.version>${project.parent.version}</application.version>
         <application.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}.log</application.logfile>
@@ -45,9 +45,9 @@
         <mapstruct.version>1.2.0.Final</mapstruct.version>
 
         <!-- UVMS Libraries -->
-        <uvms.commons.version>3.3-W14J8</uvms.commons.version>
-        <usm4uvms.version>4.0.14-W14-J8</usm4uvms.version>
-        <uvms.config.version>4.1-W14J8</uvms.config.version>
+        <uvms.commons.version>3.4-SNAPSHOT</uvms.commons.version>
+        <usm4uvms.version>4.0.15.1-SNAPSHOT</usm4uvms.version>
+        <uvms.config.version>4.2-SNAPSHOT</uvms.config.version>
 
         <database.dialect>postgres</database.dialect>
         <scm.connection>scm:git:https://github.com/UnionVMS/UVMS-SpatialModule-APP.git</scm.connection>

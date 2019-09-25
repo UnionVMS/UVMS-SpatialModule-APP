@@ -12,6 +12,8 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.impl;
 
+import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageErrorEvent;
+import eu.europa.ec.fisheries.uvms.spatial.message.event.carrier.EventMessage;
 import eu.europa.ec.fisheries.uvms.commons.message.api.Fault;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.JAXBUtils;
 import eu.europa.ec.fisheries.uvms.spatial.message.bean.SpatialProducer;
@@ -28,7 +30,10 @@ import lombok.extern.slf4j.Slf4j;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
+import javax.inject.Inject;
+
 import java.util.List;
 
 @Stateless
@@ -37,6 +42,10 @@ import java.util.List;
 public class SpatialEventServiceBean {
 
     private static final String MODULE_NAME = "spatial";
+    
+    @Inject
+    @SpatialMessageErrorEvent
+    private Event<EventMessage> errorEvent;
 
     @EJB
     private SpatialService spatialService;
@@ -82,7 +91,7 @@ public class SpatialEventServiceBean {
 
     private void sendError(SpatialMessageEvent message, Exception e) {
         log.error("[ Error in spatial module. ] ", e);
-        messageProducer.sendFault(message.getMessage(), new Fault(FaultCode.SPATIAL_MESSAGE.getCode(),"Exception in spatial [ " + e.getMessage()));
+        errorEvent.fire(new EventMessage(message.getMessage(), SpatialModuleResponseMapper.createFaultMessage(FaultCode.SPATIAL_MESSAGE, "Exception in spatial [ " + e.getMessage())));
     }
 
 
