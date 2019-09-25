@@ -89,7 +89,6 @@ public class BaseAreaEntity {
         return "";
     }
 
-    @JsonIgnore
     public Long getId(){
         return null;
     }
@@ -103,6 +102,7 @@ public class BaseAreaEntity {
         return geometryType;
     }
 
+    @JsonIgnore
     public String getExtent() {
         String extent = null;
         if (geom != null) {
@@ -111,6 +111,7 @@ public class BaseAreaEntity {
         return extent;
     }
 
+    @JsonIgnore
     public String getCentroid(){
         String centroid = null;
         if (geom != null) {

@@ -82,7 +82,7 @@ public class FileUploadBeanTest extends TransactionalTests {
         assertEquals(15, response.getFile().size());
         assertEquals(1, response.getAdditionalProperties().keySet().size());
         assertTrue(response.getAdditionalProperties().keySet().contains("ref"));
-        assertEquals(createdEntity.getId(), (long)response.getAdditionalProperties().get("ref"));
+        assertEquals(createdEntity.getId(), Long.valueOf((String)response.getAdditionalProperties().get("ref")).longValue());
     }
 
     @Test(expected = EJBTransactionRolledbackException.class)
@@ -92,10 +92,10 @@ public class FileUploadBeanTest extends TransactionalTests {
     }
 
 
-    @Test(expected = EJBTransactionRolledbackException.class)
+    @Test(expected = EJBTransactionRolledbackException.class )
     public void upsertReferenceDataNonexistantRefMappingTest() throws IOException {
         AreaUploadMapping mapping = new AreaUploadMapping();
-        mapping.getAdditionalProperties().put("ref", -1);
+        mapping.getAdditionalProperties().put("ref", "-1");
         fileUploadBean.upsertReferenceData(mapping, 4326);
     }
 

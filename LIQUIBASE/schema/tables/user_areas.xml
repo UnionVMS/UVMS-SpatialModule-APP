@@ -71,26 +71,4 @@
         </createProcedure>		
     </changeSet>	
 	
-	
-<!--	<changeSet author="dubduan" id="18k7997k70s-31" dbms="postgresql">
-	
-        <createProcedure>
-
-            CREATE OR REPLACE FUNCTION inc_user_areas_sq()
-            RETURNS "trigger" AS
-            $BODY$
-            BEGIN
-            New.gid:=nextval('user_areas_seq');
-            Return NEW;
-            END;
-            $BODY$
-            LANGUAGE 'plpgsql' VOLATILE;
-
-            CREATE TRIGGER trg_user_areas
-            before insert on user_areas
-            for each row EXECUTE procedure inc_user_areas_sq()
-			
-        </createProcedure>			
-    </changeSet>-->
-	
 </databaseChangeLog>

@@ -86,7 +86,7 @@ public class FileUploadBean {
             response.getDomain().addAll(getAreaEntityMetadata(areaUpdate.getAreaType()));
 
             response.getFile().addAll(getShapeFileMetadata(areaUpdate));
-            response.withAdditionalProperty("ref", areaUpdate.getId());
+            response.withAdditionalProperty("ref", "" + areaUpdate.getId());
 
         } catch (Exception ex) {
             throw new RuntimeException("Invalid upload area data.", ex);
@@ -182,7 +182,7 @@ public class FileUploadBean {
     /*------------------- Upsert Reference Data ----------------------*/
 
     public void upsertReferenceData(final AreaUploadMapping mapping, final Integer incomingSrid) throws IOException {
-        long ref = ((Integer) mapping.getAdditionalProperties().get("ref")).longValue();
+        long ref = Long.valueOf((String) mapping.getAdditionalProperties().get("ref"));
         AreaUpdateEntity updateEntity = areaDao.find(AreaUpdateEntity.class, ref);
         if(updateEntity == null){
             throw new IllegalArgumentException("Reference for uploaded data is missing/invalid");
@@ -202,7 +202,7 @@ public class FileUploadBean {
         for (BaseAreaEntity entity : createdEntitys) {
             if(!entity.getGeom().isValid()){
 
-                throw new IllegalArgumentException("Area nammed " + entity.getName() + " with code " + entity.getCode() + " is not valid. Its geometry is: " + entity.getGeometryWKT());
+                throw new IllegalArgumentException("Area named " + entity.getName() + " with code " + entity.getCode() + " is not valid. Its geometry is: " + entity.getGeometryWKT());
             }
         }
         updateEntity.setProcessCompleted(true);
