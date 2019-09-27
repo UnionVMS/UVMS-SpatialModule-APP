@@ -106,9 +106,11 @@ public class FileUploadBean {
 
         List<AreaUploadProperty> domain = new ArrayList<>();
         for (Field field : properties) {
-            AreaUploadProperty uploadProperty = new AreaUploadProperty();
-            uploadProperty.withName(field.getName()).withType(field.getType().getSimpleName());
-            domain.add(uploadProperty);
+            if(!field.getName().equals("id")) {     //you should not be able to set the internal id field
+                AreaUploadProperty uploadProperty = new AreaUploadProperty();
+                uploadProperty.withName(field.getName()).withType(field.getType().getSimpleName());
+                domain.add(uploadProperty);
+            }
         }
 
         return domain;
@@ -139,7 +141,7 @@ public class FileUploadBean {
                     case "geom":
                         break;
                     default:
-                        properties.add(new AreaUploadProperty().withName(localPart).withType(attributeDescriptor.getType().getBinding().getSimpleName())); // TODO nullpointer checks
+                        properties.add(new AreaUploadProperty().withName(localPart).withType(attributeDescriptor.getType().getBinding().getSimpleName()).withExampleValue(next.getAttribute(localPart))); // TODO nullpointer checks
                 }
             }
 

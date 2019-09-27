@@ -50,7 +50,7 @@ public class FileUploadRestResourceTest extends BuildSpatialRestDeployment {
         AreaUploadMetadata response = om.readValue(stringResponse, AreaUploadMetadata.class);       //for some reason the client always uses jsonb despite us saying that it should use jackson, and we use a jackson-specific annotation.
 
         assertThat(response, is(notNullValue()));
-        assertEquals(12, response.getDomain().size());
+        assertEquals(11, response.getDomain().size());
         assertEquals(15, response.getFile().size());
         assertEquals(1, response.getAdditionalProperties().keySet().size());
         assertTrue(response.getAdditionalProperties().keySet().contains("ref"));

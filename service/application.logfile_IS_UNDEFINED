@@ -490,3 +490,33 @@ Caused by: java.net.ConnectException: WFLYPRT0023: Could not connect to remote+h
 2019-09-25 10:16:47.876  [34mINFO [0;39m [36mxnio.<clinit>(95)[0;39m [main]  INFO  [MDC:] org.xnio - XNIO version 3.5.1.Final
 2019-09-25 10:16:47.887  [34mINFO [0;39m [36mnio.<clinit>(58)[0;39m [main]  INFO  [MDC:] org.xnio.nio - XNIO NIO Implementation Version 3.5.1.Final
 2019-09-25 10:16:47.961  [34mINFO [0;39m [36msecurity.<clinit>(57)[0;39m [main]  INFO  [MDC:] org.wildfly.security - ELY00001: WildFly Elytron version 1.1.0.Final
+2019-09-27 13:03:25.239  [34mINFO [0;39m [36mReflections.scan(232)[0;39m [main]  INFO  [MDC:] org.reflections.Reflections - Reflections took 145 ms to scan 1 urls, producing 6 keys and 12 values 
+2019-09-27 13:03:33.344  [34mINFO [0;39m [36mremoting.<clinit>(98)[0;39m [main]  INFO  [MDC:] org.jboss.remoting - JBoss Remoting version 5.0.0.Final
+2019-09-27 13:03:33.392  [34mINFO [0;39m [36mxnio.<clinit>(95)[0;39m [main]  INFO  [MDC:] org.xnio - XNIO version 3.5.1.Final
+2019-09-27 13:03:33.403  [34mINFO [0;39m [36mnio.<clinit>(58)[0;39m [main]  INFO  [MDC:] org.xnio.nio - XNIO NIO Implementation Version 3.5.1.Final
+2019-09-27 13:03:33.509  [34mINFO [0;39m [36msecurity.<clinit>(57)[0;39m [main]  INFO  [MDC:] org.wildfly.security - ELY00001: WildFly Elytron version 1.1.0.Final
+2019-09-27 13:13:19.866  [34mINFO [0;39m [36mReflections.scan(232)[0;39m [main]  INFO  [MDC:] org.reflections.Reflections - Reflections took 115 ms to scan 1 urls, producing 6 keys and 12 values 
+2019-09-27 13:13:27.841  [34mINFO [0;39m [36mremoting.<clinit>(98)[0;39m [main]  INFO  [MDC:] org.jboss.remoting - JBoss Remoting version 5.0.0.Final
+2019-09-27 13:13:27.888  [34mINFO [0;39m [36mxnio.<clinit>(95)[0;39m [main]  INFO  [MDC:] org.xnio - XNIO version 3.5.1.Final
+2019-09-27 13:13:27.898  [34mINFO [0;39m [36mnio.<clinit>(58)[0;39m [main]  INFO  [MDC:] org.xnio.nio - XNIO NIO Implementation Version 3.5.1.Final
+2019-09-27 13:13:28.000  [34mINFO [0;39m [36msecurity.<clinit>(57)[0;39m [main]  INFO  [MDC:] org.wildfly.security - ELY00001: WildFly Elytron version 1.1.0.Final
+2019-09-27 13:19:59.452  [34mINFO [0;39m [36mReflections.scan(232)[0;39m [main]  INFO  [MDC:] org.reflections.Reflections - Reflections took 130 ms to scan 1 urls, producing 6 keys and 12 values 
+2019-09-27 13:20:07.177  [34mINFO [0;39m [36mremoting.<clinit>(98)[0;39m [main]  INFO  [MDC:] org.jboss.remoting - JBoss Remoting version 5.0.0.Final
+2019-09-27 13:20:07.232  [34mINFO [0;39m [36mxnio.<clinit>(95)[0;39m [main]  INFO  [MDC:] org.xnio - XNIO version 3.5.1.Final
+2019-09-27 13:20:07.244  [34mINFO [0;39m [36mnio.<clinit>(58)[0;39m [main]  INFO  [MDC:] org.xnio.nio - XNIO NIO Implementation Version 3.5.1.Final
+2019-09-27 13:20:07.331  [34mINFO [0;39m [36msecurity.<clinit>(57)[0;39m [main]  INFO  [MDC:] org.wildfly.security - ELY00001: WildFly Elytron version 1.1.0.Final
+2019-09-27 13:20:43.191  [34mINFO [0;39m [36mReflections.scan(232)[0;39m [main]  INFO  [MDC:] org.reflections.Reflections - Reflections took 128 ms to scan 1 urls, producing 6 keys and 12 values 
+2019-09-27 13:20:50.617  [34mINFO [0;39m [36mremoting.<clinit>(98)[0;39m [main]  INFO  [MDC:] org.jboss.remoting - JBoss Remoting version 5.0.0.Final
+2019-09-27 13:20:50.662  [34mINFO [0;39m [36mxnio.<clinit>(95)[0;39m [main]  INFO  [MDC:] org.xnio - XNIO version 3.5.1.Final
+2019-09-27 13:20:50.674  [34mINFO [0;39m [36mnio.<clinit>(58)[0;39m [main]  INFO  [MDC:] org.xnio.nio - XNIO NIO Implementation Version 3.5.1.Final
+2019-09-27 13:20:50.758  [34mINFO [0;39m [36msecurity.<clinit>(57)[0;39m [main]  INFO  [MDC:] org.wildfly.security - ELY00001: WildFly Elytron version 1.1.0.Final
+2019-09-27 13:26:37.846  [34mINFO [0;39m [36mReflections.scan(232)[0;39m [main]  INFO  [MDC:] org.reflections.Reflections - Reflections took 139 ms to scan 1 urls, producing 6 keys and 12 values 
+2019-09-27 13:26:45.887  [34mINFO [0;39m [36mremoting.<clinit>(98)[0;39m [main]  INFO  [MDC:] org.jboss.remoting - JBoss Remoting version 5.0.0.Final
+2019-09-27 13:26:45.933  [34mINFO [0;39m [36mxnio.<clinit>(95)[0;39m [main]  INFO  [MDC:] org.xnio - XNIO version 3.5.1.Final
+2019-09-27 13:26:45.943  [34mINFO [0;39m [36mnio.<clinit>(58)[0;39m [main]  INFO  [MDC:] org.xnio.nio - XNIO NIO Implementation Version 3.5.1.Final
+2019-09-27 13:26:46.047  [34mINFO [0;39m [36msecurity.<clinit>(57)[0;39m [main]  INFO  [MDC:] org.wildfly.security - ELY00001: WildFly Elytron version 1.1.0.Final
+2019-09-27 13:27:19.268  [34mINFO [0;39m [36mReflections.scan(232)[0;39m [main]  INFO  [MDC:] org.reflections.Reflections - Reflections took 128 ms to scan 1 urls, producing 6 keys and 12 values 
+2019-09-27 13:27:26.583  [34mINFO [0;39m [36mremoting.<clinit>(98)[0;39m [main]  INFO  [MDC:] org.jboss.remoting - JBoss Remoting version 5.0.0.Final
+2019-09-27 13:27:26.628  [34mINFO [0;39m [36mxnio.<clinit>(95)[0;39m [main]  INFO  [MDC:] org.xnio - XNIO version 3.5.1.Final
+2019-09-27 13:27:26.639  [34mINFO [0;39m [36mnio.<clinit>(58)[0;39m [main]  INFO  [MDC:] org.xnio.nio - XNIO NIO Implementation Version 3.5.1.Final
+2019-09-27 13:27:26.731  [34mINFO [0;39m [36msecurity.<clinit>(57)[0;39m [main]  INFO  [MDC:] org.wildfly.security - ELY00001: WildFly Elytron version 1.1.0.Final
