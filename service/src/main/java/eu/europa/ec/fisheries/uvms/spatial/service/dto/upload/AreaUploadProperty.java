@@ -26,7 +26,7 @@ public class AreaUploadProperty {
 
     private String name;
     private String type;
-    private Object value;
+    private Object exampleValue;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<>();
 
@@ -41,12 +41,12 @@ public class AreaUploadProperty {
      * 
      * @param name
      * @param type
-     * @param value
+     * @param exampleValue
      */
-    public AreaUploadProperty(String name, String type, String value) {
+    public AreaUploadProperty(String name, String type, String exampleValue) {
         this.name = name;
         this.type = type;
-        this.value = value;
+        this.exampleValue = exampleValue;
 
     }
 
@@ -101,21 +101,21 @@ public class AreaUploadProperty {
      * @return
      *     The value
      */
-    public Object getValue() {
-        return value;
+    public Object getExampleValue() {
+        return exampleValue;
     }
 
     /**
      *
-     * @param value
+     * @param exampleValue
      *     The value
      */
-    public void setValue(Object value) {
-        this.value = value;
+    public void setExampleValue(Object exampleValue) {
+        this.exampleValue = exampleValue;
     }
 
-    public AreaUploadProperty withValue(Object value) {
-        this.value = value;
+    public AreaUploadProperty withExampleValue(Object value) {
+        this.exampleValue = value;
         return this;
     }
 

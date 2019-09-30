@@ -46,7 +46,7 @@ public class FileUploadBeanTest extends TransactionalTests {
     @Test
     public void getAreaEntityEEZMetadataTest(){
         List<AreaUploadProperty> areaMetadata = fileUploadBean.getAreaEntityMetadata("EEZ");
-        assertEquals(12, areaMetadata.size());
+        assertEquals(11, areaMetadata.size());
         assertTrue(areaMetadata.stream().anyMatch(property -> "country".equals(property.getName())));
         assertTrue(areaMetadata.stream().anyMatch(property -> "mrGid".equals(property.getName())));
         assertTrue(areaMetadata.stream().anyMatch(property -> "eezId".equals(property.getName())));
@@ -55,7 +55,7 @@ public class FileUploadBeanTest extends TransactionalTests {
     @Test
     public void getAreaEntityFAOMetadataTest(){
         List<AreaUploadProperty> areaMetadata = fileUploadBean.getAreaEntityMetadata("FAO");
-        assertEquals(21, areaMetadata.size());
+        assertEquals(20, areaMetadata.size());
         assertTrue(areaMetadata.stream().anyMatch(property -> "ocean".equals(property.getName())));
         assertTrue(areaMetadata.stream().anyMatch(property -> "fLabel".equals(property.getName())));
         assertTrue(areaMetadata.stream().anyMatch(property -> "fArea".equals(property.getName())));
@@ -67,10 +67,14 @@ public class FileUploadBeanTest extends TransactionalTests {
 
         List<AreaUploadProperty> properties = fileUploadBean.getShapeFileMetadata(createdEntity);
         assertEquals(15, properties.size());
-        assertTrue(properties.stream().anyMatch(property -> "OMR_ID".equals(property.getName())));
-        assertTrue(properties.stream().anyMatch(property -> "OMR_NAMN".equals(property.getName())));
-        assertTrue(properties.stream().anyMatch(property -> "OMR_UPPANV".equals(property.getName())));
-        assertTrue(properties.stream().anyMatch(property -> "OMR_GEOM_B".equals(property.getName())));
+        assertTrue(properties.stream().anyMatch(property -> "OMR_ID".equals(property.getName()) && 117627.0 == (double)property.getExampleValue()));
+        assertTrue(properties.stream().anyMatch(property -> "OMR_NAMN".equals(property.getName()) && "Bratten MPA".equals(property.getExampleValue())));
+        assertTrue(properties.stream().anyMatch(property -> "OMR_UPPANV".equals(property.getName()) && "STITHO".equals(property.getExampleValue())));
+        assertTrue(properties.stream().anyMatch(property -> "OMR_GEOM_B".equals(property.getName()) && ("Punkt Latitud N\tLongitud E\tLatitud N      Longitud E\n" +
+                "1. NV\t58.58333\t10.27120\t   58°35.00000'\t10°16.27200'\n" +
+                "2. NO\t58.58333\t10.70000\t  58°35.00000'   10°42.00000'\n" +
+                "3. SO\t58.26667\t10.70000\t   58°16.00000'\t  10°42.00000'\n" +
+                "4. SV\t58.26667\t10.02860\t    58°16.000").equals(property.getExampleValue())));
     }
 
     @Test
@@ -78,7 +82,7 @@ public class FileUploadBeanTest extends TransactionalTests {
         AreaUpdateEntity createdEntity = createAreaUpdateEntity("EEZ");
 
         AreaUploadMetadata response = fileUploadBean.getShapeFileAndAreaMetadata(createdEntity);
-        assertEquals(12, response.getDomain().size());
+        assertEquals(11, response.getDomain().size());
         assertEquals(15, response.getFile().size());
         assertEquals(1, response.getAdditionalProperties().keySet().size());
         assertTrue(response.getAdditionalProperties().keySet().contains("ref"));
