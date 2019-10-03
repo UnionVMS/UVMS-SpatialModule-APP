@@ -36,7 +36,15 @@
         <dispatcher>REQUEST</dispatcher>
         <dispatcher>ASYNC</dispatcher>
     </filter-mapping>
-
+    <filter>
+        <filter-name>RequestFilter</filter-name>
+        <filter-class>eu.europa.ec.fisheries.uvms.spatial.rest.util.RequestFilter</filter-class>
+        <async-supported>true</async-supported>
+    </filter>
+    <filter-mapping>
+        <filter-name>RequestFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
     <filter-mapping>
         <filter-name>AuthenticationFilter</filter-name>
         <url-pattern>/rest/*</url-pattern>
@@ -46,17 +54,8 @@
         <filter-class>eu.europa.ec.fisheries.uvms.rest.security.AuthenticationFilter</filter-class>
     </filter>
 
-
-
-
     <context-param>
         <param-name>usmApplication</param-name>
         <param-value>Spatialswe</param-value>
     </context-param>
-
-
-
-
-
-
 </web-app>
