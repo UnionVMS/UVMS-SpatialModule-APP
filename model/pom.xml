@@ -58,14 +58,6 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.9</version>
         </dependency>
-
-        <dependency>
-            <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
-            <artifactId>uvms-commons-message</artifactId>
-            <version>${uvms.commons.version}</version>
-        </dependency>
-
-
     </dependencies>
 
 
