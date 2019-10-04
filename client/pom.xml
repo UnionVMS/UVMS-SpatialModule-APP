@@ -1,28 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
     <parent>
-        <artifactId>spatialSwe</artifactId>
         <groupId>eu.europa.ec.fisheries.uvms.spatialSwe</groupId>
+        <artifactId>spatialSwe</artifactId>
         <version>2.0.9-UVMS-SNAPSHOT</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
 
     <artifactId>spatial-client</artifactId>
     <name>spatial-client</name>
     <packaging>jar</packaging>
     <description>This module has classes for communicating with the spatial module over REST</description>
 
+    <properties>
+        <docker.dev.start.phase>test-compile</docker.dev.start.phase>
+        <docker.liquibase.phase>test-compile</docker.liquibase.phase>
+        <docker.dev.stop.phase>verify</docker.dev.stop.phase>
+    </properties>
+
     <dependencies>
         <!-- UVMS dependencies -->
-        <dependency>
-            <groupId>eu.europa.ec.fisheries.uvms.spatialSwe</groupId>
-            <artifactId>spatial-model</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms</groupId>
             <artifactId>usm4uvms</artifactId>
             <version>${usm4uvms.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>eu.europa.ec.fisheries.uvms.spatialSwe</groupId>
+            <artifactId>spatial-model</artifactId>
         </dependency>
 
 
@@ -51,6 +58,21 @@
             <artifactId>uvms-pom-arquillian-deps</artifactId>
             <type>pom</type>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>service</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>rest</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+            <type>war</type>
         </dependency>
     </dependencies>
 

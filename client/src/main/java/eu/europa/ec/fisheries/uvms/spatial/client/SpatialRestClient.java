@@ -11,7 +11,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.spatial.client;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
@@ -20,7 +19,10 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
-import javax.ws.rs.client.*;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ContextResolver;
@@ -60,19 +62,10 @@ public class SpatialRestClient {
         geometryByPortCodeRequest.setPortCode(portCode);
         geometryByPortCodeRequest.setMethod(method);
 
-        ObjectMapper om = new ObjectMapper();
-        String jsonRequest = "";
-        try {
-            jsonRequest = om.writeValueAsString(geometryByPortCodeRequest);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-
-        Invocation.Builder builder = webTarget
+        Response response = webTarget
                 .path("getGeometryByPortCode")
-                .request(MediaType.APPLICATION_JSON);
-
-        Response response = builder.post(Entity.json(jsonRequest), Response.class);
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(geometryByPortCodeRequest), Response.class);
 
         GeometryByPortCodeResponse geometryByPortCodeResponse = response.readEntity(GeometryByPortCodeResponse.class);
         return geometryByPortCodeResponse.getPortGeometry();
@@ -87,19 +80,10 @@ public class SpatialRestClient {
         filterAreasSpatialRQ.setScopeAreas(scopeAreas);
         filterAreasSpatialRQ.setUserAreas(userAreas);
 
-        ObjectMapper om = new ObjectMapper();
-        String jsonRequest = "";
-        try {
-            jsonRequest = om.writeValueAsString(filterAreasSpatialRQ);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-
-        Invocation.Builder builder = webTarget
+        Response response = webTarget
                 .path("getFilterArea")
-                .request(MediaType.APPLICATION_JSON);
-
-        Response response = builder.post(Entity.json(jsonRequest), Response.class);
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(filterAreasSpatialRQ), Response.class);
 
         FilterAreasSpatialRS filterAreasSpatialRS = response.readEntity(FilterAreasSpatialRS.class);
         return filterAreasSpatialRS.getGeometry();

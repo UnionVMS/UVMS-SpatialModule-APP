@@ -1,10 +1,19 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured;
 
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.MultiPoint;
+import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.impl.CoordinateArraySequence;
+import com.vividsolutions.jts.io.ParseException;
 import eu.europa.ec.fisheries.schema.movement.v1.MovementPoint;
 import eu.europa.ec.fisheries.schema.movement.v1.MovementType;
 import eu.europa.ec.fisheries.schema.movement.v1.SegmentCategoryType;
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaTransitionsDTO;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GeometryByPortCodeRequest;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GeometryByPortCodeResponse;
 import eu.europa.ec.fisheries.uvms.spatial.rest.BuildSpatialRestDeployment;
+import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaTransitionsDTO;
+import eu.europa.ec.fisheries.uvms.spatial.service.utils.GeometryUtils;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
@@ -271,6 +280,32 @@ public class SpatialRestResourceTest extends BuildSpatialRestDeployment {
         assertFalse(response.getSpatialEnrichmentRS().getAreasByLocation().getAreas().isEmpty());
     }
 
+    @Test
+    public void getGeometryByPortCode() throws ParseException {
+
+        GeometryByPortCodeRequest request = new GeometryByPortCodeRequest();
+        request.setPortCode("ESVGO");
+
+        Response response =  getWebTarget()
+                .path("json")
+                .path("getGeometryByPortCode")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(request), Response.class);
+
+        assertEquals(200, response.getStatus());
+
+        GeometryByPortCodeResponse geometryByPortCodeResponse = response.readEntity(GeometryByPortCodeResponse.class);
+        String portGeometry = geometryByPortCodeResponse.getPortGeometry();
+
+        Coordinate coordinate = new Coordinate(-8.718, 42.242);
+        CoordinateArraySequence sequence = new CoordinateArraySequence(new Coordinate[]{coordinate});
+        GeometryFactory geometryFactory = new GeometryFactory();
+        Point point = new Point(sequence, geometryFactory);
+        MultiPoint multiPoint = new MultiPoint(new Point[]{point}, geometryFactory);
+
+        MultiPoint responseMultipoint = (MultiPoint) GeometryUtils.wktToGeometry(portGeometry);
+        assertEquals(multiPoint, responseMultipoint);
+    }
 
 
     /*      HELPERS     */
