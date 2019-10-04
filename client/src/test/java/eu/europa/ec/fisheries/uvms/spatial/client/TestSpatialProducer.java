@@ -20,7 +20,7 @@ import javax.jms.Destination;
 import javax.jms.Queue;
 
 @Stateless
-public class SpatialProducer extends AbstractProducer {
+public class TestSpatialProducer extends AbstractProducer {
 
     @Resource(mappedName =  "java:/" + MessageConstants.QUEUE_SPATIAL)
     private Queue destination;

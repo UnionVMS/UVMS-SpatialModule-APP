@@ -20,7 +20,7 @@ import java.util.Collections;
 public class ConfigServiceMock implements MessageListener {
 
     @Inject
-    private SpatialProducer producer;
+    private TestSpatialProducer producer;
     
     @Override
     public void onMessage(Message message) {
