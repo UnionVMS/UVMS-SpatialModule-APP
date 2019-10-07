@@ -16,27 +16,27 @@
                 <constraints primaryKey="true" primaryKeyName="fao_pkey"/>
             </column>
             <column name="geom" type="GEOMETRY(Multipolygon, 4326)"/>
-            <column name="ocean" type="VARCHAR(250)"/>
-            <column name="subocean" type="VARCHAR(250)"/>
-            <column name="f_area" type="VARCHAR(250)"/>
-            <column name="name" type="VARCHAR(250)"/>
-            <column name="area_l" type="VARCHAR(250)"/>
-            <column name="f_subarea" type="VARCHAR(250)"/>
-            <column name="subarea_n" type="VARCHAR(250)"/>
-            <column name="subarea_l" type="VARCHAR(250)"/>
-            <column name="f_division" type="VARCHAR(250)"/>
-            <column name="division_n" type="VARCHAR(250)"/>
-            <column name="division_l" type="VARCHAR(250)"/>
-            <column name="f_subdivis" type="VARCHAR(250)"/>
-            <column name="subdivis_n" type="VARCHAR(250)"/>
-            <column name="subdivis_l" type="VARCHAR(250)"/>
-            <column name="f_subunit" type="VARCHAR(250)"/>
-            <column name="subunit_n" type="VARCHAR(250)"/>
-            <column name="subunit_l" type="VARCHAR(250)"/>
-            <column name="ele_name" type="VARCHAR(250)"/>
-            <column name="ele_label" type="VARCHAR(250)"/>
-            <column name="ele_type" type="VARCHAR(250)"/>
-            <column name="f_label" type="VARCHAR(250)"/>
+            <column name="ocean" type="VARCHAR(50)"/>
+            <column name="subocean" type="VARCHAR(50)"/>
+            <column name="f_area" type="VARCHAR(50)"/>
+            <column name="name" type="VARCHAR(50)"/>
+            <column name="area_l" type="VARCHAR(50)"/>
+            <column name="f_subarea" type="VARCHAR(50)"/>
+            <column name="subarea_n" type="VARCHAR(50)"/>
+            <column name="subarea_l" type="VARCHAR(50)"/>
+            <column name="f_division" type="VARCHAR(50)"/>
+            <column name="division_n" type="VARCHAR(50)"/>
+            <column name="division_l" type="VARCHAR(50)"/>
+            <column name="f_subdivis" type="VARCHAR(50)"/>
+            <column name="subdivis_n" type="VARCHAR(50)"/>
+            <column name="subdivis_l" type="VARCHAR(50)"/>
+            <column name="f_subunit" type="VARCHAR(50)"/>
+            <column name="subunit_n" type="VARCHAR(50)"/>
+            <column name="subunit_l" type="VARCHAR(50)"/>
+            <column name="ele_name" type="VARCHAR(50)"/>
+            <column name="ele_label" type="VARCHAR(50)"/>
+            <column name="ele_type" type="VARCHAR(50)"/>
+            <column name="f_label" type="VARCHAR(16)"/>
             <column name="code" type="VARCHAR(20)"/>
             <column name="enabled" type="boolean">
                 <constraints nullable="false"/>
