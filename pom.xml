@@ -43,7 +43,7 @@
         <maven.scm.provider.version>2.1.1</maven.scm.provider.version>
         <javaee.version>8.0</javaee.version>
         <mapstruct.version>1.2.0.Final</mapstruct.version>
-        <uvms.config.version>4.0.4</uvms.config.version>
+        <uvms.config.version>4.0.5</uvms.config.version>
         <database.dialect>postgres</database.dialect>
         <scm.connection>scm:git:https://github.com/UnionVMS/UVMS-SpatialModule-APP.git</scm.connection>
         <installAtEnd>false</installAtEnd>
