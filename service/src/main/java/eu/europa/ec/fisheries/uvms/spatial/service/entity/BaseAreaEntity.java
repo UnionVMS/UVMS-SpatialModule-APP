@@ -15,11 +15,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.InstantSerializer;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.io.WKTWriter;
 import eu.europa.ec.fisheries.uvms.spatial.model.SpatialInstantDeserializer;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.BaseAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.utils.GeometryUtils;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.io.WKTWriter;
 
 import javax.persistence.*;
 import java.time.Instant;

@@ -10,7 +10,6 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
-import com.vividsolutions.jts.io.ParseException;
 import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialFeaturesEnum;
 import eu.europa.ec.fisheries.uvms.spatial.rest.constants.ErrorCodes;
@@ -21,6 +20,7 @@ import eu.europa.ec.fisheries.uvms.spatial.rest.util.UserAreaMapper;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaServiceBean;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.AreaDao;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity;
+import org.locationtech.jts.io.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

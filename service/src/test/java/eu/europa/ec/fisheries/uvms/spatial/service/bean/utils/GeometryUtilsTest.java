@@ -1,12 +1,12 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.utils;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.TransactionalTests;
 import eu.europa.ec.fisheries.uvms.spatial.service.utils.GeometryUtils;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.Point;
 
 import static org.junit.Assert.assertEquals;
 

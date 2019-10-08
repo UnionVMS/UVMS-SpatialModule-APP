@@ -17,9 +17,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.InstantSerializer;
-import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.spatial.model.SpatialInstantDeserializer;
 import org.hibernate.annotations.Where;
+import org.locationtech.jts.geom.Geometry;
 
 import javax.persistence.*;
 import java.time.Instant;

@@ -11,13 +11,13 @@ details. You should have received a copy of the GNU General Public License along
 
  */
 
-import com.vividsolutions.jts.geom.*;
-import com.vividsolutions.jts.io.ParseException;
-import com.vividsolutions.jts.io.WKTReader;
-import com.vividsolutions.jts.io.WKTWriter;
 import org.apache.commons.collections.CollectionUtils;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.CRS;
+import org.locationtech.jts.geom.*;
+import org.locationtech.jts.io.ParseException;
+import org.locationtech.jts.io.WKTReader;
+import org.locationtech.jts.io.WKTWriter;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
@@ -61,7 +61,7 @@ public class GeometryUtils {
     public static String calculateBuffer(final Double latitude, final Double longitude, final Double buffer) {
 
         GeometryFactory gf = new GeometryFactory();
-        Point point = gf.createPoint(new com.vividsolutions.jts.geom.Coordinate(longitude, latitude));
+        Point point = gf.createPoint(new Coordinate(longitude, latitude));
         Geometry geometry = point.buffer(buffer);
         return geometryToWkt(geometry);
 

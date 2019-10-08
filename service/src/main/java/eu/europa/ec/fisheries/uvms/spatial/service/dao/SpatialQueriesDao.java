@@ -1,7 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.dao;
 
-import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.BaseAreaDto;
+import org.locationtech.jts.geom.Point;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;

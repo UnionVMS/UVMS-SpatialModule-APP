@@ -1,10 +1,10 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.util;
 
-import com.vividsolutions.jts.io.ParseException;
 import eu.europa.ec.fisheries.uvms.movement.model.util.DateUtil;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.UserAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.utils.GeometryUtils;
+import org.locationtech.jts.io.ParseException;
 
 import java.time.Instant;
 
