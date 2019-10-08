@@ -14,5 +14,6 @@
     <include file="v2.0.0\db-changelog-addDbFunctionForSpatialFunctions.xml" relativeToChangelogFile="true"/>
     <include file="v2.0.1\db-changelog-addIndexes.xml" relativeToChangelogFile="true"/>
     <include file="v2.0.6\db-changelog-addTableAreaUpdate.xml" relativeToChangelogFile="true"/>
+    <include file="v2.0.10\db-changelog-changeDBTypesOnSomeAreaEntitys.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
