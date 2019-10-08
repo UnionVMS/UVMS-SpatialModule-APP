@@ -65,7 +65,7 @@ public class BaseAreaEntity extends BaseEntity {
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "enabled_on")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DateUtils.DATE_TIME_UI_FORMAT)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private Date enabledOn;
 
     public String getGeometry(){

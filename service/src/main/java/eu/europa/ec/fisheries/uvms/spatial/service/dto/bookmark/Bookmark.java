@@ -227,9 +227,9 @@ public class Bookmark implements Comparable<Bookmark> {
     }
 
     @Override public int compareTo(Bookmark o) {
-        if (stringToDate(this.createdBy).before(stringToDate(o.createdBy))) {
+        if (stringToDate(this.createdBy).isBefore(stringToDate(o.createdBy))) {
             return 1;
-        } else if (stringToDate(this.createdBy).after(stringToDate(o.createdBy))) {
+        } else if (stringToDate(this.createdBy).isAfter(stringToDate(o.createdBy))) {
             return -1;
         } else return 0;
     }

@@ -51,7 +51,7 @@ public class UserAreaGeoJsonDto extends GeoJsonDto {
 
     public void setStartDate(Date startDate) {
         if (startDate != null) {
-            properties.put(START_DATE, DateUtils.dateToString(startDate));
+            properties.put(START_DATE, DateUtils.dateToString(startDate.toInstant()));
         }
     }
 
@@ -61,7 +61,7 @@ public class UserAreaGeoJsonDto extends GeoJsonDto {
 
     public void setEndDate(Date startDate) {
         if (startDate != null) {
-            properties.put(END_DATE, DateUtils.dateToString(startDate));
+            properties.put(END_DATE, DateUtils.dateToString(startDate.toInstant()));
         }
     }
 
