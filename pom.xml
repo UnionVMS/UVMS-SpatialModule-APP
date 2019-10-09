@@ -10,7 +10,7 @@
 
     <groupId>eu.europa.ec.fisheries.uvms.spatialSwe</groupId>
     <artifactId>spatialSwe</artifactId>
-    <version>2.0.12-UVMS</version>
+    <version>2.0.13-UVMS-SNAPSHOT</version>
     <packaging>pom</packaging>
     <description>Maven project-archetype for UnionVms modules</description>
 
@@ -200,7 +200,7 @@
 
     <scm>
         <connection>${scm.connection}</connection>
-        <tag>spatialSwe-2.0.12-UVMS</tag>
+        <tag>HEAD</tag>
     </scm>
 
 
