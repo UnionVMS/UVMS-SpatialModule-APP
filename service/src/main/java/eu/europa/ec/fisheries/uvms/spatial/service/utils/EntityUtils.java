@@ -11,10 +11,10 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.service.utils;
 
 import com.google.common.collect.Maps;
-import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.AreaUploadMappingProperty;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.*;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.locationtech.jts.geom.Geometry;
 import org.opengis.feature.Property;
 
 import java.lang.reflect.Field;

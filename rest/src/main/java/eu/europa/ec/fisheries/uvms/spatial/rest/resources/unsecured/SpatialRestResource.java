@@ -1,7 +1,5 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured;
 
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.io.WKTReader;
 import eu.europa.ec.fisheries.schema.movement.v1.MovementType;
 import eu.europa.ec.fisheries.schema.movement.v1.SegmentCategoryType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
@@ -16,6 +14,8 @@ import eu.europa.ec.fisheries.uvms.spatial.service.entity.PortEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.utils.AreaMapper;
 import eu.europa.ec.fisheries.uvms.spatial.service.utils.GeometryUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.io.WKTReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

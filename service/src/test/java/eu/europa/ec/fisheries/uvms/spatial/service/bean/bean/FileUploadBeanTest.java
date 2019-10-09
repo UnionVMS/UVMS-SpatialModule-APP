@@ -1,6 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.bean;
 
-import com.vividsolutions.jts.geom.Geometry;
+import org.locationtech.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.FileUploadBean;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.TestZipFile;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.TransactionalTests;

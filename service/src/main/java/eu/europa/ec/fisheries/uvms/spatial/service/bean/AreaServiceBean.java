@@ -11,7 +11,6 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.AreaDao;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.AreaLocationTypesDao;
@@ -25,6 +24,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.utils.AreaMapper;
 import eu.europa.ec.fisheries.uvms.spatial.service.utils.GeometryUtils;
 import eu.europa.ec.fisheries.uvms.spatial.service.utils.MeasurementUnit;
+import org.locationtech.jts.geom.Point;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;

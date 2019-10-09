@@ -1,6 +1,5 @@
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
-import com.vividsolutions.jts.geom.Geometry;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.AreaDao;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.AreaLocationTypesDao;
@@ -27,6 +26,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.StatelessSession;
 import org.hibernate.Transaction;
+import org.locationtech.jts.geom.Geometry;
 import org.opengis.feature.Property;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;

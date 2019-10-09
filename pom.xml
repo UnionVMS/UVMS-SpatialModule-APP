@@ -17,7 +17,7 @@
   <properties>
         <!-- The spatial name is used as a common point to rename the application alias visible in USM-->
         <spatial.name>Spatial</spatial.name>
-        <docker.dev.version>3.39.4.w17</docker.dev.version>
+        <docker.dev.version>3.39.14.w18</docker.dev.version>
         <docker.liquibase.changeLogFile>LIQUIBASE/changelog/db-changelog-master.xml</docker.liquibase.changeLogFile>
         <docker.liquibase.db.user>spatial</docker.liquibase.db.user>
         <docker.liquibase.db.passwd>spatial</docker.liquibase.db.passwd>
@@ -30,7 +30,7 @@
         <application.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}.log</application.logfile>
         <application.error.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}-error.log</application.error.logfile>
         <application.logfile.boot>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}-boot.log</application.logfile.boot>
-        <geotools.version>14.4</geotools.version>
+        <geotools.version>22.0</geotools.version>
         <uvms.commons.version>4.0.4</uvms.commons.version>
         <usm4uvms.version>4.0.23</usm4uvms.version>
         <usm_deployment_descriptor_force_update>false</usm_deployment_descriptor_force_update>
