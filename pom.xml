@@ -213,12 +213,6 @@
                 <version>${mapstruct.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>javax</groupId>
-                <artifactId>javaee-api</artifactId>
-                <version>${javaee.version}</version>
-                <scope>provided</scope>
-            </dependency>
 	        <dependency>
 	            <groupId>ch.qos.logback</groupId>
 	            <artifactId>logback-classic</artifactId>
