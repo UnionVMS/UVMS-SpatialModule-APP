@@ -12,8 +12,6 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.mapper;
 
-import static eu.europa.ec.fisheries.uvms.commons.date.DateUtils.DATE_TIME_UI_FORMAT;
-
 import java.util.List;
 import java.util.Set;
 
@@ -34,8 +32,8 @@ public abstract class UserAreaMapper {
             @Mapping(target = "type", source = "subType"),
             @Mapping(target = "areaDesc", source = "desc"),
             @Mapping(source = "geometry", target = "geom"),
-            @Mapping(target = "startDate", dateFormat = DATE_TIME_UI_FORMAT),
-            @Mapping(target = "endDate", dateFormat = DATE_TIME_UI_FORMAT),
+            @Mapping(target = "startDate", dateFormat = "yyyy-MM-dd'T'HH:mm:ss"),
+            @Mapping(target = "endDate", dateFormat = "yyyy-MM-dd'T'HH:mm:ss"),
             @Mapping(target = "scopeSelection", expression = "java(fromScopeArrayToEntity(userAreaDto.getScopeSelection()))"),
     })
     public abstract UserAreasEntity fromDtoToEntity(UserAreaGeoJsonDto userAreaDto);

@@ -35,7 +35,7 @@
         <application.error.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}-error.log</application.error.logfile>
         <application.logfile.boot>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}-boot.log</application.logfile.boot>
         <geotools.version>14.4</geotools.version>
-        <uvms.commons.version>4.0.0</uvms.commons.version>
+        <uvms.commons.version>4.0.5</uvms.commons.version>
         <uvms.test.version>0.0.8</uvms.test.version>
         <usm4uvms.version>4.0.19</usm4uvms.version>
         <usm_deployment_descriptor_force_update>false</usm_deployment_descriptor_force_update>
@@ -43,7 +43,8 @@
         <maven.scm.provider.version>2.1.1</maven.scm.provider.version>
         <javaee.version>8.0</javaee.version>
         <mapstruct.version>1.2.0.Final</mapstruct.version>
-        <uvms.config.version>4.0.4</uvms.config.version>
+        <lombok.version>1.16.18</lombok.version>
+        <uvms.config.version>4.0.5</uvms.config.version>
         <database.dialect>postgres</database.dialect>
         <scm.connection>scm:git:https://github.com/UnionVMS/UVMS-SpatialModule-APP.git</scm.connection>
         <installAtEnd>false</installAtEnd>
@@ -55,6 +56,11 @@
 		<dependency>
 			<groupId>javax</groupId>
 			<artifactId>javaee-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>${lombok.version}</version>
 		</dependency>
 	</dependencies>
 
@@ -125,13 +131,6 @@
                 <groupId>eu.europa.ec.fisheries.uvms.spatial</groupId>
                 <artifactId>spatial-model</artifactId>
                 <version>${spatial.model}</version>
-            </dependency>
-
-
-            <dependency>
-                <groupId>io.jsonwebtoken</groupId>
-                <artifactId>jjwt</artifactId>
-                <version>0.4</version>
             </dependency>
 
             <dependency>

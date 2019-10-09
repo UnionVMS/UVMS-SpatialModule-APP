@@ -90,7 +90,7 @@ public class ImageResource extends UnionVMSResource {
     public Response renderImages(@Context HttpServletRequest request, Icons payload) throws ServiceException {
 
         ImageResponse response = new ImageResponse();
-        response.getLegend().withBase("/" + propertiesBean.getProperty("context.root") + "/spatial/image/legend/");
+        response.getLegend().withBase("/" + propertiesBean.getProperty("context.root") + "spatial/image/legend/");
 
         if (payload.getPositions() != null){
             handlePositions(payload, response);
@@ -132,7 +132,7 @@ public class ImageResource extends UnionVMSResource {
 
     private void handlePositions(Icons payload, ImageResponse response) throws ServiceException {
         try {
-            response.getMap().getVmspos().withBase("/" + propertiesBean.getProperty("context.root") + "/spatial/image/position/");
+            response.getMap().getVmspos().withBase("/" + propertiesBean.getProperty("context.root") + "spatial/image/position/");
             List<ImageEncoderFactory.LegendEntry> temp = new ArrayList<>();
 
             for (Class clazz : payload.getPositions().getClasses()) { // TODO validate hex value
