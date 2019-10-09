@@ -15,7 +15,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.dao;
 import com.ninja_squad.dbsetup.DbSetup;
 import com.ninja_squad.dbsetup.destination.DataSourceDestination;
 import com.ninja_squad.dbsetup.operation.Operation;
-import com.vividsolutions.jts.geom.Point;
+import org.locationtech.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.utility.BaseSpatialDaoTest;
 import lombok.SneakyThrows;

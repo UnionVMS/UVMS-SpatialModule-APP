@@ -11,7 +11,7 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.impl;
 
-import static com.vividsolutions.jts.operation.distance.DistanceOp.nearestPoints;
+import static org.locationtech.jts.operation.distance.DistanceOp.nearestPoints;
 import static eu.europa.ec.fisheries.uvms.commons.geometry.utils.GeometryUtils.isDefaultEpsgSRID;
 import static org.geotools.geometry.jts.JTS.orthodromicDistance;
 
@@ -40,10 +40,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.simplify.DouglasPeuckerSimplifier;
 import eu.europa.ec.fisheries.uvms.commons.domain.BaseEntity;
 import eu.europa.ec.fisheries.uvms.commons.geometry.mapper.GeometryMapper;
 import eu.europa.ec.fisheries.uvms.commons.geometry.utils.GeometryUtils;
@@ -423,7 +423,7 @@ public class AreaServiceBean implements AreaService {
                     if (geom.isEmpty()){
                         continue;
                     }
-                    com.vividsolutions.jts.geom.Coordinate[] coordinates = nearestPoints(geom, incoming);
+                    org.locationtech.jts.geom.Coordinate[] coordinates = nearestPoints(geom, incoming);
                     Double orthodromicDistance = orthodromicDistance(coordinates[0], coordinates[1], GeometryUtils.toDefaultCoordinateReferenceSystem());
                     String type = result[0].toString();
                     Area closest = distancePerTypeMap.get(type);

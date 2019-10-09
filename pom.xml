@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>fish.focus.uvms.maven</groupId>
 		<artifactId>uvms-pom</artifactId>
-		<version>1.24</version>
+		<version>2.2</version>
 	</parent>
 
     <groupId>eu.europa.ec.fisheries.uvms.spatial</groupId>
@@ -17,7 +17,7 @@
   <properties>
         <!-- The spatial name is used as a common point to rename the application alias visible in USM-->
         <spatial.name>Spatial</spatial.name>
-        <docker.dev.version>3.39.8.w17</docker.dev.version>
+        <docker.dev.version>3.39.14.w18</docker.dev.version>
         <docker.liquibase.changeLogFile>LIQUIBASE/changelog/db-changelog-master.xml</docker.liquibase.changeLogFile>
         <docker.liquibase.db.user>spatial</docker.liquibase.db.user>
         <docker.liquibase.db.passwd>spatial</docker.liquibase.db.passwd>
@@ -34,9 +34,9 @@
         <application.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}.log</application.logfile>
         <application.error.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}-error.log</application.error.logfile>
         <application.logfile.boot>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}-boot.log</application.logfile.boot>
-        <geotools.version>14.4</geotools.version>
-        <uvms.commons.version>4.0.5</uvms.commons.version>
-        <uvms.test.version>0.0.8</uvms.test.version>
+        <geotools.version>22.0</geotools.version>
+        <uvms.commons.version>4.0.6</uvms.commons.version>
+        <uvms.test.version>0.0.9</uvms.test.version>
         <usm4uvms.version>4.0.19</usm4uvms.version>
         <usm_deployment_descriptor_force_update>false</usm_deployment_descriptor_force_update>
         <release.branch.name>uvms-1.0.0</release.branch.name>
@@ -54,8 +54,9 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>javax</groupId>
-			<artifactId>javaee-api</artifactId>
+			<groupId>jakarta.platform</groupId>
+			<artifactId>jakarta.jakartaee-api</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -69,25 +70,25 @@
 			<dependency>
 				<groupId>fish.focus.uvms.maven</groupId>
 				<artifactId>uvms-pom-monitoring-deps</artifactId>
-				<version>1.24</version>
+				<version>2.2</version>
 				<type>pom</type>
 			</dependency>
 			<dependency>
 				<groupId>fish.focus.uvms.maven</groupId>
 				<artifactId>uvms-pom-gis-deps</artifactId>
-				<version>1.24</version>
+				<version>2.2</version>
 				<type>pom</type>
 			</dependency>
 			<dependency>
 				<groupId>fish.focus.uvms.maven</groupId>
 				<artifactId>uvms-pom-test-deps</artifactId>
-				<version>1.24</version>
+				<version>2.2</version>
 				<type>pom</type>
 			</dependency>
 			<dependency>
 				<groupId>fish.focus.uvms.maven</groupId>
 				<artifactId>uvms-pom-arquillian-deps</artifactId>
-				<version>1.24</version>
+				<version>2.2</version>
 				<type>pom</type>
 			</dependency>
 
@@ -170,7 +171,7 @@
                 <version>${geotools.version}</version>
                 <exclusions>
                     <exclusion>
-                        <groupId>com.vividsolutions</groupId>
+                        <groupId>org.locationtech</groupId>
                         <artifactId>jts</artifactId>
                     </exclusion>
                 </exclusions>

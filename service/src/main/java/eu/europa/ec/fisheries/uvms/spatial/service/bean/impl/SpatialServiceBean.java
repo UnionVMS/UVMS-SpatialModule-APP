@@ -20,9 +20,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.Point;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.commons.geometry.mapper.GeometryMapper;
 import eu.europa.ec.fisheries.uvms.commons.service.interceptor.TracingInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.SpatialRepository;
@@ -71,7 +71,7 @@ public class SpatialServiceBean implements SpatialService {
     public String calculateBuffer(final Double latitude, final Double longitude, final Double buffer) {
 
         GeometryFactory gf = new GeometryFactory();
-        Point point = gf.createPoint(new com.vividsolutions.jts.geom.Coordinate(longitude, latitude));
+        Point point = gf.createPoint(new org.locationtech.jts.geom.Coordinate(longitude, latitude));
         Geometry geometry = point.buffer(buffer);
         return GeometryMapper.INSTANCE.geometryToWkt(geometry).getValue();
 

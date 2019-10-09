@@ -24,8 +24,8 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Maps;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.io.WKTWriter;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.io.WKTWriter;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.commons.domain.BaseEntity;
 import eu.europa.ec.fisheries.uvms.commons.domain.CharBooleanConverter;
@@ -52,6 +52,7 @@ public class BaseAreaEntity extends BaseEntity {
     private static final String UTF_8 = "UTF-8";
 
     @JsonIgnore
+    @Column(columnDefinition = "Geometry")
     private Geometry geom;
 
     private String name;

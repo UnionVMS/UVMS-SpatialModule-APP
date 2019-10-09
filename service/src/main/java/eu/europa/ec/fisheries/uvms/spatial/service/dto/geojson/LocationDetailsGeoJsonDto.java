@@ -12,8 +12,8 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.dto.geojson;
 
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.io.ParseException;
+import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.io.ParseException;
 import org.opengis.feature.simple.SimpleFeature;
 
 public class LocationDetailsGeoJsonDto extends GeoJsonDto {
