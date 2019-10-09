@@ -1,7 +1,8 @@
 <databaseChangeLog
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd"
+        logicalFilePath="schema/tables/area_location_types.xml">
 
     <changeSet author="emrinalgr" id="1439890745706-51">
         <createSequence cycle="false" incrementBy="1" maxValue="9223372036854775807" minValue="1"

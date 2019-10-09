@@ -2,7 +2,8 @@
 
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd"
+				   logicalFilePath="changelog/v0.1/db-changelog-insertStaticValues_0.1.xml">
 				   
     <include file="..\..\schema\initdata\provider_format_init.xml" relativeToChangelogFile="true"/>
 	<include file="..\..\schema\initdata\service_layer_init.xml" relativeToChangelogFile="true"/>
