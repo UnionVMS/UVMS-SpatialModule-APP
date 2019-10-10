@@ -145,6 +145,20 @@
                 <artifactId>uvms-test</artifactId>
                 <version>${uvms.test.version}</version>
                 <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.jboss.arquillian</groupId>
+                        <artifactId>arquillian-bom</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.jboss.shrinkwrap.resolver</groupId>
+                        <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.jboss.arquillian.junit</groupId>
+                        <artifactId>arquillian-junit-container</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <dependency>
