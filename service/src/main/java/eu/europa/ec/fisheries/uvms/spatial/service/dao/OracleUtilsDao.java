@@ -15,7 +15,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.dao;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-import com.vividsolutions.jts.geom.MultiPoint;
+import org.locationtech.jts.geom.MultiPoint;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.NotImplementedException;
 

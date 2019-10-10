@@ -15,8 +15,8 @@ package eu.europa.ec.fisheries.uvms.spatial.service.dao;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.MultiPoint;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.MultiPoint;
 import org.hibernate.SQLQuery;
 import org.hibernate.spatial.JTSGeometryType;
 import org.hibernate.spatial.dialect.postgis.PGGeometryTypeDescriptor;
