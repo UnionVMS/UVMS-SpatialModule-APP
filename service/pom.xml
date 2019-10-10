@@ -38,16 +38,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-impl</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-core</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>eu.europa.ec.fisheries.uvms</groupId>
             <artifactId>uvms-config</artifactId>
         </dependency>
