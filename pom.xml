@@ -2,15 +2,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>fish.focus.uvms.maven</groupId>
-		<artifactId>uvms-pom</artifactId>
-		<version>1.21</version>
-	</parent>
+  <parent>
+    <groupId>eu.europa.ec.fisheries.uvms</groupId>
+    <artifactId>mare-pom</artifactId>
+    <version>1.6.0-MARE</version>
+    <relativePath />
+  </parent>
 
     <groupId>eu.europa.ec.fisheries.uvms.spatial</groupId>
     <artifactId>spatial</artifactId>
-    <version>1.1.16.1-SNAPSHOT</version>
+    <version>${uvms.spatial.module.version}</version>
     <packaging>pom</packaging>
     <description>Maven project-archetype for UnionVms modules</description>
 
@@ -18,15 +19,24 @@
         <!-- The spatial name is used as a common point to rename the application alias visible in USM-->
         <spatial.name>Spatial</spatial.name>
         <docker.dev.version>3.29.0.w14</docker.dev.version>
-        <spatial.model>1.0.13-SNAPSHOT</spatial.model>
-        <reporting.model>1.0.4</reporting.model>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <jts.version>1.13</jts.version>
         <jackson.version>2.6.0</jackson.version>
         <logback.core.version>1.2.3</logback.core.version>
-        <asset.model.version>4.0.0</asset.model.version>
-        <movement.model.version>5.1.8-SNAPSHOT</movement.model.version>
+        
+        <spatial.model>${uvms.spatial.model.version}</spatial.model>
+        <reporting.model>${uvms.reporting.model.version}</reporting.model>
+        <asset.model.version>${uvms.asset.module.version}</asset.model.version>
+        <movement.model.version>${uvms.movement.module.version}</movement.model.version>
+
+        <uvms.test.version>0.0.8</uvms.test.version>
+
+        <!-- UVMS Libraries -->
+        <uvms.commons.version>${uvms.commonsLibrary.version}</uvms.commons.version>
+        <usm4uvms.version>${uvms.uvms4usm.version}</usm4uvms.version>
+        <uvms.config.version>${uvms.config.library.version}</uvms.config.version>
+
         <application.name>${project.parent.artifactId}</application.name>
         <application.version>${project.parent.version}</application.version>
         <application.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}.log</application.logfile>
@@ -35,7 +45,6 @@
         <hibernate.version>4.3.11.Final</hibernate.version>
         <hibernate-spatial.version>4.3</hibernate-spatial.version>
         <geotools.version>14.4</geotools.version>
-        <uvms.test.version>0.0.8</uvms.test.version>
         <hibernate.validator.version>4.3.2.Final</hibernate.validator.version>
 
         <usm_deployment_descriptor_force_update>false</usm_deployment_descriptor_force_update>
@@ -43,11 +52,6 @@
         <maven.scm.provider.version>2.1.1</maven.scm.provider.version>
         <javaee.version>8.0</javaee.version>
         <mapstruct.version>1.2.0.Final</mapstruct.version>
-
-        <!-- UVMS Libraries -->
-        <uvms.commons.version>3.4-SNAPSHOT</uvms.commons.version>
-        <usm4uvms.version>4.0.15.1-SNAPSHOT</usm4uvms.version>
-        <uvms.config.version>4.2-SNAPSHOT</uvms.config.version>
 
         <database.dialect>postgres</database.dialect>
         <scm.connection>scm:git:https://github.com/UnionVMS/UVMS-SpatialModule-APP.git</scm.connection>
