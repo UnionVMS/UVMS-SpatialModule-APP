@@ -4,7 +4,7 @@
                    logicalFilePath="changelog/v2.0.14/db-changelog-changePostgisStorageOfLargeAreas.xml">
 
     <changeSet author="joemat" id="Change Postgis Storage Of Large Areas">
-        <!-- In short, change so that large (ie with many points) areas is not compressed when stored.
+        <!-- In short, change so that large (ie with many points) areas are not compressed when stored.
                        For more info, see: http://blog.cleverelephant.ca/2018/09/postgis-external-storage.html-->
         <sql
                 splitStatements="false"
