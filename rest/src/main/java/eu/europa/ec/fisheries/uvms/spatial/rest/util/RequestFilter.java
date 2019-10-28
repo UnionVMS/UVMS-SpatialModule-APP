@@ -49,31 +49,26 @@ public class RequestFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse res, FilterChain chain) throws IOException, ServletException {
-
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-        final String HOST = httpServletRequest.getHeader("HOST");
+        String origin = httpServletRequest.getHeader("ORIGIN");
 
-        boolean isValid = validateHost(HOST);
+        if(origin != null && validateOrigin(origin)) {
+            HttpServletResponse response = (HttpServletResponse) res;
+            response.setHeader(RestConstants.ACCESS_CONTROL_ALLOW_ORIGIN, origin);
+            response.setHeader(RestConstants.ACCESS_CONTROL_ALLOW_METHODS, RestConstants.ACCESS_CONTROL_ALLOWED_METHODS);
+            response.setHeader(RestConstants.ACCESS_CONTROL_ALLOW_HEADERS, RestConstants.ACCESS_CONTROL_ALLOW_HEADERS_ALL);
 
-        if (!isValid)
-            throw new ForbiddenException("You are not allowed to make any request from an external domain. Your Host: " + HOST);
-
-        HttpServletResponse response = (HttpServletResponse) res;
-        response.setHeader(RestConstants.ACCESS_CONTROL_ALLOW_ORIGIN, HOST);
-        response.setHeader(RestConstants.ACCESS_CONTROL_ALLOW_METHODS, RestConstants.ACCESS_CONTROL_ALLOWED_METHODS);
-        response.setHeader(RestConstants.ACCESS_CONTROL_ALLOW_HEADERS, RestConstants.ACCESS_CONTROL_ALLOW_HEADERS_ALL);
-
-        if (httpServletRequest.getMethod().equals("OPTIONS")) {
-            response.setStatus(200);
-            return;
+            if (httpServletRequest.getMethod().equals("OPTIONS")) {
+                response.setStatus(200);
+                return;
+            }
         }
-
         chain.doFilter(request, res);
     }
 
-    private boolean validateHost(String host) {
+    private boolean validateOrigin(String origin) {
         Pattern pattern = Pattern.compile(corsOriginRegex);
-        Matcher matcher = pattern.matcher(host);
+        Matcher matcher = pattern.matcher(origin);
         return matcher.matches();
     }
 
