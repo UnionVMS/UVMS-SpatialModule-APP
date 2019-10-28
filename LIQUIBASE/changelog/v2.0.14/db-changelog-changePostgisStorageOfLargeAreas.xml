@@ -1,0 +1,35 @@
+<databaseChangeLog xmlns='http://www.liquibase.org/xml/ns/dbchangelog'
+  xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+  xsi:schemaLocation='http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd'
+                   logicalFilePath="changelog/v2.0.14/db-changelog-changePostgisStorageOfLargeAreas.xml">
+
+    <changeSet author="joemat" id="Change Postgis Storage Of Large Areas">
+        <!-- In short, change so that large (ie with many points) areas are not compressed when stored.
+                       For more info, see: http://blog.cleverelephant.ca/2018/09/postgis-external-storage.html-->
+        <sql
+                splitStatements="false"
+                stripComments="false">
+            ALTER TABLE spatial.eez
+            ALTER COLUMN geom
+            SET STORAGE EXTERNAL;
+
+            UPDATE spatial.eez
+            SET geom = ST_SetSRID(geom, 4326);
+
+            ALTER TABLE spatial.fao
+            ALTER COLUMN geom
+            SET STORAGE EXTERNAL;
+
+            UPDATE spatial.fao
+            SET geom = ST_SetSRID(geom, 4326);
+
+            ALTER TABLE spatial.rfmo
+            ALTER COLUMN geom
+            SET STORAGE EXTERNAL;
+
+            UPDATE spatial.rfmo
+            SET geom = ST_SetSRID(geom, 4326);
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
