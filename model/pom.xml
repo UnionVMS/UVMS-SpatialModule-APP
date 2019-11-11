@@ -27,7 +27,6 @@
         <dependency>
             <groupId>fish.focus.uvms.maven</groupId>
             <artifactId>uvms-pom-test-deps</artifactId>
-            <version>1.24</version>
             <type>pom</type>
         </dependency>
 
@@ -53,6 +52,12 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.9</version>
         </dependency>
+
+        <dependency>
+            <groupId>fish.focus.uvms.maven</groupId>
+            <artifactId>uvms-pom-java11-deps</artifactId>
+            <type>pom</type>
+        </dependency>
     </dependencies>
 
 
@@ -67,7 +72,7 @@
                     <plugin>
                         <groupId>org.jvnet.jaxb2.maven2</groupId>
                         <artifactId>maven-jaxb2-plugin</artifactId>
-                        <version>0.12.3</version>
+                        <version>0.14.0</version>
                         <executions>
                             <execution>
                                 <phase>generate-sources</phase>
