@@ -232,20 +232,20 @@
                     <artifactId>maven-project-info-reports-plugin</artifactId>
                     <version>2.9</version>
                 </plugin>
-                <plugin>
+                <!--plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
-                    <version>2.0.4</version>
+                    <version>3.2.0</version>
                     <executions>
                         <execution>
-                            <!-- This id must match the -Prelease-profile id value or else sources will be "uploaded" twice, which causes Nexus to fail -->
-                            <id>attach-sources</id>
+                            < This id must match the -Prelease-profile id value or else sources will be "uploaded" twice, which causes Nexus to fail -->
+                            <!--id>attach-sources</id>
                             <goals>
                                 <goal>jar</goal>
                             </goals>
                         </execution>
                     </executions>
-                </plugin>
+                </plugin-->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-ejb-plugin</artifactId>
