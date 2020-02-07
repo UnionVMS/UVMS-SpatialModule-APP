@@ -1,12 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest;
 
-import java.io.File;
-import java.util.Arrays;
-import javax.ejb.EJB;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
-
+import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
 import eu.europa.ec.fisheries.uvms.rest.security.InternalRestTokenHandler;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import eu.europa.ec.mare.usm.jwt.JwtTokenHandler;
@@ -16,8 +10,13 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
+
+import javax.ejb.EJB;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
+import java.io.File;
+import java.util.Arrays;
 
 @ArquillianSuiteDeployment
 public abstract class BuildSpatialRestDeployment {
@@ -58,16 +57,14 @@ public abstract class BuildSpatialRestDeployment {
     }
 
     protected WebTarget getWebTarget() {
-        ObjectMapper objectMapper = new ObjectMapper();
         Client client = ClientBuilder.newClient();
-        client.register(new JacksonJaxbJsonProvider(objectMapper, JacksonJaxbJsonProvider.DEFAULT_ANNOTATIONS));
-        return client.target("http://localhost:28080/test/spatialnonsecure");
+        client.register(JsonBConfigurator.class);
+        return client.target("http://localhost:8080/test/spatialnonsecure");
     }
     
     protected WebTarget getSecuredWebTarget() {
-        ObjectMapper objectMapper = new ObjectMapper();
         Client client = ClientBuilder.newClient();
-        client.register(new JacksonJaxbJsonProvider(objectMapper, JacksonJaxbJsonProvider.DEFAULT_ANNOTATIONS));
+        client.register(JsonBConfigurator.class);
         return client.target("http://localhost:8080/test/rest");
     }
 

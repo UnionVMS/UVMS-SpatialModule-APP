@@ -12,15 +12,11 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.ser.InstantSerializer;
-import eu.europa.ec.fisheries.uvms.spatial.model.SpatialInstantDeserializer;
 import org.hibernate.annotations.Where;
 import org.locationtech.jts.geom.Geometry;
 
+import javax.json.bind.annotation.JsonbProperty;
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
 import java.time.Instant;
 import java.util.*;
@@ -67,13 +63,9 @@ public class UserAreasEntity extends BaseAreaEntity {
     @Column(name = "type")
     private String type;
 
-    @JsonSerialize(using = InstantSerializer.class)
-    @JsonDeserialize(using = SpatialInstantDeserializer.class)
     @Column(name = "start_date")
     private Instant startDate = Instant.now();
 
-    @JsonSerialize(using = InstantSerializer.class)
-    @JsonDeserialize(using = SpatialInstantDeserializer.class)
     @Column(name = "end_date")
     private Instant endDate = Instant.parse("2100-01-01T00:00:00.000Z");
 
@@ -86,13 +78,12 @@ public class UserAreasEntity extends BaseAreaEntity {
     @Column(columnDefinition = "text", name = "dataset_name")
     private String datasetName;
 
-    @JsonSerialize(using = InstantSerializer.class)
-    @JsonDeserialize(using = SpatialInstantDeserializer.class)
     @Column(name = "created_on", nullable = false)
     private Instant createdOn = Instant.now();
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "userAreas", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
+    //@JsonIgnore
+    @JsonbTransient
     private Set<UserScopeEntity> scopeSelection = new HashSet<>();
 
     @Override
@@ -100,7 +91,8 @@ public class UserAreasEntity extends BaseAreaEntity {
         return DISABLE_USER_AREA_DUMMY_QUERY;
     }
 
-    @JsonProperty("scopeSelection")
+    //@JsonProperty("scopeSelection")
+    @JsonbProperty("scopeSelection")
     public List<String> getScopeSelectionAsString(){
         List<String> list = new ArrayList<>();
         if (isNotEmpty(scopeSelection)){

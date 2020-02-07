@@ -11,8 +11,7 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
+import javax.json.bind.annotation.JsonbProperty;
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -44,7 +43,8 @@ public class PortEntity extends BaseAreaEntity {
 	@Column(name = "gid")
 	@SequenceGenerator(name="SEQ_PORT_GEN", sequenceName="port_seq", allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_PORT_GEN")
-    @JsonProperty("gid")
+    @JsonbProperty("gid")
+    //@JsonProperty("gid")
     private Long id;
 	
     @Column(name = "country_code", length = 3)

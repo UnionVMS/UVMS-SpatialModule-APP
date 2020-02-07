@@ -11,8 +11,7 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
+import javax.json.bind.annotation.JsonbProperty;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -42,7 +41,8 @@ public class EezEntity extends BaseAreaEntity {
 	@Column(name = "gid")
 	@SequenceGenerator(name="SEQ_EEZ_GEN", sequenceName="eez_seq", allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_EEZ_GEN")
-    @JsonProperty("gid")
+    //@JsonProperty("gid")
+    @JsonbProperty("gid")
     private Long id;
 	
     @Column(length = 100)

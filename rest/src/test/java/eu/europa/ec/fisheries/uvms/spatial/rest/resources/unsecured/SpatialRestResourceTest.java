@@ -3,6 +3,7 @@ package eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured;
 import eu.europa.ec.fisheries.schema.movement.v1.MovementPoint;
 import eu.europa.ec.fisheries.schema.movement.v1.MovementType;
 import eu.europa.ec.fisheries.schema.movement.v1.SegmentCategoryType;
+import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GeometryByPortCodeRequest;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GeometryByPortCodeResponse;
 import eu.europa.ec.fisheries.uvms.spatial.rest.BuildSpatialRestDeployment;
@@ -19,6 +20,7 @@ import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.impl.CoordinateArraySequence;
 import org.locationtech.jts.io.ParseException;
 
+import javax.json.bind.Jsonb;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
@@ -31,7 +33,7 @@ import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
-@RunAsClient
+//@RunAsClient
 @RunWith(Arquillian.class)
 public class SpatialRestResourceTest extends BuildSpatialRestDeployment {
 
@@ -114,7 +116,7 @@ public class SpatialRestResourceTest extends BuildSpatialRestDeployment {
 
 
     @Test
-    public void getSegmentCategoryTypeJumpTest() throws Exception{
+    public void getSegmentCategoryTypeJumpTest() {
 
 
         MovementType move1 = createBasicMovementType(-15.301291d, 47.006736d);
@@ -124,6 +126,10 @@ public class SpatialRestResourceTest extends BuildSpatialRestDeployment {
         input.add(move1);
         input.add(move2);
 
+        Jsonb jsonb = new JsonBConfigurator().getContext(null);
+        String json = jsonb.toJson(input);
+
+        List<MovementType> tmp = jsonb.fromJson(json, new ArrayList<MovementType>(){}.getClass().getGenericSuperclass());
 
         SegmentCategoryType output = getSegmentCategoryType(input);
 
@@ -131,7 +137,7 @@ public class SpatialRestResourceTest extends BuildSpatialRestDeployment {
     }
 
     @Test
-    public void getSegmentCategoryTypeInPortTest() throws Exception{
+    public void getSegmentCategoryTypeInPortTest() {
 
 
         MovementType move1 = createBasicMovementType(11.922098, 57.700490);
@@ -319,7 +325,7 @@ public class SpatialRestResourceTest extends BuildSpatialRestDeployment {
                 .post(Entity.json(request), Response.class);
 
         assertEquals(200, response.getStatus());
-        return response.readEntity(new GenericType<SegmentCategoryType>() {});
+        return response.readEntity(SegmentCategoryType.class);
     }
 
 
@@ -336,7 +342,8 @@ public class SpatialRestResourceTest extends BuildSpatialRestDeployment {
                 .get(Response.class);
 
         assertEquals(200 ,response.getStatus());
-        return response.readEntity(new GenericType<AreaTransitionsDTO>() {});
+        //return response.readEntity(new GenericType<AreaTransitionsDTO>() {});
+        return response.readEntity(AreaTransitionsDTO.class);
     }
 
     private MovementType createBasicMovementType(double lon, double lat){

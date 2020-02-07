@@ -11,9 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.spatial.client;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
+import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 
 import javax.annotation.PostConstruct;
@@ -25,7 +23,6 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ContextResolver;
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
@@ -45,15 +42,7 @@ public class SpatialRestClient {
         clientBuilder.connectTimeout(30, TimeUnit.SECONDS);
         clientBuilder.readTimeout(30, TimeUnit.SECONDS);
         Client client = clientBuilder.build();
-        client.register(new ContextResolver<ObjectMapper>() {
-            @Override
-            public ObjectMapper getContext(Class<?> type) {
-                ObjectMapper mapper = new ObjectMapper();
-                mapper.registerModule(new JaxbAnnotationModule());
-                mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-                return mapper;
-            }
-        });
+        client.register(JsonBConfigurator.class);
         webTarget = client.target(url);
     }
 

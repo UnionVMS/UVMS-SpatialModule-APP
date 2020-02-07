@@ -10,7 +10,6 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.service.dto.upload;
 
-import com.fasterxml.jackson.annotation.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -21,7 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class AreaUploadMetadata {
 
     @Valid
@@ -29,7 +27,7 @@ public class AreaUploadMetadata {
     @Valid
     private List<AreaUploadProperty> file = new ArrayList<>();
     //@JsonIgnore
-    @JsonAnySetter
+    //@JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
 
     /**
@@ -100,7 +98,7 @@ public class AreaUploadMetadata {
         return ToStringBuilder.reflectionToString(this);
     }
 
-    @JsonAnyGetter
+    //@JsonAnyGetter
     public Map<String, Object> getAdditionalProperties() {
         return this.additionalProperties;
     }
@@ -112,6 +110,10 @@ public class AreaUploadMetadata {
     public AreaUploadMetadata withAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
         return this;
+    }
+
+    public void setAdditionalProperties(Map<String, Object> additionalProperties) {
+        this.additionalProperties = additionalProperties;
     }
 
     @Override

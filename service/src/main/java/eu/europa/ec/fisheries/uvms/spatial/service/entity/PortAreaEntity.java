@@ -12,8 +12,7 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
+import javax.json.bind.annotation.JsonbProperty;
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -43,7 +42,8 @@ public class PortAreaEntity extends BaseAreaEntity {
 	@Column(name = "gid")
 	@SequenceGenerator(name="SEQ_PORTAREA_GEN", sequenceName="port_area_seq", allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_PORTAREA_GEN")
-    @JsonProperty("gid")
+    //@JsonProperty("gid")
+    @JsonbProperty("gid")
     private Long id;
 
     @Override
