@@ -1,10 +1,7 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.uvms.spatial.rest.BuildSpatialRestDeployment;
 import eu.europa.ec.fisheries.uvms.spatial.rest.TestZipFile;
-import eu.europa.ec.fisheries.uvms.spatial.rest.dto.FileUploadForm;
-import eu.europa.ec.fisheries.uvms.spatial.service.dto.AreaLayerDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.AreaUploadMapping;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.AreaUploadMappingProperty;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.AreaUploadMetadata;
@@ -39,15 +36,14 @@ public class FileUploadRestResourceTest extends BuildSpatialRestDeployment {
         mdo.addFormData("areaType", "EEZ", MediaType.TEXT_PLAIN_TYPE );
         mdo.addFormData("uploadedFile", bytes, MediaType.APPLICATION_OCTET_STREAM_TYPE );
 
-        String stringResponse = getSecuredWebTarget()
+        AreaUploadMetadata response = getSecuredWebTarget()
                 .path("files")
                 .path("metadata")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getToken())
-                .post(Entity.entity(mdo, MediaType.MULTIPART_FORM_DATA_TYPE), String.class);
+                .post(Entity.entity(mdo, MediaType.MULTIPART_FORM_DATA_TYPE), AreaUploadMetadata.class);
 
-        ObjectMapper om = new ObjectMapper();
-        AreaUploadMetadata response = om.readValue(stringResponse, AreaUploadMetadata.class);       //for some reason the client always uses jsonb despite us saying that it should use jackson, and we use a jackson-specific annotation.
+        /*AreaUploadMetadata response = om.readValue(stringResponse, AreaUploadMetadata.class);       //for some reason the client always uses jsonb despite us saying that it should use jackson, and we use a jackson-specific annotation.*/
 
         assertThat(response, is(notNullValue()));
         assertEquals(11, response.getDomain().size());
@@ -65,15 +61,14 @@ public class FileUploadRestResourceTest extends BuildSpatialRestDeployment {
         mdo.addFormData("areaType", "userArea", MediaType.TEXT_PLAIN_TYPE );
         mdo.addFormData("uploadedFile", bytes, MediaType.APPLICATION_OCTET_STREAM_TYPE );
 
-        String stringResponse = getSecuredWebTarget()
+        AreaUploadMetadata response = getSecuredWebTarget()
                 .path("files")
                 .path("metadata")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getToken())
-                .post(Entity.entity(mdo, MediaType.MULTIPART_FORM_DATA_TYPE), String.class);
+                .post(Entity.entity(mdo, MediaType.MULTIPART_FORM_DATA_TYPE), AreaUploadMetadata.class);
 
-        ObjectMapper om = new ObjectMapper();
-        AreaUploadMetadata response = om.readValue(stringResponse, AreaUploadMetadata.class);       //for some reason the client always uses jsonb despite us saying that it should use jackson, and we use a jackson-specific annotation.
+        //AreaUploadMetadata response = om.readValue(stringResponse, AreaUploadMetadata.class);       //for some reason the client always uses jsonb despite us saying that it should use jackson, and we use a jackson-specific annotation.
 
         AreaUploadMapping mapping = new AreaUploadMapping();
         mapping.setAdditionalProperty("ref", response.getAdditionalProperties().get("ref"));
@@ -84,7 +79,7 @@ public class FileUploadRestResourceTest extends BuildSpatialRestDeployment {
         mapping.getMapping().add(createAreaUploadMappingProperty("createdOn", "OMR_UPPDAT"));
         mapping.getMapping().add(createAreaUploadMappingProperty("areaDesc", "OMR_BESKRI"));
 
-        String json = om.writeValueAsString(mapping);
+        //String json = om.writeValueAsString(mapping);
 
         Response uploadResponse = getSecuredWebTarget()
                 .path("files")
@@ -92,7 +87,7 @@ public class FileUploadRestResourceTest extends BuildSpatialRestDeployment {
                 .path("4326")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getToken())
-                .post(Entity.json(json) , Response.class);
+                .post(Entity.json(mapping) , Response.class);
 
         assertNotNull(uploadResponse);
         assertEquals(200, uploadResponse.getStatus());

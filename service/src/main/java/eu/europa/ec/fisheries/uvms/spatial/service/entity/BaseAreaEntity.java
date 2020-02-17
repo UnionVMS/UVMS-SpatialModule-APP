@@ -11,16 +11,12 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.ser.InstantSerializer;
-import eu.europa.ec.fisheries.uvms.spatial.model.SpatialInstantDeserializer;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.BaseAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.utils.GeometryUtils;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.io.WKTWriter;
 
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
 import java.time.Instant;
 import java.util.Objects;
@@ -64,7 +60,7 @@ public class BaseAreaEntity {
     private static final String ISO_8859_1 = "ISO-8859-1";
     private static final String UTF_8 = "UTF-8";
 
-    @JsonIgnore
+    @JsonbTransient
     protected Geometry geom;
 
     protected String name;
@@ -75,8 +71,6 @@ public class BaseAreaEntity {
     @Column(nullable = false)
     protected Boolean enabled = true;
 
-    @JsonSerialize(using = InstantSerializer.class)
-    @JsonDeserialize(using = SpatialInstantDeserializer.class)
     @Column(name = "enabled_on")
     protected Instant enabledOn;
 
@@ -84,7 +78,7 @@ public class BaseAreaEntity {
         return GeometryUtils.geometryToWkt(geom);
     }
 
-    @JsonIgnore
+    @JsonbTransient
     public String getDisableQueryName(){
         return "";
     }
@@ -93,7 +87,7 @@ public class BaseAreaEntity {
         return null;
     }
 
-    @JsonIgnore
+    @JsonbTransient
     public String getGeometryType(){
         String geometryType = null;
         if (geom !=null){
@@ -102,7 +96,7 @@ public class BaseAreaEntity {
         return geometryType;
     }
 
-    @JsonIgnore
+    @JsonbTransient
     public String getExtent() {
         String extent = null;
         if (geom != null) {
@@ -111,7 +105,7 @@ public class BaseAreaEntity {
         return extent;
     }
 
-    @JsonIgnore
+    @JsonbTransient
     public String getCentroid(){
         String centroid = null;
         if (geom != null) {

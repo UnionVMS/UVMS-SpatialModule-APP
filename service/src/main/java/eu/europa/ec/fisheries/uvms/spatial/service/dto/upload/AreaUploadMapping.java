@@ -10,24 +10,22 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.service.dto.upload;
 
-import com.fasterxml.jackson.annotation.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import javax.json.bind.annotation.JsonbProperty;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class AreaUploadMapping {
 
-    @JsonProperty("mapping")
+    @JsonbProperty("mapping")
     @Valid
     private List<AreaUploadMappingProperty> mapping = new ArrayList<AreaUploadMappingProperty>();
-    @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
@@ -50,7 +48,6 @@ public class AreaUploadMapping {
      * @return
      *     The mapping
      */
-    @JsonProperty("mapping")
     public List<AreaUploadMappingProperty> getMapping() {
         return mapping;
     }
@@ -60,7 +57,6 @@ public class AreaUploadMapping {
      * @param mapping
      *     The mapping
      */
-    @JsonProperty("mapping")
     public void setMapping(List<AreaUploadMappingProperty> mapping) {
         this.mapping = mapping;
     }
@@ -75,7 +71,6 @@ public class AreaUploadMapping {
         return ToStringBuilder.reflectionToString(this);
     }
 
-    @JsonAnyGetter
     public Map<String, Object> getAdditionalProperties() {
         return this.additionalProperties;
     }
@@ -88,6 +83,10 @@ public class AreaUploadMapping {
     public AreaUploadMapping withAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
         return this;
+    }
+
+    public void setAdditionalProperties(Map<String, Object> additionalProperties) {
+        this.additionalProperties = additionalProperties;
     }
 
     @Override

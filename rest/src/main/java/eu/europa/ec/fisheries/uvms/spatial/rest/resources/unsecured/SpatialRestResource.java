@@ -2,6 +2,7 @@ package eu.europa.ec.fisheries.uvms.spatial.rest.resources.unsecured;
 
 import eu.europa.ec.fisheries.schema.movement.v1.MovementType;
 import eu.europa.ec.fisheries.schema.movement.v1.SegmentCategoryType;
+import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.AreaTransitionsDTO;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaServiceBean;
@@ -20,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import javax.json.bind.Jsonb;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -40,6 +42,8 @@ public class SpatialRestResource {
 
 
     private static final Logger log = LoggerFactory.getLogger(SpatialRestResource.class);
+
+    private static Jsonb jsonb = new JsonBConfigurator().getContext(null);  //For the sole reason that resteasy insists on using jackson to deserialize movementType
 
 
     @Inject
@@ -127,8 +131,6 @@ public class SpatialRestResource {
         }
     }
 
-
-
     private static final double DISTANCE_TO_PORT_THRESHOLD_IN_NAUTICAL_MILES = 1.5;   //meters = 2778
     private static final double FACTOR_METER_PER_SECOND_TO_KNOTS = 1.9438444924574;
     private static final double NAUTICAL_MILE_ONE_METER = 0.000539956803;
@@ -136,10 +138,12 @@ public class SpatialRestResource {
     @Path("getSegmentCategoryType")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getSegmentCategoryType(List<MovementType> movements) {
+    public Response getSegmentCategoryType(String jsonMovements) {
 
         SegmentCategoryType returnVal = SegmentCategoryType.OTHER;
         try {
+            List<MovementType> movements = jsonb.fromJson(jsonMovements, new ArrayList<MovementType>(){}.getClass().getGenericSuperclass());
+
             if(movements == null || movements.size() < 2){
                 log.error("Null as indata or not enough movements in the the input list, need at least two");
                 return Response.status(400).entity("Null as indata or not enough movements in the the input list, need at least two").build();
