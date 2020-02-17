@@ -44,7 +44,6 @@ public class PortEntity extends BaseAreaEntity {
 	@SequenceGenerator(name="SEQ_PORT_GEN", sequenceName="port_seq", allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_PORT_GEN")
     @JsonbProperty("gid")
-    //@JsonProperty("gid")
     private Long id;
 	
     @Column(name = "country_code", length = 3)

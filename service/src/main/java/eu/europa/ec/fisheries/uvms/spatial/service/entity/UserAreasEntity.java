@@ -82,7 +82,6 @@ public class UserAreasEntity extends BaseAreaEntity {
     private Instant createdOn = Instant.now();
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "userAreas", cascade = CascadeType.ALL, orphanRemoval = true)
-    //@JsonIgnore
     @JsonbTransient
     private Set<UserScopeEntity> scopeSelection = new HashSet<>();
 
@@ -91,7 +90,6 @@ public class UserAreasEntity extends BaseAreaEntity {
         return DISABLE_USER_AREA_DUMMY_QUERY;
     }
 
-    //@JsonProperty("scopeSelection")
     @JsonbProperty("scopeSelection")
     public List<String> getScopeSelectionAsString(){
         List<String> list = new ArrayList<>();

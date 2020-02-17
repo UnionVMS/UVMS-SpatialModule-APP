@@ -42,7 +42,6 @@ public class RfmoEntity extends BaseAreaEntity {
 	@Column(name = "gid")
 	@SequenceGenerator(name="SEQ_RFMO_GEN", sequenceName="rfmo_seq", allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_RFMO_GEN")
-    //@JsonProperty("gid")
     @JsonbProperty("gid")
     private Long id;
 	

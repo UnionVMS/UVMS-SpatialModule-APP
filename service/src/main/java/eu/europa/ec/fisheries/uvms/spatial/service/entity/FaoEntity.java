@@ -41,7 +41,6 @@ public class FaoEntity extends BaseAreaEntity {
 	@Column(name = "gid")
 	@SequenceGenerator(name="SEQ_FAO_GEN", sequenceName="fao_seq", allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_FAO_GEN")
-    //@JsonProperty("gid")
     @JsonbProperty("gid")
     private Long id;
 	

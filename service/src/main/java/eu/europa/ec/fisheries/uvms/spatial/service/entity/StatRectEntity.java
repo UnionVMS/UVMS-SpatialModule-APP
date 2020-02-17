@@ -42,7 +42,6 @@ public class StatRectEntity extends BaseAreaEntity {
 	@Column(name = "gid")
 	@SequenceGenerator(name="SEQ_STATRECT_GEN", sequenceName="stat_rect_seq", allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_STATRECT_GEN")
-    //@JsonProperty("gid")
     @JsonbProperty("gid")
     private Long id;
 	

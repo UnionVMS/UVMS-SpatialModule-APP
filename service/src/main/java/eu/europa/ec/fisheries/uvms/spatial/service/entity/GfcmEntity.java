@@ -41,7 +41,6 @@ public class GfcmEntity extends BaseAreaEntity {
 	@Column(name = "gid")
 	@SequenceGenerator(name="SEQ_GFCM_GEN", sequenceName="gfcm_seq", allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_GFCM_GEN")
-    //@JsonProperty("gid")
     @JsonbProperty("gid")
     private Long id;
 

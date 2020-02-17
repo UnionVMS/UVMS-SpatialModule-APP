@@ -2,7 +2,6 @@ package eu.europa.ec.fisheries.uvms.spatial.service.dto;
 
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 
-//@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class BaseAreaDto {
 
 

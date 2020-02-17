@@ -21,7 +21,6 @@ public class AreaUploadMappingProperty {
 
     private String source;
     private String target;
-    //@JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
@@ -92,12 +91,10 @@ public class AreaUploadMappingProperty {
         return ToStringBuilder.reflectionToString(this);
     }
 
-    //@JsonAnyGetter
     public Map<String, Object> getAdditionalProperties() {
         return this.additionalProperties;
     }
 
-    //@JsonAnySetter
     public void setAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
     }

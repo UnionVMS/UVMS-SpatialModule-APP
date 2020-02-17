@@ -41,7 +41,6 @@ public class EezEntity extends BaseAreaEntity {
 	@Column(name = "gid")
 	@SequenceGenerator(name="SEQ_EEZ_GEN", sequenceName="eez_seq", allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_EEZ_GEN")
-    //@JsonProperty("gid")
     @JsonbProperty("gid")
     private Long id;
 	

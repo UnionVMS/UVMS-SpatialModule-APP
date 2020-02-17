@@ -23,11 +23,9 @@ import java.util.Map;
 
 public class AreaUploadMapping {
 
-    //@JsonProperty("mapping")
     @JsonbProperty("mapping")
     @Valid
     private List<AreaUploadMappingProperty> mapping = new ArrayList<AreaUploadMappingProperty>();
-    //@JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
@@ -73,7 +71,6 @@ public class AreaUploadMapping {
         return ToStringBuilder.reflectionToString(this);
     }
 
-    //@JsonAnyGetter
     public Map<String, Object> getAdditionalProperties() {
         return this.additionalProperties;
     }

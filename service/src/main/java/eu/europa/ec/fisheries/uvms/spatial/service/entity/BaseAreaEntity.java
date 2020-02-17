@@ -60,7 +60,6 @@ public class BaseAreaEntity {
     private static final String ISO_8859_1 = "ISO-8859-1";
     private static final String UTF_8 = "UTF-8";
 
-    //@JsonIgnore
     @JsonbTransient
     protected Geometry geom;
 
@@ -79,7 +78,6 @@ public class BaseAreaEntity {
         return GeometryUtils.geometryToWkt(geom);
     }
 
-    //@JsonIgnore
     @JsonbTransient
     public String getDisableQueryName(){
         return "";
@@ -89,7 +87,6 @@ public class BaseAreaEntity {
         return null;
     }
 
-    //@JsonIgnore
     @JsonbTransient
     public String getGeometryType(){
         String geometryType = null;
@@ -99,7 +96,6 @@ public class BaseAreaEntity {
         return geometryType;
     }
 
-    //@JsonIgnore
     @JsonbTransient
     public String getExtent() {
         String extent = null;
@@ -109,7 +105,6 @@ public class BaseAreaEntity {
         return extent;
     }
 
-    //@JsonIgnore
     @JsonbTransient
     public String getCentroid(){
         String centroid = null;
