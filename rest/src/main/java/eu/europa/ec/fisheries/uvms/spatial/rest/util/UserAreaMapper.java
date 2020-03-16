@@ -1,6 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.util;
 
-import eu.europa.ec.fisheries.uvms.movement.model.util.DateUtil;
+import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.UserAreaDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.utils.GeometryUtils;
@@ -15,8 +15,8 @@ public class UserAreaMapper {
         entity.setAreaDesc(dto.getDescription());
         entity.setCreatedOn(Instant.now());
         entity.setDatasetName(dto.getDatasetName());
-        entity.setEndDate(DateUtil.parseToUTCDate(dto.getEndDate()));
-        entity.setStartDate(DateUtil.parseToUTCDate(dto.getStartDate()));
+        entity.setEndDate(DateUtils.stringToDate(dto.getEndDate()));
+        entity.setStartDate(DateUtils.stringToDate(dto.getStartDate()));
         entity.setId( (dto.getId() == null || dto.getId().equals("")) ? null : Long.valueOf(dto.getId()));
         entity.setType(dto.getType());
 

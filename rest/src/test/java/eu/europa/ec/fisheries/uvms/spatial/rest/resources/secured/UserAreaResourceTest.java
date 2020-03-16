@@ -1,6 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
-import eu.europa.ec.fisheries.uvms.movement.model.util.DateUtil;
+import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import eu.europa.ec.fisheries.uvms.spatial.rest.BuildSpatialRestDeployment;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.UserAreaDto;
@@ -61,7 +61,7 @@ public class UserAreaResourceTest extends BuildSpatialRestDeployment {
 
         area.setId(createdArea.getId().toString());
         area.setDescription("Updated description");
-        area.setEndDate(DateUtil.parseUTCDateToString(Instant.now().minusSeconds(30)));
+        area.setEndDate(DateUtils.dateToHumanReadableString(Instant.now().minusSeconds(30)));
         UserAreasEntity updatedArea = restUserArea(area);
 
         assertEquals(area.getDescription(), updatedArea.getAreaDesc());
@@ -135,8 +135,8 @@ public class UserAreaResourceTest extends BuildSpatialRestDeployment {
         UserAreaDto area = new UserAreaDto();
         area.setDatasetName("Test Dataset");
         area.setDescription("User Area Test Description");
-        area.setEndDate(DateUtil.parseUTCDateToString(Instant.now().plusSeconds(60)));
-        area.setStartDate(DateUtil.parseUTCDateToString(Instant.now().minusSeconds(60)));
+        area.setEndDate(DateUtils.dateToHumanReadableString(Instant.now().plusSeconds(60)));
+        area.setStartDate(DateUtils.dateToHumanReadableString(Instant.now().minusSeconds(60)));
         area.setExtent("Test Extent");
         area.setName(code);
         area.setScopeSelection("Test Scope Selection");
