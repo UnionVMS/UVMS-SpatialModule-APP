@@ -131,7 +131,7 @@
 				</plugins>
 			</build>
 			<properties>
-				<db.docker.url>offline:postgresql?changeLogFile=target/databasechangelog.csv&amp;outputLiquibaseSql=true</db.docker.url>
+				<db.docker.url>offline:postgresql?version=9&amp;changeLogFile=target/databasechangelog.csv&amp;outputLiquibaseSql=true</db.docker.url>
 			</properties>
 		</profile>                               
     </profiles>
