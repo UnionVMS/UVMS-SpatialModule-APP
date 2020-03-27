@@ -87,7 +87,7 @@ public class UserAreaRestResource extends UnionVMSResource {
     @GET
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    @Path("/layers/areaGroups")
+    @Path("/layers/distinctAreaGroups")
     public Response getUserAreaGroups(@HeaderParam("scopeName") String scopeName, @Context HttpServletRequest servletRequest)  {
         log.debug("UserName from security : " + servletRequest.getRemoteUser());
         return createSuccessResponse(areaServiceBean.getDistinctUserAreaGroups(servletRequest.getRemoteUser(), scopeName));
