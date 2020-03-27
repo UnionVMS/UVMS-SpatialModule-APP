@@ -1,0 +1,35 @@
+<databaseChangeLog xmlns='http://www.liquibase.org/xml/ns/dbchangelog'
+  xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+  xsi:schemaLocation='http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd'
+                   logicalFilePath="changelog/v2.1.3/db-changelog-extendUserAreasWithAreaGroup.xml.xml">
+
+    <changeSet author="joemat" id="Extend user areas with area group">
+        <!-- To test the stuff below
+        <insert tableName="user_areas">
+            <column name="gid" value="555"/>
+            <column name="type" value="MOVE_TO_AREA_GROUP"/>
+            <column name="user_name" value="joemat"/>
+            <column name="area_desc" value="test area desc"/>
+            <column name="dataset_name" value="test area dataset name"/>
+            <column name="code" value="test area code"/>
+            <column name="name" value="test area name"/>
+            <column name="enabled" value="true"/>
+            <column name="geom" value="SRID=4326;MULTIPOLYGON(((7.45350000000008 43.743194444,7.52833333300003 43.5524999990001,7.75694444400006 42.966388888,7.72469072500007 42.9485788320001,7.49666666700006 43.529444444,7.41958333300005 43.7258055550001,7.39161095700007 43.727545338,7.39160909100002 43.727545455,7.42028181800003 43.737081818,7.43929090900002 43.7575181820001,7.43948333300006 43.750413888,7.45350000000008 43.743194444)))"/>
+            <column name="created_on" value="2020-03-27"/>
+        </insert>
+        -->
+
+        <addColumn tableName="user_areas">
+            <column name="area_group " type="varchar(255)"/>
+        </addColumn>
+
+        <update tableName="user_areas">
+            <column name="area_group" valueComputed="type"/>
+        </update>
+
+        <update tableName="user_areas">
+            <column name="type" value="USERAREA"/>
+        </update>
+    </changeSet>
+
+</databaseChangeLog>

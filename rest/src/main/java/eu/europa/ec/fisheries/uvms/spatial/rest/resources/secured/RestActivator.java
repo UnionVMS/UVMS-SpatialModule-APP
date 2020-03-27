@@ -31,7 +31,7 @@ public class RestActivator extends Application {
         set.add(AreaResource.class);
         set.add(XMLResource.class);
         set.add(ConfigResource.class);
-        set.add(UserAreaResource.class);
+        set.add(UserAreaRestResource.class);
         set.add(ImageResource.class);
         set.add(GeometryUtilsResource.class);
         set.add(JsonBConfigurator.class);

@@ -44,7 +44,7 @@ public class XMLResource {
     @Produces(value = {MediaType.APPLICATION_XML})
     @Consumes(value = {MediaType.APPLICATION_XML})
     @Path("/enrichment")
-    public SpatialEnrichmentRS spatialEnrichment2(SpatialEnrichmentRQ request){
+    public SpatialEnrichmentRS spatialEnrichment(SpatialEnrichmentRQ request){
         return areaServiceBean.getSpatialEnrichment(request);
     }
 
@@ -61,7 +61,7 @@ public class XMLResource {
     @Produces(value = {MediaType.APPLICATION_XML})
     @Consumes(value = {MediaType.APPLICATION_XML})
     @Path("/areas-by-location")
-    public AreaByLocationSpatialRS getAreasByPoint2(AreaByLocationSpatialRQ request)  throws Exception {
+    public AreaByLocationSpatialRS getAreasByPoint(AreaByLocationSpatialRQ request)  throws Exception {
         AreaByLocationSpatialRS response = new AreaByLocationSpatialRS();
         List<BaseAreaDto> areaList = areaServiceBean.getAreasByPoint(request.getPoint().getLatitude(), request.getPoint().getLongitude());
         List<AreaExtendedIdentifierType> areaTypesByLocation = AreaMapper.mapToAreaExtendedIdentifierType(areaList);

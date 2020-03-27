@@ -41,7 +41,7 @@ public class AreaMapper {
     }
 
     public static BaseAreaDto mapToBaseAreaDtoFromUserArea(UserAreasEntity entity){
-        BaseAreaDto dto = new BaseAreaDto(entity.getType(), entity.getId(), entity.getCode(), entity.getName());
+        BaseAreaDto dto = new BaseAreaDto(entity.getType().name(), entity.getId(), entity.getCode(), entity.getName());
         return dto;
     }
 
