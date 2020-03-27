@@ -33,7 +33,7 @@
         <geotools.version>22.2</geotools.version>
         <uvms.commons.version>4.1.6</uvms.commons.version>
         <usm4uvms.version>4.1.0</usm4uvms.version>
-        <fish.focus.parent.version>3.0</fish.focus.parent.version>
+        <fish.focus.parent.version>3.1</fish.focus.parent.version>
         <usm_deployment_descriptor_force_update>false</usm_deployment_descriptor_force_update>
         <release.branch.name>uvms-1.0.0</release.branch.name>
         <maven.scm.provider.version>2.1.1</maven.scm.provider.version>
