@@ -128,6 +128,14 @@ public class AreaDao {
         return query.getResultList();
     }
 
+    public List<String> selectDistinctUserAreaGroupsByUserNameAndScopeName(String userName, String scopeName){
+
+        TypedQuery<String> query =  em.createNamedQuery(UserAreasEntity.SELECT_DISTINCT_AREA_GROUPS_BY_USER_NAME_AND_SCOPE_NAME, String.class);
+        query.setParameter(USER_NAME, userName);
+        query.setParameter(SCOPE_NAME, scopeName);
+        return query.getResultList();
+    }
+
     /*  ---------------------- Get Areas By Codes ------------------------- */
 
     public List<EezEntity> getEEZByAreaCodes(List<String> codes) {

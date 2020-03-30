@@ -27,7 +27,7 @@ public class UserScopeEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_area_id", nullable = false)
-    private UserAreasEntity userAreas;
+    private UserAreasEntity userArea;
 
     @Column(name = "scope_name", nullable = false)
     private String name;
@@ -40,12 +40,12 @@ public class UserScopeEntity {
         this.id = id;
     }
 
-    public UserAreasEntity getUserAreas() {
-        return userAreas;
+    public UserAreasEntity getUserArea() {
+        return userArea;
     }
 
-    public void setUserAreas(UserAreasEntity userAreas) {
-        this.userAreas = userAreas;
+    public void setUserArea(UserAreasEntity userArea) {
+        this.userArea = userArea;
     }
 
     public String getName() {
@@ -62,12 +62,7 @@ public class UserScopeEntity {
         if (o == null || getClass() != o.getClass()) return false;
         UserScopeEntity that = (UserScopeEntity) o;
         return Objects.equals(id, that.id) &&
-                Objects.equals(userAreas, that.userAreas) &&
+                Objects.equals(userArea, that.userArea) &&
                 Objects.equals(name, that.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, userAreas, name);
     }
 }

@@ -230,8 +230,17 @@ public class AreaServiceBean {
     public AreaLayerDto getUserAreaLayerDefinition(String userName, String scopeName) {
 
         AreaLayerDto userAreaLayer = areaLocationTypesDao.findUserAreaLayerMapping();
-        List<UserAreasEntity> userAreasEntity2List = areaDao.findByUserNameAndScopeName(userName, scopeName);
-        userAreaLayer.setIdList(AreaMapper.mapToBaseAreaDtoListFromUserAreas(userAreasEntity2List));
+        List<UserAreasEntity> userAreasEntityList = areaDao.findByUserNameAndScopeName(userName, scopeName);
+        userAreaLayer.setIdList(AreaMapper.mapToBaseAreaDtoListFromUserAreas(userAreasEntityList));
+        return userAreaLayer;
+    }
+
+    public AreaLayerDto getDistinctUserAreaGroups(String userName, String scopeName) {
+
+        AreaLayerDto userAreaLayer = areaLocationTypesDao.findUserAreaLayerMapping();
+        List<String> userAreasEntityList = areaDao.selectDistinctUserAreaGroupsByUserNameAndScopeName(userName, scopeName);
+        userAreaLayer.setDistinctAreaGroups(userAreasEntityList);
+
         return userAreaLayer;
     }
 

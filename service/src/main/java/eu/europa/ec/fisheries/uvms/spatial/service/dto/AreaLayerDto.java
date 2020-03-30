@@ -17,6 +17,8 @@ public class AreaLayerDto {
 
     private List<BaseAreaDto> idList;
 
+    private List<String> distinctAreaGroups;
+
     public AreaLayerDto() {     //to make json happy
     }
 
@@ -70,10 +72,15 @@ public class AreaLayerDto {
     }
 
     public List<BaseAreaDto> getIdList() {
-        if(idList == null){
-            idList = new ArrayList<>();
-        }
         return idList;
+    }
+
+    public List<String> getDistinctAreaGroups() {
+        return distinctAreaGroups;
+    }
+
+    public void setDistinctAreaGroups(List<String> distinctAreaGroups) {
+        this.distinctAreaGroups = distinctAreaGroups;
     }
 
     public void setIdList(List<BaseAreaDto> idList) {

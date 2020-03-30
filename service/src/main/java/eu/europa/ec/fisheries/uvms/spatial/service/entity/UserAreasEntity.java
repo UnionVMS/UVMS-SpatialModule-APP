@@ -12,6 +12,7 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.entity;
 
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
 import org.hibernate.annotations.Where;
 import org.locationtech.jts.geom.Geometry;
 
@@ -33,6 +34,9 @@ import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
         @NamedQuery(name = UserAreasEntity.FIND_BY_USER_NAME_AND_SCOPE_NAME,
                 query = "SELECT distinct area FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection " +
                         "WHERE area.userName = :userName OR scopeSelection.name = :scopeName"),
+        @NamedQuery(name = UserAreasEntity.SELECT_DISTINCT_AREA_GROUPS_BY_USER_NAME_AND_SCOPE_NAME,
+                query = "SELECT distinct area.areaGroup FROM UserAreasEntity area LEFT JOIN area.scopeSelection scopeSelection " +
+                        "WHERE area.userName = :userName OR scopeSelection.name = :scopeName"),
         @NamedQuery(name = UserAreasEntity.USER_AREA_DETAILS_BY_LOCATION,
                 query = "FROM UserAreasEntity userArea WHERE intersects(userArea.geom, :shape) = true AND userArea.enabled = true GROUP BY userArea.id"),
         @NamedQuery(name = UserAreasEntity.FIND_ALL_USER_AREAS,
@@ -52,6 +56,7 @@ public class UserAreasEntity extends BaseAreaEntity {
     public static final String DISABLE_USER_AREA_DUMMY_QUERY = "UserArea.dummyUpdateQuery";
     public static final String FIND_USER_AREA_BY_USERNAME_SCOPE_AND_POWERUSER = "UserArea.findUserAreaByUsernameScopeAndPowerUser";
     public static final String FIND_BY_USER_NAME_AND_SCOPE_NAME = "UserArea.findGidByUserNameOrScope";
+    public static final String SELECT_DISTINCT_AREA_GROUPS_BY_USER_NAME_AND_SCOPE_NAME = "UserArea.selectDistinctAreaGroupsByUserNameOrScope";
     public static final String AREA_BY_AREA_CODES = "UserAreasEntity.areaByAreaCodes";
 
     @Id
@@ -61,7 +66,8 @@ public class UserAreasEntity extends BaseAreaEntity {
     private Long id;
 
     @Column(name = "type")
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private AreaType type;
 
     @Column(name = "start_date")
     private Instant startDate = Instant.now();
@@ -78,10 +84,13 @@ public class UserAreasEntity extends BaseAreaEntity {
     @Column(columnDefinition = "text", name = "dataset_name")
     private String datasetName;
 
+    @Column(columnDefinition = "text", name = "area_group")
+    private String areaGroup;
+
     @Column(name = "created_on", nullable = false)
     private Instant createdOn = Instant.now();
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "userAreas", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "userArea", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonbTransient
     private Set<UserScopeEntity> scopeSelection = new HashSet<>();
 
@@ -101,7 +110,7 @@ public class UserAreasEntity extends BaseAreaEntity {
         return list;
     }
 
-    public UserAreasEntity(String type, Instant startDate, Instant endDate, String userName, String areaDesc,
+    public UserAreasEntity(AreaType type, Instant startDate, Instant endDate, String userName, String areaDesc,
                            String datasetName, Instant createdOn, Set<UserScopeEntity> scopeSelection,
                            Geometry geom, String name, String code, boolean enabled, Instant enabledOn) {
         this.type = type;
@@ -126,18 +135,18 @@ public class UserAreasEntity extends BaseAreaEntity {
 
     public void addUserScope(UserScopeEntity scope) {
         scopeSelection.add(scope);
-        scope.setUserAreas(this);
+        scope.setUserArea(this);
     }
 
     public void removeScope(UserScopeEntity scope) {
         scopeSelection.remove(scope);
-        scope.setUserAreas(null);
+        scope.setUserArea(null);
     }
 
     public void setScopeSelection(Set<UserScopeEntity> scopeSelection) {
         if (scopeSelection != null) {
             for (UserScopeEntity userScopeEntity : scopeSelection) {
-                userScopeEntity.setUserAreas(this);
+                userScopeEntity.setUserArea(this);
             }
             this.scopeSelection = scopeSelection;
         }
@@ -151,11 +160,11 @@ public class UserAreasEntity extends BaseAreaEntity {
         this.id = id;
     }
 
-    public String getType() {
+    public AreaType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(AreaType type) {
         this.type = type;
     }
 
@@ -209,6 +218,14 @@ public class UserAreasEntity extends BaseAreaEntity {
 
     public Set<UserScopeEntity> getScopeSelection() {
         return scopeSelection;
+    }
+
+    public String getAreaGroup() {
+        return areaGroup;
+    }
+
+    public void setAreaGroup(String areaGroup) {
+        this.areaGroup = areaGroup;
     }
 
     @Override

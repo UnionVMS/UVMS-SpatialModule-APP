@@ -1,18 +1,22 @@
 package eu.europa.ec.fisheries.uvms.spatial.rest.dto;
 
 
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
+
+import java.util.List;
+
 public class UserAreaDto {
     String name;
     String description;
     String id;
-    String scopeSelection;
+    List<String> scopeSelection;
     String startDate;
     String endDate;
-    String subType;
+    String areaGroup;
     String datasetName;
     String geometry;
     String extent;
-    String type;
+    AreaType type;
 
 
     public String getName() {
@@ -39,11 +43,11 @@ public class UserAreaDto {
         this.id = id;
     }
 
-    public String getScopeSelection() {
+    public List<String> getScopeSelection() {
         return scopeSelection;
     }
 
-    public void setScopeSelection(String scopeSelection) {
+    public void setScopeSelection(List<String> scopeSelection) {
         this.scopeSelection = scopeSelection;
     }
 
@@ -63,12 +67,12 @@ public class UserAreaDto {
         this.endDate = endDate;
     }
 
-    public String getSubType() {
-        return subType;
+    public String getAreaGroup() {
+        return areaGroup;
     }
 
-    public void setSubType(String subType) {
-        this.subType = subType;
+    public void setAreaGroup(String areaGroup) {
+        this.areaGroup = areaGroup;
     }
 
     public String getDatasetName() {
@@ -95,11 +99,11 @@ public class UserAreaDto {
         this.extent = extent;
     }
 
-    public String getType() {
+    public AreaType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(AreaType type) {
         this.type = type;
     }
 }
