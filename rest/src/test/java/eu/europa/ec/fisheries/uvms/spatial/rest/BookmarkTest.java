@@ -8,7 +8,7 @@
  details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.europe.ec.fisheries.uvms.spatial.rest;
+package eu.europa.ec.fisheries.uvms.spatial.rest;
 
 import java.util.ArrayList;
 import java.util.Collections;

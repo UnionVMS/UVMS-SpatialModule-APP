@@ -1,9 +1,8 @@
-package eu.europe.ec.fisheries.uvms.spatial.rest;
+package eu.europa.ec.fisheries.uvms.spatial.rest;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.Properties;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
