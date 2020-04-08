@@ -114,53 +114,43 @@ public class SpatialEventMDB implements MessageListener {
             SpatialModuleMethod method = request.getMethod();
             switch (method) {
                 case GET_AREA_BY_LOCATION:
-                    AreaByLocationSpatialRQ byLocationSpatialRQ = JAXBUtils.unMarshallMessage(textMessage.getText(), AreaByLocationSpatialRQ.class);
-                    SpatialMessageEvent areaByLocationEvent = new SpatialMessageEvent(textMessage, byLocationSpatialRQ);
+                    SpatialMessageEvent areaByLocationEvent = new SpatialMessageEvent(textMessage,request);
                     areaByLocationSpatialEvent.fire(areaByLocationEvent);
                     break;
                 case GET_AREA_TYPES:
-                    AllAreaTypesRequest allAreaTypesRequest = JAXBUtils.unMarshallMessage(textMessage.getText(), AllAreaTypesRequest.class);
-                    SpatialMessageEvent areaTypeNamesEvent = new SpatialMessageEvent(textMessage, allAreaTypesRequest);
+                    SpatialMessageEvent areaTypeNamesEvent = new SpatialMessageEvent(textMessage,request);
                     typeNamesEvent.fire(areaTypeNamesEvent);
                     break;
                 case GET_CLOSEST_AREA:
-                    ClosestAreaSpatialRQ closestAreaSpatialRQ = JAXBUtils.unMarshallMessage(textMessage.getText(), ClosestAreaSpatialRQ.class);
-                    SpatialMessageEvent closestAreaEvent = new SpatialMessageEvent(textMessage, closestAreaSpatialRQ);
+                    SpatialMessageEvent closestAreaEvent = new SpatialMessageEvent(textMessage,request);
                     closestAreaSpatialEvent.fire(closestAreaEvent);
                     break;
                 case GET_CLOSEST_LOCATION:
-                    ClosestLocationSpatialRQ closestLocationSpatialRQ = JAXBUtils.unMarshallMessage(textMessage.getText(), ClosestLocationSpatialRQ.class);
-                    SpatialMessageEvent closestLocationEvent = new SpatialMessageEvent(textMessage, closestLocationSpatialRQ);
+                    SpatialMessageEvent closestLocationEvent = new SpatialMessageEvent(textMessage,request);
                     closestLocationSpatialEvent.fire(closestLocationEvent);
                     break;
                 case GET_ENRICHMENT:
-                    SpatialEnrichmentRQ spatialEnrichmentRQ = JAXBUtils.unMarshallMessage(textMessage.getText(), SpatialEnrichmentRQ.class);
-                    SpatialMessageEvent spatialEnrichmentEvent = new SpatialMessageEvent(textMessage, spatialEnrichmentRQ);
+                    SpatialMessageEvent spatialEnrichmentEvent = new SpatialMessageEvent(textMessage,request);
                     enrichmentSpatialEvent.fire(spatialEnrichmentEvent);
                     break;
                 case GET_ENRICHMENT_BATCH:
-                    BatchSpatialEnrichmentRQ spatialBatchEnrichmentRQ = JAXBUtils.unMarshallMessage(textMessage.getText(), BatchSpatialEnrichmentRQ.class);
-                    SpatialMessageEvent spatialBatchEnrichmentEvent = new SpatialMessageEvent(textMessage, spatialBatchEnrichmentRQ);
+                    SpatialMessageEvent spatialBatchEnrichmentEvent = new SpatialMessageEvent(textMessage,request);
                     batchEnrichmentSpatialEvent.fire(spatialBatchEnrichmentEvent);
                     break;
                 case GET_FILTER_AREA:
-                    FilterAreasSpatialRQ filterAreasSpatialRQ = JAXBUtils.unMarshallMessage(textMessage.getText(), FilterAreasSpatialRQ.class);
-                    SpatialMessageEvent filterAreaEvent = new SpatialMessageEvent(textMessage, filterAreasSpatialRQ);
+                    SpatialMessageEvent filterAreaEvent = new SpatialMessageEvent(textMessage,request);
                     filterAreaSpatialEvent.fire(filterAreaEvent);
                     break;
                 case GET_MAP_CONFIGURATION:
-                    SpatialGetMapConfigurationRQ spatialGetMapConfigurationRQ = JAXBUtils.unMarshallMessage(textMessage.getText(), SpatialGetMapConfigurationRQ.class);
-                    SpatialMessageEvent getMapConfigurationEvent = new SpatialMessageEvent(textMessage, spatialGetMapConfigurationRQ);
+                    SpatialMessageEvent getMapConfigurationEvent = new SpatialMessageEvent(textMessage,request);
                     getMapConfigurationSpatialEvent.fire(getMapConfigurationEvent);
                     break;
                 case SAVE_OR_UPDATE_MAP_CONFIGURATION:
-                    SpatialSaveOrUpdateMapConfigurationRQ spatialSaveMapConfigurationRQ = JAXBUtils.unMarshallMessage(textMessage.getText(), SpatialSaveOrUpdateMapConfigurationRQ.class);
-                    SpatialMessageEvent saveMapConfigurationEvent = new SpatialMessageEvent(textMessage, spatialSaveMapConfigurationRQ);
+                    SpatialMessageEvent saveMapConfigurationEvent = new SpatialMessageEvent(textMessage,request);
                     saveOrUpdateMapConfigurationSpatialEvent.fire(saveMapConfigurationEvent);
                     break;
                 case DELETE_MAP_CONFIGURATION:
-                    SpatialDeleteMapConfigurationRQ mapConfigurationRQ = JAXBUtils.unMarshallMessage(textMessage.getText(), SpatialDeleteMapConfigurationRQ.class);
-                    SpatialMessageEvent spatialMessageEvent = new SpatialMessageEvent(textMessage, mapConfigurationRQ);
+                    SpatialMessageEvent spatialMessageEvent = new SpatialMessageEvent(textMessage,request);
                     deleteMapConfigurationSpatialEvent.fire(spatialMessageEvent);
                     break;
                 case PING:
