@@ -20,7 +20,7 @@
         -->
 
         <addColumn tableName="user_areas">
-            <column name="area_group " type="varchar(255)"/>
+            <column name="area_group" type="varchar(255)"/>
         </addColumn>
 
         <update tableName="user_areas">
