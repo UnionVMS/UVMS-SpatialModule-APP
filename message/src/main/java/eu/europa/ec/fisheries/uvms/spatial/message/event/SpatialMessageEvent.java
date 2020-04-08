@@ -31,6 +31,12 @@ public class SpatialMessageEvent {
     private PingRQ pingRQ;
     private AreaByCodeRequest areaByCodeRequest;
     private GeometryByPortCodeRequest geometryByPortCodeRequest;
+    private SpatialModuleRequest spatialModuleRequest;
+
+    public SpatialMessageEvent(TextMessage message,SpatialModuleRequest spatialModuleRequest){
+        this.message = message;
+        this.spatialModuleRequest = spatialModuleRequest;
+    }
 
     public SpatialMessageEvent(TextMessage message, AreaByLocationSpatialRQ areaByLocationSpatialRQ) {
         this.message = message;
@@ -151,5 +157,9 @@ public class SpatialMessageEvent {
 
     public GeometryByPortCodeRequest getGeometryByPortCodeRequest() {
         return geometryByPortCodeRequest;
+    }
+
+    public SpatialModuleRequest getSpatialModuleRequest() {
+        return spatialModuleRequest;
     }
 }

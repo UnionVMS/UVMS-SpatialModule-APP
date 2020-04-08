@@ -68,8 +68,9 @@ public class SpatialEventServiceBean {
 
     public void getAreaByLocation(@Observes @GetAreaByLocationEvent SpatialMessageEvent message) {
         log.info("Getting area by location.");
+        AreaByLocationSpatialRQ byLocationSpatialRQ = (AreaByLocationSpatialRQ) message.getSpatialModuleRequest();
         try {
-            List<AreaExtendedIdentifierType> areaTypesByLocation = areaService.getAreasByPoint(message.getAreaByLocationSpatialRQ());
+            List<AreaExtendedIdentifierType> areaTypesByLocation = areaService.getAreasByPoint(byLocationSpatialRQ);
             log.debug("Send back areaByLocation response.");
             messageProducer.sendResponseMessageToSender(message.getMessage(), SpatialModuleResponseMapper.mapAreaByLocationResponse(areaTypesByLocation), MODULE_NAME);
         } catch (Exception e) {
@@ -97,8 +98,8 @@ public class SpatialEventServiceBean {
 
     public void getClosestArea(@Observes @GetClosestAreaEvent SpatialMessageEvent message) {
         log.info("Getting closest area.");
+        ClosestAreaSpatialRQ request = (ClosestAreaSpatialRQ)message.getSpatialModuleRequest();
         try {
-            ClosestAreaSpatialRQ request = message.getClosestAreaSpatialRQ();
             Double lat = request.getPoint().getLatitude();
             Double lon = request.getPoint().getLongitude();
             Integer crs = request.getPoint().getCrs();
@@ -114,8 +115,9 @@ public class SpatialEventServiceBean {
 
     public void getClosestLocation(@Observes @GetClosestLocationEvent SpatialMessageEvent message) {
         log.info("Getting closest locations.");
+        ClosestLocationSpatialRQ closestLocationSpatialRQ = (ClosestLocationSpatialRQ)message.getSpatialModuleRequest();
         try {
-            List<Location> closestLocations = areaService.getClosestPointByPoint(message.getClosestLocationSpatialRQ());
+            List<Location> closestLocations = areaService.getClosestPointByPoint(closestLocationSpatialRQ);
             log.debug("Send back closest locations response.");
             messageProducer.sendResponseMessageToSender(message.getMessage(), SpatialModuleResponseMapper.mapClosestLocationResponse(closestLocations), MODULE_NAME);
         } catch (Exception e) {
@@ -126,8 +128,8 @@ public class SpatialEventServiceBean {
 
     public void areaByCode(@Observes @AreaByCodeEvent SpatialMessageEvent message) {
         log.info("Getting area by code");
+        AreaByCodeRequest areaByCodeRequest = (AreaByCodeRequest)message.getSpatialModuleRequest();
         try {
-            AreaByCodeRequest areaByCodeRequest = message.getAreaByCodeRequest();
             List<AreaSimpleType> areaSimples = areaByCodeRequest.getAreaSimples();
             List<AreaSimpleType> areaSimpleTypeList = areaService.getAreasByCode(areaSimples);
 
@@ -145,8 +147,9 @@ public class SpatialEventServiceBean {
 
     public void getSpatialEnrichment(@Observes @GetSpatialEnrichmentEvent SpatialMessageEvent message) {
         log.info("Getting spatial enrichment.");
+        SpatialEnrichmentRQ spatialEnrichmentRQ = (SpatialEnrichmentRQ) message.getSpatialModuleRequest();
         try {
-            SpatialEnrichmentRS spatialEnrichmentRS = enrichmentService.getSpatialEnrichment(message.getSpatialEnrichmentRQ());
+            SpatialEnrichmentRS spatialEnrichmentRS = enrichmentService.getSpatialEnrichment(spatialEnrichmentRQ);
             log.debug("Send back enrichment response.");
             messageProducer.sendResponseMessageToSender(message.getMessage(), SpatialModuleResponseMapper.mapEnrichmentResponse(spatialEnrichmentRS), MODULE_NAME);
         } catch (Exception e) {
@@ -158,7 +161,7 @@ public class SpatialEventServiceBean {
     public void getBatchSpatialEnrichment(@Observes @GetSpatialBatchEnrichmentEvent SpatialMessageEvent message) {
         log.info("Getting Spatial BATCH Enrichment.");
         try {
-            BatchSpatialEnrichmentRS spatialEnrichmentRS = enrichmentService.getBatchSpatialEnrichment(message.getSpatialBatchEnrichmentRQ());
+            BatchSpatialEnrichmentRS spatialEnrichmentRS = enrichmentService.getBatchSpatialEnrichment((BatchSpatialEnrichmentRQ) message.getSpatialModuleRequest());
             log.info("Enrich BATCH was Successful.. Response sent back to [ {} ] queue.", message.getMessage().getJMSReplyTo());
             messageProducer.sendResponseMessageToSender(message.getMessage(), SpatialModuleResponseMapper.mapToBatchEnrichmentResponse(spatialEnrichmentRS), MODULE_NAME);
         } catch (Exception e) {
@@ -170,7 +173,7 @@ public class SpatialEventServiceBean {
     public void deleteMapConfiguration(@Observes @DeleteMapConfigurationEvent SpatialMessageEvent message) {
         log.info("Delete mapDefaultSRIDToEPSG configurations.");
         try {
-            mapConfigService.handleDeleteMapConfiguration(message.getSpatialDeleteMapConfigurationRQ());
+            mapConfigService.handleDeleteMapConfiguration((SpatialDeleteMapConfigurationRQ) message.getSpatialModuleRequest());
             log.debug("Send back mapDefaultSRIDToEPSG configurations response.");
             String value = JAXBUtils.marshallJaxBObjectToString(JAXBUtils.marshallJaxBObjectToString(new SpatialDeleteMapConfigurationRS()));
             messageProducer.sendResponseMessageToSender(message.getMessage(), value, MODULE_NAME);
@@ -183,8 +186,7 @@ public class SpatialEventServiceBean {
     public void getFilterAreas(@Observes @GetFilterAreaEvent SpatialMessageEvent message) {
         log.info("Getting Filter Areas");
         try {
-            FilterAreasSpatialRQ filterAreaSpatialRQ = message.getFilterAreasSpatialRQ();
-            FilterAreasSpatialRS filterAreasSpatialRS = areaService.computeAreaFilter(filterAreaSpatialRQ);
+            FilterAreasSpatialRS filterAreasSpatialRS = areaService.computeAreaFilter((FilterAreasSpatialRQ)message.getSpatialModuleRequest());
             log.debug("Send back filtered Areas");
             messageProducer.sendResponseMessageToSender(message.getMessage(), SpatialModuleResponseMapper.mapFilterAreasResponse(filterAreasSpatialRS), MODULE_NAME);
         } catch (Exception e) {
@@ -196,7 +198,7 @@ public class SpatialEventServiceBean {
     public void saveOrUpdateSpatialMapConfiguration(@Observes @SaveOrUpdateMapConfigurationEvent SpatialMessageEvent message) {
         log.info("Saving/Updating mapDefaultSRIDToEPSG configurations.");
         try {
-            SpatialSaveOrUpdateMapConfigurationRS saveOrUpdateMapConfigurationRS = mapConfigService.handleSaveOrUpdateSpatialMapConfiguration(message.getSpatialSaveOrUpdateMapConfigurationRQ());
+            SpatialSaveOrUpdateMapConfigurationRS saveOrUpdateMapConfigurationRS = mapConfigService.handleSaveOrUpdateSpatialMapConfiguration((SpatialSaveOrUpdateMapConfigurationRQ)message.getSpatialModuleRequest());
             log.debug("Send back mapDefaultSRIDToEPSG configurations response.");
             String response = SpatialModuleResponseMapper.mapSpatialSaveOrUpdateMapConfigurationRSToString(saveOrUpdateMapConfigurationRS);
             messageProducer.sendResponseMessageToSender(message.getMessage(), response, MODULE_NAME);
@@ -209,7 +211,7 @@ public class SpatialEventServiceBean {
     public void getMapConfiguration(@Observes @GetMapConfigurationEvent SpatialMessageEvent message) {
         log.info("Getting mapDefaultSRIDToEPSG configurations.");
         try {
-            SpatialGetMapConfigurationRS mapConfigurationRS = mapConfigService.getMapConfiguration(message.getSpatialGetMapConfigurationRQ());
+            SpatialGetMapConfigurationRS mapConfigurationRS = mapConfigService.getMapConfiguration((SpatialGetMapConfigurationRQ)message.getSpatialModuleRequest());
             log.debug("Send back mapDefaultSRIDToEPSG configurations response.");
             String response = SpatialModuleResponseMapper.mapSpatialGetMapConfigurationResponse(mapConfigurationRS);
             messageProducer.sendResponseMessageToSender(message.getMessage(), response, MODULE_NAME);
@@ -234,10 +236,10 @@ public class SpatialEventServiceBean {
 
     public void getGeometryForPortCode(@Observes @GetGeometryByPortCodeEvent SpatialMessageEvent message) {
         log.info("Getting area by code");
+        GeometryByPortCodeRequest geometryByPortCodeRequest = (GeometryByPortCodeRequest)message.getSpatialModuleRequest();
         try {
-            GeometryByPortCodeRequest geometryByPortCodeRequest = message.getGeometryByPortCodeRequest();
-            String portCode=geometryByPortCodeRequest.getPortCode();
-            String geometry= areaService.getGeometryForPort(portCode);
+            String portCode = geometryByPortCodeRequest.getPortCode();
+            String geometry = areaService.getGeometryForPort(portCode);
 
             GeometryByPortCodeResponse geometryByPortCodeResponse = new GeometryByPortCodeResponse();
             geometryByPortCodeResponse.setPortGeometry(geometry);
