@@ -146,7 +146,8 @@ public class AreaServiceBean {
 
         List<BaseAreaDto> areaTypesByLocation = spatialQueriesDao.getAreasByPoint(point);
 
-        List<BaseAreaDto> closestAreas = spatialQueriesDao.getClosestAreaByPoint(point);
+        //Asked mats börje what to do about this and since he could not think of a use case for this he suggested that we put this on pause until the case was investigated further
+        List<BaseAreaDto> closestAreas = null; // spatialQueriesDao.getClosestAreaByPoint(point);
 
         PortDistanceInfoDto closestLocation = areaDao.getClosestPort(point);
 
