@@ -12,7 +12,6 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.message.bean;
 
-import eu.europa.ec.fisheries.uvms.commons.message.api.Fault;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.JAXBUtils;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.*;
@@ -24,8 +23,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.MessageDriven;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.jms.JMSException;
@@ -103,9 +100,6 @@ public class SpatialEventMDB implements MessageListener {
     @GetGeometryByPortCodeEvent
     private Event<SpatialMessageEvent> geometryByPortCodeSpatialEvent;
 
-    @Inject
-    private SpatialProducer producer;
-
     @Override
     public void onMessage(Message message) {
         TextMessage textMessage = (TextMessage) message;
@@ -154,27 +148,22 @@ public class SpatialEventMDB implements MessageListener {
                     deleteMapConfigurationSpatialEvent.fire(spatialMessageEvent);
                     break;
                 case PING:
-                    PingRQ pingRQ = JAXBUtils.unMarshallMessage(textMessage.getText(), PingRQ.class);
-                    SpatialMessageEvent pingEvent = new SpatialMessageEvent(textMessage, pingRQ);
+                    SpatialMessageEvent pingEvent = new SpatialMessageEvent(textMessage, request);
                     pingSpatialEvent.fire(pingEvent);
                     break;
                 case GET_AREA_BY_CODE:
-                    AreaByCodeRequest areaByCodeRequest = JAXBUtils.unMarshallMessage(textMessage.getText(), AreaByCodeRequest.class);
-                    SpatialMessageEvent areaByCodeEvent = new SpatialMessageEvent(textMessage, areaByCodeRequest);
+                    SpatialMessageEvent areaByCodeEvent = new SpatialMessageEvent(textMessage, request);
                     areaByCodeSpatialEvent.fire(areaByCodeEvent);
                     break;
                 case GET_GEOMETRY_BY_PORT_CODE:
-                    GeometryByPortCodeRequest geometryByPortCodeRequest = JAXBUtils.unMarshallMessage(textMessage.getText(), GeometryByPortCodeRequest.class);
-                    SpatialMessageEvent geometryByPortCodeEvent = new SpatialMessageEvent(textMessage, geometryByPortCodeRequest);
+                    SpatialMessageEvent geometryByPortCodeEvent = new SpatialMessageEvent(textMessage, request);
                     geometryByPortCodeSpatialEvent.fire(geometryByPortCodeEvent);
                     break;
                 default:
                     log.error("[ Not implemented method consumed: {} ]", method);
-                    Fault fault = new Fault(FaultCode.SPATIAL_MESSAGE.getCode(), "Method not implemented");
                     throw new MessageException(method + " Method not implemented");
             }
         } catch (JMSException | JAXBException | MessageException e) {
-            Fault fault = new Fault(FaultCode.SPATIAL_MESSAGE.getCode(), "ERROR OCCURRED IN SPATIAL MDB");
             errorEvent.fire(new EventMessage(textMessage, SpatialModuleResponseMapper.createFaultMessage(FaultCode.SPATIAL_MESSAGE, "Exception in spatial [ " + e.getMessage())));
         }
     }
