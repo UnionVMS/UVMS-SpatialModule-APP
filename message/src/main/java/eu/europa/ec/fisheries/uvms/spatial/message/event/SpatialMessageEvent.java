@@ -18,19 +18,6 @@ import javax.jms.TextMessage;
 public class SpatialMessageEvent {
 
     private TextMessage message;
-    private AreaByLocationSpatialRQ areaByLocationSpatialRQ;
-    private ClosestAreaSpatialRQ closestAreaSpatialRQ;
-    private SpatialEnrichmentRQ spatialEnrichmentRQ;
-    private BatchSpatialEnrichmentRQ spatialBatchEnrichmentRQ;
-    private AllAreaTypesRequest allAreaTypesRequest;
-    private ClosestLocationSpatialRQ closestLocationSpatialRQ;
-    private FilterAreasSpatialRQ filterAreasSpatialRQ;
-    private SpatialDeleteMapConfigurationRQ spatialDeleteMapConfigurationRQ;
-    private SpatialSaveOrUpdateMapConfigurationRQ spatialSaveOrUpdateMapConfigurationRQ;
-    private SpatialGetMapConfigurationRQ spatialGetMapConfigurationRQ;
-    private PingRQ pingRQ;
-    private AreaByCodeRequest areaByCodeRequest;
-    private GeometryByPortCodeRequest geometryByPortCodeRequest;
     private SpatialModuleRequest spatialModuleRequest;
 
     public SpatialMessageEvent(TextMessage message,SpatialModuleRequest spatialModuleRequest){
@@ -38,125 +25,8 @@ public class SpatialMessageEvent {
         this.spatialModuleRequest = spatialModuleRequest;
     }
 
-    public SpatialMessageEvent(TextMessage message, AreaByLocationSpatialRQ areaByLocationSpatialRQ) {
-        this.message = message;
-        this.areaByLocationSpatialRQ = areaByLocationSpatialRQ;
-    }
-
-    public SpatialMessageEvent(TextMessage message, ClosestAreaSpatialRQ closestAreaSpatialRQ) {
-        this.message = message;
-        this.closestAreaSpatialRQ = closestAreaSpatialRQ;
-    }
-
-    public SpatialMessageEvent(TextMessage message, SpatialEnrichmentRQ spatialEnrichmentRQ) {
-        this.message = message;
-        this.spatialEnrichmentRQ = spatialEnrichmentRQ;
-    }
-
-    public SpatialMessageEvent(TextMessage textMessage, AllAreaTypesRequest allAreaTypesRequest) {
-        this.message = textMessage;
-        this.allAreaTypesRequest = allAreaTypesRequest;
-    }
-
-    public SpatialMessageEvent(TextMessage textMessage, ClosestLocationSpatialRQ closestLocationSpatialRQ) {
-        this.message = textMessage;
-        this.closestLocationSpatialRQ = closestLocationSpatialRQ;
-    }
-
-    public SpatialMessageEvent(TextMessage textMessage, FilterAreasSpatialRQ filterAreasSpatialRQ) {
-        this.message = textMessage;
-        this.filterAreasSpatialRQ = filterAreasSpatialRQ;
-    }
-
-    public SpatialMessageEvent(TextMessage textMessage, PingRQ pingRQ) {
-        this.message = textMessage;
-        this.pingRQ = pingRQ;
-    }
-
-    public SpatialMessageEvent(TextMessage textMessage, SpatialSaveOrUpdateMapConfigurationRQ spatialSaveOrUpdateMapConfigurationRQ) {
-        this.message = textMessage;
-        this.spatialSaveOrUpdateMapConfigurationRQ = spatialSaveOrUpdateMapConfigurationRQ;
-    }
-
-    public SpatialMessageEvent(TextMessage textMessage, SpatialGetMapConfigurationRQ spatialGetMapConfigurationRQ) {
-        this.message = textMessage;
-        this.spatialGetMapConfigurationRQ = spatialGetMapConfigurationRQ;
-    }
-
-    public SpatialMessageEvent(TextMessage textMessage, SpatialDeleteMapConfigurationRQ mapConfigurationRQ) {
-        this.message = textMessage;
-        this.spatialDeleteMapConfigurationRQ = mapConfigurationRQ;
-    }
-
-    public SpatialMessageEvent(TextMessage textMessage, AreaByCodeRequest areaByCodeRequest) {
-        this.message = textMessage;
-        this.areaByCodeRequest = areaByCodeRequest;
-    }
-
-    public SpatialMessageEvent(TextMessage textMessage, GeometryByPortCodeRequest geometryByPortCodeRequest) {
-        this.message = textMessage;
-        this.geometryByPortCodeRequest = geometryByPortCodeRequest;
-    }
-
-    public SpatialMessageEvent(TextMessage textMessage, BatchSpatialEnrichmentRQ spatialBatchEnrichmentRQ) {
-        this.message = textMessage;
-        this.spatialBatchEnrichmentRQ = spatialBatchEnrichmentRQ;
-    }
-
     public TextMessage getMessage() {
         return message;
-    }
-
-    public AreaByLocationSpatialRQ getAreaByLocationSpatialRQ() {
-        return areaByLocationSpatialRQ;
-    }
-
-    public ClosestAreaSpatialRQ getClosestAreaSpatialRQ() {
-        return closestAreaSpatialRQ;
-    }
-
-    public SpatialEnrichmentRQ getSpatialEnrichmentRQ() {
-        return spatialEnrichmentRQ;
-    }
-
-    public BatchSpatialEnrichmentRQ getSpatialBatchEnrichmentRQ() {
-        return spatialBatchEnrichmentRQ;
-    }
-
-    public ClosestLocationSpatialRQ getClosestLocationSpatialRQ() {
-        return closestLocationSpatialRQ;
-    }
-
-    public FilterAreasSpatialRQ getFilterAreasSpatialRQ() {
-        return filterAreasSpatialRQ;
-    }
-
-    public PingRQ getPingRQ() {
-        return pingRQ;
-    }
-
-    public SpatialSaveOrUpdateMapConfigurationRQ getSpatialSaveOrUpdateMapConfigurationRQ() {
-        return spatialSaveOrUpdateMapConfigurationRQ;
-    }
-
-    public SpatialGetMapConfigurationRQ getSpatialGetMapConfigurationRQ() {
-        return spatialGetMapConfigurationRQ;
-    }
-
-    public AllAreaTypesRequest getAllAreaTypesRequest() {
-        return allAreaTypesRequest;
-    }
-
-    public SpatialDeleteMapConfigurationRQ getSpatialDeleteMapConfigurationRQ() {
-        return spatialDeleteMapConfigurationRQ;
-    }
-
-    public AreaByCodeRequest getAreaByCodeRequest() {
-        return areaByCodeRequest;
-    }
-
-    public GeometryByPortCodeRequest getGeometryByPortCodeRequest() {
-        return geometryByPortCodeRequest;
     }
 
     public SpatialModuleRequest getSpatialModuleRequest() {
