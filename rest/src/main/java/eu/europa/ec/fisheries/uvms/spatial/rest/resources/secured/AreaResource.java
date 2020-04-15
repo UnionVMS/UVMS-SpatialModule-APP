@@ -114,33 +114,6 @@ public class AreaResource {
     }
 
     @POST
-    @Produces(value = {MediaType.APPLICATION_XML})
-    @Consumes(value = {MediaType.APPLICATION_XML})
-    @Path("/closest")
-    public ClosestAreaSpatialRS getClosestAreasToPointByType(ClosestAreaSpatialRQ request) {
-        ClosestAreaSpatialRS response = new ClosestAreaSpatialRS();
-        Double lat = request.getPoint().getLatitude();
-        Double lon = request.getPoint().getLongitude();
-        Integer crs = request.getPoint().getCrs();
-        UnitType unit = request.getUnit();
-
-        List<BaseAreaDto> closestAreas = areaServiceBean.getClosestAreasByPoint(lat, lon);
-        List<Area> areaList = new ArrayList<>();
-        for (BaseAreaDto base: closestAreas) {
-            Area area = new Area(String.valueOf(base.getGid()), base.getType(), base.getCode(), base.getName(), base.getDistance(), UnitType.METERS);
-            areaList.add(area);
-        }
-        if (areaList != null) {
-            ClosestAreasType closestAreasType = new ClosestAreasType();
-            closestAreasType.getClosestAreas().addAll(areaList);
-            response.setClosestArea(closestAreasType);
-        }
-        return response;
-    }
-
-
-
-    @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/type/code")
