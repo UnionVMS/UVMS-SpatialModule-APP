@@ -17,5 +17,6 @@
     <include file="v2.0.10\db-changelog-changeDBTypesOnSomeAreaEntitys.xml" relativeToChangelogFile="true"/>
     <include file="v2.0.14\db-changelog-changePostgisStorageOfLargeAreas.xml" relativeToChangelogFile="true"/>
     <include file="v2.1.3\db-changelog-extendUserAreasWithAreaGroup.xml" relativeToChangelogFile="true"/>
+    <include file="v2.1.5\db-changelog-removeClosestAreaSearch.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

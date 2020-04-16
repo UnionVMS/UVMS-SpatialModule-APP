@@ -33,7 +33,6 @@ import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
-//@RunAsClient
 @RunWith(Arquillian.class)
 public class SpatialRestResourceTest extends BuildSpatialRestDeployment {
 
@@ -342,7 +341,6 @@ public class SpatialRestResourceTest extends BuildSpatialRestDeployment {
                 .get(Response.class);
 
         assertEquals(200 ,response.getStatus());
-        //return response.readEntity(new GenericType<AreaTransitionsDTO>() {});
         return response.readEntity(AreaTransitionsDTO.class);
     }
 

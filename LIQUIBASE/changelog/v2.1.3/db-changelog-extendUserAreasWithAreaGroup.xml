@@ -1,7 +1,7 @@
 <databaseChangeLog xmlns='http://www.liquibase.org/xml/ns/dbchangelog'
   xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
   xsi:schemaLocation='http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd'
-                   logicalFilePath="changelog/v2.1.3/db-changelog-extendUserAreasWithAreaGroup.xml.xml">
+                   logicalFilePath="changelog/v2.1.3/db-changelog-extendUserAreasWithAreaGroup.xml">
 
     <changeSet author="joemat" id="Extend user areas with area group">
         <!-- To test the stuff below
