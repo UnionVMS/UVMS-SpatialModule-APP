@@ -29,7 +29,9 @@
         </sql>
         -->
 
-        <dropFunction functionName="get_closest_areas" />
+        <sql>
+            DROP FUNCTION spatial.get_Closest_Areas;
+        </sql>
 
     </changeSet>
 
