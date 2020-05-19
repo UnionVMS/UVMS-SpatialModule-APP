@@ -127,14 +127,14 @@ public class AreaResource {
     }
 
 
-    //TODO: Remove the headers
+
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/layers")
     @Interceptors(value = {ExceptionInterceptor.class})
     public Response getSystemAreaLayerMapping(@Context HttpServletRequest request,
-                                              @HeaderParam(AuthConstants.HTTP_HEADER_SCOPE_NAME) String scopeName,
-                                              @HeaderParam(AuthConstants.HTTP_HEADER_ROLE_NAME) String roleName)  {
+                                              @QueryParam(AuthConstants.HTTP_HEADER_SCOPE_NAME) String scopeName,
+                                              @QueryParam(AuthConstants.HTTP_HEADER_ROLE_NAME) String roleName)  {
         return Response.ok(areaLocationTypesDao.findSystemAreaLayerMapping()).build();
     }
 

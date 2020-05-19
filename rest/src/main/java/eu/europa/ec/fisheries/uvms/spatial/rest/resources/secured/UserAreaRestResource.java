@@ -78,7 +78,7 @@ public class UserAreaRestResource extends UnionVMSResource {
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/layers")
     @Interceptors(value = {ExceptionInterceptor.class})
-    public Response getUserAreaLayerMapping(@HeaderParam("scopeName") String scopeName, @Context HttpServletRequest servletRequest) {
+    public Response getUserAreaLayerMapping(@QueryParam("scopeName") String scopeName, @Context HttpServletRequest servletRequest) {
         log.debug("UserName from security : " + servletRequest.getRemoteUser());
         return createSuccessResponse(areaServiceBean.getUserAreaLayerDefinition(servletRequest.getRemoteUser(), scopeName));
     }
@@ -88,7 +88,7 @@ public class UserAreaRestResource extends UnionVMSResource {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/layers/distinctAreaGroups")
-    public Response getUserAreaGroups(@HeaderParam("scopeName") String scopeName, @Context HttpServletRequest servletRequest)  {
+    public Response getUserAreaGroups(@QueryParam("scopeName") String scopeName, @Context HttpServletRequest servletRequest)  {
         log.debug("UserName from security : " + servletRequest.getRemoteUser());
         return createSuccessResponse(areaServiceBean.getDistinctUserAreaGroups(servletRequest.getRemoteUser(), scopeName));
     }
@@ -99,7 +99,7 @@ public class UserAreaRestResource extends UnionVMSResource {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/list")
-    public Response listUserAreas(@HeaderParam("scopeName") String scopeName, @Context HttpServletRequest servletRequest) {
+    public Response listUserAreas(@QueryParam("scopeName") String scopeName, @Context HttpServletRequest servletRequest) {
         Response response;
 
         if (servletRequest.isUserInRole(SpatialFeaturesEnum.MANAGE_USER_DEFINED_AREAS.toString())) {
