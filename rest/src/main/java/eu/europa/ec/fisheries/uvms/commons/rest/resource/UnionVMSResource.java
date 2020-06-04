@@ -27,31 +27,4 @@ public abstract class UnionVMSResource {
 		return response;
 	}
 
-
-	public Response createErrorResponse() {
-		Response response = Response.status(HttpServletResponse.SC_INTERNAL_SERVER_ERROR).build();
-		return response;
-	}
-	
-	public Response createErrorResponse(String errorMsgCode) {
-		Response response = Response.status(HttpServletResponse.SC_INTERNAL_SERVER_ERROR).entity(errorMsgCode).build();
-		return response;
-	}
-
-	public Response createScNotFoundErrorResponse(String errorMsgCode) {
-		Response response = Response.status(HttpServletResponse.SC_NOT_FOUND).entity(errorMsgCode).build();
-		return response;
-	}
-
-	public Response createAccessForbiddenResponse() {
-		return Response.status(Response.Status.FORBIDDEN)
-				.build();
-	}
-
-
-	public Response createAccessForbiddenResponse(String errorMsgCode) {
-		return Response.status(Response.Status.FORBIDDEN)
-				.entity(errorMsgCode)
-				.build();
-	}
 }

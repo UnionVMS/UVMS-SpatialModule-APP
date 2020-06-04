@@ -12,7 +12,6 @@ package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.FileUploadForm;
-import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.FileUploadBean;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.AreaUploadMapping;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.AreaUploadMetadata;
@@ -38,7 +37,6 @@ public class FileUploadRestResource extends UnionVMSResource {
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Path("/upload/{code}")
-    @Interceptors(value = { ExceptionInterceptor.class})
     public Response upload(AreaUploadMapping mapping,
                            @PathParam("code") int code) throws IOException {
 
@@ -50,7 +48,6 @@ public class FileUploadRestResource extends UnionVMSResource {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Path("/metadata")
-    @Interceptors(value = {ExceptionInterceptor.class})
     public Response metadata(@MultipartForm FileUploadForm form, @Context HttpServletRequest servletRequest) {
 
         AreaUpdateEntity updateEntity = fileUploadBean.saveUploadedAreaDefinitionsToDB(form.getData(), form.getAreaType(), servletRequest.getRemoteUser());

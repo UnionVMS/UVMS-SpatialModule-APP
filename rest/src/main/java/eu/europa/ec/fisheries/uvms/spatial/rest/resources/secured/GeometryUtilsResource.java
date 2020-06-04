@@ -50,7 +50,7 @@ public class GeometryUtilsResource extends UnionVMSResource {
         } catch (Exception ex) {
             String error = "[ Error when calculating buffer. ] ";
             log.error(error, ex);
-            response = createErrorResponse(error);
+            throw ex;
         }
 
         return response;
