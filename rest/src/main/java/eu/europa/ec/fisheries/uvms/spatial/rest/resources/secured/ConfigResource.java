@@ -11,7 +11,6 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
-import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.ProjectionDao;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.ProjectionDto;
 import eu.europa.ec.fisheries.uvms.spatial.service.utils.ProjectionMapper;
@@ -50,7 +49,6 @@ public class ConfigResource extends UnionVMSResource {
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Path("/projections")
-    @Interceptors(value = {ExceptionInterceptor.class})
     public Response getAllProjections() {
         log.info("Getting all projections");
         List<ProjectionDto> projections = ProjectionMapper.mapToProjectionDto(projectionDao.findAll());
