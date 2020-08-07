@@ -26,6 +26,9 @@ public class VisibilityAttributesDto {
     @JsonProperty("order")
     private List<String> order;
 
+    @JsonProperty("names")
+    private List<String> names;
+
     @JsonProperty("values")
     private List<String> values;
 
@@ -50,6 +53,16 @@ public class VisibilityAttributesDto {
     @JsonProperty("values")
     public List<String> getValues() {
         return values;
+    }
+
+    @JsonProperty("names")
+    public void setNames(List<String> names) {
+        this.names = names;
+    }
+
+    @JsonProperty("names")
+    public List<String> getNames() {
+        return names;
     }
 
     @JsonProperty("values")
