@@ -29,7 +29,7 @@ public class SpatialConfigRegistration implements ConfigHelper {
     @Inject
     private PropertiesBean propertiesBean;
 
-    @PersistenceContext(unitName = "spatialConfig")
+    @PersistenceContext(unitName = "spatialPUpostgres")
     private EntityManager em;
 
     @Override
