@@ -10,7 +10,6 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.service.utils;
 
-import com.google.common.collect.Maps;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.AreaUploadMappingProperty;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.*;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -20,10 +19,7 @@ import org.opengis.feature.Property;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class EntityUtils {
 
@@ -114,7 +110,7 @@ public class EntityUtils {
     }
 
     public static Map<String, Object> createAttributesMap(List<Property> properties) {
-        Map<String, Object> resultMap = Maps.newHashMap();
+        Map<String, Object> resultMap = new HashMap<>(properties.size());
         for (Property property : properties) {
             String name = property.getName().toString();
             Object value = property.getValue();

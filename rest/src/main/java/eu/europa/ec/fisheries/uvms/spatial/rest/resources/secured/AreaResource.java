@@ -11,9 +11,7 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
-import eu.europa.ec.fisheries.uvms.constants.AuthConstants;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
-import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaServiceBean;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.AreaLocationTypesDao;
 import eu.europa.ec.fisheries.uvms.spatial.service.dto.BaseAreaDto;
@@ -61,7 +59,6 @@ public class AreaResource {
      */
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
-    @Interceptors(value = {ExceptionInterceptor.class})
     @Path("/types")
     public Response getAreaTypes() {
         log.info("Getting user areas list");
@@ -114,37 +111,9 @@ public class AreaResource {
     }
 
     @POST
-    @Produces(value = {MediaType.APPLICATION_XML})
-    @Consumes(value = {MediaType.APPLICATION_XML})
-    @Path("/closest")
-    public ClosestAreaSpatialRS getClosestAreasToPointByType(ClosestAreaSpatialRQ request) {
-        ClosestAreaSpatialRS response = new ClosestAreaSpatialRS();
-        Double lat = request.getPoint().getLatitude();
-        Double lon = request.getPoint().getLongitude();
-        Integer crs = request.getPoint().getCrs();
-        UnitType unit = request.getUnit();
-
-        List<BaseAreaDto> closestAreas = areaServiceBean.getClosestAreasByPoint(lat, lon);
-        List<Area> areaList = new ArrayList<>();
-        for (BaseAreaDto base: closestAreas) {
-            Area area = new Area(String.valueOf(base.getGid()), base.getType(), base.getCode(), base.getName(), base.getDistance(), UnitType.METERS);
-            areaList.add(area);
-        }
-        if (areaList != null) {
-            ClosestAreasType closestAreasType = new ClosestAreasType();
-            closestAreasType.getClosestAreas().addAll(areaList);
-            response.setClosestArea(closestAreasType);
-        }
-        return response;
-    }
-
-
-
-    @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/type/code")
-    @Interceptors(value = { ExceptionInterceptor.class})
     public Response byCode(AreaByCodeRequest areaByCodeRequest) {
 
         List<AreaSimpleType> areaSimpleTypeList = areaServiceBean.getAreasByCode(areaByCodeRequest);
@@ -154,21 +123,17 @@ public class AreaResource {
     }
 
 
-    //TODO: Remove the headers
+
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/layers")
-    @Interceptors(value = {ExceptionInterceptor.class})
-    public Response getSystemAreaLayerMapping(@Context HttpServletRequest request,
-                                              @HeaderParam(AuthConstants.HTTP_HEADER_SCOPE_NAME) String scopeName,
-                                              @HeaderParam(AuthConstants.HTTP_HEADER_ROLE_NAME) String roleName)  {
+    public Response getSystemAreaLayerMapping(@Context HttpServletRequest request)  {
         return Response.ok(areaLocationTypesDao.findSystemAreaLayerMapping()).build();
     }
 
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/allNonUserAreas")
-    @Interceptors(value = {ExceptionInterceptor.class})
     public Response getAllNonUserAreas(){
         return Response.ok(areaServiceBean.getAllNonUserAreaTypes()).build();
     }
@@ -176,7 +141,6 @@ public class AreaResource {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/getAreaLayer/{areaType}")
-    @Interceptors(value = {ExceptionInterceptor.class})
     public Response getAreaLayer(@PathParam("areaType") String areaType){
         return Response.ok(areaServiceBean.getAllAreasOfType(AreaType.fromValue(areaType))).build();
     }

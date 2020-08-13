@@ -12,9 +12,7 @@ package eu.europa.ec.fisheries.uvms.spatial.rest.resources.secured;
 
 import eu.europa.ec.fisheries.uvms.commons.rest.resource.UnionVMSResource;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialFeaturesEnum;
-import eu.europa.ec.fisheries.uvms.spatial.rest.constants.ErrorCodes;
 import eu.europa.ec.fisheries.uvms.spatial.rest.dto.UserAreaDto;
-import eu.europa.ec.fisheries.uvms.spatial.rest.util.ExceptionInterceptor;
 import eu.europa.ec.fisheries.uvms.spatial.rest.util.UserAreaMapper;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaServiceBean;
 import eu.europa.ec.fisheries.uvms.spatial.service.dao.AreaDao;
@@ -25,7 +23,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.interceptor.Interceptors;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -54,7 +51,6 @@ public class UserAreaRestResource extends UnionVMSResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/")
-    @Interceptors(value = {ExceptionInterceptor.class})
     public Response upsertUserArea(UserAreaDto userAreaDto, @Context HttpServletRequest servletRequest) throws ParseException {
         String userName = servletRequest.getRemoteUser();
         log.info("{} is requesting upsertUserArea(...)", userName);
@@ -67,7 +63,6 @@ public class UserAreaRestResource extends UnionVMSResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/get")
-    @Interceptors(value = {ExceptionInterceptor.class})
     public Response getUserAreasByCode(List<String> areaCode, @Context HttpServletRequest servletRequest) {
         String userName = servletRequest.getRemoteUser();
         log.info("{} is requesting User Area By Code(...)", userName);
@@ -77,8 +72,7 @@ public class UserAreaRestResource extends UnionVMSResource {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/layers")
-    @Interceptors(value = {ExceptionInterceptor.class})
-    public Response getUserAreaLayerMapping(@HeaderParam("scopeName") String scopeName, @Context HttpServletRequest servletRequest) {
+    public Response getUserAreaLayerMapping(@QueryParam("scopeName") String scopeName, @Context HttpServletRequest servletRequest) {
         log.debug("UserName from security : " + servletRequest.getRemoteUser());
         return createSuccessResponse(areaServiceBean.getUserAreaLayerDefinition(servletRequest.getRemoteUser(), scopeName));
     }
@@ -88,7 +82,7 @@ public class UserAreaRestResource extends UnionVMSResource {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/layers/distinctAreaGroups")
-    public Response getUserAreaGroups(@HeaderParam("scopeName") String scopeName, @Context HttpServletRequest servletRequest)  {
+    public Response getUserAreaGroups(@QueryParam("scopeName") String scopeName, @Context HttpServletRequest servletRequest)  {
         log.debug("UserName from security : " + servletRequest.getRemoteUser());
         return createSuccessResponse(areaServiceBean.getDistinctUserAreaGroups(servletRequest.getRemoteUser(), scopeName));
     }
@@ -99,13 +93,13 @@ public class UserAreaRestResource extends UnionVMSResource {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/list")
-    public Response listUserAreas(@HeaderParam("scopeName") String scopeName, @Context HttpServletRequest servletRequest) {
+    public Response listUserAreas(@QueryParam("scopeName") String scopeName, @Context HttpServletRequest servletRequest) {
         Response response;
 
         if (servletRequest.isUserInRole(SpatialFeaturesEnum.MANAGE_USER_DEFINED_AREAS.toString())) {
             response = createSuccessResponse(areaDao.findByUserNameScopeNameAndPowerUser(servletRequest.getRemoteUser(), scopeName, isPowerUser(servletRequest)));
         } else {
-            response = createErrorResponse(ErrorCodes.NOT_AUTHORIZED);
+            throw new NotAuthorizedException("User does not have required permissions");
         }
         return response;
     }

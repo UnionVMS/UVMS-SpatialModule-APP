@@ -89,29 +89,6 @@ public class SpatialRestResource {
         }
     }
 
-    @POST
-    @Path("getClosestArea")
-    @Consumes(value = {MediaType.APPLICATION_JSON})
-    @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getClosestArea(ClosestAreaSpatialRQ request)  {
-
-        try {
-            Double lat = request.getPoint().getLatitude();
-            Double lon = request.getPoint().getLongitude();
-
-            List<BaseAreaDto> closestAreas = areaServiceBean.getClosestAreasByPoint(lat, lon);
-            List<Area> response = new ArrayList<>();
-            for (BaseAreaDto base: closestAreas) {
-                Area area = new Area(String.valueOf(base.getGid()), base.getType(), base.getCode(), base.getName(), base.getDistance(), UnitType.METERS);
-                response.add(area);
-            }
-            return Response.ok(response).build();
-        } catch (Exception e) {
-            log.error(e.toString(),e);
-            return Response.status(500).build();
-        }
-    }
-
 
     @POST
     @Path("getClosestLocation")

@@ -26,14 +26,4 @@ public class SpatialQueriesDao {
         return q.getResultList();
 
     }
-
-    public List<BaseAreaDto> getClosestAreaByPoint(Point point) {
-        Query q = em.createNativeQuery("SELECT type,gid,code,name,dist from  spatial.get_closest_areas( :point)", "BaseAreaDtoMappingWithDist")
-                .setParameter("point", point);
-
-        return q.getResultList();
-
-    }
-
-
 }

@@ -125,11 +125,6 @@ public class AreaServiceBean {
         return areaDao.getClosestPort(point);
     }
 
-    public List<BaseAreaDto> getClosestAreasByPoint(Double lat, Double lon){
-        Point point = (Point) GeometryUtils.createPoint(lat, lon);
-        return spatialQueriesDao.getClosestAreaByPoint(point);
-    }
-
 
     public SpatialEnrichmentRS getSpatialEnrichment(SpatialEnrichmentRQ request){
 
@@ -142,11 +137,12 @@ public class AreaServiceBean {
 
 
     private SpatialEnrichmentRS computeSpatialEnrichment(Point point){
-
+        //Asked Mats Börje what to do about the closest area query and since he could not think of a use case for
+        // it he suggested that we put this on pause until the case was investigated further.
+        //After further investigation (on 14/04/2020) it was concluded that none could find a good use case for this query
+        //and since it consumes a lot of resources it is now removed.
 
         List<BaseAreaDto> areaTypesByLocation = spatialQueriesDao.getAreasByPoint(point);
-
-        List<BaseAreaDto> closestAreas = spatialQueriesDao.getClosestAreaByPoint(point);
 
         PortDistanceInfoDto closestLocation = areaDao.getClosestPort(point);
 
@@ -164,22 +160,6 @@ public class AreaServiceBean {
                 areasByLocationType.getAreas().add(areaExtendedIdentifierType);
             }
             response.setAreasByLocation(areasByLocationType);
-        }
-
-        if (closestAreas != null) {
-            ClosestAreasType closestAreasType = new ClosestAreasType();
-            for(BaseAreaDto baseArea : closestAreas){
-                Area area = new Area();
-                area.setAreaType(baseArea.getType());
-                area.setCode(baseArea.getCode());
-                area.setDistance(baseArea.getDistance() / MeasurementUnit.NAUTICAL_MILES.getRatio());
-                area.setId(String.valueOf(baseArea.getGid()));
-                area.setName(baseArea.getName());
-                area.setUnit(UnitType.NAUTICAL_MILES);
-
-                closestAreasType.getClosestAreas().add(area);
-            }
-            response.setClosestAreas(closestAreasType);
         }
 
         if (closestLocation != null){
