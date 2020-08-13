@@ -11,7 +11,7 @@
 
      <changeSet author="padhyad" id="1439890745706-46">
         <createTable tableName="service_layer">
-            <column name="id" type="SERIAL">
+            <column autoIncrement="true" name="id" type="SERIAL">
                 <constraints primaryKey="true" primaryKeyName="layer_pkey"/>
             </column>
             <column name="user_id" type="BIGINT"/>
