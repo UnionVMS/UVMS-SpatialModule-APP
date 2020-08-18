@@ -21,6 +21,8 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class VisibilityAttributesDto {
 
+    @Deprecated
+    // not used
     private Boolean isAttributeVisible;
 
     @JsonProperty("order")
@@ -29,15 +31,17 @@ public class VisibilityAttributesDto {
     @JsonProperty("names")
     private List<String> names;
 
+    @JsonProperty("titles")
+    private List<TitleDto> titles;
+
     @JsonProperty("values")
     private List<String> values;
 
     public VisibilityAttributesDto(){}
 
-    public VisibilityAttributesDto(List<String> order, List<String> values, Boolean isAttributeVisible) {
+    public VisibilityAttributesDto(List<String> order, List<String> values) {
         this.order = order;
         this.values = values;
-        this.isAttributeVisible = isAttributeVisible;
     }
 
     @JsonProperty("order")
@@ -55,6 +59,11 @@ public class VisibilityAttributesDto {
         return values;
     }
 
+    @JsonProperty("values")
+    public void setValues(List<String> values) {
+        this.values = values;
+    }
+
     @JsonProperty("names")
     public void setNames(List<String> names) {
         this.names = names;
@@ -63,11 +72,6 @@ public class VisibilityAttributesDto {
     @JsonProperty("names")
     public List<String> getNames() {
         return names;
-    }
-
-    @JsonProperty("values")
-    public void setValues(List<String> values) {
-        this.values = values;
     }
 
     @JsonProperty("isAttributeVisible")
@@ -79,4 +83,16 @@ public class VisibilityAttributesDto {
     public void setIsAttributeVisible(Boolean isAttributeVisible) {
         this.isAttributeVisible = isAttributeVisible;
     }
+
+    @JsonProperty("titles")
+    public void setTitles(List<TitleDto> titles) {
+        this.titles = titles;
+    }
+
+    @JsonProperty("titles")
+    public List<TitleDto> getTitles() {
+        return titles;
+    }
+
+
 }

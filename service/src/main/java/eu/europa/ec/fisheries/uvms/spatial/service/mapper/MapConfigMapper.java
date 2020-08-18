@@ -49,13 +49,11 @@ public abstract class MapConfigMapper {
 
     @Mappings({
             @Mapping(source = "order", target = "orders"),
-            @Mapping(target = "isAttributeVisible", expression = "java(getAttributeValue(visibilityAttributesDto.isAttributeVisible()))")
     })
     public abstract VisibilityAttributeType getVisibilityAttributeType(VisibilityAttributesDto visibilityAttributesDto);
 
     @Mappings({
             @Mapping(source = "orders", target = "order"),
-            @Mapping(target = "isAttributeVisible", expression = "java(getAttributeValue(visibilityAttributeType.isIsAttributeVisible()))")
     })
     public abstract VisibilityAttributesDto getVisibilityAttributeDto(VisibilityAttributeType visibilityAttributeType);
 
@@ -193,13 +191,6 @@ public abstract class MapConfigMapper {
         alarmsDto.setPending(alarmType.getPending());
         alarmsDto.setNone(alarmType.getNone());
         return alarmsDto;
-    }
-
-    protected Boolean getAttributeValue(Boolean isAttrVisible) {
-        if (isAttrVisible == null) {
-            return false;
-        }
-        return isAttrVisible;
     }
 
     protected List<StyleDataType> convertToStyleType(Map<String, String> style) {
