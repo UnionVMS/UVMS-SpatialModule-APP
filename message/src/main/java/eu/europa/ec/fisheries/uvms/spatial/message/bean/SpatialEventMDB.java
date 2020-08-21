@@ -192,8 +192,7 @@ public class SpatialEventMDB implements MessageListener {
                     geometryByPortCodeSpatialEvent.fire(geometryByPortCodeEvent);
                     break;
                 default:
-                    log.error("[ Not implemented method consumed: {} ]", method);
-                    throw new MessageException(method + " Method not implemented");
+                    throw new MessageException(" Method not implemented " + method);
             }
         } catch (JMSException | JAXBException | MessageException e) {
             errorEvent.fire(new EventMessage(textMessage, SpatialModuleResponseMapper.createFaultMessage(FaultCode.SPATIAL_MESSAGE, "Exception in spatial [ " + e.getMessage())));
