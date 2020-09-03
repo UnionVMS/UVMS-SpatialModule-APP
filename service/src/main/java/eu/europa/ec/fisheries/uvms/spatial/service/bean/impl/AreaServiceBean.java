@@ -33,6 +33,7 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.FileAttribute;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -85,6 +86,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.entity.BaseAreaEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.CountryEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.EntityFactory;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.PortEntity;
+import eu.europa.ec.fisheries.uvms.spatial.service.entity.UserAreasEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.enums.MeasurementUnit;
 import eu.europa.ec.fisheries.uvms.spatial.service.enums.SpatialTypeEnum;
 import eu.europa.ec.fisheries.uvms.spatial.service.exception.SpatialServiceErrors;
@@ -668,7 +670,26 @@ public class AreaServiceBean implements AreaService {
 
         return objectAsMap;
     }
-
+    
+    @Override
+    public List<AreaExtendedIdentifierType> getUserAreasByPoint(Date activeDate, Double lon, Double lat, Integer crs) throws ServiceException {
+        if (lat == null || lon == null || crs == null){
+            throw new ServiceException("MISSING MANDATORY FIELDS");
+        }
+        final Point incoming = (Point) GeometryUtils.toGeographic(lat, lon, crs);
+        final List<AreaExtendedIdentifierType> areaTypes = new ArrayList<>();
+        List<UserAreasEntity> records = repository.intersectingUserAreas(incoming,activeDate);
+        for (UserAreasEntity result : records) {
+            AreaExtendedIdentifierType area = new AreaExtendedIdentifierType();
+            area.setAreaType(AreaType.USERAREA);
+            area.setId(String.valueOf(result.getId()));
+            area.setCode(result.getCode());
+            area.setName(result.getName());
+            areaTypes.add(area);
+        }
+        return areaTypes;
+    }
+    
     @Override // FIXME is kind off a duplicate of List<Map<String, Object>> getAreasByPoint
     public List<AreaExtendedIdentifierType> getAreasByPoint(final AreaByLocationSpatialRQ request) throws ServiceException {
         if (request == null){

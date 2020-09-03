@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.MultiPoint;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
@@ -131,6 +132,8 @@ public interface SpatialRepository {
 
     List closestAreaByPoint(List<AreaLocationTypesEntity> entities, DatabaseDialect spatialFunction, Point point);
 
+    List<UserAreasEntity> intersectingUserAreas(final Geometry shape, final Date activeDate) throws ServiceException;
+    
     List intersectingArea(List<AreaLocationTypesEntity> entities, DatabaseDialect spatialFunction, Point point);
 
     List<AreaLocationTypesEntity> listAllArea() throws ServiceException;

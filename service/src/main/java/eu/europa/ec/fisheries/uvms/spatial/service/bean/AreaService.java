@@ -11,6 +11,7 @@ details. You should have received a copy of the GNU General Public License along
 package eu.europa.ec.fisheries.uvms.spatial.service.bean;
 
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -60,6 +61,8 @@ public interface AreaService {
 
     List<AreaExtendedIdentifierType> getAreasByPoint(AreaByLocationSpatialRQ request) throws ServiceException;
 
+    List<AreaExtendedIdentifierType> getUserAreasByPoint(Date activeDate, Double lon, Double lat, Integer crs) throws ServiceException;
+        
     List<Location> getClosestPointByPoint(ClosestLocationSpatialRQ request) throws ServiceException;
 
     Map<String, String> getAllCountriesDesc() throws ServiceException;
