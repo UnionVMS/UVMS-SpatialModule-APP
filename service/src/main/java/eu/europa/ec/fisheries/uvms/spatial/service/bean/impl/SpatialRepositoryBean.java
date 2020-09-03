@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.MultiPoint;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.commons.service.dao.QueryParameter;
@@ -369,7 +370,12 @@ public class SpatialRepositoryBean implements SpatialRepository {
     public List intersectingArea(List<AreaLocationTypesEntity> entities, DatabaseDialect spatialFunction, Point point) {
         return areaDao.intersectingArea(entities, spatialFunction, point);
     }
-
+    
+    @Override
+    public List<UserAreasEntity> intersectingUserAreas(final Geometry shape, final Date activeDate) {
+        return userAreaDao.intersects(shape,activeDate);
+    }
+    
     @Override
     public List<AreaLocationTypesEntity> listAllArea() throws ServiceException {
         return areaLocationTypeDao.findByIsLocation(false);

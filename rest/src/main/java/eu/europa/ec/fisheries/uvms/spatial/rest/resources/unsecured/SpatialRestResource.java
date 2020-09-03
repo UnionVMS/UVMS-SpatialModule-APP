@@ -278,7 +278,7 @@ public class SpatialRestResource {
 
             point = new PointType(secondLongitude, secondLatitude, 4326);
 
-            SpatialEnrichmentRQ spatialEnrichmentRQ = new SpatialEnrichmentRQ(null, point, new SpatialEnrichmentRQ.AreaTypes(), new SpatialEnrichmentRQ.LocationTypes(), UnitType.NAUTICAL_MILES);
+            SpatialEnrichmentRQ spatialEnrichmentRQ = new SpatialEnrichmentRQ(null, point, new SpatialEnrichmentRQ.AreaTypes(), new SpatialEnrichmentRQ.LocationTypes(), UnitType.NAUTICAL_MILES , null);
             SpatialEnrichmentRS spatialEnrichmentRS = enrichmentService.getSpatialEnrichment(spatialEnrichmentRQ);
 
             ArrayList<AreaExtendedIdentifierType> secondAreas = (ArrayList<AreaExtendedIdentifierType>)spatialEnrichmentRS.getAreasByLocation().getAreas();

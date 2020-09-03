@@ -10,15 +10,35 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.service.bean.impl;
 
+import eu.europa.ec.fisheries.uvms.commons.date.XMLDateUtils;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.*;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Area;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaByLocationSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaExtendedIdentifierType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreasByLocationType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.BatchSpatialEnrichmentRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.BatchSpatialEnrichmentRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreasType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestLocationSpatialRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestLocationsType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.CommonEnrichmentRSElement;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Location;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.PointType;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRQListElement;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.SpatialEnrichmentRSListElement;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.UnitType;
 import eu.europa.ec.fisheries.uvms.spatial.service.bean.AreaService;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Stateless
@@ -29,45 +49,49 @@ public class SpatialEnrichmentServiceBean {
     @EJB
     private AreaService areaService;
 
-    public SpatialEnrichmentRS getSpatialEnrichment(SpatialEnrichmentRQ request) throws ServiceException {
+    public SpatialEnrichmentRS getSpatialEnrichment(SpatialEnrichmentRQ request) {
         PointType point = request.getPoint();
         UnitType unit = request.getUnit();
-        List<AreaType> areaTypes = request.getAreaTypes().getAreaTypes();
+        Date activeDate = XMLDateUtils.xmlGregorianCalendarToDate(request.getUserAreaActiveDate());
+        List<AreaType> areaTypes = request.getAreaTypes() != null ? request.getAreaTypes().getAreaTypes() : null;
         List<LocationType> locationTypes = request.getLocationTypes().getLocationTypes();
-        return computeSpatialEnrichment(point, unit, areaTypes, locationTypes);
+        return computeSpatialEnrichment(point, unit, locationTypes,areaTypes,activeDate,SpatialEnrichmentRS.class);
     }
 
-    public BatchSpatialEnrichmentRS getBatchSpatialEnrichment(BatchSpatialEnrichmentRQ spatialBatchEnrichmentRQ) throws ServiceException {
-        List<SpatialEnrichmentRS> spatialBatchEnrichRespList = new ArrayList<>();
-        for (SpatialEnrichmentRQListElement enrichmentListElement : spatialBatchEnrichmentRQ.getEnrichmentLists()) {
-            spatialBatchEnrichRespList.add(computeSpatialEnrichment(enrichmentListElement.getPoint(), enrichmentListElement.getUnit(),
-                    enrichmentListElement.getAreaTypes(), enrichmentListElement.getLocationTypes()));
-        }
-        return convertToBatchReponse(spatialBatchEnrichRespList);
-    }
-
-    private BatchSpatialEnrichmentRS convertToBatchReponse(List<SpatialEnrichmentRS> spatialBatchEnrichRespList) {
+    public BatchSpatialEnrichmentRS getBatchSpatialEnrichment(BatchSpatialEnrichmentRQ spatialBatchEnrichmentRQ) {
         BatchSpatialEnrichmentRS batchResponse = new BatchSpatialEnrichmentRS();
         List<SpatialEnrichmentRSListElement> enrichmentRespList = batchResponse.getEnrichmentRespLists();
-        for (SpatialEnrichmentRS spatialEnrichmentRS : spatialBatchEnrichRespList) {
-            enrichmentRespList.add(new SpatialEnrichmentRSListElement(spatialEnrichmentRS.getAreasByLocation(), spatialEnrichmentRS.getClosestAreas(),
-                    spatialEnrichmentRS.getClosestLocations()));
+        for (SpatialEnrichmentRQListElement enrichmentListElement : spatialBatchEnrichmentRQ.getEnrichmentLists()) {
+            SpatialEnrichmentRSListElement rsElement = computeSpatialEnrichment(enrichmentListElement.getPoint(), enrichmentListElement.getUnit(),
+                    enrichmentListElement.getLocationTypes(),
+                    enrichmentListElement.getAreaTypes(),
+                    XMLDateUtils.xmlGregorianCalendarToDate(enrichmentListElement.getUserAreaActiveDate()),
+                    SpatialEnrichmentRSListElement.class);
+            rsElement.setGuid(enrichmentListElement.getGuid());
+            enrichmentRespList.add(rsElement);
         }
         return batchResponse;
     }
 
-    private SpatialEnrichmentRS computeSpatialEnrichment(PointType point, UnitType unit, List<AreaType> areaTypes, List<LocationType> locationTypes) throws ServiceException {
+    @SneakyThrows
+    private <R extends CommonEnrichmentRSElement> R computeSpatialEnrichment(PointType point, UnitType unit, List<LocationType> locationTypes, List<AreaType> areaTypes, Date activeDate, Class<R> responseClass) {
         AreaByLocationSpatialRQ areaByLocationSpatialRQ = new AreaByLocationSpatialRQ();
         areaByLocationSpatialRQ.setPoint(point);
         List<AreaExtendedIdentifierType> areaTypesByLocation = areaService.getAreasByPoint(areaByLocationSpatialRQ);
-
-        ClosestAreaSpatialRQ closestAreaSpatialRQ = new ClosestAreaSpatialRQ();
-        ClosestAreaSpatialRQ.AreaTypes types = new ClosestAreaSpatialRQ.AreaTypes();
-        types.getAreaTypes().addAll(areaTypes);
-        closestAreaSpatialRQ.setAreaTypes(types);
-        closestAreaSpatialRQ.setUnit(unit);
-        closestAreaSpatialRQ.setPoint(point);
-
+        
+        /*
+            ClosestAreaSpatialRQ closestAreaSpatialRQ = new ClosestAreaSpatialRQ();
+            ClosestAreaSpatialRQ.AreaTypes types = new ClosestAreaSpatialRQ.AreaTypes();
+            types.getAreaTypes().addAll(areaTypes);
+            closestAreaSpatialRQ.setAreaTypes(types);
+            closestAreaSpatialRQ.setUnit(unit);
+            closestAreaSpatialRQ.setPoint(point);
+        */
+        List<AreaExtendedIdentifierType> userAreaTypesByLocation = areaService.getUserAreasByPoint(activeDate,point.getLongitude(), point.getLatitude(), point.getCrs());
+        if(!userAreaTypesByLocation.isEmpty()){
+            areaTypesByLocation.addAll(userAreaTypesByLocation);
+        }
+        
         List<Area> closestAreas = areaService.getClosestArea(point.getLongitude(), point.getLatitude(), 3857, unit);
 
         ClosestLocationSpatialRQ closestLocationSpatialRQ = new ClosestLocationSpatialRQ();
@@ -79,8 +103,7 @@ public class SpatialEnrichmentServiceBean {
 
         List<Location> closestLocations = areaService.getClosestPointByPoint(closestLocationSpatialRQ);
 
-        SpatialEnrichmentRS response = new SpatialEnrichmentRS();
-
+        R response = responseClass.newInstance();
         if(areaTypesByLocation != null){
             AreasByLocationType areasByLocationType = new AreasByLocationType();
             areasByLocationType.getAreas().addAll(areaTypesByLocation);

@@ -75,6 +75,23 @@ public class UserAreaDao extends AbstractAreaDao<UserAreasEntity> {
         return findEntityByNamedQuery(UserAreasEntity.class, USER_AREA_BY_COORDINATE, with("shape", shape).parameters());
     }
 
+    public List<UserAreasEntity> intersects(final Geometry shape,final Date activeDate) {
+        StringBuilder hql = new StringBuilder();
+        hql.append("SELECT uArea ")
+                .append("FROM UserAreasEntity uArea ")
+                .append("WHERE uArea.enabled = 'Y' AND intersects(uArea.geom, :shape) = true ");
+        if(activeDate != null){
+            hql.append(" AND ((uArea.startDate < :activeDate) OR uArea.startDate is null)");
+            hql.append(" AND ((uArea.endDate >= :activeDate) OR uArea.endDate is null)");
+        }        
+        TypedQuery<UserAreasEntity> query = getEntityManager().createQuery(hql.toString(),UserAreasEntity.class);
+        query.setParameter("shape",shape);
+        if(activeDate != null){
+            query.setParameter("activeDate",activeDate);
+        }
+        return query.getResultList();
+    }
+    
     @Override
     protected String getIntersectNamedQuery() {
         return BY_INTERSECT;
