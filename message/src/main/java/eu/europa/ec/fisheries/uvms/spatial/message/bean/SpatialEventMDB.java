@@ -69,6 +69,18 @@ public class SpatialEventMDB implements MessageListener {
     private Event<SpatialMessageEvent> batchEnrichmentSpatialEvent;
 
     @Inject
+    @GetUserAreaSpatialEnrichmentEvent
+    private Event<SpatialMessageEvent> getUserAreaSpatialEnrichmentEvent;
+
+    @Inject
+    @GetUserAreaSpatialEnrichmentEventByWkt
+    private Event<SpatialMessageEvent> getUserAreaSpatialEnrichmentEventByWkt;
+
+    @Inject
+    @GetUserAreaSpatialBatchEnrichmentEvent
+    private Event<SpatialMessageEvent> getUserAreaSpatialBatchEnrichmentEvent;
+
+    @Inject
     @GetClosestLocationEvent
     private Event<SpatialMessageEvent> closestLocationSpatialEvent;
 
@@ -130,6 +142,18 @@ public class SpatialEventMDB implements MessageListener {
                 case GET_ENRICHMENT_BATCH:
                     SpatialMessageEvent spatialBatchEnrichmentEvent = new SpatialMessageEvent(textMessage,request);
                     batchEnrichmentSpatialEvent.fire(spatialBatchEnrichmentEvent);
+                    break;
+                case GET_USER_AREA_ENRICHMENT:
+                    SpatialMessageEvent userAreaSpatialEnrichment = new SpatialMessageEvent(textMessage,request);
+                    getUserAreaSpatialEnrichmentEvent.fire(userAreaSpatialEnrichment);
+                    break;
+                case GET_USER_AREA_ENRICHMENT_BY_WKT:
+                    SpatialMessageEvent userAreaSpatialEnrichmentByWkt = new SpatialMessageEvent(textMessage,request);
+                    getUserAreaSpatialEnrichmentEventByWkt.fire(userAreaSpatialEnrichmentByWkt);
+                    break;
+                case GET_USER_AREA_ENRICHMENT_BATCH:
+                    SpatialMessageEvent userAreaBatchSpatialEnrichment = new SpatialMessageEvent(textMessage,request);
+                    getUserAreaSpatialBatchEnrichmentEvent.fire(userAreaBatchSpatialEnrichment);
                     break;
                 case GET_FILTER_AREA:
                     SpatialMessageEvent filterAreaEvent = new SpatialMessageEvent(textMessage,request);
