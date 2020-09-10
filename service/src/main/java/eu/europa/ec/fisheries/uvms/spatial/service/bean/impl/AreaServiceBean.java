@@ -481,7 +481,7 @@ public class AreaServiceBean implements AreaService {
             }
             buildQuery(userAreas.getUserAreas(), sb, "user", typesEntityMap);
         }
-        log.debug("{} QUERY => {}", sb.toString());
+        log.debug("QUERY => {}", sb.toString());
         List records = repository.listBaseAreaList(sb.toString());
         final List<Geometry> scopeGeometryList = new ArrayList<>();
         final List<Geometry> userGeometryList = new ArrayList<>();
@@ -672,13 +672,9 @@ public class AreaServiceBean implements AreaService {
     }
     
     @Override
-    public List<AreaExtendedIdentifierType> getUserAreasByPoint(Date activeDate, Double lon, Double lat, Integer crs) throws ServiceException {
-        if (lat == null || lon == null || crs == null){
-            throw new ServiceException("MISSING MANDATORY FIELDS");
-        }
-        final Point incoming = (Point) GeometryUtils.toGeographic(lat, lon, crs);
+    public List<AreaExtendedIdentifierType> getUserAreasByPoint(Date activeDate, Geometry geometry) throws ServiceException {
         final List<AreaExtendedIdentifierType> areaTypes = new ArrayList<>();
-        List<UserAreasEntity> records = repository.intersectingUserAreas(incoming,activeDate);
+        List<UserAreasEntity> records = repository.intersectingUserAreas(geometry,activeDate);
         for (UserAreasEntity result : records) {
             AreaExtendedIdentifierType area = new AreaExtendedIdentifierType();
             area.setAreaType(AreaType.USERAREA);

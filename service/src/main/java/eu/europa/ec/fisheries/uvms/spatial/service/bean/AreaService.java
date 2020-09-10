@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Area;
@@ -61,7 +62,7 @@ public interface AreaService {
 
     List<AreaExtendedIdentifierType> getAreasByPoint(AreaByLocationSpatialRQ request) throws ServiceException;
 
-    List<AreaExtendedIdentifierType> getUserAreasByPoint(Date activeDate, Double lon, Double lat, Integer crs) throws ServiceException;
+    List<AreaExtendedIdentifierType> getUserAreasByPoint(Date activeDate, Geometry incoming) throws ServiceException;
         
     List<Location> getClosestPointByPoint(ClosestLocationSpatialRQ request) throws ServiceException;
 

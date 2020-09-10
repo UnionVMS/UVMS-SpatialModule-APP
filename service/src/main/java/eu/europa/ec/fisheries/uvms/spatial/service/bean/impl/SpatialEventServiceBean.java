@@ -14,7 +14,6 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean.impl;
 
 import eu.europa.ec.fisheries.uvms.spatial.message.event.SpatialMessageErrorEvent;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.carrier.EventMessage;
-import eu.europa.ec.fisheries.uvms.commons.message.api.Fault;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.JAXBUtils;
 import eu.europa.ec.fisheries.uvms.spatial.message.bean.SpatialProducer;
 import eu.europa.ec.fisheries.uvms.spatial.message.event.*;
@@ -169,6 +168,39 @@ public class SpatialEventServiceBean {
         }
     }
 
+    public void getUserAreaSpatialEnrichment(@Observes @GetUserAreaSpatialEnrichmentEvent SpatialMessageEvent message) {
+        log.info("Getting UserArea Spatial Enrichment.");
+        try {
+            SpatialEnrichmentRS spatialEnrichmentRS = enrichmentService.getUserAreaSpatialEnrichment((SpatialEnrichmentRQ)message.getSpatialModuleRequest());
+            log.info("Enrich was Successful.. Response sent back to [ {} ] queue.", message.getMessage().getJMSReplyTo());
+            messageProducer.sendResponseMessageToSender(message.getMessage(), SpatialModuleResponseMapper.mapEnrichmentResponse(spatialEnrichmentRS), MODULE_NAME);
+        } catch (Exception e) {
+            sendError(message, e);
+        }
+    }
+    
+    public void getUserAreaSpatialEnrichmentByWkt(@Observes @GetUserAreaSpatialEnrichmentEventByWkt SpatialMessageEvent message) {
+        log.info("Getting UserArea Spatial Enrichment by wkt.");
+        try {
+
+            BatchSpatialEnrichmentRS spatialEnrichmentRS = enrichmentService.getUserAreaSpatialEnrichmentByWkt((BatchSpatialUserAreaEnrichmentRQ)message.getSpatialModuleRequest());
+            log.info("Enrich was Successful.. Response sent back to [ {} ] queue.", message.getMessage().getJMSReplyTo());
+            messageProducer.sendResponseMessageToSender(message.getMessage(), SpatialModuleResponseMapper.mapToBatchEnrichmentResponse(spatialEnrichmentRS), MODULE_NAME);
+        } catch (Exception e) {
+            sendError(message, e);
+        }
+    }
+    
+    public void getUserAreaSpatialBatchEnrichment(@Observes @GetUserAreaSpatialBatchEnrichmentEvent SpatialMessageEvent message) {
+        log.info("Getting UserArea Spatial BATCH Enrichment.");
+        try {
+            BatchSpatialEnrichmentRS spatialEnrichmentRS = enrichmentService.getUserAreaBatchSpatialEnrichment((BatchSpatialEnrichmentRQ) message.getSpatialModuleRequest());
+            log.info("Enrich BATCH was Successful.. Response sent back to [ {} ] queue.", message.getMessage().getJMSReplyTo());
+            messageProducer.sendResponseMessageToSender(message.getMessage(), SpatialModuleResponseMapper.mapToBatchEnrichmentResponse(spatialEnrichmentRS), MODULE_NAME);
+        } catch (Exception e) {
+            sendError(message, e);
+        }
+    }
 
     public void deleteMapConfiguration(@Observes @DeleteMapConfigurationEvent SpatialMessageEvent message) {
         log.info("Delete mapDefaultSRIDToEPSG configurations.");
