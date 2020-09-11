@@ -11,7 +11,7 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 
-import javax.ejb.EJB;
+import javax.inject.Inject;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
@@ -21,10 +21,10 @@ import java.util.Arrays;
 @ArquillianSuiteDeployment
 public abstract class BuildSpatialRestDeployment {
 
-    @EJB
+    @Inject
     private JwtTokenHandler tokenHandler;
 
-    @EJB
+    @Inject
     private InternalRestTokenHandler internalRestTokenHandler;
 
     private String token;
