@@ -36,6 +36,11 @@
                         </webModule>
                     </modules>
                     <skinnyWars>true</skinnyWars>
+                    <archive>
+                        <manifestEntries>
+                            <Logging-Profile>spatialSwe</Logging-Profile>
+                        </manifestEntries>
+                    </archive>
                 </configuration>
             </plugin>
             <plugin>
