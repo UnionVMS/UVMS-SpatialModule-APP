@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>fish.focus.uvms.maven</groupId>
 		<artifactId>uvms-pom</artifactId>
-		<version>3.3</version>
+		<version>3.4</version>
 	</parent>
 
     <groupId>eu.europa.ec.fisheries.uvms.spatialSwe</groupId>
@@ -25,15 +25,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <movement.model.version>5.5.18-UVMS</movement.model.version>
-        <application.name>${project.parent.artifactId}</application.name>
-        <application.version>${project.parent.version}</application.version>
-        <application.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}.log</application.logfile>
-        <application.error.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}-error.log</application.error.logfile>
-        <application.logfile.boot>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}-boot.log</application.logfile.boot>
         <geotools.version>22.2</geotools.version>
         <uvms.commons.version>4.1.7</uvms.commons.version>
         <usm4uvms.version>4.1.2</usm4uvms.version>
-        <fish.focus.parent.version>3.3</fish.focus.parent.version>
+        <fish.focus.parent.version>3.4</fish.focus.parent.version>
         <usm_deployment_descriptor_force_update>false</usm_deployment_descriptor_force_update>
         <release.branch.name>uvms-1.0.0</release.branch.name>
         <maven.scm.provider.version>2.1.1</maven.scm.provider.version>
@@ -80,12 +75,6 @@
                 <version>${fish.focus.parent.version}</version>
 				<type>pom</type>
 			</dependency>
-            <dependency>
-                <groupId>fish.focus.uvms.maven</groupId>
-                <artifactId>uvms-pom-logging-deps</artifactId>
-                <version>${fish.focus.parent.version}</version>
-                <type>pom</type>
-            </dependency>
             <dependency>
                 <groupId>fish.focus.uvms.maven</groupId>
                 <artifactId>uvms-pom-java11-deps</artifactId>
