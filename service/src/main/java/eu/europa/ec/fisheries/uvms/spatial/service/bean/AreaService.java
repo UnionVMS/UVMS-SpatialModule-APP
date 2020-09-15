@@ -27,6 +27,8 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestLocationSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GetAreasGeometryUnionRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GetAreasGeometryUnionRS;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Location;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.UnitType;
@@ -50,6 +52,8 @@ public interface AreaService {
 
     List<SystemAreaNamesDto> searchAreasByCode(String areaType, String filter) throws ServiceException;
 
+    GetAreasGeometryUnionRS getAreasGeometryUnion(GetAreasGeometryUnionRQ spatialAreasUnionRQ) throws ServiceException;
+        
     FilterAreasSpatialRS computeAreaFilter(FilterAreasSpatialRQ filterAreasSpatialRQ) throws ServiceException;
 
     List<Map<String, Object>> getAreasByIds(List<AreaTypeEntry> areaTypes) throws ServiceException;

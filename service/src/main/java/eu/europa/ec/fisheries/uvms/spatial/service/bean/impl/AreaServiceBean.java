@@ -17,7 +17,6 @@ import static org.geotools.geometry.jts.JTS.orthodromicDistance;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
@@ -62,6 +61,8 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.AreaTypeEntry;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestLocationSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.FilterAreasSpatialRS;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GetAreasGeometryUnionRQ;
+import eu.europa.ec.fisheries.uvms.spatial.model.schemas.GetAreasGeometryUnionRS;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Location;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationTypeEntry;
@@ -353,7 +354,6 @@ public class AreaServiceBean implements AreaService {
             Geometry geom = (Geometry) result[2];
             simpleTypeList.add(new AreaSimpleType(type, code, GeometryMapper.INSTANCE.geometryToWkt(geom).getValue()));
         }
-
         return simpleTypeList;
     }
 
@@ -462,7 +462,42 @@ public class AreaServiceBean implements AreaService {
         }
         return new ArrayList<>(distancePerTypeMap.values());
     }
+    
+    @Override
+    public GetAreasGeometryUnionRS getAreasGeometryUnion(GetAreasGeometryUnionRQ spatialAreasUnionRQ) throws ServiceException {
+        List<AreaIdentifierType> typeList = spatialAreasUnionRQ.getAreas();
+        final StringBuilder sb = new StringBuilder();
 
+        final List<AreaLocationTypesEntity> typesEntities = repository.findAllIsLocation(false);
+        final Map<String, AreaLocationTypesEntity> typesEntityMap = new HashMap<>();
+        for (AreaLocationTypesEntity typesEntity : typesEntities){
+            typesEntityMap.put(typesEntity.getTypeName(), typesEntity);
+        }
+        for (AreaIdentifierType next : typeList){
+            final String id = next.getId();
+            final AreaType areaType = next.getAreaType();
+            final AreaLocationTypesEntity locationTypesEntity = typesEntityMap.get(areaType.value());
+            sb.append("(SELECT ta.type,ta.geom FROM spatial.").append(locationTypesEntity.getAreaDbTable())
+                    .append(" ta WHERE ta.gid = ").append(id).append(" AND ta.enabled = 'Y')");
+            sb.append(" UNION ALL ");
+        }
+        String query = sb.substring(0,sb.lastIndexOf(" UNION ALL "));
+        List<Object[]> records = repository.listBaseAreaList(query);
+        final List<Geometry> geometryList = new ArrayList<>();
+        for (Object[] record : records) {
+            Geometry geometry = (Geometry) record[1];
+            Integer epsgSRID = repository.mapToEpsgSRID(geometry.getSRID());
+            if (!isDefaultEpsgSRID(epsgSRID)) {
+                geometry = GeometryUtils.toGeographic(geometry, epsgSRID);
+            }
+            geometryList.add(geometry);
+        }
+        GeometryFactory geometryFactory = JTSFactoryFinder.getGeometryFactory();
+        Geometry union = geometryFactory.buildGeometry(geometryList).union();
+        String geometry = GeometryMapper.INSTANCE.geometryToWkt(union).getValue();
+        return new GetAreasGeometryUnionRS(geometry);
+    }
+    
     @Override
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public FilterAreasSpatialRS computeAreaFilter(final FilterAreasSpatialRQ request) throws ServiceException {

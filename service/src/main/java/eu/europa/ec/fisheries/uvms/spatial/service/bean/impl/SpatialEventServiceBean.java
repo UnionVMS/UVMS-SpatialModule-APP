@@ -191,6 +191,17 @@ public class SpatialEventServiceBean {
         }
     }
     
+    public void getAreasGeometryUnionEvent(@Observes @GetAreasGeometryUnionEvent SpatialMessageEvent message) {
+        log.info("Getting areas geometry union.");
+        try {
+            GetAreasGeometryUnionRS spatialEnrichmentRS = areaService.getAreasGeometryUnion((GetAreasGeometryUnionRQ)message.getSpatialModuleRequest());
+            log.info("Enrich was Successful.. Response sent back to [ {} ] queue.", message.getMessage().getJMSReplyTo());
+            messageProducer.sendResponseMessageToSender(message.getMessage(), JAXBUtils.marshallJaxBObjectToString(spatialEnrichmentRS), MODULE_NAME);
+        } catch (Exception e) {
+            sendError(message, e);
+        }
+    }
+    
     public void getUserAreaSpatialBatchEnrichment(@Observes @GetUserAreaSpatialBatchEnrichmentEvent SpatialMessageEvent message) {
         log.info("Getting UserArea Spatial BATCH Enrichment.");
         try {
