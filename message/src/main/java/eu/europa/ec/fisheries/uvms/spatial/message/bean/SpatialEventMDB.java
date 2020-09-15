@@ -77,6 +77,10 @@ public class SpatialEventMDB implements MessageListener {
     private Event<SpatialMessageEvent> getUserAreaSpatialEnrichmentEventByWkt;
 
     @Inject
+    @GetAreasGeometryUnionEvent
+    private Event<SpatialMessageEvent> getAreasGeometryUnionEvent;
+
+    @Inject
     @GetUserAreaSpatialBatchEnrichmentEvent
     private Event<SpatialMessageEvent> getUserAreaSpatialBatchEnrichmentEvent;
 
@@ -150,6 +154,10 @@ public class SpatialEventMDB implements MessageListener {
                 case GET_USER_AREA_ENRICHMENT_BY_WKT:
                     SpatialMessageEvent userAreaSpatialEnrichmentByWkt = new SpatialMessageEvent(textMessage,request);
                     getUserAreaSpatialEnrichmentEventByWkt.fire(userAreaSpatialEnrichmentByWkt);
+                    break; 
+                case GET_AREAS_GEOMETRY_UNION:
+                    SpatialMessageEvent areasGeometryUnionEvent = new SpatialMessageEvent(textMessage,request);
+                    getAreasGeometryUnionEvent.fire(areasGeometryUnionEvent);
                     break;
                 case GET_USER_AREA_ENRICHMENT_BATCH:
                     SpatialMessageEvent userAreaBatchSpatialEnrichment = new SpatialMessageEvent(textMessage,request);
