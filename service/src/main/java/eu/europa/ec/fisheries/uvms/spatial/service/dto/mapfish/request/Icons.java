@@ -28,6 +28,9 @@ public class Icons {
     @JsonProperty("positions")
     @Valid
     private Positions positions;
+    @JsonProperty("activities")
+    @Valid
+    private Positions activities;
     @JsonProperty("alarms")
     @Valid
     private Alarms alarms;
@@ -82,6 +85,26 @@ public class Icons {
     @JsonProperty("positions")
     public void setPositions(Positions positions) {
         this.positions = positions;
+    }
+
+    /**
+     *
+     * @return
+     *     The activity
+     */
+    @JsonProperty("activities")
+    public Positions getActivities() {
+       return activities;
+    }
+
+    /**
+     *
+     * @param activities
+     *     The activities
+     */
+    @JsonProperty("activities")
+    public void setActivities(Positions activities) {
+        this.activities = activities;
     }
 
     /**
@@ -164,7 +187,7 @@ public class Icons {
             return false;
         }
         Icons rhs = ((Icons) other);
-        return new EqualsBuilder().append(alarms, rhs.alarms).append(positions, rhs.positions).append(segments, rhs.segments).append(additionalProperties, rhs.additionalProperties).isEquals();
+        return new EqualsBuilder().append(alarms, rhs.alarms).append(positions, rhs.positions).append(activities, rhs.activities).append(segments, rhs.segments).append(additionalProperties, rhs.additionalProperties).isEquals();
     }
 
 }

@@ -31,16 +31,20 @@ public class VectorStylesDto {
     @JsonProperty("alarms")
     private AlarmsDto alarmsDto;
 
+    @JsonProperty("activities")
+    private ActivityDto activityDto;
+
     /**
      * No args constructor for use in serialization
      */
     public VectorStylesDto() {
     }
 
-    public VectorStylesDto(PositionDto positionDto, SegmentDto segmentDto, AlarmsDto alarmsDto) {
+    public VectorStylesDto(PositionDto positionDto, SegmentDto segmentDto, AlarmsDto alarmsDto,ActivityDto activitiesDto) {
         this.positionDto = positionDto;
         this.segmentDto = segmentDto;
         this.alarmsDto = alarmsDto;
+        this.activityDto = activitiesDto;
     }
 
     @JsonProperty("positions")
@@ -71,5 +75,10 @@ public class VectorStylesDto {
     @JsonProperty("alarms")
     public void setAlarmsDto(AlarmsDto alarmsDto) {
         this.alarmsDto = alarmsDto;
+    }
+
+    @JsonProperty("activities")
+    public void setActivityDto(ActivityDto activitiesDto) {
+        this.activityDto = activitiesDto;
     }
 }

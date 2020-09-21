@@ -10,8 +10,11 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.service.dto.mapfish.response;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import javax.validation.Valid;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -22,42 +25,35 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Legend {
+public class Ers {
 
     @JsonProperty("base")
     private String base;
-    @JsonProperty("positions")
-    private String positions;
-    @JsonProperty("segments")
-    private String segments;
-    @JsonProperty("alarms")
-    private String alarms;
-    @JsonProperty("activity")
-    private String activity;
+    @JsonProperty("colors")
+    @Valid
+    private List<String> colors = new ArrayList<String>();
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
      * No args constructor for use in serialization
-     * 
+     *
      */
-    public Legend() {
+    public Ers() {
     }
 
     /**
-     * 
-     * @param positions
-     * @param segments
+     *
+     * @param colors
      * @param base
      */
-    public Legend(String base, String positions, String segments) {
+    public Ers(String base, List<String> colors) {
         this.base = base;
-        this.positions = positions;
-        this.segments = segments;
+        this.colors = colors;
     }
 
     /**
-     * 
+     *
      * @return
      *     The base
      */
@@ -67,7 +63,7 @@ public class Legend {
     }
 
     /**
-     * 
+     *
      * @param base
      *     The base
      */
@@ -76,84 +72,33 @@ public class Legend {
         this.base = base;
     }
 
-    public Legend withBase(String base) {
+    public Ers withBase(String base) {
         this.base = base;
         return this;
     }
 
     /**
-     * 
+     *
      * @return
-     *     The positions
+     *     The colors
      */
-    @JsonProperty("positions")
-    public String getPositions() {
-        return positions;
-    }
-
-    /**
-     * 
-     * @param positions
-     *     The positions
-     */
-    @JsonProperty("positions")
-    public void setPositions(String positions) {
-        this.positions = positions;
-    }
-
-    public Legend withPositions(String positions) {
-        this.positions = positions;
-        return this;
-    }
-
-    /**
-     * 
-     * @return
-     *     The segments
-     */
-    @JsonProperty("segments")
-    public String getSegments() {
-        return segments;
+    @JsonProperty("colors")
+    public List<String> getColors() {
+        return colors;
     }
 
     /**
      *
-     * @return
-     *     The alarms
+     * @param colors
+     *     The colors
      */
-    @JsonProperty("alarms")
-    public String getAlarms() {
-        return alarms;
+    @JsonProperty("colors")
+    public void setColors(List<String> colors) {
+        this.colors = colors;
     }
 
-    /**
-     * 
-     * @param segments
-     *     The segments
-     */
-    @JsonProperty("segments")
-    public void setSegments(String segments) {
-        this.segments = segments;
-    }
-
-    /**
-     *
-     * @param alarms
-     *     The alarms
-     */
-    @JsonProperty("alarms")
-    public void setAlarms(String alarms) {
-        this.alarms = alarms;
-    }
-
-
-    public Legend withSegments(String segments) {
-        this.segments = segments;
-        return this;
-    }
-
-    public Legend withActivities(String activity) {
-        this.activity = activity;
+    public Ers withColors(List<String> colors) {
+        this.colors = colors;
         return this;
     }
 
@@ -172,14 +117,14 @@ public class Legend {
         this.additionalProperties.put(name, value);
     }
 
-    public Legend withAdditionalProperty(String name, Object value) {
+    public Ers withAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
         return this;
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(base).append(positions).append(alarms).append(segments).append(additionalProperties).toHashCode();
+        return new HashCodeBuilder().append(base).append(colors).append(additionalProperties).toHashCode();
     }
 
     @Override
@@ -187,16 +132,11 @@ public class Legend {
         if (other == this) {
             return true;
         }
-        if ((other instanceof Legend) == false) {
+        if ((other instanceof Ers) == false) {
             return false;
         }
-        Legend rhs = ((Legend) other);
-        return new EqualsBuilder().append(base, rhs.base).append(positions, rhs.positions).append(alarms, rhs.alarms).append(segments, rhs.segments).append(additionalProperties, rhs.additionalProperties).isEquals();
+        Ers rhs = ((Ers) other);
+        return new EqualsBuilder().append(base, rhs.base).append(colors, rhs.colors).append(additionalProperties, rhs.additionalProperties).isEquals();
     }
 
-    public Legend withAlarms(String alarms) {
-        this.alarms = alarms;
-        return this;
-
-    }
 }

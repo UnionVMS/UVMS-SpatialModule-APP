@@ -104,7 +104,32 @@ public class ImageResource extends UnionVMSResource {
             handleAlarms(payload, response);
         }
 
+        if (payload.getActivities() != null) {
+            handleActivities(payload, response);
+        }
+
         return createSuccessResponse(response);
+
+    }
+
+    private void handleActivities(Icons payload, ImageResponse response) throws ServiceException {
+
+        List<ImageEncoderFactory.LegendEntry> temp = new ArrayList<>();
+        Cluster cluster = payload.getActivities().getCluster();
+        BufferedImage bufferedImage;
+        try {
+            bufferedImage = ImageEncoderFactory.renderActivity(cluster.getBgcolor(), cluster.getBordercolor());
+        } catch (TranscoderException | IOException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+        ImageEncoderFactory.LegendEntry clusterEntry = new ImageEncoderFactory.LegendEntry();
+        clusterEntry.setMsg(cluster.getText());
+        clusterEntry.setIcon(bufferedImage);
+        temp.add(clusterEntry);
+
+        String guid = UUID.randomUUID().toString();
+        response.getLegend().withActivities(guid);
+        LegendResource.getLegendEntries().put(guid, ImageEncoderFactory.renderLegend(temp, payload.getActivities().getTitle(), 25));
 
     }
 

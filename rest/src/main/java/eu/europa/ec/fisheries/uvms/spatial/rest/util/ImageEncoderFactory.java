@@ -52,6 +52,7 @@ public class ImageEncoderFactory {
     private static final String ALARM_SVG = "/alarm.svg";
     private static final String SEGMENT_SVG = "/line.svg";
     private static final String CLUSTER_SVG = "/cluster.svg";
+    private static final String ACTIVITY_SVG = "/activity.svg";
     private static final String TRANSFORM = "transform";
     private static final String FILL = "fill:";
     public static final String CIRCLE = "circle";
@@ -65,6 +66,15 @@ public class ImageEncoderFactory {
 
         log.debug("Rendering cluster icon with color {} ", borderColor);
         Document cluster = createDocument(CLUSTER_SVG);
+        NamedNodeMap attributes = cluster.getElementById(CIRCLE).getAttributes();
+        attributes.getNamedItem("stroke").getFirstChild().setNodeValue(borderColor);
+        return getBufferedImage(cluster);
+    }
+
+    public static BufferedImage renderActivity(String backGroundColor, String borderColor) throws TranscoderException, IOException {
+
+        log.debug("Rendering cluster icon with color {} ", borderColor);
+        Document cluster = createDocument(ACTIVITY_SVG);
         NamedNodeMap attributes = cluster.getElementById(CIRCLE).getAttributes();
         attributes.getNamedItem("stroke").getFirstChild().setNodeValue(borderColor);
         return getBufferedImage(cluster);
