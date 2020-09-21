@@ -12,6 +12,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.dto.usm;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import eu.europa.ec.fisheries.uvms.spatial.service.dto.config.ActivityDto;
 
 import javax.validation.constraints.NotNull;
 
@@ -31,6 +32,9 @@ public class StyleSettingsDto {
 
     @JsonProperty("alarms")
     private AlarmsDto alarms;
+
+    @JsonProperty("alarms")
+    private ActivityDto activities;
 
     public StyleSettingsDto() {}
 
@@ -57,6 +61,16 @@ public class StyleSettingsDto {
     @JsonProperty("segments")
     public void setSegments(SegmentsDto segmentsDto) {
         this.segments = segmentsDto;
+    }
+
+    @JsonProperty("activities")
+    public ActivityDto getActivities() {
+        return activities;
+    }
+
+    @JsonProperty("activities")
+    public void setActivities(ActivityDto activityDto) {
+        this.activities = activityDto;
     }
 
     @JsonProperty("alarms")
