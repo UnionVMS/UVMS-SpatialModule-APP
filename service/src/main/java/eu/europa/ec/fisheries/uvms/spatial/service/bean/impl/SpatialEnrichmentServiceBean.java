@@ -28,7 +28,6 @@ import eu.europa.ec.fisheries.uvms.spatial.model.schemas.BatchSpatialUserAreaEnr
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestAreasType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestLocationSpatialRQ;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.ClosestLocationsType;
-import eu.europa.ec.fisheries.uvms.spatial.model.schemas.CommonEnrichmentRSElement;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.Location;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.LocationType;
 import eu.europa.ec.fisheries.uvms.spatial.model.schemas.PointType;
@@ -60,17 +59,16 @@ public class SpatialEnrichmentServiceBean {
         UnitType unit = request.getUnit();
         List<AreaType> areaTypes = request.getAreaTypes() != null ? request.getAreaTypes().getAreaTypes() : null;
         List<LocationType> locationTypes = request.getLocationTypes().getLocationTypes();
-        return computeSpatialEnrichment(point, unit, locationTypes,areaTypes,SpatialEnrichmentRS.class);
+        return computeSpatialEnrichmentSpatialEnrichmentRS(point, unit, locationTypes,areaTypes);
     }
 
     public BatchSpatialEnrichmentRS getBatchSpatialEnrichment(BatchSpatialEnrichmentRQ spatialBatchEnrichmentRQ) {
         BatchSpatialEnrichmentRS batchResponse = new BatchSpatialEnrichmentRS();
         List<SpatialEnrichmentRSListElement> enrichmentRespList = batchResponse.getEnrichmentRespLists();
         for (SpatialEnrichmentRQListElement enrichmentListElement : spatialBatchEnrichmentRQ.getEnrichmentLists()) {
-            SpatialEnrichmentRSListElement rsElement = computeSpatialEnrichment(enrichmentListElement.getPoint(), enrichmentListElement.getUnit(),
+            SpatialEnrichmentRSListElement rsElement = computeSpatialEnrichmentSpatialEnrichmentRSListElement(enrichmentListElement.getPoint(), enrichmentListElement.getUnit(),
                     enrichmentListElement.getLocationTypes(),
-                    enrichmentListElement.getAreaTypes(),
-                    SpatialEnrichmentRSListElement.class);
+                    enrichmentListElement.getAreaTypes());
             rsElement.setGuid(enrichmentListElement.getGuid());
             enrichmentRespList.add(rsElement);
         }
@@ -80,7 +78,14 @@ public class SpatialEnrichmentServiceBean {
     public SpatialEnrichmentRS getUserAreaSpatialEnrichment(SpatialEnrichmentRQ request) throws ServiceException {
         PointType point = request.getPoint();
         Date activeDate = XMLDateUtils.xmlGregorianCalendarToDate(request.getUserAreaActiveDate());
-        return computeUserAreaSpatialEnrichment(point,activeDate,SpatialEnrichmentRS.class);
+        SpatialEnrichmentRS response = new SpatialEnrichmentRS();
+        List<AreaExtendedIdentifierType> areaTypesByLocation = areaService.getUserAreasByPoint(activeDate, GeometryUtils.toGeographic(point.getLatitude(), point.getLongitude(), point.getCrs()));
+        if(areaTypesByLocation != null){
+            AreasByLocationType areasByLocationType = new AreasByLocationType();
+            areasByLocationType.getAreas().addAll(areaTypesByLocation);
+            response.setAreasByLocation(areasByLocationType);
+        }
+        return response;
     }
 
     public BatchSpatialEnrichmentRS getUserAreaSpatialEnrichmentByWkt(BatchSpatialUserAreaEnrichmentRQ request) throws ServiceException {
@@ -97,8 +102,7 @@ public class SpatialEnrichmentServiceBean {
                 throw new ServiceException("INVALID GEOMETRY DATA",e);
             }
             geometry.setSRID(4326);
-            SpatialEnrichmentRSListElement rsElement = computeUserAreaSpatialEnrichment(geometry,
-                    activeDate, SpatialEnrichmentRSListElement.class);
+            SpatialEnrichmentRSListElement rsElement = computeUserAreaSpatialEnrichment(geometry, activeDate);
             enrichmentRespList.add(rsElement);
         }
         return batchResponse;
@@ -109,25 +113,24 @@ public class SpatialEnrichmentServiceBean {
         List<SpatialEnrichmentRSListElement> enrichmentRespList = batchResponse.getEnrichmentRespLists();
         for (SpatialEnrichmentRQListElement enrichmentListElement : spatialBatchEnrichmentRQ.getEnrichmentLists()) {
             SpatialEnrichmentRSListElement rsElement = computeUserAreaSpatialEnrichment(enrichmentListElement.getPoint(),
-                    XMLDateUtils.xmlGregorianCalendarToDate(enrichmentListElement.getUserAreaActiveDate()),
-                    SpatialEnrichmentRSListElement.class);
+                    XMLDateUtils.xmlGregorianCalendarToDate(enrichmentListElement.getUserAreaActiveDate()));
             rsElement.setGuid(enrichmentListElement.getGuid());
             enrichmentRespList.add(rsElement);
         }
         return batchResponse;
     }
     
-    private <R extends CommonEnrichmentRSElement> R computeUserAreaSpatialEnrichment(PointType point, Date activeDate, Class<R> responseClass)  throws ServiceException {
+    private SpatialEnrichmentRSListElement computeUserAreaSpatialEnrichment(PointType point, Date activeDate)  throws ServiceException {
         if (point.getLongitude() == null || point.getLatitude() == null || point.getCrs()  == null){
             throw new ServiceException("MISSING MANDATORY FIELDS");
         }
         final Geometry incoming = GeometryUtils.toGeographic(point.getLatitude(), point.getLongitude(), point.getCrs());
-        return computeUserAreaSpatialEnrichment(incoming,activeDate,responseClass);
+        return computeUserAreaSpatialEnrichment(incoming,activeDate);
     }
-    
+
     @SneakyThrows
-    private <R extends CommonEnrichmentRSElement> R computeUserAreaSpatialEnrichment(final Geometry incoming, Date activeDate, Class<R> responseClass) {
-        R response = responseClass.newInstance();
+    private SpatialEnrichmentRSListElement computeUserAreaSpatialEnrichment(final Geometry incoming, Date activeDate) {
+        SpatialEnrichmentRSListElement response = new SpatialEnrichmentRSListElement();
         List<AreaExtendedIdentifierType> areaTypesByLocation = areaService.getUserAreasByPoint(activeDate, incoming);
         if(areaTypesByLocation != null){
             AreasByLocationType areasByLocationType = new AreasByLocationType();
@@ -138,7 +141,7 @@ public class SpatialEnrichmentServiceBean {
     }
     
     @SneakyThrows
-    private <R extends CommonEnrichmentRSElement> R computeSpatialEnrichment(PointType point, UnitType unit, List<LocationType> locationTypes, List<AreaType> areaTypes, Class<R> responseClass) {
+    private SpatialEnrichmentRS computeSpatialEnrichmentSpatialEnrichmentRS(PointType point, UnitType unit, List<LocationType> locationTypes, List<AreaType> areaTypes) {
         AreaByLocationSpatialRQ areaByLocationSpatialRQ = new AreaByLocationSpatialRQ();
         areaByLocationSpatialRQ.setPoint(point);
         List<AreaExtendedIdentifierType> areaTypesByLocation = areaService.getAreasByPoint(areaByLocationSpatialRQ);
@@ -163,7 +166,7 @@ public class SpatialEnrichmentServiceBean {
 
         List<Location> closestLocations = areaService.getClosestPointByPoint(closestLocationSpatialRQ);
 
-        R response = responseClass.newInstance();
+        SpatialEnrichmentRS response = new SpatialEnrichmentRS();
         if(areaTypesByLocation != null){
             AreasByLocationType areasByLocationType = new AreasByLocationType();
             areasByLocationType.getAreas().addAll(areaTypesByLocation);
@@ -184,4 +187,50 @@ public class SpatialEnrichmentServiceBean {
         return response;
     }
 
+    @SneakyThrows
+    private SpatialEnrichmentRSListElement computeSpatialEnrichmentSpatialEnrichmentRSListElement(PointType point, UnitType unit, List<LocationType> locationTypes, List<AreaType> areaTypes) {
+        AreaByLocationSpatialRQ areaByLocationSpatialRQ = new AreaByLocationSpatialRQ();
+        areaByLocationSpatialRQ.setPoint(point);
+        List<AreaExtendedIdentifierType> areaTypesByLocation = areaService.getAreasByPoint(areaByLocationSpatialRQ);
+
+        /*
+            ClosestAreaSpatialRQ closestAreaSpatialRQ = new ClosestAreaSpatialRQ();
+            ClosestAreaSpatialRQ.AreaTypes types = new ClosestAreaSpatialRQ.AreaTypes();
+            types.getAreaTypes().addAll(areaTypes);
+            closestAreaSpatialRQ.setAreaTypes(types);
+            closestAreaSpatialRQ.setUnit(unit);
+            closestAreaSpatialRQ.setPoint(point);
+        */
+
+        List<Area> closestAreas = areaService.getClosestArea(point.getLongitude(), point.getLatitude(), 3857, unit);
+
+        ClosestLocationSpatialRQ closestLocationSpatialRQ = new ClosestLocationSpatialRQ();
+        closestLocationSpatialRQ.setPoint(point);
+        closestLocationSpatialRQ.setUnit(unit);
+        ClosestLocationSpatialRQ.LocationTypes locationTp = new ClosestLocationSpatialRQ.LocationTypes();
+        locationTp.getLocationTypes().addAll(locationTypes);
+        closestLocationSpatialRQ.setLocationTypes(locationTp);
+
+        List<Location> closestLocations = areaService.getClosestPointByPoint(closestLocationSpatialRQ);
+
+        SpatialEnrichmentRSListElement response = new SpatialEnrichmentRSListElement();
+        if(areaTypesByLocation != null){
+            AreasByLocationType areasByLocationType = new AreasByLocationType();
+            areasByLocationType.getAreas().addAll(areaTypesByLocation);
+            response.setAreasByLocation(areasByLocationType);
+        }
+
+        if (closestAreas != null) {
+            ClosestAreasType closestAreasType = new ClosestAreasType();
+            closestAreasType.getClosestAreas().addAll(closestAreas);
+            response.setClosestAreas(closestAreasType);
+        }
+
+        if (closestLocations != null){
+            ClosestLocationsType locationType = new ClosestLocationsType();
+            locationType.getClosestLocations().addAll(closestLocations);
+            response.setClosestLocations(locationType);
+        }
+        return response;
+    }
 }
