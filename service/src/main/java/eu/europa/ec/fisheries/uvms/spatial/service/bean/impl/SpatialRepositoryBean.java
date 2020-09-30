@@ -16,7 +16,6 @@ import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -399,6 +398,11 @@ public class SpatialRepositoryBean implements SpatialRepository {
     @Override
     public List listBaseAreaList(final String query) throws ServiceException {
         return areaDao.listBaseAreas(query);
+    }
+
+    @Override
+    public List listBaseAreaGeometries(String query) throws ServiceException {
+        return areaDao.listBaseAreaGeometries(query);
     }
 
     @Override

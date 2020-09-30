@@ -146,6 +146,8 @@ public interface SpatialRepository {
 
     List listBaseAreaList(String query) throws ServiceException;
 
+    List listBaseAreaGeometries(String query) throws ServiceException;
+
     void makeGeomValid(String areaDbTable, DatabaseDialect dialect);
 
     /**

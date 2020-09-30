@@ -38,6 +38,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vividsolutions.jts.geom.Geometry;
@@ -465,27 +467,14 @@ public class AreaServiceBean implements AreaService {
     
     @Override
     public GetAreasGeometryUnionRS getAreasGeometryUnion(GetAreasGeometryUnionRQ spatialAreasUnionRQ) throws ServiceException {
-        List<AreaIdentifierType> typeList = spatialAreasUnionRQ.getAreas();
-        final StringBuilder sb = new StringBuilder();
-
-        final List<AreaLocationTypesEntity> typesEntities = repository.findAllIsLocation(false);
-        final Map<String, AreaLocationTypesEntity> typesEntityMap = new HashMap<>();
-        for (AreaLocationTypesEntity typesEntity : typesEntities){
-            typesEntityMap.put(typesEntity.getTypeName(), typesEntity);
-        }
-        for (AreaIdentifierType next : typeList){
-            final String id = next.getId();
-            final AreaType areaType = next.getAreaType();
-            final AreaLocationTypesEntity locationTypesEntity = typesEntityMap.get(areaType.value());
-            sb.append("(SELECT ta.type,ta.geom FROM spatial.").append(locationTypesEntity.getAreaDbTable())
-                    .append(" ta WHERE ta.gid = ").append(id).append(" AND ta.enabled = 'Y')");
-            sb.append(" UNION ALL ");
-        }
-        String query = sb.substring(0,sb.lastIndexOf(" UNION ALL "));
-        List<Object[]> records = repository.listBaseAreaList(query);
+        final Map<String, AreaLocationTypesEntity> typesEntityMap = repository.findAllIsLocation(false).stream()
+                .collect(Collectors.toMap(AreaLocationTypesEntity::getTypeName, Function.identity()));
+        final String query = spatialAreasUnionRQ.getAreas().stream()
+                .map(toQuery(typesEntityMap))
+                .collect(Collectors.joining(" UNION ALL "));
+        List<Geometry> records = repository.listBaseAreaGeometries(query);
         final List<Geometry> geometryList = new ArrayList<>();
-        for (Object[] record : records) {
-            Geometry geometry = (Geometry) record[1];
+        for (Geometry geometry : records) {
             Integer epsgSRID = repository.mapToEpsgSRID(geometry.getSRID());
             if (!isDefaultEpsgSRID(epsgSRID)) {
                 geometry = GeometryUtils.toGeographic(geometry, epsgSRID);
@@ -496,6 +485,15 @@ public class AreaServiceBean implements AreaService {
         Geometry union = geometryFactory.buildGeometry(geometryList).union();
         String geometry = GeometryMapper.INSTANCE.geometryToWkt(union).getValue();
         return new GetAreasGeometryUnionRS(geometry);
+    }
+
+    private Function<AreaIdentifierType, String> toQuery(Map<String, AreaLocationTypesEntity> typesEntityMap) {
+        return next -> {
+            String id = next.getId();
+            AreaType areaType = next.getAreaType();
+            AreaLocationTypesEntity locationTypesEntity = typesEntityMap.get(areaType.value());
+            return "(SELECT ta.geom FROM spatial." + locationTypesEntity.getAreaDbTable() + " ta WHERE ta.gid = " + id + " AND ta.enabled = 'Y')";
+        };
     }
     
     @Override
@@ -516,7 +514,6 @@ public class AreaServiceBean implements AreaService {
             }
             buildQuery(userAreas.getUserAreas(), sb, "user", typesEntityMap);
         }
-        log.debug("QUERY => {}", sb.toString());
         List records = repository.listBaseAreaList(sb.toString());
         final List<Geometry> scopeGeometryList = new ArrayList<>();
         final List<Geometry> userGeometryList = new ArrayList<>();
