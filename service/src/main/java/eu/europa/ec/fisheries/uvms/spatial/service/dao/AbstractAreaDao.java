@@ -23,10 +23,7 @@ import eu.europa.ec.fisheries.uvms.spatial.service.dto.upload.UploadMappingPrope
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.AreaLocationTypesEntity;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.BaseAreaEntity;
 import java.io.Serializable;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -135,6 +132,13 @@ public abstract class AbstractAreaDao<E extends BaseAreaEntity> extends Abstract
         javax.persistence.Query emNativeQuery = getEntityManager().createNativeQuery(query);
         emNativeQuery.unwrap(SQLQuery.class)
                 .addScalar(TYPE, StringType.INSTANCE)
+                .addScalar(GEOM, GeometryType.INSTANCE);
+        return emNativeQuery.getResultList();
+    }
+
+    public List listBaseAreaGeometries(final String query) {
+        javax.persistence.Query emNativeQuery = getEntityManager().createNativeQuery(query);
+        emNativeQuery.unwrap(SQLQuery.class)
                 .addScalar(GEOM, GeometryType.INSTANCE);
         return emNativeQuery.getResultList();
     }
