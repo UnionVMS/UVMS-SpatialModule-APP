@@ -5,6 +5,6 @@ target/*
 container-conf/lib/*
 logging.properties
 .idea
-rest/src/main/webapp/apidocs/*
+module/src/main/webapp/apidocs/*
 *.DS_Store
 application*logfile_IS_UNDEFINED

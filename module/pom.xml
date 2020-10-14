@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>spatialSwe-module</artifactId>
     <name>spatialSwe-module</name>
-    <packaging>ear</packaging>
+    <packaging>war</packaging>
 
     <parent>
         <groupId>eu.europa.ec.fisheries.uvms.spatialSwe</groupId>
@@ -12,78 +12,115 @@
         <version>2.2.6-UVMS-SNAPSHOT</version>
     </parent>
 
+    <properties>
+        <docker.dev.start.phase>test-compile</docker.dev.start.phase>
+        <docker.liquibase.phase>test-compile</docker.liquibase.phase>
+        <docker.dev.prestop.phase>validate</docker.dev.prestop.phase>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>fish.focus.uvms.maven</groupId>
+            <artifactId>uvms-pom-gis-deps</artifactId>
+            <type>pom</type>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>fish.focus.uvms.maven</groupId>
+            <artifactId>uvms-pom-monitoring-deps</artifactId>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>eu.europa.ec.fisheries.uvms</groupId>
+            <artifactId>uvms-config</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>eu.europa.ec.fisheries.uvms</groupId>
+            <artifactId>usm4uvms</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>spatial-model</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>eu.europa.ec.fisheries.uvms.movement</groupId>
+            <artifactId>movement-model</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
+            <artifactId>uvms-commons-rest</artifactId>
+            <version>${uvms.commons.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.geotools</groupId>
+            <artifactId>gt-shapefile</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax</groupId>
+                    <artifactId>javaee-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.geotools</groupId>
+            <artifactId>gt-epsg-hsql</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax</groupId>
+                    <artifactId>javaee-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>fish.focus.uvms.maven</groupId>
+            <artifactId>uvms-pom-arquillian-deps</artifactId>
+            <type>pom</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-client</artifactId>
+            <version>2.32</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
     <build>
-        <finalName>${project.name}</finalName>
+        <finalName>${project.name}-${project.version}</finalName>
         <plugins>
-            <!-- This configuration specifies what ends up in application.xml -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-ear-plugin</artifactId>
+                <artifactId>maven-war-plugin</artifactId>
                 <configuration>
-                    <modules>
-                        <ejbModule>
-                            <groupId>${project.groupId}</groupId>
-                            <artifactId>service</artifactId>
-                        </ejbModule>
-                        <ejbModule>
-                            <groupId>${project.groupId}</groupId>
-                            <artifactId>spatial-model</artifactId>
-                        </ejbModule>
-                        <webModule>
-                            <groupId>${project.groupId}</groupId>
-                            <context-root>${context.root}${project.parent.artifactId}</context-root>
-                            <artifactId>rest</artifactId>
-                        </webModule>
-                    </modules>
-                    <skinnyWars>true</skinnyWars>
+                    <webResources>
+                        <resource>
+                            <directory>src/main/webapp</directory>
+                            <filtering>true</filtering>
+                        </resource>
+                    </webResources>
                     <archive>
                         <manifestEntries>
                             <Logging-Profile>spatialSwe</Logging-Profile>
                         </manifestEntries>
                     </archive>
+                    <attachClasses>true</attachClasses>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
 
-    <dependencies>
-
-        <dependency>
-			<groupId>fish.focus.uvms.maven</groupId>
-			<artifactId>uvms-pom-monitoring-deps</artifactId>
-			<type>pom</type>
-		</dependency>
-        
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>service</artifactId>
-            <version>${project.parent.version}</version>
-            <type>ejb</type>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>spatial-model</artifactId>
-            <version>${project.parent.version}</version>
-            <type>ejb</type>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>rest</artifactId>
-            <version>${project.parent.version}</version>
-            <type>war</type>
-        </dependency>
-    </dependencies>
-
     <!-- USE following command to run this profile: mvn clean install -P wildfly-deploy wildfly:deploy -Dhostname=127.0.0.1 -Dport=9990 -Dusername=wildfly -Dpassword=password  -->
     <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <usm_deployment_descriptor_force_update>true</usm_deployment_descriptor_force_update>
+            </properties>
+        </profile>
         <profile>
             <id>wildfly-deploy</id>
             <build>
