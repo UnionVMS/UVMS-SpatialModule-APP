@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.spatial.client;
 
+import java.io.File;
 import org.eu.ingwar.tools.arquillian.extension.suite.annotations.ArquillianSuiteDeployment;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
@@ -14,16 +15,11 @@ public abstract class BuildSpatialRestClientDeployment {
     public static Archive<?> createDeployment() {
         WebArchive testWar = ShrinkWrap.create(WebArchive.class, "spatial.war");
 
-        WebArchive fromZipFile = ShrinkWrap.createFromZipFile(WebArchive.class,
-                Maven.configureResolver().loadPomFromFile("pom.xml")
-                        .resolve("eu.europa.ec.fisheries.uvms.spatialSwe:rest:war:?")
-                        .withoutTransitivity().asSingleFile());
+        File[] files = Maven.configureResolver().loadPomFromFile("pom.xml")
+                .resolve("eu.europa.ec.fisheries.uvms.spatialSwe:spatialSwe-module:jar:classes:?")
+                .withTransitivity().asFile();
 
-        testWar.merge(fromZipFile);
-
-        testWar.addAsLibraries(Maven.configureResolver().loadPomFromFile("pom.xml")
-                .resolve("eu.europa.ec.fisheries.uvms.spatialSwe:service")
-                .withTransitivity().asFile());
+        testWar.addAsLibraries(files);
 
         testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.spatial.client");
         testWar.addAsResource("beans.xml", "META-INF/beans.xml");
