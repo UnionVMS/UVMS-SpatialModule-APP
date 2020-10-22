@@ -25,11 +25,15 @@ public class SystemSettingsDto {
     @JsonProperty("bingApiKey")
     private String bingApiKey;
 
+    @JsonProperty("spatialServerUrl")
+    private String spatialServerUrl;
+
     public SystemSettingsDto() {}
 
-    public SystemSettingsDto(String geoserverUrl, String bingApiKey) {
+    public SystemSettingsDto(String geoserverUrl, String bingApiKey, String spatialServerUrl) {
         this.geoserverUrl = geoserverUrl;
         this.bingApiKey = bingApiKey;
+        this.spatialServerUrl = spatialServerUrl;
     }
 
     @JsonProperty("geoserverUrl")
@@ -52,8 +56,22 @@ public class SystemSettingsDto {
         this.bingApiKey = bingApiKey;
     }
 
+    @JsonProperty("spatialServerUrl")
+    public String getSpatialServerUrl() {
+        return spatialServerUrl;
+    }
+
+    @JsonProperty("spatialServerUrl")
+    public void setSpatialServerUrl(String spatialServerUrl) {
+        this.spatialServerUrl = spatialServerUrl;
+    }
+
     @Override
     public String toString() {
-        return "ClassPojo [geoserverUrl = " + geoserverUrl + "]";
+        return "ClassPojo[" +
+                "geoserverUrl='" + geoserverUrl + '\'' +
+                ", bingApiKey='" + bingApiKey + '\'' +
+                ", spatialServerUrl='" + spatialServerUrl + '\'' +
+                "]";
     }
 }

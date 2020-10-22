@@ -89,6 +89,7 @@ public class MapConfigServiceBean implements MapConfigService {
     private static final String SCALE = "scale";
     private static final String MOUSECOORDS = "mousecoords";
     private static final String GEO_SERVER = "geo_server_url";
+    private static final String SPATIAL_SERVER = "spatial_server_url";
     private static final String BING_API_KEY = "bing_api_key";
     private static final String PROVIDER_FORMAT_BING = "BING";
 
@@ -760,6 +761,10 @@ public class MapConfigServiceBean implements MapConfigService {
         return repository.findSystemConfigByName(BING_API_KEY);
     }
 
+    private String getSpatialServerUrl() throws ServiceException {
+        return repository.findSystemConfigByName(SPATIAL_SERVER);
+    }
+
     private List<ServiceLayerEntity> getServiceLayers(List<Long> ids, String bingApiKey) {
         List<ServiceLayerEntity> serviceLayers = MapConfigHelper.sortServiceLayers(repository.findServiceLayerEntityByIds(ids), ids);
         Iterator<ServiceLayerEntity> layerIterator = serviceLayers.iterator();
@@ -818,6 +823,7 @@ public class MapConfigServiceBean implements MapConfigService {
         SystemSettingsDto systemSettingsDto = new SystemSettingsDto();
         systemSettingsDto.setGeoserverUrl(getGeoServerUrl());
         systemSettingsDto.setBingApiKey(getBingApiKey());
+        systemSettingsDto.setSpatialServerUrl(getSpatialServerUrl());
         return systemSettingsDto;
     }
 

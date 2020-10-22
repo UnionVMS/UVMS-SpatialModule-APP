@@ -1,0 +1,21 @@
+<databaseChangeLog xmlns='http://www.liquibase.org/xml/ns/dbchangelog'
+  xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+  xsi:schemaLocation='http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd'>
+
+    <changeSet id="UNIONVMS-4725-add_spatial_server_url" author="cpapatheodorou">
+
+        <insert tableName="system_configurations">
+            <column name="name" value="spatial_server_url"/>
+            <column name="value" value=""/>
+        </insert>
+        <rollback>
+            <delete tableName="system_configurations">
+                <where>
+                    name = 'spatial_server_url'
+                </where>
+            </delete>
+        </rollback>
+    </changeSet>
+	
+
+</databaseChangeLog>
