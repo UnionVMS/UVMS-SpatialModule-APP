@@ -6,6 +6,7 @@
     <include file="changelog\v0.1\db-changelog-createTables_0.1.xml"/>
     <include file="changelog\v0.1\db-changelog-insertStaticValues_0.1.xml"/>
 	<include file="changelog\v0.4.2\db-changelog-042-001.xml"/>
+	<include file="changelog\v1.0.2\db-changelog-UNIONVMS-4725.xml"/>
 
     <!-- set DB specific properties, like sysdate vs now() <include file="changelog\properties.xml"/> -->
 
