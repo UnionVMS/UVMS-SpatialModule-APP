@@ -21,7 +21,7 @@
         <docker.liquibase.changeLogFile>LIQUIBASE/changelog/db-changelog-master.xml</docker.liquibase.changeLogFile>
         <docker.liquibase.db.user>spatial</docker.liquibase.db.user>
         <docker.liquibase.db.passwd>spatial</docker.liquibase.db.passwd>
-        <reporting.model>1.1.25-UVMS</reporting.model>
+        <reporting.model>1.1.27-UVMS</reporting.model>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <movement.model.version>5.6.0-UVMS</movement.model.version>
