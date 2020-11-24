@@ -15,6 +15,7 @@ package eu.europa.ec.fisheries.uvms.spatial.service.bean.impl;
 import eu.europa.ec.fisheries.uvms.config.constants.ConfigHelper;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.Collections;
@@ -22,6 +23,11 @@ import java.util.List;
 
 @Stateless
 public class SpatialConfigRegistration implements ConfigHelper {
+
+    public static final String MODULE_VERSION_PROPERTIES_KEY = "uvms.module.version";
+
+    @Inject
+    private PropertiesBean propertiesBean;
 
     @PersistenceContext(unitName = "spatialConfig")
     private EntityManager em;
@@ -34,6 +40,11 @@ public class SpatialConfigRegistration implements ConfigHelper {
     @Override
     public String getModuleName() {
         return "spatial";
+    }
+
+    @Override
+    public String getModuleVersion() {
+        return propertiesBean.getProperty(MODULE_VERSION_PROPERTIES_KEY);
     }
 
     @Override
