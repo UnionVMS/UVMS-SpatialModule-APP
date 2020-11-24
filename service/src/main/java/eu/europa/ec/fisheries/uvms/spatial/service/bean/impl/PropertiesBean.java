@@ -48,6 +48,12 @@ public class PropertiesBean {
             props.load(propsStream2);
             propsStream2.close();
 
+            InputStream propsStream3 =
+                    PropertiesBean.class.getResourceAsStream("/app-version.properties");
+
+            props.load(propsStream3);
+            propsStream3.close();
+
         } catch (IOException e) {
             throw new EJBException("PropertiesBean initialization error", e);
         }
