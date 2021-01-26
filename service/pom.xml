@@ -12,13 +12,12 @@
         <version>${uvms.spatial.module.version}</version>
     </parent>
 
+    <properties>
+        <application.logfile.message.pattern>%replace(%rEx){'[\r\n]+', '~~'}%nopex %n</application.logfile.message.pattern>
+    </properties>
+
     <dependencies>
 
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.reporting</groupId>
@@ -155,6 +154,12 @@
             <id>dev</id>
             <properties>
                 <usm_deployment_descriptor_force_update>true</usm_deployment_descriptor_force_update>
+            </properties>
+        </profile>
+        <profile>
+            <id>multilineLog</id>
+            <properties>
+                <application.logfile.message.pattern>%n</application.logfile.message.pattern>
             </properties>
         </profile>
     </profiles>
