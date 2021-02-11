@@ -21,7 +21,7 @@
         <docker.dev.version>3.29.0.w14</docker.dev.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <jts.version>1.13</jts.version>
+        <jts.version>1.14.0</jts.version>
         <jackson.version>2.6.0</jackson.version>
         <logback.core.version>1.2.3</logback.core.version>
         
@@ -41,7 +41,7 @@
         <application.version>${project.parent.version}</application.version>
         <application.logfile>${project.parent.artifactId}/${project.parent.artifactId}.log</application.logfile>
         <application.logfile.boot>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}-boot.log</application.logfile.boot>
-        <hibernate.version>4.3.11.Final</hibernate.version>
+        <hibernate.version>5.3.17.Final</hibernate.version>
         <hibernate-spatial.version>4.3</hibernate-spatial.version>
         <geotools.version>14.4</geotools.version>
         <hibernate.validator.version>4.3.2.Final</hibernate.validator.version>
@@ -101,7 +101,7 @@
 
             <dependency>
                 <groupId>com.vividsolutions</groupId>
-                <artifactId>jts</artifactId>
+                <artifactId>jts-core</artifactId>
                 <version>${jts.version}</version>
                 <scope>provided</scope>
             </dependency>
@@ -170,7 +170,7 @@
                 <exclusions>
                     <exclusion>
                         <groupId>com.vividsolutions</groupId>
-                        <artifactId>jts</artifactId>
+                        <artifactId>jts-core</artifactId>
                     </exclusion>
                 </exclusions>
                 <scope>provided</scope>
@@ -183,7 +183,7 @@
                 <exclusions>
                     <exclusion>
                         <groupId>com.vividsolutions</groupId>
-                        <artifactId>jts</artifactId>
+                        <artifactId>jts-core</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
