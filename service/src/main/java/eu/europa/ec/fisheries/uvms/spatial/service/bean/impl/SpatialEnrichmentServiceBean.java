@@ -202,7 +202,7 @@ public class SpatialEnrichmentServiceBean {
             closestAreaSpatialRQ.setPoint(point);
         */
 
-        List<Area> closestAreas = areaService.getClosestArea(point.getLongitude(), point.getLatitude(), 3857, unit);
+        List<Area> closestAreas = areaService.getClosestArea(point.getLongitude(), point.getLatitude(), 4326, unit);
 
         ClosestLocationSpatialRQ closestLocationSpatialRQ = new ClosestLocationSpatialRQ();
         closestLocationSpatialRQ.setPoint(point);
