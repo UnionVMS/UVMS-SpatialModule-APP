@@ -52,6 +52,7 @@ public class SpatialRestResource {
 
 //    private static final ObjectMapper MAPPER = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).registerModule(new JavaTimeModule());
     private static final ObjectMapper MAPPER = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    public static final long TWELVE_HOURS_THRESHOLD = 60 * 60 * 12;
 
 
     @Inject
@@ -215,9 +216,9 @@ public class SpatialRestResource {
                 }else if(((distanceMeter(movePoint1.getY(), movePoint1.getX(), movePoint2.getY(), movePoint2.getX()) / Math.abs(move1.getPositionTime().getTime() - move2.getPositionTime().getTime())) * FACTOR_METER_PER_SECOND_TO_KNOTS ) < 0.00001){    //if the average speed is 'zero'
                     returnVal = SegmentCategoryType.ANCHORED;
                 }else if(((distanceMeter(movePoint1.getY(), movePoint1.getX(), movePoint2.getY(), movePoint2.getX()) / Math.abs(move1.getPositionTime().getTime() - move2.getPositionTime().getTime())) * FACTOR_METER_PER_SECOND_TO_KNOTS ) > 50 ||    //speed is over 50
-                        ((distanceMeter(movePoint1.getY(), movePoint1.getX(), movePoint2.getY(), movePoint2.getX()) * NAUTICAL_MILE_ONE_METER) > 250 && Math.abs((move1.getPositionTime().getTime() / 1000) - (move2.getPositionTime().getTime()) / 1000) > 12 )){  //OR distance is grater the n250 nautical miles and duration is longer then 12 seconds (this last one feels wierd)
+                        ((distanceMeter(movePoint1.getY(), movePoint1.getX(), movePoint2.getY(), movePoint2.getX()) * NAUTICAL_MILE_ONE_METER) > 250 && Math.abs((move1.getPositionTime().getTime() / 1000) - (move2.getPositionTime().getTime()) / 1000) > TWELVE_HOURS_THRESHOLD )){  //OR distance is grater the n250 nautical miles and duration is longer then 12 seconds (this last one feels wierd)
                     returnVal = SegmentCategoryType.JUMP;
-                }else if(Math.abs((move1.getPositionTime().getTime() / 1000) - (move2.getPositionTime().getTime()) / 1000) > 12){  //if there is longer then 12 seconds between points
+                }else if(Math.abs((move1.getPositionTime().getTime() / 1000) - (move2.getPositionTime().getTime()) / 1000) > TWELVE_HOURS_THRESHOLD){  //if there is longer then 12 hours between points
                     returnVal = SegmentCategoryType.GAP;
                 }
             }else{   //and if we are
