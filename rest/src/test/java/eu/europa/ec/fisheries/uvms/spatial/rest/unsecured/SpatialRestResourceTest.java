@@ -77,7 +77,7 @@ public class SpatialRestResourceTest extends BuildSpatialRestDeployment {
 
         MovementType move1 = createBasicMovementType(2d, 3d);
         MovementType move2 = createBasicMovementType(3d, 2d);
-        move2.setPositionTime(new Date(System.currentTimeMillis() + (1000 * 60 * 30)));
+        move2.setPositionTime(new Date(System.currentTimeMillis() + (1000 * 60 * 60 * 12 + 30000)));
         List<MovementType> input = new ArrayList<>();
         input.add(move1);
         input.add(move2);
@@ -110,7 +110,7 @@ public class SpatialRestResourceTest extends BuildSpatialRestDeployment {
 
         MovementType move1 = createBasicMovementType(-15.301291d, 47.006736d);
         MovementType move2 = createBasicMovementType( -61.214025d, 36.745943d);
-        move2.setPositionTime(new Date(System.currentTimeMillis() + (1000 * 60 * 30)));
+        move2.setPositionTime(new Date(System.currentTimeMillis() + (1000 * 60 * 60 * 12 + 30000)));
         List<MovementType> input = new ArrayList<>();
         input.add(move1);
         input.add(move2);
