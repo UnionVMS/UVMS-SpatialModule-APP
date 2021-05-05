@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>spatial-module</artifactId>
@@ -35,11 +36,31 @@
                         </ejbModule>
                         <webModule>
                             <groupId>${project.groupId}</groupId>
-                            <context-root>${context.root}${project.parent.artifactId}</context-root>
                             <artifactId>rest</artifactId>
+                            <context-root>${context.root}${project.parent.artifactId}</context-root>
                         </webModule>
+                        <jarModule>
+                            <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
+                            <artifactId>uvms-commons-message</artifactId>
+                            <includeInApplicationXml>true</includeInApplicationXml>
+                            <bundleDir>/</bundleDir>
+                        </jarModule>
+                        <jarModule>
+                            <groupId>eu.europa.ec.fisheries.uvms</groupId>
+                            <artifactId>usm4uvms</artifactId>
+                            <includeInApplicationXml>true</includeInApplicationXml>
+                            <bundleDir>/</bundleDir>
+                        </jarModule>
+                        <jarModule>
+                            <groupId>eu.europa.ec.mare.usm</groupId>
+                            <artifactId>jwt-handler-impl</artifactId>
+                            <bundleFileName>jw-handler-impl.jar</bundleFileName>
+                            <includeInApplicationXml>true</includeInApplicationXml>
+                            <bundleDir>/</bundleDir>
+                        </jarModule>
                     </modules>
                     <skinnyWars>true</skinnyWars>
+                    <defaultLibBundleDir>lib</defaultLibBundleDir>
                 </configuration>
             </plugin>
             <plugin>
@@ -83,6 +104,54 @@
             <version>${project.parent.version}</version>
             <type>war</type>
         </dependency>
+        <dependency>
+            <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
+            <artifactId>uvms-commons-message</artifactId>
+            <version>${uvms.commons.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-io</groupId>
+                    <artifactId>commons-io</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>commons-lang3</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.mail</groupId>
+                    <artifactId>mail</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.javassist</groupId>
+                    <artifactId>javassist</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>eu.europa.ec.fisheries.uvms</groupId>
+            <artifactId>usm4uvms</artifactId>
+            <version>${usm4uvms.version}</version>
+            <type>jar</type>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.jboss.resteasy</groupId>
+                    <artifactId>resteasy-jaxrs</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>net.sf.ehcache</groupId>
+                    <artifactId>ehcache</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>eu.europa.ec.mare.usm</groupId>
+            <artifactId>jwt-handler-impl</artifactId>
+            <version>${usm.jwt-handler.version}</version>
+        </dependency>
     </dependencies>
 
     <!-- USE following command to run this profile: mvn clean install -P wildfly-deploy wildfly:deploy -Dhostname=127.0.0.1 -Dport=9990 -Dusername=wildfly -Dpassword=password  -->
@@ -97,23 +166,23 @@
                         <version>1.1.0.Alpha11</version>
                         <executions>
                             <!-- Undeploy the application on clean -->
-		                    <execution>
-		                        <id>undeploy</id>
-		                        <phase>clean</phase>
-		                        <goals>
-		                            <goal>undeploy</goal>
-		                        </goals>
-		                        <configuration>
-		                            <ignoreMissingDeployment>true</ignoreMissingDeployment>
-		                        </configuration>
-                    		</execution>
-                    		<execution>
-		                        <id>deploy</id>
-		                        <phase>install</phase>
-		                        <goals>
-		                            <goal>deploy</goal>
-		                        </goals>
-                    		</execution>
+                            <execution>
+                                <id>undeploy</id>
+                                <phase>clean</phase>
+                                <goals>
+                                    <goal>undeploy</goal>
+                                </goals>
+                                <configuration>
+                                    <ignoreMissingDeployment>true</ignoreMissingDeployment>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>deploy</id>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>deploy</goal>
+                                </goals>
+                            </execution>
                         </executions>
                         <configuration>
                             <filename>${project.build.finalName}.${project.packaging}</filename>

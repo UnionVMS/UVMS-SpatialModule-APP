@@ -41,8 +41,7 @@
         <application.version>${project.parent.version}</application.version>
         <application.logfile>${project.parent.artifactId}.log</application.logfile>
         <application.logfile.boot>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}-boot.log</application.logfile.boot>
-        <hibernate.version>5.3.17.Final</hibernate.version>
-        <hibernate-spatial.version>4.3</hibernate-spatial.version>
+        <hibernate.version>5.3.20.Final</hibernate.version>
         <geotools.version>14.4</geotools.version>
         <hibernate.validator.version>4.3.2.Final</hibernate.validator.version>
 
@@ -62,6 +61,7 @@
 		<dependency>
 			<groupId>javax</groupId>
 			<artifactId>javaee-api</artifactId>
+            <scope>provided</scope>
 		</dependency>
 	</dependencies>
 
@@ -156,25 +156,25 @@
 			</dependency>
 
             <!-- Hibernate JPA provider provided by WildFly -->
-            <dependency>
-                <groupId>org.hibernate</groupId>
-                <artifactId>hibernate-entitymanager</artifactId>
-                <version>${hibernate.version}</version>
-                <scope>provided</scope>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>org.hibernate</groupId>-->
+<!--                <artifactId>hibernate-entitymanager</artifactId>-->
+<!--                <version>${hibernate.version}</version>-->
+<!--                <scope>provided</scope>-->
+<!--            </dependency>-->
 
-            <dependency>
-                <groupId>org.hibernate</groupId>
-                <artifactId>hibernate-spatial</artifactId>
-                <version>4.3</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>com.vividsolutions</groupId>
-                        <artifactId>jts-core</artifactId>
-                    </exclusion>
-                </exclusions>
-                <scope>provided</scope>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>org.hibernate</groupId>-->
+<!--                <artifactId>hibernate-spatial</artifactId>-->
+<!--                <version>4.3</version>-->
+<!--                <exclusions>-->
+<!--                    <exclusion>-->
+<!--                        <groupId>com.vividsolutions</groupId>-->
+<!--                        <artifactId>jts-core</artifactId>-->
+<!--                    </exclusion>-->
+<!--                </exclusions>-->
+<!--                <scope>provided</scope>-->
+<!--            </dependency>-->
 
             <dependency>
                 <groupId>org.geotools</groupId>

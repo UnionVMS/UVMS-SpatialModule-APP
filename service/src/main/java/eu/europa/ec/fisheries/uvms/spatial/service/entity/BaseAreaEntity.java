@@ -11,16 +11,6 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.entity;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Maps;
@@ -37,8 +27,12 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.reflect.FieldUtils;
-import org.hibernate.annotations.Type;
 import org.opengis.feature.Property;
+
+import javax.persistence.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @MappedSuperclass
 @Slf4j
@@ -52,7 +46,6 @@ public class BaseAreaEntity extends BaseEntity {
     private static final String UTF_8 = "UTF-8";
 
     @JsonIgnore
-    @Type(type = "org.hibernate.spatial.GeometryType")
     private Geometry geom;
 
     private String name;
@@ -69,14 +62,14 @@ public class BaseAreaEntity extends BaseEntity {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DateUtils.DATE_TIME_UI_FORMAT)
     private Date enabledOn;
 
-    public String getGeometry(){
+    public String getGeometry() {
         return GeometryMapper.INSTANCE.geometryToWkt(geom).getValue();
     }
 
     @JsonIgnore
-    public String getGeometryType(){
+    public String getGeometryType() {
         String geometryType = null;
-        if (geom !=null){
+        if (geom != null) {
             geometryType = geom.getGeometryType();
         }
         return geometryType;
@@ -90,7 +83,7 @@ public class BaseAreaEntity extends BaseEntity {
         return extent;
     }
 
-    public String getCentroid(){
+    public String getCentroid() {
         String centroid = null;
         if (geom != null) {
             centroid = new WKTWriter().write(geom.getCentroid());
@@ -104,20 +97,18 @@ public class BaseAreaEntity extends BaseEntity {
             geom = (Geometry) values.get("the_geom"); // shape file standard
             enabled = true;
             enabledOn = new Date();
-            if (mapping != null){
-                for (UploadMappingProperty property : mapping){
+            if (mapping != null) {
+                for (UploadMappingProperty property : mapping) {
                     Object value = values.get(property.getTarget());
-                    if ("code".equals(property.getSource())){
-                        if (value!= null){
+                    if ("code".equals(property.getSource())) {
+                        if (value != null) {
                             code = String.valueOf(value);
                         }
-                    }
-                    else if ("name".equals(property.getSource())){
-                        if (value!= null){
+                    } else if ("name".equals(property.getSource())) {
+                        if (value != null) {
                             name = String.valueOf(value);
                         }
-                    }
-                    else {
+                    } else {
                         FieldUtils.writeDeclaredField(this, property.getSource(), value, true);
                     }
                 }
