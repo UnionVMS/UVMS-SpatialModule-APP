@@ -10,7 +10,6 @@ details. You should have received a copy of the GNU General Public License along
  */
 package eu.europa.ec.fisheries.uvms.spatial.service.dao;
 
-import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.SysConfigEntity;
 
 import javax.ejb.Stateless;
@@ -64,7 +63,7 @@ public class SysConfigDao {
 
     }
 
-    public List<SysConfigEntity> findSystemConfigByName(String name) throws ServiceException {
+    public List<SysConfigEntity> findSystemConfigByName(String name) {
 
         TypedQuery<SysConfigEntity> query = em.createNamedQuery( SysConfigEntity.FIND_CONFIG_BY_NAME, SysConfigEntity.class );
         query.setParameter("name",name) ;

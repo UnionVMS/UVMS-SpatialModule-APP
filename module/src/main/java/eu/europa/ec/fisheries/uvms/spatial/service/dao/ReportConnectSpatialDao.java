@@ -12,7 +12,6 @@ details. You should have received a copy of the GNU General Public License along
 
 package eu.europa.ec.fisheries.uvms.spatial.service.dao;
 
-import eu.europa.ec.fisheries.uvms.commons.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.spatial.service.entity.ReportConnectSpatialEntity;
 
 import javax.ejb.Stateless;
@@ -50,7 +49,7 @@ public class ReportConnectSpatialDao {
         return query.getResultList();
     }
 
-    public void deleteById(List<Long> reportIds) throws ServiceException {
+    public void deleteById(List<Long> reportIds) {
 
         if(reportIds == null || reportIds.size() < 1) return;
 
