@@ -11,7 +11,6 @@ details. You should have received a copy of the GNU General Public License along
 
  */
 
-import org.apache.commons.collections.CollectionUtils;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.CRS;
 import org.locationtech.jts.geom.*;
@@ -114,7 +113,7 @@ public class GeometryUtils {
     }
 
     public static Geometry createMultipoint(List<Geometry> geometries) {
-        if (CollectionUtils.isEmpty(geometries)) {
+        if (geometries == null || geometries.isEmpty()) {
             return null;
         }
         GeometryFactory geometryFactory = new GeometryFactory();
@@ -122,7 +121,7 @@ public class GeometryUtils {
         for (Geometry geom : geometries) {
             coordinates.add(geom.getCoordinate());
         }
-        Geometry multiPoint = geometryFactory.createMultiPoint(coordinates.toArray(new Coordinate[coordinates.size()]));
+        Geometry multiPoint = geometryFactory.createMultiPointFromCoords(coordinates.toArray(new Coordinate[coordinates.size()]));
         multiPoint.setSRID(DEFAULT_EPSG_SRID);
         return multiPoint;
     }

@@ -22,8 +22,6 @@ import javax.persistence.*;
 import java.time.Instant;
 import java.util.*;
 
-import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
-
 
 @Entity
 @NamedQueries({
@@ -102,7 +100,7 @@ public class UserAreasEntity extends BaseAreaEntity {
     @JsonbProperty("scopeSelection")
     public List<String> getScopeSelectionAsString(){
         List<String> list = new ArrayList<>();
-        if (isNotEmpty(scopeSelection)){
+        if (scopeSelection != null && !scopeSelection.isEmpty()){
             for (UserScopeEntity entity :scopeSelection){
                 list.add(entity.getName());
             }
