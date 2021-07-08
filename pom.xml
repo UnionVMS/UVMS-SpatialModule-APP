@@ -63,12 +63,6 @@
 			</dependency>
 			<dependency>
 				<groupId>fish.focus.uvms.maven</groupId>
-				<artifactId>uvms-pom-test-deps</artifactId>
-                <version>${fish.focus.parent.version}</version>
-				<type>pom</type>
-			</dependency>
-			<dependency>
-				<groupId>fish.focus.uvms.maven</groupId>
 				<artifactId>uvms-pom-arquillian-deps</artifactId>
                 <version>${fish.focus.parent.version}</version>
 				<type>pom</type>
@@ -113,7 +107,7 @@
             <dependency>
                 <groupId>eu.europa.ec.fisheries.uvms.spatialSwe</groupId>
                 <artifactId>spatial-model</artifactId>
-                <version>${project.parent.version}</version>
+                <version>${project.version}</version>
             </dependency>
 
             <dependency>
@@ -132,24 +126,6 @@
                 <groupId>org.geotools</groupId>
                 <artifactId>gt-epsg-hsql</artifactId>
                 <version>${geotools.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>javax.xml.bind</groupId>
-                <artifactId>jaxb-api</artifactId>
-                <version>2.3.1</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.sun.xml.bind</groupId>
-                <artifactId>jaxb-impl</artifactId>
-                <version>3.0.1</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.sun.xml.bind</groupId>
-                <artifactId>jaxb-core</artifactId>
-                <version>3.0.1</version>
             </dependency>
 
             <dependency>
