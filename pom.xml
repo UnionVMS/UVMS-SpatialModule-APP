@@ -24,7 +24,7 @@
         <reporting.model>1.1.27-UVMS</reporting.model>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <movement.model.version>5.6.1-UVMS</movement.model.version>
+        <movement.model.version>5.6.2-UVMS</movement.model.version>
         <geotools.version>22.2</geotools.version>
         <uvms.commons.version>4.1.9</uvms.commons.version>
         <usm4uvms.version>4.1.9</usm4uvms.version>
