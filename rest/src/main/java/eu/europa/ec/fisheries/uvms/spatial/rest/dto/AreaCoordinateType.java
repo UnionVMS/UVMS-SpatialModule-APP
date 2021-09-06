@@ -25,4 +25,6 @@ public class AreaCoordinateType extends GeoCoordinateType {
 	@NotNull
 	private Boolean isGeom = false;
 
+	private  String value;
+
 }
