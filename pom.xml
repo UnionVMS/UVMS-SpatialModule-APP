@@ -73,6 +73,12 @@
                 <version>${fish.focus.parent.version}</version>
                 <type>pom</type>
             </dependency>
+            <dependency>
+                <groupId>eu.europa.ec.fisheries.uvms.docker</groupId>
+                <artifactId>uvms-docker-wildfly-unionvms</artifactId>
+                <version>${docker.dev.version}</version>
+                <type>pom</type>
+            </dependency>
 
             <dependency>
                 <groupId>eu.europa.ec.fisheries.uvms</groupId>
