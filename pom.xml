@@ -23,7 +23,6 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <jts.version>1.14.0</jts.version>
         <jackson.version>2.6.0</jackson.version>
-        <logback.core.version>1.2.3</logback.core.version>
         
         <spatial.model>${uvms.spatial.model.version}</spatial.model>
         <reporting.model>${uvms.reporting.model.version}</reporting.model>
@@ -90,13 +89,6 @@
                         <artifactId>commons-logging</artifactId>
                     </exclusion>
                 </exclusions>
-            </dependency>
-
-            <dependency>
-                <groupId>fish.focus.uvms.maven</groupId>
-                <artifactId>uvms-pom-logging-deps</artifactId>
-                <version>1.21</version>
-                <type>pom</type>
             </dependency>
 
             <dependency>
@@ -242,16 +234,6 @@
                 <version>${javaee.version}</version>
                 <scope>provided</scope>
             </dependency>
-	        <dependency>
-	            <groupId>ch.qos.logback</groupId>
-	            <artifactId>logback-classic</artifactId>
-	            <version>${logback.core.version}</version>
-	        </dependency>
-	        <dependency>
-	            <groupId>ch.qos.logback</groupId>
-	            <artifactId>logback-core</artifactId>
-	            <version>${logback.core.version}</version>
-	        </dependency>
 
         </dependencies>
 
@@ -405,9 +387,8 @@
         <profile>
             <id>enforce-jdk-version</id>
             <activation>
-                <!-- To disable profile, define property -Dfocus-pom.enforce.jdk.version.disabled=true -->
                 <property>
-                    <name>!focus-pom.enforce.jdk.version.disabled</name>
+                    <name>focus-pom.enforce.jdk.version.enabled</name>
                 </property>
             </activation>
             <build>
